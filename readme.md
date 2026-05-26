@@ -30,3 +30,4 @@ under construction - just ramblings for now
 ## notes
 
 - https://github.com/owid/cartograms/blob/main/data/country-code.csv has the country codes to save you looking again and again
+- it'd be cool to borrow their algorithm and make higher resolution cartograms for use within countries
