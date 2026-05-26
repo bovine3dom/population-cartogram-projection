@@ -25,3 +25,8 @@ under construction - just ramblings for now
 3) if assigning by sorting is bad, give hungarian algorithm a go - potentially worth doing hungarian at a coarse level and then using the sorting method within each coarse cell
 4) in julia play with data and make sure it feels good
 5) make some d3.js or three.js web app
+
+
+## notes
+
+- https://github.com/owid/cartograms/blob/main/data/country-code.csv has the country codes to save you looking again and again
