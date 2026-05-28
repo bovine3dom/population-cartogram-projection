@@ -1,4 +1,9 @@
 [deps]
+Arrow = "69666777-d1a9-59fb-9406-91d4454c9d45"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+H3 = "f62fece2-b996-571a-b4c9-e662aba1c617"
 Luxor = "ae8d54c2-7ccd-5906-9d76-62fc9837b5bc"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+ThreadsX = "ac1d9e8a-700a-412c-b207-f0111f4b6c0d"
