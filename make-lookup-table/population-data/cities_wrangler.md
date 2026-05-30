@@ -40,6 +40,6 @@ order by population desc, geonameid asc;
 copy (
 select name, country_code, latitude, longitude, population from cities500
     --where population > 50_000 -- change this to make file bigger or smaller. or even just use a limit
-    limit 100
+    order by population desc
 ) to 'tiny-cities.csv';
 ```
