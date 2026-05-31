@@ -1,5 +1,5 @@
 #!/bin/julia
-using CSV, DataFrames, Luxor, Arrow, ThreadsX, StatsBase, ColorSchemes
+using CSV, DataFrames, Luxor, Arrow, ThreadsX, StatsBase, ColorSchemes, ProgressMeter
 import H3
 import Colors: RGB
 
@@ -441,6 +441,7 @@ function match_h3_to_cartogram_ot(
     
     # probably worth turning this off because we'll want to multithread by country
     Threads.@threads for i in 1:M
+    #for i in 1:M
         px, py = pop_norm_x[i], pop_norm_y[i]
         
         dists = Vector{Float64}(undef, N)
@@ -541,9 +542,10 @@ end
 H3_RES = 5
 cities = CSV.read("population-data/tiny-cities.csv", DataFrame)
 cities.h3 = H3.API.latLngToCell.(H3.API.LatLng.(deg2rad.(cities.latitude), deg2rad.(cities.longitude)), H3_RES)
-_cities = cities[cities.country_code .== "FR", :][1:10, :]
-_code = 249 # 826 UK, 250 France
-ffs = Dict(249 => 250)
+# max top 3 cities per country
+_cities = combine(groupby(cities, :country_code), g -> g[1:min(3, nrow(g)), :])
+# _cities = cities[cities.country_code .== "FR", :][1:10, :]
+# _code = 249 # 826 UK, 250 France
 population.parent = ThreadsX.map(c -> H3.API.cellToParent(c, H3_RES), population.h3)
 #subdivide_cartogram(cartogram[cartogram.code .== uk_code, :], 2) # somehow this alters the original data (!?)
 cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false)
@@ -559,18 +561,31 @@ smaller_pop.y = rad2deg.(map(x -> -x.lat, smaller_pop.centre))
 sort!(smaller_pop, [:x, :y])
 gp = groupby(smaller_pop, :code)
 
-all_countries = intersect(unique(cartogram.code), unique(smaller_pop.code))
-#df = reduce(vcat,ThreadsX.map(c -> begin
-    c = _code
-    c_ffs = get(ffs, c, c)
-    # ffs brilliant the codes don't match perfectly. for them france is 250, for us it is 249. so we're buggered unless we find the data they were using
-    # or go back and make this all ourself
-    _mini_cartogram = copy(DataFrame(gc[(c_ffs,)]))
-    mini_cartogram = subdivide_cartogram(_mini_cartogram, 1)
-    mini_population = gp[(c,)]
+# sidequest: build matching between codes from OWID and Natural Earth
+
+ne_countries = unique(smaller_pop.code)
+ne_only = setdiff(ne_countries, countries.code) # -99 (sea), 249, (france)
+owid_only = setdiff(unique(cartogram.code), ne_countries) # 28 (antigua), 250 (france), 492 (monaco)
+# ok so we need to map france 249 => 250 and skip 28, 336, 581
+
+all_countries = setdiff(cartogram.code, setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+ffs = Dict(250 => 249)
+results = []
+# somehow something in here MUTATES the cartogram(!!!!)
+length(unique(cartogram.code))
+# let's check china works with 100 neighbours first - big population, big area, unevenly distributed
+@showprogress Threads.@threads for _code in [826] # all_countries[1:10]
+    owid_code = _code
+    ne_code = get(ffs, owid_code, owid_code)
+    mini_cartogram = deepcopy(gc[(owid_code,)])
+    mini_population = gp[(ne_code,)]
     # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
-    mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100)
-    df = mini_df
+    mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=200)
+    push!(results, mini_df)
+end
+length(unique(cartogram.code))
+results
+df = reduce(vcat, results)
 #    @info c
 #    mini_df
 #end, [_code]))
@@ -578,6 +593,8 @@ all_countries = intersect(unique(cartogram.code), unique(smaller_pop.code))
 
 toplot = leftjoin(df, smaller_pop[:, Not([:x, :y])], on=:h3)
 toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
+sort!(toplot, :weight)
+toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name)))
 almost_there = combine(groupby(toplot, [:x, :y]), [:median, :weight] => ((m,w) -> quantile(m, weights(collect(skipmissing(w))), 0.5)) => :median, :name => (n -> join(collect(skipmissing(n)), ", ")) => :label, [:population, :weight] => ((p, w) -> sum(p.*w)) => :population)
 almost_there.label = map(x -> x == "" ? missing : x, almost_there.label)
 addquantiles!(almost_there, :median)
@@ -585,10 +602,10 @@ addquantiles!(almost_there, :population)
 almost_there.population_z = (almost_there.population ./ mean(almost_there.population)) ./ 2
 
 # this is just for sense checking: it should all be the same colour
-render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=100, font_size=50, filename="population_check.png")
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=10, font_size=10, filename="population_check.png")
 
 # this is the actual map
-render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_outline=false, square_size=100, font_size=50)
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_outline=false, square_size=10, font_size=10)
 
 # reducing the resolution makes it tractable
 # could we subsample using hilbert?
