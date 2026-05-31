@@ -20,7 +20,12 @@ function render_cartogram(
     filename::String="hello.png",
     font_size::Real=8,
     font_face::String="Iosevka",
-    text_color::String="black"
+    text_color::String="black",
+    draw_country_borders::Bool=false,
+    country_border_color::String="black",
+    country_border_width::Real=1.5,
+    include_outer_borders::Bool=false,
+    coord_step::Real=2
 )
     min_x, max_x = minimum(cartogram.x), maximum(cartogram.x)
     min_y, max_y = minimum(cartogram.y), maximum(cartogram.y)
@@ -47,6 +52,36 @@ function render_cartogram(
             sethue(outline_color)
             setline(outline_width)
             box(Point(cx, cy), square_size, square_size, :stroke)
+        end
+    end
+    
+    if draw_country_borders
+        cell_map = Dict((row.x, row.y) => row[:code] for row in eachrow(cartogram))
+        sethue(country_border_color)
+        setline(country_border_width)
+        for row in eachrow(cartogram)
+            cx = (row.x - center_x) * square_size/2
+            cy = (row.y - center_y) * square_size/2
+            x, y = row.x, row.y
+            code = row[:code]
+            r_neighbor = (x + coord_step, y)
+            r_code = get(cell_map, r_neighbor, nothing)
+            if !isequal(r_code, code) && (include_outer_borders || !isnothing(r_code))
+                line(
+                    Point(cx + square_size/2, cy - square_size/2),
+                    Point(cx + square_size/2, cy + square_size/2),
+                    :stroke
+                )
+            end
+            b_neighbor = (x, y + coord_step)
+            b_code = get(cell_map, b_neighbor, nothing)
+            if !isequal(b_code, code) && (include_outer_borders || !isnothing(b_code))
+                line(
+                    Point(cx - square_size/2, cy + square_size/2),
+                    Point(cx + square_size/2, cy + square_size/2),
+                    :stroke
+                )
+            end
         end
     end
     
@@ -104,8 +139,9 @@ function subdivide_cartogram(df::DataFrame, n::Int)
     return DataFrame(x = new_xs, y = new_ys, code = new_codes)
 end
 
-# european_countries = ["Albania", "Andorra", "Austria", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Belarus", "Cyprus", "Croatia", "Czechia", "Denmark", "Estonia", "Faeroe Islands", "Finland", "<span data-sort-value=\"Aland Islands !\">Åland Islands", "France", "Germany", "Gibraltar", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Monaco", "Moldova", "Montenegro", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Svalbard and Jan Mayen", "Sweden", "Switzerland", "Ukraine", "North Macedonia", "United Kingdom", "Guernsey", "Jersey", "Isle of Man", "Vatican"]
+european_countries = ["Albania", "Andorra", "Austria", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Belarus", "Cyprus", "Croatia", "Czechia", "Denmark", "Estonia", "Faeroe Islands", "Finland", "<span data-sort-value=\"Aland Islands !\">Åland Islands", "France", "Germany", "Gibraltar", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Monaco", "Moldova", "Montenegro", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Svalbard and Jan Mayen", "Sweden", "Switzerland", "Ukraine", "North Macedonia", "United Kingdom", "Guernsey", "Jersey", "Isle of Man", "Vatican"]
 # europe = semijoin(cartogram, countries[in.(countries.name, Ref(european_countries)), :], on=:code)
+europe_codes = countries[in.(countries.name, Ref(european_countries)), :code]
 
 # ok fun drawing time over. let's do some lookup tables
 
@@ -543,14 +579,12 @@ H3_RES = 5
 cities = CSV.read("population-data/tiny-cities.csv", DataFrame)
 cities.h3 = H3.API.latLngToCell.(H3.API.LatLng.(deg2rad.(cities.latitude), deg2rad.(cities.longitude)), H3_RES)
 # max top 3 cities per country
-_cities = combine(groupby(cities, :country_code), g -> g[1:min(3, nrow(g)), :])
+_cities = combine(groupby(cities, :country_code), g -> g[1:min(5, nrow(g)), :])
+_cities = _cities[_cities.population .> 100_000, :]
 # _cities = cities[cities.country_code .== "FR", :][1:10, :]
 # _code = 249 # 826 UK, 250 France
 population.parent = ThreadsX.map(c -> H3.API.cellToParent(c, H3_RES), population.h3)
 #subdivide_cartogram(cartogram[cartogram.code .== uk_code, :], 2) # somehow this alters the original data (!?)
-cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false)
-rename!(cartogram, [:x, :y, :code])
-gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
 # sanity check
 # render_cartogram(gc[(826,)])
 smaller_pop = combine(groupby(population, :parent), :population => sum => :population, :population => (p -> quantile(p, weights(collect(skipmissing(p))), 0.5)) => :median, :code => StatsBase.mode => :code)
@@ -562,26 +596,32 @@ sort!(smaller_pop, [:x, :y])
 gp = groupby(smaller_pop, :code)
 
 # sidequest: build matching between codes from OWID and Natural Earth
-
 ne_countries = unique(smaller_pop.code)
 ne_only = setdiff(ne_countries, countries.code) # -99 (sea), 249, (france)
+cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false) # re-read here because it gets mutated mysteriously
+rename!(cartogram, [:x, :y, :code])
+gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
 owid_only = setdiff(unique(cartogram.code), ne_countries) # 28 (antigua), 250 (france), 492 (monaco)
-# ok so we need to map france 249 => 250 and skip 28, 336, 581
-
-all_countries = setdiff(cartogram.code, setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
-ffs = Dict(250 => 249)
+ffs = Dict(250 => 249) # ok so we need to map france 249 => 250 and skip 28, 336, 581
+all_countries = setdiff(intersect(cartogram.code, europe_codes), setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
 results = []
 # somehow something in here MUTATES the cartogram(!!!!)
 length(unique(cartogram.code))
 # let's check china works with 100 neighbours first - big population, big area, unevenly distributed
-@showprogress Threads.@threads for _code in [826] # all_countries[1:10]
-    owid_code = _code
-    ne_code = get(ffs, owid_code, owid_code)
-    mini_cartogram = deepcopy(gc[(owid_code,)])
-    mini_population = gp[(ne_code,)]
-    # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
-    mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=200)
-    push!(results, mini_df)
+@showprogress Threads.@threads for _code in all_countries
+    try
+        owid_code = _code
+        ne_code = get(ffs, owid_code, owid_code)
+        mini_cartogram = deepcopy(gc[(owid_code,)])
+        mini_population = gp[(ne_code,)]
+        # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
+        mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=200.0)
+        # i am thinking our best bet is really just to use optimal transport and mask out the parts of the map where the population is too small
+        # sidequest - integer downsample large countries then upsample back to exact original grid
+        push!(results, mini_df)
+    catch (e)
+        @warn e
+    end
 end
 length(unique(cartogram.code))
 results
@@ -590,22 +630,59 @@ df = reduce(vcat, results)
 #    mini_df
 #end, [_code]))
 
+Arrow.write("mapping.arrow", df) # the thing we actually want. H3 res = 5
 
+"""
+add a label column for the cell closest to the weighted average of x,y for each label
+"""
+function assign_weighted_labels!(
+    df::DataFrame; 
+    label_col::Symbol=:name, 
+    weight_col::Symbol=:weight, 
+    target_col::Symbol=:label
+)
+    LabelType = Union{Missing, nonmissingtype(eltype(df[!, label_col]))}
+    df[!, target_col] = Vector{LabelType}(missing, nrow(df))
+    
+    df.temp_idx = 1:nrow(df)
+    df_labeled = filter(row -> !ismissing(row[label_col]) && !isnothing(row[label_col]), df)
+    gdf = groupby(df_labeled, label_col)
+    
+    for sub_df in gdf
+        label_val = first(sub_df[!, label_col])
+        sum_w = sum(sub_df[!, weight_col])
+        if sum_w > 0
+            mean_x = sum(sub_df.x .* sub_df[!, weight_col]) / sum_w
+            mean_y = sum(sub_df.y .* sub_df[!, weight_col]) / sum_w
+        else
+            mean_x = mean(sub_df.x)
+            mean_y = mean(sub_df.y)
+        end
+        distances = (sub_df.x .- mean_x).^2 .+ (sub_df.y .- mean_y).^2
+        best_sub_idx = argmin(distances)
+        orig_row_idx = sub_df[best_sub_idx, :temp_idx]
+        df[orig_row_idx, target_col] = label_val
+    end
+    select!(df, Not(:temp_idx))
+    return df
+end
 toplot = leftjoin(df, smaller_pop[:, Not([:x, :y])], on=:h3)
 toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
-sort!(toplot, :weight)
-toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name)))
-almost_there = combine(groupby(toplot, [:x, :y]), [:median, :weight] => ((m,w) -> quantile(m, weights(collect(skipmissing(w))), 0.5)) => :median, :name => (n -> join(collect(skipmissing(n)), ", ")) => :label, [:population, :weight] => ((p, w) -> sum(p.*w)) => :population)
+# sort!(toplot, :weight)
+# toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
+assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=:label)
+almost_there = combine(groupby(toplot, [:x, :y]), [:median, :weight] => ((m,w) -> quantile(m, weights(collect(skipmissing(w))), 0.5)) => :median, :label => (n -> join(collect(skipmissing(n)), ", ")) => :label, [:population, :weight] => ((p, w) -> sum(p.*w)) => :population, :code => StatsBase.mode => :code)
 almost_there.label = map(x -> x == "" ? missing : x, almost_there.label)
 addquantiles!(almost_there, :median)
 addquantiles!(almost_there, :population)
 almost_there.population_z = (almost_there.population ./ mean(almost_there.population)) ./ 2
 
 # this is just for sense checking: it should all be the same colour
-render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=10, font_size=10, filename="population_check.png")
+RENDER_SCALE = 20
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, filename="population_check.png", draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # this is the actual map
-render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_outline=false, square_size=10, font_size=10)
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # reducing the resolution makes it tractable
 # could we subsample using hilbert?
@@ -613,8 +690,7 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 
 # ok i think this is promising really
 # todo:
-# 1) sort out the missing country codes (our 249 for france, their 250), see https://en.wikipedia.org/wiki/ISO_3166-1_numeric
-# 2) do a first pass on the planet using a low number of neighbours seeing if stuff looks kind reasonable
-# 3) increase neighbours?
-# 4) think about subsampling?
-# 5) try to work out how to draw borders?
+# 1) increase neighbours?
+# 2) think about subsampling?
+# 3) document reuse, move plotting code to library
+# 4) attempt first reuse. e.g. vacant properties in france?
