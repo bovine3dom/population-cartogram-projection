@@ -630,8 +630,6 @@ df = reduce(vcat, results)
 #    mini_df
 #end, [_code]))
 
-Arrow.write("mapping.arrow", df) # the thing we actually want. H3 res = 5
-
 """
 add a label column for the cell closest to the weighted average of x,y for each label
 """
@@ -671,11 +669,20 @@ toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
 # sort!(toplot, :weight)
 # toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
 assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=:label)
+
+# write the data out for reuse
+# dropmissing!(toplot, Not([:name, :label]))
+# Arrow.write("mapping.arrow", toplot[!, [:h3, :x, :y, :weight, :population, :code, :label]]) # the thing we actually want. H3 res = 5
+# dropmissing!(smaller_pop, :h3)
+# Arrow.write("out.arrow", smaller_pop[!, [:h3, :median]]) # so now the challenge is: group by and plot on client side
+# df = copy(Arrow.Table("mapping.arrow") |> DataFrame)
+
 almost_there = combine(groupby(toplot, [:x, :y]), [:median, :weight] => ((m,w) -> quantile(m, weights(collect(skipmissing(w))), 0.5)) => :median, :label => (n -> join(collect(skipmissing(n)), ", ")) => :label, [:population, :weight] => ((p, w) -> sum(p.*w)) => :population, :code => StatsBase.mode => :code)
 almost_there.label = map(x -> x == "" ? missing : x, almost_there.label)
 addquantiles!(almost_there, :median)
 addquantiles!(almost_there, :population)
 almost_there.population_z = (almost_there.population ./ mean(almost_there.population)) ./ 2
+almost_there.median_z = (almost_there.median .- mean(almost_there.median)) ./ (2 * std(almost_there.median)) .+ 0.5
 
 # this is just for sense checking: it should all be the same colour
 RENDER_SCALE = 20
@@ -683,6 +690,7 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 
 # this is the actual map
 render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # reducing the resolution makes it tractable
 # could we subsample using hilbert?
