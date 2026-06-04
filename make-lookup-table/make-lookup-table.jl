@@ -670,6 +670,10 @@ toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
 # toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
 assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=:label)
 
+# TODO:
+# h3 needs to be stringified
+# need to add weight_mean column that is weight*(h3 cell population) / (total cartogram cell population)
+
 # write the data out for reuse
 # dropmissing!(toplot, Not([:name, :label]))
 # Arrow.write("mapping.arrow", toplot[!, [:h3, :x, :y, :weight, :population, :code, :label]]) # the thing we actually want. H3 res = 5
