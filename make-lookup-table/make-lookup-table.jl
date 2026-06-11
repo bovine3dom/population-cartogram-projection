@@ -706,3 +706,176 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 # 2) think about subsampling?
 # 3) document reuse, move plotting code to library
 # 4) attempt first reuse. e.g. vacant properties in france?
+
+
+
+# trying with sinkhorn again
+include("cuRegOT.jl")
+using Random
+function run_demo()
+    Random.seed!(42)
+    n, m = 10000, 10000
+    
+    # Generate random points in 2D
+    X = rand(Float32, n, 2)
+    Y = rand(Float32, m, 2)
+    
+    # Compute squared Euclidean distance cost matrix
+    M_cpu = [sum((X[i, :] .- Y[j, :]).^2) for i in 1:n, j in 1:m]
+    M_cpu ./= maximum(M_cpu) # Normalize cost matrix [15]
+    
+    # Uniform distributions
+    a_cpu = fill(1.0f0 / n, n)
+    b_cpu = fill(1.0f0 / m, m)
+    
+    eta = 0.005f0 # Regularization strength
+    
+    println("Starting cuRegOT solver on a $n x $m problem...")
+    T = curegot_solver(M_cpu, a_cpu, b_cpu, eta; k=3000, S=10, max_iters=50, tol=1e-4)
+    
+    # Verify marginal preservation
+    println("\nVerification:")
+    row_err = sum(abs.(sum(T, dims=2) .- a_cpu))
+    col_err = sum(abs.(sum(T, dims=1) .- b_cpu'))
+    println("Row marginal error: ", row_err)
+    println("Col marginal error: ", col_err)
+end
+
+run_demo()
+
+"""
+Distributes population from H3 cells to a cartogram grid using GPU-accelerated 
+entropic-regularized optimal transport.
+"""
+function match_h3_to_cartogram_curegot(
+    population::DataFrame, 
+    cartogram::DataFrame; 
+    eta::Float32 = 0.005f0,       # Entropic regularization parameter
+    k::Int = 2000,                # Sparsified Cholesky parameter (top-k entries of T)
+    S::Int = 10,                  # Amortized symbolic factorization interval
+    max_iters::Int = 100,         # Maximum iterations
+    tol::Float64 = 1e-5,          # Tolerance for convergence (marginal error)
+    threshold::Float64 = 1e-5     # Minimum overlap to include in the output DataFrame
+)
+    pop_clean = filter(row -> row.population > 0.0, population)
+    
+    N = size(cartogram, 1) # Target cells
+    M = size(pop_clean, 1) # Source cells
+    
+    if M == 0 || N == 0
+        error("Input population or cartogram dataframe is empty.")
+    end
+    
+    total_pop = sum(pop_clean.population)
+    
+    # --- 1. Map Coordinates and Normalize Spans ---
+    lat_min, lat_max = minimum(pop_clean.y), maximum(pop_clean.y)
+    lon_min, lon_max = minimum(pop_clean.x), maximum(pop_clean.x)
+    x_min, max_x = minimum(cartogram.x), maximum(cartogram.x)
+    y_min, max_y = minimum(cartogram.y), maximum(cartogram.y)
+    
+    lon_span = (lon_max - lon_min) > 0 ? (lon_max - lon_min) : 1.0
+    lat_span = (lat_max - lat_min) > 0 ? (lat_max - lat_min) : 1.0
+    x_span = (max_x - x_min) > 0 ? (max_x - x_min) : 1.0
+    y_span = (max_y - y_min) > 0 ? (max_y - y_min) : 1.0
+    
+    pop_norm_x = (pop_clean.x .- lon_min) ./ lon_span
+    pop_norm_y = (pop_clean.y .- lat_min) ./ lat_span
+    
+    carto_norm_x = (cartogram.x .- x_min) ./ x_span
+    carto_norm_y = (cartogram.y .- y_min) ./ y_span
+    
+    # --- 2. Construct the Distance/Cost Matrix ---
+    # Constructing a full dense cost matrix on the CPU
+    M_cpu = Matrix{Float32}(undef, M, N)
+    Threads.@threads for i in 1:M
+        px, py = pop_norm_x[i], pop_norm_y[i]
+        for j in 1:N
+            # Euclidean distance matching the original logic
+            M_cpu[i, j] = sqrt((px - carto_norm_x[j])^2 + (py - carto_norm_y[j])^2)
+        end
+    end
+    
+    # Normalize the cost matrix by its maximum value to keep eta comparable
+    M_cpu ./= maximum(M_cpu)
+    
+    # --- 3. Prepare Marginal Probability Vectors ---
+    a_cpu = Vector{Float32}(pop_clean.population ./ total_pop)
+    b_cpu = fill(1.0f32 / N, N) # Targets uniform distribution to enforce even spatial loading
+    
+    # --- 4. Run the GPU-Accelerated Solver ---
+    T = curegot_solver(M_cpu, a_cpu, b_cpu, eta; k=k, S=S, max_iters=max_iters, tol=tol)
+    
+    # --- 5. Extract and Reconstruct Absolute Mass Outputs ---
+    T_abs = T .* total_pop
+    
+    assigned_h3 = Vector{UInt64}()
+    assigned_x = Vector{eltype(cartogram.x)}()
+    assigned_y = Vector{eltype(cartogram.y)}()
+    assigned_weight = Vector{Float64}()
+    assigned_overlap = Vector{Float64}()
+    
+    # Filter and capture non-negligible transport contributions
+    for j in 1:N
+        for i in 1:M
+            overlap = T_abs[i, j]
+            if overlap > threshold
+                h3_pop = pop_clean.population[i]
+                weight = h3_pop > 0 ? (overlap / h3_pop) : 0.0
+                
+                push!(assigned_h3, pop_clean.h3[i])
+                push!(assigned_x, cartogram.x[j])
+                push!(assigned_y, cartogram.y[j])
+                push!(assigned_weight, weight)
+                push!(assigned_overlap, overlap)
+            end
+        end
+    end
+    
+    return DataFrame(
+        h3 = assigned_h3, 
+        x = assigned_x, 
+        y = assigned_y, 
+        weight = assigned_weight, 
+        overlap = assigned_overlap
+    )
+end
+_code = 826 # uk # 356 india. which at least runs
+owid_code = _code
+ne_code = get(ffs, owid_code, owid_code)
+mini_cartogram = deepcopy(gc[(owid_code,)])
+mini_population = gp[(ne_code,)]
+# mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
+mini_df = match_h3_to_cartogram_curegot(DataFrame(mini_population), DataFrame(mini_cartogram); eta = 0.001f0, max_iters=100, k=2_000)#, threshold=1e36)
+# mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=400.0)
+# for reference: soft ot only yields 1,600 matches, compared to ~26,000 with sinkhorn
+# i am thinking our best bet is really just to use optimal transport and mask out the parts of the map where the population is too small
+# sidequest - integer downsample large countries then upsample back to exact original grid
+#
+toplot = leftjoin(mini_df, smaller_pop[:, Not([:x, :y])], on=:h3)
+toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
+# sort!(toplot, :weight)
+# toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
+assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=:label)
+
+almost_there = combine(groupby(toplot, [:x, :y]), [:median, :weight] => ((m,w) -> quantile(m, weights(collect(skipmissing(w))), 0.5)) => :median, :label => (n -> join(collect(skipmissing(n)), ", ")) => :label, [:population, :weight] => ((p, w) -> sum(p.*w)) => :population, :code => StatsBase.mode => :code)
+almost_there.label = map(x -> x == "" ? missing : x, almost_there.label)
+addquantiles!(almost_there, :median)
+addquantiles!(almost_there, :population)
+almost_there.population_z = (almost_there.population ./ mean(almost_there.population)) ./ 2
+almost_there.median_z = (almost_there.median .- mean(almost_there.median)) ./ (2 * std(almost_there.median)) .+ 0.5
+
+# this is just for sense checking: it should all be the same colour
+RENDER_SCALE = 10
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, filename="population_check.png", draw_country_borders=true, padding=RENDER_SCALE*10)
+
+# this is the actual map
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
+# render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
+
+# todo:
+# it's still too smeared
+# but i can't reduce eta more without getting errors
+#
+# increasing the threshold doesn't help much because stuff is still extremely smeared
+# for reference: for the uk jump/highs soft ot only yields 1,600 matches, compared to ~50,000 with sinkhorn
