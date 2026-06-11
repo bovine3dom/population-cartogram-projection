@@ -603,7 +603,8 @@ rename!(cartogram, [:x, :y, :code])
 gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
 owid_only = setdiff(unique(cartogram.code), ne_countries) # 28 (antigua), 250 (france), 492 (monaco)
 ffs = Dict(250 => 249) # ok so we need to map france 249 => 250 and skip 28, 336, 581
-all_countries = setdiff(intersect(cartogram.code, europe_codes), setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+# all_countries = setdiff(intersect(cartogram.code, europe_codes), setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+all_countries = setdiff(cartogram.code, setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
 results = []
 # somehow something in here MUTATES the cartogram(!!!!)
 length(unique(cartogram.code))
@@ -669,6 +670,22 @@ toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
 # sort!(toplot, :weight)
 # toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
 assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=:label)
+dropmissing!(toplot, Not([:name, :label]))
+Arrow.write("mapping.arrow", toplot[!, [:h3, :x, :y, :weight, :population, :code, :label]]) # the thing we actually want. H3 res = 5
+toplot.index = string.(toplot.h3, base=16) # stringify h3
+
+# find % contribution of each h3 to population of cell
+t = combine(groupby(toplot, [:x, :y]), [:weight, :population] => ((w, p) -> sum(w.*p)) => :total_population)
+toplot2 = leftjoin(toplot, t, on=[:x, :y])
+toplot2.weight_mean = toplot2.weight .* toplot2.population ./ toplot2.total_population
+Arrow.write("cartogram_weights.arrow", toplot2[!, [:x, :y, :weight, :population, :code, :label, :index, :weight_mean]])
+
+# select c.*, (c.weight*c.population)/p.population weight_mean from cartogram c
+# left join (
+#     select x,y,sum(weight*population) population
+#     from cartogram
+#     group by x,y
+# ) p on p.x = c.x and p.y = c.y
 
 # TODO:
 # h3 needs to be stringified
