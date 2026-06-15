@@ -598,22 +598,29 @@ gp = groupby(smaller_pop, :code)
 # sidequest: build matching between codes from OWID and Natural Earth
 ne_countries = unique(smaller_pop.code)
 ne_only = setdiff(ne_countries, countries.code) # -99 (sea), 249, (france)
-cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false) # re-read here because it gets mutated mysteriously
-rename!(cartogram, [:x, :y, :code])
-gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
-owid_only = setdiff(unique(cartogram.code), ne_countries) # 28 (antigua), 250 (france), 492 (monaco)
-ffs = Dict(250 => 249) # ok so we need to map france 249 => 250 and skip 28, 336, 581
+cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false, copycols=true); # re-read here because it gets mutated mysteriously
+length(unique(cartogram[!, :3])) # 208
+rename!(cartogram, [:x, :y, :code]);
+# there is a bug with setdiff(csv...) that causes all kinds of insane behaviour
+insane_bug_defence = collect(cartogram.code)
+length(unique(cartogram.code)) # 208
+# gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
+owid_only = setdiff(insane_bug_defence, ne_countries) # 28 (antigua), 250 (france), 492 (monaco)
+length(unique(cartogram.code)) # 208
+ffs = Dict(250 => 249); # ok so we need to map france 249 => 250 and skip 28, 336, 581
 # all_countries = setdiff(intersect(cartogram.code, europe_codes), setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
-all_countries = setdiff(cartogram.code, setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+all_countries = setdiff(insane_bug_defence, setdiff(collect(owid_only), keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+length(unique(cartogram.code)) # should be 208 but seems to reliably be 181. unless you run the code slowly.
 results = []
-# somehow something in here MUTATES the cartogram(!!!!)
-length(unique(cartogram.code))
 # let's check china works with 100 neighbours first - big population, big area, unevenly distributed
 @showprogress Threads.@threads for _code in all_countries
     try
         owid_code = _code
         ne_code = get(ffs, owid_code, owid_code)
-        mini_cartogram = deepcopy(gc[(owid_code,)])
+        # mini_cartogram = deepcopy(gc[(owid_code,)])
+        cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false, copycols=true) # re-read here because it gets mutated mysteriously
+        rename!(cartogram, [:x, :y, :code])
+        mini_cartogram = cartogram[cartogram.code .== owid_code, :]
         mini_population = gp[(ne_code,)]
         # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
         mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=200.0)
