@@ -6,22 +6,20 @@ using CUDA, SparseArrays, LinearAlgebra
 # ==============================================================================
 
 """
-Fused CUDA kernel for evaluating the row sums and column sums of the 
-transport plan matrix: T_ij = exp((alpha_i + beta_j - M_ij) / eta)
-Uses warp shuffles for row reductions and shared memory for column reductions.
+Fused CUDA kernel with hardcoded compile-time dimensions for shared memory 
+to prevent type-inference and memory-corruption issues in CUDA.jl.
 """
 function fused_grad_kernel!(M, alpha, beta, eta, row_sums, col_sums, n, m)
-    tx = threadIdx().x  # 1 to 32 (warp width)
-    ty = threadIdx().y  # 1 to D (typically 8)
+    tx = threadIdx().x
+    ty = threadIdx().y
     bx = blockIdx().x
     by = blockIdx().y
     
     FT = eltype(M)
     
-    # Dynamic shared memory allocation for column reduction
-    shared_cols = CUDA.CuDynamicSharedArray(FT, (32, blockDim().y))
+    # Declare dynamic shared memory stably using a flat 1D compile-time size (32 * 8 = 256)
+    shared_cols = CUDA.CuDynamicSharedArray(FT, 256)
     
-    # Direct index mapping
     i = (by - 1) * blockDim().y + ty
     j = (bx - 1) * blockDim().x + tx
     
@@ -30,27 +28,27 @@ function fused_grad_kernel!(M, alpha, beta, eta, row_sums, col_sums, n, m)
         T_ij = exp((alpha[i] + beta[j] - M[i, j]) / eta)
     end
     
-    # --- Warp-level Row Reduction (Summing across columns j for row i) ---
+    # --- Warp-level Row Reduction ---
     val = T_ij
     mask = 0xffffffff
     for offset in (16, 8, 4, 2, 1)
         val += CUDA.shfl_down_sync(mask, val, offset)
     end
     
-    # Thread 1 of each warp writes partial sum to global memory row_sums
     if tx == 1 && i <= n
         CUDA.@atomic row_sums[i] += val
     end
     
-    # --- Shared Memory Column Reduction (Summing across rows i for column j) ---
-    shared_cols[tx, ty] = T_ij
+    # --- 1D Column-Major Shared Memory Assignment ---
+    shared_cols[tx + (ty - 1) * 32] = T_ij
     CUDA.sync_threads()
     
-    # Thread 1 of each block column sums values in shared memory
+    # --- Shared Memory Column Reduction ---
     if ty == 1 && j <= m
         sum_col_block = zero(FT)
-        for k in 1:blockDim().y
-            sum_col_block += shared_cols[tx, k]
+        # Use a compile-time constant (8) instead of blockDim().y
+        for k in 1:8
+            sum_col_block += shared_cols[tx + (k - 1) * 32]
         end
         CUDA.@atomic col_sums[j] += sum_col_block
     end
@@ -399,4 +397,150 @@ function curegot_solver(M_cpu::Matrix{Float32}, a_cpu::Vector{Float32}, b_cpu::V
     # Reconstruct and return optimal transport plan
     T_optimal = exp.((Array(alpha_gpu) .+ Array(beta_gpu)' .- M_cpu) ./ eta)
     return T_optimal
+end
+
+using CUDA
+using LinearAlgebra
+using DataFrames
+
+# ==============================================================================
+# CORRECTED SOLVER & MATCHING FUNCTION
+# ==============================================================================
+
+"""
+Completely stable, GPU-accelerated Log-Domain Sinkhorn solver.
+Uses alternating projections with the Log-Sum-Exp trick to prevent numerical overflow.
+"""
+function log_sinkhorn_gpu_solver(M_cpu::Matrix{Float32}, a_cpu::Vector{Float32}, b_cpu::Vector{Float32}, eta::Float32;
+                                 max_iters::Int = 1000, 
+                                 tol::Float64 = 1e-5)
+    n, m = size(M_cpu)
+    
+    # Transfer distributions and costs to GPU
+    M_gpu = CuArray(M_cpu)
+    a_gpu = CuArray(a_cpu)
+    b_gpu = CuArray(b_cpu)
+    
+    # Initialize dual variables
+    alpha_gpu = CUDA.zeros(Float32, n)
+    beta_gpu = CUDA.zeros(Float32, m)
+    
+    # Execution configuration
+    threads = 256
+    blocks_row = div(n + threads - 1, threads)
+    blocks_col = div(m + threads - 1, threads)
+    
+    # Pre-allocate workspace for calculating marginal error on GPU
+    row_sums_gpu = CUDA.zeros(Float32, n)
+    col_sums_gpu = CUDA.zeros(Float32, m)
+    g_scratch = CUDA.zeros(Float32, n + m - 1)
+    
+    println("Iter\tMarginal Error")
+    for iter in 1:max_iters
+        # Alternating projection updates in log-space (uses the LSE kernels)
+        @cuda threads=threads blocks=blocks_row sinkhorn_row_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
+        @cuda threads=threads blocks=blocks_col sinkhorn_col_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
+        
+        # Enforce the dual gauge constraint (beta_m = 0)
+        CUDA.@allowscalar beta_gpu[m] = 0.0f0
+        
+        # Periodically compute marginals on the GPU to check convergence
+        if iter % 10 == 0 || iter == 1
+            _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
+            marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
+            
+            if iter % 50 == 0 || iter == 1 || marg_error < tol
+                println("$iter\t$(round(marg_error, digits=6))")
+            end
+            
+            if marg_error < tol
+                println("Log-stabilized Sinkhorn converged in $iter iterations.")
+                break
+            end
+        end
+    end
+    
+    T = exp.((Array(alpha_gpu) .+ Array(beta_gpu)' .- M_cpu) ./ eta)
+    return T
+end
+
+function match_h3_to_cartogram_stable(
+    population::DataFrame, 
+    cartogram::DataFrame; 
+    eta::Float32 = 0.005f0,       # Stable down to extremely small values now
+    max_iters::Int = 1000,
+    tol::Float64 = 1e-5,
+    threshold::Float64 = 1e-5
+)
+    pop_clean = filter(row -> row.population > 0.0, population)
+    N = size(cartogram, 1)
+    M = size(pop_clean, 1)
+    
+    if M == 0 || N == 0
+        error("Input population or cartogram dataframe is empty.")
+    end
+    
+    total_pop = sum(pop_clean.population)
+    
+    # --- Normalized Cost Matrix ---
+    lat_min, lat_max = minimum(pop_clean.y), maximum(pop_clean.y)
+    lon_min, lon_max = minimum(pop_clean.x), maximum(pop_clean.x)
+    x_min, max_x = minimum(cartogram.x), maximum(cartogram.x)
+    y_min, max_y = minimum(cartogram.y), maximum(cartogram.y)
+    
+    lon_span = (lon_max - lon_min) > 0 ? (lon_max - lon_min) : 1.0
+    lat_span = (lat_max - lat_min) > 0 ? (lat_max - lat_min) : 1.0
+    x_span = (max_x - x_min) > 0 ? (max_x - x_min) : 1.0
+    y_span = (max_y - y_min) > 0 ? (max_y - y_min) : 1.0
+    
+    pop_norm_x = (pop_clean.x .- lon_min) ./ lon_span
+    pop_norm_y = (pop_clean.y .- lat_min) ./ lat_span
+    carto_norm_x = (cartogram.x .- x_min) ./ x_span
+    carto_norm_y = (cartogram.y .- y_min) ./ y_span
+    
+    M_cpu = Matrix{Float32}(undef, M, N)
+    Threads.@threads for i in 1:M
+        px, py = pop_norm_x[i], pop_norm_y[i]
+        for j in 1:N
+            M_cpu[i, j] = sqrt((px - carto_norm_x[j])^2 + (py - carto_norm_y[j])^2)
+        end
+    end
+    M_cpu ./= maximum(M_cpu)
+    
+    a_cpu = Vector{Float32}(pop_clean.population ./ total_pop)
+    b_cpu = fill(1.0f0 / N, N) # CHANGED from 1.0f32 to 1.0f0
+    
+    # --- Run Solver ---
+    T = log_sinkhorn_gpu_solver(M_cpu, a_cpu, b_cpu, eta; max_iters=max_iters, tol=tol)
+    
+    # --- Reconstruct Absolute Mass Outputs ---
+    T_abs = T .* total_pop
+    
+    assigned_h3 = Vector{UInt64}()
+    assigned_x = Vector{eltype(cartogram.x)}()
+    assigned_y = Vector{eltype(cartogram.y)}()
+    assigned_weight = Vector{Float64}()
+    assigned_overlap = Vector{Float64}()
+    
+    for j in 1:N, i in 1:M
+        overlap = T_abs[i, j]
+        if overlap > threshold
+            h3_pop = pop_clean.population[i]
+            weight = h3_pop > 0 ? (overlap / h3_pop) : 0.0
+            
+            push!(assigned_h3, pop_clean.h3[i])
+            push!(assigned_x, cartogram.x[j])
+            push!(assigned_y, cartogram.y[j])
+            push!(assigned_weight, weight)
+            push!(assigned_overlap, overlap)
+        end
+    end
+    
+    return DataFrame(
+        h3 = assigned_h3, 
+        x = assigned_x, 
+        y = assigned_y, 
+        weight = assigned_weight, 
+        overlap = assigned_overlap
+    )
 end
