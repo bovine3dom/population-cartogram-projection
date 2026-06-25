@@ -3,8 +3,7 @@ using CSV, DataFrames, Luxor, Arrow, ThreadsX, StatsBase, ColorSchemes, Progress
 import H3
 import Colors: RGB
 
-cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false)
-rename!(cartogram, [:x, :y, :code])
+cartogram = Arrow.Table("cartogram.arrow") |> DataFrame
 countries = CSV.read("../data/country-code.csv", DataFrame)
 country_colours = Dict(c => rand(3) for c in unique(cartogram.code))
 
@@ -598,9 +597,9 @@ gp = groupby(smaller_pop, :code)
 # sidequest: build matching between codes from OWID and Natural Earth
 ne_countries = unique(smaller_pop.code)
 ne_only = setdiff(ne_countries, countries.code) # -99 (sea), 249, (france)
-cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false, copycols=true); # re-read here because it gets mutated mysteriously
+# cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false, copycols=true); # re-read here because it gets mutated mysteriously
 length(unique(cartogram[!, :3])) # 208
-rename!(cartogram, [:x, :y, :code]);
+#rename!(cartogram, [:x, :y, :code]);
 # there is a bug with setdiff(csv...) that causes all kinds of insane behaviour
 insane_bug_defence = collect(cartogram.code)
 length(unique(cartogram.code)) # 208
@@ -618,8 +617,8 @@ results = []
         owid_code = _code
         ne_code = get(ffs, owid_code, owid_code)
         # mini_cartogram = deepcopy(gc[(owid_code,)])
-        cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false, copycols=true) # re-read here because it gets mutated mysteriously
-        rename!(cartogram, [:x, :y, :code])
+        # cartogram = CSV.read("../data/cartogram.csv", DataFrame, header=false, copycols=true) # re-read here because it gets mutated mysteriously
+        # rename!(cartogram, [:x, :y, :code])
         mini_cartogram = cartogram[cartogram.code .== owid_code, :]
         mini_population = gp[(ne_code,)]
         # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
