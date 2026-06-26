@@ -471,7 +471,9 @@ function log_sinkhorn_gpu_solver_schedule(
     b_cpu::Vector{Float32},
     eta_schedule::Vector{Float32};
     max_iters_per_eta::Int = 1000,
-    tol::Float64 = 1e-5
+    tol::Float64 = 1e-5,
+    silent::Bool = true,
+    progress_callback::Union{Nothing, Function} = nothing
 )
     n, m = size(M_cpu)
     M_gpu = CuArray(M_cpu)
@@ -490,17 +492,22 @@ function log_sinkhorn_gpu_solver_schedule(
     g_scratch = CUDA.zeros(Float32, n + m - 1)
 
     for eta in eta_schedule
-        println("Eta $eta")
+        if !silent
+            println("Eta $eta")
+        end
         for iter in 1:max_iters_per_eta
             @cuda threads=threads blocks=blocks_row sinkhorn_row_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
             @cuda threads=threads blocks=blocks_col sinkhorn_col_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
             CUDA.@allowscalar beta_gpu[m] = 0.0f0
+            if !isnothing(progress_callback)
+                progress_callback()
+            end
 
             if iter % 25 == 0 || iter == 1
                 _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
                 marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
 
-                if iter % 100 == 0 || iter == 1 || marg_error < tol
+                if !silent && (iter % 100 == 0 || iter == 1 || marg_error < tol)
                     println("$iter\t$(round(marg_error, digits=6))")
                 end
 
@@ -534,7 +541,9 @@ function match_h3_to_cartogram_sinkhorn2(
     min_weight::Float64 = 1e-4,
     min_output_neighbors::Int = 1,
     max_output_neighbors::Union{Nothing, Int} = nothing,
-    normalize_cost::Bool = true
+    normalize_cost::Bool = true,
+    silent::Bool = true,
+    progress_callback::Union{Nothing, Function} = nothing
 )
     pop_clean = filter(row -> row.population > 0.0, population)
     N = size(cartogram, 1)
@@ -605,7 +614,9 @@ function match_h3_to_cartogram_sinkhorn2(
         b_cpu,
         eta_schedule;
         max_iters_per_eta=max_iters_per_eta,
-        tol=tol
+        tol=tol,
+        silent=silent,
+        progress_callback=progress_callback
     )
 
     assigned_h3 = Vector{eltype(pop_clean.h3)}()

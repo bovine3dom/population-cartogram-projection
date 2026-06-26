@@ -173,3 +173,35 @@ function assign_weighted_labels!(
     select!(df, Not(:temp_idx))
     return df
 end
+
+function subdivide_cartogram(df::DataFrame, n::Int)
+    num_orig = nrow(df)
+    total_rows = num_orig * n^2
+    unique_xs = sort(unique(df.x))
+    step_size = length(unique_xs) > 1 ? minimum(diff(unique_xs)) : 1
+    new_xs = Vector{Int}(undef, total_rows)
+    new_ys = Vector{Int}(undef, total_rows)
+    new_codes = Vector{Int}(undef, total_rows)
+    xs = df.x
+    ys = df.y
+    codes = df.code
+    
+    idx = 1
+    for r in 1:num_orig
+        x_base = xs[r] * n
+        y_base = ys[r] * n
+        country_code = codes[r]
+        for i in 0:(n-1)
+            offset_x = round(Int, (2 * i - n + 1) * step_size / 2)
+            for j in 0:(n-1)
+                offset_y = round(Int, (2 * j - n + 1) * step_size / 2)
+                new_xs[idx] = x_base + offset_x
+                new_ys[idx] = y_base + offset_y
+                new_codes[idx] = country_code
+                idx += 1
+            end
+        end
+    end
+    return DataFrame(x = new_xs, y = new_ys, code = new_codes)
+end
+

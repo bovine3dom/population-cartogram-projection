@@ -34,24 +34,81 @@ rename!(cartogram, [:x, :y, :code])
 gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
 owid_only = setdiff(unique(cartogram.code), ne_countries) # 28 (antigua), 250 (france), 492 (monaco)
 ffs = Dict(250 => 249) # ok so we need to map france 249 => 250 and skip 28, 336, 581
-all_countries = setdiff(intersect(cartogram.code, europe_codes), setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+european_countries = ["Albania", "Andorra", "Austria", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Belarus", "Cyprus", "Croatia", "Czechia", "Denmark", "Estonia", "Faeroe Islands", "Finland", "<span data-sort-value=\"Aland Islands !\">Åland Islands", "France", "Germany", "Gibraltar", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Monaco", "Moldova", "Montenegro", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Svalbard and Jan Mayen", "Sweden", "Switzerland", "Ukraine", "North Macedonia", "United Kingdom", "Guernsey", "Jersey", "Isle of Man", "Vatican"]
+# europe = semijoin(cartogram, countries[in.(countries.name, Ref(european_countries)), :], on=:code)
+europe_codes = countries[in.(countries.name, Ref(european_countries)), :code]
+# all_countries = setdiff(intersect(cartogram.code, europe_codes), setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+all_countries = setdiff(cartogram.code, setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
 results = []
 # somehow something in here MUTATES the cartogram(!!!!)
 length(unique(cartogram.code))
 # let's check china works with 100 neighbours first - big population, big area, unevenly distributed
-@showprogress Threads.@threads for _code in all_countries
+countries_to_process = all_countries
+sinkhorn_eta_schedule = Float32[
+    0.05,
+    0.02,
+    0.01,
+    0.005,
+    0.002,
+    0.001,
+    0.0005,
+    0.0002,
+    0.0001,
+    0.00005,
+]
+sinkhorn_max_iters_per_eta = 500
+country_work = Dict{eltype(countries_to_process), Int}()
+total_work = 0
+for _code in countries_to_process
+    try
+        ne_code = get(ffs, _code, _code)
+        work = max(1, nrow(gp[(ne_code,)]) * nrow(gc[(_code,)])) * length(sinkhorn_eta_schedule) * sinkhorn_max_iters_per_eta
+        country_work[_code] = work
+        total_work += work
+    catch e
+        if e isa InterruptException
+            rethrow()
+        end
+        country_work[_code] = 1
+        total_work += 1
+    end
+end
+
+progress = Progress(total_work; desc="Sinkhorn countries: ", showspeed=true);
+completed_work = 0
+for _code in countries_to_process
     try
         owid_code = _code
         ne_code = get(ffs, owid_code, owid_code)
         mini_cartogram = deepcopy(gc[(owid_code,)])
         mini_population = gp[(ne_code,)]
-        # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
-        mini_df = match_h3_to_cartogram_adaptive_ot(mini_population, mini_cartogram; oversample=2.0, min_neighbors=10, max_neighbors=1_000)
-        # i am thinking our best bet is really just to use optimal transport and mask out the parts of the map where the population is too small
-        # sidequest - integer downsample large countries then upsample back to exact original grid
+        country_unit_work = max(1, nrow(mini_population) * nrow(mini_cartogram))
+        country_progress = Ref(0)
+        progress_callback = () -> begin
+            country_progress[] += country_unit_work
+            update!(progress, min(completed_work + country_progress[], total_work))
+        end
+        mini_df = match_h3_to_cartogram_sinkhorn2(
+         DataFrame(mini_population),
+         DataFrame(mini_cartogram);
+         cost_power = 2.0,
+         eta_schedule = sinkhorn_eta_schedule,
+         max_iters_per_eta = sinkhorn_max_iters_per_eta,
+         tol = 1e-5,
+         cumulative_weight = 0.995,
+         min_weight = 1e-4,
+         silent = true,
+         progress_callback = progress_callback,
+        )
         push!(results, mini_df)
     catch (e)
+        if e isa InterruptException
+            rethrow()
+        end
         @warn e
+    finally
+        completed_work += country_work[_code]
+        update!(progress, min(completed_work, total_work))
     end
 end
 length(unique(cartogram.code))
@@ -67,13 +124,16 @@ toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
 # toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
 assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=:label)
 
-# TODO:
-# h3 needs to be stringified
-# need to add weight_mean column that is weight*(h3 cell population) / (total cartogram cell population)
-
 # write the data out for reuse
-# dropmissing!(toplot, Not([:name, :label]))
-# Arrow.write("mapping.arrow", toplot[!, [:h3, :x, :y, :weight, :population, :code, :label]]) # the thing we actually want. H3 res = 5
+dropmissing!(toplot, Not([:name, :label]))
+Arrow.write("mapping.arrow", toplot[!, [:h3, :x, :y, :weight, :population, :code, :label]]) # the thing we actually want. H3 res = 5
+toplot.index = string.(toplot.h3, base=16)
+
+t = combine(groupby(toplot, [:x, :y]), [:weight, :population] => ((w, p) -> sum(w .* p)) => :total_population)
+toplot2 = leftjoin(toplot, t, on=[:x, :y])
+toplot2.weight_mean = toplot2.weight .* toplot2.population ./ toplot2.total_population
+Arrow.write("cartogram_weights.arrow", toplot2[!, [:x, :y, :weight, :population, :code, :label, :index, :weight_mean]])
+
 # dropmissing!(smaller_pop, :h3)
 # Arrow.write("out.arrow", smaller_pop[!, [:h3, :median]]) # so now the challenge is: group by and plot on client side
 # df = copy(Arrow.Table("mapping.arrow") |> DataFrame)
@@ -104,46 +164,15 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 # 3) document reuse, move plotting code to library
 # 4) attempt first reuse. e.g. vacant properties in france?
 
-function subdivide_cartogram(df::DataFrame, n::Int)
-    num_orig = nrow(df)
-    total_rows = num_orig * n^2
-    unique_xs = sort(unique(df.x))
-    step_size = length(unique_xs) > 1 ? minimum(diff(unique_xs)) : 1
-    new_xs = Vector{Int}(undef, total_rows)
-    new_ys = Vector{Int}(undef, total_rows)
-    new_codes = Vector{Int}(undef, total_rows)
-    xs = df.x
-    ys = df.y
-    codes = df.code
-    
-    idx = 1
-    for r in 1:num_orig
-        x_base = xs[r] * n
-        y_base = ys[r] * n
-        country_code = codes[r]
-        for i in 0:(n-1)
-            offset_x = round(Int, (2 * i - n + 1) * step_size / 2)
-            for j in 0:(n-1)
-                offset_y = round(Int, (2 * j - n + 1) * step_size / 2)
-                new_xs[idx] = x_base + offset_x
-                new_ys[idx] = y_base + offset_y
-                new_codes[idx] = country_code
-                idx += 1
-            end
-        end
-    end
-    return DataFrame(x = new_xs, y = new_ys, code = new_codes)
-end
-
 # bof. it looks kind of fine in the centre but at the borders it is mega dodge
 # fixed with the f32 -> f0 bug. but now it's slow? is it really no faster than the jump solver?
-_code = countries[countries.name .== "Italy", :code][1] # 826 uk # 356 india # 156 china
+_code = countries[countries.name .== "United States", :code][1] # 826 uk # 356 india # 156 china
 owid_code = _code
 ne_code = get(ffs, owid_code, owid_code)
 # gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
 owid_only = setdiff(unique(cartogram.code), ne_countries) # 28 (antigua), 250 (france), 492 (monaco)
 # somehow something in here MUTATES the cartogram(!!!!) # switching from csv to arrow fixed it.
-mini_cartogram = subdivide_cartogram(cartogram[cartogram.code .== owid_code, :], 2) # do not do this for big countries. lol.
+mini_cartogram = subdivide_cartogram(cartogram[cartogram.code .== owid_code, :], 1) # do not do this for big countries. lol.
 render_cartogram(mini_cartogram)
 mini_population = gp[(ne_code,)]
 # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
@@ -171,6 +200,7 @@ mini_df = match_h3_to_cartogram_sinkhorn2(
  tol = 1e-5,
  cumulative_weight = 0.995,
  min_weight = 1e-4,
+ silent = false,
 )
 # still too stripey for india
 # mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=400.0)
