@@ -614,6 +614,7 @@ results = []
 # let's check china works with 100 neighbours first - big population, big area, unevenly distributed
 @showprogress Threads.@threads for _code in all_countries
     try
+        _code = countries[countries.name .== "United Kingdom", :code][1]
         owid_code = _code
         ne_code = get(ffs, owid_code, owid_code)
         # mini_cartogram = deepcopy(gc[(owid_code,)])
@@ -623,6 +624,11 @@ results = []
         mini_population = gp[(ne_code,)]
         # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
         mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=200.0)
+
+        # ... these aren't always the same size :(
+        # size(combine(groupby(mini_df, [:x, :y]), nrow), 1)
+        # size(mini_cartogram, 1)
+
         # i am thinking our best bet is really just to use optimal transport and mask out the parts of the map where the population is too small
         # sidequest - integer downsample large countries then upsample back to exact original grid
         push!(results, mini_df)
