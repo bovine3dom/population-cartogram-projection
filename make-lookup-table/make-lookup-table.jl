@@ -151,7 +151,7 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 
 # this is the actual map
 render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
-render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
+# render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # reducing the resolution makes it tractable
 # could we subsample using hilbert?
@@ -209,7 +209,7 @@ mini_df = match_h3_to_cartogram_sinkhorn2(
 # sidequest - integer downsample large countries then upsample back to exact original grid
 #
 _cities = combine(groupby(cities, :country_code), g -> g[1:min(10, nrow(g)), :])
-_cities = _cities[_cities.population .> 100_000, :]
+_cities = cities[cities.population .> 300_000, :]
 toplot = leftjoin(mini_df, smaller_pop[:, Not([:x, :y])], on=:h3)
 toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
 # sort!(toplot, :weight)
