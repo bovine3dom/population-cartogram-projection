@@ -1,4 +1,5 @@
 using CUDA, SparseArrays, LinearAlgebra
+using JuMP, HiGHS
 # gemini 3.5 flash vomit draft implementation of https://arxiv.org/abs/2605.08793
 
 # ==============================================================================
@@ -464,6 +465,200 @@ function log_sinkhorn_gpu_solver(M_cpu::Matrix{Float32}, a_cpu::Vector{Float32},
     return T
 end
 
+function log_sinkhorn_gpu_solver_schedule(
+    M_cpu::Matrix{Float32},
+    a_cpu::Vector{Float32},
+    b_cpu::Vector{Float32},
+    eta_schedule::Vector{Float32};
+    max_iters_per_eta::Int = 1000,
+    tol::Float64 = 1e-5
+)
+    n, m = size(M_cpu)
+    M_gpu = CuArray(M_cpu)
+    a_gpu = CuArray(a_cpu)
+    b_gpu = CuArray(b_cpu)
+
+    alpha_gpu = CUDA.zeros(Float32, n)
+    beta_gpu = CUDA.zeros(Float32, m)
+
+    threads = 256
+    blocks_row = div(n + threads - 1, threads)
+    blocks_col = div(m + threads - 1, threads)
+
+    row_sums_gpu = CUDA.zeros(Float32, n)
+    col_sums_gpu = CUDA.zeros(Float32, m)
+    g_scratch = CUDA.zeros(Float32, n + m - 1)
+
+    for eta in eta_schedule
+        println("Eta $eta")
+        for iter in 1:max_iters_per_eta
+            @cuda threads=threads blocks=blocks_row sinkhorn_row_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
+            @cuda threads=threads blocks=blocks_col sinkhorn_col_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
+            CUDA.@allowscalar beta_gpu[m] = 0.0f0
+
+            if iter % 25 == 0 || iter == 1
+                _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
+                marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
+
+                if iter % 100 == 0 || iter == 1 || marg_error < tol
+                    println("$iter\t$(round(marg_error, digits=6))")
+                end
+
+                if marg_error < tol
+                    break
+                end
+            end
+        end
+    end
+
+    eta_final = eta_schedule[end]
+    T = exp.((Array(alpha_gpu) .+ Array(beta_gpu)' .- M_cpu) ./ eta_final)
+    return T
+end
+
+"""
+Dense balanced Sinkhorn matching with cartogram-cell radial costs.
+
+This is intended as the main modelling experiment for coherent cartogram
+matching: the solver remains balanced and dense, while the returned dataframe is
+sparsified per source by cumulative transported mass.
+"""
+function match_h3_to_cartogram_sinkhorn2(
+    population::DataFrame,
+    cartogram::DataFrame;
+    cost_power::Float64 = 2.0,
+    eta_schedule::Vector{Float32} = Float32[0.05, 0.02, 0.01, 0.005],
+    max_iters_per_eta::Int = 1000,
+    tol::Float64 = 1e-5,
+    cumulative_weight::Float64 = 0.995,
+    min_weight::Float64 = 1e-4,
+    min_output_neighbors::Int = 1,
+    max_output_neighbors::Union{Nothing, Int} = nothing,
+    normalize_cost::Bool = true
+)
+    pop_clean = filter(row -> row.population > 0.0, population)
+    N = size(cartogram, 1)
+    M = size(pop_clean, 1)
+
+    if M == 0 || N == 0
+        error("Input population or cartogram dataframe is empty.")
+    end
+    if cost_power <= 0
+        error("cost_power must be positive.")
+    end
+    if isempty(eta_schedule)
+        error("eta_schedule cannot be empty.")
+    end
+    if !(0.0 < cumulative_weight <= 1.0)
+        error("cumulative_weight must be in (0, 1].")
+    end
+    if min_output_neighbors <= 0
+        error("min_output_neighbors must be positive.")
+    end
+
+    total_pop = sum(pop_clean.population)
+
+    lat_min, lat_max = minimum(pop_clean.y), maximum(pop_clean.y)
+    lon_min, lon_max = minimum(pop_clean.x), maximum(pop_clean.x)
+    x_min, max_x = minimum(cartogram.x), maximum(cartogram.x)
+    y_min, max_y = minimum(cartogram.y), maximum(cartogram.y)
+
+    lon_span = (lon_max - lon_min) > 0 ? (lon_max - lon_min) : 1.0
+    lat_span = (lat_max - lat_min) > 0 ? (lat_max - lat_min) : 1.0
+    x_span = (max_x - x_min) > 0 ? (max_x - x_min) : 1.0
+    y_span = (max_y - y_min) > 0 ? (max_y - y_min) : 1.0
+
+    pop_norm_x = (pop_clean.x .- lon_min) ./ lon_span
+    pop_norm_y = (pop_clean.y .- lat_min) ./ lat_span
+    pop_carto_x = x_min .+ pop_norm_x .* x_span
+    pop_carto_y = y_min .+ pop_norm_y .* y_span
+
+    unique_carto_x = sort(unique(cartogram.x))
+    unique_carto_y = sort(unique(cartogram.y))
+    carto_step_x = length(unique_carto_x) > 1 ? minimum(diff(unique_carto_x)) : 1.0
+    carto_step_y = length(unique_carto_y) > 1 ? minimum(diff(unique_carto_y)) : 1.0
+
+    M_cpu = Matrix{Float32}(undef, M, N)
+    Threads.@threads for i in 1:M
+        px, py = pop_carto_x[i], pop_carto_y[i]
+        for j in 1:N
+            dx = (px - cartogram.x[j]) / carto_step_x
+            dy = (py - cartogram.y[j]) / carto_step_y
+            d = sqrt(dx^2 + dy^2)
+            M_cpu[i, j] = Float32(d^cost_power)
+        end
+    end
+
+    if normalize_cost
+        max_cost = maximum(M_cpu)
+        if max_cost > 0
+            M_cpu ./= max_cost
+        end
+    end
+
+    a_cpu = Vector{Float32}(pop_clean.population ./ total_pop)
+    b_cpu = fill(1.0f0 / N, N)
+
+    T = log_sinkhorn_gpu_solver_schedule(
+        M_cpu,
+        a_cpu,
+        b_cpu,
+        eta_schedule;
+        max_iters_per_eta=max_iters_per_eta,
+        tol=tol
+    )
+
+    assigned_h3 = Vector{eltype(pop_clean.h3)}()
+    assigned_x = Vector{eltype(cartogram.x)}()
+    assigned_y = Vector{eltype(cartogram.y)}()
+    assigned_weight = Vector{Float64}()
+    assigned_overlap = Vector{Float64}()
+
+    max_keep = isnothing(max_output_neighbors) ? N : min(max_output_neighbors, N)
+
+    for i in 1:M
+        h3_pop = pop_clean.population[i]
+        row = @view T[i, :]
+        order = sortperm(collect(row), rev=true)
+        cumulative = 0.0
+        kept = 0
+
+        for j in order
+            mass = Float64(row[j])
+            if mass <= 0
+                break
+            end
+
+            weight = mass / Float64(a_cpu[i])
+            if kept >= min_output_neighbors && cumulative >= cumulative_weight && weight < min_weight
+                break
+            end
+
+            overlap = mass * total_pop
+            push!(assigned_h3, pop_clean.h3[i])
+            push!(assigned_x, cartogram.x[j])
+            push!(assigned_y, cartogram.y[j])
+            push!(assigned_weight, weight)
+            push!(assigned_overlap, overlap)
+
+            cumulative += weight
+            kept += 1
+
+            if kept >= max_keep || (kept >= min_output_neighbors && cumulative >= cumulative_weight)
+                break
+            end
+        end
+    end
+
+    return DataFrame(
+        h3 = assigned_h3,
+        x = assigned_x,
+        y = assigned_y,
+        weight = assigned_weight,
+        overlap = assigned_overlap
+    )
+end
+
 function match_h3_to_cartogram_stable(
     population::DataFrame, 
     cartogram::DataFrame; 
@@ -641,4 +836,273 @@ function match_h3_to_cartogram_curegot(
         weight = assigned_weight, 
         overlap = assigned_overlap
     )
+end
+
+"""
+Distributes population from H3 cells to a cartogram grid with exact uniform target
+loads, using an adaptive nearest-neighbor edge set.
+
+For each source cell, the candidate count is based on the minimum number of
+uniform target cells needed to hold its mass, multiplied by `oversample`.
+"""
+function match_h3_to_cartogram_adaptive_ot(
+    population,
+    cartogram;
+    oversample::Float64 = 2.0,
+    min_neighbors::Int = 10,
+    target_neighbors::Int = 10,
+    max_neighbors::Union{Nothing, Int} = nothing,
+    retry_factor::Float64 = 1.5,
+    max_retries::Int = 3,
+    full_fallback_max_edges::Int = 0,
+    uniform_mode::Symbol = :soft,
+    uniform_penalty::Float64 = 100_000.0,
+    uniform_rel_tol::Float64 = 0.01,
+    threshold::Float64 = 1e-5,
+    silent::Bool = true
+)
+    pop_clean = filter(row -> row.population > 0.0, population)
+
+    N = size(cartogram, 1)
+    M = size(pop_clean, 1)
+
+    if M == 0 || N == 0
+        error("Input population or cartogram dataframe is empty.")
+    end
+    if oversample <= 0
+        error("oversample must be positive.")
+    end
+    if min_neighbors <= 0
+        error("min_neighbors must be positive.")
+    end
+    if target_neighbors <= 0
+        error("target_neighbors must be positive.")
+    end
+    if max_retries <= 0
+        error("max_retries must be positive.")
+    end
+    if full_fallback_max_edges < 0
+        error("full_fallback_max_edges must be non-negative.")
+    end
+    if !(uniform_mode in (:hard, :soft))
+        error("uniform_mode must be :hard or :soft.")
+    end
+    if uniform_penalty < 0
+        error("uniform_penalty must be non-negative.")
+    end
+    if uniform_rel_tol < 0
+        error("uniform_rel_tol must be non-negative.")
+    end
+    if retry_factor <= 1.0 && max_retries > 1
+        error("retry_factor must be greater than 1.0 when max_retries > 1.")
+    end
+
+    total_pop = sum(pop_clean.population)
+    target_pop_per_cell = total_pop / N
+    max_neighbors_eff = isnothing(max_neighbors) ? N : min(max_neighbors, N)
+    min_neighbors_eff = min(min_neighbors, max_neighbors_eff)
+    target_neighbors_eff = min(target_neighbors, M)
+    required_neighbors = ceil.(Int, pop_clean.population ./ target_pop_per_cell)
+
+    lat_min, lat_max = minimum(pop_clean.y), maximum(pop_clean.y)
+    lon_min, lon_max = minimum(pop_clean.x), maximum(pop_clean.x)
+    x_min, max_x = minimum(cartogram.x), maximum(cartogram.x)
+    y_min, max_y = minimum(cartogram.y), maximum(cartogram.y)
+
+    lon_span = (lon_max - lon_min) > 0 ? (lon_max - lon_min) : 1.0
+    lat_span = (lat_max - lat_min) > 0 ? (lat_max - lat_min) : 1.0
+    x_span = (max_x - x_min) > 0 ? (max_x - x_min) : 1.0
+    y_span = (max_y - y_min) > 0 ? (max_y - y_min) : 1.0
+
+    pop_norm_x = (pop_clean.x .- lon_min) ./ lon_span
+    pop_norm_y = (pop_clean.y .- lat_min) ./ lat_span
+    pop_carto_x = x_min .+ pop_norm_x .* x_span
+    pop_carto_y = y_min .+ pop_norm_y .* y_span
+
+    unique_carto_x = sort(unique(cartogram.x))
+    unique_carto_y = sort(unique(cartogram.y))
+    carto_step_x = length(unique_carto_x) > 1 ? minimum(diff(unique_carto_x)) : 1.0
+    carto_step_y = length(unique_carto_y) > 1 ? minimum(diff(unique_carto_y)) : 1.0
+
+    last_status = nothing
+    last_edge_count = 0
+    last_target_error = Inf
+
+    for attempt in 1:max_retries
+        attempt_oversample = oversample * retry_factor^(attempt - 1)
+        attempt_target_neighbors = min(M, ceil(Int, target_neighbors_eff * retry_factor^(attempt - 1)))
+        edge_set = Set{Tuple{Int, Int}}()
+
+        for i in 1:M
+            required = required_neighbors[i]
+            feasible_cap = min(max(max_neighbors_eff, required), N)
+            K = clamp(ceil(Int, attempt_oversample * required), min_neighbors_eff, feasible_cap)
+
+            dists = Vector{Float64}(undef, N)
+            px, py = pop_carto_x[i], pop_carto_y[i]
+            for j in 1:N
+                dx = (px - cartogram.x[j]) / carto_step_x
+                dy = (py - cartogram.y[j]) / carto_step_y
+                dists[j] = sqrt(dx^2 + dy^2)
+            end
+
+            for j in partialsortperm(dists, 1:K)
+                push!(edge_set, (i, j))
+            end
+        end
+
+        for j in 1:N
+            dists = Vector{Float64}(undef, M)
+            cx, cy = cartogram.x[j], cartogram.y[j]
+            for i in 1:M
+                dx = (pop_carto_x[i] - cx) / carto_step_x
+                dy = (pop_carto_y[i] - cy) / carto_step_y
+                dists[i] = sqrt(dx^2 + dy^2)
+            end
+
+            for i in partialsortperm(dists, 1:attempt_target_neighbors)
+                push!(edge_set, (i, j))
+            end
+        end
+
+        covered_targets = falses(N)
+        for (_, j) in edge_set
+            covered_targets[j] = true
+        end
+
+        # Exact column constraints are immediately infeasible if a target has no
+        # incoming edge, so add the nearest source edge for uncovered targets.
+        for j in findall(!, covered_targets)
+            best_i = 1
+            best_dist = Inf
+            cx, cy = cartogram.x[j], cartogram.y[j]
+            for i in 1:M
+                dx = (pop_carto_x[i] - cx) / carto_step_x
+                dy = (pop_carto_y[i] - cy) / carto_step_y
+                dist = sqrt(dx^2 + dy^2)
+                if dist < best_dist
+                    best_dist = dist
+                    best_i = i
+                end
+            end
+            push!(edge_set, (best_i, j))
+        end
+
+        # Local nearest-neighbor graphs can still be infeasible even when every
+        # source has enough neighbors and every target is covered. On the last
+        # retry, fall back to the full graph for modest country-sized problems.
+        if attempt == max_retries && M * N <= full_fallback_max_edges
+            for i in 1:M, j in 1:N
+                push!(edge_set, (i, j))
+            end
+        end
+
+        valid_pairs = collect(edge_set)
+        sort!(valid_pairs)
+        total_pairs = length(valid_pairs)
+        last_edge_count = total_pairs
+
+        distances = Vector{Float64}(undef, total_pairs)
+        source_to_indices = [Int[] for _ in 1:M]
+        target_to_indices = [Int[] for _ in 1:N]
+
+        for (idx, (i, j)) in enumerate(valid_pairs)
+            dx = (pop_carto_x[i] - cartogram.x[j]) / carto_step_x
+            dy = (pop_carto_y[i] - cartogram.y[j]) / carto_step_y
+            distances[idx] = sqrt(dx^2 + dy^2)
+            push!(source_to_indices[i], idx)
+            push!(target_to_indices[j], idx)
+        end
+
+        model = Model(HiGHS.Optimizer)
+        if silent
+            set_silent(model)
+        end
+        set_attribute(model, "solver", uniform_mode == :soft ? "simplex" : "ipm")
+        set_attribute(model, "threads", Threads.nthreads())
+
+        @variable(model, w[1:total_pairs] >= 0)
+        if uniform_mode == :soft
+            @variable(model, deficit[1:N] >= 0)
+            @variable(model, surplus[1:N] >= 0)
+            @objective(model, Min,
+                sum(w[idx] * distances[idx] for idx in 1:total_pairs) +
+                uniform_penalty * sum(deficit[j] + surplus[j] for j in 1:N)
+            )
+        else
+            @objective(model, Min, sum(w[idx] * distances[idx] for idx in 1:total_pairs))
+        end
+
+        for i in 1:M
+            indices = source_to_indices[i]
+            @constraint(model, sum(w[idx] for idx in indices) == pop_clean.population[i])
+        end
+
+        for j in 1:N
+            indices = target_to_indices[j]
+            if uniform_mode == :soft
+                @constraint(model, sum(w[idx] for idx in indices) + deficit[j] - surplus[j] == target_pop_per_cell)
+            else
+                @constraint(model, sum(w[idx] for idx in indices) == target_pop_per_cell)
+            end
+        end
+
+        optimize!(model)
+        last_status = termination_status(model)
+
+        if last_status != OPTIMAL
+            continue
+        end
+
+        w_vals = value.(w)
+        target_loads = zeros(Float64, N)
+        for idx in 1:total_pairs
+            _, j = valid_pairs[idx]
+            target_loads[j] += w_vals[idx]
+        end
+
+        max_target_error = maximum(abs.(target_loads .- target_pop_per_cell))
+        last_target_error = max_target_error
+        if uniform_mode == :soft && max_target_error > uniform_rel_tol * target_pop_per_cell
+            continue
+        end
+
+        assigned_h3 = Vector{eltype(pop_clean.h3)}()
+        assigned_x = Vector{eltype(cartogram.x)}()
+        assigned_y = Vector{eltype(cartogram.y)}()
+        assigned_weight = Vector{Float64}()
+        assigned_overlap = Vector{Float64}()
+
+        sizehint!(assigned_h3, total_pairs)
+        sizehint!(assigned_x, total_pairs)
+        sizehint!(assigned_y, total_pairs)
+        sizehint!(assigned_weight, total_pairs)
+        sizehint!(assigned_overlap, total_pairs)
+
+        for idx in 1:total_pairs
+            overlap = w_vals[idx]
+            if overlap > threshold
+                i, j = valid_pairs[idx]
+                h3_pop = pop_clean.population[i]
+                weight = h3_pop > 0 ? (overlap / h3_pop) : 0.0
+
+                push!(assigned_h3, pop_clean.h3[i])
+                push!(assigned_x, cartogram.x[j])
+                push!(assigned_y, cartogram.y[j])
+                push!(assigned_weight, weight)
+                push!(assigned_overlap, overlap)
+            end
+        end
+
+        return DataFrame(
+            h3 = assigned_h3,
+            x = assigned_x,
+            y = assigned_y,
+            weight = assigned_weight,
+            overlap = assigned_overlap
+        )
+    end
+
+    max_required = maximum(required_neighbors)
+    error("Adaptive OT failed to find an acceptable solution after $max_retries attempts. Last status: $last_status. Last edge count: $last_edge_count. Max required neighbors from source/target mass ratio: $max_required. Uniform mode: $uniform_mode. Last max target load error: $last_target_error.")
 end

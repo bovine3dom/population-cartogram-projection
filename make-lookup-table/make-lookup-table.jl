@@ -46,7 +46,7 @@ length(unique(cartogram.code))
         mini_cartogram = deepcopy(gc[(owid_code,)])
         mini_population = gp[(ne_code,)]
         # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
-        mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=200.0)
+        mini_df = match_h3_to_cartogram_adaptive_ot(mini_population, mini_cartogram; oversample=2.0, min_neighbors=10, max_neighbors=1_000)
         # i am thinking our best bet is really just to use optimal transport and mask out the parts of the map where the population is too small
         # sidequest - integer downsample large countries then upsample back to exact original grid
         push!(results, mini_df)
@@ -137,18 +137,41 @@ end
 
 # bof. it looks kind of fine in the centre but at the borders it is mega dodge
 # fixed with the f32 -> f0 bug. but now it's slow? is it really no faster than the jump solver?
-_code = countries[countries.name .== "India", :code][1] # 826 uk # 356 india # 156 china
+_code = countries[countries.name .== "Italy", :code][1] # 826 uk # 356 india # 156 china
 owid_code = _code
 ne_code = get(ffs, owid_code, owid_code)
 # gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
 owid_only = setdiff(unique(cartogram.code), ne_countries) # 28 (antigua), 250 (france), 492 (monaco)
 # somehow something in here MUTATES the cartogram(!!!!) # switching from csv to arrow fixed it.
-mini_cartogram = subdivide_cartogram(cartogram[cartogram.code .== owid_code, :], 1) # do not do this for big countries. lol.
+mini_cartogram = subdivide_cartogram(cartogram[cartogram.code .== owid_code, :], 2) # do not do this for big countries. lol.
 render_cartogram(mini_cartogram)
 mini_population = gp[(ne_code,)]
 # mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
-# mini_df = match_h3_to_cartogram_curegot(DataFrame(mini_population), DataFrame(mini_cartogram); eta = 0.001f0, max_iters=100, k=2_000)#, threshold=1e36)
-mini_df = match_h3_to_cartogram_stable(DataFrame(mini_population), DataFrame(mini_cartogram); eta = 0.0001f0, max_iters=100_000, tol=0.05)#, threshold=1e36)
+# mini_df = match_h3_to_cartogram_curegot(DataFrame(mini_population), DataFrame(mini_cartogram); eta = 4f-4, max_iters=400, k=2_000)#, threshold=10000.0)#, threshold=1e36)
+# mini_df = match_h3_to_cartogram_stable(DataFrame(mini_population), DataFrame(mini_cartogram); eta = 0.0001f0, max_iters=100_000, tol=0.05)#, threshold=1e36)
+# mini_df = match_h3_to_cartogram_adaptive_ot(DataFrame(mini_population), DataFrame(mini_cartogram); oversample=4.0, max_retries=5, retry_factor=4.0, min_neighbors=1, target_neighbors=20, max_neighbors=1_000)
+# mini_df = match_h3_to_cartogram_sinkhorn2(DataFrame(mini_population), DataFrame(mini_cartogram); cost_power=2.0, eta_schedule=Float32[0.0005, 0.00005], cumulative_weight=0.995, min_weight=1e-4)
+mini_df = match_h3_to_cartogram_sinkhorn2(
+ DataFrame(mini_population),
+ DataFrame(mini_cartogram);
+ cost_power = 2.0,
+ eta_schedule = Float32[
+  0.05,
+  0.02,
+  0.01,
+  0.005,
+  0.002,
+  0.001,
+  0.0005,
+  0.0002,
+  0.0001,
+  0.00005,
+ ],
+ max_iters_per_eta = 500,
+ tol = 1e-5,
+ cumulative_weight = 0.995,
+ min_weight = 1e-4,
+)
 # still too stripey for india
 # mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=400.0)
 # for reference: soft ot only yields 1,600 matches, compared to ~26,000 with sinkhorn
@@ -172,7 +195,7 @@ almost_there.median_z = (almost_there.median .- mean(almost_there.median)) ./ (2
 almost_there.nrow_z = (almost_there.nrow ./ maximum(almost_there.nrow))
 
 # this is just for sense checking: it should all be the same colour
-RENDER_SCALE = 20
+RENDER_SCALE = 10 
 render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, filename="population_check.png", draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # this is the actual map
