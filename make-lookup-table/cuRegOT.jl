@@ -544,3 +544,101 @@ function match_h3_to_cartogram_stable(
         overlap = assigned_overlap
     )
 end
+
+"""
+Distributes population from H3 cells to a cartogram grid using GPU-accelerated 
+entropic-regularized optimal transport.
+"""
+function match_h3_to_cartogram_curegot(
+    population::DataFrame, 
+    cartogram::DataFrame; 
+    eta::Float32 = 0.005f0,       # Entropic regularization parameter
+    k::Int = 2000,                # Sparsified Cholesky parameter (top-k entries of T)
+    S::Int = 10,                  # Amortized symbolic factorization interval
+    max_iters::Int = 100,         # Maximum iterations
+    tol::Float64 = 1e-5,          # Tolerance for convergence (marginal error)
+    threshold::Float64 = 1e-5     # Minimum overlap to include in the output DataFrame
+)
+    pop_clean = filter(row -> row.population > 0.0, population)
+    
+    N = size(cartogram, 1) # Target cells
+    M = size(pop_clean, 1) # Source cells
+    
+    if M == 0 || N == 0
+        error("Input population or cartogram dataframe is empty.")
+    end
+    
+    total_pop = sum(pop_clean.population)
+    
+    # --- 1. Map Coordinates and Normalize Spans ---
+    lat_min, lat_max = minimum(pop_clean.y), maximum(pop_clean.y)
+    lon_min, lon_max = minimum(pop_clean.x), maximum(pop_clean.x)
+    x_min, max_x = minimum(cartogram.x), maximum(cartogram.x)
+    y_min, max_y = minimum(cartogram.y), maximum(cartogram.y)
+    
+    lon_span = (lon_max - lon_min) > 0 ? (lon_max - lon_min) : 1.0
+    lat_span = (lat_max - lat_min) > 0 ? (lat_max - lat_min) : 1.0
+    x_span = (max_x - x_min) > 0 ? (max_x - x_min) : 1.0
+    y_span = (max_y - y_min) > 0 ? (max_y - y_min) : 1.0
+    
+    pop_norm_x = (pop_clean.x .- lon_min) ./ lon_span
+    pop_norm_y = (pop_clean.y .- lat_min) ./ lat_span
+    
+    carto_norm_x = (cartogram.x .- x_min) ./ x_span
+    carto_norm_y = (cartogram.y .- y_min) ./ y_span
+    
+    # --- 2. Construct the Distance/Cost Matrix ---
+    # Constructing a full dense cost matrix on the CPU
+    M_cpu = Matrix{Float32}(undef, M, N)
+    Threads.@threads for i in 1:M
+        px, py = pop_norm_x[i], pop_norm_y[i]
+        for j in 1:N
+            # Euclidean distance matching the original logic
+            M_cpu[i, j] = sqrt((px - carto_norm_x[j])^2 + (py - carto_norm_y[j])^2)
+        end
+    end
+    
+    # Normalize the cost matrix by its maximum value to keep eta comparable
+    M_cpu ./= maximum(M_cpu)
+    
+    # --- 3. Prepare Marginal Probability Vectors ---
+    a_cpu = Vector{Float32}(pop_clean.population ./ total_pop)
+    b_cpu = fill(1.0f0 / N, N) # Targets uniform distribution to enforce even spatial loading
+    
+    # --- 4. Run the GPU-Accelerated Solver ---
+    T = curegot_solver(M_cpu, a_cpu, b_cpu, eta; k=k, S=S, max_iters=max_iters, tol=tol)
+    
+    # --- 5. Extract and Reconstruct Absolute Mass Outputs ---
+    T_abs = T .* total_pop
+    
+    assigned_h3 = Vector{UInt64}()
+    assigned_x = Vector{eltype(cartogram.x)}()
+    assigned_y = Vector{eltype(cartogram.y)}()
+    assigned_weight = Vector{Float64}()
+    assigned_overlap = Vector{Float64}()
+    
+    # Filter and capture non-negligible transport contributions
+    for j in 1:N
+        for i in 1:M
+            overlap = T_abs[i, j]
+            if overlap > threshold
+                h3_pop = pop_clean.population[i]
+                weight = h3_pop > 0 ? (overlap / h3_pop) : 0.0
+                
+                push!(assigned_h3, pop_clean.h3[i])
+                push!(assigned_x, cartogram.x[j])
+                push!(assigned_y, cartogram.y[j])
+                push!(assigned_weight, weight)
+                push!(assigned_overlap, overlap)
+            end
+        end
+    end
+    
+    return DataFrame(
+        h3 = assigned_h3, 
+        x = assigned_x, 
+        y = assigned_y, 
+        weight = assigned_weight, 
+        overlap = assigned_overlap
+    )
+end
