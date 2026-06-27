@@ -63,7 +63,7 @@ CUDA kernel for a single row-update step of the log-stabilized Sinkhorn algorith
 function sinkhorn_row_kernel!(M, alpha, beta, eta, a, n, m)
     i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
     if i <= n
-        max_val = -Inf
+        max_val = -Inf32
         for j in 1:m
             val = beta[j] - M[i, j]
             if val > max_val
@@ -71,7 +71,7 @@ function sinkhorn_row_kernel!(M, alpha, beta, eta, a, n, m)
             end
         end
         
-        sum_exp = 0.0
+        sum_exp = 0.0f0
         for j in 1:m
             sum_exp += exp((beta[j] - M[i, j] - max_val) / eta)
         end
@@ -87,7 +87,7 @@ CUDA kernel for a single column-update step of the log-stabilized Sinkhorn algor
 function sinkhorn_col_kernel!(M, alpha, beta, eta, b, n, m)
     j = (blockIdx().x - 1) * blockDim().x + threadIdx().x
     if j <= m
-        max_val = -Inf
+        max_val = -Inf32
         for i in 1:n
             val = alpha[i] - M[i, j]
             if val > max_val
@@ -95,13 +95,131 @@ function sinkhorn_col_kernel!(M, alpha, beta, eta, b, n, m)
             end
         end
         
-        sum_exp = 0.0
+        sum_exp = 0.0f0
         for i in 1:n
             sum_exp += exp((alpha[i] - M[i, j] - max_val) / eta)
         end
         
         beta[j] = eta * log(b[j]) - max_val - eta * log(sum_exp)
     end
+    return
+end
+
+function sinkhorn_row_block_kernel!(Mt, alpha, beta, eta, a, n, m)
+    i = blockIdx().x
+    tid = threadIdx().x
+    block_size = blockDim().x
+    FT = eltype(Mt)
+    shared = CUDA.CuDynamicSharedArray(FT, block_size)
+
+    max_val = FT(-Inf)
+    j = tid
+    while j <= m
+        val = beta[j] - Mt[j, i]
+        if val > max_val
+            max_val = val
+        end
+        j += block_size
+    end
+
+    shared[tid] = max_val
+    CUDA.sync_threads()
+
+    offset = block_size >>> 1
+    while offset >= 1
+        if tid <= offset
+            other = shared[tid + offset]
+            if other > shared[tid]
+                shared[tid] = other
+            end
+        end
+        CUDA.sync_threads()
+        offset >>>= 1
+    end
+
+    row_max = shared[1]
+    sum_exp = zero(FT)
+    j = tid
+    while j <= m
+        sum_exp += exp((beta[j] - Mt[j, i] - row_max) / eta)
+        j += block_size
+    end
+
+    shared[tid] = sum_exp
+    CUDA.sync_threads()
+
+    offset = block_size >>> 1
+    while offset >= 1
+        if tid <= offset
+            shared[tid] += shared[tid + offset]
+        end
+        CUDA.sync_threads()
+        offset >>>= 1
+    end
+
+    if tid == 1
+        alpha[i] = eta * log(a[i]) - row_max - eta * log(shared[1])
+    end
+
+    return
+end
+
+function sinkhorn_col_block_kernel!(M, alpha, beta, eta, b, n, m)
+    j = blockIdx().x
+    tid = threadIdx().x
+    block_size = blockDim().x
+    FT = eltype(M)
+    shared = CUDA.CuDynamicSharedArray(FT, block_size)
+
+    max_val = FT(-Inf)
+    i = tid
+    while i <= n
+        val = alpha[i] - M[i, j]
+        if val > max_val
+            max_val = val
+        end
+        i += block_size
+    end
+
+    shared[tid] = max_val
+    CUDA.sync_threads()
+
+    offset = block_size >>> 1
+    while offset >= 1
+        if tid <= offset
+            other = shared[tid + offset]
+            if other > shared[tid]
+                shared[tid] = other
+            end
+        end
+        CUDA.sync_threads()
+        offset >>>= 1
+    end
+
+    col_max = shared[1]
+    sum_exp = zero(FT)
+    i = tid
+    while i <= n
+        sum_exp += exp((alpha[i] - M[i, j] - col_max) / eta)
+        i += block_size
+    end
+
+    shared[tid] = sum_exp
+    CUDA.sync_threads()
+
+    offset = block_size >>> 1
+    while offset >= 1
+        if tid <= offset
+            shared[tid] += shared[tid + offset]
+        end
+        CUDA.sync_threads()
+        offset >>>= 1
+    end
+
+    if tid == 1
+        beta[j] = eta * log(b[j]) - col_max - eta * log(shared[1])
+    end
+
     return
 end
 
@@ -523,6 +641,156 @@ function log_sinkhorn_gpu_solver_schedule(
     return T
 end
 
+function log_sinkhorn_gpu_solver_schedule_optimized(
+    M_cpu::Matrix{Float32},
+    a_cpu::Vector{Float32},
+    b_cpu::Vector{Float32},
+    eta_schedule::Vector{Float32};
+    max_iters_per_eta::Int = 1000,
+    tol::Float64 = 1e-5,
+    check_every::Int = 100,
+    silent::Bool = true,
+    progress_callback::Union{Nothing, Function} = nothing
+)
+    n, m = size(M_cpu)
+    M_gpu = CuArray(M_cpu)
+    Mt_gpu = CuArray(Matrix{Float32}(transpose(M_cpu)))
+    a_gpu = CuArray(a_cpu)
+    b_gpu = CuArray(b_cpu)
+
+    alpha_gpu = CUDA.zeros(Float32, n)
+    beta_gpu = CUDA.zeros(Float32, m)
+
+    threads = 256
+    shmem = threads * sizeof(Float32)
+
+    row_sums_gpu = CUDA.zeros(Float32, n)
+    col_sums_gpu = CUDA.zeros(Float32, m)
+    g_scratch = CUDA.zeros(Float32, n + m - 1)
+
+    last_marg_error = Inf
+    iterations_completed = 0
+
+    for eta in eta_schedule
+        if !silent
+            println("Eta $eta")
+        end
+        for iter in 1:max_iters_per_eta
+            @cuda threads=threads blocks=n shmem=shmem sinkhorn_row_block_kernel!(Mt_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
+            @cuda threads=threads blocks=m shmem=shmem sinkhorn_col_block_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
+            CUDA.@allowscalar beta_gpu[m] = 0.0f0
+            iterations_completed += 1
+
+            if !isnothing(progress_callback)
+                progress_callback()
+            end
+
+            if iter % check_every == 0 || iter == 1 || iter == max_iters_per_eta
+                _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
+                last_marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
+
+                if !silent && (iter % (5 * check_every) == 0 || iter == 1 || last_marg_error < tol)
+                    println("$iter\t$(round(last_marg_error, digits=6))")
+                end
+
+                if !isfinite(last_marg_error)
+                    error("Non-finite Sinkhorn marginal error at eta=$eta iteration=$iter.")
+                end
+
+                if last_marg_error < tol
+                    break
+                end
+            end
+        end
+    end
+
+    alpha_cpu = Array(alpha_gpu)
+    beta_cpu = Array(beta_gpu)
+    if any(!isfinite, alpha_cpu) || any(!isfinite, beta_cpu)
+        error("Non-finite Sinkhorn dual potential.")
+    end
+
+    return (
+        alpha = alpha_cpu,
+        beta = beta_cpu,
+        eta = eta_schedule[end],
+        marginal_error = last_marg_error,
+        iterations = iterations_completed,
+    )
+end
+
+function extract_sinkhorn_matches(
+    M_cpu::Matrix{Float32},
+    alpha_cpu::Vector{Float32},
+    beta_cpu::Vector{Float32},
+    eta::Float32,
+    a_cpu::Vector{Float32},
+    total_pop,
+    pop_clean::DataFrame,
+    cartogram::DataFrame;
+    cumulative_weight::Float64 = 0.995,
+    min_weight::Float64 = 1e-4,
+    min_output_neighbors::Int = 1,
+    max_output_neighbors::Union{Nothing, Int} = nothing
+)
+    n, m = size(M_cpu)
+    assigned_h3 = Vector{eltype(pop_clean.h3)}()
+    assigned_x = Vector{eltype(cartogram.x)}()
+    assigned_y = Vector{eltype(cartogram.y)}()
+    assigned_weight = Vector{Float64}()
+    assigned_overlap = Vector{Float64}()
+
+    max_keep = isnothing(max_output_neighbors) ? m : min(max_output_neighbors, m)
+    row_mass = Vector{Float32}(undef, m)
+
+    for i in 1:n
+        @inbounds for j in 1:m
+            row_mass[j] = exp((alpha_cpu[i] + beta_cpu[j] - M_cpu[i, j]) / eta)
+        end
+        if any(!isfinite, row_mass)
+            error("Non-finite reconstructed Sinkhorn row at source row $i.")
+        end
+
+        order = sortperm(row_mass, rev=true)
+        cumulative = 0.0
+        kept = 0
+
+        for j in order
+            mass = Float64(row_mass[j])
+            if mass <= 0
+                break
+            end
+
+            weight = mass / Float64(a_cpu[i])
+            if kept >= min_output_neighbors && cumulative >= cumulative_weight && weight < min_weight
+                break
+            end
+
+            overlap = mass * total_pop
+            push!(assigned_h3, pop_clean.h3[i])
+            push!(assigned_x, cartogram.x[j])
+            push!(assigned_y, cartogram.y[j])
+            push!(assigned_weight, weight)
+            push!(assigned_overlap, overlap)
+
+            cumulative += weight
+            kept += 1
+
+            if kept >= max_keep || (kept >= min_output_neighbors && cumulative >= cumulative_weight)
+                break
+            end
+        end
+    end
+
+    return DataFrame(
+        h3 = assigned_h3,
+        x = assigned_x,
+        y = assigned_y,
+        weight = assigned_weight,
+        overlap = assigned_overlap
+    )
+end
+
 """
 Dense balanced Sinkhorn matching with cartogram-cell radial costs.
 
@@ -537,13 +805,15 @@ function match_h3_to_cartogram_sinkhorn2(
     eta_schedule::Vector{Float32} = Float32[0.05, 0.02, 0.01, 0.005],
     max_iters_per_eta::Int = 1000,
     tol::Float64 = 1e-5,
+    check_every::Int = 100,
     cumulative_weight::Float64 = 0.995,
     min_weight::Float64 = 1e-4,
     min_output_neighbors::Int = 1,
     max_output_neighbors::Union{Nothing, Int} = nothing,
     normalize_cost::Bool = true,
     silent::Bool = true,
-    progress_callback::Union{Nothing, Function} = nothing
+    progress_callback::Union{Nothing, Function} = nothing,
+    return_metadata::Bool = false
 )
     pop_clean = filter(row -> row.population > 0.0, population)
     N = size(cartogram, 1)
@@ -608,66 +878,124 @@ function match_h3_to_cartogram_sinkhorn2(
     a_cpu = Vector{Float32}(pop_clean.population ./ total_pop)
     b_cpu = fill(1.0f0 / N, N)
 
-    T = log_sinkhorn_gpu_solver_schedule(
+    result = log_sinkhorn_gpu_solver_schedule_optimized(
         M_cpu,
         a_cpu,
         b_cpu,
         eta_schedule;
         max_iters_per_eta=max_iters_per_eta,
         tol=tol,
+        check_every=check_every,
         silent=silent,
         progress_callback=progress_callback
     )
 
-    assigned_h3 = Vector{eltype(pop_clean.h3)}()
-    assigned_x = Vector{eltype(cartogram.x)}()
-    assigned_y = Vector{eltype(cartogram.y)}()
-    assigned_weight = Vector{Float64}()
-    assigned_overlap = Vector{Float64}()
+    df = extract_sinkhorn_matches(
+        M_cpu,
+        result.alpha,
+        result.beta,
+        result.eta,
+        a_cpu,
+        total_pop,
+        pop_clean,
+        cartogram;
+        cumulative_weight=cumulative_weight,
+        min_weight=min_weight,
+        min_output_neighbors=min_output_neighbors,
+        max_output_neighbors=max_output_neighbors
+    )
 
-    max_keep = isnothing(max_output_neighbors) ? N : min(max_output_neighbors, N)
+    metadata = (
+        final_eta = result.eta,
+        marginal_error = result.marginal_error,
+        iterations = result.iterations,
+        rows = nrow(df),
+        sources = M,
+        targets = N,
+    )
 
-    for i in 1:M
-        h3_pop = pop_clean.population[i]
-        row = @view T[i, :]
-        order = sortperm(collect(row), rev=true)
-        cumulative = 0.0
-        kept = 0
+    return return_metadata ? (df, metadata) : df
+end
 
-        for j in order
-            mass = Float64(row[j])
-            if mass <= 0
-                break
+function eta_schedule_to(final_eta::Float32; base_schedule::Vector{Float32}=Float32[0.05, 0.02, 0.01, 0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005])
+    schedule = Float32[eta for eta in base_schedule if eta >= final_eta]
+    if isempty(schedule) || schedule[end] != final_eta
+        push!(schedule, final_eta)
+    end
+    return unique(schedule)
+end
+
+function match_h3_to_cartogram_sinkhorn2_auto(
+    population::DataFrame,
+    cartogram::DataFrame;
+    target_rows_multiplier::Float64 = 10.0,
+    candidate_final_etas::Vector{Float32} = Float32[0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005],
+    max_iters_per_eta::Int = 1000,
+    tol::Float64 = 1e-5,
+    check_every::Int = 100,
+    silent::Bool = true,
+    progress_callback::Union{Nothing, Function} = nothing,
+    return_metadata::Bool = false,
+    kwargs...
+)
+    M = nrow(filter(row -> row.population > 0.0, population))
+    N = nrow(cartogram)
+    target_rows = round(Int, target_rows_multiplier * (M + N))
+
+    best_df = nothing
+    best_meta = nothing
+    failed = NamedTuple[]
+
+    for final_eta in candidate_final_etas
+        schedule = eta_schedule_to(final_eta)
+        try
+            df, meta = match_h3_to_cartogram_sinkhorn2(
+                population,
+                cartogram;
+                eta_schedule=schedule,
+                max_iters_per_eta=max_iters_per_eta,
+                tol=tol,
+                check_every=check_every,
+                silent=silent,
+                progress_callback=progress_callback,
+                return_metadata=true,
+                kwargs...
+            )
+
+            if !isfinite(meta.marginal_error)
+                error("Non-finite marginal error for final eta $final_eta.")
             end
 
-            weight = mass / Float64(a_cpu[i])
-            if kept >= min_output_neighbors && cumulative >= cumulative_weight && weight < min_weight
-                break
+            tuned_meta = merge(meta, (
+                target_rows=target_rows,
+                row_error=abs(meta.rows - target_rows),
+                failed_candidates=failed,
+            ))
+
+            if isnothing(best_meta) || tuned_meta.row_error < best_meta.row_error
+                best_df = df
+                best_meta = tuned_meta
             end
 
-            overlap = mass * total_pop
-            push!(assigned_h3, pop_clean.h3[i])
-            push!(assigned_x, cartogram.x[j])
-            push!(assigned_y, cartogram.y[j])
-            push!(assigned_weight, weight)
-            push!(assigned_overlap, overlap)
-
-            cumulative += weight
-            kept += 1
-
-            if kept >= max_keep || (kept >= min_output_neighbors && cumulative >= cumulative_weight)
+            if meta.rows <= target_rows
+                return return_metadata ? (df, tuned_meta) : df
+            end
+        catch e
+            if e isa InterruptException
+                rethrow()
+            end
+            push!(failed, (eta=final_eta, error=sprint(showerror, e)))
+            if !isnothing(best_df)
                 break
             end
         end
     end
 
-    return DataFrame(
-        h3 = assigned_h3,
-        x = assigned_x,
-        y = assigned_y,
-        weight = assigned_weight,
-        overlap = assigned_overlap
-    )
+    if isnothing(best_df)
+        error("No stable Sinkhorn eta candidate found. Failed candidates: $failed")
+    end
+
+    return return_metadata ? (best_df, best_meta) : best_df
 end
 
 function match_h3_to_cartogram_stable(

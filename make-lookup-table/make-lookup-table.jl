@@ -44,24 +44,15 @@ results = []
 length(unique(cartogram.code))
 # let's check china works with 100 neighbours first - big population, big area, unevenly distributed
 countries_to_process = all_countries
-sinkhorn_eta_schedule = Float32[
-    0.05,
-    0.02,
-    0.01,
-    0.005,
-    0.002,
-    0.001,
-    0.0005,
-    0.0002,
-    0.0001,
-    0.00005,
-]
+sinkhorn_candidate_final_etas = Float32[0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005]
+sinkhorn_max_iters_per_eta = 5000
+sinkhorn_estimated_iters = sum(length(eta_schedule_to(eta)) for eta in sinkhorn_candidate_final_etas) * sinkhorn_max_iters_per_eta
 country_work = Dict{eltype(countries_to_process), Int}()
 total_work = 0
 for _code in countries_to_process
     try
         ne_code = get(ffs, _code, _code)
-        work = max(1, nrow(gp[(ne_code,)]) * nrow(gc[(_code,)])) * length(sinkhorn_eta_schedule) * sinkhorn_max_iters_per_eta
+        work = max(1, nrow(gp[(ne_code,)]) * nrow(gc[(_code,)])) * sinkhorn_estimated_iters
         country_work[_code] = work
         total_work += work
     catch e
@@ -87,18 +78,21 @@ for _code in countries_to_process
             country_progress[] += country_unit_work
             update!(progress, min(completed_work + country_progress[], total_work))
         end
-        mini_df = match_h3_to_cartogram_sinkhorn2(
+        mini_df, tuning_meta = match_h3_to_cartogram_sinkhorn2_auto(
          DataFrame(mini_population),
          DataFrame(mini_cartogram);
          cost_power = 2.0,
-         eta_schedule = sinkhorn_eta_schedule,
-         max_iters_per_eta = 5000,
+         candidate_final_etas = sinkhorn_candidate_final_etas,
+         target_rows_multiplier = 10.0,
+         max_iters_per_eta = sinkhorn_max_iters_per_eta,
          tol = 0.002,
          cumulative_weight = 0.995,
          min_weight = 1e-4,
          silent = true,
          progress_callback = progress_callback,
+         return_metadata = true,
         )
+        @info "Sinkhorn eta tuned" code=owid_code final_eta=tuning_meta.final_eta rows=tuning_meta.rows target_rows=tuning_meta.target_rows marginal_error=tuning_meta.marginal_error
         push!(results, mini_df)
     catch (e)
         if e isa InterruptException
@@ -165,7 +159,7 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 
 # bof. it looks kind of fine in the centre but at the borders it is mega dodge
 # fixed with the f32 -> f0 bug. but now it's slow? is it really no faster than the jump solver?
-_code = countries[countries.name .== "China", :code][1] # 826 uk # 356 india # 156 china
+_code = countries[countries.name .== "Turkey", :code][1] # 826 uk # 356 india # 156 china
 owid_code = _code
 ne_code = get(ffs, owid_code, owid_code)
 # gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
@@ -174,33 +168,34 @@ owid_only = setdiff(unique(cartogram.code), ne_countries) # 28 (antigua), 250 (f
 mini_cartogram = subdivide_cartogram(cartogram[cartogram.code .== owid_code, :], 1) # do not do this for big countries. lol.
 render_cartogram(mini_cartogram)
 mini_population = gp[(ne_code,)]
-# mini_df = match_h3_to_cartogram_stripey(mini_population, mini_cartogram)
-# mini_df = match_h3_to_cartogram_curegot(DataFrame(mini_population), DataFrame(mini_cartogram); eta = 4f-4, max_iters=400, k=2_000)#, threshold=10000.0)#, threshold=1e36)
-# mini_df = match_h3_to_cartogram_stable(DataFrame(mini_population), DataFrame(mini_cartogram); eta = 0.0001f0, max_iters=100_000, tol=0.05)#, threshold=1e36)
-# mini_df = match_h3_to_cartogram_adaptive_ot(DataFrame(mini_population), DataFrame(mini_cartogram); oversample=4.0, max_retries=5, retry_factor=4.0, min_neighbors=1, target_neighbors=20, max_neighbors=1_000)
-# mini_df = match_h3_to_cartogram_sinkhorn2(DataFrame(mini_population), DataFrame(mini_cartogram); cost_power=2.0, eta_schedule=Float32[0.0005, 0.00005], cumulative_weight=0.995, min_weight=1e-4)
-mini_df = match_h3_to_cartogram_sinkhorn2(
- DataFrame(mini_population),
- DataFrame(mini_cartogram);
- cost_power = 2.0,
- eta_schedule = Float32[
-  0.05,
-  0.02,
-  0.01,
-  0.005,
-  0.002,
-  0.001,
-  0.0005,
-  0.0002,
-  0.0001,
-  0.00005,
- ],
- max_iters_per_eta = 5000,
- tol = 0.002,
- cumulative_weight = 0.995,
- min_weight = 1e-4,
- silent = false,
+mini_df, tuning_meta = match_h3_to_cartogram_sinkhorn2_auto(
+  DataFrame(mini_population),
+  DataFrame(mini_cartogram);
+  cost_power = 2.0,
+  candidate_final_etas = Float32[
+      0.005,
+      0.002,
+      0.001,
+      0.0005,
+      0.0002,
+      0.0001,
+      0.00005,
+      0.00001,
+      0.000005,
+  ],
+  target_rows_multiplier = 10.0,
+  max_iters_per_eta = 5000,
+  tol = 0.001,
+  cumulative_weight = 0.999,
+  min_weight = 1e-5,
+  silent = false,
+  return_metadata = true,
 )
+
+@show tuning_meta.final_eta
+@show tuning_meta.rows
+@show tuning_meta.target_rows
+@show tuning_meta.marginal_error
 # still too stripey for india
 # mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=400.0)
 # for reference: soft ot only yields 1,600 matches, compared to ~26,000 with sinkhorn
