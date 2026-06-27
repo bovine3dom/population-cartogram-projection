@@ -12,6 +12,12 @@ render_cartogram(cartogram)
 H3_RES = 5
 cities = CSV.read("population-data/tiny-cities.csv", DataFrame)
 cities.h3 = H3.API.latLngToCell.(H3.API.LatLng.(deg2rad.(cities.latitude), deg2rad.(cities.longitude)), H3_RES)
+function city_labels_by_h3(cities::DataFrame; min_population::Real=300_000)
+    selected = cities[cities.population .> min_population, [:h3, :name, :population]]
+    sort!(selected, [:h3, :population], rev=[false, true])
+    return combine(groupby(selected, :h3), :name => (n -> join(unique(collect(skipmissing(n))), ", ")) => :name)
+end
+_cities = city_labels_by_h3(cities)
 # max top 3 cities per country
 # _cities = cities[cities.country_code .== "FR", :][1:10, :]
 # _code = 249 # 826 UK, 250 France
@@ -46,6 +52,11 @@ length(unique(cartogram.code))
 countries_to_process = all_countries
 sinkhorn_candidate_final_etas = Float32[0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005]
 sinkhorn_max_iters_per_eta = 5000
+sinkhorn_cost_power = 2.0
+sinkhorn_target_rows_multiplier = 10.0
+sinkhorn_tol = 0.002
+sinkhorn_cumulative_weight = 0.995
+sinkhorn_min_weight = 1e-4
 sinkhorn_estimated_iters = sum(length(eta_schedule_to(eta)) for eta in sinkhorn_candidate_final_etas) * sinkhorn_max_iters_per_eta
 country_work = Dict{eltype(countries_to_process), Int}()
 total_work = 0
@@ -64,30 +75,55 @@ for _code in countries_to_process
     end
 end
 
+function prepare_country_sinkhorn_problem(owid_code)
+    ne_code = get(ffs, owid_code, owid_code)
+    mini_cartogram = DataFrame(deepcopy(gc[(owid_code,)]))
+    mini_population = DataFrame(gp[(ne_code,)])
+    prepared = prepare_sinkhorn2_problem(
+        mini_population,
+        mini_cartogram;
+        cost_power=sinkhorn_cost_power,
+    )
+    return (
+        owid_code = owid_code,
+        prepared = prepared,
+        country_unit_work = max(1, prepared.sources * prepared.targets),
+    )
+end
+
+function start_country_prepare_task(country_index)
+    if country_index > length(countries_to_process)
+        return nothing
+    end
+    owid_code = countries_to_process[country_index]
+    return Threads.@spawn prepare_country_sinkhorn_problem(owid_code)
+end
+
 progress = Progress(total_work; desc="Sinkhorn countries: ", showspeed=true);
 completed_work = 0
-for _code in countries_to_process
+prepare_task = start_country_prepare_task(1)
+for country_index in eachindex(countries_to_process)
+    _code = countries_to_process[country_index]
+    next_prepare_started = false
     try
-        owid_code = _code
-        ne_code = get(ffs, owid_code, owid_code)
-        mini_cartogram = deepcopy(gc[(owid_code,)])
-        mini_population = gp[(ne_code,)]
-        country_unit_work = max(1, nrow(mini_population) * nrow(mini_cartogram))
+        prepared_country = fetch(prepare_task)
+        prepare_task = start_country_prepare_task(country_index + 1)
+        next_prepare_started = true
+        owid_code = prepared_country.owid_code
+        country_unit_work = prepared_country.country_unit_work
         country_progress = Ref(0)
         progress_callback = () -> begin
             country_progress[] += country_unit_work
             update!(progress, min(completed_work + country_progress[], total_work))
         end
-        mini_df, tuning_meta = match_h3_to_cartogram_sinkhorn2_auto(
-         DataFrame(mini_population),
-         DataFrame(mini_cartogram);
-         cost_power = 2.0,
+        mini_df, tuning_meta = match_prepared_h3_to_cartogram_sinkhorn2_auto(
+         prepared_country.prepared;
          candidate_final_etas = sinkhorn_candidate_final_etas,
-         target_rows_multiplier = 10.0,
+         target_rows_multiplier = sinkhorn_target_rows_multiplier,
          max_iters_per_eta = sinkhorn_max_iters_per_eta,
-         tol = 0.002,
-         cumulative_weight = 0.995,
-         min_weight = 1e-4,
+         tol = sinkhorn_tol,
+         cumulative_weight = sinkhorn_cumulative_weight,
+         min_weight = sinkhorn_min_weight,
          silent = true,
          progress_callback = progress_callback,
          return_metadata = true,
@@ -100,6 +136,9 @@ for _code in countries_to_process
         end
         @warn e
     finally
+        if !next_prepare_started
+            prepare_task = start_country_prepare_task(country_index + 1)
+        end
         completed_work += country_work[_code]
         update!(progress, min(completed_work, total_work))
     end
@@ -159,7 +198,7 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 
 # bof. it looks kind of fine in the centre but at the borders it is mega dodge
 # fixed with the f32 -> f0 bug. but now it's slow? is it really no faster than the jump solver?
-_code = countries[countries.name .== "Turkey", :code][1] # 826 uk # 356 india # 156 china
+_code = countries[countries.name .== "China", :code][1] # 826 uk # 356 india # 156 china
 owid_code = _code
 ne_code = get(ffs, owid_code, owid_code)
 # gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
@@ -173,25 +212,20 @@ mini_df, tuning_meta = match_h3_to_cartogram_sinkhorn2_auto(
   DataFrame(mini_cartogram);
   cost_power = 2.0,
   candidate_final_etas = Float32[
-      0.005,
-      0.002,
       0.001,
       0.0005,
       0.0002,
       0.0001,
       0.00005,
-      0.00001,
-      0.000005,
   ],
-  target_rows_multiplier = 10.0,
+  target_rows_multiplier = 5.0,
   max_iters_per_eta = 5000,
-  tol = 0.001,
-  cumulative_weight = 0.999,
-  min_weight = 1e-5,
+  tol = 0.002,
+  cumulative_weight = 0.995,
+  min_weight = 1e-4,
   silent = false,
   return_metadata = true,
 )
-
 @show tuning_meta.final_eta
 @show tuning_meta.rows
 @show tuning_meta.target_rows
@@ -202,8 +236,7 @@ mini_df, tuning_meta = match_h3_to_cartogram_sinkhorn2_auto(
 # i am thinking our best bet is really just to use optimal transport and mask out the parts of the map where the population is too small
 # sidequest - integer downsample large countries then upsample back to exact original grid
 #
-_cities = combine(groupby(cities, :country_code), g -> g[1:min(10, nrow(g)), :])
-_cities = cities[cities.population .> 300_000, :]
+_cities = city_labels_by_h3(cities)
 toplot = leftjoin(mini_df, smaller_pop[:, Not([:x, :y])], on=:h3)
 toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
 # sort!(toplot, :weight)

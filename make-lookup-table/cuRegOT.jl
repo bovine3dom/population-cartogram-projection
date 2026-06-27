@@ -650,73 +650,139 @@ function log_sinkhorn_gpu_solver_schedule_optimized(
     tol::Float64 = 1e-5,
     check_every::Int = 100,
     silent::Bool = true,
-    progress_callback::Union{Nothing, Function} = nothing
+    progress_callback::Union{Nothing, Function} = nothing,
+    profile::Bool = false
 )
     n, m = size(M_cpu)
-    M_gpu = CuArray(M_cpu)
-    Mt_gpu = CuArray(Matrix{Float32}(transpose(M_cpu)))
-    a_gpu = CuArray(a_cpu)
-    b_gpu = CuArray(b_cpu)
+    cpu_transpose_seconds = 0.0
+    gpu_upload_allocation_seconds = 0.0
+    gpu_iteration_seconds = 0.0
+    dual_download_seconds = 0.0
 
-    alpha_gpu = CUDA.zeros(Float32, n)
-    beta_gpu = CUDA.zeros(Float32, m)
+    if profile
+        Mt_cpu = nothing
+        cpu_transpose_seconds = @elapsed begin
+            Mt_cpu = Matrix{Float32}(transpose(M_cpu))
+        end
+
+        M_gpu = nothing
+        Mt_gpu = nothing
+        a_gpu = nothing
+        b_gpu = nothing
+        alpha_gpu = nothing
+        beta_gpu = nothing
+        row_sums_gpu = nothing
+        col_sums_gpu = nothing
+        g_scratch = nothing
+        gpu_upload_allocation_seconds = @elapsed begin
+            CUDA.@sync begin
+                M_gpu = CuArray(M_cpu)
+                Mt_gpu = CuArray(Mt_cpu)
+                a_gpu = CuArray(a_cpu)
+                b_gpu = CuArray(b_cpu)
+                alpha_gpu = CUDA.zeros(Float32, n)
+                beta_gpu = CUDA.zeros(Float32, m)
+                row_sums_gpu = CUDA.zeros(Float32, n)
+                col_sums_gpu = CUDA.zeros(Float32, m)
+                g_scratch = CUDA.zeros(Float32, n + m - 1)
+            end
+        end
+    else
+        M_gpu = CuArray(M_cpu)
+        Mt_gpu = CuArray(Matrix{Float32}(transpose(M_cpu)))
+        a_gpu = CuArray(a_cpu)
+        b_gpu = CuArray(b_cpu)
+        alpha_gpu = CUDA.zeros(Float32, n)
+        beta_gpu = CUDA.zeros(Float32, m)
+        row_sums_gpu = CUDA.zeros(Float32, n)
+        col_sums_gpu = CUDA.zeros(Float32, m)
+        g_scratch = CUDA.zeros(Float32, n + m - 1)
+    end
 
     threads = 256
     shmem = threads * sizeof(Float32)
 
-    row_sums_gpu = CUDA.zeros(Float32, n)
-    col_sums_gpu = CUDA.zeros(Float32, m)
-    g_scratch = CUDA.zeros(Float32, n + m - 1)
-
     last_marg_error = Inf
     iterations_completed = 0
 
-    for eta in eta_schedule
-        if !silent
-            println("Eta $eta")
-        end
-        for iter in 1:max_iters_per_eta
-            @cuda threads=threads blocks=n shmem=shmem sinkhorn_row_block_kernel!(Mt_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
-            @cuda threads=threads blocks=m shmem=shmem sinkhorn_col_block_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
-            CUDA.@allowscalar beta_gpu[m] = 0.0f0
-            iterations_completed += 1
-
-            if !isnothing(progress_callback)
-                progress_callback()
+    solver_loop = () -> begin
+        for eta in eta_schedule
+            if !silent
+                println("Eta $eta")
             end
+            for iter in 1:max_iters_per_eta
+                @cuda threads=threads blocks=n shmem=shmem sinkhorn_row_block_kernel!(Mt_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
+                @cuda threads=threads blocks=m shmem=shmem sinkhorn_col_block_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
+                CUDA.@allowscalar beta_gpu[m] = 0.0f0
+                iterations_completed += 1
 
-            if iter % check_every == 0 || iter == 1 || iter == max_iters_per_eta
-                _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
-                last_marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
-
-                if !silent && (iter % (5 * check_every) == 0 || iter == 1 || last_marg_error < tol)
-                    println("$iter\t$(round(last_marg_error, digits=6))")
+                if !isnothing(progress_callback)
+                    progress_callback()
                 end
 
-                if !isfinite(last_marg_error)
-                    error("Non-finite Sinkhorn marginal error at eta=$eta iteration=$iter.")
-                end
+                if iter % check_every == 0 || iter == 1 || iter == max_iters_per_eta
+                    _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
+                    last_marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
 
-                if last_marg_error < tol
-                    break
+                    if !silent && (iter % (5 * check_every) == 0 || iter == 1 || last_marg_error < tol)
+                        println("$iter\t$(round(last_marg_error, digits=6))")
+                    end
+
+                    if !isfinite(last_marg_error)
+                        error("Non-finite Sinkhorn marginal error at eta=$eta iteration=$iter.")
+                    end
+
+                    if last_marg_error < tol
+                        break
+                    end
                 end
             end
         end
     end
 
-    alpha_cpu = Array(alpha_gpu)
-    beta_cpu = Array(beta_gpu)
+    if profile
+        gpu_iteration_seconds = @elapsed begin
+            CUDA.@sync solver_loop()
+        end
+    else
+        solver_loop()
+    end
+
+    if profile
+        alpha_cpu = nothing
+        beta_cpu = nothing
+        dual_download_seconds = @elapsed begin
+            CUDA.@sync begin
+                alpha_cpu = Array(alpha_gpu)
+                beta_cpu = Array(beta_gpu)
+            end
+        end
+    else
+        alpha_cpu = Array(alpha_gpu)
+        beta_cpu = Array(beta_gpu)
+    end
     if any(!isfinite, alpha_cpu) || any(!isfinite, beta_cpu)
         error("Non-finite Sinkhorn dual potential.")
     end
 
-    return (
+    result = (
         alpha = alpha_cpu,
         beta = beta_cpu,
         eta = eta_schedule[end],
         marginal_error = last_marg_error,
         iterations = iterations_completed,
     )
+
+    if profile
+        return merge(result, (timings = (
+            cpu_transpose_seconds = cpu_transpose_seconds,
+            gpu_upload_allocation_seconds = gpu_upload_allocation_seconds,
+            gpu_iteration_seconds = gpu_iteration_seconds,
+            dual_download_seconds = dual_download_seconds,
+        ),))
+    end
+
+    return result
 end
 
 function extract_sinkhorn_matches(
@@ -791,6 +857,180 @@ function extract_sinkhorn_matches(
     )
 end
 
+function validate_sinkhorn2_extraction_args(
+    eta_schedule::Vector{Float32},
+    cumulative_weight::Float64,
+    min_output_neighbors::Int
+)
+    if isempty(eta_schedule)
+        error("eta_schedule cannot be empty.")
+    end
+    if !(0.0 < cumulative_weight <= 1.0)
+        error("cumulative_weight must be in (0, 1].")
+    end
+    if min_output_neighbors <= 0
+        error("min_output_neighbors must be positive.")
+    end
+end
+
+function prepare_sinkhorn2_problem(
+    population::DataFrame,
+    cartogram::DataFrame;
+    cost_power::Float64 = 2.0,
+    normalize_cost::Bool = true,
+    profile::Bool = false
+)
+    input_cleanup_seconds = 0.0
+    coordinate_scaling_seconds = 0.0
+    cost_matrix_fill_seconds = 0.0
+    cost_normalization_seconds = 0.0
+    mass_vector_seconds = 0.0
+
+    pop_clean = nothing
+    targets = 0
+    sources = 0
+    total_pop = 0.0
+    input_cleanup_seconds = @elapsed begin
+        pop_clean = filter(row -> row.population > 0.0, population)
+        targets = size(cartogram, 1)
+        sources = size(pop_clean, 1)
+
+        if sources == 0 || targets == 0
+            error("Input population or cartogram dataframe is empty.")
+        end
+        if cost_power <= 0
+            error("cost_power must be positive.")
+        end
+
+        total_pop = sum(pop_clean.population)
+    end
+
+    pop_carto_x = nothing
+    pop_carto_y = nothing
+    carto_step_x = 1.0
+    carto_step_y = 1.0
+    coordinate_scaling_seconds = @elapsed begin
+        lat_min, lat_max = minimum(pop_clean.y), maximum(pop_clean.y)
+        lon_min, lon_max = minimum(pop_clean.x), maximum(pop_clean.x)
+        x_min, max_x = minimum(cartogram.x), maximum(cartogram.x)
+        y_min, max_y = minimum(cartogram.y), maximum(cartogram.y)
+
+        lon_span = (lon_max - lon_min) > 0 ? (lon_max - lon_min) : 1.0
+        lat_span = (lat_max - lat_min) > 0 ? (lat_max - lat_min) : 1.0
+        x_span = (max_x - x_min) > 0 ? (max_x - x_min) : 1.0
+        y_span = (max_y - y_min) > 0 ? (max_y - y_min) : 1.0
+
+        pop_norm_x = (pop_clean.x .- lon_min) ./ lon_span
+        pop_norm_y = (pop_clean.y .- lat_min) ./ lat_span
+        pop_carto_x = x_min .+ pop_norm_x .* x_span
+        pop_carto_y = y_min .+ pop_norm_y .* y_span
+
+        unique_carto_x = sort(unique(cartogram.x))
+        unique_carto_y = sort(unique(cartogram.y))
+        carto_step_x = length(unique_carto_x) > 1 ? minimum(diff(unique_carto_x)) : 1.0
+        carto_step_y = length(unique_carto_y) > 1 ? minimum(diff(unique_carto_y)) : 1.0
+    end
+
+    cost = Matrix{Float32}(undef, sources, targets)
+    cost_matrix_fill_seconds = @elapsed begin
+        Threads.@threads for i in 1:sources
+            px, py = pop_carto_x[i], pop_carto_y[i]
+            for j in 1:targets
+                dx = (px - cartogram.x[j]) / carto_step_x
+                dy = (py - cartogram.y[j]) / carto_step_y
+                d = sqrt(dx^2 + dy^2)
+                cost[i, j] = Float32(d^cost_power)
+            end
+        end
+    end
+
+    if normalize_cost
+        cost_normalization_seconds = @elapsed begin
+            max_cost = maximum(cost)
+            if max_cost > 0
+                cost ./= max_cost
+            end
+        end
+    end
+
+    source_mass = Vector{Float32}(undef, sources)
+    target_mass = Vector{Float32}(undef, targets)
+    mass_vector_seconds = @elapsed begin
+        source_mass = Vector{Float32}(pop_clean.population ./ total_pop)
+        target_mass = fill(1.0f0 / targets, targets)
+    end
+
+    return (
+        cost = cost,
+        source_mass = source_mass,
+        target_mass = target_mass,
+        pop_clean = pop_clean,
+        cartogram = cartogram,
+        total_pop = total_pop,
+        sources = sources,
+        targets = targets,
+        timings = (
+            input_cleanup_seconds = input_cleanup_seconds,
+            coordinate_scaling_seconds = coordinate_scaling_seconds,
+            cost_matrix_fill_seconds = cost_matrix_fill_seconds,
+            cost_normalization_seconds = cost_normalization_seconds,
+            mass_vector_seconds = mass_vector_seconds,
+        ),
+    )
+end
+
+function solve_prepared_sinkhorn2_problem(
+    prepared,
+    eta_schedule::Vector{Float32};
+    max_iters_per_eta::Int = 1000,
+    tol::Float64 = 1e-5,
+    check_every::Int = 100,
+    silent::Bool = true,
+    progress_callback::Union{Nothing, Function} = nothing,
+    profile::Bool = false
+)
+    if isempty(eta_schedule)
+        error("eta_schedule cannot be empty.")
+    end
+
+    return log_sinkhorn_gpu_solver_schedule_optimized(
+        prepared.cost,
+        prepared.source_mass,
+        prepared.target_mass,
+        eta_schedule;
+        max_iters_per_eta=max_iters_per_eta,
+        tol=tol,
+        check_every=check_every,
+        silent=silent,
+        progress_callback=progress_callback,
+        profile=profile
+    )
+end
+
+function extract_prepared_sinkhorn2_matches(
+    prepared,
+    result;
+    cumulative_weight::Float64 = 0.995,
+    min_weight::Float64 = 1e-4,
+    min_output_neighbors::Int = 1,
+    max_output_neighbors::Union{Nothing, Int} = nothing
+)
+    return extract_sinkhorn_matches(
+        prepared.cost,
+        result.alpha,
+        result.beta,
+        result.eta,
+        prepared.source_mass,
+        prepared.total_pop,
+        prepared.pop_clean,
+        prepared.cartogram;
+        cumulative_weight=cumulative_weight,
+        min_weight=min_weight,
+        min_output_neighbors=min_output_neighbors,
+        max_output_neighbors=max_output_neighbors
+    )
+end
+
 """
 Dense balanced Sinkhorn matching with cartogram-cell radial costs.
 
@@ -813,106 +1053,66 @@ function match_h3_to_cartogram_sinkhorn2(
     normalize_cost::Bool = true,
     silent::Bool = true,
     progress_callback::Union{Nothing, Function} = nothing,
-    return_metadata::Bool = false
+    return_metadata::Bool = false,
+    profile::Bool = false
 )
-    pop_clean = filter(row -> row.population > 0.0, population)
-    N = size(cartogram, 1)
-    M = size(pop_clean, 1)
+    validate_sinkhorn2_extraction_args(eta_schedule, cumulative_weight, min_output_neighbors)
+    total_wall_start = time()
+    solver_total_seconds = 0.0
+    sparse_extraction_seconds = 0.0
 
-    if M == 0 || N == 0
-        error("Input population or cartogram dataframe is empty.")
-    end
-    if cost_power <= 0
-        error("cost_power must be positive.")
-    end
-    if isempty(eta_schedule)
-        error("eta_schedule cannot be empty.")
-    end
-    if !(0.0 < cumulative_weight <= 1.0)
-        error("cumulative_weight must be in (0, 1].")
-    end
-    if min_output_neighbors <= 0
-        error("min_output_neighbors must be positive.")
-    end
-
-    total_pop = sum(pop_clean.population)
-
-    lat_min, lat_max = minimum(pop_clean.y), maximum(pop_clean.y)
-    lon_min, lon_max = minimum(pop_clean.x), maximum(pop_clean.x)
-    x_min, max_x = minimum(cartogram.x), maximum(cartogram.x)
-    y_min, max_y = minimum(cartogram.y), maximum(cartogram.y)
-
-    lon_span = (lon_max - lon_min) > 0 ? (lon_max - lon_min) : 1.0
-    lat_span = (lat_max - lat_min) > 0 ? (lat_max - lat_min) : 1.0
-    x_span = (max_x - x_min) > 0 ? (max_x - x_min) : 1.0
-    y_span = (max_y - y_min) > 0 ? (max_y - y_min) : 1.0
-
-    pop_norm_x = (pop_clean.x .- lon_min) ./ lon_span
-    pop_norm_y = (pop_clean.y .- lat_min) ./ lat_span
-    pop_carto_x = x_min .+ pop_norm_x .* x_span
-    pop_carto_y = y_min .+ pop_norm_y .* y_span
-
-    unique_carto_x = sort(unique(cartogram.x))
-    unique_carto_y = sort(unique(cartogram.y))
-    carto_step_x = length(unique_carto_x) > 1 ? minimum(diff(unique_carto_x)) : 1.0
-    carto_step_y = length(unique_carto_y) > 1 ? minimum(diff(unique_carto_y)) : 1.0
-
-    M_cpu = Matrix{Float32}(undef, M, N)
-    Threads.@threads for i in 1:M
-        px, py = pop_carto_x[i], pop_carto_y[i]
-        for j in 1:N
-            dx = (px - cartogram.x[j]) / carto_step_x
-            dy = (py - cartogram.y[j]) / carto_step_y
-            d = sqrt(dx^2 + dy^2)
-            M_cpu[i, j] = Float32(d^cost_power)
-        end
-    end
-
-    if normalize_cost
-        max_cost = maximum(M_cpu)
-        if max_cost > 0
-            M_cpu ./= max_cost
-        end
-    end
-
-    a_cpu = Vector{Float32}(pop_clean.population ./ total_pop)
-    b_cpu = fill(1.0f0 / N, N)
-
-    result = log_sinkhorn_gpu_solver_schedule_optimized(
-        M_cpu,
-        a_cpu,
-        b_cpu,
-        eta_schedule;
-        max_iters_per_eta=max_iters_per_eta,
-        tol=tol,
-        check_every=check_every,
-        silent=silent,
-        progress_callback=progress_callback
-    )
-
-    df = extract_sinkhorn_matches(
-        M_cpu,
-        result.alpha,
-        result.beta,
-        result.eta,
-        a_cpu,
-        total_pop,
-        pop_clean,
+    prepared = prepare_sinkhorn2_problem(
+        population,
         cartogram;
-        cumulative_weight=cumulative_weight,
-        min_weight=min_weight,
-        min_output_neighbors=min_output_neighbors,
-        max_output_neighbors=max_output_neighbors
+        cost_power=cost_power,
+        normalize_cost=normalize_cost,
+        profile=profile
     )
+
+    result = nothing
+    solver_total_seconds = @elapsed begin
+        result = solve_prepared_sinkhorn2_problem(
+            prepared,
+            eta_schedule;
+            max_iters_per_eta=max_iters_per_eta,
+            tol=tol,
+            check_every=check_every,
+            silent=silent,
+            progress_callback=progress_callback,
+            profile=profile
+        )
+    end
+
+    df = nothing
+    sparse_extraction_seconds = @elapsed begin
+        df = extract_prepared_sinkhorn2_matches(
+            prepared,
+            result;
+            cumulative_weight=cumulative_weight,
+            min_weight=min_weight,
+            min_output_neighbors=min_output_neighbors,
+            max_output_neighbors=max_output_neighbors
+        )
+    end
 
     metadata = (
         final_eta = result.eta,
         marginal_error = result.marginal_error,
         iterations = result.iterations,
         rows = nrow(df),
-        sources = M,
-        targets = N,
+        sources = prepared.sources,
+        targets = prepared.targets,
     )
+
+    if profile
+        solver_timings = result.timings
+        metadata = merge(metadata, (timings = merge(prepared.timings, (
+            total_wall_seconds = time() - total_wall_start,
+            solver_total_seconds = solver_total_seconds,
+        ), solver_timings, (
+            sparse_extraction_seconds = sparse_extraction_seconds,
+        )),))
+    end
 
     return return_metadata ? (df, metadata) : df
 end
@@ -925,7 +1125,174 @@ function eta_schedule_to(final_eta::Float32; base_schedule::Vector{Float32}=Floa
     return unique(schedule)
 end
 
+function match_prepared_h3_to_cartogram_sinkhorn2_auto(
+    prepared;
+    target_rows_multiplier::Float64 = 10.0,
+    candidate_final_etas::Vector{Float32} = Float32[0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005],
+    max_iters_per_eta::Int = 1000,
+    tol::Float64 = 1e-5,
+    check_every::Int = 100,
+    silent::Bool = true,
+    progress_callback::Union{Nothing, Function} = nothing,
+    return_metadata::Bool = false,
+    cumulative_weight::Float64 = 0.995,
+    min_weight::Float64 = 1e-4,
+    min_output_neighbors::Int = 1,
+    max_output_neighbors::Union{Nothing, Int} = nothing,
+    profile::Bool = false,
+    total_wall_start::Float64 = time(),
+)
+    if isempty(candidate_final_etas)
+        error("candidate_final_etas cannot be empty.")
+    end
+    validate_sinkhorn2_extraction_args(Float32[1.0], cumulative_weight, min_output_neighbors)
+
+    target_rows = round(Int, target_rows_multiplier * (prepared.sources + prepared.targets))
+
+    best_df = nothing
+    best_meta = nothing
+    failed = NamedTuple[]
+
+    for final_eta in candidate_final_etas
+        schedule = eta_schedule_to(final_eta)
+        try
+            result = nothing
+            solver_total_seconds = @elapsed begin
+                result = solve_prepared_sinkhorn2_problem(
+                    prepared,
+                    schedule;
+                    max_iters_per_eta=max_iters_per_eta,
+                    tol=tol,
+                    check_every=check_every,
+                    silent=silent,
+                    progress_callback=progress_callback,
+                    profile=profile
+                )
+            end
+
+            if !isfinite(result.marginal_error)
+                error("Non-finite marginal error for final eta $final_eta.")
+            end
+
+            df = nothing
+            sparse_extraction_seconds = @elapsed begin
+                df = extract_prepared_sinkhorn2_matches(
+                    prepared,
+                    result;
+                    cumulative_weight=cumulative_weight,
+                    min_weight=min_weight,
+                    min_output_neighbors=min_output_neighbors,
+                    max_output_neighbors=max_output_neighbors
+                )
+            end
+
+            meta = (
+                final_eta = result.eta,
+                marginal_error = result.marginal_error,
+                iterations = result.iterations,
+                rows = nrow(df),
+                sources = prepared.sources,
+                targets = prepared.targets,
+            )
+
+            if profile
+                meta = merge(meta, (timings = merge(prepared.timings, (
+                    total_wall_seconds = time() - total_wall_start,
+                    solver_total_seconds = solver_total_seconds,
+                ), result.timings, (
+                    sparse_extraction_seconds = sparse_extraction_seconds,
+                )),))
+            end
+
+            tuned_meta = merge(meta, (
+                target_rows=target_rows,
+                row_error=abs(meta.rows - target_rows),
+                failed_candidates=failed,
+            ))
+
+            if isnothing(best_meta) || tuned_meta.row_error < best_meta.row_error
+                best_df = df
+                best_meta = tuned_meta
+            end
+
+            if meta.rows <= target_rows
+                return return_metadata ? (df, tuned_meta) : df
+            end
+        catch e
+            if e isa InterruptException
+                rethrow()
+            end
+            push!(failed, (eta=final_eta, error=sprint(showerror, e)))
+            if !isnothing(best_df)
+                break
+            end
+        end
+    end
+
+    if isnothing(best_df)
+        error("No stable Sinkhorn eta candidate found. Failed candidates: $failed")
+    end
+
+    return return_metadata ? (best_df, best_meta) : best_df
+end
+
 function match_h3_to_cartogram_sinkhorn2_auto(
+    population::DataFrame,
+    cartogram::DataFrame;
+    target_rows_multiplier::Float64 = 10.0,
+    candidate_final_etas::Vector{Float32} = Float32[0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005],
+    max_iters_per_eta::Int = 1000,
+    tol::Float64 = 1e-5,
+    check_every::Int = 100,
+    silent::Bool = true,
+    progress_callback::Union{Nothing, Function} = nothing,
+    return_metadata::Bool = false,
+    cost_power::Float64 = 2.0,
+    cumulative_weight::Float64 = 0.995,
+    min_weight::Float64 = 1e-4,
+    min_output_neighbors::Int = 1,
+    max_output_neighbors::Union{Nothing, Int} = nothing,
+    normalize_cost::Bool = true,
+    profile::Bool = false,
+    kwargs...
+)
+    if !isempty(kwargs)
+        error("Unsupported keyword(s) for match_h3_to_cartogram_sinkhorn2_auto: $(keys(kwargs))")
+    end
+    if isempty(candidate_final_etas)
+        error("candidate_final_etas cannot be empty.")
+    end
+    validate_sinkhorn2_extraction_args(Float32[1.0], cumulative_weight, min_output_neighbors)
+
+    total_wall_start = time()
+    prepared = prepare_sinkhorn2_problem(
+        population,
+        cartogram;
+        cost_power=cost_power,
+        normalize_cost=normalize_cost,
+        profile=profile
+    )
+
+    return match_prepared_h3_to_cartogram_sinkhorn2_auto(
+        prepared;
+        target_rows_multiplier=target_rows_multiplier,
+        candidate_final_etas=candidate_final_etas,
+        max_iters_per_eta=max_iters_per_eta,
+        tol=tol,
+        check_every=check_every,
+        silent=silent,
+        progress_callback=progress_callback,
+        return_metadata=return_metadata,
+        cumulative_weight=cumulative_weight,
+        min_weight=min_weight,
+        min_output_neighbors=min_output_neighbors,
+        max_output_neighbors=max_output_neighbors,
+        profile=profile,
+        total_wall_start=total_wall_start,
+    )
+end
+
+function match_h3_to_cartogram_sinkhorn2_auto_repeated_prepare_reference(
     population::DataFrame,
     cartogram::DataFrame;
     target_rows_multiplier::Float64 = 10.0,
