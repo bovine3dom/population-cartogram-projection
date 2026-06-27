@@ -56,7 +56,6 @@ sinkhorn_eta_schedule = Float32[
     0.0001,
     0.00005,
 ]
-sinkhorn_max_iters_per_eta = 500
 country_work = Dict{eltype(countries_to_process), Int}()
 total_work = 0
 for _code in countries_to_process
@@ -93,8 +92,8 @@ for _code in countries_to_process
          DataFrame(mini_cartogram);
          cost_power = 2.0,
          eta_schedule = sinkhorn_eta_schedule,
-         max_iters_per_eta = sinkhorn_max_iters_per_eta,
-         tol = 1e-5,
+         max_iters_per_eta = 5000,
+         tol = 0.002,
          cumulative_weight = 0.995,
          min_weight = 1e-4,
          silent = true,
@@ -146,7 +145,7 @@ almost_there.population_z = (almost_there.population ./ mean(almost_there.popula
 almost_there.median_z = (almost_there.median .- mean(almost_there.median)) ./ (2 * std(almost_there.median)) .+ 0.5
 
 # this is just for sense checking: it should all be the same colour
-RENDER_SCALE = 20
+RENDER_SCALE = 10
 render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, filename="population_check.png", draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # this is the actual map
@@ -166,7 +165,7 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 
 # bof. it looks kind of fine in the centre but at the borders it is mega dodge
 # fixed with the f32 -> f0 bug. but now it's slow? is it really no faster than the jump solver?
-_code = countries[countries.name .== "United States", :code][1] # 826 uk # 356 india # 156 china
+_code = countries[countries.name .== "China", :code][1] # 826 uk # 356 india # 156 china
 owid_code = _code
 ne_code = get(ffs, owid_code, owid_code)
 # gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
@@ -196,8 +195,8 @@ mini_df = match_h3_to_cartogram_sinkhorn2(
   0.0001,
   0.00005,
  ],
- max_iters_per_eta = 500,
- tol = 1e-5,
+ max_iters_per_eta = 5000,
+ tol = 0.002,
  cumulative_weight = 0.995,
  min_weight = 1e-4,
  silent = false,
