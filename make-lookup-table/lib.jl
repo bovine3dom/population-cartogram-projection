@@ -1,9 +1,40 @@
 #!/bin/julia
-using CSV, DataFrames, Luxor, Arrow, ThreadsX, StatsBase, ColorSchemes, ProgressMeter
+using CSV, DataFrames, Luxor, Arrow, ThreadsX, StatsBase, ColorSchemes, ProgressMeter, Printf
 import H3
 import Colors: RGB
 
 countries = CSV.read("../data/country-code.csv", DataFrame)
+
+function _comma_group_number(raw::AbstractString)
+    sign = startswith(raw, "-") ? "-" : ""
+    unsigned = isempty(sign) ? raw : raw[2:end]
+    parts = String[]
+    while length(unsigned) > 3
+        pushfirst!(parts, unsigned[end-2:end])
+        unsigned = unsigned[1:end-3]
+    end
+    pushfirst!(parts, unsigned)
+    return sign * join(parts, ",")
+end
+
+function _format_legend_number(x::Real; sigdigits::Int=2)
+    if !isfinite(x)
+        return string(x)
+    end
+
+    rounded = round(Float64(x); sigdigits=sigdigits)
+    if rounded == 0
+        return "0"
+    end
+
+    decimal_places = max(0, sigdigits - floor(Int, log10(abs(rounded))) - 1)
+    raw = @sprintf("%.*f", decimal_places, rounded)
+    pieces = split(raw, "."; limit=2)
+    whole = _comma_group_number(pieces[1])
+    return length(pieces) == 1 ? whole : whole * "." * pieces[2]
+end
+
+_format_legend_label(x) = x isa Real ? _format_legend_number(x) : string(x)
 
 function render_cartogram(
     cartogram; 
@@ -22,7 +53,15 @@ function render_cartogram(
     country_border_color::String="black",
     country_border_width::Real=1.5,
     include_outer_borders::Bool=false,
-    coord_step::Real=2
+    coord_step::Real=2,
+    draw_legend::Bool=false,
+    legend_label_field::Union{Nothing, Symbol}=nothing,
+    legend_title::Union{Nothing, String}=nothing,
+    legend_ticks=0:0.25:1,
+    legend_label_formatter = _format_legend_label,
+    legend_bar_width::Real=max(12, 3 * square_size),
+    legend_bar_height::Real=max(80, 3 * 6 * square_size),
+    legend_font_size::Real=font_size
 )
     min_x, max_x = minimum(cartogram.x), maximum(cartogram.x)
     min_y, max_y = minimum(cartogram.y), maximum(cartogram.y)
@@ -99,6 +138,102 @@ function render_cartogram(
                 sethue(text_color)
                 text(string(val), Point(cx, cy), halign=:center, valign=:middle)
             end
+        end
+    end
+    
+    if draw_legend
+        legend_label_values = nothing
+        if !isnothing(legend_label_field)
+            if !(string(legend_label_field) in names(cartogram))
+                error("legend_label_field $(legend_label_field) is not a column in cartogram")
+            end
+            legend_label_values = collect(skipmissing(cartogram[!, legend_label_field]))
+            if isempty(legend_label_values)
+                error("legend_label_field $(legend_label_field) has no non-missing values")
+            end
+        end
+        
+        ticks = collect(legend_ticks)
+        if isempty(ticks)
+            ticks = [0, 0.25, 0.5, 0.75, 1]
+        end
+        
+        legend_margin = max(6, padding / 4)
+        legend_left = -width / 2 + legend_margin
+        legend_top = -height / 2 + legend_margin
+        box_padding = max(4, legend_font_size * 0.5)
+        tick_length = max(4, legend_bar_width * 0.35)
+        label_gap = max(4, legend_font_size * 0.4)
+        label_width = max(70, legend_font_size * 7)
+        title_height = isnothing(legend_title) ? 0 : legend_font_size * 1.4
+        tick_label_padding = legend_font_size * 0.6
+        backing_width = legend_bar_width + tick_length + label_gap + label_width + 2 * box_padding
+        backing_height = title_height + legend_bar_height + 2 * tick_label_padding + 2 * box_padding
+        
+        sethue("white")
+        box(
+            Point(legend_left + backing_width / 2, legend_top + backing_height / 2),
+            backing_width,
+            backing_height,
+            :fill
+        )
+        sethue("black")
+        setline(0.5)
+        box(
+            Point(legend_left + backing_width / 2, legend_top + backing_height / 2),
+            backing_width,
+            backing_height,
+            :stroke
+        )
+        
+        fontface(font_face)
+        fontsize(legend_font_size)
+        content_x = legend_left + box_padding
+        content_y = legend_top + box_padding
+        if !isnothing(legend_title)
+            sethue(text_color)
+            text(legend_title, Point(content_x, content_y + legend_font_size / 2), halign=:left, valign=:middle)
+            content_y += title_height
+        end
+        bar_top = content_y + tick_label_padding
+        
+        steps = 64
+        step_height = legend_bar_height / steps
+        for i in 1:steps
+            q = 1 - (i - 0.5) / steps
+            sethue(legend(q))
+            box(
+                Point(content_x + legend_bar_width / 2, bar_top + (i - 0.5) * step_height),
+                legend_bar_width,
+                step_height + 0.5,
+                :fill
+            )
+        end
+        
+        sethue(text_color)
+        setline(0.5)
+        box(
+            Point(content_x + legend_bar_width / 2, bar_top + legend_bar_height / 2),
+            legend_bar_width,
+            legend_bar_height,
+            :stroke
+        )
+        
+        for q in ticks
+            qv = clamp(Float64(q), 0.0, 1.0)
+            tick_y = bar_top + (1 - qv) * legend_bar_height
+            line(
+                Point(content_x + legend_bar_width, tick_y),
+                Point(content_x + legend_bar_width + tick_length, tick_y),
+                :stroke
+            )
+            label_value = isnothing(legend_label_values) ? qv : quantile(legend_label_values, qv)
+            text(
+                legend_label_formatter(label_value),
+                Point(content_x + legend_bar_width + tick_length + label_gap, tick_y),
+                halign=:left,
+                valign=:middle
+            )
         end
     end
     
@@ -204,4 +339,3 @@ function subdivide_cartogram(df::DataFrame, n::Int)
     end
     return DataFrame(x = new_xs, y = new_ys, code = new_codes)
 end
-

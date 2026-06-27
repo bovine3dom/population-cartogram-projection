@@ -183,7 +183,7 @@ RENDER_SCALE = 20
 render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, filename="population_check.png", draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # this is the actual map
-render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_legend=true, legend_label_field=:median, legend_title="Population per km/2", draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 # render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # reducing the resolution makes it tractable
@@ -213,7 +213,7 @@ mini_df, tuning_meta = match_h3_to_cartogram_sinkhorn2_auto(
   DataFrame(mini_cartogram);
   cost_power = 2.0,
   candidate_final_etas = sinkhorn_candidate_final_etas,
-  target_rows_multiplier = l.0,
+#  target_rows_multiplier = l.0,
   max_iters_per_eta = 5000,
   tol = 0.01,
   cumulative_weight = 0.995,
@@ -254,7 +254,7 @@ RENDER_SCALE = 10
 render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, filename="population_check.png", draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # this is the actual map
-render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_legend=true, legend_label_field=:median, legend_title="Population density per km^2", draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 # render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # todo:
@@ -263,4 +263,3 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 #
 # increasing the threshold doesn't help much because stuff is still extremely smeared
 # for reference: for the uk jump/highs soft ot only yields 1,600 matches, compared to ~50,000 with sinkhorn
-
