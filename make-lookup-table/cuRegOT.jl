@@ -785,6 +785,173 @@ function log_sinkhorn_gpu_solver_schedule_optimized(
     return result
 end
 
+function log_sinkhorn_gpu_solver_schedule_optimized_each_eta(
+    M_cpu::Matrix{Float32},
+    a_cpu::Vector{Float32},
+    b_cpu::Vector{Float32},
+    eta_schedule::Vector{Float32};
+    candidate_etas::Vector{Float32} = eta_schedule,
+    max_iters_per_eta::Int = 1000,
+    tol::Float64 = 1e-5,
+    check_every::Int = 100,
+    silent::Bool = true,
+    progress_callback::Union{Nothing, Function} = nothing,
+    stage_callback::Union{Nothing, Function} = nothing,
+    profile::Bool = false
+)
+    n, m = size(M_cpu)
+    if isempty(eta_schedule)
+        error("eta_schedule cannot be empty.")
+    end
+    if isempty(candidate_etas)
+        error("candidate_etas cannot be empty.")
+    end
+
+    cpu_transpose_seconds = 0.0
+    gpu_upload_allocation_seconds = 0.0
+    gpu_iteration_seconds = 0.0
+    dual_download_seconds = 0.0
+
+    if profile
+        Mt_cpu = nothing
+        cpu_transpose_seconds = @elapsed begin
+            Mt_cpu = Matrix{Float32}(transpose(M_cpu))
+        end
+
+        M_gpu = nothing
+        Mt_gpu = nothing
+        a_gpu = nothing
+        b_gpu = nothing
+        alpha_gpu = nothing
+        beta_gpu = nothing
+        row_sums_gpu = nothing
+        col_sums_gpu = nothing
+        g_scratch = nothing
+        gpu_upload_allocation_seconds = @elapsed begin
+            CUDA.@sync begin
+                M_gpu = CuArray(M_cpu)
+                Mt_gpu = CuArray(Mt_cpu)
+                a_gpu = CuArray(a_cpu)
+                b_gpu = CuArray(b_cpu)
+                alpha_gpu = CUDA.zeros(Float32, n)
+                beta_gpu = CUDA.zeros(Float32, m)
+                row_sums_gpu = CUDA.zeros(Float32, n)
+                col_sums_gpu = CUDA.zeros(Float32, m)
+                g_scratch = CUDA.zeros(Float32, n + m - 1)
+            end
+        end
+    else
+        M_gpu = CuArray(M_cpu)
+        Mt_gpu = CuArray(Matrix{Float32}(transpose(M_cpu)))
+        a_gpu = CuArray(a_cpu)
+        b_gpu = CuArray(b_cpu)
+        alpha_gpu = CUDA.zeros(Float32, n)
+        beta_gpu = CUDA.zeros(Float32, m)
+        row_sums_gpu = CUDA.zeros(Float32, n)
+        col_sums_gpu = CUDA.zeros(Float32, m)
+        g_scratch = CUDA.zeros(Float32, n + m - 1)
+    end
+
+    threads = 256
+    shmem = threads * sizeof(Float32)
+    candidate_set = Set(candidate_etas)
+
+    last_marg_error = Inf
+    iterations_completed = 0
+    last_result = nothing
+
+    for eta in eta_schedule
+        if !silent
+            println("Eta $eta")
+        end
+
+        eta_loop = () -> begin
+            for iter in 1:max_iters_per_eta
+                @cuda threads=threads blocks=n shmem=shmem sinkhorn_row_block_kernel!(Mt_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
+                @cuda threads=threads blocks=m shmem=shmem sinkhorn_col_block_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
+                CUDA.@allowscalar beta_gpu[m] = 0.0f0
+                iterations_completed += 1
+
+                if !isnothing(progress_callback)
+                    progress_callback()
+                end
+
+                if iter % check_every == 0 || iter == 1 || iter == max_iters_per_eta
+                    _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
+                    last_marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
+
+                    if !silent && (iter % (5 * check_every) == 0 || iter == 1 || last_marg_error < tol)
+                        println("$iter\t$(round(last_marg_error, digits=6))")
+                    end
+
+                    if !isfinite(last_marg_error)
+                        error("Non-finite Sinkhorn marginal error at eta=$eta iteration=$iter.")
+                    end
+
+                    if last_marg_error < tol
+                        break
+                    end
+                end
+            end
+        end
+
+        if profile
+            gpu_iteration_seconds += @elapsed begin
+                CUDA.@sync eta_loop()
+            end
+        else
+            eta_loop()
+        end
+
+        if eta in candidate_set
+            if profile
+                alpha_cpu = nothing
+                beta_cpu = nothing
+                dual_download_seconds += @elapsed begin
+                    CUDA.@sync begin
+                        alpha_cpu = Array(alpha_gpu)
+                        beta_cpu = Array(beta_gpu)
+                    end
+                end
+            else
+                alpha_cpu = Array(alpha_gpu)
+                beta_cpu = Array(beta_gpu)
+            end
+            if any(!isfinite, alpha_cpu) || any(!isfinite, beta_cpu)
+                error("Non-finite Sinkhorn dual potential at eta=$eta.")
+            end
+
+            result = (
+                alpha = alpha_cpu,
+                beta = beta_cpu,
+                eta = eta,
+                marginal_error = last_marg_error,
+                iterations = iterations_completed,
+            )
+
+            if profile
+                result = merge(result, (timings = (
+                    cpu_transpose_seconds = cpu_transpose_seconds,
+                    gpu_upload_allocation_seconds = gpu_upload_allocation_seconds,
+                    gpu_iteration_seconds = gpu_iteration_seconds,
+                    dual_download_seconds = dual_download_seconds,
+                ),))
+            end
+
+            last_result = result
+            if !isnothing(stage_callback) && stage_callback(result)
+                return result
+            end
+        end
+    end
+
+    if isnothing(last_result)
+        error("No requested eta candidate was present in eta_schedule.")
+    end
+
+    return last_result
+end
+
 function extract_sinkhorn_matches(
     M_cpu::Matrix{Float32},
     alpha_cpu::Vector{Float32},
@@ -1125,7 +1292,143 @@ function eta_schedule_to(final_eta::Float32; base_schedule::Vector{Float32}=Floa
     return unique(schedule)
 end
 
+function eta_continuation_schedule(
+    candidate_final_etas::Vector{Float32};
+    base_schedule::Vector{Float32}=Float32[0.05, 0.02, 0.01, 0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005]
+)
+    if isempty(candidate_final_etas)
+        error("candidate_final_etas cannot be empty.")
+    end
+
+    min_eta = minimum(candidate_final_etas)
+    schedule = Float32[eta for eta in base_schedule if eta >= min_eta]
+    append!(schedule, candidate_final_etas)
+    schedule = sort(collect(Set(schedule)), rev=true)
+    return Float32[schedule...]
+end
+
 function match_prepared_h3_to_cartogram_sinkhorn2_auto(
+    prepared;
+    target_rows_multiplier::Float64 = 10.0,
+    candidate_final_etas::Vector{Float32} = Float32[0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005],
+    max_iters_per_eta::Int = 1000,
+    tol::Float64 = 1e-5,
+    check_every::Int = 100,
+    silent::Bool = true,
+    progress_callback::Union{Nothing, Function} = nothing,
+    return_metadata::Bool = false,
+    cumulative_weight::Float64 = 0.995,
+    min_weight::Float64 = 1e-4,
+    min_output_neighbors::Int = 1,
+    max_output_neighbors::Union{Nothing, Int} = nothing,
+    profile::Bool = false,
+    total_wall_start::Float64 = time(),
+)
+    if isempty(candidate_final_etas)
+        error("candidate_final_etas cannot be empty.")
+    end
+    validate_sinkhorn2_extraction_args(Float32[1.0], cumulative_weight, min_output_neighbors)
+
+    target_rows = round(Int, target_rows_multiplier * (prepared.sources + prepared.targets))
+
+    best_df = nothing
+    best_meta = nothing
+    failed = NamedTuple[]
+    candidate_etas = sort(collect(Set(candidate_final_etas)), rev=true)
+    schedule = eta_continuation_schedule(candidate_etas)
+    current_eta = Ref{Float32}(NaN32)
+    solver_total_seconds = 0.0
+
+    try
+        solver_total_seconds = @elapsed begin
+            log_sinkhorn_gpu_solver_schedule_optimized_each_eta(
+                prepared.cost,
+                prepared.source_mass,
+                prepared.target_mass,
+                schedule;
+                candidate_etas=candidate_etas,
+                max_iters_per_eta=max_iters_per_eta,
+                tol=tol,
+                check_every=check_every,
+                silent=silent,
+                progress_callback=progress_callback,
+                profile=profile,
+                stage_callback = result -> begin
+                    current_eta[] = result.eta
+                    if !isfinite(result.marginal_error)
+                        error("Non-finite marginal error for final eta $(result.eta).")
+                    end
+
+                    df = nothing
+                    sparse_extraction_seconds = @elapsed begin
+                        df = extract_prepared_sinkhorn2_matches(
+                            prepared,
+                            result;
+                            cumulative_weight=cumulative_weight,
+                            min_weight=min_weight,
+                            min_output_neighbors=min_output_neighbors,
+                            max_output_neighbors=max_output_neighbors
+                        )
+                    end
+
+                    meta = (
+                        final_eta = result.eta,
+                        marginal_error = result.marginal_error,
+                        iterations = result.iterations,
+                        rows = nrow(df),
+                        sources = prepared.sources,
+                        targets = prepared.targets,
+                    )
+
+                    if profile
+                        meta = merge(meta, (timings = merge(prepared.timings, (
+                            total_wall_seconds = time() - total_wall_start,
+                            solver_total_seconds = solver_total_seconds,
+                        ), result.timings, (
+                            sparse_extraction_seconds = sparse_extraction_seconds,
+                        )),))
+                    end
+
+                    tuned_meta = merge(meta, (
+                        target_rows=target_rows,
+                        row_error=abs(meta.rows - target_rows),
+                        failed_candidates=failed,
+                    ))
+
+                    if isnothing(best_meta) || tuned_meta.row_error < best_meta.row_error
+                        best_df = df
+                        best_meta = tuned_meta
+                    end
+
+                    return meta.rows <= target_rows
+                end
+            )
+        end
+    catch e
+        if e isa InterruptException
+            rethrow()
+        end
+        push!(failed, (eta=current_eta[], error=sprint(showerror, e)))
+        if !isnothing(best_meta)
+            best_meta = merge(best_meta, (failed_candidates=failed,))
+        end
+    end
+
+    if isnothing(best_df)
+        error("No stable Sinkhorn eta candidate found. Failed candidates: $failed")
+    end
+
+    if profile && !isnothing(best_meta)
+        best_meta = merge(best_meta, (timings = merge(best_meta.timings, (
+            total_wall_seconds = time() - total_wall_start,
+            solver_total_seconds = solver_total_seconds,
+        )),))
+    end
+
+    return return_metadata ? (best_df, best_meta) : best_df
+end
+
+function match_prepared_h3_to_cartogram_sinkhorn2_auto_repeated_schedule_reference(
     prepared;
     target_rows_multiplier::Float64 = 10.0,
     candidate_final_etas::Vector{Float32} = Float32[0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005],

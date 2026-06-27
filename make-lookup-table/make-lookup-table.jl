@@ -45,19 +45,20 @@ european_countries = ["Albania", "Andorra", "Austria", "Belgium", "Bosnia and He
 europe_codes = countries[in.(countries.name, Ref(european_countries)), :code]
 # all_countries = setdiff(intersect(cartogram.code, europe_codes), setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
 all_countries = setdiff(cartogram.code, setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+# all_countries = [156] # china
 results = []
 # somehow something in here MUTATES the cartogram(!!!!)
 length(unique(cartogram.code))
 # let's check china works with 100 neighbours first - big population, big area, unevenly distributed
 countries_to_process = all_countries
-sinkhorn_candidate_final_etas = Float32[0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005]
+sinkhorn_candidate_final_etas = Float32[0.005, 0.002, 0.001, 0.000_5, 0.000_2, 0.000_1, 0.000_05, 0.000_02, 0.000_01, 0.000_001, 0.000_000_1]
 sinkhorn_max_iters_per_eta = 5000
 sinkhorn_cost_power = 2.0
-sinkhorn_target_rows_multiplier = 10.0
-sinkhorn_tol = 0.002
+sinkhorn_target_rows_multiplier = 2.0
+sinkhorn_tol = 0.02
 sinkhorn_cumulative_weight = 0.995
 sinkhorn_min_weight = 1e-4
-sinkhorn_estimated_iters = sum(length(eta_schedule_to(eta)) for eta in sinkhorn_candidate_final_etas) * sinkhorn_max_iters_per_eta
+sinkhorn_estimated_iters = length(eta_continuation_schedule(sinkhorn_candidate_final_etas)) * sinkhorn_max_iters_per_eta
 country_work = Dict{eltype(countries_to_process), Int}()
 total_work = 0
 for _code in countries_to_process
@@ -128,7 +129,7 @@ for country_index in eachindex(countries_to_process)
          progress_callback = progress_callback,
          return_metadata = true,
         )
-        @info "Sinkhorn eta tuned" code=owid_code final_eta=tuning_meta.final_eta rows=tuning_meta.rows target_rows=tuning_meta.target_rows marginal_error=tuning_meta.marginal_error
+        # @info "Sinkhorn eta tuned" code=owid_code final_eta=tuning_meta.final_eta rows=tuning_meta.rows target_rows=tuning_meta.target_rows marginal_error=tuning_meta.marginal_error
         push!(results, mini_df)
     catch (e)
         if e isa InterruptException
@@ -158,13 +159,13 @@ assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=
 
 # write the data out for reuse
 dropmissing!(toplot, Not([:name, :label]))
-Arrow.write("mapping.arrow", toplot[!, [:h3, :x, :y, :weight, :population, :code, :label]]) # the thing we actually want. H3 res = 5
+# Arrow.write("mapping.arrow", toplot[!, [:h3, :x, :y, :weight, :population, :code, :label]]) # the thing we actually want. H3 res = 5
 toplot.index = string.(toplot.h3, base=16)
 
 t = combine(groupby(toplot, [:x, :y]), [:weight, :population] => ((w, p) -> sum(w .* p)) => :total_population)
 toplot2 = leftjoin(toplot, t, on=[:x, :y])
 toplot2.weight_mean = toplot2.weight .* toplot2.population ./ toplot2.total_population
-Arrow.write("cartogram_weights.arrow", toplot2[!, [:x, :y, :weight, :population, :code, :label, :index, :weight_mean]])
+Arrow.write("cartogram_weights_europe.arrow", toplot2[!, [:x, :y, :weight, :population, :code, :label, :index, :weight_mean]])
 
 # dropmissing!(smaller_pop, :h3)
 # Arrow.write("out.arrow", smaller_pop[!, [:h3, :median]]) # so now the challenge is: group by and plot on client side
@@ -178,7 +179,7 @@ almost_there.population_z = (almost_there.population ./ mean(almost_there.popula
 almost_there.median_z = (almost_there.median .- mean(almost_there.median)) ./ (2 * std(almost_there.median)) .+ 0.5
 
 # this is just for sense checking: it should all be the same colour
-RENDER_SCALE = 10
+RENDER_SCALE = 20
 render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, filename="population_check.png", draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # this is the actual map
@@ -198,7 +199,7 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 
 # bof. it looks kind of fine in the centre but at the borders it is mega dodge
 # fixed with the f32 -> f0 bug. but now it's slow? is it really no faster than the jump solver?
-_code = countries[countries.name .== "China", :code][1] # 826 uk # 356 india # 156 china
+_code = countries[countries.name .== "France", :code][1] # 826 uk # 356 india # 156 china
 owid_code = _code
 ne_code = get(ffs, owid_code, owid_code)
 # gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
@@ -211,21 +212,15 @@ mini_df, tuning_meta = match_h3_to_cartogram_sinkhorn2_auto(
   DataFrame(mini_population),
   DataFrame(mini_cartogram);
   cost_power = 2.0,
-  candidate_final_etas = Float32[
-      0.001,
-      0.0005,
-      0.0002,
-      0.0001,
-      0.00005,
-  ],
-  target_rows_multiplier = 5.0,
+  candidate_final_etas = sinkhorn_candidate_final_etas,
+  target_rows_multiplier = l.0,
   max_iters_per_eta = 5000,
-  tol = 0.002,
+  tol = 0.01,
   cumulative_weight = 0.995,
   min_weight = 1e-4,
   silent = false,
   return_metadata = true,
-)
+ ) # wtf at one point we had finally got china to be 50k rows but now it is 500k again !?
 @show tuning_meta.final_eta
 @show tuning_meta.rows
 @show tuning_meta.target_rows
@@ -243,6 +238,9 @@ toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
 # toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
 assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=:label)
 
+#toplot = Arrow.Table("cartogram_weights.whole_planet.arrow") |> DataFrame
+#toplot.h3 = parse.(UInt64, toplot.index, base=16)
+#toplot = leftjoin(toplot, smaller_pop[:, [:median, :h3]], on=:h3)
 almost_there = combine(groupby(toplot, [:x, :y]), [:median, :weight] => ((m,w) -> quantile(m, weights(collect(skipmissing(w))), 0.5)) => :median, :label => (n -> join(collect(skipmissing(n)), ", ")) => :label, [:population, :weight] => ((p, w) -> sum(p.*w)) => :population, :code => StatsBase.mode => :code, nrow)
 almost_there.label = map(x -> x == "" ? missing : x, almost_there.label)
 addquantiles!(almost_there, :median)
@@ -265,3 +263,4 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 #
 # increasing the threshold doesn't help much because stuff is still extremely smeared
 # for reference: for the uk jump/highs soft ot only yields 1,600 matches, compared to ~50,000 with sinkhorn
+
