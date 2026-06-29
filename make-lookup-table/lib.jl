@@ -3,6 +3,9 @@ using CSV, DataFrames, Luxor, Arrow, ThreadsX, StatsBase, ColorSchemes, Progress
 import H3
 import Colors: RGB
 
+loweruint64(x) = x % UInt32
+upperuint64(x) = (x >> 32) % UInt32
+
 countries = CSV.read("../data/country-code.csv", DataFrame)
 
 function _comma_group_number(raw::AbstractString)
