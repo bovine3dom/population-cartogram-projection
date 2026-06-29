@@ -9,7 +9,7 @@ include("cuRegOT.jl")
 cartogram = Arrow.Table("cartogram.arrow") |> DataFrame # pls fix the corruption? pls?
 country_colours = Dict(c => rand(3) for c in unique(cartogram.code))
 render_cartogram(cartogram)
-H3_RES = 5
+H3_RES = 6
 cities = CSV.read("population-data/tiny-cities.csv", DataFrame)
 cities.h3 = H3.API.latLngToCell.(H3.API.LatLng.(deg2rad.(cities.latitude), deg2rad.(cities.longitude)), H3_RES)
 function city_labels_by_h3(cities::DataFrame; min_population::Real=300_000)
@@ -113,8 +113,8 @@ for country_index in eachindex(countries_to_process)
         owid_code = prepared_country.owid_code
         country_unit_work = prepared_country.country_unit_work
         country_progress = Ref(0)
-        progress_callback = () -> begin
-            country_progress[] += country_unit_work
+        progress_callback = (steps=1) -> begin
+            country_progress[] += country_unit_work * steps
             update!(progress, min(completed_work + country_progress[], total_work))
         end
         mini_df, tuning_meta = match_prepared_h3_to_cartogram_sinkhorn2_auto(
@@ -199,63 +199,120 @@ render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), fiel
 
 # bof. it looks kind of fine in the centre but at the borders it is mega dodge
 # fixed with the f32 -> f0 bug. but now it's slow? is it really no faster than the jump solver?
-_code = countries[countries.name .== "France", :code][1] # 826 uk # 356 india # 156 china
-owid_code = _code
-ne_code = get(ffs, owid_code, owid_code)
-# gc = groupby(cartogram, :code) # somehow doing this twice causes a segfault
-owid_only = setdiff(unique(cartogram.code), ne_countries) # 28 (antigua), 250 (france), 492 (monaco)
-# somehow something in here MUTATES the cartogram(!!!!) # switching from csv to arrow fixed it.
-mini_cartogram = subdivide_cartogram(cartogram[cartogram.code .== owid_code, :], 1) # do not do this for big countries. lol.
-render_cartogram(mini_cartogram)
-mini_population = gp[(ne_code,)]
-mini_df, tuning_meta = match_h3_to_cartogram_sinkhorn2_auto(
-  DataFrame(mini_population),
-  DataFrame(mini_cartogram);
-  cost_power = 2.0,
-  candidate_final_etas = sinkhorn_candidate_final_etas,
-#  target_rows_multiplier = l.0,
-  max_iters_per_eta = 5000,
-  tol = 0.01,
-  cumulative_weight = 0.995,
-  min_weight = 1e-4,
-  silent = false,
-  return_metadata = true,
- ) # wtf at one point we had finally got china to be 50k rows but now it is 500k again !?
-@show tuning_meta.final_eta
-@show tuning_meta.rows
-@show tuning_meta.target_rows
-@show tuning_meta.marginal_error
-# still too stripey for india
-# mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=400.0)
-# for reference: soft ot only yields 1,600 matches, compared to ~26,000 with sinkhorn
-# i am thinking our best bet is really just to use optimal transport and mask out the parts of the map where the population is too small
-# sidequest - integer downsample large countries then upsample back to exact original grid
-#
-_cities = city_labels_by_h3(cities)
-toplot = leftjoin(mini_df, smaller_pop[:, Not([:x, :y])], on=:h3)
-toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
-# sort!(toplot, :weight)
-# toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
-assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=:label)
+function render_country_scratch(
+    country_name::AbstractString;
+    subdivision::Int=6,
+    min_city_population::Real=50_000,
+    render_scale::Real=10,
+    silent::Bool=true,
+    profile::Bool=true,
+)
+    matches = countries[countries.name .== country_name, :code]
+    if isempty(matches)
+        error("No country found with name '$country_name'.")
+    end
 
-#toplot = Arrow.Table("cartogram_weights.whole_planet.arrow") |> DataFrame
-#toplot.h3 = parse.(UInt64, toplot.index, base=16)
-#toplot = leftjoin(toplot, smaller_pop[:, [:median, :h3]], on=:h3)
-almost_there = combine(groupby(toplot, [:x, :y]), [:median, :weight] => ((m,w) -> quantile(m, weights(collect(skipmissing(w))), 0.5)) => :median, :label => (n -> join(collect(skipmissing(n)), ", ")) => :label, [:population, :weight] => ((p, w) -> sum(p.*w)) => :population, :code => StatsBase.mode => :code, nrow)
-almost_there.label = map(x -> x == "" ? missing : x, almost_there.label)
-addquantiles!(almost_there, :median)
-addquantiles!(almost_there, :population)
-almost_there.population_z = (almost_there.population ./ mean(almost_there.population)) ./ 2
-almost_there.median_z = (almost_there.median .- mean(almost_there.median)) ./ (2 * std(almost_there.median)) .+ 0.5
-almost_there.nrow_z = (almost_there.nrow ./ maximum(almost_there.nrow))
+    owid_code = matches[1] # 826 uk # 356 india # 156 china
+    ne_code = get(ffs, owid_code, owid_code)
+    # somehow something in here MUTATES the cartogram(!!!!) # switching from csv to arrow fixed it.
+    mini_cartogram = subdivide_cartogram(cartogram[cartogram.code .== owid_code, :], subdivision) # do not do this for big countries. lol.
+    render_cartogram(mini_cartogram)
+    mini_population = gp[(ne_code,)]
 
-# this is just for sense checking: it should all be the same colour
-RENDER_SCALE = 10 
-render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, filename="population_check.png", draw_country_borders=true, padding=RENDER_SCALE*10)
+    schedule = eta_continuation_schedule(sinkhorn_candidate_final_etas)
+    unit_work = max(1, nrow(mini_population) * nrow(mini_cartogram))
+    total_work = length(schedule) * sinkhorn_max_iters_per_eta * unit_work
+    progress = Progress(total_work; desc="Sinkhorn $country_name: ", showspeed=true)
+    completed_work = Ref(0)
+    progress_callback = (steps=1) -> begin
+        completed_work[] += steps * unit_work
+        update!(progress, min(completed_work[], total_work))
+    end
 
-# this is the actual map
+    mini_df = nothing
+    tuning_meta = nothing
+    try
+        mini_df, tuning_meta = match_h3_to_cartogram_sinkhorn2_auto(
+            DataFrame(mini_population),
+            DataFrame(mini_cartogram);
+            candidate_final_etas=sinkhorn_candidate_final_etas,
+            target_rows_multiplier=sinkhorn_target_rows_multiplier,
+            max_iters_per_eta=sinkhorn_max_iters_per_eta,
+            tol=sinkhorn_tol,
+            cumulative_weight=sinkhorn_cumulative_weight,
+            min_weight=sinkhorn_min_weight,
+            silent=silent,
+            progress_callback=progress_callback,
+            return_metadata=true,
+            profile=profile,
+        ) # wtf at one point we had finally got china to be 50k rows but now it is 500k again !?
+    finally
+        finish!(progress)
+    end
+
+    @show tuning_meta.final_eta
+    @show tuning_meta.rows
+    @show tuning_meta.target_rows
+    @show tuning_meta.marginal_error
+    if profile && hasproperty(tuning_meta, :timings)
+        @show tuning_meta.timings.gpu_iteration_seconds
+        @show tuning_meta.timings.candidate_row_count_seconds
+        @show tuning_meta.timings.best_dual_copy_seconds
+        @show tuning_meta.timings.dual_download_seconds
+        @show tuning_meta.timings.sparse_extraction_seconds
+        @show tuning_meta.timings.total_wall_seconds
+    end
+    # still too stripey for india
+    # mini_df = match_h3_to_cartogram_ot(mini_population, mini_cartogram, max_neighbors=100, penalty=400.0)
+    # for reference: soft ot only yields 1,600 matches, compared to ~26,000 with sinkhorn
+    # i am thinking our best bet is really just to use optimal transport and mask out the parts of the map where the population is too small
+    # sidequest - integer downsample large countries then upsample back to exact original grid
+    #
+    _cities = city_labels_by_h3(cities, min_population=min_city_population)
+    toplot = leftjoin(mini_df, smaller_pop[:, Not([:x, :y])], on=:h3)
+    toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
+    # sort!(toplot, :weight)
+    # toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
+    assign_weighted_labels!(toplot, label_col=:name, weight_col=:weight, target_col=:label)
+
+    #toplot = Arrow.Table("cartogram_weights.whole_planet.arrow") |> DataFrame
+    #toplot.h3 = parse.(UInt64, toplot.index, base=16)
+    #toplot = leftjoin(toplot, smaller_pop[:, [:median, :h3]], on=:h3)
+    almost_there = combine(groupby(toplot, [:x, :y]), [:median, :weight] => ((m,w) -> quantile(m, weights(collect(skipmissing(w))), 0.5)) => :median, :label => (n -> join(collect(skipmissing(n)), ", ")) => :label, [:population, :weight] => ((p, w) -> sum(p.*w)) => :population, :code => StatsBase.mode => :code, nrow)
+    almost_there.label = map(x -> x == "" ? missing : x, almost_there.label)
+    addquantiles!(almost_there, :median)
+    addquantiles!(almost_there, :population)
+    almost_there.population_z = (almost_there.population ./ mean(almost_there.population)) ./ 2
+    almost_there.median_z = (almost_there.median .- mean(almost_there.median)) ./ (2 * std(almost_there.median)) .+ 0.5
+    almost_there.nrow_z = (almost_there.nrow ./ maximum(almost_there.nrow))
+
+    # this is just for sense checking: it should all be the same colour
+    render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=render_scale, font_size=render_scale, filename="population_check.png", draw_country_borders=true, padding=render_scale*10)
+
+    # this is the actual map
+    render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_legend=true, legend_label_field=:median, legend_title="Population density per km^2", draw_outline=false, square_size=render_scale, font_size=render_scale, draw_country_borders=true, padding=render_scale*10)
+
+    return (
+        owid_code=owid_code,
+        ne_code=ne_code,
+        mini_cartogram=mini_cartogram,
+        mini_population=mini_population,
+        mini_df=mini_df,
+        tuning_meta=tuning_meta,
+        toplot=toplot,
+        almost_there=almost_there,
+    )
+end
+
+scratch = render_country_scratch("Germany")
+mini_cartogram = scratch.mini_cartogram
+mini_population = scratch.mini_population
+mini_df = scratch.mini_df
+tuning_meta = scratch.tuning_meta
+toplot = scratch.toplot
+almost_there = scratch.almost_there
+RENDER_SCALE = 20
 render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_legend=true, legend_label_field=:median, legend_title="Population density per km^2", draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
-# render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # todo:
 # it's still too smeared
