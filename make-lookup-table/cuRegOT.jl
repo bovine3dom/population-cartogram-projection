@@ -2,6 +2,20 @@ using CUDA, SparseArrays, LinearAlgebra
 using JuMP, HiGHS
 # gemini 3.5 flash vomit draft implementation of https://arxiv.org/abs/2605.08793
 
+function _report_progress(progress_callback, steps::Int)
+    if isnothing(progress_callback) || steps <= 0
+        return
+    end
+
+    if applicable(progress_callback, steps)
+        progress_callback(steps)
+    elseif applicable(progress_callback)
+        progress_callback()
+    else
+        progress_callback(steps)
+    end
+end
+
 # ==============================================================================
 # 1. FUSED CUDA KERNELS FOR GRADIENT EVALUATION & SINKHORN ITERATIONS
 # ==============================================================================
@@ -87,6 +101,11 @@ CUDA kernel for a single column-update step of the log-stabilized Sinkhorn algor
 function sinkhorn_col_kernel!(M, alpha, beta, eta, b, n, m)
     j = (blockIdx().x - 1) * blockDim().x + threadIdx().x
     if j <= m
+        if j == m
+            beta[j] = zero(eltype(beta))
+            return
+        end
+
         max_val = -Inf32
         for i in 1:n
             val = alpha[i] - M[i, j]
@@ -169,6 +188,14 @@ function sinkhorn_col_block_kernel!(M, alpha, beta, eta, b, n, m)
     tid = threadIdx().x
     block_size = blockDim().x
     FT = eltype(M)
+
+    if j == m
+        if tid == 1
+            beta[j] = zero(FT)
+        end
+        return
+    end
+
     shared = CUDA.CuDynamicSharedArray(FT, block_size)
 
     max_val = FT(-Inf)
@@ -261,7 +288,6 @@ function run_sinkhorn_gpu!(alpha, beta, M, a, b, eta, n, m, num_iters)
         @cuda threads=threads blocks=blocks_row sinkhorn_row_kernel!(M, alpha, beta, eta, a, n, m)
         @cuda threads=threads blocks=blocks_col sinkhorn_col_kernel!(M, alpha, beta, eta, b, n, m)
     end
-    CUDA.@allowscalar beta[m] = 0.0  # Maintain the beta_m = 0 constraint
 end
 
 """
@@ -560,9 +586,6 @@ function log_sinkhorn_gpu_solver(M_cpu::Matrix{Float32}, a_cpu::Vector{Float32},
         @cuda threads=threads blocks=blocks_row sinkhorn_row_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
         @cuda threads=threads blocks=blocks_col sinkhorn_col_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
         
-        # Enforce the dual gauge constraint (beta_m = 0)
-        CUDA.@allowscalar beta_gpu[m] = 0.0f0
-        
         # Periodically compute marginals on the GPU to check convergence
         if iter % 10 == 0 || iter == 1
             _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
@@ -613,15 +636,15 @@ function log_sinkhorn_gpu_solver_schedule(
         if !silent
             println("Eta $eta")
         end
+        pending_progress = 0
         for iter in 1:max_iters_per_eta
             @cuda threads=threads blocks=blocks_row sinkhorn_row_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
             @cuda threads=threads blocks=blocks_col sinkhorn_col_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
-            CUDA.@allowscalar beta_gpu[m] = 0.0f0
-            if !isnothing(progress_callback)
-                progress_callback()
-            end
+            pending_progress += 1
 
-            if iter % 25 == 0 || iter == 1
+            if iter % 25 == 0 || iter == 1 || iter == max_iters_per_eta
+                _report_progress(progress_callback, pending_progress)
+                pending_progress = 0
                 _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
                 marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
 
@@ -710,17 +733,16 @@ function log_sinkhorn_gpu_solver_schedule_optimized(
             if !silent
                 println("Eta $eta")
             end
+            pending_progress = 0
             for iter in 1:max_iters_per_eta
                 @cuda threads=threads blocks=n shmem=shmem sinkhorn_row_block_kernel!(Mt_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
                 @cuda threads=threads blocks=m shmem=shmem sinkhorn_col_block_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
-                CUDA.@allowscalar beta_gpu[m] = 0.0f0
                 iterations_completed += 1
-
-                if !isnothing(progress_callback)
-                    progress_callback()
-                end
+                pending_progress += 1
 
                 if iter % check_every == 0 || iter == 1 || iter == max_iters_per_eta
+                    _report_progress(progress_callback, pending_progress)
+                    pending_progress = 0
                     _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
                     last_marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
 
@@ -797,7 +819,8 @@ function log_sinkhorn_gpu_solver_schedule_optimized_each_eta(
     silent::Bool = true,
     progress_callback::Union{Nothing, Function} = nothing,
     stage_callback::Union{Nothing, Function} = nothing,
-    profile::Bool = false
+    profile::Bool = false,
+    return_duals::Bool = true
 )
     n, m = size(M_cpu)
     if isempty(eta_schedule)
@@ -866,17 +889,16 @@ function log_sinkhorn_gpu_solver_schedule_optimized_each_eta(
         end
 
         eta_loop = () -> begin
+            pending_progress = 0
             for iter in 1:max_iters_per_eta
                 @cuda threads=threads blocks=n shmem=shmem sinkhorn_row_block_kernel!(Mt_gpu, alpha_gpu, beta_gpu, eta, a_gpu, n, m)
                 @cuda threads=threads blocks=m shmem=shmem sinkhorn_col_block_kernel!(M_gpu, alpha_gpu, beta_gpu, eta, b_gpu, n, m)
-                CUDA.@allowscalar beta_gpu[m] = 0.0f0
                 iterations_completed += 1
-
-                if !isnothing(progress_callback)
-                    progress_callback()
-                end
+                pending_progress += 1
 
                 if iter % check_every == 0 || iter == 1 || iter == max_iters_per_eta
+                    _report_progress(progress_callback, pending_progress)
+                    pending_progress = 0
                     _ = evaluate_gradient_and_obj!(M_gpu, alpha_gpu, beta_gpu, eta, row_sums_gpu, col_sums_gpu, a_gpu, b_gpu, n, m, g_scratch)
                     last_marg_error = sum(abs.(row_sums_gpu .- a_gpu)) + sum(abs.(col_sums_gpu .- b_gpu))
 
@@ -904,26 +926,7 @@ function log_sinkhorn_gpu_solver_schedule_optimized_each_eta(
         end
 
         if eta in candidate_set
-            if profile
-                alpha_cpu = nothing
-                beta_cpu = nothing
-                dual_download_seconds += @elapsed begin
-                    CUDA.@sync begin
-                        alpha_cpu = Array(alpha_gpu)
-                        beta_cpu = Array(beta_gpu)
-                    end
-                end
-            else
-                alpha_cpu = Array(alpha_gpu)
-                beta_cpu = Array(beta_gpu)
-            end
-            if any(!isfinite, alpha_cpu) || any(!isfinite, beta_cpu)
-                error("Non-finite Sinkhorn dual potential at eta=$eta.")
-            end
-
             result = (
-                alpha = alpha_cpu,
-                beta = beta_cpu,
                 eta = eta,
                 marginal_error = last_marg_error,
                 iterations = iterations_completed,
@@ -939,8 +942,32 @@ function log_sinkhorn_gpu_solver_schedule_optimized_each_eta(
             end
 
             last_result = result
-            if !isnothing(stage_callback) && stage_callback(result)
-                return result
+            should_stop = !isnothing(stage_callback) && stage_callback(result, M_gpu, alpha_gpu, beta_gpu, a_gpu)
+            if should_stop
+                if !return_duals
+                    return result
+                end
+
+                alpha_cpu = nothing
+                beta_cpu = nothing
+                elapsed_download = @elapsed begin
+                    CUDA.@sync begin
+                        alpha_cpu = Array(alpha_gpu)
+                        beta_cpu = Array(beta_gpu)
+                    end
+                end
+                dual_download_seconds += elapsed_download
+                if any(!isfinite, alpha_cpu) || any(!isfinite, beta_cpu)
+                    error("Non-finite Sinkhorn dual potential at eta=$eta.")
+                end
+
+                materialized = merge(result, (alpha=alpha_cpu, beta=beta_cpu))
+                if profile
+                    materialized = merge(materialized, (timings = merge(result.timings, (
+                        dual_download_seconds = dual_download_seconds,
+                    )),))
+                end
+                return materialized
             end
         end
     end
@@ -949,7 +976,31 @@ function log_sinkhorn_gpu_solver_schedule_optimized_each_eta(
         error("No requested eta candidate was present in eta_schedule.")
     end
 
-    return last_result
+    if !return_duals
+        return last_result
+    end
+
+    alpha_cpu = nothing
+    beta_cpu = nothing
+    elapsed_download = @elapsed begin
+        CUDA.@sync begin
+            alpha_cpu = Array(alpha_gpu)
+            beta_cpu = Array(beta_gpu)
+        end
+    end
+    dual_download_seconds += elapsed_download
+    if any(!isfinite, alpha_cpu) || any(!isfinite, beta_cpu)
+        error("Non-finite Sinkhorn dual potential at eta=$(last_result.eta).")
+    end
+
+    materialized = merge(last_result, (alpha=alpha_cpu, beta=beta_cpu))
+    if profile
+        materialized = merge(materialized, (timings = merge(last_result.timings, (
+            dual_download_seconds = dual_download_seconds,
+        )),))
+    end
+
+    return materialized
 end
 
 function extract_sinkhorn_matches(
@@ -1022,6 +1073,90 @@ function extract_sinkhorn_matches(
         weight = assigned_weight,
         overlap = assigned_overlap
     )
+end
+
+function count_sinkhorn_match_rows_kernel!(M, alpha, beta, eta, a, row_counts, n, m, cumulative_weight, min_output_neighbors, max_keep)
+    i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+    if i <= n
+        FT = eltype(M)
+        ai = a[i]
+        cumulative = zero(FT)
+        previous = FT(Inf)
+        kept = Int32(0)
+
+        while kept < max_keep && !(kept >= min_output_neighbors && cumulative >= cumulative_weight)
+            best = zero(FT)
+            for j in 1:m
+                mass = exp((alpha[i] + beta[j] - M[i, j]) / eta)
+                weight = mass / ai
+                if weight < previous && weight > best
+                    best = weight
+                end
+            end
+
+            if !(best > zero(FT))
+                break
+            end
+
+            ties = Int32(0)
+            for j in 1:m
+                mass = exp((alpha[i] + beta[j] - M[i, j]) / eta)
+                weight = mass / ai
+                if weight == best
+                    ties += Int32(1)
+                end
+            end
+
+            taken = Int32(0)
+            while taken < ties && kept < max_keep
+                if kept >= min_output_neighbors && cumulative >= cumulative_weight
+                    break
+                end
+                cumulative += best
+                kept += Int32(1)
+                taken += Int32(1)
+            end
+
+            previous = best
+        end
+
+        row_counts[i] = kept
+    end
+
+    return
+end
+
+function count_sinkhorn_match_rows_gpu(
+    M_gpu,
+    alpha_gpu,
+    beta_gpu,
+    eta::Float32,
+    a_gpu;
+    cumulative_weight::Float64 = 0.995,
+    min_output_neighbors::Int = 1,
+    max_output_neighbors::Union{Nothing, Int} = nothing
+)
+    n, m = size(M_gpu)
+    max_keep = isnothing(max_output_neighbors) ? m : max(1, min(max_output_neighbors, m))
+    row_counts = CUDA.zeros(Int32, n)
+    threads = 256
+    blocks = div(n + threads - 1, threads)
+
+    @cuda threads=threads blocks=blocks count_sinkhorn_match_rows_kernel!(
+        M_gpu,
+        alpha_gpu,
+        beta_gpu,
+        eta,
+        a_gpu,
+        row_counts,
+        n,
+        m,
+        Float32(cumulative_weight),
+        Int32(min_output_neighbors),
+        Int32(max_keep),
+    )
+
+    return Int(sum(row_counts))
 end
 
 function validate_sinkhorn2_extraction_args(
@@ -1331,17 +1466,23 @@ function match_prepared_h3_to_cartogram_sinkhorn2_auto(
 
     target_rows = round(Int, target_rows_multiplier * (prepared.sources + prepared.targets))
 
-    best_df = nothing
     best_meta = nothing
+    best_alpha_gpu = nothing
+    best_beta_gpu = nothing
     failed = NamedTuple[]
     candidate_etas = sort(collect(Set(candidate_final_etas)), rev=true)
     schedule = eta_continuation_schedule(candidate_etas)
     current_eta = Ref{Float32}(NaN32)
     solver_total_seconds = 0.0
+    candidate_row_count_seconds = 0.0
+    best_dual_copy_seconds = 0.0
+    final_dual_download_seconds = 0.0
+    sparse_extraction_seconds = 0.0
+    solver_result = nothing
 
     try
         solver_total_seconds = @elapsed begin
-            log_sinkhorn_gpu_solver_schedule_optimized_each_eta(
+            solver_result = log_sinkhorn_gpu_solver_schedule_optimized_each_eta(
                 prepared.cost,
                 prepared.source_mass,
                 prepared.target_mass,
@@ -1353,21 +1494,24 @@ function match_prepared_h3_to_cartogram_sinkhorn2_auto(
                 silent=silent,
                 progress_callback=progress_callback,
                 profile=profile,
-                stage_callback = result -> begin
+                return_duals=false,
+                stage_callback = (result, M_gpu, alpha_gpu, beta_gpu, a_gpu) -> begin
                     current_eta[] = result.eta
                     if !isfinite(result.marginal_error)
                         error("Non-finite marginal error for final eta $(result.eta).")
                     end
 
-                    df = nothing
-                    sparse_extraction_seconds = @elapsed begin
-                        df = extract_prepared_sinkhorn2_matches(
-                            prepared,
-                            result;
+                    rows = 0
+                    candidate_row_count_seconds += @elapsed begin
+                        rows = count_sinkhorn_match_rows_gpu(
+                            M_gpu,
+                            alpha_gpu,
+                            beta_gpu,
+                            result.eta,
+                            a_gpu;
                             cumulative_weight=cumulative_weight,
-                            min_weight=min_weight,
                             min_output_neighbors=min_output_neighbors,
-                            max_output_neighbors=max_output_neighbors
+                            max_output_neighbors=max_output_neighbors,
                         )
                     end
 
@@ -1375,19 +1519,10 @@ function match_prepared_h3_to_cartogram_sinkhorn2_auto(
                         final_eta = result.eta,
                         marginal_error = result.marginal_error,
                         iterations = result.iterations,
-                        rows = nrow(df),
+                        rows = rows,
                         sources = prepared.sources,
                         targets = prepared.targets,
                     )
-
-                    if profile
-                        meta = merge(meta, (timings = merge(prepared.timings, (
-                            total_wall_seconds = time() - total_wall_start,
-                            solver_total_seconds = solver_total_seconds,
-                        ), result.timings, (
-                            sparse_extraction_seconds = sparse_extraction_seconds,
-                        )),))
-                    end
 
                     tuned_meta = merge(meta, (
                         target_rows=target_rows,
@@ -1396,7 +1531,16 @@ function match_prepared_h3_to_cartogram_sinkhorn2_auto(
                     ))
 
                     if isnothing(best_meta) || tuned_meta.row_error < best_meta.row_error
-                        best_df = df
+                        if isnothing(best_alpha_gpu)
+                            best_alpha_gpu = similar(alpha_gpu)
+                            best_beta_gpu = similar(beta_gpu)
+                        end
+                        best_dual_copy_seconds += @elapsed begin
+                            CUDA.@sync begin
+                                copyto!(best_alpha_gpu, alpha_gpu)
+                                copyto!(best_beta_gpu, beta_gpu)
+                            end
+                        end
                         best_meta = tuned_meta
                     end
 
@@ -1414,14 +1558,67 @@ function match_prepared_h3_to_cartogram_sinkhorn2_auto(
         end
     end
 
-    if isnothing(best_df)
+    if isnothing(best_meta) || isnothing(best_alpha_gpu) || isnothing(best_beta_gpu)
         error("No stable Sinkhorn eta candidate found. Failed candidates: $failed")
     end
 
+    alpha_cpu = nothing
+    beta_cpu = nothing
+    final_dual_download_seconds = @elapsed begin
+        CUDA.@sync begin
+            alpha_cpu = Array(best_alpha_gpu)
+            beta_cpu = Array(best_beta_gpu)
+        end
+    end
+    if any(!isfinite, alpha_cpu) || any(!isfinite, beta_cpu)
+        error("Non-finite Sinkhorn dual potential at eta=$(best_meta.final_eta).")
+    end
+
+    best_result = (
+        alpha = alpha_cpu,
+        beta = beta_cpu,
+        eta = best_meta.final_eta,
+        marginal_error = best_meta.marginal_error,
+        iterations = best_meta.iterations,
+    )
+
+    best_df = nothing
+    sparse_extraction_seconds = @elapsed begin
+        best_df = extract_prepared_sinkhorn2_matches(
+            prepared,
+            best_result;
+            cumulative_weight=cumulative_weight,
+            min_weight=min_weight,
+            min_output_neighbors=min_output_neighbors,
+            max_output_neighbors=max_output_neighbors
+        )
+    end
+
+    if nrow(best_df) != best_meta.rows
+        best_meta = merge(best_meta, (
+            counted_rows = best_meta.rows,
+            rows = nrow(best_df),
+            row_error = abs(nrow(best_df) - target_rows),
+        ))
+    end
+
     if profile && !isnothing(best_meta)
-        best_meta = merge(best_meta, (timings = merge(best_meta.timings, (
+        solver_timings = !isnothing(solver_result) && hasproperty(solver_result, :timings) ? solver_result.timings : (
+            cpu_transpose_seconds = 0.0,
+            gpu_upload_allocation_seconds = 0.0,
+            gpu_iteration_seconds = 0.0,
+            dual_download_seconds = 0.0,
+        )
+        solver_timings = merge(solver_timings, (
+            dual_download_seconds = solver_timings.dual_download_seconds + final_dual_download_seconds,
+        ))
+        best_meta = merge(best_meta, (timings = merge(prepared.timings, (
             total_wall_seconds = time() - total_wall_start,
             solver_total_seconds = solver_total_seconds,
+        ), solver_timings, (
+            candidate_row_count_seconds = candidate_row_count_seconds,
+            best_dual_copy_seconds = best_dual_copy_seconds,
+            sparse_extraction_seconds = sparse_extraction_seconds,
         )),))
     end
 
