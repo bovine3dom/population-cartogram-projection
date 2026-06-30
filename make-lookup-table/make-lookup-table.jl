@@ -43,8 +43,8 @@ ffs = Dict(250 => 249) # ok so we need to map france 249 => 250 and skip 28, 336
 european_countries = ["Albania", "Andorra", "Austria", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Belarus", "Cyprus", "Croatia", "Czechia", "Denmark", "Estonia", "Faeroe Islands", "Finland", "<span data-sort-value=\"Aland Islands !\">Åland Islands", "France", "Germany", "Gibraltar", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Monaco", "Moldova", "Montenegro", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Svalbard and Jan Mayen", "Sweden", "Switzerland", "Ukraine", "North Macedonia", "United Kingdom", "Guernsey", "Jersey", "Isle of Man", "Vatican"]
 # europe = semijoin(cartogram, countries[in.(countries.name, Ref(european_countries)), :], on=:code)
 europe_codes = countries[in.(countries.name, Ref(european_countries)), :code]
-# all_countries = setdiff(intersect(cartogram.code, europe_codes), setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
-all_countries = setdiff(cartogram.code, setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+all_countries = setdiff(intersect(cartogram.code, europe_codes), setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
+# all_countries = setdiff(cartogram.code, setdiff(owid_only, keys(ffs))) # seems to miss approx 50 countries? presumably microstates?
 # all_countries = [156] # china
 results = []
 # somehow something in here MUTATES the cartogram(!!!!)
@@ -55,6 +55,7 @@ sinkhorn_candidate_final_etas = Float32[0.005, 0.002, 0.001, 0.000_5, 0.000_2, 0
 sinkhorn_max_iters_per_eta = 5000
 sinkhorn_cost_power = 2.0
 sinkhorn_target_rows_multiplier = 2.0
+subdivide_factor = 6
 sinkhorn_tol = 0.02
 sinkhorn_cumulative_weight = 0.995
 sinkhorn_min_weight = 1e-4
@@ -64,7 +65,7 @@ total_work = 0
 for _code in countries_to_process
     try
         ne_code = get(ffs, _code, _code)
-        work = max(1, nrow(gp[(ne_code,)]) * nrow(gc[(_code,)])) * sinkhorn_estimated_iters
+        work = max(1, nrow(gp[(ne_code,)]) * nrow(gc[(_code,)])) * subdivide_factor^2 * sinkhorn_estimated_iters
         country_work[_code] = work
         total_work += work
     catch e
@@ -78,7 +79,7 @@ end
 
 function prepare_country_sinkhorn_problem(owid_code)
     ne_code = get(ffs, owid_code, owid_code)
-    mini_cartogram = DataFrame(deepcopy(gc[(owid_code,)]))
+    mini_cartogram = subdivide_cartogram(cartogram[cartogram.code .== owid_code, :], subdivide_factor)
     mini_population = DataFrame(gp[(ne_code,)])
     prepared = prepare_sinkhorn2_problem(
         mini_population,
@@ -152,6 +153,7 @@ df = reduce(vcat, results)
 #end, [_code]))
 
 toplot = leftjoin(df, smaller_pop[:, Not([:x, :y])], on=:h3)
+_cities = city_labels_by_h3(cities, min_population=50_000)
 toplot = leftjoin(toplot, _cities[:, [:h3, :name]], on=:h3)
 # sort!(toplot, :weight)
 # toplot.name = collect(Iterators.map(p -> p[1] ? p[2] : missing, zip(.!nonunique(toplot, :name), toplot.name))) # ideally this would be a weighted average
@@ -183,7 +185,7 @@ RENDER_SCALE = 20
 render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:population_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, filename="population_check.png", draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # this is the actual map
-render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_quantile, draw_legend=true, legend_label_field=:median, legend_title="Population per km/2", draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
+render_cartogram(almost_there, legend = z -> get(ColorSchemes.Greys, z), field=:median_quantile, draw_legend=true, legend_label_field=:median, legend_title="Population per km/2", draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 # render_cartogram(almost_there, legend = z -> get(ColorSchemes.Spectral, z), field=:median_z, draw_outline=false, square_size=RENDER_SCALE, font_size=RENDER_SCALE, draw_country_borders=true, padding=RENDER_SCALE*10)
 
 # reducing the resolution makes it tractable
