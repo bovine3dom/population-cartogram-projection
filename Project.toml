@@ -1,0 +1,24 @@
+name = "PopulationCartogramProjection"
+uuid = "c8499a48-226f-4b8e-883b-6bf873220240"
+version = "0.1.0"
+
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+KernelAbstractions = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
+oneAPI = "8f75cd03-7ff8-4ecb-9b8f-daf728133b1b"
+
+[compat]
+CSV = "0.10"
+CUDA = "6.2.1"
+DataFrames = "1"
+KernelAbstractions = "0.9.42"
+julia = "1.11"
+oneAPI = "2.7.0"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
