@@ -10,7 +10,10 @@ id, population, x, y, country_code
 ```
 
 `id` is opaque and can be an H3 index, NUTS code, ONS code, IRIS code, or another
-stable identifier. The result is a dense fractional mapping:
+stable identifier. `x` and `y` are WGS84 longitude and latitude in degrees. The
+cartogram's downward-pointing vertical axis is handled internally.
+
+The fixed-eta API returns a dense fractional mapping:
 
 ```text
 id, country_code, cell_id, source_share
@@ -62,6 +65,79 @@ The CPU backend requires no system setup and is intended for fallback-sized
 regional problems. Its 256-workitem reductions are GPU-oriented and allocate
 more than a dedicated CPU algorithm would, so it is not intended to replace GPU
 execution for large H3 workloads.
+
+## Automatic Eta And Sparse Output
+
+`fit_mapping_auto` follows one warm-started continuation schedule and evaluates
+progressively tighter candidate etas. It targets
+`round(target_rows_multiplier * (sources + targets))` sparse rows, matching the
+scratch workflow's size rule. For source-heavy larger countries this approaches
+two retained targets per source with the default multiplier of two, so the tuner
+selects tighter regularization where needed.
+
+```julia
+fitted = fit_mapping_auto(sources; backend=:cuda)
+mapping = fitted.mapping
+retention = fitted.source_retention
+metadata = fitted.metadata
+```
+
+The default candidate list extends from `0.005` to `1e-7`. Candidates are
+visited from high to low eta, equal row errors retain the earlier higher eta,
+and evaluation stops after the first candidate at or below the row target. The
+closest converged candidate visited is returned. Failed candidates remain in
+metadata and do not stop continuation; selected-candidate and solver-final
+fields remain separate when a later stage does not converge.
+
+Sparse rows are selected in descending `source_share` order, including the row
+that crosses `cumulative_share`. Retained shares are not renormalized.
+After `minimum_neighbors` have been retained, `minimum_source_share` can stop
+before the next smaller row even if the cumulative target has not been reached.
+This is an explicit rule, unlike the scratch workflow's inert `min_weight`
+setting. `source_retention` reports retained and dropped share, whether the
+cumulative target was achieved, and the truncation reason for every source.
+Metadata reports population-weighted retained and dropped mass. Candidate
+counting and final extraction use the same deterministic host implementation.
+
+## Real UK H3 Check
+
+The full Kontur and Natural Earth Arrow inputs remain external and ignored. With
+those files in their existing `make-lookup-table/population-data/` locations,
+build a cached canonical UK extract without loading either complete table into a
+DataFrame:
+
+```sh
+julia scripts/extract_country_h3.jl 826 6
+```
+
+This uses `clickhouse local` to reproduce the scratch workflow's exact H3 join,
+parent population sum, and modal country assignment. Parent resolutions from 0
+through the source resolution of 8 are supported. The script pins the
+`h3ToGeo` coordinate order and validates IDs, resolution, country code,
+coordinates, population, and uniqueness before publishing its output. The
+resulting ignored `country-826-res6.arrow` has 8,346 unique sources, population
+66,956,569, and is about 197 KiB.
+
+Run the bounded package-versus-scratch migration oracle on the 8,346 by 459
+native UK problem:
+
+```sh
+julia +1.12.1 --threads=auto --project=make-lookup-table \
+  make-lookup-table/compare_package_auto.jl
+```
+
+On the GTX 1080 Ti, after warming both CUDA paths:
+
+| Implementation | Selected eta | Rows | Marginal error | Retained mass | Time |
+|---|---:|---:|---:|---:|---:|
+| Package | `5e-5` | 19,539 | 0.00105 | 99.770% | about 1.2 s |
+| Scratch | `1e-5` | 18,616 | 0.00577 | 99.747% | about 1.5 s |
+
+Prepared costs differ by at most `1.79e-7`, source masses by `9.31e-10`, and
+target masses are identical. Dominant target cells agree for 96.15% of sources.
+The eta difference is expected: the package tunes against normalized,
+deterministic source shares, while the scratch GPU counter uses source-relative
+mass from a loosely converged plan. No all-country population matching is run.
 
 ## Intel Gen9 Setup
 
@@ -148,7 +224,8 @@ does not require the large Kontur or Natural Earth H3 datasets.
 
 - `fit_mapping` currently handles one country at a time.
 - CUDA, oneAPI, and CPU use one portable kernel implementation.
-- Output is dense; sparse extraction is not yet part of this path.
+- `fit_mapping` is dense; `fit_mapping_auto` returns sparse output and retention
+  diagnostics.
 - Source coordinates are scaled from their bounding box to the country's OWID
   grid bounding box. This is an explicit modelling limitation under review.
 - Rendering and projection of additional values have not yet been moved into

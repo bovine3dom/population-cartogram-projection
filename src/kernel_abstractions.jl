@@ -246,6 +246,8 @@ function solve_sinkhorn(
     max_iters_per_eta::Int=1_000,
     tol::Real=1e-5,
     check_every::Int=25,
+    stage_observer=nothing,
+    stage_observer_etas=nothing,
 )
     problem = _prepare_sinkhorn_inputs(
         cost,
@@ -256,8 +258,19 @@ function solve_sinkhorn(
         tol,
         check_every,
     )
-    ka_backend = _ka_backend(backend)
     (; float_cost, float_source_mass, float_target_mass, float_eta_schedule) = problem
+    observed_eta_set = if isnothing(stage_observer_etas)
+        nothing
+    else
+        isnothing(stage_observer) &&
+            throw(ArgumentError("stage_observer_etas requires stage_observer"))
+        observed = Set(_float_eta_values(stage_observer_etas, "stage_observer_etas"))
+        issubset(observed, Set(float_eta_schedule)) || throw(ArgumentError(
+            "stage_observer_etas must be present in eta_schedule",
+        ))
+        observed
+    end
+    ka_backend = _ka_backend(backend)
     source_count, target_count = size(float_cost)
 
     transposed_float_cost = Matrix(transpose(float_cost))
@@ -316,18 +329,28 @@ function solve_sinkhorn(
         target_mass_device,
         eta,
     )
+    observe_stage = if isnothing(stage_observer)
+        nothing
+    else
+        state -> begin
+            !isnothing(observed_eta_set) && state.eta ∉ observed_eta_set && return false
+            return stage_observer(
+                _sinkhorn_result(Array(alpha_device), Array(beta_device), state),
+            )
+        end
+    end
     state = _run_sinkhorn(
         step!,
         marginal_error!,
         float_eta_schedule,
         max_iters_per_eta,
         tol,
-        check_every,
+        check_every;
+        stage_observer=observe_stage,
     )
     return _sinkhorn_result(
         Array(alpha_device),
         Array(beta_device),
-        float_eta_schedule,
         state,
     )
 end

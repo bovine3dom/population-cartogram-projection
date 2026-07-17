@@ -7,7 +7,8 @@ import KernelAbstractions as KA
 using KernelAbstractions: @index, @kernel, @localmem, @synchronize
 using oneAPI
 
-export fit_mapping, load_owid_grid, solve_sinkhorn, validate_sources
+export eta_continuation_schedule, eta_schedule_to, fit_mapping, fit_mapping_auto,
+       load_owid_grid, solve_sinkhorn, validate_sources
 
 const SOURCE_COLUMNS = (:id, :population, :x, :y, :country_code)
 const GRID_COLUMNS = (:cell_id, :grid_x, :grid_y, :country_code)
@@ -45,10 +46,10 @@ function validate_sources(sources::AbstractDataFrame)
     all(value -> value isa Real && !(value isa Bool) && isfinite(value) && value > 0, sources.population) ||
         throw(ArgumentError("source population must contain finite positive numbers"))
 
-    for column in (:x, :y)
-        all(value -> value isa Real && !(value isa Bool) && isfinite(value), sources[!, column]) ||
-            throw(ArgumentError("source $column must contain finite numbers"))
-    end
+    all(value -> value isa Real && !(value isa Bool) && isfinite(value) && -180 <= value <= 180, sources.x) ||
+        throw(ArgumentError("source x must contain WGS84 longitudes in degrees between -180 and 180"))
+    all(value -> value isa Real && !(value isa Bool) && isfinite(value) && -90 <= value <= 90, sources.y) ||
+        throw(ArgumentError("source y must contain WGS84 latitudes in degrees between -90 and 90"))
 
     keys = Set(zip(sources.country_code, sources.id))
     length(keys) == nrow(sources) ||
@@ -103,19 +104,30 @@ function _minimum_step(values)
     return length(sorted_values) > 1 ? minimum(diff(sorted_values)) : 1.0
 end
 
+function _float_eta_values(values, label)
+    collected = collect(values)
+    isempty(collected) && throw(ArgumentError("$label cannot be empty"))
+    all(value -> value isa Real && !(value isa Bool), collected) ||
+        throw(ArgumentError("$label must contain real numbers"))
+    converted = Float32.(collected)
+    all(value -> isfinite(value) && value > 0, converted) ||
+        throw(ArgumentError("$label must contain finite positive values representable as Float32"))
+    return converted
+end
+
 function _prepare_problem(sources::AbstractDataFrame, targets::AbstractDataFrame; cost_power::Real=2)
     !(cost_power isa Bool) && isfinite(cost_power) && cost_power > 0 ||
         throw(ArgumentError("cost_power must be finite and positive"))
     source_x = _scale_to_grid(Float64.(sources.x), Float64.(targets.grid_x))
-    source_y = _scale_to_grid(Float64.(sources.y), Float64.(targets.grid_y))
+    source_y = _scale_to_grid(-Float64.(sources.y), Float64.(targets.grid_y))
     step_x = _minimum_step(targets.grid_x)
     step_y = _minimum_step(targets.grid_y)
 
     source_count = nrow(sources)
     target_count = nrow(targets)
     cost = Matrix{Float32}(undef, source_count, target_count)
-    @inbounds for j in 1:target_count
-        for i in 1:source_count
+    Threads.@threads for j in 1:target_count
+        @inbounds for i in 1:source_count
             dx = (source_x[i] - targets.grid_x[j]) / step_x
             dy = (source_y[i] - targets.grid_y[j]) / step_y
             cost[i, j] = Float32(hypot(dx, dy))
@@ -178,13 +190,10 @@ function _prepare_sinkhorn_inputs(
     tol,
     check_every,
 )
-    eta_values = collect(eta_schedule)
-    any(value -> value isa Bool, eta_values) &&
-        throw(ArgumentError("eta_schedule cannot contain boolean values"))
     float_cost = cost isa Matrix{Float32} ? cost : Matrix{Float32}(cost)
     float_source_mass = source_mass isa Vector{Float32} ? source_mass : Vector{Float32}(source_mass)
     float_target_mass = Vector{Float32}(target_mass)
-    float_eta_schedule = Float32.(eta_values)
+    float_eta_schedule = _float_eta_values(eta_schedule, "eta_schedule")
     source_total, target_total = _validate_sinkhorn_inputs(
         float_cost,
         float_source_mass,
@@ -207,12 +216,20 @@ function _prepare_sinkhorn_inputs(
     return (; float_cost, float_source_mass, float_target_mass, float_eta_schedule)
 end
 
-function _run_sinkhorn(step!, marginal_error!, eta_schedule, max_iters_per_eta, tol, check_every)
-    error_value = Inf
+function _run_sinkhorn(
+    step!,
+    marginal_error!,
+    eta_schedule,
+    max_iters_per_eta,
+    tol,
+    check_every;
+    stage_observer=nothing,
+)
     iterations = 0
-    converged = false
+    stage_state = nothing
     for eta in eta_schedule
         converged = false
+        error_value = Inf
         for iteration in 1:max_iters_per_eta
             step!(eta)
             iterations += 1
@@ -227,11 +244,23 @@ function _run_sinkhorn(step!, marginal_error!, eta_schedule, max_iters_per_eta, 
                 end
             end
         end
+        stage_state = (
+            marginal_error=error_value,
+            iterations=iterations,
+            converged=converged,
+            eta=eta,
+            stop_reason=converged ? :converged : :max_iterations,
+        )
+        if !isnothing(stage_observer)
+            stop = stage_observer(stage_state)
+            stop isa Bool || throw(ArgumentError("stage_observer must return Bool"))
+            stop && return merge(stage_state, (stop_reason=:stage_observer,))
+        end
     end
-    return (; marginal_error=error_value, iterations, converged)
+    return stage_state
 end
 
-function _sinkhorn_result(alpha, beta, eta_schedule, state)
+function _sinkhorn_result(alpha, beta, state)
     shift = beta[end]
     beta .-= shift
     alpha .+= shift
@@ -239,11 +268,11 @@ function _sinkhorn_result(alpha, beta, eta_schedule, state)
     return SinkhornResult(
         alpha,
         beta,
-        eta_schedule[end],
+        state.eta,
         state.marginal_error,
         state.iterations,
         state.converged,
-        state.converged ? :converged : :max_iterations,
+        state.stop_reason,
     )
 end
 
@@ -254,6 +283,26 @@ function _cuda_unavailable()
 end
 
 include("kernel_abstractions.jl")
+
+function _prepare_mapping_problem(sources, grid; cost_power, backend)
+    validate_sources(sources)
+    _validate_grid(grid)
+
+    country_codes = unique(sources.country_code)
+    length(country_codes) == 1 || throw(ArgumentError("fit_mapping currently supports one country at a time"))
+    country_code = only(country_codes)
+    targets = filter(:country_code => ==(country_code), grid)
+    nrow(targets) > 0 || throw(ArgumentError("OWID grid has no cells for country_code=$country_code"))
+    if backend === :cuda
+        CUDA.functional() || throw(_cuda_unavailable())
+    elseif backend === :oneapi
+        oneAPI.functional() || throw(ArgumentError("oneAPI is not functional on this system"))
+    elseif backend !== :cpu
+        throw(ArgumentError("backend must be :cuda, :oneapi, or :cpu"))
+    end
+
+    return (; targets, problem=_prepare_problem(sources, targets; cost_power))
+end
 
 function _extract_mapping(sources, targets, problem, result)
     source_count = nrow(sources)
@@ -287,6 +336,8 @@ function _extract_mapping(sources, targets, problem, result)
     )
 end
 
+include("automatic_eta.jl")
+
 """
     fit_mapping(sources, [grid]; kwargs...)
 
@@ -306,23 +357,7 @@ function fit_mapping(
     check_every::Int=25,
     backend::Symbol=:cuda,
 )
-    validate_sources(sources)
-    _validate_grid(grid)
-
-    country_codes = unique(sources.country_code)
-    length(country_codes) == 1 || throw(ArgumentError("fit_mapping currently supports one country at a time"))
-    country_code = only(country_codes)
-    targets = filter(:country_code => ==(country_code), grid)
-    nrow(targets) > 0 || throw(ArgumentError("OWID grid has no cells for country_code=$country_code"))
-    if backend === :cuda
-        CUDA.functional() || throw(_cuda_unavailable())
-    elseif backend === :oneapi
-        oneAPI.functional() || throw(ArgumentError("oneAPI is not functional on this system"))
-    elseif backend !== :cpu
-        throw(ArgumentError("backend must be :cuda, :oneapi, or :cpu"))
-    end
-
-    problem = _prepare_problem(sources, targets; cost_power)
+    (; targets, problem) = _prepare_mapping_problem(sources, grid; cost_power, backend)
     solver_kwargs = (; eta_schedule, max_iters_per_eta, tol, check_every)
     result = solve_sinkhorn(
         problem.cost,

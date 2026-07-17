@@ -133,6 +133,60 @@ function check_regional_mapping(backend)
     @test all(value -> isapprox(value, expected_mass; rtol=2e-4), target_totals.mass)
 end
 
+function check_automatic_eta(backend)
+    sources = DataFrame(
+        id=["north", "south"],
+        population=Float32[1, 1],
+        x=Float64[0, 0],
+        y=Float64[60, 50],
+        country_code=[999, 999],
+    )
+    grid = DataFrame(
+        cell_id=["top", "bottom"],
+        grid_x=[0, 0],
+        grid_y=[0, 2],
+        country_code=[999, 999],
+    )
+    fitted = fit_mapping_auto(
+        sources,
+        grid;
+        backend,
+        candidate_final_etas=Float32[0.5, 0.1, 0.05],
+        base_eta_schedule=Float32[0.5, 0.1, 0.05],
+        target_rows_multiplier=0.5,
+        cumulative_share=0.995,
+        max_iters_per_eta=100,
+        tol=1e-5,
+        check_every=5,
+    )
+    @test fitted.metadata.final_eta == 0.1f0
+    @test fitted.metadata.selected_eta == fitted.metadata.final_eta
+    @test fitted.metadata.selected_stop_reason == :converged
+    @test fitted.metadata.solver_final_eta == fitted.metadata.final_eta
+    @test fitted.metadata.solver_stop_reason == :stage_observer
+    @test fitted.metadata.rows == fitted.metadata.target_rows == 2
+    @test fitted.metadata.row_error == minimum(candidate.row_error for candidate in fitted.metadata.candidates)
+    @test fitted.metadata.dropped_mass_share ≈ 1 - fitted.metadata.retained_mass_share
+    @test propertynames(fitted.mapping) == [:id, :country_code, :cell_id, :source_share]
+    @test fitted.mapping.cell_id == ["top", "bottom"]
+    @test propertynames(fitted.source_retention) == [
+        :id,
+        :country_code,
+        :neighbors,
+        :retained_share,
+        :dropped_share,
+        :cumulative_achieved,
+        :truncation_reason,
+    ]
+    @test fitted.source_retention.neighbors == [1, 1]
+    @test all(fitted.source_retention.cumulative_achieved)
+    @test all(==(:cumulative_share), fitted.source_retention.truncation_reason)
+    @test fitted.source_retention.retained_share ≈ combine(
+        groupby(fitted.mapping, :id),
+        :source_share => sum => :retained_share,
+    ).retained_share
+end
+
 @testset "source validation" begin
     sources = CSV.read(FIXTURE_PATH, DataFrame)
     @test isnothing(validate_sources(sources))
@@ -148,6 +202,10 @@ end
     boolean_population = copy(sources)
     boolean_population.population = trues(nrow(boolean_population))
     @test_throws ArgumentError validate_sources(boolean_population)
+
+    invalid_longitude = copy(sources)
+    invalid_longitude.x[1] = 181
+    @test_throws ArgumentError validate_sources(invalid_longitude)
 end
 
 @testset "OWID grid" begin
@@ -172,6 +230,154 @@ end
     @test_throws ArgumentError solve_sinkhorn(cost, source_mass, target_mass; tol=1e-8)
     @test_throws ArgumentError solve_sinkhorn(cost, Float32[-0.4, 1.4], target_mass)
     @test_throws ArgumentError solve_sinkhorn(cost, source_mass, target_mass; backend=:invalid)
+
+    one_solver(; kwargs...) = solve_sinkhorn(
+        zeros(Float32, 1, 1), Float32[1], Float32[1]; backend=:cpu, kwargs...,
+    )
+    observed_etas = Float32[]
+    one_solver(
+        ;
+        eta_schedule=Float32[0.5, 0.1],
+        stage_observer=result -> (push!(observed_etas, result.eta); false),
+        stage_observer_etas=Float32[0.1],
+    )
+    @test observed_etas == Float32[0.1]
+    @test_throws ArgumentError one_solver(
+        ;
+        eta_schedule=Float32[0.5],
+        stage_observer_etas=Float32[0.5],
+    )
+    @test_throws ArgumentError one_solver(
+        ;
+        eta_schedule=Float32[0.5],
+        stage_observer=_ -> false,
+        stage_observer_etas=Float32[0.1],
+    )
+    @test_throws ArgumentError one_solver(
+        ;
+        eta_schedule=Float32[0.5],
+        stage_observer=_ -> 1,
+    )
+end
+
+@testset "automatic eta tuning" begin
+    @test eta_schedule_to(0.003; base_schedule=Float32[0.05, 0.01, 0.005, 0.002]) ==
+          Float32[0.05, 0.01, 0.005, 0.003]
+    @test eta_continuation_schedule(
+        Float32[0.005, 0.001, 0.005];
+        base_schedule=Float32[0.05, 0.01, 0.005, 0.002],
+    ) == Float32[0.05, 0.01, 0.005, 0.002, 0.001]
+    @test_throws ArgumentError eta_continuation_schedule(Float32[])
+    check_automatic_eta(:cpu)
+
+    function sparse_select(
+        shares=[0.6, 0.25, 0.1, 0.05];
+        cumulative_share=0.8,
+        minimum_source_share=0.0,
+        minimum_neighbors=1,
+        maximum_neighbors=nothing,
+        collect_indices=false,
+        tie_keys=nothing,
+    )
+        options = PopulationCartogramProjection._sparse_options(
+            length(shares);
+            cumulative_share,
+            minimum_source_share,
+            minimum_neighbors,
+            maximum_neighbors,
+        )
+        return PopulationCartogramProjection._select_sparse_row(
+            shares, options; collect_indices, tie_keys,
+        )
+    end
+    cumulative = sparse_select()
+    @test (cumulative.count, cumulative.cumulative_achieved, cumulative.stop_reason) ==
+          (2, true, :cumulative_share)
+    @test cumulative.retained_share ≈ 0.85
+
+    threshold = sparse_select(; cumulative_share=0.99, minimum_source_share=0.2)
+    @test (threshold.count, threshold.cumulative_achieved, threshold.stop_reason) ==
+          (2, false, :minimum_source_share)
+
+    minimum_count = sparse_select(
+        ; cumulative_share=0.5, minimum_source_share=0.3, minimum_neighbors=2,
+    )
+    @test (minimum_count.count, minimum_count.stop_reason) == (2, :cumulative_share)
+
+    capped = sparse_select(; cumulative_share=0.99, maximum_neighbors=2)
+    @test (capped.count, capped.cumulative_achieved, capped.stop_reason) ==
+          (2, false, :maximum_neighbors)
+
+    nonbinding_cap = sparse_select(
+        [0.6, 0.3, 0.05, 0.04]; cumulative_share=1.0, maximum_neighbors=4,
+    )
+    @test nonbinding_cap.stop_reason == :targets_exhausted
+
+    numerical_zero = sparse_select(
+        [0.9, 0.0, 0.0]; cumulative_share=1.0, minimum_neighbors=2,
+    )
+    @test (numerical_zero.count, numerical_zero.stop_reason) == (2, :numerical_zero)
+
+    tied = sparse_select(
+        [0.5, 0.5];
+        cumulative_share=0.5,
+        maximum_neighbors=1,
+        collect_indices=true,
+        tie_keys=["b", "a"],
+    )
+    @test tied.selected == [2]
+
+    fallback_sources = DataFrame(
+        id=["a", "b"],
+        population=Float32[1, 2],
+        x=[0.0, 1.0],
+        y=[1.0, 0.0],
+        country_code=[999, 999],
+    )
+    fallback_grid = DataFrame(
+        cell_id=["x", "y"],
+        grid_x=[0, 2],
+        grid_y=[0, 1],
+        country_code=[999, 999],
+    )
+    auto_options = (
+        backend=:cpu,
+        base_eta_schedule=Float32[0.5, 0.1, 0.05],
+        target_rows_multiplier=0.75,
+        cumulative_share=0.995,
+        max_iters_per_eta=20,
+        tol=1e-5,
+        check_every=1,
+    )
+    continued = fit_mapping_auto(
+        fallback_sources,
+        fallback_grid;
+        auto_options...,
+        candidate_final_etas=Float32[0.5, 0.1, 0.05],
+    )
+    @test continued.metadata.selected_eta == 0.05f0
+    @test continued.metadata.solver_final_converged
+    @test only(continued.metadata.failed_candidates).final_eta == 0.1f0
+    @test [candidate.converged for candidate in continued.metadata.candidates] == [true, false, true]
+
+    fallback = fit_mapping_auto(
+        fallback_sources,
+        fallback_grid;
+        auto_options...,
+        candidate_final_etas=Float32[0.5, 0.1],
+    )
+    @test fallback.metadata.selected_eta == 0.5f0
+    @test fallback.metadata.solver_final_eta == 0.1f0
+    @test !fallback.metadata.solver_final_converged
+    @test nrow(fallback.mapping) == fallback.metadata.rows == 4
+
+    @test_throws ErrorException fit_mapping_auto(
+        fallback_sources,
+        fallback_grid;
+        auto_options...,
+        candidate_final_etas=Float32[0.5, 0.1],
+        max_iters_per_eta=1,
+    )
 end
 
 @testset "KernelAbstractions CPU Sinkhorn" begin
@@ -188,6 +394,9 @@ if CUDA.functional()
     end
     @testset "KernelAbstractions CUDA regional mapping" begin
         check_regional_mapping(:cuda)
+    end
+    @testset "KernelAbstractions CUDA automatic eta" begin
+        check_automatic_eta(:cuda)
     end
 else
     @testset "CUDA requirement" begin
@@ -216,5 +425,8 @@ if oneAPI.functional()
     end
     @testset "KernelAbstractions oneAPI regional mapping" begin
         check_regional_mapping(:oneapi)
+    end
+    @testset "KernelAbstractions oneAPI automatic eta" begin
+        check_automatic_eta(:oneapi)
     end
 end

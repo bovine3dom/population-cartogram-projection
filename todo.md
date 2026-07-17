@@ -37,6 +37,10 @@ including dimensions larger than one workgroup. Direct CUDA comparison showed
 1-10% overhead on representative rectangular problems and a 5% speedup at
 4096x4096, so the portable implementation was retained. The advanced workspace
 still contains duplicate experimental solvers that have not yet been migrated.
+Automatic eta tuning and deterministic sparse extraction now run through the
+portable solver. A cached 8,346-source real UK resolution-6 H3 check matches
+scratch preparation to Float32 precision and agrees on 96.15% of dominant
+target cells.
 
 ## 1. Define The Public Data Contract
 
@@ -62,9 +66,8 @@ country_code
 - [x] Require finite, positive `population` values. The package rejects zero
       population rather than silently discarding rows.
 - [x] Require finite source-centre coordinates.
-- [ ] Define the accepted `x` and `y` coordinate convention. The likely default
-      is WGS84 longitude and latitude, but the current code also reverses the
-      vertical axis for rendering and must not leak that into the input contract.
+- [x] Define `x` and `y` as WGS84 longitude and latitude in degrees, validate
+      their ranges, and reverse only the internal cartogram vertical transform.
 - [ ] Permit column-name keywords if users should not have to rename an existing
       table to the canonical names.
 - [x] Validate every country has at least one positive-population source and a
@@ -118,7 +121,8 @@ transport_mass
 - [x] Return the normalized mapping by default; keep convenient denormalized
       columns out of the core result.
 - [ ] Document the distinction between `source_share` and `transport_mass`.
-- [ ] Report retained and dropped source share after sparsification.
+- [x] Report retained and dropped share per source and population-weighted mass
+      after sparsification.
 - [x] Keep the fractional mapping as the canonical result.
 - [ ] Provide a derived dominant-source assignment for users who want exactly
       one source identifier per cartogram cell.
@@ -143,7 +147,7 @@ downloading large population or boundary datasets.
 - [x] Assert convergence, mass conservation, finite output, and expected output
       columns after solving.
 - [x] Assert dense source shares sum to the documented tolerance.
-- [ ] Assert retained share and mass loss once sparse extraction is implemented.
+- [x] Assert retained share and mass loss after sparse extraction.
 - [ ] Report included, remapped, skipped, and failed countries.
 - [ ] Fail on an incomplete result unless the caller explicitly permits partial
       output.
@@ -258,7 +262,9 @@ oneAPI, and CPU.
       for the completed CUDA evaluation.
 - [x] Share validation, schedules, convergence checks, result construction, and
       mapping extraction between comparison implementations.
-- [ ] Share progress reporting, stage observation, and sparse extraction.
+- [ ] Share progress reporting.
+- [x] Use backend-neutral stage observation and deterministic sparse extraction
+      for automatic eta tuning.
 - [x] Implement and benchmark direct CUDA block reductions as the temporary
       comparison baseline.
 - [x] Preserve the block-per-marginal reduction structure in the retained
@@ -313,17 +319,17 @@ Create regression tests first, then remove:
 
 ### Eta selection and sparse extraction
 
-- [ ] Keep row-count-based eta selection in the cartogram layer, not the generic
+- [x] Keep row-count-based eta selection in the cartogram layer, not the generic
       numerical solver.
-- [ ] Give ordinary users a documented regularization/sparsity preset rather
+- [x] Give ordinary users a documented regularization/sparsity preset rather
       than exposing every experimental parameter immediately.
-- [ ] Replace callbacks exposing raw GPU arrays with a backend-neutral stage
+- [x] Replace callbacks exposing raw GPU arrays with a backend-neutral stage
       observation interface.
-- [ ] Make CUDA row counting and final host extraction follow exactly the same
-      cumulative-share, minimum-weight, tie, and neighbor-limit rules.
-- [ ] Fix the current mismatch where CUDA row counting does not apply
-      `min_weight` but final host extraction does.
-- [ ] Report dense solver marginal error separately from mass dropped during
+- [x] Use the same authoritative host implementation for candidate row counting
+      and final extraction, including deterministic ties and neighbor limits.
+- [x] Replace ambiguous `min_weight` behavior with an explicit
+      `minimum_source_share` rule used by both counting and extraction.
+- [x] Report dense solver marginal error separately from mass dropped during
       sparse extraction.
 
 ## 6. Add Tests And Continuous Integration
@@ -351,7 +357,8 @@ Create regression tests first, then remove:
 - [x] Test convergence, explicit non-convergence, and stopping reasons on CUDA.
 - [x] Test source-share normalization and population-weighted target marginals
       on CUDA.
-- [ ] Test sparse mass-loss reporting once sparse extraction exists.
+- [x] Test sparse mass-loss reporting and automatic eta selection on CPU and
+      CUDA when available.
 - [x] Keep performance benchmarks separate from unit tests.
 
 ### oneAPI numerical tests
@@ -391,11 +398,11 @@ external H3 population rows
   -> shared accelerator mapping pipeline
 ```
 
-- [ ] Preserve the H3 index in the generic `id` column.
-- [ ] Preserve the H3 identifier type where Arrow and downstream joins allow it.
-- [ ] Make parent-resolution aggregation explicit and report its population
+- [x] Preserve the H3 index in the generic `id` column.
+- [x] Preserve the H3 `UInt64` identifier type in the country Arrow extract.
+- [x] Make parent-resolution aggregation explicit and report its population
       totals.
-- [ ] Separate country assignment from generic mapping preparation.
+- [x] Separate country assignment from generic mapping preparation.
 - [ ] Report unmatched and ambiguous population during boundary assignment
       instead of silently dropping it at `make-lookup-table/lib.jl:250-251`.
 - [ ] Process countries independently and release large cost matrices promptly.
@@ -416,10 +423,12 @@ external H3 population rows
       conversion commands.
 - [ ] Pin or package the required `geojson2h3.jl` tool.
 - [ ] Decide and document the boundary H3 resolution.
-- [ ] Make generated filenames match those consumed by the Julia workflow.
+- [x] Generate a deterministic `country-CODE-resN.arrow` filename consumed by
+      the bounded comparison workflow.
 - [ ] Replace instructions to "probably" change compression with tested,
       deterministic commands.
-- [ ] Keep these large inputs outside the source repository.
+- [x] Keep these large inputs and generated country extracts outside the source
+      repository.
 
 ## 8. Data, Licensing, And Citation
 
@@ -478,7 +487,7 @@ external H3 population rows
 - [x] Document Intel Gen9 system package and Level Zero driver discovery.
 - [x] Record the completed CUDA comparison methodology and results.
 - [x] Document the centre-point approximation and spatial transform limitations.
-- [ ] Add an advanced prerequisites section for H3 data preparation rather than
+- [x] Add an advanced prerequisites section for H3 data preparation rather than
       presenting ClickHouse, DuckDB, GDAL, and 7-Zip as ordinary requirements.
 - [ ] Add root ignore rules for generated outputs, logs, profiles, editor files,
       and coverage files.
