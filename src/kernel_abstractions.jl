@@ -237,7 +237,7 @@ function _ka_marginal_error!(
 end
 
 """
-    solve_sinkhorn(cost, source_mass, target_mass; backend=:cuda, kwargs...)
+    solve_sinkhorn(cost, source_mass, target_mass; backend, kwargs...)
 
 Solve a dense, balanced Float32 transport problem with log-domain Sinkhorn and
 epsilon continuation on the explicitly selected `:cuda`, `:amdgpu`, `:metal`,
@@ -247,7 +247,7 @@ function solve_sinkhorn(
     cost,
     source_mass,
     target_mass;
-    backend::Symbol=:cuda,
+    backend::Symbol,
     eta_schedule=Float32[0.05, 0.02, 0.01, 0.005],
     max_iters_per_eta::Int=1_000,
     tol::Real=1e-5,

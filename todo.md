@@ -31,8 +31,8 @@ a custom mapping from the user's own source table.
 
 ## Current Status
 
-The repository now has a root Julia package and a one-country accelerator workflow for
-the five-column source contract. The same KernelAbstractions path runs end to
+The repository now has a root Julia package and a one-country accelerator
+workflow for the five-column source contract. The same KernelAbstractions path runs end to
 end on Intel UHD 620 through oneAPI and NVIDIA GTX 1080 Ti through CUDA,
 including dimensions larger than one workgroup. Direct CUDA comparison showed
 1-10% overhead on representative rectangular problems and a 5% speedup at
@@ -45,6 +45,19 @@ Automatic eta tuning and deterministic sparse extraction now run through the
 portable solver. A cached 8,346-source real UK resolution-6 H3 check matches
 scratch preparation to Float32 precision and agrees on 96.15% of dominant
 target cells.
+
+The CPU-first one-country vertical slice is complete: callers explicitly select
+a backend, extensive and population-weighted intensive values can be projected
+without hiding sparse loss, and `examples/regional_centres.jl` writes a complete
+set of mapping and projection CSVs. Non-GPU CI covers the supported Julia range.
+
+## Next Milestones
+
+1. Make the spatial transform explicit, stable, and reproducible.
+2. Add country partitioning, per-country status reporting, and explicit partial
+   result handling.
+3. Migrate the supported H3 orchestration onto that multi-country package path.
+4. Finish data provenance, licensing, and release hygiene.
 
 ## 1. Define The Public Data Contract
 
@@ -74,8 +87,8 @@ country_code
       their ranges, and reverse only the internal cartogram vertical transform.
 - [ ] Permit column-name keywords if users should not have to rename an existing
       table to the canonical names.
-- [x] Validate every country has at least one positive-population source and a
-      matching OWID target.
+- [x] Validate that the selected country has at least one positive-population
+      source and a matching OWID target.
 
 ### Target grid
 
@@ -124,28 +137,29 @@ transport_mass
 
 - [x] Return the normalized mapping by default; keep convenient denormalized
       columns out of the core result.
-- [ ] Document the distinction between `source_share` and `transport_mass`.
+- [x] Document the distinction between `source_share` and `transport_mass`.
 - [x] Report retained and dropped share per source and population-weighted mass
       after sparsification.
 - [x] Keep the fractional mapping as the canonical result.
 - [ ] Provide a derived dominant-source assignment for users who want exactly
       one source identifier per cartogram cell.
-- [ ] Define separate projection helpers for extensive quantities and
+- [x] Define separate projection helpers for extensive quantities and
       population-weighted intensive quantities.
 
 ### Definition of done
 
-A newcomer with a supported CUDA or oneAPI device can provide a five-column
-regional table and receive a documented source-to-OWID-cell mapping without
-downloading large population or boundary datasets.
+A newcomer can select `backend=:cpu` and provide a five-column regional table to
+receive a documented source-to-OWID-cell mapping and project additional values
+without downloading large population or boundary datasets.
 
 ## 2. Build The Simple GPU Vertical Slice
 
 - [x] Add a small checked-in fixture resembling NUTS2 input.
 - [x] Use the bundled OWID grid at native resolution for the first example.
 - [ ] Solve each country independently.
-- [ ] Add one command that validates the fixture, fits the mapping, writes it,
-      projects a sample value, and optionally renders the result.
+- [x] Add one command that validates the fixture, fits the mapping, writes it,
+      and projects extensive and intensive sample values. Rendering remains
+      optional and deferred.
 - [x] Assert input schemas before constructing a dense cost matrix.
 - [x] Assert source and target mass totals before solving.
 - [x] Assert convergence, mass conservation, finite output, and expected output
@@ -162,14 +176,14 @@ downloading large population or boundary datasets.
 
 ```julia
 grid = load_owid_grid()
-mapping = fit_mapping(sources, grid)
-cells = project_to_grid(mapping, sources; value=:some_value)
-render_cartogram(cells; value=:some_value)
+fitted = fit_mapping_auto(sources, grid; backend=:cpu)
+totals = project_extensive(fitted.mapping, sources, grid; value=:some_count)
+rates = project_intensive(fitted.mapping, sources, grid; value=:some_rate)
 ```
 
-These names are provisional. The important separation is that fitting a mapping
-depends on identifiers, population, and centres, while projecting values and
-rendering can be repeated without solving again.
+Fitting depends on identifiers, population, and centres, while projecting values
+can be repeated without solving again. Rendering remains a separate future
+layer.
 
 ## 3. Make The Spatial Model Explicit
 
@@ -251,7 +265,7 @@ data/
   README.md
 ```
 
-Keep one CUDA Sinkhorn implementation in the package. Host-side validation,
+Keep one portable Sinkhorn implementation in the package. Host-side validation,
 table preparation, and result extraction are not alternative solver paths.
 
 ## 5. Keep One Log-Domain Sinkhorn Solver
@@ -260,7 +274,7 @@ table preparation, and result extraction are not alternative solver paths.
 
 The supported algorithm is dense, balanced, Float32 log-domain Sinkhorn with
 epsilon continuation through one KernelAbstractions implementation on CUDA,
-oneAPI, and CPU.
+AMDGPU, Metal, oneAPI, and CPU.
 
 - [x] Define explicit direct-CUDA and KernelAbstractions comparison entry points
       for the completed CUDA evaluation.
@@ -344,6 +358,8 @@ Create regression tests first, then remove:
 - [x] Test source-table validation, OWID loading, package loading, and clear
       unavailable-accelerator errors.
 - [x] Test solver input validation independently of CUDA availability.
+- [x] Test extensive and population-weighted intensive projection, sparse loss,
+      country-scoped identifiers, malformed mappings, and the CSV example.
 - [ ] Test country partitioning, country-code reconciliation, and failure
       reporting.
 - [ ] Test cartogram subdivision without mutating its input.
@@ -402,7 +418,7 @@ Create regression tests first, then remove:
 
 ### CI
 
-- [ ] Add non-GPU CI that instantiates the project and runs host-side tests.
+- [x] Add non-GPU CI that instantiates the project and runs host-side tests.
 - [x] Test the documented error when CUDA is unavailable.
 - [x] Test the documented error when AMDGPU is unavailable.
 - [ ] Add NVIDIA GPU CI for the numerical and end-to-end tests.
@@ -513,10 +529,12 @@ external H3 population rows
 - [x] Document Intel Gen9 system package and Level Zero driver discovery.
 - [x] Record the completed CUDA comparison methodology and results.
 - [x] Document the centre-point approximation and spatial transform limitations.
+- [x] Document extensive and population-weighted intensive projection without
+      silently renormalizing sparse mappings.
 - [x] Add an advanced prerequisites section for H3 data preparation rather than
       presenting ClickHouse, DuckDB, GDAL, and 7-Zip as ordinary requirements.
-- [ ] Add root ignore rules for generated outputs, logs, profiles, editor files,
-      and coverage files.
+- [x] Add root ignore rules for the supported example output, logs, profiles,
+      editor files, and coverage files.
 - [ ] Decide whether the existing untracked `out.arrow` is useful before moving,
       deleting, or ignoring it.
 - [ ] Classify existing Arrow and PNG files as examples, release artifacts, or
@@ -540,19 +558,20 @@ Reconsider extraction only if:
 - [ ] Maintaining a separate release and compatibility contract would reduce
       rather than add work.
 
-## Suggested Pull Request Sequence
+## Milestone Sequence
 
-1. **State the contract:** document the five-column source input, OWID target
-   grid, normalized mapping output, and centre-point approximation.
-2. **Extract the accelerator solver:** move the optimized log-domain kernels
-   behind the package API and keep CPU support inside the portable kernel path.
-3. **Compare GPU implementations:** run direct CUDA and KernelAbstractions CUDA
-   numerical tests and benchmarks on representative NVIDIA hardware, then
-   retain the portable implementation.
-4. **Deliver the simple example:** run a NUTS2-like fixture against the bundled
-   OWID grid and project a sample value.
-5. **Create the package boundary:** remove import-time I/O and globals, move
-   orchestration to scripts, and separate mapping from rendering.
+1. **Completed - State the contract:** document the five-column source input,
+   OWID target grid, normalized mapping output, and centre-point approximation.
+2. **Completed - Extract the accelerator solver:** move the optimized log-domain
+   kernels behind the package API and keep CPU support inside the portable
+   kernel path.
+3. **Completed - Compare GPU implementations:** run direct CUDA and
+   KernelAbstractions CUDA numerical tests and benchmarks on representative
+   NVIDIA hardware, then retain the portable implementation.
+4. **Completed - Deliver the simple example:** run a NUTS2-like fixture against
+   the bundled OWID grid and project extensive and intensive sample values.
+5. **In progress - Create the package boundary:** remove import-time I/O and
+   globals, move orchestration to scripts, and separate mapping from rendering.
 6. **Remove old solvers:** delete quasi-Newton, JuMP/HiGHS, and duplicate
    Sinkhorn paths after regression coverage exists.
 7. **Adapt H3:** convert the existing large workflow to the shared source schema

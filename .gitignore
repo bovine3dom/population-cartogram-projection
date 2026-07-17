@@ -1,0 +1,9 @@
+/output/
+/coverage/
+/.idea/
+/.vscode/
+*.cov
+*.log
+*.mem
+*.prof
+.DS_Store

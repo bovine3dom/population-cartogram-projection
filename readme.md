@@ -22,18 +22,98 @@ id, country_code, cell_id, source_share
 `source_share` is the fraction of a source row's population assigned to an OWID
 cell and sums to approximately one for each source.
 
-## Try It
+## Quick Start
 
-Instantiate the root project and run the tests:
+Instantiate the root project and run the complete CPU example:
 
 ```sh
-julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.test()'
+julia --project=. -e 'using Pkg; Pkg.instantiate()'
+julia --threads=auto --project=. examples/regional_centres.jl
 ```
 
-Numerical tests run for every functional accelerator backend that is available.
+The example validates the five-source fixture, fits a sparse mapping, projects
+an extensive household count and a population-weighted employment rate, and
+writes these files under `output/regional-centres/`:
 
-The default `:cuda` backend requires an NVIDIA CUDA-capable GPU and functional
-CUDA driver. Check availability with:
+```text
+mapping.csv
+source_retention.csv
+projected_households.csv
+projected_employment_rate.csv
+summary.csv
+```
+
+The same workflow can be used programmatically:
+
+```julia
+using CSV, DataFrames, PopulationCartogramProjection
+
+sources = CSV.read("test/fixtures/synthetic_sources.csv", DataFrame)
+sources.households = [510_000, 760_000, 1_080_000, 390_000, 310_000]
+sources.employment_rate = [0.71, 0.74, 0.69, 0.76, 0.67]
+
+grid = load_owid_grid()
+fitted = fit_mapping_auto(sources, grid; backend=:cpu)
+households = project_extensive(
+    fitted.mapping, sources, grid; value=:households,
+)
+employment_rate = project_intensive(
+    fitted.mapping, sources, grid; value=:employment_rate,
+)
+```
+
+`fit_mapping`, `fit_mapping_auto`, and `solve_sinkhorn` require an explicit
+`backend`; they never select or fall back to another device silently. Run the
+test suite with:
+
+```sh
+julia --threads=auto --project=. -e 'using Pkg; Pkg.test()'
+```
+
+Numerical tests run for every functional backend available on the machine.
+
+## Project Values
+
+The mapping joins to source values by `(country_code, id)`. For each mapping row,
+
+```text
+transport_mass = population * source_share
+```
+
+`project_extensive` distributes a source-level count or total as
+`value * source_share` and sums it by target cell. `project_intensive` calculates
+a population-weighted mean as
+`sum(value * transport_mass) / sum(transport_mass)`. Its cell output includes
+`projected_population`, the denominator used for that mean.
+
+Both helpers return `cells`, `source_retention`, and `metadata`. They preserve
+the supplied mapping weights: sparse shares are not renormalized. Retained and
+dropped share are reported per source, while metadata reports projected and
+dropped extensive totals or projected and dropped population. All relevant grid
+cells are retained in grid order. A cell with no retained contribution receives
+zero for an extensive value and `missing` for an intensive value.
+
+## Backend Selection
+
+Select the backend on every fitting or solver call:
+
+```julia
+cuda_mapping = fit_mapping(sources; backend=:cuda)
+amd_mapping = fit_mapping(sources; backend=:amdgpu)
+metal_mapping = fit_mapping(sources; backend=:metal) # after `using Metal`
+intel_mapping = fit_mapping(sources; backend=:oneapi)
+cpu_mapping = fit_mapping(sources; backend=:cpu)
+```
+
+All backends run the same KernelAbstractions row, column, and marginal kernels.
+There is no separately maintained CPU or direct-CUDA solver. The CPU backend
+requires no system setup and is intended for modest regional problems. Its
+256-workitem reductions are GPU-oriented and allocate more than a dedicated CPU
+algorithm would, so it is not intended to replace GPU execution for large H3
+workloads.
+
+The `:cuda` backend requires an NVIDIA CUDA-capable GPU and functional CUDA
+driver. Check availability with:
 
 ```sh
 julia --project=. -e 'using CUDA; println(CUDA.functional())'
@@ -73,36 +153,6 @@ Metal.jl, or before `using Metal`, `backend=:metal` reports that the extension i
 not loaded rather than installing a package or changing backends silently.
 Metal is a test-only extra, so `Pkg.test()` installs it and automatically loads
 the extension on Apple Silicon; ordinary package installation still omits it.
-
-Then fit the included five-source synthetic example:
-
-```julia
-using CSV, DataFrames, PopulationCartogramProjection
-
-sources = CSV.read("test/fixtures/synthetic_sources.csv", DataFrame)
-mapping = fit_mapping(sources)
-first(mapping, 5)
-```
-
-Select a backend explicitly when needed:
-
-```julia
-cuda_mapping = fit_mapping(sources; backend=:cuda)
-amd_mapping = fit_mapping(sources; backend=:amdgpu)
-metal_mapping = fit_mapping(sources; backend=:metal) # after `using Metal`
-intel_mapping = fit_mapping(sources; backend=:oneapi)
-cpu_mapping = fit_mapping(sources; backend=:cpu)
-```
-
-These backends, plus the optional `:metal` backend, run the same
-KernelAbstractions row, column, and marginal kernels. Backend selection never
-falls back silently, and there is no separately maintained CPU or direct-CUDA
-solver.
-
-The CPU backend requires no system setup and is intended for fallback-sized
-regional problems. Its 256-workitem reductions are GPU-oriented and allocate
-more than a dedicated CPU algorithm would, so it is not intended to replace GPU
-execution for large H3 workloads.
 
 ## Automatic Eta And Sparse Output
 
@@ -268,8 +318,7 @@ does not require the large Kontur or Natural Earth H3 datasets.
   diagnostics.
 - Source coordinates are scaled from their bounding box to the country's OWID
   grid bounding box. This is an explicit modelling limitation under review.
-- Rendering and projection of additional values have not yet been moved into
-  the package.
+- Rendering has not yet been moved into the package.
 
 The existing `make-lookup-table/` workspace retains the large H3 workflow while
 it is migrated to the package solver.

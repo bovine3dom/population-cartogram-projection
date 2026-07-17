@@ -12,6 +12,8 @@ end
 
 const FIXTURE_PATH = joinpath(@__DIR__, "fixtures", "synthetic_sources.csv")
 
+include(joinpath(@__DIR__, "..", "examples", "regional_centres.jl"))
+
 function transport_plan(result, cost)
     return exp.((result.alpha .+ result.beta' .- cost) ./ result.eta)
 end
@@ -219,6 +221,8 @@ end
 @testset "source validation" begin
     sources = CSV.read(FIXTURE_PATH, DataFrame)
     @test isnothing(validate_sources(sources))
+    @test_throws UndefKeywordError fit_mapping(sources)
+    @test_throws UndefKeywordError fit_mapping_auto(sources)
     @test_throws ArgumentError validate_sources(select(sources, Not(:population)))
 
     duplicate = vcat(sources, sources[1:1, :])
@@ -249,15 +253,165 @@ end
     @test grid.cell_id[turkey_cell] == "792:552:262"
 end
 
+@testset "project source values" begin
+    grid = DataFrame(
+        cell_id=["1:a", "1:b", "1:empty", "2:a", "2:empty"],
+        grid_x=[0, 1, 2, 0, 1],
+        grid_y=[0, 0, 0, 1, 1],
+        country_code=[1, 1, 1, 2, 2],
+    )
+    values = DataFrame(
+        id=["shared", "other", "shared"],
+        country_code=[1, 1, 2],
+        population=[100.0, 300.0, 50.0],
+        households=[10.0, 20.0, 7.0],
+        rate=[2.0, 4.0, 8.0],
+    )
+    mapping = DataFrame(
+        id=["shared", "shared", "other", "shared"],
+        country_code=[1, 1, 1, 2],
+        cell_id=["1:a", "1:b", "1:a", "2:a"],
+        source_share=[0.6, 0.2, 0.5, 0.75],
+    )
+    original_values = copy(values)
+    original_mapping = copy(mapping)
+
+    extensive = project_extensive(mapping, values, grid; value=:households)
+    @test propertynames(extensive.cells) == [
+        :cell_id, :grid_x, :grid_y, :country_code, :households,
+    ]
+    @test extensive.cells.cell_id == grid.cell_id
+    @test extensive.cells.households == [16.0, 2.0, 0.0, 5.25, 0.0]
+    @test extensive.source_retention.neighbors == [2, 1, 1]
+    @test extensive.source_retention.retained_share ≈ [0.8, 0.5, 0.75]
+    @test extensive.source_retention.dropped_share ≈ [0.2, 0.5, 0.25]
+    @test extensive.metadata.input_total == 37.0
+    @test extensive.metadata.projected_total == 23.25
+    @test extensive.metadata.dropped_total == 13.75
+
+    intensive = project_intensive(mapping, values, grid; value=:rate)
+    @test propertynames(intensive.cells) == [
+        :cell_id, :grid_x, :grid_y, :country_code, :projected_population, :rate,
+    ]
+    @test intensive.cells.projected_population == [210.0, 20.0, 0.0, 37.5, 0.0]
+    @test intensive.cells.rate[1] ≈ 24 / 7
+    @test intensive.cells.rate[2] == 2.0
+    @test ismissing(intensive.cells.rate[3])
+    @test intensive.cells.rate[4] == 8.0
+    @test ismissing(intensive.cells.rate[5])
+    @test intensive.metadata.input_population == 450.0
+    @test intensive.metadata.projected_population == 267.5
+    @test intensive.metadata.dropped_population == 182.5
+    @test intensive.metadata.zero_population_cells == 2
+
+    population = project_extensive(mapping, values, grid; value=:population)
+    @test population.cells.population == intensive.cells.projected_population
+    @test isequal(values, original_values)
+    @test isequal(mapping, original_mapping)
+
+    duplicate_values = vcat(values, values[1:1, :])
+    @test_throws ArgumentError project_extensive(
+        mapping, duplicate_values, grid; value=:households,
+    )
+    @test_throws ArgumentError project_extensive(
+        vcat(mapping, mapping[1:1, :]), values, grid; value=:households,
+    )
+    @test_throws ArgumentError project_extensive(
+        mapping, values[1:2, :], grid; value=:households,
+    )
+
+    wrong_country_cell = copy(mapping)
+    wrong_country_cell.cell_id[4] = "1:a"
+    @test_throws ArgumentError project_extensive(
+        wrong_country_cell, values, grid; value=:households,
+    )
+    excessive_share = copy(mapping)
+    excessive_share.source_share[2] = 0.5
+    @test_throws ArgumentError project_extensive(
+        excessive_share, values, grid; value=:households,
+    )
+    invalid_values = copy(values)
+    invalid_values.households[1] = Inf
+    @test_throws ArgumentError project_extensive(
+        mapping, invalid_values, grid; value=:households,
+    )
+    invalid_population = copy(values)
+    invalid_population.population[1] = 0
+    @test_throws ArgumentError project_intensive(
+        mapping, invalid_population, grid; value=:rate,
+    )
+    @test_throws ArgumentError project_intensive(mapping, values, grid; value=:population)
+end
+
+@testset "regional CSV example" begin
+    mktempdir() do output_dir
+        paths = RegionalCentresExample.main([output_dir])
+        @test all(isfile, Base.values(paths))
+
+        mapping = CSV.read(paths.mapping, DataFrame)
+        retention = CSV.read(paths.source_retention, DataFrame)
+        households = CSV.read(paths.households, DataFrame)
+        employment_rate = CSV.read(paths.employment_rate, DataFrame)
+        summary = CSV.read(paths.summary, DataFrame)
+        @test propertynames(mapping) == [:id, :country_code, :cell_id, :source_share]
+        @test propertynames(retention) == [
+            :id,
+            :country_code,
+            :neighbors,
+            :retained_share,
+            :dropped_share,
+            :cumulative_achieved,
+            :truncation_reason,
+        ]
+        @test propertynames(households) == [
+            :cell_id, :grid_x, :grid_y, :country_code, :households,
+        ]
+        @test propertynames(employment_rate) == [
+            :cell_id,
+            :grid_x,
+            :grid_y,
+            :country_code,
+            :projected_population,
+            :employment_rate,
+        ]
+        @test nrow(retention) == 5
+        @test nrow(households) == nrow(employment_rate) == 72
+        @test sum(households.households) < sum(
+            [510_000, 760_000, 1_080_000, 390_000, 310_000],
+        )
+        @test all(employment_rate.projected_population .> 0)
+        @test summary.metric == [
+            "selected_eta",
+            "mapping_rows",
+            "retained_population_share",
+            "projected_households",
+            "dropped_households",
+        ]
+        @test summary.value[2] == nrow(mapping)
+        @test summary.value[4] ≈ sum(households.households)
+    end
+end
+
 @testset "solver input validation" begin
     cost = Float32[0 1 2; 1 0 1]
     source_mass = Float32[0.4, 0.6]
     target_mass = Float32[0.2, 0.3, 0.5]
-    @test_throws DimensionMismatch solve_sinkhorn(cost, Float32[1], target_mass)
-    @test_throws ArgumentError solve_sinkhorn(cost, source_mass, target_mass; eta_schedule=Float32[])
-    @test_throws ArgumentError solve_sinkhorn(cost, source_mass, target_mass; eta_schedule=[true])
-    @test_throws ArgumentError solve_sinkhorn(cost, source_mass, target_mass; tol=1e-8)
-    @test_throws ArgumentError solve_sinkhorn(cost, Float32[-0.4, 1.4], target_mass)
+    @test_throws UndefKeywordError solve_sinkhorn(cost, source_mass, target_mass)
+    @test_throws DimensionMismatch solve_sinkhorn(
+        cost, Float32[1], target_mass; backend=:cpu,
+    )
+    @test_throws ArgumentError solve_sinkhorn(
+        cost, source_mass, target_mass; backend=:cpu, eta_schedule=Float32[],
+    )
+    @test_throws ArgumentError solve_sinkhorn(
+        cost, source_mass, target_mass; backend=:cpu, eta_schedule=[true],
+    )
+    @test_throws ArgumentError solve_sinkhorn(
+        cost, source_mass, target_mass; backend=:cpu, tol=1e-8,
+    )
+    @test_throws ArgumentError solve_sinkhorn(
+        cost, Float32[-0.4, 1.4], target_mass; backend=:cpu,
+    )
     @test_throws ArgumentError solve_sinkhorn(cost, source_mass, target_mass; backend=:invalid)
 
     one_solver(; kwargs...) = solve_sinkhorn(

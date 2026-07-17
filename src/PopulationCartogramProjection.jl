@@ -9,7 +9,8 @@ using KernelAbstractions: @index, @kernel, @localmem, @synchronize
 using oneAPI
 
 export eta_continuation_schedule, eta_schedule_to, fit_mapping, fit_mapping_auto,
-       load_owid_grid, solve_sinkhorn, validate_sources
+       load_owid_grid, project_extensive, project_intensive, solve_sinkhorn,
+       validate_sources
 
 const SOURCE_COLUMNS = (:id, :population, :x, :y, :country_code)
 const GRID_COLUMNS = (:cell_id, :grid_x, :grid_y, :country_code)
@@ -92,6 +93,8 @@ function load_owid_grid(path::AbstractString=DEFAULT_GRID_PATH)
     _validate_grid(grid)
     return grid
 end
+
+include("projection.jl")
 
 function _scale_to_grid(values, grid_values)
     source_min, source_max = extrema(values)
@@ -365,24 +368,24 @@ end
 include("automatic_eta.jl")
 
 """
-    fit_mapping(sources, [grid]; kwargs...)
+    fit_mapping(sources, [grid]; backend, kwargs...)
 
 Fit a dense fractional mapping from one country's weighted source centres to
 the OWID cartogram grid. `sources` must contain `id`, `population`, `x`, `y`,
 and `country_code`. The returned table contains `id`, `country_code`, `cell_id`,
 and `source_share`, whose values sum to approximately one for each source.
-Select `backend=:cuda`, `:amdgpu`, `:metal`, `:oneapi`, or `:cpu` explicitly
-when needed.
+Callers must select `backend=:cuda`, `:amdgpu`, `:metal`, `:oneapi`, or `:cpu`
+explicitly.
 """
 function fit_mapping(
     sources::AbstractDataFrame,
     grid::AbstractDataFrame=load_owid_grid();
+    backend::Symbol,
     cost_power::Real=2,
     eta_schedule=Float32[0.05, 0.02, 0.01, 0.005],
     max_iters_per_eta::Int=1_000,
     tol::Real=1e-5,
     check_every::Int=25,
-    backend::Symbol=:cuda,
 )
     (; targets, problem) = _prepare_mapping_problem(sources, grid; cost_power, backend)
     solver_kwargs = (; eta_schedule, max_iters_per_eta, tol, check_every)

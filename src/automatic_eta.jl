@@ -217,7 +217,7 @@ function _extract_sparse_mapping(sources, targets, problem, result, options, sta
 end
 
 """
-    fit_mapping_auto(sources, [grid]; kwargs...)
+    fit_mapping_auto(sources, [grid]; backend, kwargs...)
 
 Tune the final Sinkhorn eta against a sparse output-row target while traversing
 one warm-started continuation schedule. Candidate counts and final extraction
@@ -227,6 +227,7 @@ use the same deterministic host implementation. Returns `mapping`,
 function fit_mapping_auto(
     sources::AbstractDataFrame,
     grid::AbstractDataFrame=load_owid_grid();
+    backend::Symbol,
     cost_power::Real=2,
     candidate_final_etas=DEFAULT_AUTO_ETA_CANDIDATES,
     base_eta_schedule=DEFAULT_ETA_BASE_SCHEDULE,
@@ -238,7 +239,6 @@ function fit_mapping_auto(
     max_iters_per_eta::Int=5_000,
     tol::Real=0.02,
     check_every::Int=100,
-    backend::Symbol=:cuda,
 )
     total_start = time()
     !(target_rows_multiplier isa Bool) && isfinite(target_rows_multiplier) &&
