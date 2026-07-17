@@ -1,3 +1,4 @@
+using AMDGPU
 using CSV
 using CUDA
 using DataFrames
@@ -185,6 +186,30 @@ function check_automatic_eta(backend)
         groupby(fitted.mapping, :id),
         :source_share => sum => :retained_share,
     ).retained_share
+end
+
+function check_unavailable_backend(backend, message)
+    sources = CSV.read(FIXTURE_PATH, DataFrame)
+    grid = load_owid_grid()
+    solver_error = try
+        solve_sinkhorn(
+            zeros(Float32, 1, 1),
+            Float32[1],
+            Float32[1];
+            backend,
+        )
+    catch error
+        error
+    end
+    mapping_error = try
+        fit_mapping(sources, grid; backend)
+    catch error
+        error
+    end
+    @test solver_error isa ArgumentError
+    @test mapping_error isa ArgumentError
+    @test occursin(message, sprint(showerror, solver_error))
+    @test occursin(message, sprint(showerror, mapping_error))
 end
 
 @testset "source validation" begin
@@ -400,22 +425,23 @@ if CUDA.functional()
     end
 else
     @testset "CUDA requirement" begin
-        sources = CSV.read(FIXTURE_PATH, DataFrame)
-        grid = load_owid_grid()
-        solver_error = try
-            solve_sinkhorn(zeros(Float32, 1, 1), Float32[1], Float32[1])
-        catch error
-            error
-        end
-        mapping_error = try
-            fit_mapping(sources, grid)
-        catch error
-            error
-        end
-        @test solver_error isa ArgumentError
-        @test mapping_error isa ArgumentError
-        @test occursin("NVIDIA CUDA-capable GPU", sprint(showerror, solver_error))
-        @test occursin("NVIDIA CUDA-capable GPU", sprint(showerror, mapping_error))
+        check_unavailable_backend(:cuda, "NVIDIA CUDA-capable GPU")
+    end
+end
+
+if AMDGPU.functional() && AMDGPU.has_rocm_gpu()
+    @testset "KernelAbstractions AMDGPU Sinkhorn" begin
+        check_numerical_solver(:amdgpu)
+    end
+    @testset "KernelAbstractions AMDGPU regional mapping" begin
+        check_regional_mapping(:amdgpu)
+    end
+    @testset "KernelAbstractions AMDGPU automatic eta" begin
+        check_automatic_eta(:amdgpu)
+    end
+else
+    @testset "AMDGPU requirement" begin
+        check_unavailable_backend(:amdgpu, "supported AMD GPU")
     end
 end
 

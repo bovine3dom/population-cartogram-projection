@@ -39,6 +39,14 @@ CUDA driver. Check availability with:
 julia --project=. -e 'using CUDA; println(CUDA.functional())'
 ```
 
+The `:amdgpu` backend requires a supported AMD GPU and functional ROCm/HIP
+installation. AMDGPU.jl currently documents ROCm 6.0 or newer. Check both the
+software stack and device detection with:
+
+```sh
+julia --project=. -e 'using AMDGPU; AMDGPU.versioninfo(); println((AMDGPU.functional(), AMDGPU.has_rocm_gpu()))'
+```
+
 Then fit the included five-source synthetic example:
 
 ```julia
@@ -53,11 +61,12 @@ Select a backend explicitly when needed:
 
 ```julia
 cuda_mapping = fit_mapping(sources; backend=:cuda)
+amd_mapping = fit_mapping(sources; backend=:amdgpu)
 intel_mapping = fit_mapping(sources; backend=:oneapi)
 cpu_mapping = fit_mapping(sources; backend=:cpu)
 ```
 
-All three backends run the same KernelAbstractions row, column, and marginal
+All four backends run the same KernelAbstractions row, column, and marginal
 kernels. Backend selection never falls back silently, and there is no separately
 maintained CPU or direct-CUDA solver.
 
@@ -171,10 +180,11 @@ package is required for the oneAPI path.
 ## Backend Benchmark
 
 The benchmark uses identical generated problems and solver options for every
-enabled backend. CUDA measurements are explicitly synchronized; CPU is opt-in:
+enabled backend. CUDA and AMDGPU measurements are explicitly synchronized; CPU
+is opt-in:
 
 ```sh
-julia --project=. benchmark/compare_solvers.jl 1024 1024 5
+julia --threads=auto --project=. benchmark/compare_solvers.jl 1024 1024 5
 ```
 
 The arguments are source count, target count, and repetitions. Compilation is
@@ -186,7 +196,7 @@ are host allocations; the accelerator storage estimate is printed separately.
 Include the CPU path explicitly:
 
 ```sh
-BENCHMARK_CPU=true julia --project=. benchmark/compare_solvers.jl 256 256 5
+BENCHMARK_CPU=true julia --threads=auto --project=. benchmark/compare_solvers.jl 256 256 5
 ```
 
 For `m` sources and `n` targets, the solver stores the Float32 cost matrix and
@@ -215,7 +225,7 @@ Hardware and software: NVIDIA GeForce GTX 1080 Ti (`sm_61`, 11 GiB), driver
 The portable path added about 0.2-1.2 ms on the representative rectangular
 problems and was faster on the largest square problem. That cost did not justify
 maintaining a second CUDA implementation, so KernelAbstractions is the retained
-solver for CUDA, oneAPI, and CPU.
+solver for CUDA, AMDGPU, oneAPI, and CPU.
 
 The package bundles the small OWID grid in `data/cartogram.csv`; ordinary use
 does not require the large Kontur or Natural Earth H3 datasets.
@@ -223,7 +233,7 @@ does not require the large Kontur or Natural Earth H3 datasets.
 ## Current Limits
 
 - `fit_mapping` currently handles one country at a time.
-- CUDA, oneAPI, and CPU use one portable kernel implementation.
+- CUDA, AMDGPU, oneAPI, and CPU use one portable kernel implementation.
 - `fit_mapping` is dense; `fit_mapping_auto` returns sparse output and retention
   diagnostics.
 - Source coordinates are scaled from their bounding box to the country's OWID

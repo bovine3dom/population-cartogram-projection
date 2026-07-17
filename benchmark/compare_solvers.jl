@@ -1,3 +1,4 @@
+using AMDGPU
 using CUDA
 import KernelAbstractions as KA
 using PopulationCartogramProjection
@@ -58,22 +59,37 @@ end
 
 function print_cuda_context()
     device = CUDA.device()
-    dense_cost_mib = 2 * sizeof(Float32) * source_count * target_count / 2^20
     println(
         "CUDA: $(CUDA.name(device)), compute capability $(CUDA.capability(device)); " *
         "Julia $VERSION, CUDA.jl $(Base.pkgversion(CUDA)), " *
         "KernelAbstractions $(Base.pkgversion(KA))",
     )
+end
+
+function print_amdgpu_context()
     println(
-        "Dense CUDA cost storage: $(round(dense_cost_mib; digits=3))MiB " *
+        "AMDGPU: $(AMDGPU.device()); Julia $VERSION, " *
+        "AMDGPU.jl $(Base.pkgversion(AMDGPU)), HIP $(AMDGPU.HIP.runtime_version()), " *
+        "KernelAbstractions $(Base.pkgversion(KA))",
+    )
+end
+
+function print_accelerator_storage()
+    dense_cost_mib = 2 * sizeof(Float32) * source_count * target_count / 2^20
+    println(
+        "Dense accelerator cost storage: $(round(dense_cost_mib; digits=3))MiB " *
         "(cost plus transpose, excluding vectors)",
     )
 end
 
-println("Problem: $source_count x $target_count, repetitions=$repetitions")
+println(
+    "Problem: $source_count x $target_count, repetitions=$repetitions, " *
+    "Julia threads=$(Threads.nthreads())",
+)
 
 if CUDA.functional()
     print_cuda_context()
+    print_accelerator_storage()
     benchmark_solver(
         "KernelAbstractions CUDA";
         synchronize! = CUDA.synchronize,
@@ -82,6 +98,19 @@ if CUDA.functional()
     end
 else
     println("Skipping CUDA: CUDA.functional() is false")
+end
+
+if AMDGPU.functional() && AMDGPU.has_rocm_gpu()
+    print_amdgpu_context()
+    print_accelerator_storage()
+    benchmark_solver(
+        "KernelAbstractions AMDGPU";
+        synchronize! = AMDGPU.synchronize,
+    ) do
+        solve_sinkhorn(cost, source_mass, target_mass; backend=:amdgpu, solver_options...)
+    end
+else
+    println("Skipping AMDGPU: AMDGPU is not functional or no ROCm GPU is available")
 end
 
 if oneAPI.functional()

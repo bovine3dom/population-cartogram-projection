@@ -1,5 +1,6 @@
 module PopulationCartogramProjection
 
+using AMDGPU
 using CSV
 using CUDA
 using DataFrames
@@ -282,6 +283,14 @@ function _cuda_unavailable()
     )
 end
 
+function _amdgpu_unavailable()
+    return ArgumentError(
+        "AMDGPU is not functional; a supported AMD GPU and ROCm/HIP installation are required",
+    )
+end
+
+_amdgpu_functional() = AMDGPU.functional() && AMDGPU.has_rocm_gpu()
+
 include("kernel_abstractions.jl")
 
 function _prepare_mapping_problem(sources, grid; cost_power, backend)
@@ -295,10 +304,12 @@ function _prepare_mapping_problem(sources, grid; cost_power, backend)
     nrow(targets) > 0 || throw(ArgumentError("OWID grid has no cells for country_code=$country_code"))
     if backend === :cuda
         CUDA.functional() || throw(_cuda_unavailable())
+    elseif backend === :amdgpu
+        _amdgpu_functional() || throw(_amdgpu_unavailable())
     elseif backend === :oneapi
         oneAPI.functional() || throw(ArgumentError("oneAPI is not functional on this system"))
     elseif backend !== :cpu
-        throw(ArgumentError("backend must be :cuda, :oneapi, or :cpu"))
+        throw(ArgumentError("backend must be :cuda, :amdgpu, :oneapi, or :cpu"))
     end
 
     return (; targets, problem=_prepare_problem(sources, targets; cost_power))
@@ -345,7 +356,7 @@ Fit a dense fractional mapping from one country's weighted source centres to
 the OWID cartogram grid. `sources` must contain `id`, `population`, `x`, `y`,
 and `country_code`. The returned table contains `id`, `country_code`, `cell_id`,
 and `source_share`, whose values sum to approximately one for each source.
-Select `backend=:cuda`, `:oneapi`, or `:cpu` explicitly when needed.
+Select `backend=:cuda`, `:amdgpu`, `:oneapi`, or `:cpu` explicitly when needed.
 """
 function fit_mapping(
     sources::AbstractDataFrame,
