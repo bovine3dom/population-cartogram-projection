@@ -170,13 +170,15 @@ end
 
 function _ka_backend(name::Symbol)
     backend = if name === :cuda
+        CUDA.functional() || throw(_cuda_unavailable())
         CUDA.CUDABackend()
     elseif name === :oneapi
+        oneAPI.functional() || throw(ArgumentError("oneAPI is not functional on this system"))
         oneAPI.oneAPIBackend()
     elseif name === :cpu
         KA.CPU()
     else
-        throw(ArgumentError("KernelAbstractions backend must be :cuda, :oneapi, or :cpu"))
+        throw(ArgumentError("backend must be :cuda, :oneapi, or :cpu"))
     end
     KA.functional(backend) || throw(ArgumentError("KernelAbstractions $name backend is not functional"))
     return backend
@@ -228,11 +230,18 @@ function _ka_marginal_error!(
     return Float64(absolute_error / sum(source_mass))
 end
 
-function solve_sinkhorn_ka(
+"""
+    solve_sinkhorn(cost, source_mass, target_mass; backend=:cuda, kwargs...)
+
+Solve a dense, balanced Float32 transport problem with log-domain Sinkhorn and
+epsilon continuation on the explicitly selected `:cuda`, `:oneapi`, or `:cpu`
+backend.
+"""
+function solve_sinkhorn(
     cost,
     source_mass,
     target_mass;
-    backend::Symbol=:oneapi,
+    backend::Symbol=:cuda,
     eta_schedule=Float32[0.05, 0.02, 0.01, 0.005],
     max_iters_per_eta::Int=1_000,
     tol::Real=1e-5,

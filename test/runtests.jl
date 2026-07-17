@@ -5,14 +5,14 @@ using PopulationCartogramProjection
 using Test
 using oneAPI
 
-const PCP = PopulationCartogramProjection
 const FIXTURE_PATH = joinpath(@__DIR__, "fixtures", "synthetic_sources.csv")
 
 function transport_plan(result, cost)
     return exp.((result.alpha .+ result.beta' .- cost) ./ result.eta)
 end
 
-function check_numerical_solver(solver)
+function check_numerical_solver(backend)
+    solver(args...; kwargs...) = solve_sinkhorn(args...; backend, kwargs...)
     one = solver(
         zeros(Float32, 1, 1),
         Float32[1],
@@ -57,30 +57,68 @@ function check_numerical_solver(solver)
         off_diagonal_mass diagonal_mass
     ] atol=1e-4
 
+    asymmetric_cost = Float32[0 0.2; 0.4 0.1]
+    asymmetric_source_mass = Float32[0.7, 0.3]
+    asymmetric_target_mass = Float32[0.2, 0.8]
+    asymmetric_result = solver(
+        asymmetric_cost,
+        asymmetric_source_mass,
+        asymmetric_target_mass;
+        eta_schedule=Float32[0.4, 0.2],
+        max_iters_per_eta=2_000,
+        tol=1e-5,
+        check_every=10,
+    )
+    asymmetric_plan = transport_plan(asymmetric_result, asymmetric_cost)
+    @test asymmetric_result.converged
+    @test asymmetric_plan ≈ Float32[
+        0.19103342 0.50896657
+        0.00896658 0.29103342
+    ] atol=1e-4
+    @test vec(sum(asymmetric_plan; dims=2)) ≈ asymmetric_source_mass atol=1e-4
+    @test vec(sum(asymmetric_plan; dims=1)) ≈ asymmetric_target_mass atol=1e-4
+
+    limited_result = solver(
+        Float32[0 4; 4 0],
+        Float32[0.9, 0.1],
+        Float32[0.1, 0.9];
+        eta_schedule=Float32[0.01],
+        max_iters_per_eta=1,
+        tol=2e-6,
+        check_every=1,
+    )
+    @test !limited_result.converged
+    @test limited_result.stop_reason == :max_iterations
+    @test limited_result.iterations == 1
+
     large_count = 257
     large_cost = reshape(
         Float32.(mod.(0:(large_count^2 - 1), 113)) ./ 112,
         large_count,
         large_count,
     )
-    large_mass = fill(inv(Float32(large_count)), large_count)
+    large_source_mass = Float32.(1:large_count)
+    large_source_mass ./= sum(large_source_mass)
+    large_target_mass = reverse(large_source_mass)
     large_result = solver(
         large_cost,
-        large_mass,
-        large_mass;
+        large_source_mass,
+        large_target_mass;
         eta_schedule=Float32[0.1],
         max_iters_per_eta=1_000,
         tol=1e-5,
         check_every=10,
     )
+    large_plan = transport_plan(large_result, large_cost)
     @test large_result.converged
     @test isfinite(large_result.marginal_error)
-    return (; result, plan)
+    @test vec(sum(large_plan; dims=2)) ≈ large_source_mass atol=1e-4
+    @test vec(sum(large_plan; dims=1)) ≈ large_target_mass atol=1e-4
 end
 
-function check_regional_mapping(implementation)
+function check_regional_mapping(backend)
     sources = CSV.read(FIXTURE_PATH, DataFrame)
-    mapping = fit_mapping(sources; implementation)
+    mapping = fit_mapping(sources; backend)
     share_totals = combine(groupby(mapping, :id), :source_share => sum => :share)
     @test propertynames(mapping) == [:id, :country_code, :cell_id, :source_share]
     @test nrow(mapping) == nrow(sources) * 72
@@ -93,7 +131,6 @@ function check_regional_mapping(implementation)
     target_totals = combine(groupby(weighted, :cell_id), :transport_mass => sum => :mass)
     expected_mass = sum(sources.population) / nrow(target_totals)
     @test all(value -> isapprox(value, expected_mass; rtol=2e-4), target_totals.mass)
-    return mapping
 end
 
 @testset "source validation" begin
@@ -134,51 +171,23 @@ end
     @test_throws ArgumentError solve_sinkhorn(cost, source_mass, target_mass; eta_schedule=[true])
     @test_throws ArgumentError solve_sinkhorn(cost, source_mass, target_mass; tol=1e-8)
     @test_throws ArgumentError solve_sinkhorn(cost, Float32[-0.4, 1.4], target_mass)
+    @test_throws ArgumentError solve_sinkhorn(cost, source_mass, target_mass; backend=:invalid)
 end
 
 @testset "KernelAbstractions CPU Sinkhorn" begin
-    check_numerical_solver(
-        (cost, source, target; kwargs...) ->
-            solve_sinkhorn_ka(cost, source, target; backend=:cpu, kwargs...),
-    )
+    check_numerical_solver(:cpu)
 end
 
 @testset "KernelAbstractions CPU regional mapping" begin
-    check_regional_mapping(:ka_cpu)
+    check_regional_mapping(:cpu)
 end
 
 if CUDA.functional()
-    direct_result = Ref{Any}()
-    portable_result = Ref{Any}()
-    @testset "direct CUDA Sinkhorn" begin
-        direct_result[] = check_numerical_solver(solve_sinkhorn_cuda)
-    end
     @testset "KernelAbstractions CUDA Sinkhorn" begin
-        portable_result[] = check_numerical_solver(
-            (cost, source, target; kwargs...) ->
-                solve_sinkhorn_ka(cost, source, target; backend=:cuda, kwargs...),
-        )
-    end
-    @testset "CUDA implementation parity" begin
-        @test direct_result[].result.converged == portable_result[].result.converged
-        @test direct_result[].result.eta == portable_result[].result.eta
-        @test direct_result[].result.marginal_error ≈ portable_result[].result.marginal_error atol=1e-5
-        @test direct_result[].plan ≈ portable_result[].plan atol=1e-4
-    end
-    direct_mapping = Ref{Any}()
-    portable_mapping = Ref{Any}()
-    @testset "direct CUDA regional mapping" begin
-        direct_mapping[] = check_regional_mapping(:cuda)
+        check_numerical_solver(:cuda)
     end
     @testset "KernelAbstractions CUDA regional mapping" begin
-        portable_mapping[] = check_regional_mapping(:ka_cuda)
-    end
-    @testset "CUDA regional mapping parity" begin
-        sort!(direct_mapping[], [:id, :cell_id])
-        sort!(portable_mapping[], [:id, :cell_id])
-        @test direct_mapping[].id == portable_mapping[].id
-        @test direct_mapping[].cell_id == portable_mapping[].cell_id
-        @test direct_mapping[].source_share ≈ portable_mapping[].source_share atol=1e-4
+        check_regional_mapping(:cuda)
     end
 else
     @testset "CUDA requirement" begin
@@ -203,12 +212,9 @@ end
 
 if oneAPI.functional()
     @testset "KernelAbstractions oneAPI Sinkhorn" begin
-        check_numerical_solver(
-            (cost, source, target; kwargs...) ->
-                solve_sinkhorn_ka(cost, source, target; backend=:oneapi, kwargs...),
-        )
+        check_numerical_solver(:oneapi)
     end
     @testset "KernelAbstractions oneAPI regional mapping" begin
-        check_regional_mapping(:ka_oneapi)
+        check_regional_mapping(:oneapi)
     end
 end

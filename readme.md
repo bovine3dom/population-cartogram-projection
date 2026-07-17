@@ -29,15 +29,14 @@ julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.test()'
 
 Numerical tests run for every functional accelerator backend that is available.
 
-The default direct CUDA implementation requires an NVIDIA CUDA-capable GPU and
-functional CUDA driver. Check availability with:
+The default `:cuda` backend requires an NVIDIA CUDA-capable GPU and functional
+CUDA driver. Check availability with:
 
 ```sh
 julia --project=. -e 'using CUDA; println(CUDA.functional())'
 ```
 
-Then fit the included five-source synthetic example with the direct CUDA
-implementation:
+Then fit the included five-source synthetic example:
 
 ```julia
 using CSV, DataFrames, PopulationCartogramProjection
@@ -47,19 +46,17 @@ mapping = fit_mapping(sources)
 first(mapping, 5)
 ```
 
-Three KernelAbstractions paths are available while backend performance is
-evaluated:
+Select a backend explicitly when needed:
 
 ```julia
-cuda_mapping = fit_mapping(sources; implementation=:ka_cuda)
-intel_mapping = fit_mapping(sources; implementation=:ka_oneapi)
-cpu_mapping = fit_mapping(sources; implementation=:ka_cpu)
+cuda_mapping = fit_mapping(sources; backend=:cuda)
+intel_mapping = fit_mapping(sources; backend=:oneapi)
+cpu_mapping = fit_mapping(sources; backend=:cpu)
 ```
 
-The default remains the direct CUDA implementation. The comparison paths share
-input normalization, continuation, convergence, result construction, and
-mapping extraction with it. The CPU path runs the same KernelAbstractions
-kernels; there is no separately maintained CPU solver.
+All three backends run the same KernelAbstractions row, column, and marginal
+kernels. Backend selection never falls back silently, and there is no separately
+maintained CPU or direct-CUDA solver.
 
 The CPU backend requires no system setup and is intended for fallback-sized
 regional problems. Its 256-workitem reductions are GPU-oriented and allocate
@@ -97,17 +94,18 @@ package is required for the oneAPI path.
 
 ## Backend Benchmark
 
-The benchmark uses identical generated problems and solver options. On an
-NVIDIA machine it compares direct CUDA with KernelAbstractions CUDA; it also
-runs oneAPI when available:
+The benchmark uses identical generated problems and solver options for every
+enabled backend. CUDA measurements are explicitly synchronized; CPU is opt-in:
 
 ```sh
 julia --project=. benchmark/compare_solvers.jl 1024 1024 5
 ```
 
 The arguments are source count, target count, and repetitions. Compilation is
-warmed before timings are recorded. A CUDA ratio is reported only when the two
-implementations have matching convergence histories.
+warmed before timings are recorded. Timings cover an end-to-end solver call,
+including validation, allocation, host/device copies, convergence checks, and
+the final dual transfer; they are not kernel-only timings. Reported allocations
+are host allocations; the accelerator storage estimate is printed separately.
 
 Include the CPU path explicitly:
 
@@ -115,14 +113,41 @@ Include the CPU path explicitly:
 BENCHMARK_CPU=true julia --project=. benchmark/compare_solvers.jl 256 256 5
 ```
 
+For `m` sources and `n` targets, the solver stores the Float32 cost matrix and
+its transpose on the accelerator. Those two dense matrices require `8mn` bytes;
+the masses, duals, and marginal buffers add approximately `12(m+n)` bytes. A
+dense transport plan is not materialized.
+
+### Recorded CUDA Comparison
+
+The separate direct-CUDA baseline was removed after this comparison. This table
+is an archival selection record, not an output the current KA-only benchmark can
+regenerate. It reports median end-to-end times from nine order-alternated
+repetitions on 2026-07-17; both implementations used identical generated inputs
+with seed `20260716` and identical convergence histories.
+
+Hardware and software: NVIDIA GeForce GTX 1080 Ti (`sm_61`, 11 GiB), driver
+570.211.01, Julia 1.12.1, CUDA.jl 6.2.1, and KernelAbstractions 0.9.42.
+
+| Sources x targets | Direct CUDA | KA CUDA | KA/direct |
+|---:|---:|---:|---:|
+| 64 x 256 | 2.7 ms | 2.9 ms | 1.068 |
+| 256 x 2,268 | 10.3 ms | 11.4 ms | 1.103 |
+| 1,024 x 9,834 | 97.4 ms | 98.6 ms | 1.012 |
+| 4,096 x 4,096 | 154.9 ms | 147.8 ms | 0.954 |
+
+The portable path added about 0.2-1.2 ms on the representative rectangular
+problems and was faster on the largest square problem. That cost did not justify
+maintaining a second CUDA implementation, so KernelAbstractions is the retained
+solver for CUDA, oneAPI, and CPU.
+
 The package bundles the small OWID grid in `data/cartogram.csv`; ordinary use
 does not require the large Kontur or Natural Earth H3 datasets.
 
 ## Current Limits
 
 - `fit_mapping` currently handles one country at a time.
-- Direct CUDA and portable CUDA/oneAPI/CPU implementations are temporarily
-  retained for correctness and performance comparison.
+- CUDA, oneAPI, and CPU use one portable kernel implementation.
 - Output is dense; sparse extraction is not yet part of this path.
 - Source coordinates are scaled from their bounding box to the country's OWID
   grid bounding box. This is an explicit modelling limitation under review.

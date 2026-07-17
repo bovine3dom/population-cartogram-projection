@@ -1,4 +1,5 @@
 using CUDA
+import KernelAbstractions as KA
 using PopulationCartogramProjection
 using Random
 using Statistics
@@ -26,69 +27,74 @@ solver_options = (
     check_every=25,
 )
 
-function benchmark_solver(solver, name)
+function benchmark_solver(solver, name; synchronize! = () -> nothing)
     print("Warming $name ... ")
     warm_result = solver()
+    synchronize!()
     println("$(warm_result.iterations) iterations")
 
-    times = Float64[]
-    allocations = Int[]
-    workloads = Set{Tuple{Bool, Float32, Int}}()
-    result = warm_result
-    for _ in 1:repetitions
+    measurements = map(1:repetitions) do _
         GC.gc()
-        measurement = @timed solver()
-        result = measurement.value
-        push!(times, measurement.time)
-        push!(allocations, measurement.bytes)
-        push!(workloads, (result.converged, result.eta, result.iterations))
+        synchronize!()
+        @timed begin
+            result = solver()
+            synchronize!()
+            result
+        end
     end
+    times = [measurement.time for measurement in measurements]
+    allocations = [measurement.bytes for measurement in measurements]
     median_time = median(times)
+    median_index = argmin(abs.(times .- median_time))
+    result = measurements[median_index].value
     println(
         "$name: median=$(round(median_time; digits=4))s " *
         "range=$(round(minimum(times); digits=4))-$(round(maximum(times); digits=4))s " *
-        "allocations=$(round(median(allocations) / 2^20; digits=2))MiB " *
-        "iterations=$(result.iterations) error=$(result.marginal_error)",
+        "host_allocations=$(round(median(allocations) / 2^20; digits=2))MiB " *
+        "iterations=$(result.iterations) converged=$(result.converged) " *
+        "error=$(result.marginal_error)",
     )
-    return (; median_time, result, workloads)
+end
+
+function print_cuda_context()
+    device = CUDA.device()
+    dense_cost_mib = 2 * sizeof(Float32) * source_count * target_count / 2^20
+    println(
+        "CUDA: $(CUDA.name(device)), compute capability $(CUDA.capability(device)); " *
+        "Julia $VERSION, CUDA.jl $(Base.pkgversion(CUDA)), " *
+        "KernelAbstractions $(Base.pkgversion(KA))",
+    )
+    println(
+        "Dense CUDA cost storage: $(round(dense_cost_mib; digits=3))MiB " *
+        "(cost plus transpose, excluding vectors)",
+    )
 end
 
 println("Problem: $source_count x $target_count, repetitions=$repetitions")
-results = Dict{Symbol, Any}()
 
 if CUDA.functional()
-    results[:direct_cuda] = benchmark_solver("direct CUDA") do
-        solve_sinkhorn_cuda(cost, source_mass, target_mass; solver_options...)
-    end
-    results[:ka_cuda] = benchmark_solver("KernelAbstractions CUDA") do
-        solve_sinkhorn_ka(cost, source_mass, target_mass; backend=:cuda, solver_options...)
-    end
-
-    direct = results[:direct_cuda]
-    portable = results[:ka_cuda]
-    if length(direct.workloads) == 1 && direct.workloads == portable.workloads
-        println(
-            "End-to-end KA/direct CUDA ratio: " *
-            string(round(portable.median_time / direct.median_time; digits=3)),
-        )
-    else
-        println("Not reporting a ratio because convergence histories differ")
+    print_cuda_context()
+    benchmark_solver(
+        "KernelAbstractions CUDA";
+        synchronize! = CUDA.synchronize,
+    ) do
+        solve_sinkhorn(cost, source_mass, target_mass; backend=:cuda, solver_options...)
     end
 else
-    println("Skipping CUDA comparisons: CUDA.functional() is false")
+    println("Skipping CUDA: CUDA.functional() is false")
 end
 
 if oneAPI.functional()
-    results[:ka_oneapi] = benchmark_solver("KernelAbstractions oneAPI") do
-        solve_sinkhorn_ka(cost, source_mass, target_mass; backend=:oneapi, solver_options...)
+    benchmark_solver("KernelAbstractions oneAPI") do
+        solve_sinkhorn(cost, source_mass, target_mass; backend=:oneapi, solver_options...)
     end
 else
     println("Skipping oneAPI: oneAPI.functional() is false")
 end
 
 if lowercase(get(ENV, "BENCHMARK_CPU", "false")) in ("1", "true", "yes")
-    results[:ka_cpu] = benchmark_solver("KernelAbstractions CPU") do
-        solve_sinkhorn_ka(cost, source_mass, target_mass; backend=:cpu, solver_options...)
+    benchmark_solver("KernelAbstractions CPU") do
+        solve_sinkhorn(cost, source_mass, target_mass; backend=:cpu, solver_options...)
     end
 else
     println("Skipping CPU; set BENCHMARK_CPU=true to include it")

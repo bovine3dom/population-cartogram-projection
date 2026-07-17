@@ -20,9 +20,9 @@ shared cartogram and solver code. The roughly 1 GB source datasets remain
 external and are not bundled with the package.
 
 The numerical implementation supports only dense, balanced, Float32 log-domain
-Sinkhorn with epsilon continuation. A direct CUDA baseline and a single
-KernelAbstractions implementation for CUDA, oneAPI, and CPU are temporarily
-retained for comparison. There is no separately maintained CPU solver.
+Sinkhorn with epsilon continuation. One KernelAbstractions implementation runs
+on CUDA, oneAPI, and CPU; the direct CUDA baseline was removed after the CUDA
+comparison. There is no separately maintained CPU solver.
 
 This supersedes the earlier artifact-first plan. A fixed H3-derived mapping may
 still be published as an optional release asset, but the main product computes
@@ -31,11 +31,12 @@ a custom mapping from the user's own source table.
 ## Current Status
 
 The repository now has a root Julia package and a one-country accelerator workflow for
-the five-column source contract. The KernelAbstractions path runs end to end on
-the Intel UHD 620 through oneAPI, including dimensions larger than one
-workgroup. Direct CUDA and KernelAbstractions CUDA still require comparison on
-NVIDIA hardware. The advanced workspace still contains duplicate experimental
-solvers that have not yet been migrated.
+the five-column source contract. The same KernelAbstractions path runs end to
+end on Intel UHD 620 through oneAPI and NVIDIA GTX 1080 Ti through CUDA,
+including dimensions larger than one workgroup. Direct CUDA comparison showed
+1-10% overhead on representative rectangular problems and a 5% speedup at
+4096x4096, so the portable implementation was retained. The advanced workspace
+still contains duplicate experimental solvers that have not yet been migrated.
 
 ## 1. Define The Public Data Contract
 
@@ -147,7 +148,7 @@ downloading large population or boundary datasets.
 - [ ] Fail on an incomplete result unless the caller explicitly permits partial
       output.
 - [x] Keep this example independent of H3, Kontur, Natural Earth, GeoNames,
-      ClickHouse, DuckDB, and GDAL. CUDA hardware remains required for fitting.
+      ClickHouse, DuckDB, and GDAL. Accelerator selection remains explicit.
 
 ### Candidate public workflow
 
@@ -250,24 +251,25 @@ table preparation, and result extraction are not alternative solver paths.
 ### Supported numerical scope
 
 The supported algorithm is dense, balanced, Float32 log-domain Sinkhorn with
-epsilon continuation. Direct CUDA is the performance baseline while the single
-KernelAbstractions implementation is evaluated on CUDA, oneAPI, and CPU.
+epsilon continuation through one KernelAbstractions implementation on CUDA,
+oneAPI, and CPU.
 
-- [x] Define explicit direct-CUDA and KernelAbstractions comparison entry points.
+- [x] Define explicit direct-CUDA and KernelAbstractions comparison entry points
+      for the completed CUDA evaluation.
 - [x] Share validation, schedules, convergence checks, result construction, and
       mapping extraction between comparison implementations.
 - [ ] Share progress reporting, stage observation, and sparse extraction.
-- [x] Implement CUDA block-reduction row and column updates and CUDA marginal
-      evaluation in the package.
-- [x] Preserve the optimized block-per-marginal structure from
-      `make-lookup-table/cuRegOT.jl:127-250`.
+- [x] Implement and benchmark direct CUDA block reductions as the temporary
+      comparison baseline.
+- [x] Preserve the block-per-marginal reduction structure in the retained
+      portable kernels.
 - [x] Implement portable KernelAbstractions row, column, and marginal kernels.
 - [x] Run the portable kernels through oneAPI on Intel UHD 620.
 - [x] Run the same portable kernels through the KernelAbstractions CPU backend.
-- [ ] Compare portable and direct CUDA performance on representative NVIDIA
+- [x] Compare portable and direct CUDA performance on representative NVIDIA
       hardware before selecting the retained implementation.
-- [ ] Consolidate the two active optimized continuation loops around
-      `make-lookup-table/cuRegOT.jl:667-1004`.
+- [x] Consolidate the package around the portable continuation loop after the
+      CUDA comparison.
 - [x] Update every target potential and normalize the final dual gauge without
       changing the reconstructed plan.
 - [x] Avoid materializing the dense transport plan during solving.
@@ -276,28 +278,29 @@ KernelAbstractions implementation is evaluated on CUDA, oneAPI, and CPU.
 - [x] Validate matrix dimensions, finite costs, strictly positive marginals,
       equal total mass, positive epsilon values, non-empty schedules, and
       positive iteration/check intervals.
-- [ ] Document the dense memory cost. CUDA stores both the cost matrix and its
-      transpose.
+- [x] Document the dense memory cost. Accelerator backends store both the cost
+      matrix and its transpose.
 
 ### Accelerator setup and selection
 
-Keep CUDA, KernelAbstractions, and oneAPI as direct dependencies during the
-comparison. Solving must check the requested accelerator and fail clearly.
+Keep CUDA, KernelAbstractions, and oneAPI as direct dependencies for the three
+supported backends. Solving must check the requested accelerator and fail clearly.
 
 - [x] Declare CUDA in `Project.toml` and record a compatible version range.
 - [x] Declare KernelAbstractions and oneAPI with compatible version ranges.
 - [x] Check `CUDA.functional()` before preparing or allocating a mapping problem.
 - [x] Report a clear unavailable-device error on machines without NVIDIA CUDA.
-- [x] Support explicit `:cuda`, `:ka_cuda`, `:ka_oneapi`, and `:ka_cpu` choices.
+- [x] Support explicit `:cuda`, `:oneapi`, and `:cpu` choices.
 - [x] Do not silently change accelerator backends.
 - [x] Document Intel Gen9 legacy-runtime installation and driver discovery.
-- [ ] Benchmark small and large CUDA problems on representative hardware.
+- [x] Benchmark small and large CUDA problems on representative hardware.
 
 ### Remove unsupported solver families
 
 Create regression tests first, then remove:
 
 - [ ] The experimental quasi-Newton `curegot_solver` and sparse-Hessian code.
+- [x] The package-level direct-CUDA comparison implementation.
 - [ ] The one-thread-per-row CUDA kernels superseded by the block kernels.
 - [ ] The older single-epsilon and schedule Sinkhorn front ends.
 - [ ] The repeated-schedule and repeated-preparation reference front ends after
@@ -341,13 +344,12 @@ Create regression tests first, then remove:
       tests.
 - [x] Compile all four KernelAbstractions CUDA kernels to PTX and cubin for
       `sm_80`.
-- [ ] Run the CUDA-gated tests on NVIDIA hardware.
-- [ ] Add symmetric and asymmetric 2x2 transport problems.
-- [x] Add a 257x257 problem to exercise multi-block reductions.
-- [ ] Add an imbalanced problem with more than eight sources to exercise atomic
-      marginal accumulation.
-- [ ] Test convergence, explicit non-convergence, and stopping reasons on CUDA.
-- [ ] Test source-share normalization and population-weighted target marginals
+- [x] Run the CUDA-gated tests on NVIDIA hardware.
+- [x] Add symmetric and asymmetric 2x2 transport problems.
+- [x] Add a nonuniform 257x257 problem to exercise strided reductions beyond the
+      256-workitem workgroup width and verify reconstructed host marginals.
+- [x] Test convergence, explicit non-convergence, and stopping reasons on CUDA.
+- [x] Test source-share normalization and population-weighted target marginals
       on CUDA.
 - [ ] Test sparse mass-loss reporting once sparse extraction exists.
 - [x] Keep performance benchmarks separate from unit tests.
@@ -386,7 +388,7 @@ external H3 population rows
   -> assign countries
   -> calculate centre x/y
   -> id, population, x, y, country_code
-  -> shared CUDA mapping pipeline
+  -> shared accelerator mapping pipeline
 ```
 
 - [ ] Preserve the H3 index in the generic `id` column.
@@ -471,10 +473,10 @@ external H3 population rows
 - [x] Replace the "under construction" README with the simple regional-centres
       workflow and clearly label advanced H3 functionality.
 - [x] Explain the five-column input and normalized mapping output first.
-- [x] Document direct CUDA and KernelAbstractions CUDA/oneAPI/CPU paths.
+- [x] Document the retained KernelAbstractions CUDA/oneAPI/CPU paths.
 - [x] State clearly that CPU uses the same kernels rather than a separate solver.
 - [x] Document Intel Gen9 system package and Level Zero driver discovery.
-- [x] Document the reproducible CUDA comparison benchmark.
+- [x] Record the completed CUDA comparison methodology and results.
 - [x] Document the centre-point approximation and spatial transform limitations.
 - [ ] Add an advanced prerequisites section for H3 data preparation rather than
       presenting ClickHouse, DuckDB, GDAL, and 7-Zip as ordinary requirements.
@@ -491,9 +493,8 @@ external H3 population rows
 
 ## Deferred: Separate Solver Package
 
-Do not split the solver into another repository now. Keep direct CUDA and the
-portable implementation only until the CUDA comparison identifies which one to
-retain; the low-maintenance CPU backend remains part of the portable path.
+Do not split the solver into another repository now. Keep the retained portable
+implementation for CUDA, oneAPI, and CPU in this package.
 
 Reconsider extraction only if:
 
@@ -512,7 +513,7 @@ Reconsider extraction only if:
    behind the package API and keep CPU support inside the portable kernel path.
 3. **Compare GPU implementations:** run direct CUDA and KernelAbstractions CUDA
    numerical tests and benchmarks on representative NVIDIA hardware, then
-   delete the losing implementation.
+   retain the portable implementation.
 4. **Deliver the simple example:** run a NUTS2-like fixture against the bundled
    OWID grid and project a sample value.
 5. **Create the package boundary:** remove import-time I/O and globals, move
