@@ -50,14 +50,16 @@ The CPU-first one-country vertical slice is complete: callers explicitly select
 a backend, extensive and population-weighted intensive values can be projected
 without hiding sparse loss, and `examples/regional_centres.jl` writes a complete
 set of mapping and projection CSVs. Non-GPU CI covers the supported Julia range.
+Per-run source-extrema scaling and cost normalization now live in a named
+internal preparation stage and are recorded in automatic-fit metadata without
+changing the bounded UK migration result.
 
 ## Next Milestones
 
-1. Make the spatial transform explicit, stable, and reproducible.
-2. Add country partitioning, per-country status reporting, and explicit partial
+1. Add country partitioning, per-country status reporting, and explicit partial
    result handling.
-3. Migrate the supported H3 orchestration onto that multi-country package path.
-4. Finish data provenance, licensing, and release hygiene.
+2. Migrate the supported H3 orchestration onto that multi-country package path.
+3. Finish data provenance, licensing, and release hygiene.
 
 ## 1. Define The Public Data Contract
 
@@ -185,30 +187,33 @@ Fitting depends on identifiers, population, and centres, while projecting values
 can be repeated without solving again. Rendering remains a separate future
 layer.
 
-## 3. Make The Spatial Model Explicit
+## 3. Make Spatial Scaling Explicit
 
-The spatial transform is currently a larger reuse risk than the Sinkhorn
-algorithm. `prepare_sinkhorn2_problem` independently stretches the extrema of
-the supplied source centres to each target country's cartogram bounding box at
+The spatial transform was a larger reuse risk than the Sinkhorn algorithm.
+`prepare_sinkhorn2_problem` independently stretches the extrema of the supplied
+source centres to each target country's cartogram bounding box at
 `make-lookup-table/cuRegOT.jl:1215-1228`.
 
 That means one outlier, or adding/removing a source, can change every source
 distance. Countries with only one or two sources also have poorly determined
 scaling.
 
-- [ ] Extract coordinate transformation and cost construction into an explicit,
-      named model rather than embedding it in solver preparation.
-- [ ] Decide whether the initial model uses input extrema, stable country
-      bounds, robust quantiles, or another fixed transform.
-- [ ] Record transform parameters and cost normalization in mapping metadata.
-- [ ] Keep geographic source coordinates separate from cartogram screen
+- [x] Extract coordinate transformation and cost construction into a named
+      preparation stage rather than embedding it in solver preparation.
+- [x] Keep input extrema as the per-run compatibility rule; changing source or
+      target releases intentionally produces a newly fitted mapping.
+- [x] Record transform parameters and cost normalization in mapping metadata.
+- [x] Keep geographic source coordinates separate from cartogram screen
       coordinates and rendering orientation.
-- [ ] Document that a single centre approximates a region and does not preserve
+- [x] Document that a single centre approximates a region and does not preserve
       its boundary, shape, adjacency, or internal population distribution.
-- [ ] Recommend population-weighted centres where available.
-- [ ] Test one-source and two-source countries, coincident centres, outliers,
-      islands, overseas territories, and disconnected countries.
-- [ ] Test that row order and unrelated table columns cannot change a mapping.
+- [x] Recommend population-weighted centres where available.
+- [x] Test one-source and two-source countries, coincident centres, degenerate
+      targets, outliers, and per-run metadata.
+- [ ] Define policies and tests for antimeridian-spanning, island, overseas, and
+      disconnected geographies.
+- [x] Test that source/target row order and unrelated columns preserve keyed
+      spatial costs.
 - [ ] Verify that uniform target mass is correct for original and subdivided
       OWID cells.
 
@@ -510,8 +515,8 @@ external H3 population rows
       coordinate transform, source checksum, grid checksum, and git commit with
       generated mappings.
 - [ ] Record CUDA/driver and GPU details with every generated mapping.
-- [ ] Define whether reproducibility means byte identity or numerical agreement
-      within documented tolerances.
+- [x] Define reproducibility as keyed numerical agreement within documented
+      tolerances rather than byte identity across row orders and backends.
 - [ ] Replace unseeded random country colours with deterministic output.
 - [ ] Handle the case where every country fails before concatenating results.
 - [ ] Remove or resolve comments describing possible corruption, mutation, and

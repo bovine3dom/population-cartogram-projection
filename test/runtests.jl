@@ -174,6 +174,9 @@ function check_automatic_eta(backend)
     @test fitted.metadata.rows == fitted.metadata.target_rows == 2
     @test fitted.metadata.row_error == minimum(candidate.row_error for candidate in fitted.metadata.candidates)
     @test fitted.metadata.dropped_mass_share ≈ 1 - fitted.metadata.retained_mass_share
+    @test fitted.metadata.spatial_transform.method == "source_extrema"
+    @test fitted.metadata.spatial_transform.longitude_bounds == (0.0, 0.0)
+    @test fitted.metadata.spatial_transform.latitude_bounds == (50.0, 60.0)
     @test propertynames(fitted.mapping) == [:id, :country_code, :cell_id, :source_share]
     @test fitted.mapping.cell_id == ["top", "bottom"]
     @test propertynames(fitted.source_retention) == [
@@ -251,6 +254,111 @@ end
         (grid.country_code .== 792) .& (grid.grid_x .== 552) .& (grid.grid_y .== 262),
     )
     @test grid.cell_id[turkey_cell] == "792:552:262"
+end
+
+@testset "per-run spatial scaling" begin
+    sources = DataFrame(
+        id=["west", "centre", "east"],
+        population=[2.0, 3.0, 5.0],
+        x=[-2.0, 0.0, 5.0],
+        y=[50.0, 52.0, 51.0],
+        country_code=[999, 999, 999],
+    )
+    grid = DataFrame(
+        cell_id=["a", "b", "c", "d"],
+        grid_x=[0, 2, 4, 0],
+        grid_y=[0, 0, 2, 2],
+        country_code=[999, 999, 999, 999],
+    )
+
+    function previous_cost(sources, targets; cost_power=2)
+        function scale(values, target_values)
+            source_min, source_max = extrema(values)
+            target_min, target_max = extrema(target_values)
+            source_min == source_max &&
+                return fill((target_min + target_max) / 2, length(values))
+            return target_min .+ (values .- source_min) .*
+                                 ((target_max - target_min) / (source_max - source_min))
+        end
+        source_x = scale(Float64.(sources.x), Float64.(targets.grid_x))
+        source_y = scale(-Float64.(sources.y), Float64.(targets.grid_y))
+        step_x = minimum(diff(sort(unique(Float64.(targets.grid_x)))))
+        step_y = minimum(diff(sort(unique(Float64.(targets.grid_y)))))
+        cost = Matrix{Float32}(undef, nrow(sources), nrow(targets))
+        for j in 1:nrow(targets), i in 1:nrow(sources)
+            dx = (source_x[i] - targets.grid_x[j]) / step_x
+            dy = (source_y[i] - targets.grid_y[j]) / step_y
+            cost[i, j] = Float32(hypot(dx, dy))
+        end
+        max_distance = maximum(cost)
+        max_distance > 0 && (cost .= (cost ./ max_distance) .^ cost_power)
+        return cost
+    end
+
+    prepared = PopulationCartogramProjection._prepare_problem(sources, grid)
+    @test isequal(prepared.cost, previous_cost(sources, grid))
+
+    metadata = prepared.spatial_metadata
+    @test metadata.method == "source_extrema"
+    @test metadata.longitude_bounds == (-2.0, 5.0)
+    @test metadata.latitude_bounds == (50.0, 52.0)
+    @test metadata.grid_x_bounds == (0.0, 4.0)
+    @test metadata.grid_y_bounds == (0.0, 2.0)
+    @test metadata.grid_step == (2.0, 2.0)
+    @test metadata.distance_scale > 0
+    @test metadata.cost_power == 2.0
+
+    expanded = vcat(sources, DataFrame(
+        id=["outlier"],
+        population=[1.0],
+        x=[40.0],
+        y=[10.0],
+        country_code=[999],
+    ))
+    expanded_prepared = PopulationCartogramProjection._prepare_problem(expanded, grid)
+    @test expanded_prepared.spatial_metadata.longitude_bounds == (-2.0, 40.0)
+    @test expanded_prepared.spatial_metadata.latitude_bounds == (10.0, 52.0)
+    @test !isequal(prepared.cost, expanded_prepared.cost[1:nrow(sources), :])
+
+    order = [3, 1, 2]
+    permuted = sources[order, :]
+    @test isequal(
+        prepared.cost[order, :],
+        PopulationCartogramProjection._prepare_problem(permuted, grid).cost,
+    )
+    with_extra_column = copy(sources)
+    with_extra_column.unrelated = [3, 2, 1]
+    @test isequal(
+        prepared.cost,
+        PopulationCartogramProjection._prepare_problem(with_extra_column, grid).cost,
+    )
+    target_order = [4, 2, 1, 3]
+    @test isequal(
+        prepared.cost[:, target_order],
+        PopulationCartogramProjection._prepare_problem(
+            sources, grid[target_order, :],
+        ).cost,
+    )
+
+    one_source = sources[1:1, :]
+    one_problem = PopulationCartogramProjection._prepare_problem(one_source, grid)
+    @test all(isfinite, one_problem.cost)
+    @test only(unique(one_source.x)) == one_problem.spatial_metadata.longitude_bounds[1]
+    @test only(unique(one_source.y)) == one_problem.spatial_metadata.latitude_bounds[1]
+
+    coincident_x = copy(sources)
+    coincident_x.x .= 1.0
+    coincident_problem = PopulationCartogramProjection._prepare_problem(coincident_x, grid)
+    @test all(isfinite, coincident_problem.cost)
+    @test coincident_problem.spatial_metadata.longitude_bounds == (1.0, 1.0)
+
+    one_cell_grid = grid[1:1, :]
+    zero_problem = PopulationCartogramProjection._prepare_problem(one_source, one_cell_grid)
+    @test iszero(zero_problem.spatial_metadata.distance_scale)
+    @test all(iszero, zero_problem.cost)
+    @test_throws ArgumentError PopulationCartogramProjection._prepare_problem(
+        sources, grid; cost_power=0,
+    )
 end
 
 @testset "project source values" begin

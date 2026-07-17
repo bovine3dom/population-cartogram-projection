@@ -93,6 +93,27 @@ dropped extensive totals or projected and dropped population. All relevant grid
 cells are retained in grid order. A cell with no retained contribution receives
 zero for an extensive value and `missing` for an intensive value.
 
+## Spatial Scaling
+
+Each fit independently maps source longitude extrema to the target `grid_x`
+bounds and negated-latitude extrema to the target `grid_y` bounds. A coincident
+source axis, including a one-source country, maps to the target midpoint.
+Distances are measured in target-grid steps, stored as `Float32`, divided by the
+per-run maximum distance, and raised to `cost_power`.
+
+This preserves the established package behavior and bounded UK comparison. It
+also means a changed source geography or outlier can change every spatial cost,
+which is accepted because each source and target release produces a new mapping.
+`fit_mapping_auto` records the actual source bounds, target bounds, grid step,
+distance scale, and `cost_power` in `metadata.spatial_transform` for auditing.
+The transform is not intended for reuse across releases.
+
+A centre point remains only an approximation of a region. It does not preserve
+the region's boundary, shape, adjacency, or internal population distribution.
+Use population-weighted centres where available. Antimeridian-spanning,
+disconnected, island, and overseas geographies still require an explicit policy
+or multiple support points.
+
 ## Backend Selection
 
 Select the backend on every fitting or solver call:
@@ -186,6 +207,7 @@ setting. `source_retention` reports retained and dropped share, whether the
 cumulative target was achieved, and the truncation reason for every source.
 Metadata reports population-weighted retained and dropped mass. Candidate
 counting and final extraction use the same deterministic host implementation.
+Metadata also records the per-run spatial transform and cost normalization.
 
 ## Real UK H3 Check
 
@@ -316,8 +338,9 @@ does not require the large Kontur or Natural Earth H3 datasets.
   Metal is activated through a weak-dependency extension.
 - `fit_mapping` is dense; `fit_mapping_auto` returns sparse output and retention
   diagnostics.
-- Source coordinates are scaled from their bounding box to the country's OWID
-  grid bounding box. This is an explicit modelling limitation under review.
+- Spatial scaling is fitted independently from each run's source extrema and
+  target grid bounds.
+- Antimeridian-spanning and disconnected geographies have no dedicated policy.
 - Rendering has not yet been moved into the package.
 
 The existing `make-lookup-table/` workspace retains the large H3 workflow while

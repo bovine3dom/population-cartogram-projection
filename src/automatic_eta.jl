@@ -222,7 +222,8 @@ end
 Tune the final Sinkhorn eta against a sparse output-row target while traversing
 one warm-started continuation schedule. Candidate counts and final extraction
 use the same deterministic host implementation. Returns `mapping`,
-`source_retention`, and `metadata`.
+`source_retention`, and `metadata`; metadata includes the per-run spatial
+transform and cost normalization.
 """
 function fit_mapping_auto(
     sources::AbstractDataFrame,
@@ -344,6 +345,7 @@ function fit_mapping_auto(
         solver_stop_reason=solver_result.stop_reason,
         backend,
         cost_power=Float64(cost_power),
+        spatial_transform=problem.spatial_metadata,
         target_rows_multiplier=Float64(target_rows_multiplier),
         cumulative_share=options.cumulative_share,
         minimum_source_share=options.minimum_source_share,

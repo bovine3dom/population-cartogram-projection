@@ -95,18 +95,7 @@ function load_owid_grid(path::AbstractString=DEFAULT_GRID_PATH)
 end
 
 include("projection.jl")
-
-function _scale_to_grid(values, grid_values)
-    source_min, source_max = extrema(values)
-    target_min, target_max = extrema(grid_values)
-    source_min == source_max && return fill((target_min + target_max) / 2, length(values))
-    return target_min .+ (values .- source_min) .* ((target_max - target_min) / (source_max - source_min))
-end
-
-function _minimum_step(values)
-    sorted_values = sort!(unique(Float64.(values)))
-    return length(sorted_values) > 1 ? minimum(diff(sorted_values)) : 1.0
-end
+include("spatial.jl")
 
 function _float_eta_values(values, label)
     collected = collect(values)
@@ -117,40 +106,6 @@ function _float_eta_values(values, label)
     all(value -> isfinite(value) && value > 0, converted) ||
         throw(ArgumentError("$label must contain finite positive values representable as Float32"))
     return converted
-end
-
-function _prepare_problem(sources::AbstractDataFrame, targets::AbstractDataFrame; cost_power::Real=2)
-    !(cost_power isa Bool) && isfinite(cost_power) && cost_power > 0 ||
-        throw(ArgumentError("cost_power must be finite and positive"))
-    source_x = _scale_to_grid(Float64.(sources.x), Float64.(targets.grid_x))
-    source_y = _scale_to_grid(-Float64.(sources.y), Float64.(targets.grid_y))
-    step_x = _minimum_step(targets.grid_x)
-    step_y = _minimum_step(targets.grid_y)
-
-    source_count = nrow(sources)
-    target_count = nrow(targets)
-    cost = Matrix{Float32}(undef, source_count, target_count)
-    Threads.@threads for j in 1:target_count
-        @inbounds for i in 1:source_count
-            dx = (source_x[i] - targets.grid_x[j]) / step_x
-            dy = (source_y[i] - targets.grid_y[j]) / step_y
-            cost[i, j] = Float32(hypot(dx, dy))
-        end
-    end
-
-    max_distance = maximum(cost)
-    if max_distance > 0
-        cost .= (cost ./ max_distance) .^ cost_power
-    end
-
-    population_scale = maximum(sources.population)
-    source_mass = Float32[value / population_scale for value in sources.population]
-    all(isfinite, source_mass) || throw(ArgumentError("source population is too large to represent"))
-    source_mass ./= sum(source_mass)
-    target_mass = fill(inv(Float32(target_count)), target_count)
-    target_mass ./= sum(target_mass)
-
-    return (; cost, source_mass, target_mass)
 end
 
 function _validate_sinkhorn_inputs(cost, source_mass, target_mass, eta_schedule, max_iters, tol, check_every)
@@ -310,14 +265,7 @@ end
 include("kernel_abstractions.jl")
 
 function _prepare_mapping_problem(sources, grid; cost_power, backend)
-    validate_sources(sources)
-    _validate_grid(grid)
-
-    country_codes = unique(sources.country_code)
-    length(country_codes) == 1 || throw(ArgumentError("fit_mapping currently supports one country at a time"))
-    country_code = only(country_codes)
-    targets = filter(:country_code => ==(country_code), grid)
-    nrow(targets) > 0 || throw(ArgumentError("OWID grid has no cells for country_code=$country_code"))
+    targets = _country_targets(sources, grid)
     if backend === :cuda
         CUDA.functional() || throw(_cuda_unavailable())
     elseif backend === :amdgpu
@@ -330,7 +278,8 @@ function _prepare_mapping_problem(sources, grid; cost_power, backend)
         throw(ArgumentError("backend must be :cuda, :amdgpu, :metal, :oneapi, or :cpu"))
     end
 
-    return (; targets, problem=_prepare_problem(sources, targets; cost_power))
+    problem = _prepare_problem(sources, targets; cost_power)
+    return (; targets, problem)
 end
 
 function _extract_mapping(sources, targets, problem, result)
