@@ -6,6 +6,10 @@ using PopulationCartogramProjection
 using Test
 using oneAPI
 
+if Sys.isapple() && Sys.ARCH === :aarch64
+    @eval using Metal
+end
+
 const FIXTURE_PATH = joinpath(@__DIR__, "fixtures", "synthetic_sources.csv")
 
 function transport_plan(result, cost)
@@ -442,6 +446,24 @@ if AMDGPU.functional() && AMDGPU.has_rocm_gpu()
 else
     @testset "AMDGPU requirement" begin
         check_unavailable_backend(:amdgpu, "supported AMD GPU")
+    end
+end
+
+if PopulationCartogramProjection._optional_backend_functional(Val(:metal))
+    @testset "KernelAbstractions Metal Sinkhorn" begin
+        check_numerical_solver(:metal)
+    end
+    @testset "KernelAbstractions Metal regional mapping" begin
+        check_regional_mapping(:metal)
+    end
+    @testset "KernelAbstractions Metal automatic eta" begin
+        check_automatic_eta(:metal)
+    end
+else
+    @testset "Metal requirement" begin
+        message = PopulationCartogramProjection._optional_backend_loaded(Val(:metal)) ?
+                  "Apple Silicon Mac" : "extension is not loaded"
+        check_unavailable_backend(:metal, message)
     end
 end
 

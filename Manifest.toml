@@ -2,7 +2,7 @@
 
 julia_version = "1.12.1"
 manifest_format = "2.0"
-project_hash = "0632da050a29c6f0616a09edc26209afd1b1773a"
+project_hash = "1e2150607acefc933163974d7457f8a93126323b"
 
 [[deps.AMDGPU]]
 deps = ["AbstractFFTs", "AcceleratedKernels", "Adapt", "Atomix", "BFloat16s", "CEnum", "ExprTools", "GPUArrays", "GPUCompiler", "GPUToolbox", "KernelAbstractions", "LLD_jll", "LLVM", "LLVM_jll", "Libdl", "LinearAlgebra", "Pkg", "PrecompileTools", "Preferences", "PrettyTables", "Printf", "ROCmDeviceLibs_jll", "Random", "Random123", "RandomNumbers", "SparseArrays", "StaticArraysCore", "Statistics", "UnsafeAtomics"]
@@ -601,6 +601,12 @@ deps = ["AMDGPU", "CSV", "CUDA", "DataFrames", "KernelAbstractions", "oneAPI"]
 path = "."
 uuid = "c8499a48-226f-4b8e-883b-6bf873220240"
 version = "0.1.0"
+
+    [deps.PopulationCartogramProjection.extensions]
+    PopulationCartogramProjectionMetalExt = "Metal"
+
+    [deps.PopulationCartogramProjection.weakdeps]
+    Metal = "dde4c033-4e86-420c-a63e-0dd931031962"
 
 [[deps.PrecompileTools]]
 deps = ["Preferences"]

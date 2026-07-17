@@ -47,6 +47,33 @@ software stack and device detection with:
 julia --project=. -e 'using AMDGPU; AMDGPU.versioninfo(); println((AMDGPU.functional(), AMDGPU.has_rocm_gpu()))'
 ```
 
+On an AMD test machine, run the complete numerical suite followed by the shared
+AMDGPU-versus-CPU benchmark with:
+
+```sh
+julia --threads=auto --project=. scripts/validate_amdgpu.jl 1024 459 5
+```
+
+Metal is an optional weak dependency because Metal.jl only runs on Apple Silicon.
+It is not installed or loaded by ordinary package use. In an application
+environment on an M-series Mac with macOS 14 or newer, install Metal.jl and load
+it before selecting the backend. Metal.jl 1.10 supports Julia 1.10 through 1.12.
+
+```julia
+using Pkg
+Pkg.add("Metal")
+
+using Metal, PopulationCartogramProjection
+Metal.functional() || error("Metal is not functional")
+```
+
+Loading both packages activates `PopulationCartogramProjectionMetalExt`, which
+supplies `Metal.MetalBackend()` to the same KernelAbstractions kernels. Without
+Metal.jl, or before `using Metal`, `backend=:metal` reports that the extension is
+not loaded rather than installing a package or changing backends silently.
+Metal is a test-only extra, so `Pkg.test()` installs it and automatically loads
+the extension on Apple Silicon; ordinary package installation still omits it.
+
 Then fit the included five-source synthetic example:
 
 ```julia
@@ -62,13 +89,15 @@ Select a backend explicitly when needed:
 ```julia
 cuda_mapping = fit_mapping(sources; backend=:cuda)
 amd_mapping = fit_mapping(sources; backend=:amdgpu)
+metal_mapping = fit_mapping(sources; backend=:metal) # after `using Metal`
 intel_mapping = fit_mapping(sources; backend=:oneapi)
 cpu_mapping = fit_mapping(sources; backend=:cpu)
 ```
 
-All four backends run the same KernelAbstractions row, column, and marginal
-kernels. Backend selection never falls back silently, and there is no separately
-maintained CPU or direct-CUDA solver.
+These backends, plus the optional `:metal` backend, run the same
+KernelAbstractions row, column, and marginal kernels. Backend selection never
+falls back silently, and there is no separately maintained CPU or direct-CUDA
+solver.
 
 The CPU backend requires no system setup and is intended for fallback-sized
 regional problems. Its 256-workitem reductions are GPU-oriented and allocate
@@ -225,7 +254,7 @@ Hardware and software: NVIDIA GeForce GTX 1080 Ti (`sm_61`, 11 GiB), driver
 The portable path added about 0.2-1.2 ms on the representative rectangular
 problems and was faster on the largest square problem. That cost did not justify
 maintaining a second CUDA implementation, so KernelAbstractions is the retained
-solver for CUDA, AMDGPU, oneAPI, and CPU.
+solver for CUDA, AMDGPU, Metal, oneAPI, and CPU.
 
 The package bundles the small OWID grid in `data/cartogram.csv`; ordinary use
 does not require the large Kontur or Natural Earth H3 datasets.
@@ -233,7 +262,8 @@ does not require the large Kontur or Natural Earth H3 datasets.
 ## Current Limits
 
 - `fit_mapping` currently handles one country at a time.
-- CUDA, AMDGPU, oneAPI, and CPU use one portable kernel implementation.
+- CUDA, AMDGPU, Metal, oneAPI, and CPU use one portable kernel implementation;
+  Metal is activated through a weak-dependency extension.
 - `fit_mapping` is dense; `fit_mapping_auto` returns sparse output and retention
   diagnostics.
 - Source coordinates are scaled from their bounding box to the country's OWID

@@ -291,6 +291,19 @@ end
 
 _amdgpu_functional() = AMDGPU.functional() && AMDGPU.has_rocm_gpu()
 
+_optional_backend_loaded(::Val) = false
+_optional_backend_functional(::Val) = false
+_optional_ka_backend(::Val) = nothing
+
+function _metal_unavailable()
+    message = if _optional_backend_loaded(Val(:metal))
+        "Metal is not functional; an Apple Silicon Mac with macOS 14 or newer is required"
+    else
+        "Metal backend extension is not loaded; install Metal.jl and run `using Metal` first"
+    end
+    return ArgumentError(message)
+end
+
 include("kernel_abstractions.jl")
 
 function _prepare_mapping_problem(sources, grid; cost_power, backend)
@@ -306,10 +319,12 @@ function _prepare_mapping_problem(sources, grid; cost_power, backend)
         CUDA.functional() || throw(_cuda_unavailable())
     elseif backend === :amdgpu
         _amdgpu_functional() || throw(_amdgpu_unavailable())
+    elseif backend === :metal
+        _optional_backend_functional(Val(:metal)) || throw(_metal_unavailable())
     elseif backend === :oneapi
         oneAPI.functional() || throw(ArgumentError("oneAPI is not functional on this system"))
     elseif backend !== :cpu
-        throw(ArgumentError("backend must be :cuda, :amdgpu, :oneapi, or :cpu"))
+        throw(ArgumentError("backend must be :cuda, :amdgpu, :metal, :oneapi, or :cpu"))
     end
 
     return (; targets, problem=_prepare_problem(sources, targets; cost_power))
@@ -356,7 +371,8 @@ Fit a dense fractional mapping from one country's weighted source centres to
 the OWID cartogram grid. `sources` must contain `id`, `population`, `x`, `y`,
 and `country_code`. The returned table contains `id`, `country_code`, `cell_id`,
 and `source_share`, whose values sum to approximately one for each source.
-Select `backend=:cuda`, `:amdgpu`, `:oneapi`, or `:cpu` explicitly when needed.
+Select `backend=:cuda`, `:amdgpu`, `:metal`, `:oneapi`, or `:cpu` explicitly
+when needed.
 """
 function fit_mapping(
     sources::AbstractDataFrame,

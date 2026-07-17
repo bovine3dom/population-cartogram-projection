@@ -21,8 +21,9 @@ external and are not bundled with the package.
 
 The numerical implementation supports only dense, balanced, Float32 log-domain
 Sinkhorn with epsilon continuation. One KernelAbstractions implementation runs
-on CUDA, AMDGPU, oneAPI, and CPU; the direct CUDA baseline was removed after the
-CUDA comparison. There is no separately maintained CPU solver.
+on CUDA, AMDGPU, Metal, oneAPI, and CPU; Metal is an optional package extension.
+The direct CUDA baseline was removed after the CUDA comparison. There is no
+separately maintained CPU solver.
 
 This supersedes the earlier artifact-first plan. A fixed H3-derived mapping may
 still be published as an optional release asset, but the main product computes
@@ -38,7 +39,8 @@ including dimensions larger than one workgroup. Direct CUDA comparison showed
 4096x4096, so the portable implementation was retained. The advanced workspace
 still contains duplicate experimental solvers that have not yet been migrated.
 The AMDGPU backend is wired through the same kernels and awaits ROCm hardware
-validation.
+validation. The Metal weak-dependency extension is wired and awaits Apple
+Silicon hardware validation.
 Automatic eta tuning and deterministic sparse extraction now run through the
 portable solver. A cached 8,346-source real UK resolution-6 H3 check matches
 scratch preparation to Float32 precision and agrees on 96.15% of dominant
@@ -291,15 +293,15 @@ oneAPI, and CPU.
 
 ### Accelerator setup and selection
 
-Keep CUDA, AMDGPU, KernelAbstractions, and oneAPI as direct dependencies for the
-four supported backends. Solving must check the requested accelerator and fail
-clearly.
+Keep CUDA, AMDGPU, KernelAbstractions, and oneAPI as direct dependencies. Keep
+Metal as a weak dependency because it only runs on Apple Silicon. Solving must
+check the requested accelerator and fail clearly.
 
 - [x] Declare CUDA in `Project.toml` and record a compatible version range.
 - [x] Declare AMDGPU, KernelAbstractions, and oneAPI with compatible version ranges.
 - [x] Check `CUDA.functional()` before preparing or allocating a mapping problem.
 - [x] Report a clear unavailable-device error on machines without NVIDIA CUDA.
-- [x] Support explicit `:cuda`, `:amdgpu`, `:oneapi`, and `:cpu` choices.
+- [x] Support explicit `:cuda`, `:amdgpu`, `:metal`, `:oneapi`, and `:cpu` choices.
 - [x] Do not silently change accelerator backends.
 - [x] Document Intel Gen9 legacy-runtime installation and driver discovery.
 - [x] Benchmark small and large CUDA problems on representative hardware.
@@ -375,15 +377,18 @@ Create regression tests first, then remove:
 
 - [x] Add the `:amdgpu` backend and unavailable-device tests.
 - [x] Reuse the CUDA/CPU numerical, regional, and automatic-eta test suites.
+- [x] Add a hardware validation script that runs tests and AMDGPU/CPU benchmarks.
 - [ ] Run the hardware-gated suite on a supported AMD GPU with ROCm 6 or newer.
 - [ ] Record AMD GPU, ROCm, Julia, and AMDGPU.jl versions with benchmark results.
 
 ### Metal numerical tests
 
-- [ ] Refactor vendor backends into optional package extensions before adding
-      Metal.jl, avoiding an unusable hard dependency on non-macOS systems.
-- [ ] Add a `:metal` backend using `Metal.MetalBackend()` and gate it with
+- [x] Add Metal.jl as a weak dependency and activate it through a package
+      extension, avoiding an unusable hard dependency on non-macOS systems.
+- [x] Add a `:metal` backend using `Metal.MetalBackend()` and gate it with
       `Metal.functional()`.
+- [x] Reuse the numerical, regional, and automatic-eta test suites when the
+      extension is loaded and functional.
 - [ ] Run the numerical and image-parity checks on an Apple Silicon Mac.
 
 ### CPU numerical tests
@@ -503,7 +508,7 @@ external H3 population rows
 - [x] Replace the "under construction" README with the simple regional-centres
       workflow and clearly label advanced H3 functionality.
 - [x] Explain the five-column input and normalized mapping output first.
-- [x] Document the retained KernelAbstractions CUDA/AMDGPU/oneAPI/CPU paths.
+- [x] Document the retained KernelAbstractions CUDA/AMDGPU/Metal/oneAPI/CPU paths.
 - [x] State clearly that CPU uses the same kernels rather than a separate solver.
 - [x] Document Intel Gen9 system package and Level Zero driver discovery.
 - [x] Record the completed CUDA comparison methodology and results.
@@ -524,7 +529,7 @@ external H3 population rows
 ## Deferred: Separate Solver Package
 
 Do not split the solver into another repository now. Keep the retained portable
-implementation for CUDA, AMDGPU, oneAPI, and CPU in this package.
+implementation for CUDA, AMDGPU, Metal, oneAPI, and CPU in this package.
 
 Reconsider extraction only if:
 
