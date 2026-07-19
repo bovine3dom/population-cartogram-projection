@@ -13,7 +13,8 @@ id, population, x, y, country_code
 stable identifier. `x` and `y` are WGS84 longitude and latitude in degrees. The
 cartogram's downward-pointing vertical axis is handled internally.
 
-The fixed-eta API returns a dense fractional mapping:
+Both fixed and automatic fitting return a `MappingFit` with `mapping`,
+`source_retention`, and `metadata`. The mapping schema is:
 
 ```text
 id, country_code, cell_id, source_share
@@ -21,6 +22,12 @@ id, country_code, cell_id, source_share
 
 `source_share` is the fraction of a source row's population assigned to an OWID
 cell and sums to approximately one for each source.
+
+`country_code` uses the integer form of the OWID grid's ISO 3166-1 numeric-style
+codes, for example France `250` and the United Kingdom `826`. Source codes must
+match the grid or be reconciled through an explicit caller-supplied crosswalk.
+The single-country fit primitives reject multiple countries; use
+`fit_mapping_countries` for partitioned fitting and structured statuses.
 
 ## Quick Start
 
@@ -38,6 +45,7 @@ writes these files under `output/regional-centres/`:
 ```text
 mapping.csv
 source_retention.csv
+metadata.toml
 projected_households.csv
 projected_employment_rate.csv
 summary.csv
@@ -53,13 +61,18 @@ sources.households = [510_000, 760_000, 1_080_000, 390_000, 310_000]
 sources.employment_rate = [0.71, 0.74, 0.69, 0.76, 0.67]
 
 grid = load_owid_grid()
-fitted = fit_mapping_auto(sources, grid; backend=:cpu)
+plan = plan_mapping(sources, grid)
+fitted = fit_mapping_auto(sources, plan.grid; backend=:cpu)
 households = project_extensive(
-    fitted.mapping, sources, grid; value=:households,
+    fitted.mapping, sources, plan.grid; value=:households,
 )
-employment_rate = project_intensive(
-    fitted.mapping, sources, grid; value=:employment_rate,
+employment_rate = project_ratio(
+    fitted.mapping, sources, plan.grid;
+    value=:employment_rate,
+    weight=:population,
+    denominator=:projected_population,
 )
+save_fit("output/my-fit", fitted)
 ```
 
 Existing tables do not need to be renamed in place. Adapt column names and a
@@ -78,7 +91,9 @@ sources = canonicalize_sources(
 
 `canonicalize_sources` validates but does not silently drop or aggregate rows.
 Filter or repair missing coordinates and non-positive populations explicitly
-before calling it.
+before calling it. Selected columns must be distinct; a pre-existing canonical
+column such as `id` conflicts with selecting another column for that role rather
+than being silently replaced.
 
 `fit_mapping`, `fit_mapping_auto`, and `solve_sinkhorn` require an explicit
 `backend`; they never select or fall back to another device silently. Run the
@@ -99,17 +114,38 @@ transport_mass = population * source_share
 ```
 
 `project_extensive` distributes a source-level count or total as
-`value * source_share` and sums it by target cell. `project_intensive` calculates
-a population-weighted mean as
-`sum(value * transport_mass) / sum(transport_mass)`. Its cell output includes
-`projected_population`, the denominator used for that mean.
+`value * source_share` and sums it by target cell. `project_ratio` calculates a
+weighted mean as `sum(value * weight * source_share) / sum(weight * source_share)`.
+The denominator column is explicit. `project_intensive` remains a concise
+population-weighted specialization.
 
-Both helpers return `cells`, `source_retention`, and `metadata`. They preserve
-the supplied mapping weights: sparse shares are not renormalized. Retained and
+```julia
+employment = project_ratio(
+    fitted.mapping, sources, grid;
+    value=:employment_rate,
+    weight=:working_age_population,
+    denominator=:projected_working_age_population,
+)
+```
+
+Use extensive projection for counts such as people, households, cases, or total
+emissions. Use ratio projection only when the chosen weight is the quantity's
+real denominator. The France visualization is specifically a
+population-weighted mean of source IRIS densities; a cartogram cell has no
+geographic area of its own.
+
+Both helpers return `cells`, `source_retention`, and `metadata`. Sparse shares
+are not renormalized; only source sums slightly above one within numerical
+tolerance are scaled back to one. Retained and
 dropped share are reported per source, while metadata reports projected and
 dropped extensive totals or projected and dropped population. All relevant grid
 cells are retained in grid order. A cell with no retained contribution receives
 zero for an extensive value and `missing` for an intensive value.
+Both projection families accept `minimum_source_retained_share` and
+`minimum_weighted_retained_share` to turn unacceptable sparse loss into an
+error. Extensive weighted retention defaults to `abs(value)` and can instead use
+an explicit non-negative `retention_weight` column. Absolute-value totals remain
+separate from the named retention-weight totals in metadata.
 
 For a one-identifier-per-cell regional lookup, derive the source contributing
 the most transported population:
@@ -124,14 +160,22 @@ population accounting.
 
 ## Target Subdivision
 
-The native grid can be filtered and uniformly subdivided before fitting:
+Plan target resolution and dense storage before fitting:
 
 ```julia
 native_grid = load_owid_grid(; country_code=250)
-grid = subdivide_grid(native_grid; factor=3)
+plan = plan_mapping(sources, native_grid; factor=3)
+grid = plan.grid
 
-# Or choose the uniform square factor nearest a desired cell count.
-grid = subdivide_grid(native_grid; target_cells=cld(nrow(sources), 10))
+# Choose the nearest achievable square factor to about ten sources per target.
+plan = plan_mapping(sources, native_grid; sources_per_target=10)
+
+# Or select the largest factor fitting both budgets.
+plan = plan_mapping(
+    sources, native_grid;
+    max_host_bytes=8 * 2^30,
+    max_backend_bytes=8 * 2^30,
+)
 ```
 
 Every parent receives `factor^2` children. Child IDs are deterministic and the
@@ -139,6 +183,37 @@ grid includes `parent_cell_id`, which projection outputs preserve. Uniform
 target mass therefore gives every parent the same aggregate mass as at native
 resolution. Subdivision is explicit because dense cost size grows by
 `factor^2`; it does not add geographic information to source centre points.
+`target_cells` and `sources_per_target` are approximate because every parent
+must receive `factor^2` children; inspect `plan.metadata.targets` and
+`subdivision_factor`.
+
+For `m` sources and `n` targets, one Float32 matrix is `4mn` bytes. The planner
+reports the host matrix pair, accelerator matrix pair plus vectors, and their
+combined baseline. These are estimates and exclude temporary allocations and
+runtime overhead.
+
+## Multiple Countries
+
+`fit_mapping_countries` reconciles explicit codes, then runs the proven
+single-country fit independently in sorted country order:
+
+```julia
+fitted = fit_mapping_countries(
+    sources,
+    grid;
+    backend=:cuda,
+    crosswalk=Dict(249 => 250),
+    allow_partial=false,
+)
+```
+
+`country_statuses` reports `:included`, `:remapped`, `:skipped`, and `:failed`.
+The default throws `IncompleteCountryFitError` after collecting statuses if any
+country is incomplete; the partial result remains available as `error.result`.
+With `allow_partial=true`, returned `sources` contains exactly the successful
+country-scoped rows and is directly compatible with projection helpers. An
+all-failed request always throws. Crosswalks are direct, explicit, and must be
+one-to-one; the package never silently imports legacy country aliases.
 
 The real [`examples/france`](examples/france/readme.md) workflow exercises IRIS
 codes, non-canonical input columns, subdivision, and dominant assignment. It
@@ -192,11 +267,11 @@ or multiple support points.
 Select the backend on every fitting or solver call:
 
 ```julia
-cuda_mapping = fit_mapping(sources; backend=:cuda)
-amd_mapping = fit_mapping(sources; backend=:amdgpu)
-metal_mapping = fit_mapping(sources; backend=:metal) # after `using Metal`
-intel_mapping = fit_mapping(sources; backend=:oneapi)
-cpu_mapping = fit_mapping(sources; backend=:cpu)
+cuda_fit = fit_mapping(sources; backend=:cuda)
+amd_fit = fit_mapping(sources; backend=:amdgpu)
+metal_fit = fit_mapping(sources; backend=:metal) # after `using Metal`
+intel_fit = fit_mapping(sources; backend=:oneapi)
+cpu_fit = fit_mapping(sources; backend=:cpu)
 ```
 
 All backends run the same KernelAbstractions row, column, and marginal kernels.
@@ -267,7 +342,9 @@ metadata = fitted.metadata
 The default candidate list extends from `0.005` to `1e-7`. Candidates are
 visited from high to low eta, equal row errors retain the earlier higher eta,
 and evaluation stops after the first candidate at or below the row target. The
-closest converged candidate visited is returned. Failed candidates remain in
+closest converged candidate meeting `minimum_retained_mass_share` is returned.
+The row target is a storage heuristic, not a quality guarantee. Failed or
+retention-ineligible candidates remain in
 metadata and do not stop continuation; selected-candidate and solver-final
 fields remain separate when a later stage does not converge.
 
@@ -282,6 +359,10 @@ Metadata reports population-weighted retained and dropped mass. Candidate
 counting and final extraction use the same deterministic host implementation.
 Metadata also records the per-run spatial transform and cost normalization.
 
+Start with defaults, inspect `source_retention` and retained mass, then tighten
+`minimum_retained_mass_share`, per-source/weighted projection thresholds, or the
+sparsification options for publication workflows.
+
 ## Real UK H3 Check
 
 The full Kontur and Natural Earth Arrow inputs remain external and ignored. With
@@ -293,13 +374,31 @@ DataFrame:
 julia scripts/extract_country_h3.jl 826 6
 ```
 
-This uses `clickhouse local` to reproduce the scratch workflow's exact H3 join,
-parent population sum, and modal country assignment. Parent resolutions from 0
-through the source resolution of 8 are supported. The script pins the
-`h3ToGeo` coordinate order and validates IDs, resolution, country code,
-coordinates, population, and uniqueness before publishing its output. The
-resulting ignored `country-826-res6.arrow` has 8,346 unique sources, population
-66,956,569, and is about 197 KiB.
+This uses `clickhouse local` to sum each joined child once and assign each parent
+to its modal country. It reports candidate, unmatched, and multi-country
+boundary population, and refuses to publish if a populated child has multiple
+distinct boundary codes.
+Parent resolutions from 0 through the source resolution of 8 are supported. The
+script rejects invalid input H3 rows, pins the `h3ToGeo` coordinate order, and validates output H3 IDs, resolution,
+country code, coordinates, population, and uniqueness before publishing. The
+recorded inputs report 4,812 unmatched candidate rows containing 759,709 people
+and no ambiguous populated rows. The resulting ignored
+`country-826-res6.arrow` has 8,346 unique sources, population 66,956,569, and is
+about 197 KiB.
+
+H3-aware validation and centroid derivation are provided by an optional H3.jl
+extension. The supported package driver revalidates cached IDs/resolution,
+plans memory, fits, projects population, and writes an audit manifest:
+
+```sh
+julia +1.12.1 --threads=auto --project=make-lookup-table \
+  examples/uk_h3.jl cuda
+```
+
+For programmatic use, add H3.jl to the application environment with
+`Pkg.add("H3")`, load it, then call
+`canonicalize_h3_sources`; IDs remain `UInt64`, parent aggregation is explicit,
+and returned coordinates are ordinary WGS84 longitude/latitude.
 
 Run the bounded package-versus-scratch migration oracle on the 8,346 by 459
 native UK problem:
@@ -378,6 +477,23 @@ its transpose on the accelerator. Those two dense matrices require `8mn` bytes;
 the masses, duals, and marginal buffers add approximately `12(m+n)` bytes. A
 dense transport plan is not materialized.
 
+## Persistence And Reproducibility
+
+`save_fit(directory, fitted)` stages and validates `mapping.csv`,
+`source_retention.csv`, and `metadata.toml` before replacing an existing
+artifact, and restores prior files if publication raises an error. This guards
+writer failures but is not a transactional snapshot for concurrent readers. The
+manifest records schema,
+package/Julia versions, output checksums, solver and sparsification settings,
+candidate history, timings, and the fitted spatial transform. Multi-country
+fits additionally write reconciled `sources.csv` and `country_statuses.csv`.
+This is an audit artifact, not a resumable solver checkpoint; CSV callers must
+still preserve opaque ID types when reading.
+
+Reproducibility means keyed numerical agreement within documented tolerances,
+not byte-identical results across hardware. Save source/grid checksums and the
+git revision alongside the generated manifest when publishing an artifact.
+
 ### Recorded CUDA Comparison
 
 The separate direct-CUDA baseline was removed after this comparison. This table
@@ -406,15 +522,16 @@ does not require the large Kontur or Natural Earth H3 datasets.
 
 ## Current Limits
 
-- `fit_mapping` currently handles one country at a time.
+- `fit_mapping` and `fit_mapping_auto` are single-country primitives;
+  `fit_mapping_countries` provides explicit partitioning and partial handling.
 - CUDA, AMDGPU, Metal, oneAPI, and CPU use one portable kernel implementation;
   Metal is activated through a weak-dependency extension.
-- `fit_mapping` is dense; `fit_mapping_auto` returns sparse output and retention
-  diagnostics.
+- `fit_mapping` emits a dense mapping; `fit_mapping_auto` emits sparse output.
+  Both return the same `MappingFit` interface and retention diagnostics.
 - Spatial scaling is fitted independently from each run's source extrema and
   target grid bounds.
 - Antimeridian-spanning and disconnected geographies have no dedicated policy.
 - Rendering has not yet been moved into the package.
 
-The existing `make-lookup-table/` workspace retains the large H3 workflow while
-it is migrated to the package solver.
+The existing `make-lookup-table/` workspace retains the external H3 preparation
+and legacy comparison oracle; `examples/uk_h3.jl` is the supported package fit.

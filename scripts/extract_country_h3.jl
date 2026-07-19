@@ -67,7 +67,7 @@ function main(args)
             (
                 SELECT
                     h3ToParent(population.h3, $resolution) AS parent,
-                    toInt32(boundary.ISO_N3_EH) AS code,
+                    boundary.code AS code,
                     count() AS code_rows,
                     min(population.row_index) AS first_row,
                     sum(population.population) AS code_population
@@ -78,18 +78,31 @@ function main(args)
                         assumeNotNull(population) AS population,
                         rowNumberInAllBlocks() AS row_index
                     FROM file($population_path_sql, Arrow)
-                    WHERE isNotNull(h3) AND isNotNull(population)
+                    WHERE
+                        isNotNull(h3) AND
+                        isNotNull(population) AND
+                        h3IsValid(assumeNotNull(h3))
                 ) AS population
             INNER JOIN
             (
-                SELECT h3, ISO_N3_EH
+                SELECT
+                    assumeNotNull(h3) AS h3,
+                    min(toInt32(ISO_N3_EH)) AS code
                 FROM file($boundary_path_sql, Arrow)
-                WHERE h3ToParent(h3, $resolution) IN
+                WHERE
+                    isNotNull(h3) AND
+                    isNotNull(ISO_N3_EH) AND
+                    h3IsValid(assumeNotNull(h3)) AND
+                    h3ToParent(assumeNotNull(h3), $resolution) IN
                 (
-                    SELECT DISTINCT h3ToParent(h3, $resolution)
+                    SELECT DISTINCT h3ToParent(assumeNotNull(h3), $resolution)
                     FROM file($boundary_path_sql, Arrow)
-                    WHERE ISO_N3_EH = '$country_code_text'
+                    WHERE
+                        isNotNull(h3) AND
+                        h3IsValid(assumeNotNull(h3)) AND
+                        ISO_N3_EH = '$country_code_text'
                 )
+                GROUP BY h3
             ) AS boundary USING (h3)
                 GROUP BY parent, code
             )
@@ -102,14 +115,100 @@ function main(args)
         SETTINGS max_threads = 1, h3togeo_lon_lat_result_order = 0
         """
 
+    audit_query = """
+        SELECT
+            count(),
+            sum(toFloat64(population)),
+            countIf(boundary_codes = 0),
+            sumIf(toFloat64(population), boundary_codes = 0),
+            countIf(boundary_codes > 1),
+            sumIf(toFloat64(population), boundary_codes > 1),
+            count() - uniqExact(h3)
+        FROM
+        (
+            SELECT assumeNotNull(h3) AS h3, assumeNotNull(population) AS population
+            FROM file($population_path_sql, Arrow)
+            WHERE
+                isNotNull(h3) AND
+                isNotNull(population) AND
+                h3IsValid(assumeNotNull(h3)) AND
+                h3ToParent(assumeNotNull(h3), $resolution) IN
+                (
+                    SELECT DISTINCT h3ToParent(assumeNotNull(h3), $resolution)
+                    FROM file($boundary_path_sql, Arrow)
+                    WHERE
+                        isNotNull(h3) AND
+                        h3IsValid(assumeNotNull(h3)) AND
+                        ISO_N3_EH = '$country_code_text'
+                )
+        ) AS population
+        LEFT JOIN
+        (
+            SELECT assumeNotNull(h3) AS h3, uniqExact(ISO_N3_EH) AS boundary_codes
+            FROM file($boundary_path_sql, Arrow)
+            WHERE
+                isNotNull(h3) AND
+                isNotNull(ISO_N3_EH) AND
+                h3IsValid(assumeNotNull(h3)) AND
+                h3ToParent(assumeNotNull(h3), $resolution) IN
+                (
+                    SELECT DISTINCT h3ToParent(assumeNotNull(h3), $resolution)
+                    FROM file($boundary_path_sql, Arrow)
+                    WHERE
+                        isNotNull(h3) AND
+                        h3IsValid(assumeNotNull(h3)) AND
+                        ISO_N3_EH = '$country_code_text'
+                )
+            GROUP BY h3
+        ) AS boundary USING (h3)
+        SETTINGS max_threads = 1
+        FORMAT TSV
+        """
+    input_audit_query = """
+        SELECT
+            (
+                SELECT countIf(
+                    isNull(h3) OR NOT h3IsValid(assumeNotNull(h3))
+                )
+                FROM file($population_path_sql, Arrow)
+            ),
+            (
+                SELECT countIf(
+                    isNull(h3) OR NOT h3IsValid(assumeNotNull(h3))
+                )
+                FROM file($boundary_path_sql, Arrow)
+            )
+        FORMAT TSV
+        """
+
     try
+        input_audit = split(
+            strip(read(Cmd([clickhouse, "local", "--query", input_audit_query]), String)),
+            '\t',
+        )
+        length(input_audit) == 2 || error(
+            "unexpected H3 input audit output: $(join(input_audit, '\t'))",
+        )
+        input_violations = parse.(Int, input_audit)
+        all(iszero, input_violations) || error(
+            "invalid H3 input rows: population=$(input_violations[1]), " *
+            "boundary=$(input_violations[2])",
+        )
+        audit = split(strip(read(Cmd([clickhouse, "local", "--query", audit_query]), String)), '\t')
+        length(audit) == 7 || error("unexpected boundary audit output: $(join(audit, '\t'))")
+        parse(Int, audit[7]) == 0 || error("population input contains duplicate H3 rows")
+        println("candidate_rows\tcandidate_population\tunmatched_rows\tunmatched_population\tambiguous_rows\tambiguous_population")
+        println(join(audit[1:6], '\t'))
+        parse(Int, audit[5]) == 0 || error(
+            "candidate population has ambiguous country boundaries; refusing arbitrary assignment",
+        )
         run(Cmd([clickhouse, "local", "--query", query]))
         verify_query = """
             SELECT
                 count(),
                 sum(population),
                 count() - uniqExact(id),
-                countIf(id = 0 OR h3GetResolution(id) != $resolution),
+                countIf(NOT h3IsValid(id) OR h3GetResolution(id) != $resolution),
                 countIf(country_code != $country_code),
                 countIf(
                     NOT isFinite(x) OR x < -180 OR x > 180 OR

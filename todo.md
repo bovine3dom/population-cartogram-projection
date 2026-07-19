@@ -31,8 +31,8 @@ a custom mapping from the user's own source table.
 
 ## Current Status
 
-The repository now has a root Julia package and a one-country accelerator
-workflow for the five-column source contract. The same KernelAbstractions path runs end to
+The repository now has a root Julia package with single-country primitives and
+explicit multi-country orchestration for the five-column source contract. The same KernelAbstractions path runs end to
 end on Intel UHD 620 through oneAPI and NVIDIA GTX 1080 Ti through CUDA,
 including dimensions larger than one workgroup. Direct CUDA comparison showed
 1-10% overhead on representative rectangular problems and a 5% speedup at
@@ -58,13 +58,19 @@ supports explicit uniform target subdivision with parent IDs, and derives a
 population-weighted dominant IRIS assignment without replacing the fractional
 mapping. Optional GeoNames cities are spatially joined to IRIS boundaries and
 placed on their fitted cartogram footprints for later rendering.
+Fixed and automatic fitting now share a `MappingFit` result, dense memory can be
+planned before subdivision, fit artifacts include checksummed TOML metadata,
+ratio projection accepts an explicit denominator, and strict sparse-retention
+thresholds are available. An optional H3 extension validates indexes,
+resolution, aggregation, and WGS84 centroids; `examples/uk_h3.jl` is the
+supported package driver for the cached UK extract.
 
 ## Next Milestones
 
-1. Add country partitioning, per-country status reporting, and explicit partial
-   result handling.
-2. Migrate the supported H3 orchestration onto that multi-country package path.
-3. Finish data provenance, licensing, and release hygiene.
+1. Migrate the full external H3 country-build orchestration onto the
+   multi-country package path.
+2. Finish data provenance, licensing, and release hygiene.
+3. Remove the superseded legacy solver and rendering paths.
 
 ## 1. Define The Public Data Contract
 
@@ -163,7 +169,7 @@ without downloading large population or boundary datasets.
 
 - [x] Add a small checked-in fixture resembling NUTS2 input.
 - [x] Use the bundled OWID grid at native resolution for the first example.
-- [ ] Solve each country independently.
+- [x] Solve each country independently.
 - [x] Add one command that validates the fixture, fits the mapping, writes it,
       and projects extensive and intensive sample values. Rendering remains
       optional and deferred.
@@ -173,8 +179,8 @@ without downloading large population or boundary datasets.
       columns after solving.
 - [x] Assert dense source shares sum to the documented tolerance.
 - [x] Assert retained share and mass loss after sparse extraction.
-- [ ] Report included, remapped, skipped, and failed countries.
-- [ ] Fail on an incomplete result unless the caller explicitly permits partial
+- [x] Report included, remapped, skipped, and failed countries.
+- [x] Fail on an incomplete result unless the caller explicitly permits partial
       output.
 - [x] Keep this example independent of H3, Kontur, Natural Earth, GeoNames,
       ClickHouse, DuckDB, and GDAL. Accelerator selection remains explicit.
@@ -185,7 +191,9 @@ without downloading large population or boundary datasets.
 grid = load_owid_grid()
 fitted = fit_mapping_auto(sources, grid; backend=:cpu)
 totals = project_extensive(fitted.mapping, sources, grid; value=:some_count)
-rates = project_intensive(fitted.mapping, sources, grid; value=:some_rate)
+rates = project_ratio(
+    fitted.mapping, sources, grid; value=:some_rate, weight=:population,
+)
 ```
 
 Fitting depends on identifiers, population, and centres, while projecting values
@@ -370,7 +378,7 @@ Create regression tests first, then remove:
 - [x] Test solver input validation independently of CUDA availability.
 - [x] Test extensive and population-weighted intensive projection, sparse loss,
       country-scoped identifiers, malformed mappings, and the CSV example.
-- [ ] Test country partitioning, country-code reconciliation, and failure
+- [x] Test country partitioning, country-code reconciliation, and failure
       reporting.
 - [x] Test cartogram subdivision without mutating its input.
 - [x] Add a deterministic regional-centres fixture.
@@ -455,14 +463,14 @@ external H3 population rows
 - [x] Make parent-resolution aggregation explicit and report its population
       totals.
 - [x] Separate country assignment from generic mapping preparation.
-- [ ] Report unmatched and ambiguous population during boundary assignment
-      instead of silently dropping it at `make-lookup-table/lib.jl:250-251`.
-- [ ] Process countries independently and release large cost matrices promptly.
+- [x] Report unmatched and ambiguous population during boundary assignment and
+      join each population H3 cell at most once.
+- [x] Process countries independently and release large cost matrices promptly.
 - [ ] Keep advanced subdivision, eta tuning, profiling, and CUDA controls
       available to the owner's large workflow.
-- [ ] Add a tiny H3 fixture that exercises the adapter without bundling Kontur or
+- [x] Add a tiny H3 fixture that exercises the adapter without bundling Kontur or
       Natural Earth data.
-- [ ] Keep the full H3 build as a supported script or advanced API, not as
+- [x] Keep the full H3 build as a supported script or advanced API, not as
       import-time package behavior.
 
 ### External H3 data preparation

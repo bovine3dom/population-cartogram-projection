@@ -6,12 +6,17 @@ using CUDA
 using DataFrames
 import KernelAbstractions as KA
 using KernelAbstractions: @index, @kernel, @localmem, @synchronize
+using SHA
+using TOML
 using oneAPI
 
-export canonicalize_sources, dominant_source_assignment, eta_continuation_schedule,
-       eta_schedule_to, fit_mapping, fit_mapping_auto, load_owid_grid,
-       place_source_labels, project_extensive, project_intensive, solve_sinkhorn,
-       subdivide_grid, validate_sources
+export IncompleteCountryFitError, MappingFit, MappingPlan, MultiCountryFit,
+       canonicalize_h3_sources, canonicalize_sources, dominant_source_assignment,
+       eta_continuation_schedule, eta_schedule_to, fit_mapping,
+       fit_mapping_auto, fit_mapping_countries, load_owid_grid, place_source_labels,
+       plan_mapping, project_extensive, project_intensive, project_ratio,
+       reconcile_countries, save_fit, solve_sinkhorn, subdivide_grid,
+       validate_sources
 
 const SOURCE_COLUMNS = (:id, :population, :x, :y, :country_code)
 const GRID_COLUMNS = (:cell_id, :grid_x, :grid_y, :country_code)
@@ -28,6 +33,59 @@ struct SinkhornResult{T<:AbstractFloat}
     stop_reason::Symbol
 end
 
+"""A fitted mapping, per-source sparse retention, and auditable fit metadata."""
+struct MappingFit{M<:AbstractDataFrame,R<:AbstractDataFrame,T}
+    mapping::M
+    source_retention::R
+    metadata::T
+end
+
+struct MappingPlan{G<:AbstractDataFrame,T}
+    grid::G
+    metadata::T
+end
+
+struct MultiCountryFit{M<:AbstractDataFrame,R<:AbstractDataFrame,S<:AbstractDataFrame,C<:AbstractDataFrame,F,T}
+    mapping::M
+    source_retention::R
+    sources::S
+    country_statuses::C
+    country_fits::F
+    metadata::T
+end
+
+struct IncompleteCountryFitError{T} <: Exception
+    result::T
+end
+
+struct MappingFitError <: Exception
+    message::String
+end
+
+Base.showerror(io::IO, error::MappingFitError) = print(io, error.message)
+
+function Base.showerror(io::IO, error::IncompleteCountryFitError)
+    statuses = error.result.country_statuses
+    incomplete = statuses[in.(statuses.status, Ref((:skipped, :failed))), :]
+    print(
+        io,
+        "country fitting was incomplete: ",
+        join(("$(row.input_country_code)=$(row.status)" for row in eachrow(incomplete)), ", "),
+        "; inspect error.result.country_statuses or set allow_partial=true",
+    )
+end
+
+"""
+    canonicalize_h3_sources(table; id=:h3, population=:population,
+                            country_code, resolution=nothing)
+
+Validate H3 cells, optionally aggregate them to a parent resolution, and derive
+canonical WGS84 centres. Requires the optional H3.jl extension.
+"""
+function canonicalize_h3_sources(args...; kwargs...)
+    throw(ArgumentError("H3 extension is not loaded; install H3.jl and run `using H3` first"))
+end
+
 function _require_columns(table::AbstractDataFrame, required, label::AbstractString)
     available = Set(Symbol.(names(table)))
     missing_columns = filter(column -> column ∉ available, required)
@@ -36,7 +94,14 @@ function _require_columns(table::AbstractDataFrame, required, label::AbstractStr
     ))
 end
 
-"""Validate the canonical `id, population, x, y, country_code` source table."""
+"""
+    validate_sources(sources)
+
+Validate a nonempty canonical `id, population, x, y, country_code` table.
+`(country_code, id)` must be unique, populations finite and positive, country
+codes non-Boolean integers, and coordinates finite WGS84 longitude/latitude in
+degrees. Returns `nothing` or throws `ArgumentError`.
+"""
 function validate_sources(sources::AbstractDataFrame)
     _require_columns(sources, SOURCE_COLUMNS, "source table")
     nrow(sources) > 0 || throw(ArgumentError("source table is empty"))
@@ -145,7 +210,12 @@ function _validate_grid(grid::AbstractDataFrame)
     return nothing
 end
 
-"""Load the bundled OWID cartogram grid and assign stable cell identifiers."""
+"""
+    load_owid_grid([path]; country_code=nothing)
+
+Load the bundled OWID cartogram grid and assign stable cell identifiers.
+`country_code` optionally filters its ISO 3166-1 numeric-style integer codes.
+"""
 function load_owid_grid(
     path::AbstractString=DEFAULT_GRID_PATH;
     country_code::Union{Nothing,Integer}=nothing,
@@ -173,6 +243,13 @@ function load_owid_grid(
     return grid
 end
 
+function _positive_int(value, label)
+    value isa Integer && !(value isa Bool) && value > 0 ||
+        throw(ArgumentError("$label must be a positive integer"))
+    value <= typemax(Int) || throw(ArgumentError("$label exceeds typemax(Int)"))
+    return Int(value)
+end
+
 """
     subdivide_grid(grid; factor)
     subdivide_grid(grid; target_cells)
@@ -193,16 +270,15 @@ function subdivide_grid(
         "supply exactly one of factor or target_cells",
     ))
     if !isnothing(target_cells)
-        target_cells isa Integer && !(target_cells isa Bool) && target_cells > 0 ||
-            throw(ArgumentError("target_cells must be a positive integer"))
-        root = sqrt(target_cells / nrow(grid))
-        candidates = unique(max.(1, [floor(Int, root), ceil(Int, root)]))
+        target_cells = _positive_int(target_cells, "target_cells")
+        lower_factor = isqrt(fld(target_cells, nrow(grid)))
+        candidates = unique(max.(1, [lower_factor, lower_factor + 1]))
+        filter!(candidate -> big(nrow(grid)) * big(candidate)^2 <= typemax(Int), candidates)
         factor = first(sort!(candidates; by=candidate -> (
-            abs(nrow(grid) * candidate^2 - target_cells), candidate,
+            abs(big(nrow(grid)) * big(candidate)^2 - target_cells), candidate,
         )))
     end
-    factor isa Integer && !(factor isa Bool) && factor > 0 ||
-        throw(ArgumentError("factor must be a positive integer"))
+    factor = _positive_int(factor, "factor")
 
     if factor == 1
         result = select(grid, GRID_COLUMNS...)
@@ -212,7 +288,8 @@ function subdivide_grid(
 
     step_x = _minimum_step(grid.grid_x)
     step_y = _minimum_step(grid.grid_y)
-    child_count = nrow(grid) * factor^2
+    factor_squared = Base.checked_mul(factor, factor)
+    child_count = Base.checked_mul(nrow(grid), factor_squared)
     cell_ids = Vector{String}(undef, child_count)
     parent_cell_ids = Vector{eltype(grid.cell_id)}(undef, child_count)
     grid_x = Vector{Float64}(undef, child_count)
@@ -223,8 +300,8 @@ function subdivide_grid(
     for parent in eachrow(grid), i in 1:factor, j in 1:factor
         cell_ids[row] = string(parent.cell_id, ":sub", factor, ':', i, ':', j)
         parent_cell_ids[row] = parent.cell_id
-        grid_x[row] = factor * parent.grid_x + (2i - factor - 1) * step_x / 2
-        grid_y[row] = factor * parent.grid_y + (2j - factor - 1) * step_y / 2
+        grid_x[row] = factor * Float64(parent.grid_x) + (2i - factor - 1) * step_x / 2
+        grid_y[row] = factor * Float64(parent.grid_y) + (2j - factor - 1) * step_y / 2
         country_codes[row] = parent.country_code
         row += 1
     end
@@ -241,6 +318,7 @@ end
 
 include("projection.jl")
 include("spatial.jl")
+include("planning.jl")
 
 function _float_eta_values(values, label)
     collected = collect(values)
@@ -411,6 +489,12 @@ include("kernel_abstractions.jl")
 
 function _prepare_mapping_problem(sources, grid; cost_power, backend)
     targets = _country_targets(sources, grid)
+    _validate_backend(backend)
+    problem = _prepare_problem(sources, targets; cost_power)
+    return (; targets, problem)
+end
+
+function _validate_backend(backend)
     if backend === :cuda
         CUDA.functional() || throw(_cuda_unavailable())
     elseif backend === :amdgpu
@@ -422,9 +506,7 @@ function _prepare_mapping_problem(sources, grid; cost_power, backend)
     elseif backend !== :cpu
         throw(ArgumentError("backend must be :cuda, :amdgpu, :metal, :oneapi, or :cpu"))
     end
-
-    problem = _prepare_problem(sources, targets; cost_power)
-    return (; targets, problem)
+    return nothing
 end
 
 function _extract_mapping(sources, targets, problem, result)
@@ -465,9 +547,8 @@ include("automatic_eta.jl")
     fit_mapping(sources, [grid]; backend, kwargs...)
 
 Fit a dense fractional mapping from one country's weighted source centres to
-the OWID cartogram grid. `sources` must contain `id`, `population`, `x`, `y`,
-and `country_code`. The returned table contains `id`, `country_code`, `cell_id`,
-and `source_share`, whose values sum to approximately one for each source.
+the OWID cartogram grid. Returns a `MappingFit` containing `mapping`,
+`source_retention`, and auditable solver/spatial `metadata`.
 Callers must select `backend=:cuda`, `:amdgpu`, `:metal`, `:oneapi`, or `:cpu`
 explicitly.
 """
@@ -481,20 +562,82 @@ function fit_mapping(
     tol::Real=1e-5,
     check_every::Int=25,
 )
+    total_start = time()
     (; targets, problem) = _prepare_mapping_problem(sources, grid; cost_power, backend)
     solver_kwargs = (; eta_schedule, max_iters_per_eta, tol, check_every)
-    result = solve_sinkhorn(
-        problem.cost,
-        problem.source_mass,
-        problem.target_mass;
-        backend,
-        solver_kwargs...,
-    )
-    result.converged || error(
+    result = nothing
+    solver_seconds = @elapsed begin
+        result = solve_sinkhorn(
+            problem.cost,
+            problem.source_mass,
+            problem.target_mass;
+            backend,
+            solver_kwargs...,
+        )
+    end
+    result.converged || throw(MappingFitError(
         "Sinkhorn failed to converge after $(result.iterations) iterations; " *
         "marginal error=$(result.marginal_error)",
+    ))
+    mapping = nothing
+    extraction_seconds = @elapsed begin
+        mapping = _extract_mapping(sources, targets, problem, result)
+    end
+    retained_shares = combine(
+        groupby(mapping, [:country_code, :id]; sort=false),
+        :source_share => sum => :retained_share,
+    ).retained_share
+    retained_shares = min.(retained_shares, 1.0)
+    source_retention = DataFrame(
+        id=copy(sources.id),
+        country_code=copy(sources.country_code),
+        neighbors=fill(nrow(targets), nrow(sources)),
+        retained_share=retained_shares,
+        dropped_share=1 .- retained_shares,
+        cumulative_achieved=trues(nrow(sources)),
+        truncation_reason=fill(:targets_exhausted, nrow(sources)),
     )
-    return _extract_mapping(sources, targets, problem, result)
+    population_scale = maximum(sources.population)
+    population_weights = Float64.(sources.population) ./ population_scale
+    retained_mass_share = sum(population_weights .* retained_shares) / sum(population_weights)
+    metadata = (
+        schema_version=1,
+        fit_mode=:fixed,
+        sources=nrow(sources),
+        targets=nrow(targets),
+        mapping_rows=nrow(mapping),
+        rows=nrow(mapping),
+        backend,
+        cost_power=Float64(cost_power),
+        selected_eta=result.eta,
+        final_eta=result.eta,
+        selected_iterations=result.iterations,
+        iterations=result.iterations,
+        marginal_error=result.marginal_error,
+        converged=result.converged,
+        stop_reason=result.stop_reason,
+        spatial_transform=problem.spatial_metadata,
+        retained_mass_share,
+        dropped_mass_share=1 - retained_mass_share,
+        minimum_retained_source_share=minimum(retained_shares),
+        maximum_dropped_source_share=maximum(1 .- retained_shares),
+        solver=(;
+            eta_schedule=Float32.(eta_schedule),
+            max_iters_per_eta,
+            tolerance=Float64(tol),
+            check_every,
+        ),
+        sparsification=nothing,
+        timings=(;
+            total_seconds=time() - total_start,
+            solver_seconds,
+            extraction_seconds,
+        ),
+    )
+    return MappingFit(mapping, source_retention, metadata)
 end
+
+include("countries.jl")
+include("persistence.jl")
 
 end

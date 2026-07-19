@@ -2,7 +2,7 @@
 
 julia_version = "1.12.1"
 manifest_format = "2.0"
-project_hash = "1e2150607acefc933163974d7457f8a93126323b"
+project_hash = "681a0284b19bb5e0060e0cd091f81cb1e68a6ad2"
 
 [[deps.AMDGPU]]
 deps = ["AbstractFFTs", "AcceleratedKernels", "Adapt", "Atomix", "BFloat16s", "CEnum", "ExprTools", "GPUArrays", "GPUCompiler", "GPUToolbox", "KernelAbstractions", "LLD_jll", "LLVM", "LLVM_jll", "Libdl", "LinearAlgebra", "Pkg", "PrecompileTools", "Preferences", "PrettyTables", "Printf", "ROCmDeviceLibs_jll", "Random", "Random123", "RandomNumbers", "SparseArrays", "StaticArraysCore", "Statistics", "UnsafeAtomics"]
@@ -597,15 +597,17 @@ uuid = "2dfb63ee-cc39-5dd5-95bd-886bf059d720"
 version = "1.4.3"
 
 [[deps.PopulationCartogramProjection]]
-deps = ["AMDGPU", "CSV", "CUDA", "DataFrames", "KernelAbstractions", "oneAPI"]
+deps = ["AMDGPU", "CSV", "CUDA", "DataFrames", "KernelAbstractions", "SHA", "TOML", "oneAPI"]
 path = "."
 uuid = "c8499a48-226f-4b8e-883b-6bf873220240"
 version = "0.1.0"
 
     [deps.PopulationCartogramProjection.extensions]
+    PopulationCartogramProjectionH3Ext = "H3"
     PopulationCartogramProjectionMetalExt = "Metal"
 
     [deps.PopulationCartogramProjection.weakdeps]
+    H3 = "f62fece2-b996-571a-b4c9-e662aba1c617"
     Metal = "dde4c033-4e86-420c-a63e-0dd931031962"
 
 [[deps.PrecompileTools]]

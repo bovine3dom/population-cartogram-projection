@@ -2,7 +2,10 @@ using AMDGPU
 using CSV
 using CUDA
 using DataFrames
+using H3
 using PopulationCartogramProjection
+using SHA
+using TOML
 using Test
 using oneAPI
 
@@ -126,8 +129,13 @@ end
 
 function check_regional_mapping(backend)
     sources = CSV.read(FIXTURE_PATH, DataFrame)
-    mapping = fit_mapping(sources; backend)
+    fitted = fit_mapping(sources; backend)
+    mapping = fitted.mapping
     share_totals = combine(groupby(mapping, :id), :source_share => sum => :share)
+    @test fitted isa MappingFit
+    @test fitted.metadata.fit_mode == :fixed
+    @test fitted.metadata.mapping_rows == nrow(mapping)
+    @test all(abs.(fitted.source_retention.dropped_share) .< 1e-6)
     @test propertynames(mapping) == [:id, :country_code, :cell_id, :source_share]
     @test nrow(mapping) == nrow(sources) * 72
     @test Set(mapping.id) == Set(sources.id)
@@ -175,6 +183,8 @@ function check_automatic_eta(backend)
     @test fitted.metadata.rows == fitted.metadata.target_rows == 2
     @test fitted.metadata.row_error == minimum(candidate.row_error for candidate in fitted.metadata.candidates)
     @test fitted.metadata.dropped_mass_share ≈ 1 - fitted.metadata.retained_mass_share
+    @test fitted.metadata.minimum_retained_mass_share == 0
+    @test all(candidate.retention_eligible for candidate in fitted.metadata.candidates)
     @test fitted.metadata.spatial_transform.method == "source_extrema"
     @test fitted.metadata.spatial_transform.longitude_bounds == (0.0, 0.0)
     @test fitted.metadata.spatial_transform.latitude_bounds == (50.0, 60.0)
@@ -342,6 +352,36 @@ end
     @test_throws ArgumentError subdivide_grid(grid)
     @test_throws ArgumentError subdivide_grid(grid; factor=2, target_cells=16)
     @test_throws ArgumentError subdivide_grid(grid; factor=0)
+    @test_throws ArgumentError subdivide_grid(grid; factor=big(typemax(Int)) + 1)
+    @test_throws OverflowError subdivide_grid(grid; factor=isqrt(typemax(Int)) + 1)
+
+    planned = plan_mapping(source, grid; factor=2)
+    @test planned isa MappingPlan
+    @test nrow(planned.grid) == 16
+    @test planned.metadata.subdivision_factor == 2
+    @test planned.metadata.cost_entries == 16
+    @test planned.metadata.matrix_bytes == 64
+    @test planned.metadata.combined_dense_bytes ==
+          planned.metadata.host_dense_bytes + planned.metadata.backend_dense_bytes
+    approximate = plan_mapping(source, grid; target_cells=35)
+    @test nrow(approximate.grid) == 36
+    ratio_plan = plan_mapping(source, grid; sources_per_target=0.03)
+    @test nrow(ratio_plan.grid) == 36
+    @test nrow(plan_mapping(source, grid; sources_per_target=0.125).grid) == 16
+    budgeted = plan_mapping(
+        source,
+        grid;
+        max_backend_bytes=planned.metadata.backend_dense_bytes,
+    )
+    @test budgeted.metadata.subdivision_factor == 2
+    @test_throws ArgumentError plan_mapping(source, grid; max_host_bytes=1)
+    @test_throws ArgumentError plan_mapping(
+        source, grid; max_host_bytes=big(typemax(Int)) + 1,
+    )
+    @test_throws ArgumentError plan_mapping(
+        source, grid; sources_per_target=nextfloat(0.0),
+    )
+    @test_throws ArgumentError plan_mapping(source, grid; factor=2, target_cells=16)
 end
 
 @testset "per-run spatial scaling" begin
@@ -462,6 +502,7 @@ end
         population=[100.0, 300.0, 50.0],
         households=[10.0, 20.0, 7.0],
         rate=[2.0, 4.0, 8.0],
+        exposure=[50.0, 10.0, 0.0],
     )
     mapping = DataFrame(
         id=["shared", "shared", "other", "shared"],
@@ -484,6 +525,7 @@ end
     @test extensive.metadata.input_total == 37.0
     @test extensive.metadata.projected_total == 23.25
     @test extensive.metadata.dropped_total == 13.75
+    @test extensive.metadata.weighted_retained_share ≈ 23.25 / 37
 
     intensive = project_intensive(mapping, values, grid; value=:rate)
     @test propertynames(intensive.cells) == [
@@ -499,6 +541,53 @@ end
     @test intensive.metadata.projected_population == 267.5
     @test intensive.metadata.dropped_population == 182.5
     @test intensive.metadata.zero_population_cells == 2
+
+    ratio = project_ratio(
+        mapping,
+        values,
+        grid;
+        value=:rate,
+        weight=:exposure,
+        denominator=:projected_exposure,
+        minimum_source_retained_share=0.5,
+        minimum_weighted_retained_share=0.75,
+    )
+    @test ratio.cells.projected_exposure == [35.0, 10.0, 0.0, 0.0, 0.0]
+    @test ratio.cells.rate[1] ≈ 16 / 7
+    @test ratio.cells.rate[2] == 2
+    @test all(ismissing, ratio.cells.rate[[3, 4, 5]])
+    @test ratio.metadata.weighted_retained_share == 0.75
+    @test_throws ArgumentError project_ratio(
+        mapping,
+        values,
+        grid;
+        value=:rate,
+        weight=:exposure,
+        minimum_source_retained_share=0.51,
+    )
+    @test_throws ArgumentError project_ratio(
+        mapping,
+        values,
+        grid;
+        value=:rate,
+        weight=:exposure,
+        minimum_weighted_retained_share=0.76,
+    )
+
+    signed = copy(values)
+    signed.balance = [10.0, -10.0, 0.0]
+    signed_projection = project_extensive(mapping, signed, grid; value=:balance)
+    @test signed_projection.metadata.input_total == 0
+    @test signed_projection.metadata.input_absolute_total == 20
+    @test signed_projection.metadata.weighted_retained_share == 0.65
+
+    custom_retention = project_extensive(
+        mapping, values, grid; value=:households, retention_weight=:exposure,
+    )
+    @test custom_retention.metadata.input_absolute_total == 37
+    @test custom_retention.metadata.projected_absolute_source_total == 23.25
+    @test custom_retention.metadata.input_retention_weight == 60
+    @test custom_retention.metadata.projected_retention_weight == 45
 
     population = project_extensive(mapping, values, grid; value=:population)
     @test population.cells.population == intensive.cells.projected_population
@@ -537,6 +626,212 @@ end
         mapping, invalid_population, grid; value=:rate,
     )
     @test_throws ArgumentError project_intensive(mapping, values, grid; value=:population)
+    invalid_weight = copy(values)
+    invalid_weight.exposure[1] = -1
+    @test_throws ArgumentError project_ratio(
+        mapping, invalid_weight, grid; value=:rate, weight=:exposure,
+    )
+
+    overflowing = copy(values)
+    overflowing.households[1:2] .= floatmax(Float64)
+    @test_throws ArgumentError project_extensive(
+        mapping, overflowing, grid; value=:households,
+    )
+    overflowing.exposure[1:2] .= floatmax(Float64)
+    @test_throws ArgumentError project_ratio(
+        mapping, overflowing, grid; value=:rate, weight=:exposure,
+    )
+
+    tolerance_values = DataFrame(id=["one"], country_code=[1], value=[10.0], weight=[2.0])
+    tolerance_grid = grid[1:2, :]
+    for (shares, expected) in (([0.5, 0.4999995], 9.999995), ([0.5, 0.5000005], 10.0))
+        tolerance_mapping = DataFrame(
+            id=fill("one", 2),
+            country_code=fill(1, 2),
+            cell_id=tolerance_grid.cell_id,
+            source_share=shares,
+        )
+        projected = project_extensive(
+            tolerance_mapping, tolerance_values, tolerance_grid; value=:value,
+        )
+        @test sum(projected.cells.value) ≈ expected
+        ratio_at_tolerance = project_ratio(
+            tolerance_mapping,
+            tolerance_values,
+            tolerance_grid;
+            value=:value,
+            weight=:weight,
+        )
+        @test ratio_at_tolerance.metadata.dropped_weight ≈ 2 * (1 - expected / 10)
+        @test ratio_at_tolerance.metadata.dropped_weight_share ≈ 1 - expected / 10
+    end
+end
+
+@testset "country reconciliation and fitting" begin
+    sources = DataFrame(
+        id=["shared", "shared", "unmatched"],
+        population=[1.0, 2.0, 3.0],
+        x=[0.0, 10.0, 20.0],
+        y=[1.0, 2.0, 3.0],
+        country_code=[1, 2, 99],
+        value=[10.0, 20.0, 30.0],
+    )
+    grid = DataFrame(
+        cell_id=["1:a", "2:a"],
+        grid_x=[0, 0],
+        grid_y=[0, 0],
+        country_code=[1, 2],
+    )
+    reconciled = reconcile_countries(sources, grid)
+    @test reconciled.statuses.status == [:included, :included, :skipped]
+    @test nrow(reconciled.sources) == 2
+    @test reconciled.metadata.skipped_sources == 1
+    all_skipped = reconcile_countries(sources[3:3, :], grid)
+    @test nrow(all_skipped.sources) == 0
+    @test all_skipped.metadata.retained_population == 0
+    zero_sources = copy(sources[1:1, :])
+    zero_sources.country_code .= 0
+    zero_grid = DataFrame(cell_id=["0:a"], grid_x=[0], grid_y=[0], country_code=[0])
+    @test only(reconcile_countries(zero_sources, zero_grid).statuses.status) == :included
+    remap_sources = sources[[1, 3], :]
+    remapped = reconcile_countries(remap_sources, grid; crosswalk=Dict(99 => 2))
+    @test remapped.statuses.status == [:included, :remapped]
+    @test_throws ArgumentError reconcile_countries(sources, grid; crosswalk=Dict(99 => 3))
+    @test_throws ArgumentError reconcile_countries(sources, grid; crosswalk=Dict(99 => 1))
+
+    options = (
+        candidate_final_etas=Float32[0.5],
+        base_eta_schedule=Float32[0.5],
+        target_rows_multiplier=1.0,
+        max_iters_per_eta=10,
+        tol=0.1,
+        check_every=1,
+    )
+    caught = try
+        fit_mapping_countries(sources, grid; backend=:cpu, options...)
+        nothing
+    catch error
+        error
+    end
+    @test caught isa IncompleteCountryFitError
+    @test caught.result.country_statuses.status == [:included, :included, :skipped]
+    partial = fit_mapping_countries(
+        sources,
+        grid;
+        backend=:cpu,
+        allow_partial=true,
+        options...,
+    )
+    @test nrow(partial.mapping) == 2
+    @test nrow(partial.sources) == 2
+    @test partial.metadata.successful_countries == 2
+    projected = project_extensive(partial.mapping, partial.sources, grid; value=:value)
+    @test projected.cells.value == [10.0, 20.0]
+
+    fitted = fit_mapping_countries(
+        remap_sources,
+        grid;
+        backend=:cpu,
+        crosswalk=Dict(99 => 2),
+        options...,
+    )
+    @test fitted.country_statuses.status == [:included, :remapped]
+    @test Set(fitted.mapping.country_code) == Set([1, 2])
+    mktempdir() do output_dir
+        paths = save_fit(output_dir, fitted; grid)
+        metadata = TOML.parsefile(paths.metadata)
+        @test metadata["schema"] == "PopulationCartogramProjection.MultiCountryFit"
+        @test metadata["country_statuses_sha256"] ==
+              bytes2hex(open(SHA.sha256, paths.country_statuses))
+    end
+
+    invalid = copy(sources[[1, 2], :])
+    invalid.population[2] = 0
+    failed = fit_mapping_countries(
+        invalid,
+        grid;
+        backend=:cpu,
+        allow_partial=true,
+        options...,
+    )
+    @test failed.country_statuses.status == [:included, :failed]
+    @test failed.sources.country_code == [1]
+    @test failed.mapping.country_code == [1]
+    @test failed.source_retention.country_code == [1]
+    @test collect(keys(failed.country_fits)) == [1]
+    @test failed.metadata.successful_sources == 1
+    @test_throws IncompleteCountryFitError fit_mapping_countries(
+        invalid[2:2, :],
+        grid;
+        backend=:cpu,
+        allow_partial=true,
+        options...,
+    )
+end
+
+@testset "H3 source adapter" begin
+    api = H3.API
+    parent = api.latLngToCell(api.LatLng(deg2rad(51.5), deg2rad(-0.1)), 5)
+    @test !(parent isa H3.API.H3ErrorCode)
+    children = api.cellToChildren(parent, 6)
+    @test !(children isa H3.API.H3ErrorCode)
+    raw = DataFrame(h3=children[1:2], people=[10.0, 20.0], code=[826, 826])
+    original = copy(raw)
+
+    native = canonicalize_h3_sources(
+        raw;
+        id=:h3,
+        population=:people,
+        country_code=:code,
+    )
+    @test eltype(native.id) == UInt64
+    @test native.id == raw.h3
+    @test all(==(6), Int.(api.getResolution.(native.id)))
+    @test all(==(826), native.country_code)
+    @test isnothing(validate_sources(native))
+
+    aggregated = canonicalize_h3_sources(
+        raw;
+        id=:h3,
+        population=:people,
+        country_code=826,
+        resolution=5,
+    )
+    @test nrow(aggregated) == 1
+    @test only(aggregated.id) == parent
+    @test only(aggregated.population) == 30
+    centre = api.cellToLatLng(parent)
+    @test only(aggregated.x) ≈ rad2deg(centre.lng)
+    @test only(aggregated.y) ≈ rad2deg(centre.lat)
+    @test isequal(raw, original)
+
+    large_integer_population = copy(raw)
+    large_integer_population.people .= typemax(Int)
+    large_aggregate = canonicalize_h3_sources(
+        large_integer_population;
+        id=:h3,
+        population=:people,
+        country_code=826,
+        resolution=5,
+    )
+    @test only(large_aggregate.population) == 2 * Float64(typemax(Int))
+    unrepresentable = copy(raw[1:1, :])
+    unrepresentable.people = BigFloat[big"1e400"]
+    @test_throws ArgumentError canonicalize_h3_sources(
+        unrepresentable; id=:h3, population=:people, country_code=826,
+    )
+
+    @test_throws ArgumentError canonicalize_h3_sources(
+        DataFrame(h3=UInt64[0], population=[1.0]); country_code=826,
+    )
+    @test_throws ArgumentError canonicalize_h3_sources(
+        raw; id=:h3, population=:people, country_code=826, resolution=7,
+    )
+    @test_throws ArgumentError canonicalize_h3_sources(
+        raw; id=:h3, population=:h3, country_code=826,
+    )
+    mixed = DataFrame(h3=UInt64[children[1], parent], population=[1.0, 1.0])
+    @test_throws ArgumentError canonicalize_h3_sources(mixed; country_code=826)
 end
 
 @testset "dominant source assignment" begin
@@ -630,12 +925,20 @@ end
     @test report.nonpositive_population_rows == 169
     @test report.excluded_rows == 860
     @test report.included_population ≈ 64_445_214.56572973 rtol=1e-12
-    @test propertynames(sources) == [:id, :population, :x, :y, :country_code]
+    @test propertynames(sources) == [
+        :id, :population, :x, :y, :country_code, :area_km2, :population_density,
+    ]
     @test all(id -> ncodeunits(id) == 9, sources.id)
     @test any(startswith("0"), sources.id)
     @test any(startswith("2A"), sources.id)
     @test collect(extrema(sources.x)) ≈ [-5.086015483046215, 9.529000248915922]
     @test collect(extrema(sources.y)) ≈ [41.43510246152267, 51.07297146412994]
+    @test all(>(0), sources.area_km2)
+    @test all(>(0), sources.population_density)
+    sorted_density = sort(sources.population_density)
+    density_midpoint = length(sorted_density) ÷ 2
+    @test (sorted_density[density_midpoint] + sorted_density[density_midpoint + 1]) / 2 ≈
+          72.63624764673145
 
     france = load_owid_grid(; country_code=250)
     subdivided = subdivide_grid(france; target_cells=cld(nrow(sources), 10))
@@ -661,6 +964,7 @@ end
         households = CSV.read(paths.households, DataFrame)
         employment_rate = CSV.read(paths.employment_rate, DataFrame)
         summary = CSV.read(paths.summary, DataFrame)
+        metadata = TOML.parsefile(paths.metadata)
         @test propertynames(mapping) == [:id, :country_code, :cell_id, :source_share]
         @test propertynames(retention) == [
             :id,
@@ -672,10 +976,11 @@ end
             :truncation_reason,
         ]
         @test propertynames(households) == [
-            :cell_id, :grid_x, :grid_y, :country_code, :households,
+            :cell_id, :parent_cell_id, :grid_x, :grid_y, :country_code, :households,
         ]
         @test propertynames(employment_rate) == [
             :cell_id,
+            :parent_cell_id,
             :grid_x,
             :grid_y,
             :country_code,
@@ -697,6 +1002,30 @@ end
         ]
         @test summary.value[2] == nrow(mapping)
         @test summary.value[4] ≈ sum(households.households)
+        @test metadata["schema"] == "PopulationCartogramProjection.MappingFit"
+        @test metadata["fit"]["fit_mode"] == "auto"
+        @test metadata["mapping_sha256"] == bytes2hex(open(SHA.sha256, paths.mapping))
+
+        note_path = joinpath(output_dir, "user-notes.txt")
+        write(note_path, "keep me")
+        RegionalCentresExample.publish_output(output_dir) do staged_dir
+            write(joinpath(staged_dir, "additional.txt"), "new")
+        end
+        @test read(note_path, String) == "keep me"
+        @test read(joinpath(output_dir, "additional.txt"), String) == "new"
+
+        original = Dict(path => read(path) for path in Base.values(paths))
+        invalid = MappingFit(mapping, retention, (unsupported=Ref(1),))
+        @test_throws ErrorException save_fit(output_dir, invalid; overwrite=true)
+        @test all(read(path) == contents for (path, contents) in original)
+        failed_dir = joinpath(output_dir, "failed")
+        @test_throws ErrorException save_fit(failed_dir, invalid)
+        @test !ispath(failed_dir)
+
+        replacement = MappingFit(mapping, retention, (fit_mode=:replacement,))
+        save_fit(output_dir, replacement; overwrite=true)
+        @test !ispath(paths.sources)
+        @test !ispath(paths.grid)
     end
 end
 
@@ -862,12 +1191,19 @@ end
     @test !fallback.metadata.solver_final_converged
     @test nrow(fallback.mapping) == fallback.metadata.rows == 4
 
-    @test_throws ErrorException fit_mapping_auto(
+    @test_throws PopulationCartogramProjection.MappingFitError fit_mapping_auto(
         fallback_sources,
         fallback_grid;
         auto_options...,
         candidate_final_etas=Float32[0.5, 0.1],
         max_iters_per_eta=1,
+    )
+    @test_throws ArgumentError fit_mapping_auto(
+        fallback_sources,
+        fallback_grid;
+        auto_options...,
+        candidate_final_etas=Float32[0.5],
+        minimum_retained_mass_share=1.1,
     )
 end
 

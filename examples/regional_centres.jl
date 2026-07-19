@@ -6,6 +6,8 @@ using CSV
 using DataFrames
 using PopulationCartogramProjection
 
+include(joinpath(@__DIR__, "publish_output.jl"))
+
 const ROOT = normpath(joinpath(@__DIR__, ".."))
 const FIXTURE_PATH = joinpath(ROOT, "test", "fixtures", "synthetic_sources.csv")
 
@@ -19,29 +21,35 @@ function main(args=ARGS)
     validate_sources(sources)
 
     grid = load_owid_grid()
-    fitted = fit_mapping_auto(sources, grid; backend=:cpu)
+    plan = plan_mapping(sources, grid)
+    fitted = fit_mapping_auto(sources, plan.grid; backend=:cpu)
     households = project_extensive(
-        fitted.mapping, sources, grid; value=:households,
+        fitted.mapping, sources, plan.grid; value=:households,
     )
-    employment_rate = project_intensive(
-        fitted.mapping, sources, grid; value=:employment_rate,
+    employment_rate = project_ratio(
+        fitted.mapping,
+        sources,
+        plan.grid;
+        value=:employment_rate,
+        weight=:population,
+        denominator=:projected_population,
     )
 
-    mkpath(output_dir)
-    paths = (
+    paths = (;
         mapping=joinpath(output_dir, "mapping.csv"),
         source_retention=joinpath(output_dir, "source_retention.csv"),
+        sources=joinpath(output_dir, "sources.csv"),
+        grid=joinpath(output_dir, "grid.csv"),
+        metadata=joinpath(output_dir, "metadata.toml"),
         households=joinpath(output_dir, "projected_households.csv"),
         employment_rate=joinpath(output_dir, "projected_employment_rate.csv"),
         summary=joinpath(output_dir, "summary.csv"),
     )
-    CSV.write(paths.mapping, fitted.mapping)
-    CSV.write(paths.source_retention, fitted.source_retention)
-    CSV.write(paths.households, households.cells)
-    CSV.write(paths.employment_rate, employment_rate.cells)
-    CSV.write(
-        paths.summary,
-        DataFrame(
+    publish_output(output_dir) do staged_dir
+        save_fit(staged_dir, fitted; sources, grid=plan.grid)
+        CSV.write(joinpath(staged_dir, basename(paths.households)), households.cells)
+        CSV.write(joinpath(staged_dir, basename(paths.employment_rate)), employment_rate.cells)
+        CSV.write(joinpath(staged_dir, basename(paths.summary)), DataFrame(
             metric=[
                 "selected_eta",
                 "mapping_rows",
@@ -52,17 +60,17 @@ function main(args=ARGS)
             value=[
                 string(fitted.metadata.selected_eta),
                 string(nrow(fitted.mapping)),
-                string(employment_rate.metadata.retained_population_share),
+                string(employment_rate.metadata.weighted_retained_share),
                 string(households.metadata.projected_total),
                 string(households.metadata.dropped_total),
             ],
-        ),
-    )
+        ))
+    end
 
     println("Wrote regional projection CSVs to $output_dir")
     println(
         "Retained population: " *
-        "$(round(100 * employment_rate.metadata.retained_population_share; digits=3))%",
+        "$(round(100 * employment_rate.metadata.weighted_retained_share; digits=3))%",
     )
     return paths
 end

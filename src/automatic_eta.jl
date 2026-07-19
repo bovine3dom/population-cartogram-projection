@@ -149,7 +149,7 @@ function _sparse_mapping_stats(problem, result, options, populations)
         shares = _normalized_source_shares(problem.cost, result, source_index)
         selected = _select_sparse_row(shares, options)
         counts[source_index] = selected.count
-        retained_shares[source_index] = selected.retained_share
+        retained_shares[source_index] = min(selected.retained_share, 1.0)
         cumulative_achieved[source_index] = selected.cumulative_achieved
         stop_reasons[source_index] = selected.stop_reason
     end
@@ -221,9 +221,10 @@ end
 
 Tune the final Sinkhorn eta against a sparse output-row target while traversing
 one warm-started continuation schedule. Candidate counts and final extraction
-use the same deterministic host implementation. Returns `mapping`,
-`source_retention`, and `metadata`; metadata includes the per-run spatial
-transform and cost normalization.
+use the same deterministic host implementation. Candidates below
+`minimum_retained_mass_share` are ineligible. Returns a `MappingFit`; metadata
+includes the row-budget history, sparse loss, per-run spatial transform, and
+cost normalization.
 """
 function fit_mapping_auto(
     sources::AbstractDataFrame,
@@ -233,6 +234,7 @@ function fit_mapping_auto(
     candidate_final_etas=DEFAULT_AUTO_ETA_CANDIDATES,
     base_eta_schedule=DEFAULT_ETA_BASE_SCHEDULE,
     target_rows_multiplier::Real=2,
+    minimum_retained_mass_share::Real=0,
     cumulative_share::Real=0.995,
     minimum_source_share::Real=0,
     minimum_neighbors::Int=1,
@@ -245,6 +247,10 @@ function fit_mapping_auto(
     !(target_rows_multiplier isa Bool) && isfinite(target_rows_multiplier) &&
         target_rows_multiplier > 0 ||
         throw(ArgumentError("target_rows_multiplier must be finite and positive"))
+    !(minimum_retained_mass_share isa Bool) && isfinite(minimum_retained_mass_share) &&
+        0 <= minimum_retained_mass_share <= 1 || throw(ArgumentError(
+            "minimum_retained_mass_share must be finite and in [0, 1]",
+        ))
     candidates = sort!(unique!(_float_eta_values(candidate_final_etas, "candidate_final_etas")); rev=true)
     schedule = eta_continuation_schedule(candidates; base_schedule=base_eta_schedule)
     (; targets, problem) = _prepare_mapping_problem(sources, grid; cost_power, backend)
@@ -296,14 +302,16 @@ function fit_mapping_auto(
             target_rows,
             row_error=abs(stats.rows - target_rows),
             retained_mass_share=stats.retained_mass_share,
+            retention_eligible=stats.retained_mass_share >= minimum_retained_mass_share,
         )
         push!(candidate_results, candidate)
-        if isnothing(best_candidate) || candidate.row_error < best_candidate.row_error
+        if candidate.retention_eligible &&
+           (isnothing(best_candidate) || candidate.row_error < best_candidate.row_error)
             best_result = result
             best_candidate = candidate
             best_stats = stats
         end
-        return candidate.rows <= target_rows
+        return candidate.rows <= target_rows && candidate.retention_eligible
     end
 
     solver_result = nothing
@@ -321,7 +329,9 @@ function fit_mapping_auto(
             stage_observer_etas=candidates,
         )
     end
-    isnothing(best_result) && error("no converged eta candidate was evaluated")
+    isnothing(best_result) && throw(MappingFitError(
+        "no converged eta candidate met minimum_retained_mass_share=$minimum_retained_mass_share",
+    ))
 
     stats = best_stats
     extracted = nothing
@@ -329,8 +339,11 @@ function fit_mapping_auto(
         extracted = _extract_sparse_mapping(sources, targets, problem, best_result, options, stats)
     end
     metadata = merge(best_candidate, (
+        schema_version=1,
+        fit_mode=:auto,
         sources=nrow(sources),
         targets=nrow(targets),
+        mapping_rows=nrow(extracted.mapping),
         candidate_final_etas=candidates,
         planned_eta_schedule=schedule,
         evaluated_eta_schedule=schedule[1:findfirst(==(solver_result.eta), schedule)],
@@ -347,6 +360,7 @@ function fit_mapping_auto(
         cost_power=Float64(cost_power),
         spatial_transform=problem.spatial_metadata,
         target_rows_multiplier=Float64(target_rows_multiplier),
+        minimum_retained_mass_share=Float64(minimum_retained_mass_share),
         cumulative_share=options.cumulative_share,
         minimum_source_share=options.minimum_source_share,
         minimum_neighbors=options.minimum_neighbors,
@@ -364,9 +378,5 @@ function fit_mapping_auto(
         maximum_dropped_source_share=maximum(1 .- stats.retained_shares),
         sources_below_cumulative_share=count(!, stats.cumulative_achieved),
     ))
-    return (
-        mapping=extracted.mapping,
-        source_retention=extracted.source_retention,
-        metadata=metadata,
-    )
+    return MappingFit(extracted.mapping, extracted.source_retention, metadata)
 end

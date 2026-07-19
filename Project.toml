@@ -8,12 +8,16 @@ CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 KernelAbstractions = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
+SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 oneAPI = "8f75cd03-7ff8-4ecb-9b8f-daf728133b1b"
 
 [weakdeps]
+H3 = "f62fece2-b996-571a-b4c9-e662aba1c617"
 Metal = "dde4c033-4e86-420c-a63e-0dd931031962"
 
 [extensions]
+PopulationCartogramProjectionH3Ext = "H3"
 PopulationCartogramProjectionMetalExt = "Metal"
 
 [compat]
@@ -21,14 +25,16 @@ AMDGPU = "2.7.0"
 CSV = "0.10"
 CUDA = "6.2.1"
 DataFrames = "1"
+H3 = "0.3.3"
 KernelAbstractions = "0.9.42"
 Metal = "1.10"
 julia = "1.11"
 oneAPI = "2.7.0"
 
 [extras]
+H3 = "f62fece2-b996-571a-b4c9-e662aba1c617"
 Metal = "dde4c033-4e86-420c-a63e-0dd931031962"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Metal", "Test"]
+test = ["H3", "Metal", "Test"]

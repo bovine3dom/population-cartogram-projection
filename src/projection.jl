@@ -1,19 +1,41 @@
 const MAPPING_COLUMNS = (:id, :country_code, :cell_id, :source_share)
 const PROJECTION_SHARE_TOLERANCE = 1e-6
 
+function _projection_float(value, label)
+    converted = Float64(value)
+    isfinite(converted) || throw(ArgumentError("$label cannot be represented as Float64"))
+    return converted
+end
+
+function _projection_sum(values, label)
+    total = 0.0
+    for value in values
+        total += Float64(value)
+        isfinite(total) || throw(ArgumentError("$label cannot be represented as Float64"))
+    end
+    return total
+end
+
+function _projection_product(left, right, label)
+    product = left * right
+    isfinite(product) || throw(ArgumentError("$label cannot be represented as Float64"))
+    return product
+end
+
 function _projection_inputs(
     mapping::AbstractDataFrame,
     values::AbstractDataFrame,
     grid::AbstractDataFrame,
     value::Symbol;
-    intensive::Bool,
+    weight::Union{Nothing,Symbol}=nothing,
 )
     _require_columns(mapping, MAPPING_COLUMNS, "mapping")
-    reserved = intensive ? (:id, :country_code, :cell_id, :grid_x, :grid_y, :population, :projected_population) :
-                           (:id, :country_code, :cell_id, :grid_x, :grid_y)
+    is_ratio = !isnothing(weight)
+    reserved = (:id, :country_code, :cell_id, :grid_x, :grid_y)
     value ∉ reserved || throw(ArgumentError("value column $value conflicts with a projection output column"))
-    required_values = intensive ? (:id, :country_code, :population, value) :
-                                  (:id, :country_code, value)
+    is_ratio && value == weight && throw(ArgumentError("value and weight must name different columns"))
+    required_values = is_ratio ? (:id, :country_code, value, weight) :
+                                 (:id, :country_code, value)
     _require_columns(values, required_values, "value table")
     _validate_grid(grid)
     nrow(mapping) > 0 || throw(ArgumentError("mapping is empty"))
@@ -43,12 +65,12 @@ function _projection_inputs(
         entry -> entry isa Real && !(entry isa Bool) && isfinite(entry),
         values[!, value],
     ) || throw(ArgumentError("value column $value must contain finite numbers"))
-    if intensive
+    if is_ratio
         all(
-            population -> population isa Real && !(population isa Bool) &&
-                          isfinite(population) && population > 0,
-            values.population,
-        ) || throw(ArgumentError("value table population must contain finite positive numbers"))
+            entry -> entry isa Real && !(entry isa Bool) && isfinite(entry) && entry >= 0,
+            values[!, weight],
+        ) || throw(ArgumentError("weight column $weight must contain finite non-negative numbers"))
+        any(>(0), values[!, weight]) || throw(ArgumentError("weight column $weight must contain a positive value"))
     end
 
     source_keys = collect(zip(values.country_code, values.id))
@@ -79,12 +101,17 @@ function _projection_inputs(
         throw(ArgumentError(
             "mapping source_share sums cannot exceed one per source beyond numerical tolerance",
         ))
+    retained_shares = min.(raw_retained_shares, 1.0)
+    share_scales = Dict(
+        key => raw_share > 1 ? inv(raw_share) : 1.0
+        for (key, raw_share) in zip(source_keys, raw_retained_shares)
+    )
     source_retention = DataFrame(
         id=copy(values.id),
         country_code=copy(values.country_code),
         neighbors=[neighbors_by_source[key] for key in source_keys],
-        retained_share=raw_retained_shares,
-        dropped_share=1 .- raw_retained_shares,
+        retained_share=retained_shares,
+        dropped_share=1 .- retained_shares,
     )
 
     country_codes = sort!(unique(collect(values.country_code)))
@@ -94,24 +121,79 @@ function _projection_inputs(
     value in propertynames(targets) && throw(ArgumentError(
         "value column $value conflicts with a target-grid column",
     ))
-    intensive && :projected_population in propertynames(targets) &&
-        throw(ArgumentError("target grid cannot contain projected_population"))
     source_values = Dict(
-        key => Float64(values[row, value]) for (row, key) in enumerate(source_keys)
+        key => _projection_float(values[row, value], "value column $value")
+        for (row, key) in enumerate(source_keys)
     )
-    source_populations = intensive ? Dict(
-        key => Float64(values.population[row]) for (row, key) in enumerate(source_keys)
+    source_weights = is_ratio ? Dict(
+        key => _projection_float(values[row, weight], "weight column $weight")
+        for (row, key) in enumerate(source_keys)
     ) : nothing
 
     return (;
         targets,
         source_keys,
         source_values,
-        source_populations,
+        source_weights,
         source_retention,
-        retained_shares=raw_retained_shares,
+        retained_shares,
+        share_scales,
         country_codes,
     )
+end
+
+function _retention_threshold(value, label)
+    value isa Real && !(value isa Bool) && isfinite(value) && 0 <= value <= 1 ||
+        throw(ArgumentError("$label must be finite and in [0, 1]"))
+    return Float64(value)
+end
+
+function _check_retention(
+    inputs,
+    weights;
+    minimum_source_retained_share,
+    minimum_weighted_retained_share,
+)
+    source_requirement = _retention_threshold(
+        minimum_source_retained_share,
+        "minimum_source_retained_share",
+    )
+    weighted_requirement = _retention_threshold(
+        minimum_weighted_retained_share,
+        "minimum_weighted_retained_share",
+    )
+    minimum_share = minimum(inputs.retained_shares)
+    failing_sources = count(share -> share < source_requirement, inputs.retained_shares)
+    failing_sources == 0 || throw(ArgumentError(
+        "minimum source retained share $minimum_share is below required " *
+        "$source_requirement for $failing_sources source(s)",
+    ))
+    weight_scale = maximum(weights)
+    scaled_weights = weight_scale == 0 ? weights : weights ./ weight_scale
+    total_weight = _projection_sum(scaled_weights, "retention weight total")
+    weighted_share = total_weight == 0 ? 1.0 : _projection_sum(
+        scaled_weights .* inputs.retained_shares,
+        "retained weight total",
+    ) / total_weight
+    weighted_share >= weighted_requirement || throw(ArgumentError(
+        "weighted retained share $weighted_share is below required $weighted_requirement",
+    ))
+    return (;
+        weighted_retained_share=weighted_share,
+        minimum_source_retained_share_required=source_requirement,
+        minimum_weighted_retained_share_required=weighted_requirement,
+    )
+end
+
+function _projection_weights(values, column)
+    _require_columns(values, (column,), "value table")
+    weights = values[!, column]
+    all(
+        value -> value isa Real && !(value isa Bool) && isfinite(value) && value >= 0,
+        weights,
+    ) || throw(ArgumentError("retention weight column $column must contain finite non-negative numbers"))
+    any(>(0), weights) || throw(ArgumentError("retention weight column $column must contain a positive value"))
+    return [_projection_float(value, "retention weight column $column") for value in weights]
 end
 
 function _projection_metadata(inputs, mapping, value, projection)
@@ -130,18 +212,30 @@ end
 """
     project_extensive(mapping, values, [grid]; value)
 
-Project a finite source-level extensive quantity onto target cells. Each source
-value is distributed using its unchanged `source_share`; sparse dropped share is
-reported rather than renormalized. Returns `cells`, `source_retention`, and
-`metadata`.
+Project a finite source-level extensive quantity onto target cells. Sparse
+dropped share is reported rather than renormalized; sums slightly above one
+within numerical tolerance are scaled back to one. Returns `cells`,
+`source_retention`, and `metadata`.
 """
 function project_extensive(
     mapping::AbstractDataFrame,
     values::AbstractDataFrame,
     grid::AbstractDataFrame=load_owid_grid();
     value::Symbol,
+    retention_weight::Union{Nothing,Symbol}=nothing,
+    minimum_source_retained_share::Real=0,
+    minimum_weighted_retained_share::Real=0,
 )
-    inputs = _projection_inputs(mapping, values, grid, value; intensive=false)
+    inputs = _projection_inputs(mapping, values, grid, value)
+    absolute_weights = [abs(inputs.source_values[key]) for key in inputs.source_keys]
+    retention_weights = isnothing(retention_weight) ? absolute_weights :
+                        _projection_weights(values, retention_weight)
+    retention = _check_retention(
+        inputs,
+        retention_weights;
+        minimum_source_retained_share,
+        minimum_weighted_retained_share,
+    )
     projected_by_cell = Dict{Any,Float64}()
     for (country, id, cell, share) in zip(
         mapping.country_code,
@@ -149,37 +243,91 @@ function project_extensive(
         mapping.cell_id,
         mapping.source_share,
     )
-        contribution = inputs.source_values[(country, id)] * Float64(share)
-        projected_by_cell[cell] = get(projected_by_cell, cell, 0.0) + contribution
+        key = (country, id)
+        effective_share = Float64(share) * inputs.share_scales[key]
+        contribution = _projection_product(
+            inputs.source_values[key],
+            effective_share,
+            "projected value contribution",
+        )
+        projected_by_cell[cell] = _projection_sum(
+            (get(projected_by_cell, cell, 0.0), contribution),
+            "projected cell value",
+        )
     end
 
     cells = copy(inputs.targets)
     cells[!, value] = [get(projected_by_cell, cell, 0.0) for cell in cells.cell_id]
-    input_total = sum(Float64.(values[!, value]))
-    projected_total = sum(cells[!, value])
+    input_total = _projection_sum(
+        (inputs.source_values[key] for key in inputs.source_keys),
+        "input value total",
+    )
+    projected_total = _projection_sum(cells[!, value], "projected value total")
+    dropped_total = _projection_sum((input_total, -projected_total), "dropped value total")
+    input_absolute_total = _projection_sum(absolute_weights, "input absolute total")
+    projected_absolute_total = _projection_sum(
+        absolute_weights .* inputs.retained_shares,
+        "projected absolute source total",
+    )
+    input_retention_weight = _projection_sum(retention_weights, "input retention weight")
+    projected_retention_weight = _projection_sum(
+        retention_weights .* inputs.retained_shares,
+        "projected retention weight",
+    )
     metadata = merge(
         _projection_metadata(inputs, mapping, value, :extensive),
-        (; input_total, projected_total, dropped_total=input_total - projected_total),
+        retention,
+        (;
+            retention_weight=isnothing(retention_weight) ? value : retention_weight,
+            retention_weight_transform=isnothing(retention_weight) ? :abs : :identity,
+            input_total,
+            projected_total,
+            dropped_total,
+            input_absolute_total,
+            projected_absolute_source_total=projected_absolute_total,
+            dropped_absolute_total=input_absolute_total - projected_absolute_total,
+            input_retention_weight,
+            projected_retention_weight,
+            dropped_retention_weight=input_retention_weight - projected_retention_weight,
+        ),
     )
     return (; cells, source_retention=inputs.source_retention, metadata)
 end
 
 """
-    project_intensive(mapping, values, [grid]; value)
+    project_ratio(mapping, values, [grid]; value, weight,
+                  denominator=:projected_weight)
 
-Project a finite source-level intensive quantity as a population-weighted mean.
-The denominator is `sum(population * source_share)` and is returned as
-`projected_population`. Sparse shares are not renormalized. Returns `cells`,
-`source_retention`, and `metadata`.
+Project a finite source-level value as a weighted mean. `weight` is transported
+with `source_share`; the transported denominator is returned in the column
+named by `denominator`. Sparse shares are not renormalized, except for source
+sums slightly above one within numerical tolerance.
 """
-function project_intensive(
+function project_ratio(
     mapping::AbstractDataFrame,
     values::AbstractDataFrame,
     grid::AbstractDataFrame=load_owid_grid();
     value::Symbol,
+    weight::Symbol,
+    denominator::Symbol=:projected_weight,
+    minimum_source_retained_share::Real=0,
+    minimum_weighted_retained_share::Real=0,
 )
-    inputs = _projection_inputs(mapping, values, grid, value; intensive=true)
-    population_by_cell = Dict{Any,Float64}()
+    denominator != value || throw(ArgumentError("denominator and value must name different columns"))
+    denominator ∉ (:id, :country_code, :cell_id, :grid_x, :grid_y) ||
+        throw(ArgumentError("denominator column $denominator conflicts with a projection output column"))
+    inputs = _projection_inputs(mapping, values, grid, value; weight)
+    denominator in propertynames(inputs.targets) && throw(ArgumentError(
+        "denominator column $denominator conflicts with a target-grid column",
+    ))
+    retention_weights = Float64.(values[!, weight])
+    retention = _check_retention(
+        inputs,
+        retention_weights;
+        minimum_source_retained_share,
+        minimum_weighted_retained_share,
+    )
+    weight_by_cell = Dict{Any,Float64}()
     numerator_by_cell = Dict{Any,Float64}()
     for (country, id, cell, share) in zip(
         mapping.country_code,
@@ -188,36 +336,107 @@ function project_intensive(
         mapping.source_share,
     )
         key = (country, id)
-        transported_population = inputs.source_populations[key] * Float64(share)
-        population_by_cell[cell] = get(population_by_cell, cell, 0.0) + transported_population
-        numerator_by_cell[cell] = get(numerator_by_cell, cell, 0.0) +
-                                  inputs.source_values[key] * transported_population
+        effective_share = Float64(share) * inputs.share_scales[key]
+        transported_weight = _projection_product(
+            inputs.source_weights[key],
+            effective_share,
+            "transported weight",
+        )
+        weight_by_cell[cell] = _projection_sum(
+            (get(weight_by_cell, cell, 0.0), transported_weight),
+            "projected cell weight",
+        )
+        numerator = _projection_product(
+            inputs.source_values[key],
+            transported_weight,
+            "weighted value contribution",
+        )
+        numerator_by_cell[cell] = _projection_sum(
+            (get(numerator_by_cell, cell, 0.0), numerator),
+            "projected weighted value",
+        )
     end
 
     cells = copy(inputs.targets)
-    projected_population = [get(population_by_cell, cell, 0.0) for cell in cells.cell_id]
+    projected_weight = [get(weight_by_cell, cell, 0.0) for cell in cells.cell_id]
     projected_values = Union{Missing,Float64}[
-        population == 0 ? missing : numerator_by_cell[cell] / population
-        for (cell, population) in zip(cells.cell_id, projected_population)
+        cell_weight == 0 ? missing : numerator_by_cell[cell] / cell_weight
+        for (cell, cell_weight) in zip(cells.cell_id, projected_weight)
     ]
-    cells.projected_population = projected_population
+    cells[!, denominator] = projected_weight
     cells[!, value] = projected_values
 
-    input_population = sum(Float64.(values.population))
-    total_projected_population = sum(projected_population)
-    retained_population_share = total_projected_population / input_population
+    input_weight = _projection_sum(retention_weights, "input weight")
+    total_projected_weight = _projection_sum(projected_weight, "projected weight")
+    dropped_weight = _projection_sum(
+        (input_weight, -total_projected_weight),
+        "dropped weight",
+    )
+    dropped_weight >= -PROJECTION_SHARE_TOLERANCE * max(1.0, input_weight) ||
+        throw(ArgumentError("projected weight exceeds input weight"))
+    dropped_weight = abs(dropped_weight) <= 8eps(max(1.0, input_weight)) ? 0.0 :
+                     max(0.0, dropped_weight)
+    weighted_retained_share = input_weight == 0 ? 1.0 : 1 - dropped_weight / input_weight
+    retention = merge(retention, (; weighted_retained_share))
     metadata = merge(
-        _projection_metadata(inputs, mapping, value, :intensive),
+        _projection_metadata(inputs, mapping, value, :ratio),
+        retention,
         (;
-            input_population,
-            projected_population=total_projected_population,
-            dropped_population=input_population - total_projected_population,
-            retained_population_share,
-            dropped_population_share=1 - retained_population_share,
-            zero_population_cells=count(iszero, projected_population),
+            weight,
+            denominator,
+            input_weight,
+            projected_weight=total_projected_weight,
+            dropped_weight,
+            dropped_weight_share=1 - weighted_retained_share,
+            zero_weight_cells=count(iszero, projected_weight),
         ),
     )
     return (; cells, source_retention=inputs.source_retention, metadata)
+end
+
+"""
+    project_intensive(mapping, values, [grid]; value, kwargs...)
+
+Project a finite source value as a population-weighted mean. This is the
+convenience specialization of `project_ratio` with `weight=:population` and
+`denominator=:projected_population`.
+"""
+function project_intensive(
+    mapping::AbstractDataFrame,
+    values::AbstractDataFrame,
+    grid::AbstractDataFrame=load_owid_grid();
+    value::Symbol,
+    minimum_source_retained_share::Real=0,
+    minimum_weighted_retained_share::Real=0,
+)
+    _require_columns(values, (:population,), "value table")
+    all(entry -> entry isa Real && !(entry isa Bool) && isfinite(entry) && entry > 0, values.population) ||
+        throw(ArgumentError("value table population must contain finite positive numbers"))
+    projected = project_ratio(
+        mapping,
+        values,
+        grid;
+        value,
+        weight=:population,
+        denominator=:projected_population,
+        minimum_source_retained_share,
+        minimum_weighted_retained_share,
+    )
+    ratio = projected.metadata
+    metadata = merge(ratio, (;
+        projection=:intensive,
+        input_population=ratio.input_weight,
+        projected_population=ratio.projected_weight,
+        dropped_population=ratio.dropped_weight,
+        retained_population_share=ratio.weighted_retained_share,
+        dropped_population_share=ratio.dropped_weight_share,
+        zero_population_cells=ratio.zero_weight_cells,
+    ))
+    return (;
+        cells=projected.cells,
+        source_retention=projected.source_retention,
+        metadata,
+    )
 end
 
 """
@@ -237,7 +456,7 @@ function dominant_source_assignment(
     values = select(sources, :id, :country_code)
     population_column = gensym(:population)
     values[!, population_column] = copy(sources.population)
-    inputs = _projection_inputs(mapping, values, grid, population_column; intensive=false)
+    inputs = _projection_inputs(mapping, values, grid, population_column)
     output_columns = (:id, :transport_mass, :cell_transport_mass, :transport_share)
     conflicts = filter(column -> column in propertynames(inputs.targets), output_columns)
     isempty(conflicts) || throw(ArgumentError(
@@ -264,7 +483,10 @@ function dominant_source_assignment(
         mapping.source_share,
     )
         key = (country, id)
-        mass = populations[key] * Float64(share)
+        mass = populations[key] * Float64(share) * inputs.share_scales[key]
+        isfinite(mass) || throw(ArgumentError(
+            "transport mass cannot be represented as Float64",
+        ))
         cell_mass = get(cell_masses, cell, 0.0) + mass
         isfinite(cell_mass) || throw(ArgumentError(
             "transport mass cannot be represented as Float64",
@@ -345,7 +567,7 @@ function place_source_labels(
         mapping_sources,
         grid,
         validation_column;
-        intensive=false,
+        weight=nothing,
     )
     mapping_keys = Set(zip(mapping_sources.country_code, mapping_sources.id))
     label_keys = collect(zip(active_labels.country_code, active_labels.id))
