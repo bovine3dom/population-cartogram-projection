@@ -90,7 +90,12 @@ function _projection_inputs(
     country_codes = sort!(unique(collect(values.country_code)))
     country_set = Set(country_codes)
     target_mask = [country in country_set for country in grid.country_code]
-    targets = select(grid[target_mask, :], GRID_COLUMNS...)
+    targets = copy(grid[target_mask, :])
+    value in propertynames(targets) && throw(ArgumentError(
+        "value column $value conflicts with a target-grid column",
+    ))
+    intensive && :projected_population in propertynames(targets) &&
+        throw(ArgumentError("target grid cannot contain projected_population"))
     source_values = Dict(
         key => Float64(values[row, value]) for (row, key) in enumerate(source_keys)
     )
@@ -213,4 +218,205 @@ function project_intensive(
         ),
     )
     return (; cells, source_retention=inputs.source_retention, metadata)
+end
+
+"""
+    dominant_source_assignment(mapping, sources, [grid])
+
+Derive one source identifier per target cell by maximizing transported
+population (`population * source_share`). The fractional mapping remains the
+authoritative result. Empty cells receive a missing `id`; `transport_share` is
+the dominant contribution's share of retained transport mass in that cell.
+"""
+function dominant_source_assignment(
+    mapping::AbstractDataFrame,
+    sources::AbstractDataFrame,
+    grid::AbstractDataFrame=load_owid_grid(),
+)
+    validate_sources(sources)
+    values = select(sources, :id, :country_code)
+    population_column = gensym(:population)
+    values[!, population_column] = copy(sources.population)
+    inputs = _projection_inputs(mapping, values, grid, population_column; intensive=false)
+    output_columns = (:id, :transport_mass, :cell_transport_mass, :transport_share)
+    conflicts = filter(column -> column in propertynames(inputs.targets), output_columns)
+    isempty(conflicts) || throw(ArgumentError(
+        "target grid contains assignment output column(s): $(join(string.(conflicts), ", "))",
+    ))
+
+    populations = Dict(
+        (country, id) => Float64(population)
+        for (country, id, population) in
+            zip(sources.country_code, sources.id, sources.population)
+    )
+    best_ids = Dict{Any,Any}()
+    best_masses = Dict{Any,Float64}()
+    best_source_rows = Dict{Any,Int}()
+    cell_masses = Dict{Any,Float64}()
+    source_rows = Dict(
+        (country, id) => row
+        for (row, (country, id)) in enumerate(zip(sources.country_code, sources.id))
+    )
+    for (country, id, cell, share) in zip(
+        mapping.country_code,
+        mapping.id,
+        mapping.cell_id,
+        mapping.source_share,
+    )
+        key = (country, id)
+        mass = populations[key] * Float64(share)
+        cell_mass = get(cell_masses, cell, 0.0) + mass
+        isfinite(cell_mass) || throw(ArgumentError(
+            "transport mass cannot be represented as Float64",
+        ))
+        cell_masses[cell] = cell_mass
+        previous_mass = get(best_masses, cell, -Inf)
+        source_row = source_rows[key]
+        wins_tie = mass == previous_mass &&
+                   source_row < get(best_source_rows, cell, typemax(Int))
+        if mass > 0 && (mass > previous_mass || wins_tie)
+            best_ids[cell] = id
+            best_masses[cell] = mass
+            best_source_rows[cell] = source_row
+        end
+    end
+
+    cells = copy(inputs.targets)
+    id_type = Union{Missing,eltype(sources.id)}
+    ids = Vector{id_type}(undef, nrow(cells))
+    transport_mass = Vector{Float64}(undef, nrow(cells))
+    cell_transport_mass = Vector{Float64}(undef, nrow(cells))
+    transport_share = Vector{Union{Missing,Float64}}(undef, nrow(cells))
+    for (row, cell) in enumerate(cells.cell_id)
+        total = get(cell_masses, cell, 0.0)
+        dominant = get(best_masses, cell, 0.0)
+        ids[row] = get(best_ids, cell, missing)
+        transport_mass[row] = dominant
+        cell_transport_mass[row] = total
+        transport_share[row] = total == 0 ? missing : dominant / total
+    end
+    cells.id = ids
+    cells.transport_mass = transport_mass
+    cells.cell_transport_mass = cell_transport_mass
+    cells.transport_share = transport_share
+    return cells
+end
+
+"""
+    place_source_labels(mapping, labels, [grid]; label=:name)
+
+Place optional labels that have already been associated with source IDs. For
+each source, calculate the `source_share`-weighted cartogram centre and select
+its nearest contributed target cell. Returns a complete labeled `cells` table
+and one row per input label in `placements`. This is a post-fit annotation step;
+it does not affect transport fitting or projection.
+"""
+function place_source_labels(
+    mapping::AbstractDataFrame,
+    labels::AbstractDataFrame,
+    grid::AbstractDataFrame=load_owid_grid();
+    label=:name,
+)
+    _require_columns(mapping, MAPPING_COLUMNS, "mapping")
+    label_column = _source_column(labels, label, "label")
+    label_column in (:id, :country_code) &&
+        throw(ArgumentError("label must differ from id and country_code"))
+    _require_columns(labels, (:id, :country_code), "label table")
+    label_values = labels[!, label_column]
+    all(
+        value -> ismissing(value) || isnothing(value) ||
+                 value isa AbstractString,
+        label_values,
+    ) || throw(ArgumentError("label values must be strings, missing, or nothing"))
+    active = [
+        value isa AbstractString && !isempty(strip(value))
+        for value in label_values
+    ]
+    active_labels = labels[active, :]
+    any(ismissing, active_labels.id) && throw(ArgumentError("label id cannot be missing"))
+    all(value -> value isa Integer && !(value isa Bool), active_labels.country_code) ||
+        throw(ArgumentError("label country_code must contain integers"))
+
+    mapping_sources = unique(select(mapping, :id, :country_code))
+    validation_column = gensym(:label)
+    mapping_sources[!, validation_column] = ones(nrow(mapping_sources))
+    inputs = _projection_inputs(
+        mapping,
+        mapping_sources,
+        grid,
+        validation_column;
+        intensive=false,
+    )
+    mapping_keys = Set(zip(mapping_sources.country_code, mapping_sources.id))
+    label_keys = collect(zip(active_labels.country_code, active_labels.id))
+    all(key -> key in mapping_keys, label_keys) || throw(ArgumentError(
+        "every label must match a (country_code, id) source in the mapping",
+    ))
+    any(column -> column in propertynames(labels), (:cell_id, :grid_x, :grid_y)) &&
+        throw(ArgumentError("label table cannot contain cell_id, grid_x, or grid_y"))
+    :label in propertynames(inputs.targets) &&
+        throw(ArgumentError("target grid cannot contain label"))
+
+    wanted_keys = Set(label_keys)
+    coordinates = Dict(
+        cell => (Float64(x), Float64(y))
+        for (cell, x, y) in
+            zip(inputs.targets.cell_id, inputs.targets.grid_x, inputs.targets.grid_y)
+    )
+    target_rows = Dict(cell => row for (row, cell) in enumerate(inputs.targets.cell_id))
+    total_share = Dict{Any,Float64}()
+    weighted_x = Dict{Any,Float64}()
+    weighted_y = Dict{Any,Float64}()
+    source_cells = Dict{Any,Vector{Any}}()
+    for (country, id, cell, share) in zip(
+        mapping.country_code,
+        mapping.id,
+        mapping.cell_id,
+        mapping.source_share,
+    )
+        key = (country, id)
+        key in wanted_keys || continue
+        x, y = coordinates[cell]
+        weight = Float64(share)
+        weight > 0 || continue
+        total_share[key] = get(total_share, key, 0.0) + weight
+        weighted_x[key] = get(weighted_x, key, 0.0) + weight * x
+        weighted_y[key] = get(weighted_y, key, 0.0) + weight * y
+        push!(get!(source_cells, key, Any[]), cell)
+    end
+
+    source_targets = Dict{Any,Any}()
+    for key in wanted_keys
+        retained = get(total_share, key, 0.0)
+        retained > 0 || throw(ArgumentError("every labeled source must retain positive share"))
+        centre_x = weighted_x[key] / retained
+        centre_y = weighted_y[key] / retained
+        best_cell = nothing
+        best_score = (Inf, typemax(Int))
+        for cell in source_cells[key]
+            x, y = coordinates[cell]
+            score = (abs2(x - centre_x) + abs2(y - centre_y), target_rows[cell])
+            if score < best_score
+                best_cell = cell
+                best_score = score
+            end
+        end
+        source_targets[key] = best_cell
+    end
+
+    placements = copy(active_labels)
+    placements.cell_id = [source_targets[key] for key in label_keys]
+    placements.grid_x = [coordinates[cell][1] for cell in placements.cell_id]
+    placements.grid_y = [coordinates[cell][2] for cell in placements.cell_id]
+    labels_by_cell = Dict{Any,Vector{String}}()
+    for (cell, value) in zip(placements.cell_id, placements[!, label_column])
+        push!(get!(labels_by_cell, cell, String[]), String(value))
+    end
+
+    cells = copy(inputs.targets)
+    cells.label = Union{Missing,String}[
+        haskey(labels_by_cell, cell) ? join(unique(labels_by_cell[cell]), ", ") : missing
+        for cell in cells.cell_id
+    ]
+    return (; cells, placements)
 end

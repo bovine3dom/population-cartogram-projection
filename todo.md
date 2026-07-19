@@ -53,6 +53,11 @@ set of mapping and projection CSVs. Non-GPU CI covers the supported Julia range.
 Per-run source-extrema scaling and cost normalization now live in a named
 internal preparation stage and are recorded in automatic-fit metadata without
 changing the bounded UK migration result.
+The metropolitan France example adapts 48,416 positive-population IRIS centres,
+supports explicit uniform target subdivision with parent IDs, and derives a
+population-weighted dominant IRIS assignment without replacing the fractional
+mapping. Optional GeoNames cities are spatially joined to IRIS boundaries and
+placed on their fitted cartogram footprints for later rendering.
 
 ## Next Milestones
 
@@ -87,7 +92,7 @@ country_code
 - [x] Require finite source-centre coordinates.
 - [x] Define `x` and `y` as WGS84 longitude and latitude in degrees, validate
       their ranges, and reverse only the internal cartogram vertical transform.
-- [ ] Permit column-name keywords if users should not have to rename an existing
+- [x] Permit column-name keywords if users should not have to rename an existing
       table to the canonical names.
 - [x] Validate that the selected country has at least one positive-population
       source and a matching OWID target.
@@ -106,8 +111,8 @@ confirming its license and provenance.
       population mass.
 - [x] Load the checked-in CSV directly or automate creation of any packaged
       Arrow derivative. Do not require the unexplained current `cartogram.arrow`.
-- [ ] Preserve a parent cell identifier when the target grid is subdivided.
-- [ ] Make subdivision an explicit quality/performance option rather than an
+- [x] Preserve a parent cell identifier when the target grid is subdivided.
+- [x] Make subdivision an explicit quality/performance option rather than an
       implicit factor of six.
 
 ### Mapping output
@@ -143,7 +148,7 @@ transport_mass
 - [x] Report retained and dropped share per source and population-weighted mass
       after sparsification.
 - [x] Keep the fractional mapping as the canonical result.
-- [ ] Provide a derived dominant-source assignment for users who want exactly
+- [x] Provide a derived dominant-source assignment for users who want exactly
       one source identifier per cartogram cell.
 - [x] Define separate projection helpers for extensive quantities and
       population-weighted intensive quantities.
@@ -367,7 +372,7 @@ Create regression tests first, then remove:
       country-scoped identifiers, malformed mappings, and the CSV example.
 - [ ] Test country partitioning, country-code reconciliation, and failure
       reporting.
-- [ ] Test cartogram subdivision without mutating its input.
+- [x] Test cartogram subdivision without mutating its input.
 - [x] Add a deterministic regional-centres fixture.
 
 ### CUDA numerical tests
@@ -493,10 +498,15 @@ external H3 population rows
 
 ### Optional city labels
 
-- [ ] Keep GeoNames labels optional and out of the core fitting workflow.
-- [ ] Record the GeoNames license, attribution, source snapshot, and checksum.
+- [x] Keep GeoNames labels optional and out of the core fitting workflow.
+- [x] Restore generic post-fit label placement from source IDs onto their
+      `source_share`-weighted cartogram footprints.
+- [ ] Migrate the legacy renderer's nullable `label`-column support into an
+      optional rendering layer.
+- [x] Record the GeoNames license, attribution, source snapshot, and checksum.
 - [ ] Pin DuckDB and `zipfs` if the current preparation method remains.
-- [ ] Decide what population threshold the canonical city fixture uses.
+- [x] Use 300,000 as the population threshold for the canonical France city
+      fixture; keep thresholds configurable in data preparation.
 
 ### Project licensing
 

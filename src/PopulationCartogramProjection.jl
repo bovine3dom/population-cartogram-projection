@@ -8,9 +8,10 @@ import KernelAbstractions as KA
 using KernelAbstractions: @index, @kernel, @localmem, @synchronize
 using oneAPI
 
-export eta_continuation_schedule, eta_schedule_to, fit_mapping, fit_mapping_auto,
-       load_owid_grid, project_extensive, project_intensive, solve_sinkhorn,
-       validate_sources
+export canonicalize_sources, dominant_source_assignment, eta_continuation_schedule,
+       eta_schedule_to, fit_mapping, fit_mapping_auto, load_owid_grid,
+       place_source_labels, project_extensive, project_intensive, solve_sinkhorn,
+       subdivide_grid, validate_sources
 
 const SOURCE_COLUMNS = (:id, :population, :x, :y, :country_code)
 const GRID_COLUMNS = (:cell_id, :grid_x, :grid_y, :country_code)
@@ -60,6 +61,74 @@ function validate_sources(sources::AbstractDataFrame)
     return nothing
 end
 
+function _source_column(table, selector, label)
+    selector isa Symbol || selector isa AbstractString ||
+        throw(ArgumentError("$label must name a source-table column"))
+    column = Symbol(selector)
+    column in propertynames(table) ||
+        throw(ArgumentError("source table has no column named $column"))
+    return column
+end
+
+"""
+    canonicalize_sources(table; id=:id, population=:population, x=:x, y=:y,
+                         country_code=:country_code)
+
+Copy a source table into the canonical schema without making callers rename
+columns. `country_code` may name a column or supply one integer for every row.
+Unrelated columns are preserved. This validates but never drops or aggregates
+rows.
+"""
+function canonicalize_sources(
+    table::AbstractDataFrame;
+    id=:id,
+    population=:population,
+    x=:x,
+    y=:y,
+    country_code=:country_code,
+)
+    id_column = _source_column(table, id, "id")
+    population_column = _source_column(table, population, "population")
+    x_column = _source_column(table, x, "x")
+    y_column = _source_column(table, y, "y")
+    country_is_value = country_code isa Integer && !(country_code isa Bool)
+    country_code isa Bool && throw(ArgumentError("country_code cannot be Bool"))
+    country_column = country_is_value ? nothing :
+                     _source_column(table, country_code, "country_code")
+    canonical_inputs = (
+        id=id_column,
+        population=population_column,
+        x=x_column,
+        y=y_column,
+        country_code=country_column,
+    )
+    for (canonical, input) in pairs(canonical_inputs)
+        canonical in propertynames(table) && input != canonical && throw(ArgumentError(
+            "input column $canonical conflicts with the selected $canonical column",
+        ))
+    end
+    selected_columns = filter(!isnothing, collect(values(canonical_inputs)))
+    allunique(selected_columns) || throw(ArgumentError(
+        "id, population, x, y, and country_code must use distinct input columns",
+    ))
+
+    sources = DataFrame(
+        id=copy(table[!, id_column]),
+        population=copy(table[!, population_column]),
+        x=copy(table[!, x_column]),
+        y=copy(table[!, y_column]),
+        country_code=country_is_value ? fill(country_code, nrow(table)) :
+                     copy(table[!, country_column]),
+    )
+    selected = Set(selected_columns)
+    for column in propertynames(table)
+        column in selected || column in SOURCE_COLUMNS ||
+            (sources[!, column] = copy(table[!, column]))
+    end
+    validate_sources(sources)
+    return sources
+end
+
 function _validate_grid(grid::AbstractDataFrame)
     _require_columns(grid, GRID_COLUMNS, "target grid")
     nrow(grid) > 0 || throw(ArgumentError("target grid is empty"))
@@ -77,7 +146,11 @@ function _validate_grid(grid::AbstractDataFrame)
 end
 
 """Load the bundled OWID cartogram grid and assign stable cell identifiers."""
-function load_owid_grid(path::AbstractString=DEFAULT_GRID_PATH)
+function load_owid_grid(
+    path::AbstractString=DEFAULT_GRID_PATH;
+    country_code::Union{Nothing,Integer}=nothing,
+)
+    country_code isa Bool && throw(ArgumentError("country_code cannot be Bool"))
     isfile(path) || throw(ArgumentError("OWID grid not found at $path"))
     grid = CSV.read(
         path,
@@ -90,8 +163,80 @@ function load_owid_grid(path::AbstractString=DEFAULT_GRID_PATH)
         for (x, y, country) in zip(grid.grid_x, grid.grid_y, grid.country_code)
     ]
     select!(grid, GRID_COLUMNS...)
+    if !isnothing(country_code)
+        filter!(:country_code => ==(country_code), grid)
+        nrow(grid) > 0 || throw(ArgumentError(
+            "OWID grid has no cells for country_code=$country_code",
+        ))
+    end
     _validate_grid(grid)
     return grid
+end
+
+"""
+    subdivide_grid(grid; factor)
+    subdivide_grid(grid; target_cells)
+
+Replace every target cell with a uniform `factor` by `factor` child lattice.
+Alternatively, choose the factor whose total is closest to `target_cells`.
+The result includes deterministic `cell_id` values and `parent_cell_id`; all
+parents receive the same number of children, preserving equal aggregate target
+mass. Exactly one keyword must be supplied.
+"""
+function subdivide_grid(
+    grid::AbstractDataFrame;
+    factor=nothing,
+    target_cells=nothing,
+)
+    _validate_grid(grid)
+    xor(isnothing(factor), isnothing(target_cells)) || throw(ArgumentError(
+        "supply exactly one of factor or target_cells",
+    ))
+    if !isnothing(target_cells)
+        target_cells isa Integer && !(target_cells isa Bool) && target_cells > 0 ||
+            throw(ArgumentError("target_cells must be a positive integer"))
+        root = sqrt(target_cells / nrow(grid))
+        candidates = unique(max.(1, [floor(Int, root), ceil(Int, root)]))
+        factor = first(sort!(candidates; by=candidate -> (
+            abs(nrow(grid) * candidate^2 - target_cells), candidate,
+        )))
+    end
+    factor isa Integer && !(factor isa Bool) && factor > 0 ||
+        throw(ArgumentError("factor must be a positive integer"))
+
+    if factor == 1
+        result = select(grid, GRID_COLUMNS...)
+        insertcols!(result, 2, :parent_cell_id => copy(result.cell_id))
+        return result
+    end
+
+    step_x = _minimum_step(grid.grid_x)
+    step_y = _minimum_step(grid.grid_y)
+    child_count = nrow(grid) * factor^2
+    cell_ids = Vector{String}(undef, child_count)
+    parent_cell_ids = Vector{eltype(grid.cell_id)}(undef, child_count)
+    grid_x = Vector{Float64}(undef, child_count)
+    grid_y = Vector{Float64}(undef, child_count)
+    country_codes = Vector{eltype(grid.country_code)}(undef, child_count)
+
+    row = 1
+    for parent in eachrow(grid), i in 1:factor, j in 1:factor
+        cell_ids[row] = string(parent.cell_id, ":sub", factor, ':', i, ':', j)
+        parent_cell_ids[row] = parent.cell_id
+        grid_x[row] = factor * parent.grid_x + (2i - factor - 1) * step_x / 2
+        grid_y[row] = factor * parent.grid_y + (2j - factor - 1) * step_y / 2
+        country_codes[row] = parent.country_code
+        row += 1
+    end
+    result = DataFrame(
+        cell_id=cell_ids,
+        parent_cell_id=parent_cell_ids,
+        grid_x=all(isinteger, grid_x) ? round.(Int, grid_x) : grid_x,
+        grid_y=all(isinteger, grid_y) ? round.(Int, grid_y) : grid_y,
+        country_code=country_codes,
+    )
+    _validate_grid(result)
+    return result
 end
 
 include("projection.jl")

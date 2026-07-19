@@ -13,6 +13,7 @@ end
 const FIXTURE_PATH = joinpath(@__DIR__, "fixtures", "synthetic_sources.csv")
 
 include(joinpath(@__DIR__, "..", "examples", "regional_centres.jl"))
+include(joinpath(@__DIR__, "..", "examples", "france", "iris_population.jl"))
 
 function transport_plan(result, cost)
     return exp.((result.alpha .+ result.beta' .- cost) ./ result.eta)
@@ -242,6 +243,47 @@ end
     invalid_longitude = copy(sources)
     invalid_longitude.x[1] = 181
     @test_throws ArgumentError validate_sources(invalid_longitude)
+
+    raw = DataFrame(
+        index=["010010000", "2A0040101"],
+        weight=[10.0, 20.0],
+        longitude=[4.9, 8.7],
+        latitude=[46.1, 41.9],
+        label=["A", "B"],
+    )
+    canonical = canonicalize_sources(
+        raw;
+        id=:index,
+        population=:weight,
+        x=:longitude,
+        y=:latitude,
+        country_code=250,
+    )
+    @test propertynames(canonical) == [
+        :id, :population, :x, :y, :country_code, :label,
+    ]
+    @test canonical.id == raw.index
+    @test canonical.country_code == [250, 250]
+    @test canonical.label == raw.label
+    @test propertynames(raw) == [:index, :weight, :longitude, :latitude, :label]
+    @test_throws ArgumentError canonicalize_sources(
+        raw;
+        id=:index,
+        population=:weight,
+        x=:longitude,
+        y=:latitude,
+        country_code=true,
+    )
+    conflicting = copy(raw)
+    conflicting.id = ["old-a", "old-b"]
+    @test_throws ArgumentError canonicalize_sources(
+        conflicting;
+        id=:index,
+        population=:weight,
+        x=:longitude,
+        y=:latitude,
+        country_code=250,
+    )
 end
 
 @testset "OWID grid" begin
@@ -250,10 +292,56 @@ end
     @test propertynames(grid) == [:cell_id, :grid_x, :grid_y, :country_code]
     @test allunique(grid.cell_id)
     @test count(==(56), grid.country_code) == 72
+    france = load_owid_grid(; country_code=250)
+    @test nrow(france) == 438
+    @test all(==(250), france.country_code)
+    @test_throws ArgumentError load_owid_grid(; country_code=999)
     turkey_cell = findfirst(
         (grid.country_code .== 792) .& (grid.grid_x .== 552) .& (grid.grid_y .== 262),
     )
     @test grid.cell_id[turkey_cell] == "792:552:262"
+end
+
+@testset "OWID grid subdivision" begin
+    grid = DataFrame(
+        cell_id=["a", "b", "c", "d"],
+        grid_x=[0, 0, 2, 2],
+        grid_y=[0, 2, 0, 2],
+        country_code=fill(1, 4),
+    )
+    original = copy(grid)
+    subdivided = subdivide_grid(grid; factor=2)
+    @test propertynames(subdivided) == [
+        :cell_id, :parent_cell_id, :grid_x, :grid_y, :country_code,
+    ]
+    @test nrow(subdivided) == 16
+    @test subdivided.parent_cell_id[1:4] == fill("a", 4)
+    @test subdivided.cell_id[1:4] == [
+        "a:sub2:1:1", "a:sub2:1:2", "a:sub2:2:1", "a:sub2:2:2",
+    ]
+    @test subdivided.grid_x[1:4] == [-1, -1, 1, 1]
+    @test subdivided.grid_y[1:4] == [-1, 1, -1, 1]
+    @test allunique(subdivided.cell_id)
+    @test isequal(grid, original)
+
+    nearest = subdivide_grid(grid; target_cells=35)
+    @test nrow(nearest) == 36
+    @test all(==(9), combine(groupby(nearest, :parent_cell_id), nrow => :children).children)
+    identity = subdivide_grid(grid; factor=1)
+    @test identity.cell_id == identity.parent_cell_id == grid.cell_id
+
+    source = DataFrame(
+        id=["source"], population=[1.0], x=[0.0], y=[0.0], country_code=[1],
+    )
+    problem = PopulationCartogramProjection._prepare_problem(source, subdivided)
+    parent_mass = combine(
+        groupby(DataFrame(parent=subdivided.parent_cell_id, mass=problem.target_mass), :parent),
+        :mass => sum => :mass,
+    )
+    @test all(mass -> isapprox(mass, 0.25; atol=eps(Float32)), parent_mass.mass)
+    @test_throws ArgumentError subdivide_grid(grid)
+    @test_throws ArgumentError subdivide_grid(grid; factor=2, target_cells=16)
+    @test_throws ArgumentError subdivide_grid(grid; factor=0)
 end
 
 @testset "per-run spatial scaling" begin
@@ -449,6 +537,118 @@ end
         mapping, invalid_population, grid; value=:rate,
     )
     @test_throws ArgumentError project_intensive(mapping, values, grid; value=:population)
+end
+
+@testset "dominant source assignment" begin
+    sources = DataFrame(
+        id=["large", "small"],
+        population=[100.0, 10.0],
+        x=[1.0, 2.0],
+        y=[45.0, 46.0],
+        country_code=[1, 1],
+    )
+    mapping = DataFrame(
+        id=["large", "large", "large", "small", "small"],
+        country_code=[1, 1, 1, 1, 1],
+        cell_id=["a", "b", "empty", "a", "b"],
+        source_share=[0.2, 0.8, 0.0, 0.9, 0.1],
+    )
+    grid = DataFrame(
+        cell_id=["a", "b", "empty"],
+        parent_cell_id=["parent-a", "parent-b", "parent-empty"],
+        grid_x=[0, 2, 4],
+        grid_y=[0, 0, 0],
+        country_code=[1, 1, 1],
+    )
+    assignment = dominant_source_assignment(mapping, sources, grid)
+    @test assignment.parent_cell_id == grid.parent_cell_id
+    @test isequal(assignment.id, ["large", "large", missing])
+    @test assignment.transport_mass == [20.0, 80.0, 0.0]
+    @test assignment.cell_transport_mass == [29.0, 81.0, 0.0]
+    @test assignment.transport_share[1] ≈ 20 / 29
+    @test assignment.transport_share[2] ≈ 80 / 81
+    @test ismissing(assignment.transport_share[3])
+
+    grid_with_metadata = copy(grid)
+    grid_with_metadata.population = [1.0, 1.0, 1.0]
+    @test dominant_source_assignment(mapping, sources, grid_with_metadata).population ==
+          grid_with_metadata.population
+
+    labels = DataFrame(
+        id=["large", "small", "large"],
+        country_code=[1, 1, 1],
+        name=["Paris", "Nice", "Lyon"],
+    )
+    placed = place_source_labels(mapping, labels, grid)
+    @test isequal(placed.cells.label, ["Nice", "Paris, Lyon", missing])
+    @test placed.placements.cell_id == ["b", "a", "b"]
+    @test placed.placements.grid_x == [2.0, 0.0, 2.0]
+    unmatched_labels = copy(labels)
+    unmatched_labels.id[1] = "unknown"
+    @test_throws ArgumentError place_source_labels(mapping, unmatched_labels, grid)
+
+    zero_candidate_mapping = DataFrame(
+        id=fill("large", 3),
+        country_code=fill(1, 3),
+        cell_id=["a", "b", "empty"],
+        source_share=[0.5, 0.0, 0.5],
+    )
+    one_label = labels[1:1, :]
+    @test only(place_source_labels(zero_candidate_mapping, one_label, grid).placements.cell_id) ==
+          "a"
+
+    empty_labels = DataFrame(id=String[], country_code=Int[], name=String[])
+    empty_placement = place_source_labels(mapping, empty_labels, grid)
+    @test nrow(empty_placement.placements) == 0
+    @test all(ismissing, empty_placement.cells.label)
+    nullable_labels = vcat(
+        one_label,
+        DataFrame(id=["unknown"], country_code=[1], name=[missing]);
+        cols=:union,
+    )
+    @test nrow(place_source_labels(mapping, nullable_labels, grid).placements) == 1
+
+    huge_sources = copy(sources)
+    huge_sources.population .= 1e308
+    huge_mapping = DataFrame(
+        id=huge_sources.id,
+        country_code=huge_sources.country_code,
+        cell_id=fill("a", 2),
+        source_share=ones(2),
+    )
+    @test_throws ArgumentError dominant_source_assignment(huge_mapping, huge_sources, grid)
+
+    projected = project_extensive(mapping, sources, grid; value=:population)
+    @test projected.cells.parent_cell_id == grid.parent_cell_id
+end
+
+@testset "France IRIS source example" begin
+    (; sources, report) = FranceIrisExample.load_sources()
+    @test report.input_rows == 49_276
+    @test report.included_rows == nrow(sources) == 48_416
+    @test report.missing_coordinate_rows == 708
+    @test report.nonpositive_population_rows == 169
+    @test report.excluded_rows == 860
+    @test report.included_population ≈ 64_445_214.56572973 rtol=1e-12
+    @test propertynames(sources) == [:id, :population, :x, :y, :country_code]
+    @test all(id -> ncodeunits(id) == 9, sources.id)
+    @test any(startswith("0"), sources.id)
+    @test any(startswith("2A"), sources.id)
+    @test collect(extrema(sources.x)) ≈ [-5.086015483046215, 9.529000248915922]
+    @test collect(extrema(sources.y)) ≈ [41.43510246152267, 51.07297146412994]
+
+    france = load_owid_grid(; country_code=250)
+    subdivided = subdivide_grid(france; target_cells=cld(nrow(sources), 10))
+    @test nrow(subdivided) == 3_942
+    @test nrow(sources) / nrow(subdivided) ≈ 12.28209030948757
+
+    cities = FranceIrisExample.load_city_labels()
+    @test nrow(cities) == 7
+    @test Set(cities.name) == Set([
+        "Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Marne La Vallée",
+    ])
+    source_keys = Set(zip(sources.country_code, sources.id))
+    @test all(key -> key in source_keys, zip(cities.country_code, cities.id))
 end
 
 @testset "regional CSV example" begin

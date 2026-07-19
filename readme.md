@@ -62,6 +62,24 @@ employment_rate = project_intensive(
 )
 ```
 
+Existing tables do not need to be renamed in place. Adapt column names and a
+constant country code while preserving unrelated value columns:
+
+```julia
+sources = canonicalize_sources(
+    raw;
+    id=:index,
+    population=:population,
+    x=:longitude,
+    y=:latitude,
+    country_code=250,
+)
+```
+
+`canonicalize_sources` validates but does not silently drop or aggregate rows.
+Filter or repair missing coordinates and non-positive populations explicitly
+before calling it.
+
 `fit_mapping`, `fit_mapping_auto`, and `solve_sinkhorn` require an explicit
 `backend`; they never select or fall back to another device silently. Run the
 test suite with:
@@ -92,6 +110,61 @@ dropped share are reported per source, while metadata reports projected and
 dropped extensive totals or projected and dropped population. All relevant grid
 cells are retained in grid order. A cell with no retained contribution receives
 zero for an extensive value and `missing` for an intensive value.
+
+For a one-identifier-per-cell regional lookup, derive the source contributing
+the most transported population:
+
+```julia
+assignment = dominant_source_assignment(fitted.mapping, sources, grid)
+```
+
+This compares `population * source_share`, not raw shares or nearest-centre
+distance. The fractional mapping remains authoritative for projection and
+population accounting.
+
+## Target Subdivision
+
+The native grid can be filtered and uniformly subdivided before fitting:
+
+```julia
+native_grid = load_owid_grid(; country_code=250)
+grid = subdivide_grid(native_grid; factor=3)
+
+# Or choose the uniform square factor nearest a desired cell count.
+grid = subdivide_grid(native_grid; target_cells=cld(nrow(sources), 10))
+```
+
+Every parent receives `factor^2` children. Child IDs are deterministic and the
+grid includes `parent_cell_id`, which projection outputs preserve. Uniform
+target mass therefore gives every parent the same aggregate mass as at native
+resolution. Subdivision is explicit because dense cost size grows by
+`factor^2`; it does not add geographic information to source centre points.
+
+The real [`examples/france`](examples/france/readme.md) workflow exercises IRIS
+codes, non-canonical input columns, subdivision, and dominant assignment. It
+uses exact IRIS identifiers for fitting; GeoNames remains an optional source of
+human-readable city labels.
+
+## Optional City Labels
+
+City labels are a post-fit annotation, separate from population matching. First
+associate each city with a source ID using the source geography: for example,
+point-in-polygon against IRIS boundaries or H3 indexing for an H3 source table.
+Then place each label on the weighted centre of that source's fitted cartogram
+footprint:
+
+```julia
+# labels contains id, country_code, and name.
+labeled = place_source_labels(fitted.mapping, labels, grid; label=:name)
+cartogram_with_labels = labeled.cells
+city_placements = labeled.placements
+```
+
+`place_source_labels` chooses the contributed target cell nearest each source's
+`source_share`-weighted centre. It preserves all target cells and joins multiple
+names that land on one cell; missing and blank labels are ignored. GeoNames is
+therefore useful for display names and coordinates, but it is not used to create
+or reconcile the population-source table or alter the transport solve.
 
 ## Spatial Scaling
 
