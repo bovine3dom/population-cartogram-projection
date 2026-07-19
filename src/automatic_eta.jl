@@ -1,382 +1,226 @@
 const DEFAULT_ETA_BASE_SCHEDULE = Float32[
-    0.05,
-    0.02,
-    0.01,
-    0.005,
-    0.002,
-    0.001,
-    0.0005,
-    0.0002,
-    0.0001,
-    0.00005,
+    0.05, 0.02, 0.01, 0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005,
 ]
 const DEFAULT_AUTO_ETA_CANDIDATES = Float32[
-    0.005,
-    0.002,
-    0.001,
-    0.0005,
-    0.0002,
-    0.0001,
-    0.00005,
-    0.00002,
-    0.00001,
-    0.000001,
-    0.0000001,
+    0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005, 0.00002, 0.00001,
+    0.000001, 0.0000001,
 ]
 
-"""Build a descending continuation schedule ending at `final_eta`."""
-function eta_schedule_to(final_eta::Real; base_schedule=DEFAULT_ETA_BASE_SCHEDULE)
-    final = only(_float_eta_values((final_eta,), "final_eta"))
-    base = _float_eta_values(base_schedule, "base_schedule")
-    return sort!(unique!(vcat(filter(eta -> eta >= final, base), final)); rev=true)
+function _eta_values(values, label)
+    collected = collect(values)
+    all(value -> value isa Real && !(value isa Bool), collected) ||
+        throw(ArgumentError("$label must contain real numbers"))
+    result = Float32.(collected)
+    isempty(result) && throw(ArgumentError("$label cannot be empty"))
+    all(value -> isfinite(value) && value > 0, result) ||
+        throw(ArgumentError("$label must contain finite positive Float32 values"))
+    return result
 end
 
-"""Build the descending warm-start schedule used for automatic eta tuning."""
-function eta_continuation_schedule(
-    candidate_final_etas;
-    base_schedule=DEFAULT_ETA_BASE_SCHEDULE,
-)
-    candidates = _float_eta_values(candidate_final_etas, "candidate_final_etas")
-    base = _float_eta_values(base_schedule, "base_schedule")
+function _eta_schedule(candidates, base_schedule)
+    base = _eta_values(base_schedule, "base_eta_schedule")
     minimum_candidate = minimum(candidates)
     return sort!(unique!(vcat(filter(eta -> eta >= minimum_candidate, base), candidates)); rev=true)
 end
 
-function _sparse_options(
-    target_count;
-    cumulative_share,
-    minimum_source_share,
-    minimum_neighbors,
-    maximum_neighbors,
-)
-    !(cumulative_share isa Bool) && isfinite(cumulative_share) && 0 < cumulative_share <= 1 ||
-        throw(ArgumentError("cumulative_share must be finite and in (0, 1]"))
-    !(minimum_source_share isa Bool) && isfinite(minimum_source_share) &&
-        0 <= minimum_source_share <= 1 ||
-        throw(ArgumentError("minimum_source_share must be finite and in [0, 1]"))
-    minimum_neighbors > 0 || throw(ArgumentError("minimum_neighbors must be positive"))
-    minimum_neighbors <= target_count ||
-        throw(ArgumentError("minimum_neighbors cannot exceed the target count"))
-    if !isnothing(maximum_neighbors)
-        maximum_neighbors > 0 || throw(ArgumentError("maximum_neighbors must be positive"))
-        maximum_neighbors >= minimum_neighbors ||
-            throw(ArgumentError("maximum_neighbors cannot be less than minimum_neighbors"))
+function _sparse_options(targets; cumulative_weight, minimum_weight, minimum_cells, maximum_cells)
+    !(cumulative_weight isa Bool) && isfinite(cumulative_weight) &&
+        0 < cumulative_weight <= 1 ||
+        throw(ArgumentError("cumulative_weight must be finite and in (0, 1]"))
+    !(minimum_weight isa Bool) && isfinite(minimum_weight) && 0 <= minimum_weight <= 1 ||
+        throw(ArgumentError("minimum_weight must be finite and in [0, 1]"))
+    minimum_cells isa Integer && !(minimum_cells isa Bool) && 0 < minimum_cells <= targets ||
+        throw(ArgumentError("minimum_cells must be between one and the cartogram size"))
+    if !isnothing(maximum_cells)
+        maximum_cells isa Integer && !(maximum_cells isa Bool) &&
+            maximum_cells >= minimum_cells || throw(ArgumentError(
+                "maximum_cells must be at least minimum_cells",
+            ))
     end
-    return (
-        cumulative_share=Float64(cumulative_share),
-        minimum_source_share=Float64(minimum_source_share),
-        minimum_neighbors,
-        maximum_neighbors,
-        maximum_neighbors_effective=isnothing(maximum_neighbors) ? target_count : min(maximum_neighbors, target_count),
+    return (;
+        cumulative_weight=Float64(cumulative_weight),
+        minimum_weight=Float64(minimum_weight),
+        minimum_cells=Int(minimum_cells),
+        maximum_cells=isnothing(maximum_cells) ? targets : min(Int(maximum_cells), targets),
     )
 end
 
-function _normalized_source_shares(cost, result, source_index)
-    target_count = size(cost, 2)
-    logits = Vector{Float64}(undef, target_count)
-    row_max = -Inf
-    @inbounds for target_index in 1:target_count
-        value = (Float64(result.beta[target_index]) - Float64(cost[source_index, target_index])) /
+function _source_weights(cost, result, source)
+    logits = Vector{Float64}(undef, size(cost, 2))
+    maximum_logit = -Inf
+    @inbounds for target in axes(cost, 2)
+        logit = (Float64(result.beta[target]) - Float64(cost[source, target])) /
                 Float64(result.eta)
-        logits[target_index] = value
-        row_max = max(row_max, value)
+        logits[target] = logit
+        maximum_logit = max(maximum_logit, logit)
     end
-    row_sum = 0.0
-    @inbounds for target_index in 1:target_count
-        share = exp(logits[target_index] - row_max)
-        logits[target_index] = share
-        row_sum += share
+    total = 0.0
+    @inbounds for target in eachindex(logits)
+        weight = exp(logits[target] - maximum_logit)
+        logits[target] = weight
+        total += weight
     end
-    isfinite(row_sum) && row_sum > 0 ||
-        error("non-finite reconstructed source shares at source row $source_index")
-    logits ./= row_sum
+    isfinite(total) && total > 0 || error(
+        "non-finite reconstructed weights at source row $source",
+    )
+    logits ./= total
     return logits
 end
 
-function _select_sparse_row(shares, options; collect_indices=false, tie_keys=nothing)
-    order = if isnothing(tie_keys)
-        sortperm(shares; alg=MergeSort, rev=true)
-    else
-        sortperm(
-            eachindex(shares);
-            alg=MergeSort,
-            lt=(left, right) -> shares[left] > shares[right] ||
-                                (shares[left] == shares[right] &&
-                                 isless(tie_keys[left], tie_keys[right])),
-        )
-    end
-    selected = collect_indices ? Int[] : nothing
-    retained_share = 0.0
+function _select_weights(weights, options, tie_keys; indices=false)
+    order = sortperm(
+        eachindex(weights);
+        alg=MergeSort,
+        lt=(left, right) -> weights[left] > weights[right] ||
+                            (weights[left] == weights[right] &&
+                             isless(tie_keys[left], tie_keys[right])),
+    )
+    selected = indices ? Int[] : nothing
+    retained = 0.0
     count = 0
-    stop_reason = :targets_exhausted
-    for target_index in order
-        share = shares[target_index]
-        if count >= options.minimum_neighbors
-            if retained_share >= options.cumulative_share
-                stop_reason = :cumulative_share
-                break
-            elseif share <= 0
-                stop_reason = :numerical_zero
-                break
-            elseif share < options.minimum_source_share
-                stop_reason = :minimum_source_share
-                break
-            end
-        end
-        collect_indices && push!(selected, target_index)
-        retained_share += share
-        count += 1
-        if count >= options.maximum_neighbors_effective
-            stop_reason = options.maximum_neighbors_effective < length(shares) ?
-                          :maximum_neighbors : :targets_exhausted
+    for target in order
+        if count >= options.minimum_cells &&
+           (retained >= options.cumulative_weight || weights[target] <= 0 ||
+            weights[target] < options.minimum_weight)
             break
         end
+        indices && push!(selected, target)
+        retained += weights[target]
+        count += 1
+        count >= options.maximum_cells && break
     end
-    cumulative_achieved = retained_share >= options.cumulative_share
-    if cumulative_achieved
-        stop_reason = :cumulative_share
-    end
-    return (; count, retained_share, cumulative_achieved, stop_reason, selected)
+    return (; count, retained=min(retained, 1.0), selected)
 end
 
-function _sparse_mapping_stats(problem, result, options, populations)
-    source_count = size(problem.cost, 1)
-    counts = Vector{Int}(undef, source_count)
-    retained_shares = Vector{Float64}(undef, source_count)
-    cumulative_achieved = Vector{Bool}(undef, source_count)
-    stop_reasons = Vector{Symbol}(undef, source_count)
-    Threads.@threads for source_index in 1:source_count
-        shares = _normalized_source_shares(problem.cost, result, source_index)
-        selected = _select_sparse_row(shares, options)
-        counts[source_index] = selected.count
-        retained_shares[source_index] = min(selected.retained_share, 1.0)
-        cumulative_achieved[source_index] = selected.cumulative_achieved
-        stop_reasons[source_index] = selected.stop_reason
-    end
-    population_scale = maximum(populations)
-    population_weights = Float64[value / population_scale for value in populations]
-    population_total = sum(population_weights)
-    retained_mass_share = sum(
-        population_weights[index] * retained_shares[index]
-        for index in eachindex(retained_shares)
-    ) / population_total
-    return (;
-        counts,
-        retained_shares,
-        cumulative_achieved,
-        stop_reasons,
-        rows=sum(counts),
-        retained_mass_share,
-    )
-end
-
-function _extract_sparse_mapping(sources, targets, problem, result, options, stats)
-    ids = Vector{eltype(sources.id)}(undef, stats.rows)
-    country_codes = Vector{eltype(sources.country_code)}(undef, stats.rows)
-    cell_ids = Vector{eltype(targets.cell_id)}(undef, stats.rows)
-    source_shares = Vector{Float64}(undef, stats.rows)
-    row_ends = cumsum(stats.counts)
-    tie_keys = string.(targets.cell_id)
-
-    Threads.@threads for source_index in 1:nrow(sources)
-        shares = _normalized_source_shares(problem.cost, result, source_index)
-        selected = _select_sparse_row(
-            shares,
-            options;
-            collect_indices=true,
-            tie_keys,
+function _sparse_stats(problem, result, options, values, tie_keys)
+    counts = Vector{Int}(undef, length(values))
+    retained = Vector{Float64}(undef, length(values))
+    Threads.@threads for source in eachindex(values)
+        selection = _select_weights(
+            _source_weights(problem.cost, result, source), options, tie_keys,
         )
-        selected.count == stats.counts[source_index] ||
+        counts[source] = selection.count
+        retained[source] = selection.retained
+    end
+    scale = maximum(Float64.(values))
+    scaled_values = Float64[Float64(value) / scale for value in values]
+    retained_value = sum(scaled_values .* retained) / sum(scaled_values)
+    return (; counts, rows=sum(counts), retained, retained_value)
+end
+
+function _extract_distribution(cartogram, sources, problem, result, options, stats, tie_keys)
+    xs = Vector{eltype(cartogram.x)}(undef, stats.rows)
+    ys = Vector{eltype(cartogram.y)}(undef, stats.rows)
+    ids = Vector{eltype(sources.id)}(undef, stats.rows)
+    target_rows = Vector{Int}(undef, stats.rows)
+    scaled_transport = Vector{Float64}(undef, stats.rows)
+    weights = Vector{Float64}(undef, stats.rows)
+    row_ends = cumsum(stats.counts)
+    value_scale = maximum(Float64.(sources.value))
+
+    Threads.@threads for source in 1:nrow(sources)
+        source_weights = _source_weights(problem.cost, result, source)
+        selection = _select_weights(source_weights, options, tie_keys; indices=true)
+        selection.count == stats.counts[source] ||
             error("sparse row count changed during extraction")
-        row = source_index == 1 ? 1 : row_ends[source_index - 1] + 1
-        for target_index in selected.selected
-            ids[row] = sources.id[source_index]
-            country_codes[row] = sources.country_code[source_index]
-            cell_ids[row] = targets.cell_id[target_index]
-            source_shares[row] = shares[target_index]
+        row = source == 1 ? 1 : row_ends[source - 1] + 1
+        for target in selection.selected
+            xs[row] = cartogram.x[target]
+            ys[row] = cartogram.y[target]
+            ids[row] = sources.id[source]
+            target_rows[row] = target
+            weights[row] = source_weights[target]
+            scaled_transport[row] =
+                Float64(sources.value[source]) / value_scale * source_weights[target]
             row += 1
         end
     end
 
-    mapping = DataFrame(
-        id=ids,
-        country_code=country_codes,
-        cell_id=cell_ids,
-        source_share=source_shares,
-    )
-    source_retention = DataFrame(
-        id=copy(sources.id),
-        country_code=copy(sources.country_code),
-        neighbors=stats.counts,
-        retained_share=stats.retained_shares,
-        dropped_share=1 .- stats.retained_shares,
-        cumulative_achieved=stats.cumulative_achieved,
-        truncation_reason=stats.stop_reasons,
-    )
-    return (; mapping, source_retention)
+    target_totals = zeros(Float64, nrow(cartogram))
+    for row in eachindex(scaled_transport)
+        target_totals[target_rows[row]] += scaled_transport[row]
+    end
+    weight_mean = [
+        scaled_transport[row] / target_totals[target_rows[row]]
+        for row in eachindex(scaled_transport)
+    ]
+    return DataFrame(x=xs, y=ys, id=ids, weight=weights, weight_mean=weight_mean)
 end
 
-"""
-    fit_mapping_auto(sources, [grid]; backend, kwargs...)
-
-Tune the final Sinkhorn eta against a sparse output-row target while traversing
-one warm-started continuation schedule. Candidate counts and final extraction
-use the same deterministic host implementation. Candidates below
-`minimum_retained_mass_share` are ineligible. Returns a `MappingFit`; metadata
-includes the row-budget history, sparse loss, per-run spatial transform, and
-cost normalization.
-"""
-function fit_mapping_auto(
-    sources::AbstractDataFrame,
-    grid::AbstractDataFrame=load_owid_grid();
-    backend::Symbol,
+function _fit_distribution(
+    cartogram,
+    sources,
+    backend;
     cost_power::Real=2,
-    candidate_final_etas=DEFAULT_AUTO_ETA_CANDIDATES,
+    candidate_etas=DEFAULT_AUTO_ETA_CANDIDATES,
     base_eta_schedule=DEFAULT_ETA_BASE_SCHEDULE,
     target_rows_multiplier::Real=2,
-    minimum_retained_mass_share::Real=0,
-    cumulative_share::Real=0.995,
-    minimum_source_share::Real=0,
-    minimum_neighbors::Int=1,
-    maximum_neighbors::Union{Nothing, Int}=nothing,
+    minimum_retained_value::Real=0,
+    cumulative_weight::Real=0.995,
+    minimum_weight::Real=0,
+    minimum_cells::Int=1,
+    maximum_cells::Union{Nothing,Int}=nothing,
     max_iters_per_eta::Int=5_000,
     tol::Real=0.02,
     check_every::Int=100,
 )
-    total_start = time()
     !(target_rows_multiplier isa Bool) && isfinite(target_rows_multiplier) &&
         target_rows_multiplier > 0 ||
         throw(ArgumentError("target_rows_multiplier must be finite and positive"))
-    !(minimum_retained_mass_share isa Bool) && isfinite(minimum_retained_mass_share) &&
-        0 <= minimum_retained_mass_share <= 1 || throw(ArgumentError(
-            "minimum_retained_mass_share must be finite and in [0, 1]",
-        ))
-    candidates = sort!(unique!(_float_eta_values(candidate_final_etas, "candidate_final_etas")); rev=true)
-    schedule = eta_continuation_schedule(candidates; base_schedule=base_eta_schedule)
-    (; targets, problem) = _prepare_mapping_problem(sources, grid; cost_power, backend)
+    !(minimum_retained_value isa Bool) && isfinite(minimum_retained_value) &&
+        0 <= minimum_retained_value <= 1 ||
+        throw(ArgumentError("minimum_retained_value must be finite and in [0, 1]"))
+    candidates = sort!(unique!(_eta_values(candidate_etas, "candidate_etas")); rev=true)
+    schedule = _eta_schedule(candidates, base_eta_schedule)
     options = _sparse_options(
-        nrow(targets);
-        cumulative_share,
-        minimum_source_share,
-        minimum_neighbors,
-        maximum_neighbors,
+        nrow(cartogram); cumulative_weight, minimum_weight, minimum_cells, maximum_cells,
     )
-    target_rows = round(Int, target_rows_multiplier * (nrow(sources) + nrow(targets)))
-    target_rows > 0 || throw(ArgumentError("target_rows_multiplier produces a zero row target"))
-
-    candidate_results = NamedTuple[]
-    failed_candidates = NamedTuple[]
+    target_rows = round(Int, target_rows_multiplier * (nrow(sources) + nrow(cartogram)))
+    target_rows > 0 || throw(ArgumentError("target_rows_multiplier produces no rows"))
+    problem = _prepare_problem(cartogram, sources; cost_power)
+    tie_keys = collect(zip(_coordinate_value.(cartogram.x), _coordinate_value.(cartogram.y)))
     best_result = nothing
-    best_candidate = nothing
     best_stats = nothing
-    candidate_count_seconds = 0.0
-    function observe_stage(result)
-        if !result.converged
-            failure = (
-                final_eta=result.eta,
-                marginal_error=result.marginal_error,
-                iterations=result.iterations,
-                stop_reason=result.stop_reason,
-            )
-            push!(failed_candidates, failure)
-            push!(candidate_results, merge(failure, (
-                converged=false,
-                rows=missing,
-                target_rows,
-                row_error=missing,
-                retained_mass_share=missing,
-            )))
-            return false
-        end
-        stats = nothing
-        candidate_count_seconds += @elapsed begin
-            stats = _sparse_mapping_stats(problem, result, options, sources.population)
-        end
-        candidate = (
-            final_eta=result.eta,
-            marginal_error=result.marginal_error,
-            iterations=result.iterations,
-            converged=result.converged,
-            stop_reason=result.stop_reason,
-            rows=stats.rows,
-            target_rows,
-            row_error=abs(stats.rows - target_rows),
-            retained_mass_share=stats.retained_mass_share,
-            retention_eligible=stats.retained_mass_share >= minimum_retained_mass_share,
-        )
-        push!(candidate_results, candidate)
-        if candidate.retention_eligible &&
-           (isnothing(best_candidate) || candidate.row_error < best_candidate.row_error)
+    best_error = typemax(Int)
+
+    function observe(result)
+        result.converged || return false
+        stats = _sparse_stats(problem, result, options, sources.value, tie_keys)
+        eligible = stats.retained_value >= minimum_retained_value
+        row_error = abs(stats.rows - target_rows)
+        if eligible && row_error < best_error
             best_result = result
-            best_candidate = candidate
             best_stats = stats
+            best_error = row_error
         end
-        return candidate.rows <= target_rows && candidate.retention_eligible
+        return eligible && stats.rows <= target_rows
     end
 
-    solver_result = nothing
-    solver_and_tuning_seconds = @elapsed begin
-        solver_result = solve_sinkhorn(
-            problem.cost,
-            problem.source_mass,
-            problem.target_mass;
-            backend,
-            eta_schedule=schedule,
-            max_iters_per_eta,
-            tol,
-            check_every,
-            stage_observer=observe_stage,
-            stage_observer_etas=candidates,
-        )
-    end
-    isnothing(best_result) && throw(MappingFitError(
-        "no converged eta candidate met minimum_retained_mass_share=$minimum_retained_mass_share",
-    ))
-
-    stats = best_stats
-    extracted = nothing
-    sparse_extraction_seconds = @elapsed begin
-        extracted = _extract_sparse_mapping(sources, targets, problem, best_result, options, stats)
-    end
-    metadata = merge(best_candidate, (
-        schema_version=1,
-        fit_mode=:auto,
-        sources=nrow(sources),
-        targets=nrow(targets),
-        mapping_rows=nrow(extracted.mapping),
-        candidate_final_etas=candidates,
-        planned_eta_schedule=schedule,
-        evaluated_eta_schedule=schedule[1:findfirst(==(solver_result.eta), schedule)],
-        candidates=candidate_results,
-        failed_candidates,
-        selected_eta=best_candidate.final_eta,
-        selected_iterations=best_candidate.iterations,
-        selected_stop_reason=best_candidate.stop_reason,
-        solver_final_eta=solver_result.eta,
-        solver_final_iterations=solver_result.iterations,
-        solver_final_converged=solver_result.converged,
-        solver_stop_reason=solver_result.stop_reason,
-        backend,
-        cost_power=Float64(cost_power),
-        spatial_transform=problem.spatial_metadata,
-        target_rows_multiplier=Float64(target_rows_multiplier),
-        minimum_retained_mass_share=Float64(minimum_retained_mass_share),
-        cumulative_share=options.cumulative_share,
-        minimum_source_share=options.minimum_source_share,
-        minimum_neighbors=options.minimum_neighbors,
-        maximum_neighbors=options.maximum_neighbors,
-        maximum_neighbors_effective=options.maximum_neighbors_effective,
-        timings=(
-            total_seconds=time() - total_start,
-            solver_and_tuning_seconds,
-            candidate_count_seconds,
-            sparse_extraction_seconds,
-        ),
-        retained_mass_share=stats.retained_mass_share,
-        dropped_mass_share=1 - stats.retained_mass_share,
-        minimum_retained_source_share=minimum(stats.retained_shares),
-        maximum_dropped_source_share=maximum(1 .- stats.retained_shares),
-        sources_below_cumulative_share=count(!, stats.cumulative_achieved),
-    ))
-    return MappingFit(extracted.mapping, extracted.source_retention, metadata)
+    _solve_sinkhorn(
+        problem.cost,
+        problem.source_mass,
+        problem.target_mass,
+        backend;
+        eta_schedule=schedule,
+        observed_etas=Set(candidates),
+        observer=observe,
+        max_iters_per_eta,
+        tol,
+        check_every,
+    )
+    isnothing(best_result) && error(
+        "no converged eta candidate retained at least $minimum_retained_value of source value",
+    )
+    mapping = _extract_distribution(
+        cartogram, sources, problem, best_result, options, best_stats, tie_keys,
+    )
+    return (;
+        mapping,
+        selected_eta=best_result.eta,
+        retained_value=best_stats.retained_value,
+        rows=best_stats.rows,
+        target_rows,
+    )
 end
+
+_distribute(args...; kwargs...) = _fit_distribution(args...; kwargs...).mapping
