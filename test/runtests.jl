@@ -232,11 +232,8 @@ end
     @test !isdefined(PopulationCartogramProjection, :oneAPI)
     @test !isdefined(PopulationCartogramProjection, :Metal)
     expected = sort(backend_result(KA.CPU()), [:id, :x, :y])
-    @test UKH3Example.backend_from_name("cpu") isa KA.CPU
-    @test_throws ArgumentError UKH3Example.backend_from_name("unknown")
 
     if CUDA.functional()
-        @test UKH3Example.backend_from_name("cuda") isa CUDA.CUDABackend
         actual = sort(backend_result(CUDA.CUDABackend()), [:id, :x, :y])
         @test actual.weight ≈ expected.weight atol=2e-4
         @test actual.weight_mean ≈ expected.weight_mean atol=2e-4

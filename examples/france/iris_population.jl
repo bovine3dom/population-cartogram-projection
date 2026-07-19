@@ -3,6 +3,7 @@
 module FranceIrisExample
 
 using CSV
+using CUDA
 using DataFrames
 using PopulationCartogramProjection
 
@@ -132,12 +133,11 @@ function place_city_labels(mapping, labels, cartogram)
 end
 
 function main(args=ARGS)
-    1 <= length(args) <= 3 || error(
-        "usage: iris_population.jl BACKEND [SUBDIVISION_FACTOR] [OUTPUT_DIRECTORY]",
+    length(args) <= 2 || error(
+        "usage: iris_population.jl [SUBDIVISION_FACTOR] [OUTPUT_DIRECTORY]",
     )
-    backend = backend_from_name(args[1])
-    factor = length(args) >= 2 ? parse(Int, args[2]) : 1
-    output_dir = length(args) >= 3 ? abspath(args[3]) :
+    factor = length(args) >= 1 ? parse(Int, args[1]) : 1
+    output_dir = length(args) >= 2 ? abspath(args[2]) :
                  normpath(joinpath(@__DIR__, "..", "..", "output", "france-iris-factor$factor"))
     (; sources, attributes, report) = load_sources()
     cartogram = load_cartogram(FRANCE_CODE; factor)
@@ -151,7 +151,10 @@ function main(args=ARGS)
         "$(report.nonpositive_population_rows) had non-positive population.",
     )
 
-    mapping = Base.invokelatest(distribute, select(cartogram, :x, :y), sources; backend)
+    # AMDGPU.ROCBackend(), Metal.MetalBackend(), and oneAPI.oneAPIBackend() also work.
+    mapping = distribute(
+        select(cartogram, :x, :y), sources; backend=CUDA.CUDABackend(),
+    )
     assignment = dominant_sources(mapping, sources, cartogram)
     population = projected_values(mapping, sources, cartogram)
     rename!(population, :x => :grid_x, :y => :grid_y, :value => :population)

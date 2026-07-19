@@ -55,18 +55,18 @@ function load_sources(path::AbstractString=DEFAULT_SOURCE_PATH)
 end
 
 function main(args=ARGS)
-    1 <= length(args) <= 4 || error(
-        "usage: uk_h3.jl BACKEND [SOURCE.arrow] [OUTPUT_DIRECTORY] [SUBDIVISION_FACTOR]",
+    length(args) <= 3 || error(
+        "usage: uk_h3.jl [SOURCE.arrow] [OUTPUT_DIRECTORY] [SUBDIVISION_FACTOR]",
     )
-    backend = backend_from_name(args[1])
-    source_path = length(args) >= 2 ? abspath(args[2]) : DEFAULT_SOURCE_PATH
-    output_dir = length(args) >= 3 ? abspath(args[3]) : DEFAULT_OUTPUT_DIR
-    factor = length(args) >= 4 ? parse(Int, args[4]) : 1
+    source_path = length(args) >= 1 ? abspath(args[1]) : DEFAULT_SOURCE_PATH
+    output_dir = length(args) >= 2 ? abspath(args[2]) : DEFAULT_OUTPUT_DIR
+    factor = length(args) >= 3 ? parse(Int, args[3]) : 1
     sources = load_sources(source_path)
     cartogram = load_cartogram(UK_CODE; factor)
     println("Using $(nrow(sources)) H3 sources and $(nrow(cartogram)) cartogram cells.")
 
-    mapping = Base.invokelatest(distribute, select(cartogram, :x, :y), sources; backend)
+    # Substitute another KernelAbstractions backend here for larger runs.
+    mapping = distribute(select(cartogram, :x, :y), sources; backend=KA.CPU())
     population = projected_values(mapping, sources, cartogram)
     rename!(population, :x => :grid_x, :y => :grid_y, :value => :population)
     paths = (;

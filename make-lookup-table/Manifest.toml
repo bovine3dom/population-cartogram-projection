@@ -2,25 +2,7 @@
 
 julia_version = "1.12.1"
 manifest_format = "2.0"
-project_hash = "f6bb8c30b892a1b94fbd74ea500b541f014139da"
-
-[[deps.AMDGPU]]
-deps = ["AbstractFFTs", "AcceleratedKernels", "Adapt", "Atomix", "BFloat16s", "CEnum", "ExprTools", "GPUArrays", "GPUCompiler", "GPUToolbox", "KernelAbstractions", "LLD_jll", "LLVM", "LLVM_jll", "Libdl", "LinearAlgebra", "Pkg", "PrecompileTools", "Preferences", "PrettyTables", "Printf", "ROCmDeviceLibs_jll", "Random", "Random123", "RandomNumbers", "SparseArrays", "StaticArraysCore", "Statistics", "UnsafeAtomics"]
-git-tree-sha1 = "c451e0febf762a9019d8a9747a31e8cf3f655fd7"
-uuid = "21141c5a-9bdb-4563-92ae-f87d6854732e"
-version = "2.7.0"
-
-    [deps.AMDGPU.extensions]
-    AMDGPUChainRulesCoreExt = "ChainRulesCore"
-    AMDGPUEnzymeCoreExt = "EnzymeCore"
-    AMDGPUSparseMatricesCSRExt = "SparseMatricesCSR"
-    AMDGPUSpecialFunctionsExt = "SpecialFunctions"
-
-    [deps.AMDGPU.weakdeps]
-    ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-    EnzymeCore = "f151be2c-9106-41f4-ab19-57ee4f262869"
-    SparseMatricesCSR = "a0a7dd2c-ebf4-11e9-1f05-cf50bc540ca1"
-    SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
+project_hash = "f9faddbdcf7f3b4fa71c959aa34974b3aa80ef2b"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -40,16 +22,6 @@ version = "1.5.0"
 git-tree-sha1 = "2d9c9a55f9c93e8887ad391fbae72f8ef55e1177"
 uuid = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 version = "0.4.5"
-
-[[deps.AcceleratedKernels]]
-deps = ["ArgCheck", "GPUArraysCore", "KernelAbstractions", "Markdown", "UnsafeAtomics"]
-git-tree-sha1 = "0de01460ed11e90b42ce666c8ed0265bad59aa6a"
-uuid = "6a4ca0a5-0e36-4168-a932-d9be78d558f1"
-version = "0.4.3"
-weakdeps = ["oneAPI"]
-
-    [deps.AcceleratedKernels.extensions]
-    AcceleratedKernelsoneAPIExt = "oneAPI"
 
 [[deps.Accessors]]
 deps = ["CompositionsBase", "ConstructionBase", "Dates", "InverseFunctions", "MacroTools"]
@@ -634,12 +606,6 @@ git-tree-sha1 = "50ed12dc8c37ebb8d2b759f21755259d8512f2bd"
 uuid = "8fd58aa0-07eb-5a78-9b36-339c94fd15ea"
 version = "1.14.0+0"
 
-[[deps.Hwloc_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "XML2_jll", "Xorg_libpciaccess_jll"]
-git-tree-sha1 = "c35847ca5b4997fc8418836354a56c459bcf48d8"
-uuid = "e33a78d0-f292-5ffc-b300-72abe9b543c8"
-version = "2.14.0+0"
-
 [[deps.InitialValues]]
 git-tree-sha1 = "4da0f88e9a39111c2fa3add390ab15f3a44f3ca3"
 uuid = "22cec73e-a1b8-11e9-2c92-598750a2cf9c"
@@ -758,11 +724,6 @@ git-tree-sha1 = "17b94ecafcfa45e8360a4fc9ca6b583b049e4e37"
 uuid = "88015f11-f218-50d7-93a8-a6af411a945d"
 version = "4.1.0+0"
 
-[[deps.LLD_jll]]
-deps = ["Artifacts", "Libdl", "Zlib_jll", "libLLVM_jll"]
-uuid = "d55e3150-da41-5e91-b323-ecfd1eec6109"
-version = "18.1.7+5"
-
 [[deps.LLVM]]
 deps = ["CEnum", "LLVMExtra_jll", "Libdl", "PrecompileTools", "Preferences", "Printf", "Unicode"]
 git-tree-sha1 = "24af42ea221a14a04283e362d83d2cdcb115cd12"
@@ -772,12 +733,6 @@ weakdeps = ["BFloat16s"]
 
     [deps.LLVM.extensions]
     BFloat16sExt = "BFloat16s"
-
-[[deps.LLVMDowngrader_jll]]
-deps = ["Artifacts", "JLLWrappers", "LazyArtifacts", "Libdl", "TOML", "Zlib_jll"]
-git-tree-sha1 = "61b917828b9d9bf6da81876dc3798f774b419707"
-uuid = "f52de702-fb25-5922-94ba-81dd59b07444"
-version = "0.6.0+2"
 
 [[deps.LLVMExtra_jll]]
 deps = ["Artifacts", "JLLWrappers", "LazyArtifacts", "Libdl", "TOML"]
@@ -795,12 +750,6 @@ deps = ["Artifacts", "JLLWrappers", "Libdl"]
 git-tree-sha1 = "eb62a3deb62fc6d8822c0c4bef73e4412419c5d8"
 uuid = "1d63c593-3942-5779-bab2-d838dc0a180e"
 version = "18.1.8+0"
-
-[[deps.LLVM_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "TOML", "Zlib_jll", "libLLVM_jll"]
-git-tree-sha1 = "52b49a1dbe5d4175c34c9db554719cc508f804b5"
-uuid = "86de99a1-58d6-5da7-8064-bd56ce2e322c"
-version = "18.1.7+4"
 
 [[deps.LaTeXStrings]]
 git-tree-sha1 = "dda21b8cbd6a6c40d9d02a73230f9d70fed6918c"
@@ -959,16 +908,6 @@ version = "1.51.0"
     BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
     CliqueTrees = "60701a23-6482-424a-84db-faee86b9b1f8"
 
-[[deps.Metal]]
-deps = ["Adapt", "BFloat16s", "CEnum", "CodecBzip2", "ExprTools", "GPUArrays", "GPUCompiler", "GPUToolbox", "KernelAbstractions", "LLVM", "LLVMDowngrader_jll", "LinearAlgebra", "ObjectiveC", "PrecompileTools", "Preferences", "Printf", "Random", "Random123", "RandomNumbers", "SHA", "ScopedValues", "StaticArrays", "UUIDs"]
-git-tree-sha1 = "26180d9c83fb2d217c0ed31b2e024d785fd841ed"
-uuid = "dde4c033-4e86-420c-a63e-0dd931031962"
-version = "1.9.3"
-weakdeps = ["SpecialFunctions"]
-
-    [deps.Metal.extensions]
-    SpecialFunctionsExt = "SpecialFunctions"
-
 [[deps.MicroCollections]]
 deps = ["Accessors", "BangBang", "InitialValues"]
 git-tree-sha1 = "44d32db644e84c75dab479f1bc15ee76a1a3618f"
@@ -1000,12 +939,6 @@ deps = ["LinearAlgebra", "SparseArrays", "Test"]
 git-tree-sha1 = "dc5b2c4c111c46bc79ac4405eeb563523b39c004"
 uuid = "d8a4904e-b15c-11e9-3269-09a3773c0cb0"
 version = "1.8.0"
-
-[[deps.NEO_jll]]
-deps = ["Artifacts", "JLLWrappers", "LazyArtifacts", "Libdl", "TOML", "gmmlib_jll", "libigc_jll", "oneAPI_Level_Zero_Headers_jll"]
-git-tree-sha1 = "44e1a07176f8d7f7b649dbdaf90a929f08cba4c5"
-uuid = "700fe977-ac61-5f37-bbc8-c6c4b2b6a9fd"
-version = "26.18.38308+0"
 
 [[deps.NVML]]
 deps = ["CEnum", "CUDACore", "GPUToolbox", "Libdl"]
@@ -1045,12 +978,6 @@ version = "0.4.27"
 uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
 version = "1.3.0"
 
-[[deps.ObjectiveC]]
-deps = ["CEnum", "Libdl", "Preferences"]
-git-tree-sha1 = "a10d01e1a9683ffd64b450cc6c1419ee9a8f7ab4"
-uuid = "e86c9b32-1129-44ac-8ea0-90d5bb39ded9"
-version = "3.4.2"
-
 [[deps.Ogg_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
 git-tree-sha1 = "b6aa4566bb7ae78498a5e68943863fa8b5231b59"
@@ -1067,12 +994,6 @@ version = "0.3.33+1"
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
 uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
 version = "0.3.29+0"
-
-[[deps.OpenCL_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "4980a4b2679f1b9cdd65a21ccb57d1a89c0d68b9"
-uuid = "6cb37087-e8b6-5417-8430-1f242f1e46e4"
-version = "2024.10.24+1"
 
 [[deps.OpenLibm_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -1195,12 +1116,6 @@ deps = ["InteractiveUtils", "JuliaSyntaxHighlighting", "Markdown", "Sockets", "S
 uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 version = "1.11.0"
 
-[[deps.ROCmDeviceLibs_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "1ea85ef5153720673093b2a59f9486c98759feda"
-uuid = "873c0968-716b-5aa7-bb8d-d1e2e2aeff2d"
-version = "6.2.1+2"
-
 [[deps.Random]]
 deps = ["SHA"]
 uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
@@ -1244,30 +1159,6 @@ version = "1.1.0"
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 version = "0.7.0"
-
-[[deps.SPIRVIntrinsics]]
-deps = ["ExprTools", "GPUToolbox", "LLVM", "SpecialFunctions"]
-git-tree-sha1 = "3ebf6a011e797e62dafe35b143b7558276a1f896"
-uuid = "71d1d633-e7e8-4a92-83a1-de8814b09ba8"
-version = "1.0.1"
-
-    [deps.SPIRVIntrinsics.extensions]
-    SPIRVIntrinsicsSIMDExt = "SIMD"
-
-    [deps.SPIRVIntrinsics.weakdeps]
-    SIMD = "fdea26ae-647d-5447-a871-4b548cad5224"
-
-[[deps.SPIRV_LLVM_Backend_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Zlib_jll"]
-git-tree-sha1 = "d5a02890b77d3a5fce32d54e97c820f13d276971"
-uuid = "4376b9bf-cff8-51b6-bb48-39421dff0d0c"
-version = "22.1.8+1"
-
-[[deps.SPIRV_Tools_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "783c358eff59056d7e703a644f5179270c43226a"
-uuid = "6ac6d60f-d740-5983-97d7-a4482c0689f4"
-version = "2025.4.0+0"
 
 [[deps.ScopedValues]]
 deps = ["HashArrayMappedTries", "Logging"]
@@ -1663,17 +1554,6 @@ git-tree-sha1 = "895f21b699121d1a57ecac57e65a852caf569254"
 uuid = "da03df04-f53b-5353-a52f-6a8b0620ced0"
 version = "2.42.13+0"
 
-[[deps.gmmlib_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "f04958d7d897c71df9d0594772992dbadccf3530"
-uuid = "09858cae-167c-5acb-9302-fddc6874d481"
-version = "22.10.0+0"
-
-[[deps.libLLVM_jll]]
-deps = ["Artifacts", "Libdl"]
-uuid = "8f36deef-c2a5-5394-99ed-8e07531fb29a"
-version = "18.1.7+5"
-
 [[deps.libaom_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
 git-tree-sha1 = "850b06095ee71f0135d644ffd8a52850699581ed"
@@ -1703,12 +1583,6 @@ git-tree-sha1 = "646634dd19587a56ee2f1199563ec056c5f228df"
 uuid = "f638f0a6-7fb0-5443-88ba-1cc74229b280"
 version = "2.0.4+0"
 
-[[deps.libigc_jll]]
-deps = ["Artifacts", "JLLWrappers", "LazyArtifacts", "Libdl", "TOML"]
-git-tree-sha1 = "54dffb182304a3f9ebb52ccbdcca5283fe110731"
-uuid = "94295238-5935-5bd7-bb0f-b00942e9bdd5"
-version = "2.34.4+1"
-
 [[deps.libpng_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Zlib_jll"]
 git-tree-sha1 = "e51150d5ab85cee6fc36726850f0e627ad2e4aba"
@@ -1731,30 +1605,6 @@ version = "1.3.8+0"
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
 version = "1.64.0+1"
-
-[[deps.oneAPI]]
-deps = ["AbstractFFTs", "AcceleratedKernels", "Adapt", "CEnum", "ExprTools", "GPUArrays", "GPUCompiler", "GPUToolbox", "KernelAbstractions", "LLVM", "Libdl", "LinearAlgebra", "NEO_jll", "Preferences", "Printf", "Random", "SPIRVIntrinsics", "SPIRV_LLVM_Backend_jll", "SPIRV_Tools_jll", "SparseArrays", "SpecialFunctions", "StaticArrays", "oneAPI_Level_Zero_Headers_jll", "oneAPI_Level_Zero_Loader_jll", "oneAPI_Support_jll"]
-git-tree-sha1 = "172162ba36be5500016abb555896c007714c3fa2"
-uuid = "8f75cd03-7ff8-4ecb-9b8f-daf728133b1b"
-version = "2.7.0"
-
-[[deps.oneAPI_Level_Zero_Headers_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "4b50f5b44ebdfec5c15280a18eba397d1ef669fb"
-uuid = "f4bc562b-d309-54f8-9efb-476e56f0410d"
-version = "1.16.0+0"
-
-[[deps.oneAPI_Level_Zero_Loader_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "oneAPI_Level_Zero_Headers_jll"]
-git-tree-sha1 = "1f6c316d4f243268f66b8b393f33f7b0550a8db7"
-uuid = "13eca655-d68d-5b81-8367-6d99d727ab01"
-version = "1.29.0+0"
-
-[[deps.oneAPI_Support_jll]]
-deps = ["Artifacts", "Hwloc_jll", "JLLWrappers", "Libdl", "OpenCL_jll", "Pkg", "oneAPI_Level_Zero_Loader_jll"]
-git-tree-sha1 = "bc39a494ae812c2e24ae92dec4abb9ea7b16aebe"
-uuid = "b049733a-a71d-5ed3-8eba-7d323ac00b36"
-version = "0.9.2+0"
 
 [[deps.p7zip_jll]]
 deps = ["Artifacts", "Libdl"]

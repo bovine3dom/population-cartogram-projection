@@ -78,6 +78,10 @@ using oneAPI
 mapping = distribute(cartogram, sources; backend=oneAPI.oneAPIBackend())
 ```
 
+The UK example below deliberately uses CPU; the larger France IRIS example uses
+CUDA. Replace those concrete backend objects in the example source when testing
+ROCm, Metal, or oneAPI.
+
 The implementation uses only generic KernelAbstractions allocation, copying,
 synchronization, and kernel-launch APIs. Backends must support Float32, local
 memory, and a 256-item workgroup.
@@ -145,14 +149,14 @@ Run the cached UK H3 workflow:
 ```sh
 julia scripts/extract_country_h3.jl 826 6
 julia +1.12.1 --threads=auto --project=make-lookup-table \
-  examples/uk_h3.jl cuda
+  examples/uk_h3.jl
 ```
 
 Run the France IRIS workflow:
 
 ```sh
 julia +1.12.1 --threads=auto --project=make-lookup-table \
-  examples/france/iris_population.jl cuda 1
+  examples/france/iris_population.jl 1
 ```
 
 The examples own H3 validation, country filtering, cartogram loading and

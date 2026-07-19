@@ -5,26 +5,6 @@ import KernelAbstractions as KA
 const EXAMPLE_ROOT = normpath(joinpath(@__DIR__, ".."))
 const CARTOGRAM_PATH = joinpath(EXAMPLE_ROOT, "data", "cartogram.csv")
 
-function backend_from_name(name::AbstractString)
-    normalized = lowercase(name)
-    if normalized == "cpu"
-        return KA.CPU()
-    elseif normalized == "cuda"
-        @eval import CUDA
-        return Core.eval(@__MODULE__, :(CUDA.CUDABackend()))
-    elseif normalized == "amdgpu"
-        @eval import AMDGPU
-        return Core.eval(@__MODULE__, :(AMDGPU.ROCBackend()))
-    elseif normalized == "metal"
-        @eval import Metal
-        return Core.eval(@__MODULE__, :(Metal.MetalBackend()))
-    elseif normalized == "oneapi"
-        @eval import oneAPI
-        return Core.eval(@__MODULE__, :(oneAPI.oneAPIBackend()))
-    end
-    throw(ArgumentError("backend must be cpu, cuda, amdgpu, metal, or oneapi"))
-end
-
 function _cartogram_step(values)
     sorted = sort!(unique(Float64.(values)))
     return length(sorted) > 1 ? minimum(diff(sorted)) : 1.0

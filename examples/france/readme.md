@@ -39,19 +39,19 @@ fallback.
 
 ## Run
 
-Select the backend explicitly. Native resolution is the default:
+The example uses CUDA directly. Native resolution is the default:
 
 ```sh
 julia +1.12.1 --threads=auto --project=make-lookup-table \
-  examples/france/iris_population.jl cuda
+  examples/france/iris_population.jl
 ```
 
-Pass a subdivision factor as the second argument. Factor 3 is close to ten IRIS
+Pass a subdivision factor as the first argument. Factor 3 is close to ten IRIS
 rows per cartogram cell:
 
 ```sh
 julia +1.12.1 --threads=auto --project=make-lookup-table \
-  examples/france/iris_population.jl cuda 3
+  examples/france/iris_population.jl 3
 ```
 
 | Factor | Cells | IRIS rows/cell | Host + accelerator dense baseline |
