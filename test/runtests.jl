@@ -15,6 +15,7 @@ end
 
 include(joinpath(@__DIR__, "..", "examples", "uk_h3.jl"))
 include(joinpath(@__DIR__, "..", "examples", "france", "iris_population.jl"))
+include(joinpath(@__DIR__, "..", "examples", "europe", "europe.jl"))
 
 const QUICK_OPTIONS = (
     candidate_etas=Float32[0.5, 0.1, 0.05],
@@ -327,4 +328,107 @@ end
     placed = FranceIrisExample.place_city_labels(mapping, labels, cartogram)
     @test nrow(placed.placements) == 1
     @test count(!ismissing, placed.cells.label) == 1
+end
+
+@testset "Europe example orchestration" begin
+    countries = EuropeExample.load_countries()
+    @test nrow(countries) == 42
+    @test countries.name[1] == "Iceland"
+    france = only(eachrow(filter(:name => ==("France"), countries)))
+    @test france.cartogram_code == 250
+    @test france.source_code == 249
+
+    api = H3.API
+    parent = api.latLngToCell(api.LatLng(deg2rad(48.85), deg2rad(2.35)), 5)
+    children = api.cellToChildren(parent, 6)
+    ids = UInt64.(children[1:2])
+    for id in ids
+        @test ((UInt64(EuropeExample.upper_uint32(id)) << 32) |
+               UInt64(EuropeExample.lower_uint32(id))) == id
+    end
+
+    mapping = DataFrame(
+        x=[0, 0],
+        y=[0, 0],
+        id=ids,
+        weight=[1.0, 1.0],
+        weight_mean=[1 / 3, 2 / 3],
+        population=[10.0, 20.0],
+        code=[249, 249],
+        label=Union{Missing,String}["Paris", missing],
+    )
+    output = EuropeExample.hilo_output(mapping)
+    @test propertynames(output) == [
+        :x, :y, :weight, :population, :code, :label, :weight_mean,
+        :index_lower, :index_upper,
+    ]
+    @test all(Missing <: eltype(output[!, column]) for column in propertynames(output))
+    @test nonmissingtype(eltype(output.index_lower)) == UInt32
+    @test nonmissingtype(eltype(output.index_upper)) == UInt32
+    source_fixture = DataFrame(
+        id=ids,
+        x=zeros(2),
+        y=zeros(2),
+        value=[10.0, 20.0],
+        country_code=fill(249, 2),
+    )
+    EuropeExample.validate_output(
+        output, countries[6:6, :]; sources=source_fixture,
+    )
+    mislabeled = copy(output)
+    mislabeled.weight_mean .= 0.5
+    @test_throws ErrorException EuropeExample.validate_output(
+        mislabeled, countries[6:6, :]; sources=source_fixture,
+    )
+    malformed = copy(output)
+    malformed.index_lower = UInt64.(malformed.index_lower)
+    malformed.index_lower[1] = ids[1]
+    @test_throws ErrorException EuropeExample.validate_output(
+        malformed, countries[6:6, :]; sources=source_fixture,
+    )
+
+    same_name = copy(mapping)
+    EuropeExample.assign_labels!(same_name, DataFrame(id=ids, name=fill("Twin", 2)))
+    @test count(==("Twin"), same_name.label) == 2
+
+    monaco_id = only(ids[1:1])
+    monaco_centre = api.cellToLatLng(monaco_id)
+    monaco_sources = DataFrame(
+        id=[monaco_id],
+        x=[rad2deg(monaco_centre.lng)],
+        y=[rad2deg(monaco_centre.lat)],
+        value=[1.0],
+        country_code=[492],
+    )
+    monaco = EuropeExample.fit_europe(
+        countries[41:41, :], monaco_sources; backend=KA.CPU(),
+    )
+    @test nrow(monaco) == 1
+    @test only(monaco.code) == 492
+    EuropeExample.assign_labels!(monaco, DataFrame(id=[monaco_id], name=["Monaco"]))
+    @test only(monaco.label) == "Monaco"
+    EuropeExample.validate_output(
+        EuropeExample.hilo_output(monaco), countries[41:41, :];
+        sources=monaco_sources, factor=1,
+    )
+    subdivided_monaco = EuropeExample.load_cartogram(492; factor=2)
+    @test sort(unique(subdivided_monaco.x)) == [891, 893]
+    @test sort(unique(subdivided_monaco.y)) == [503, 505]
+
+    mktempdir() do directory
+        source_path = joinpath(directory, "sources.arrow")
+        centres = api.cellToLatLng.(ids)
+        Arrow.write(source_path, DataFrame(
+            id=ids,
+            population=[10.0, 20.0],
+            x=[rad2deg(centre.lng) for centre in centres],
+            y=[rad2deg(centre.lat) for centre in centres],
+            country_code=fill(249, 2),
+            ambiguous_rows=zeros(UInt64, 2),
+            ambiguous_population=zeros(2),
+        ))
+        sources = EuropeExample.load_sources(source_path; countries=countries[6:6, :])
+        @test propertynames(sources) == [:id, :x, :y, :value, :country_code]
+        @test sources.id == ids
+    end
 end

@@ -18,14 +18,14 @@ function load_cartogram(country::Integer; factor::Integer=1, path=CARTOGRAM_PATH
         header=[:x, :y, :country],
         types=Dict(:x => Int, :y => Int, :country => Int),
     )
+    step_x = _cartogram_step(raw.x)
+    step_y = _cartogram_step(raw.y)
     filter!(:country => ==(country), raw)
     nrow(raw) > 0 || error("cartogram has no cells for country $country")
     raw.cell_id = ["$(lpad(string(country), 3, '0')):$x:$y" for (x, y) in zip(raw.x, raw.y)]
     raw.parent_cell_id = copy(raw.cell_id)
     factor == 1 && return select(raw, :x, :y, :cell_id, :parent_cell_id)
 
-    step_x = _cartogram_step(raw.x)
-    step_y = _cartogram_step(raw.y)
     rows = NamedTuple[]
     for parent in eachrow(raw), i in 1:factor, j in 1:factor
         push!(rows, (

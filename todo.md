@@ -10,6 +10,7 @@
 - [x] Keep vendor, country, H3, CSV, persistence, projection, and rendering code
       outside the package core.
 - [x] Preserve example-owned UK H3 and France IRIS integration checks.
+- [x] Add a factor-1, country-local Europe example with legacy hilo Arrow output.
 
 ## Follow-Up
 

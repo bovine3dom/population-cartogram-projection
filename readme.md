@@ -78,9 +78,11 @@ using oneAPI
 mapping = distribute(cartogram, sources; backend=oneAPI.oneAPIBackend())
 ```
 
-The UK example below deliberately uses CPU; the larger France IRIS example uses
-CUDA. Replace those concrete backend objects in the example source when testing
-ROCm, Metal, or oneAPI.
+The UK example below deliberately uses CPU; the larger France IRIS and Europe
+entry points use CUDA. The underlying `distribute` API accepts another backend,
+but using ROCm, Metal, or oneAPI also requires adding that vendor package to the
+consumer environment, adapting the concrete calls, and removing the Europe
+entry point's CUDA preflight.
 
 The implementation uses only generic KernelAbstractions allocation, copying,
 synchronization, and kernel-launch APIs. Backends must support Float32, local
@@ -159,6 +161,17 @@ julia +1.12.1 --threads=auto --project=make-lookup-table \
   examples/france/iris_population.jl 1
 ```
 
+Run the country-by-country Europe workflow at native factor 1:
+
+```sh
+julia +1.12.1 --threads=auto --project=make-lookup-table \
+  examples/europe/europe.jl
+```
+
+The first run uses `clickhouse local` to build a reusable resolution-6 H3 source
+cache, then writes an Arrow mapping with split `index_lower`/`index_upper` H3
+identifiers. See [`examples/europe/readme.md`](examples/europe/readme.md).
+
 The examples own H3 validation, country filtering, cartogram loading and
 subdivision, secondary projections, city placement, persistence, and rendering.
 None are package dependencies.
@@ -169,6 +182,10 @@ None are package dependencies.
 julia +1.12.1 --threads=auto --project=. -e 'using Pkg; Pkg.test()'
 ```
 
+The France adapter checks require the derived `examples/france/iris-population.csv`
+and `examples/france/iris-cities.csv` fixtures described in its example readme.
+
 The suite checks input validation, conservation, both weight normalizations,
 warmed automatic eta selection, opaque `UInt64` IDs, caller-provided backends,
-and example-owned UK H3 and France IRIS input adapters.
+example-owned UK H3 and France IRIS input adapters, and Europe orchestration and
+split-index compatibility.
