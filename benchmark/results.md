@@ -69,4 +69,43 @@ are not peak resident or oneAPI device-memory measurements.
 
 Factor 6 dense mode was not attempted: its modeled 11.38 GiB cost state exceeded
 safe available memory on this host, while matrix-free coordinate cost state
-would be approximately 1.96 MiB.
+is approximately 1.96 MiB. The legacy oneAPI watchdog required splitting each
+763-million-pair reduction into launches capped near 200 million pairs. With
+that exact chunking, a 20-iteration matrix-free solve took 32.822 seconds and
+ended at marginal error `0.00524762`.
+
+## Dual-Aware Truncation
+
+The experimental two-level hierarchy uses Morton-ordered 256-point coarse blocks
+over 32-point leaves and `truncation_tolerance=1e-6`. The first iteration at each
+eta and every marginal audit are exact all-pairs operations. These cold,
+single-eta runs therefore measure a conservative hybrid rather than an ideal
+sparse-only kernel. All rows set `BENCHMARK_TRUNCATED=true` and
+`BENCHMARK_ETA` to the tabulated eta; the `5e-3` row also set
+`BENCHMARK_TRUNCATION_ETA=0.005`. Factors 1, 3, and 6 used respectively
+`france 1 5 20`, `france 3 3 10`, and `france-mf 6 3 5`.
+
+| Factor | Eta | Iterations | Exact matrix-free | Truncated | Speedup | Main pairs retained | Total pair-work upper bound | Sampled weight delta |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | `1e-4` | 20 | 1.0999 s | 1.1685 s | 0.94x | 26.4% | 39.6% | `7.57e-8` |
+| 3 | `5e-3` | 10 | 4.6505 s | 5.9986 s | 0.78x | 69.8% | 77.7% | `5.74e-9` |
+| 3 | `1e-3` | 10 | 4.5762 s | 4.4304 s | 1.03x | 33.7% | 50.6% | `1.10e-8` |
+| 3 | `1e-4` | 10 | 4.5615 s | 3.3795 s | 1.35x | 18.8% | 39.4% | `1.17e-7` |
+| 6 | `1e-4` | 5 | 9.7276 s | 6.8193 s | 1.43x | 13.1% | 50.4% | `6.54e-8` |
+
+For France factor 3 on this backend, this places the crossover near eta `1e-3`;
+the default keeps broader stages exact. Factor 1 remains too small to amortize
+hierarchy traversal even at `1e-4`. Truncated coordinate, hierarchy,
+dual-maximum, and counter state is still linear: approximately 2.67 MiB,
+2.86 MiB, and 3.51 MiB for France factors 1, 3, and 6 respectively, excluding
+shared solver vectors.
+
+"Main pairs retained" covers only truncatable Sinkhorn updates. The total upper
+bound adds exact eta-boundary updates, exact marginal audits, and one 32-pair
+witness leaf per output and compares that sum with the equivalent all-pairs
+workload. It is an upper bound because a final witness leaf can contain fewer
+than 32 points. Weight deltas are maxima over the first, middle, and last source.
+
+The runs were not converged because the low-eta cold starts intentionally used
+short fixed iteration caps; production uses warm eta continuation and the normal
+exact marginal stopping criterion.

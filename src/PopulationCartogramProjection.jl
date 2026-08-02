@@ -11,6 +11,7 @@ const SOURCE_COLUMNS = (:x, :y, :value, :id)
 const SINKHORN_WORKGROUP_SIZE = 256
 const MATRIX_FREE_REDUCTION_LANES = 32
 const MATRIX_FREE_OUTPUTS_PER_GROUP = 8
+const MATRIX_FREE_MAX_PAIRS_PER_LAUNCH = 200_000_000
 
 struct SinkhornResult
     beta::Vector{Float32}
@@ -62,6 +63,7 @@ end
 
 include("spatial.jl")
 include("kernel_abstractions.jl")
+include("truncation.jl")
 include("automatic_eta.jl")
 
 """
@@ -73,6 +75,7 @@ The returned `x, y, id, weight, weight_mean` table contains source-normalized
 transport weights and target-normalized contributions. The caller supplies an
 instantiated `KernelAbstractions.Backend` such as `CPU()` or `CUDABackend()`.
 Use `cost_mode=:matrix_free` for the all-pairs matrix-free squared-cost path.
+Use `cost_mode=:truncated` for the experimental dual-aware multiscale accelerator path.
 """
 function distribute(
     cartogram::AbstractDataFrame,

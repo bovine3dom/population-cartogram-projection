@@ -109,6 +109,8 @@ mapping = distribute(
     sources;
     backend,
     cost_mode=:dense,
+    truncation_tolerance=1e-6,
+    truncation_eta=0.001,
     candidate_etas=Float32[0.005, 0.002, 0.001, 0.0005],
     target_rows_multiplier=2,
     cumulative_weight=0.995,
@@ -127,6 +129,20 @@ in the source and cell counts. High/low `Float32` coordinate pairs preserve
 small displacements without requiring backend `Float64`, but operation order is
 not bitwise identical to dense cost construction. Dense mode remains the
 default and numerical oracle while backend crossover points are measured.
+
+`cost_mode=:truncated` is an opt-in accelerator mode over the same squared-cost
+problem. It Morton-orders points into 32-point leaves and 256-point coarse
+blocks, refreshes dual maxima before each truncated half-step, and skips blocks
+using conservative point-to-box cost bounds. The first iteration at every eta,
+all stages above `truncation_eta`, and every convergence marginal check remain
+all-pairs. `truncation_tolerance` bounds omitted row-normalizer mass for each
+truncated reduction in real arithmetic; it is not a final transport-error or
+convergence guarantee. CPU backends fall back to exact matrix-free solving.
+
+The default `truncation_eta=0.001` reflects the measured France factor 3
+crossover on the tested oneAPI backend. Smaller problems can remain slower even
+below that threshold. This solver truncation is independent of the sparse output
+selection described below.
 
 Sparse `weight` values are not renormalized. Their sum records the retained
 fraction of each source, while `weight_mean` is calculated from retained rows and
@@ -221,6 +237,12 @@ ZE_ENABLE_ALT_DRIVERS=/usr/lib/libze_intel_gpu_legacy1.so.1 \
   julia +1.12.1 --threads=auto --project=benchmark \
   benchmark/compare_solvers.jl france 1 5 50
 ```
+
+Set `BENCHMARK_TRUNCATED=true` and `BENCHMARK_ETA=0.0001` to compare the
+experimental hierarchy against exact matrix-free solving. Use `france-mf` for
+factor 6 so the unsafe dense allocation is not attempted. To benchmark
+truncation above the default cutoff, also raise `BENCHMARK_TRUNCATION_ETA`; for
+example, set both eta variables to `0.005`.
 
 Preparation time, warm solver timing, host allocations, convergence diagnostics,
 and theoretical host-plus-device cost storage are reported separately. See the

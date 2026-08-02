@@ -22,4 +22,6 @@
       profiling shows candidate extraction allocations are material.
 - [x] Add an all-pairs matrix-free squared-cost path with tiled accelerator
       kernels while retaining dense costs as the numerical oracle.
+- [x] Prototype opt-in dual-aware two-level block truncation with exact eta-boundary
+      updates and exact marginal audits.
 - [ ] Add CI jobs for accelerator backends that have available hardware.

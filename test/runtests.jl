@@ -106,6 +106,20 @@ end
     @test_throws ArgumentError distribute(
         cartogram, sources; backend, cost_mode=:matrix_free, cost_power=1,
     )
+    @test_throws ArgumentError distribute(
+        cartogram, sources; backend, cost_mode=:truncated, cost_power=1,
+    )
+    for tolerance in (0, 1, -1, Inf, NaN, true, big"1e-400")
+        @test_throws ArgumentError distribute(
+            cartogram, sources; backend, cost_mode=:truncated,
+            truncation_tolerance=tolerance,
+        )
+    end
+    for eta in (0, -1, Inf, NaN, true, big"1e-400")
+        @test_throws ArgumentError distribute(
+            cartogram, sources; backend, cost_mode=:truncated, truncation_eta=eta,
+        )
+    end
     @test_throws TypeError distribute(cartogram, sources; backend, max_iters_per_eta=true)
     @test_throws TypeError distribute(cartogram, sources; backend, check_every=true)
 end
@@ -310,6 +324,244 @@ end
         Val(false),
     )
     @test logsum ≈ log1p(small_terms * exp(Float64(small_logit))) atol=1e-7
+end
+
+@testset "dual-aware truncation" begin
+    tiled_cartogram = DataFrame(x=collect(0:36), y=mod.(0:36, 7))
+    tiled_sources = DataFrame(
+        id=collect(1:9),
+        x=collect(range(-2, 2; length=9)),
+        y=collect(range(55, 47; length=9)),
+        value=Float64.(1:9),
+    )
+    problem = PopulationCartogramProjection._prepare_problem(
+        tiled_cartogram,
+        tiled_sources;
+        cost_power=2,
+        cost_mode=:truncated,
+        truncation_tolerance=1e-6,
+        truncation_eta=0.001,
+    )
+    exact = problem.exact
+    @test problem.maximum_eta == Float32(0.001)
+    @test sort(Int.(problem.source_blocks.indices)) == collect(1:nrow(tiled_sources))
+    @test sort(Int.(problem.target_blocks.indices)) == collect(1:nrow(tiled_cartogram))
+
+    dual = Float32[sin(index) for index in 1:nrow(tiled_cartogram)]
+    for bounds in (problem.target_blocks.leaf, problem.target_blocks.coarse)
+        block_size = bounds === problem.target_blocks.leaf ?
+                     PopulationCartogramProjection.TRUNCATION_BLOCK_SIZE :
+                     PopulationCartogramProjection.TRUNCATION_COARSE_SIZE
+        for source in 1:nrow(tiled_sources), block in eachindex(bounds.minimum_x)
+            first_position = (block - 1) * block_size + 1
+            last_position = min(
+                block * block_size, length(problem.target_blocks.indices),
+            )
+            targets = Int.(problem.target_blocks.indices[first_position:last_position])
+            lower_cost = PopulationCartogramProjection._block_lower_cost(
+                exact.source_x_hi[source],
+                exact.source_x_lo[source],
+                exact.source_y_hi[source],
+                exact.source_y_lo[source],
+                bounds.minimum_x[block],
+                bounds.maximum_x[block],
+                bounds.minimum_y[block],
+                bounds.maximum_y[block],
+                exact.inverse_distance_scale,
+            )
+            upper_score = maximum(dual[targets]) - lower_cost
+            exact_score = maximum(
+                dual[target] - PopulationCartogramProjection._cost(exact, source, target)
+                for target in targets
+            )
+            @test upper_score >= exact_score
+        end
+    end
+
+    wide_cartogram = DataFrame(x=mod.(0:299, 20), y=(0:299) .÷ 20)
+    wide_sources = DataFrame(
+        id=1:300,
+        x=collect(range(-5, 5; length=300)),
+        y=sin.(range(0, 4pi; length=300)),
+        value=ones(300),
+    )
+    wide_problem = PopulationCartogramProjection._prepare_problem(
+        wide_cartogram,
+        wide_sources;
+        cost_power=2,
+        cost_mode=:truncated,
+        truncation_tolerance=1e-6,
+        truncation_eta=0.001,
+    )
+    @test length(wide_problem.source_blocks.coarse.minimum_x) > 1
+    @test length(wide_problem.target_blocks.coarse.minimum_x) > 1
+
+    function omitted_mass(problem, output, source_output, dual, eta)
+        exact = problem.exact
+        blocks = source_output ? problem.target_blocks : problem.source_blocks
+        reductions = source_output ? length(exact.target_mass) : length(exact.source_mass)
+        positions(block, size, count) = ((block - 1) * size + 1):min(block * size, count)
+        leaf_size = PopulationCartogramProjection.TRUNCATION_BLOCK_SIZE
+        coarse_leaves = PopulationCartogramProjection.TRUNCATION_COARSE_BLOCKS
+        output_x_hi = source_output ? exact.source_x_hi[output] : exact.target_x_hi[output]
+        output_x_lo = source_output ? exact.source_x_lo[output] : exact.target_x_lo[output]
+        output_y_hi = source_output ? exact.source_y_hi[output] : exact.target_y_hi[output]
+        output_y_lo = source_output ? exact.source_y_lo[output] : exact.target_y_lo[output]
+        upper(bounds, maxima, block) = maxima[block] -
+            PopulationCartogramProjection._block_lower_cost(
+                output_x_hi,
+                output_x_lo,
+                output_y_hi,
+                output_y_lo,
+                bounds.minimum_x[block],
+                bounds.maximum_x[block],
+                bounds.minimum_y[block],
+                bounds.maximum_y[block],
+                exact.inverse_distance_scale,
+            )
+        leaf_maxima = Float32[
+            maximum(
+                dual[Int(blocks.indices[position])]
+                for position in positions(block, leaf_size, reductions)
+            )
+            for block in eachindex(blocks.leaf.minimum_x)
+        ]
+        coarse_maxima = Float32[
+            maximum(
+                @view leaf_maxima[positions(coarse, coarse_leaves, length(leaf_maxima))]
+            )
+            for coarse in eachindex(blocks.coarse.minimum_x)
+        ]
+        anchor_coarse = argmax([
+            upper(blocks.coarse, coarse_maxima, block)
+            for block in eachindex(coarse_maxima)
+        ])
+        anchor_leaves = positions(anchor_coarse, coarse_leaves, length(leaf_maxima))
+        anchor_leaf = first(anchor_leaves) - 1 + argmax([
+            upper(blocks.leaf, leaf_maxima, block) for block in anchor_leaves
+        ])
+        score(reduction) = Float64(dual[reduction]) - Float64(
+            source_output ? PopulationCartogramProjection._cost(exact, output, reduction) :
+            PopulationCartogramProjection._cost(exact, reduction, output),
+        )
+        lower_score = maximum(
+            score(Int(blocks.indices[position]))
+            for position in positions(anchor_leaf, leaf_size, reductions)
+        ) - PopulationCartogramProjection.TRUNCATION_BOUND_GUARD
+        margin = eta * PopulationCartogramProjection._truncation_log_budget(
+            reductions, problem.tolerance,
+        ) + PopulationCartogramProjection.TRUNCATION_BOUND_GUARD
+        active = falses(reductions)
+        for coarse in eachindex(coarse_maxima)
+            coarse_active = coarse == anchor_coarse ||
+                            upper(blocks.coarse, coarse_maxima, coarse) + margin >= lower_score
+            coarse_active || continue
+            for leaf in positions(coarse, coarse_leaves, length(leaf_maxima))
+                leaf_active = leaf == anchor_leaf ||
+                              upper(blocks.leaf, leaf_maxima, leaf) + margin >= lower_score
+                leaf_active || continue
+                active[positions(leaf, leaf_size, reductions)] .= true
+            end
+        end
+        scores = Float64[score(Int(index)) for index in blocks.indices]
+        maximum_score = maximum(scores)
+        weights = exp.((scores .- maximum_score) ./ Float64(eta))
+        return sum(weights[.!active]) / sum(weights), count(active)
+    end
+
+    for output in (1, 150, 300), source_output in (false, true)
+        dual = zeros(Float32, 300)
+        omitted, active = omitted_mass(wide_problem, output, source_output, dual, 1.0f-4)
+        @test omitted <= wide_problem.tolerance
+        @test 0 < active < 300
+    end
+
+    options = (
+        candidate_etas=Float32[0.1],
+        base_eta_schedule=Float32[0.1],
+        max_iters_per_eta=500,
+        tol=1e-5,
+        check_every=10,
+        cumulative_weight=1,
+    )
+    exact_mapping = sort(distribute(
+        tiled_cartogram,
+        tiled_sources;
+        backend=KA.CPU(),
+        cost_mode=:matrix_free,
+        options...,
+    ), [:id, :x, :y])
+    fallback_mapping = sort(distribute(
+        tiled_cartogram,
+        tiled_sources;
+        backend=KA.CPU(),
+        cost_mode=:truncated,
+        options...,
+    ), [:id, :x, :y])
+    @test fallback_mapping == exact_mapping
+
+    if oneAPI.functional()
+        backend = oneAPI.oneAPIBackend()
+        function solve(
+            mode,
+            cartogram=tiled_cartogram,
+            sources=tiled_sources;
+            eta=0.001f0,
+            iterations=20,
+        )
+            prepared = PopulationCartogramProjection._prepare_problem(
+                cartogram,
+                sources;
+                cost_power=2,
+                cost_mode=mode,
+                truncation_tolerance=1e-6,
+                truncation_eta=0.001,
+            )
+            snapshot = Ref{Any}()
+            diagnostics = PopulationCartogramProjection._solve_sinkhorn(
+                prepared,
+                backend;
+                eta_schedule=Float32[eta],
+                observed_etas=Set(Float32[eta]),
+                observer=result -> (snapshot[] = result; false),
+                max_iters_per_eta=iterations,
+                tol=1e-5,
+                check_every=iterations,
+            )
+            return prepared, snapshot[], diagnostics
+        end
+        exact_problem, exact_result, exact_diagnostics = solve(:matrix_free)
+        truncated_problem, truncated_result, truncated_diagnostics = solve(:truncated)
+        _, repeated_result, repeated_diagnostics = solve(:truncated)
+        truncation = truncated_diagnostics.truncation
+        @test 0 < truncation.active_blocks < truncation.possible_blocks
+        @test 0 < truncation.evaluated_pairs < truncation.possible_pairs
+        @test truncation.row_updates == truncation.column_updates == 19
+        @test truncated_diagnostics.marginal_error ≈ exact_diagnostics.marginal_error atol=1e-5
+        @test truncated_diagnostics.truncation == repeated_diagnostics.truncation
+        @test truncated_result.beta == repeated_result.beta
+        @test PopulationCartogramProjection._source_weights(
+            truncated_problem, truncated_result, 5,
+        ) ≈ PopulationCartogramProjection._source_weights(
+            exact_problem, exact_result, 5,
+        ) atol=2e-5
+
+        wide_exact_problem, wide_exact_result, wide_exact_diagnostics = solve(
+            :matrix_free, wide_cartogram, wide_sources; eta=1.0f-4, iterations=3,
+        )
+        wide_truncated_problem, wide_truncated_result, wide_truncated_diagnostics =
+            solve(:truncated, wide_cartogram, wide_sources; eta=1.0f-4, iterations=3)
+        wide_truncation = wide_truncated_diagnostics.truncation
+        @test wide_truncation.row_updates == wide_truncation.column_updates == 2
+        @test 0 < wide_truncation.active_blocks < wide_truncation.possible_blocks
+        @test wide_truncated_diagnostics.marginal_error ≈
+              wide_exact_diagnostics.marginal_error atol=1e-5
+        @test PopulationCartogramProjection._source_weights(
+            wide_truncated_problem, wide_truncated_result, 150,
+        ) ≈ PopulationCartogramProjection._source_weights(
+            wide_exact_problem, wide_exact_result, 150,
+        ) atol=2e-5
+    end
 end
 
 @testset "automatic eta and sparsity" begin

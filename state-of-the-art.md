@@ -221,6 +221,15 @@ FlashSinkhorn's fused streaming reduction**, not either library's public API:
 5. Consider dual-aware multiscale truncation only after the exact online solver
    establishes numerical and performance baselines.
 
+As of 2 August 2026, those prerequisites are met. The experimental
+`cost_mode=:truncated` path uses Morton-ordered 256-point coarse blocks over
+32-point leaves, current per-block dual maxima, a real pair as a row witness,
+and a conservative omitted-mass budget. Eta-boundary updates and marginal audits
+remain exact all-pairs operations. It is opt-in because dynamic truncation does
+not inherit a general convergence proof and because broad kernels above roughly
+eta `1e-3` did not amortize block traversal for France factor 3 on the tested
+oneAPI backend; smaller workloads crossed over later or not at all.
+
 The decisive validation risk is floating point rather than OT theory. Dense
 costs use host `Float64` distance arithmetic, round to `Float32`, normalize, and
 then apply the power. Matrix-free squared costs instead use high/low `Float32`

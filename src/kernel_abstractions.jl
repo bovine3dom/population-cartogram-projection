@@ -161,11 +161,13 @@ end
     inverse_distance_scale,
     outputs,
     reductions,
+    output_offset,
     ::Val{UPDATE},
 ) where {UPDATE}
     _, output_group = @index(Group, NTuple)
     lane, output_lane = @index(Local, NTuple)
-    output_index = (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP + output_lane
+    output_index = output_offset +
+                   (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP + output_lane
     valid_output = output_index <= outputs
     state = @private Float32 (6,)
     state[1] = valid_output ? output_x_hi[output_index] : 0.0f0
@@ -203,7 +205,8 @@ end
         @synchronize
 
         reduction_index = tile * MATRIX_FREE_REDUCTION_LANES + lane
-        output_index = (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP + output_lane
+        output_index = output_offset +
+                       (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP + output_lane
         if output_index <= outputs && reduction_index <= reductions
             cost = _matrix_free_cost(
                 state[1],
@@ -259,7 +262,8 @@ end
         @synchronize
     end
 
-    output_index = (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP + output_lane
+    output_index = output_offset +
+                   (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP + output_lane
     if lane == 1 && output_index <= outputs
         maximum_value = maxima[1, output_lane]
         total = totals[1, output_lane]
@@ -551,43 +555,32 @@ function _solve_sinkhorn_impl(problem::MatrixFreeProblem, backend::KA.CPU; kwarg
     )
 end
 
-function _solve_sinkhorn_impl(problem::MatrixFreeProblem, backend; kwargs...)
-    sources = length(problem.source_mass)
-    targets = length(problem.target_mass)
-    source_coordinates = (
-        _copy_to_backend(backend, problem.source_x_hi),
-        _copy_to_backend(backend, problem.source_x_lo),
-        _copy_to_backend(backend, problem.source_y_hi),
-        _copy_to_backend(backend, problem.source_y_lo),
+function _matrix_free_chunk_size(reductions)
+    chunk_size = max(
+        MATRIX_FREE_OUTPUTS_PER_GROUP,
+        fld(MATRIX_FREE_MAX_PAIRS_PER_LAUNCH, reductions),
     )
-    target_coordinates = (
-        _copy_to_backend(backend, problem.target_x_hi),
-        _copy_to_backend(backend, problem.target_x_lo),
-        _copy_to_backend(backend, problem.target_y_hi),
-        _copy_to_backend(backend, problem.target_y_lo),
-    )
-    source_mass = _copy_to_backend(backend, problem.source_mass)
-    target_mass = _copy_to_backend(backend, problem.target_mass)
-    alpha = KA.zeros(backend, Float32, sources)
-    beta = KA.zeros(backend, Float32, targets)
-    row_sums = KA.allocate(backend, Float32, sources)
-    column_sums = KA.allocate(backend, Float32, targets)
-    reduce! = _matrix_free_reduce!(
-        backend, (MATRIX_FREE_REDUCTION_LANES, MATRIX_FREE_OUTPUTS_PER_GROUP),
-    )
-    function launch!(
-        output,
-        output_coordinates,
-        reduction_coordinates,
-        output_dual,
-        reduction_dual,
-        mass,
-        eta,
-        outputs,
-        reductions,
-        update,
-    )
-        return reduce!(
+    return chunk_size - mod(chunk_size, MATRIX_FREE_OUTPUTS_PER_GROUP)
+end
+
+function _launch_matrix_free!(
+    reduce!,
+    inverse_distance_scale,
+    output,
+    output_coordinates,
+    reduction_coordinates,
+    output_dual,
+    reduction_dual,
+    mass,
+    eta,
+    outputs,
+    reductions,
+    update,
+)
+    chunk_size = _matrix_free_chunk_size(reductions)
+    for output_offset in 0:chunk_size:(outputs - 1)
+        chunk_outputs = min(chunk_size, outputs - output_offset)
+        reduce!(
             output,
             output_coordinates...,
             reduction_coordinates...,
@@ -595,28 +588,61 @@ function _solve_sinkhorn_impl(problem::MatrixFreeProblem, backend; kwargs...)
             reduction_dual,
             mass,
             eta,
-            problem.inverse_distance_scale,
+            inverse_distance_scale,
             outputs,
             reductions,
+            output_offset,
             update;
-            ndrange=(MATRIX_FREE_REDUCTION_LANES, outputs),
+            ndrange=(MATRIX_FREE_REDUCTION_LANES, chunk_outputs),
         )
     end
+    return nothing
+end
+
+function _matrix_free_device_data(problem, backend)
+    source_coordinates = map(
+        coordinates -> _copy_to_backend(backend, coordinates),
+        (problem.source_x_hi, problem.source_x_lo, problem.source_y_hi, problem.source_y_lo),
+    )
+    target_coordinates = map(
+        coordinates -> _copy_to_backend(backend, coordinates),
+        (problem.target_x_hi, problem.target_x_lo, problem.target_y_hi, problem.target_y_lo),
+    )
+    return (;
+        source_coordinates,
+        target_coordinates,
+        source_mass=_copy_to_backend(backend, problem.source_mass),
+        target_mass=_copy_to_backend(backend, problem.target_mass),
+    )
+end
+
+function _solve_sinkhorn_impl(problem::MatrixFreeProblem, backend; kwargs...)
+    sources = length(problem.source_mass)
+    targets = length(problem.target_mass)
+    device = _matrix_free_device_data(problem, backend)
+    alpha = KA.zeros(backend, Float32, sources)
+    beta = KA.zeros(backend, Float32, targets)
+    row_sums = KA.allocate(backend, Float32, sources)
+    column_sums = KA.allocate(backend, Float32, targets)
+    reduce! = _matrix_free_reduce!(
+        backend, (MATRIX_FREE_REDUCTION_LANES, MATRIX_FREE_OUTPUTS_PER_GROUP),
+    )
+    launch!(args...) = _launch_matrix_free!(reduce!, problem.inverse_distance_scale, args...)
     row_update!(eta) = launch!(
-        alpha, source_coordinates, target_coordinates, alpha, beta,
-        source_mass, eta, sources, targets, Val(true),
+        alpha, device.source_coordinates, device.target_coordinates, alpha, beta,
+        device.source_mass, eta, sources, targets, Val(true),
     )
     column_update!(eta) = launch!(
-        beta, target_coordinates, source_coordinates, beta, alpha,
-        target_mass, eta, targets, sources, Val(true),
+        beta, device.target_coordinates, device.source_coordinates, beta, alpha,
+        device.target_mass, eta, targets, sources, Val(true),
     )
     row_marginals!(eta) = launch!(
-        row_sums, source_coordinates, target_coordinates, alpha, beta,
-        source_mass, eta, sources, targets, Val(false),
+        row_sums, device.source_coordinates, device.target_coordinates, alpha, beta,
+        device.source_mass, eta, sources, targets, Val(false),
     )
     column_marginals!(eta) = launch!(
-        column_sums, target_coordinates, source_coordinates, beta, alpha,
-        target_mass, eta, targets, sources, Val(false),
+        column_sums, device.target_coordinates, device.source_coordinates, beta, alpha,
+        device.target_mass, eta, targets, sources, Val(false),
     )
     return _run_sinkhorn(
         problem.source_mass,

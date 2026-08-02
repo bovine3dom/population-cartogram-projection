@@ -78,6 +78,7 @@ end
 end
 
 @inline _cost(problem::DenseProblem, source, target) = problem.cost[source, target]
+@inline _target_mass(problem::Union{DenseProblem,MatrixFreeProblem}) = problem.target_mass
 @inline function _cost(problem::MatrixFreeProblem, source, target)
     return _matrix_free_cost(
         problem.source_x_hi[source],
@@ -232,14 +233,30 @@ function _masses(cartogram, sources)
     return source_mass, target_mass
 end
 
-function _prepare_problem(cartogram, sources; cost_power, cost_mode)
+function _prepare_problem(
+    cartogram,
+    sources;
+    cost_power,
+    cost_mode,
+    truncation_tolerance=1e-6,
+    truncation_eta=0.001,
+)
     !(cost_power isa Bool) && isfinite(cost_power) && cost_power > 0 ||
         throw(ArgumentError("cost_power must be finite and positive"))
-    cost_mode in (:dense, :matrix_free) ||
-        throw(ArgumentError("cost_mode must be :dense or :matrix_free"))
-    cost_mode === :matrix_free && cost_power != 2 && throw(ArgumentError(
-        "cost_mode=:matrix_free requires cost_power=2",
+    cost_mode in (:dense, :matrix_free, :truncated) || throw(ArgumentError(
+        "cost_mode must be :dense, :matrix_free, or :truncated",
     ))
+    cost_mode in (:matrix_free, :truncated) && cost_power != 2 && throw(ArgumentError(
+        "cost_mode=$cost_mode requires cost_power=2",
+    ))
+    if cost_mode === :truncated
+        !(truncation_tolerance isa Bool) && isfinite(truncation_tolerance) &&
+            0 < truncation_tolerance < 1 || throw(ArgumentError(
+                "truncation_tolerance must be finite and in (0, 1)",
+            ))
+        !(truncation_eta isa Bool) && isfinite(truncation_eta) && truncation_eta > 0 ||
+            throw(ArgumentError("truncation_eta must be finite and positive"))
+    end
     target_x = _normalized_axis(cartogram.x)
     target_y = _normalized_axis(cartogram.y)
     source_x = _scale_to_cartogram(Float64.(sources.x), target_x)
@@ -266,7 +283,7 @@ function _prepare_problem(cartogram, sources; cost_power, cost_mode)
         source_mass,
         target_mass,
     )
-    return _prepare_matrix_free_problem(
+    matrix_free = _prepare_matrix_free_problem(
         source_x,
         source_y,
         target_x,
@@ -276,5 +293,11 @@ function _prepare_problem(cartogram, sources; cost_power, cost_mode)
         distance_bound,
         source_mass,
         target_mass,
+    )
+    cost_mode === :matrix_free && return matrix_free
+    return _prepare_truncated_problem(
+        matrix_free;
+        tolerance=_float32_down(truncation_tolerance),
+        maximum_eta=Float32(truncation_eta),
     )
 end

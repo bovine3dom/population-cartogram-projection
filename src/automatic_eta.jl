@@ -46,9 +46,10 @@ function _sparse_options(targets; cumulative_weight, minimum_weight, minimum_cel
 end
 
 function _source_weights(problem, result, source)
-    logits = Vector{Float64}(undef, length(problem.target_mass))
+    target_mass = _target_mass(problem)
+    logits = Vector{Float64}(undef, length(target_mass))
     maximum_logit = -Inf
-    @inbounds for target in eachindex(problem.target_mass)
+    @inbounds for target in eachindex(target_mass)
         logit = (Float64(result.beta[target]) - Float64(_cost(problem, source, target))) /
                 Float64(result.eta)
         logits[target] = logit
@@ -153,6 +154,8 @@ function _fit_distribution(
     backend;
     cost_power::Real=2,
     cost_mode=:dense,
+    truncation_tolerance::Real=1e-6,
+    truncation_eta::Real=0.001,
     candidate_etas=DEFAULT_AUTO_ETA_CANDIDATES,
     base_eta_schedule=DEFAULT_ETA_BASE_SCHEDULE,
     target_rows_multiplier::Real=2,
@@ -178,7 +181,14 @@ function _fit_distribution(
     )
     target_rows = round(Int, target_rows_multiplier * (nrow(sources) + nrow(cartogram)))
     target_rows > 0 || throw(ArgumentError("target_rows_multiplier produces no rows"))
-    problem = _prepare_problem(cartogram, sources; cost_power, cost_mode)
+    problem = _prepare_problem(
+        cartogram,
+        sources;
+        cost_power,
+        cost_mode,
+        truncation_tolerance,
+        truncation_eta,
+    )
     tie_keys = collect(zip(_coordinate_value.(cartogram.x), _coordinate_value.(cartogram.y)))
     best_result = nothing
     best_stats = nothing
