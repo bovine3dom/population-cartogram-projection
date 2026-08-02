@@ -16,17 +16,10 @@ struct SpatialBlocks
     coarse::BlockBounds
 end
 
-struct TruncatedProblem
-    exact::MatrixFreeProblem
+struct TruncationWorkspace
     source_blocks::SpatialBlocks
     target_blocks::SpatialBlocks
-    tolerance::Float32
-    maximum_eta::Float32
 end
-
-@inline _cost(problem::TruncatedProblem, source, target) =
-    _cost(problem.exact, source, target)
-@inline _target_mass(problem::TruncatedProblem) = problem.exact.target_mass
 
 function _float32_down(value)
     converted = Float32(value)
@@ -37,6 +30,9 @@ function _float32_up(value)
     converted = Float32(value)
     return converted < value ? nextfloat(converted) : converted
 end
+
+const TRUNCATION_TOLERANCE = _float32_down(1e-6)
+const TRUNCATION_MAXIMUM_ETA = 0.001f0
 
 function _truncation_log_budget(count, tolerance)
     value = log(Float64(count) * (1 - Float64(tolerance)) / Float64(tolerance))
@@ -93,13 +89,7 @@ function _spatial_blocks(x_hi, x_lo, y_hi, y_lo)
     )
 end
 
-function _prepare_truncated_problem(problem; tolerance, maximum_eta)
-    isfinite(tolerance) && 0 < tolerance < 1 || throw(ArgumentError(
-        "truncation_tolerance is outside the supported Float32 range",
-    ))
-    isfinite(maximum_eta) && maximum_eta > 0 || throw(ArgumentError(
-        "truncation_eta is outside the supported Float32 range",
-    ))
+function _prepare_truncation(problem)
     source_blocks = _spatial_blocks(
         problem.source_x_hi,
         problem.source_x_lo,
@@ -112,7 +102,7 @@ function _prepare_truncated_problem(problem; tolerance, maximum_eta)
         problem.target_y_hi,
         problem.target_y_lo,
     )
-    return TruncatedProblem(problem, source_blocks, target_blocks, tolerance, maximum_eta)
+    return TruncationWorkspace(source_blocks, target_blocks)
 end
 
 @inline function _block_lower_cost(
@@ -188,7 +178,6 @@ end
     coarse_minimum_y,
     coarse_maximum_y,
     coarse_dual_maximum,
-    output_dual,
     reduction_dual,
     mass,
     eta,
@@ -197,10 +186,7 @@ end
     outputs,
     reductions,
     output_offset,
-    active_block_counts,
-    evaluated_pair_counts,
-    ::Val{UPDATE},
-) where {UPDATE}
+)
     _, output_group = @index(Group, NTuple)
     lane, output_lane = @index(Local, NTuple)
     output_position = output_offset +
@@ -214,9 +200,6 @@ end
     state[4] = valid_output ? output_y_lo[output_index] : 0.0f0
     anchor = @private Int64 (1,)
     anchor[1] = 1
-    counters = @private UInt64 (2,)
-    counters[1] = 0
-    counters[2] = 0
     leaf_count = length(leaf_dual_maximum)
     coarse_count = length(coarse_dual_maximum)
     maxima = @localmem Float32 (
@@ -309,10 +292,7 @@ end
 
     anchor_position = (anchor[1] - 1) * TRUNCATION_BLOCK_SIZE + lane
     anchor_score = -Inf32
-    output_position = output_offset +
-                      (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP + output_lane
-    output_index = output_position <= outputs ? output_indices[output_position] : Int32(1)
-    if output_position <= outputs && anchor_position <= reductions
+    if valid_output && anchor_position <= reductions
         reduction_index = reduction_indices[anchor_position]
         anchor_score = reduction_dual[reduction_index] - _matrix_free_cost(
             state[1],
@@ -340,8 +320,6 @@ end
 
     for coarse in 1:coarse_count
         if lane == 1
-            output_position = output_offset +
-                              (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP + output_lane
             upper = coarse_dual_maximum[coarse] - _block_lower_cost(
                 state[1],
                 state[2],
@@ -354,7 +332,7 @@ end
                 inverse_distance_scale,
             )
             coarse_active_rows[output_lane] = ifelse(
-                output_position <= outputs &&
+                valid_output &&
                 (coarse == cld(anchor[1], TRUNCATION_COARSE_BLOCKS) ||
                  upper + eta * log_budget + TRUNCATION_BOUND_GUARD >= state[5]),
                 UInt32(1),
@@ -414,12 +392,7 @@ end
                 end
                 @synchronize
 
-                output_position = output_offset +
-                                  (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP +
-                                  output_lane
-                output_index = output_position <= outputs ?
-                               output_indices[output_position] : Int32(1)
-                if active_rows[output_lane] != 0 && output_position <= outputs &&
+                if active_rows[output_lane] != 0 && valid_output &&
                    position <= reductions
                     score = tile_dual[lane] - _matrix_free_cost(
                         state[1],
@@ -432,7 +405,6 @@ end
                         tile_y_lo[lane],
                         inverse_distance_scale,
                     )
-                    UPDATE || (score += output_dual[output_index])
                     if state[7] == 0
                         state[6] = score
                         state[7] = 1.0f0
@@ -442,13 +414,6 @@ end
                         state[7] = state[7] * exp((state[6] - score) / eta) + 1.0f0
                         state[6] = score
                     end
-                end
-                if lane == 1 && active_rows[output_lane] != 0
-                    counters[1] += 1
-                    counters[2] += Base.unsafe_trunc(UInt64, min(
-                        TRUNCATION_BLOCK_SIZE,
-                        reductions - (block - 1) * TRUNCATION_BLOCK_SIZE,
-                    ))
                 end
                 @synchronize
             end
@@ -484,20 +449,11 @@ end
         @synchronize
     end
 
-    output_position = output_offset +
-                      (output_group - 1) * MATRIX_FREE_OUTPUTS_PER_GROUP + output_lane
-    output_index = output_position <= outputs ? output_indices[output_position] : Int32(1)
-    if lane == 1 && output_position <= outputs
+    if lane == 1 && valid_output
         maximum_value = maxima[1, output_lane]
         total = totals[1, output_lane]
-        if UPDATE
-            output[output_index] = eta * log(mass[output_index]) - maximum_value -
-                                   eta * log(total)
-        else
-            output[output_index] = maximum_value / eta + log(total)
-        end
-        active_block_counts[output_index] += counters[1]
-        evaluated_pair_counts[output_index] += counters[2]
+        output[output_index] = eta * log(mass[output_index]) - maximum_value -
+                               eta * log(total)
     end
 end
 
@@ -518,33 +474,25 @@ function _copy_spatial_blocks(backend, blocks)
     )
 end
 
-function _solve_sinkhorn_impl(problem::TruncatedProblem, backend::KA.CPU; kwargs...)
-    return _solve_sinkhorn_impl(problem.exact, backend; kwargs...)
-end
-
-function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
-    exact = problem.exact
+function _solve_sinkhorn(exact::MatrixFreeProblem, backend; kwargs...)
+    workspace = _prepare_truncation(exact)
     sources = length(exact.source_mass)
     targets = length(exact.target_mass)
     device = _matrix_free_device_data(exact, backend)
-    source_blocks = _copy_spatial_blocks(backend, problem.source_blocks)
-    target_blocks = _copy_spatial_blocks(backend, problem.target_blocks)
+    source_blocks = _copy_spatial_blocks(backend, workspace.source_blocks)
+    target_blocks = _copy_spatial_blocks(backend, workspace.target_blocks)
     source_leaf_maxima = KA.allocate(
-        backend, Float32, length(problem.source_blocks.leaf.minimum_x),
+        backend, Float32, length(workspace.source_blocks.leaf.minimum_x),
     )
     source_coarse_maxima = KA.allocate(
-        backend, Float32, length(problem.source_blocks.coarse.minimum_x),
+        backend, Float32, length(workspace.source_blocks.coarse.minimum_x),
     )
     target_leaf_maxima = KA.allocate(
-        backend, Float32, length(problem.target_blocks.leaf.minimum_x),
+        backend, Float32, length(workspace.target_blocks.leaf.minimum_x),
     )
     target_coarse_maxima = KA.allocate(
-        backend, Float32, length(problem.target_blocks.coarse.minimum_x),
+        backend, Float32, length(workspace.target_blocks.coarse.minimum_x),
     )
-    source_active_blocks = KA.zeros(backend, UInt64, sources)
-    source_evaluated_pairs = KA.zeros(backend, UInt64, sources)
-    target_active_blocks = KA.zeros(backend, UInt64, targets)
-    target_evaluated_pairs = KA.zeros(backend, UInt64, targets)
     alpha = KA.zeros(backend, Float32, sources)
     beta = KA.zeros(backend, Float32, targets)
     row_sums = KA.allocate(backend, Float32, sources)
@@ -557,14 +505,10 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
     )
     block_maximum! = _block_maximum!(backend, TRUNCATION_BLOCK_SIZE)
     coarse_maximum! = _coarse_maximum!(backend)
-    source_log_budget = _truncation_log_budget(sources, problem.tolerance)
-    target_log_budget = _truncation_log_budget(targets, problem.tolerance)
+    source_log_budget = _truncation_log_budget(sources, TRUNCATION_TOLERANCE)
+    target_log_budget = _truncation_log_budget(targets, TRUNCATION_TOLERANCE)
     current_eta = Ref(NaN32)
     truncated_iteration = Ref(false)
-    truncated_row_updates = Ref(0)
-    truncated_column_updates = Ref(0)
-    exact_row_audits = Ref(0)
-    exact_column_audits = Ref(0)
 
     exact_launch!(args...) = _launch_matrix_free!(
         exact_reduce!, exact.inverse_distance_scale, args...,
@@ -588,15 +532,12 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
         reduction_blocks,
         leaf_maxima,
         coarse_maxima,
-        output_dual,
         reduction_dual,
         mass,
         eta,
         log_budget,
         outputs,
         reductions,
-        active_counts,
-        pair_counts,
     )
         chunk_size = _matrix_free_chunk_size(reductions)
         for output_offset in 0:chunk_size:(outputs - 1)
@@ -617,7 +558,6 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
                 reduction_blocks.coarse.minimum_y,
                 reduction_blocks.coarse.maximum_y,
                 coarse_maxima,
-                output_dual,
                 reduction_dual,
                 mass,
                 eta,
@@ -625,10 +565,7 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
                 log_budget,
                 outputs,
                 reductions,
-                output_offset,
-                active_counts,
-                pair_counts,
-                Val(true);
+                output_offset;
                 ndrange=(TRUNCATION_BLOCK_SIZE, chunk_outputs),
             )
         end
@@ -637,9 +574,8 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
     function row_update!(eta)
         new_stage = eta != current_eta[]
         current_eta[] = eta
-        truncated_iteration[] = eta <= problem.maximum_eta && !new_stage
+        truncated_iteration[] = eta <= TRUNCATION_MAXIMUM_ETA && !new_stage
         if truncated_iteration[]
-            truncated_row_updates[] += 1
             refresh!(target_leaf_maxima, target_coarse_maxima, beta, target_blocks, targets)
             truncated_launch!(
                 alpha,
@@ -649,15 +585,12 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
                 target_blocks,
                 target_leaf_maxima,
                 target_coarse_maxima,
-                alpha,
                 beta,
                 device.source_mass,
                 eta,
                 target_log_budget,
                 sources,
                 targets,
-                source_active_blocks,
-                source_evaluated_pairs,
             )
         else
             exact_launch!(
@@ -676,7 +609,6 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
     end
     function column_update!(eta)
         if truncated_iteration[]
-            truncated_column_updates[] += 1
             refresh!(source_leaf_maxima, source_coarse_maxima, alpha, source_blocks, sources)
             truncated_launch!(
                 beta,
@@ -686,15 +618,12 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
                 source_blocks,
                 source_leaf_maxima,
                 source_coarse_maxima,
-                beta,
                 alpha,
                 device.target_mass,
                 eta,
                 source_log_budget,
                 targets,
                 sources,
-                target_active_blocks,
-                target_evaluated_pairs,
             )
         else
             exact_launch!(
@@ -712,7 +641,6 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
         end
     end
     function row_marginals!(eta)
-        exact_row_audits[] += 1
         return exact_launch!(
             row_sums,
             device.source_coordinates,
@@ -727,7 +655,6 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
         )
     end
     function column_marginals!(eta)
-        exact_column_audits[] += 1
         return exact_launch!(
             column_sums,
             device.target_coordinates,
@@ -741,11 +668,10 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
             Val(false),
         )
     end
-    diagnostics = _run_sinkhorn(
+    return _run_sinkhorn(
         exact.source_mass,
         exact.target_mass,
         backend,
-        alpha,
         beta,
         row_sums,
         column_sums,
@@ -755,49 +681,4 @@ function _solve_sinkhorn_impl(problem::TruncatedProblem, backend; kwargs...)
         column_marginals!;
         kwargs...,
     )
-    host_source_blocks = _copy_to_host!(
-        backend, Vector{UInt64}(undef, sources), source_active_blocks,
-    )
-    host_source_pairs = _copy_to_host!(
-        backend, Vector{UInt64}(undef, sources), source_evaluated_pairs,
-    )
-    host_target_blocks = _copy_to_host!(
-        backend, Vector{UInt64}(undef, targets), target_active_blocks,
-    )
-    host_target_pairs = _copy_to_host!(
-        backend, Vector{UInt64}(undef, targets), target_evaluated_pairs,
-    )
-    active_blocks = sum(UInt64, host_source_blocks) + sum(UInt64, host_target_blocks)
-    evaluated_pairs = sum(UInt64, host_source_pairs) + sum(UInt64, host_target_pairs)
-    possible_blocks = UInt64(truncated_row_updates[]) * UInt64(sources) *
-                      UInt64(length(problem.target_blocks.leaf.minimum_x)) +
-                      UInt64(truncated_column_updates[]) * UInt64(targets) *
-                      UInt64(length(problem.source_blocks.leaf.minimum_x))
-    possible_pairs = UInt64(truncated_row_updates[] + truncated_column_updates[]) *
-                     UInt64(sources) * UInt64(targets)
-    exact_update_half_steps = 2 * diagnostics.iterations -
-                              truncated_row_updates[] - truncated_column_updates[]
-    exact_pair_evaluations = UInt64(
-        exact_update_half_steps + exact_row_audits[] + exact_column_audits[],
-    ) * UInt64(sources) * UInt64(targets)
-    witness_pair_upper_bound = UInt64(truncated_row_updates[]) * UInt64(sources) *
-                               UInt64(min(TRUNCATION_BLOCK_SIZE, targets)) +
-                               UInt64(truncated_column_updates[]) * UInt64(targets) *
-                               UInt64(min(TRUNCATION_BLOCK_SIZE, sources))
-    return merge(diagnostics, (;
-        truncation=(;
-            active_blocks,
-            possible_blocks,
-            evaluated_pairs,
-            possible_pairs,
-            exact_pair_evaluations,
-            witness_pair_upper_bound,
-            pair_evaluation_upper_bound=exact_pair_evaluations + evaluated_pairs +
-                                        witness_pair_upper_bound,
-            row_updates=truncated_row_updates[],
-            column_updates=truncated_column_updates[],
-            row_audits=exact_row_audits[],
-            column_audits=exact_column_audits[],
-        ),
-    ))
 end

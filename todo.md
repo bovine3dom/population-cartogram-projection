@@ -9,8 +9,8 @@
 - [x] Accept a caller-provided KernelAbstractions backend object.
 - [x] Keep vendor, country, H3, CSV, persistence, projection, and rendering code
       outside the package core.
-- [x] Preserve example-owned UK H3 and France IRIS integration checks.
-- [x] Add a factor-1, country-local Europe example with legacy hilo Arrow output.
+- [x] Use exact matrix-free CPU reductions and conservative low-eta truncation
+      on accelerators.
 
 ## Follow-Up
 
@@ -20,8 +20,4 @@
       an explicit opt-in renormalization mode.
 - [ ] Reuse per-thread sparse reconstruction and sorting buffers if end-to-end
       profiling shows candidate extraction allocations are material.
-- [x] Add an all-pairs matrix-free squared-cost path with tiled accelerator
-      kernels while retaining dense costs as the numerical oracle.
-- [x] Prototype opt-in dual-aware two-level block truncation with exact eta-boundary
-      updates and exact marginal audits.
 - [ ] Add CI jobs for accelerator backends that have available hardware.

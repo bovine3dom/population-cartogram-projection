@@ -8,7 +8,6 @@ export distribute
 
 const CARTOGRAM_COLUMNS = (:x, :y)
 const SOURCE_COLUMNS = (:x, :y, :value, :id)
-const SINKHORN_WORKGROUP_SIZE = 256
 const MATRIX_FREE_REDUCTION_LANES = 32
 const MATRIX_FREE_OUTPUTS_PER_GROUP = 8
 const MATRIX_FREE_MAX_PAIRS_PER_LAUNCH = 200_000_000
@@ -53,11 +52,9 @@ function _validate_inputs(cartogram, sources)
     ))
     any(ismissing, sources.id) && throw(ArgumentError("source id cannot be missing"))
     allunique(sources.id) || throw(ArgumentError("source id must be unique"))
-    all(
-        value -> value isa Real && !(value isa Bool) && isfinite(value) && value > 0 &&
-                 isfinite(Float64(value)),
-        sources.value,
-    ) || throw(ArgumentError("source value must contain finite positive Float64 values"))
+    all(value -> _finite_coordinate(value) && value > 0, sources.value) || throw(
+        ArgumentError("source value must contain finite positive Float64 values"),
+    )
     return nothing
 end
 
@@ -67,27 +64,26 @@ include("truncation.jl")
 include("automatic_eta.jl")
 
 """
-    distribute(cartogram, sources; backend, kwargs...)
+    distribute(cartogram, sources; backend)
 
 Distribute one country's positive source values over a balanced cartogram.
 `cartogram` must contain `x, y`; `sources` must contain `x, y, value, id`.
 The returned `x, y, id, weight, weight_mean` table contains source-normalized
 transport weights and target-normalized contributions. The caller supplies an
 instantiated `KernelAbstractions.Backend` such as `CPU()` or `CUDABackend()`.
-Use `cost_mode=:matrix_free` for the all-pairs matrix-free squared-cost path.
-Use `cost_mode=:truncated` for the experimental dual-aware multiscale accelerator path.
+CPU uses exact matrix-free reductions; accelerators conservatively truncate
+negligible terms at low regularization while keeping convergence checks exact.
 """
 function distribute(
     cartogram::AbstractDataFrame,
     sources::AbstractDataFrame;
     backend::KA.Backend,
-    kwargs...,
 )
     _validate_inputs(cartogram, sources)
     KA.functional(backend) === false && throw(ArgumentError(
         "the supplied KernelAbstractions backend is not functional",
     ))
-    return _distribute(cartogram, sources, backend; kwargs...)
+    return _distribute(cartogram, sources, backend)
 end
 
 end

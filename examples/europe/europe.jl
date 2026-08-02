@@ -351,7 +351,6 @@ function fit_europe(countries, sources; factor=1, backend=CUDA.CUDABackend())
             select(cartogram, :x, :y),
             source_table;
             backend,
-            minimum_weight=1e-4,
         )
         mapping = leftjoin(
             mapping,

@@ -1,5 +1,7 @@
 /output/
 /coverage/
+/Manifest.toml
+/*.arrow
 /.idea/
 /.vscode/
 *.cov

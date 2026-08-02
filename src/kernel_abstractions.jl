@@ -1,149 +1,3 @@
-@kernel function _sinkhorn_row!(transposed_cost, alpha, beta, eta, source_mass, targets)
-    source = @index(Group, Linear)
-    thread = @index(Local, Linear)
-    maxima = @localmem Float32 (SINKHORN_WORKGROUP_SIZE,)
-    totals = @localmem Float32 (SINKHORN_WORKGROUP_SIZE,)
-
-    maximum_value = -Inf32
-    target = thread
-    while target <= targets
-        maximum_value = max(maximum_value, beta[target] - transposed_cost[target, source])
-        target += SINKHORN_WORKGROUP_SIZE
-    end
-    maxima[thread] = maximum_value
-    @synchronize
-    for offset in (128, 64, 32, 16, 8, 4, 2, 1)
-        thread <= offset && (maxima[thread] = max(maxima[thread], maxima[thread + offset]))
-        @synchronize
-    end
-
-    total = 0.0f0
-    target = thread
-    while target <= targets
-        total += exp((beta[target] - transposed_cost[target, source] - maxima[1]) / eta)
-        target += SINKHORN_WORKGROUP_SIZE
-    end
-    totals[thread] = total
-    @synchronize
-    for offset in (128, 64, 32, 16, 8, 4, 2, 1)
-        thread <= offset && (totals[thread] += totals[thread + offset])
-        @synchronize
-    end
-    thread == 1 && (alpha[source] =
-        eta * log(source_mass[source]) - maxima[1] - eta * log(totals[1]))
-end
-
-@kernel function _sinkhorn_column!(cost, alpha, beta, eta, target_mass, sources)
-    target = @index(Group, Linear)
-    thread = @index(Local, Linear)
-    maxima = @localmem Float32 (SINKHORN_WORKGROUP_SIZE,)
-    totals = @localmem Float32 (SINKHORN_WORKGROUP_SIZE,)
-
-    maximum_value = -Inf32
-    source = thread
-    while source <= sources
-        maximum_value = max(maximum_value, alpha[source] - cost[source, target])
-        source += SINKHORN_WORKGROUP_SIZE
-    end
-    maxima[thread] = maximum_value
-    @synchronize
-    for offset in (128, 64, 32, 16, 8, 4, 2, 1)
-        thread <= offset && (maxima[thread] = max(maxima[thread], maxima[thread + offset]))
-        @synchronize
-    end
-
-    total = 0.0f0
-    source = thread
-    while source <= sources
-        total += exp((alpha[source] - cost[source, target] - maxima[1]) / eta)
-        source += SINKHORN_WORKGROUP_SIZE
-    end
-    totals[thread] = total
-    @synchronize
-    for offset in (128, 64, 32, 16, 8, 4, 2, 1)
-        thread <= offset && (totals[thread] += totals[thread + offset])
-        @synchronize
-    end
-    thread == 1 && (beta[target] =
-        eta * log(target_mass[target]) - maxima[1] - eta * log(totals[1]))
-end
-
-@kernel function _row_marginals!(transposed_cost, alpha, beta, eta, output, targets)
-    source = @index(Group, Linear)
-    thread = @index(Local, Linear)
-    maxima = @localmem Float32 (SINKHORN_WORKGROUP_SIZE,)
-    totals = @localmem Float32 (SINKHORN_WORKGROUP_SIZE,)
-    maximum_value = -Inf32
-    target = thread
-    while target <= targets
-        maximum_value = max(
-            maximum_value,
-            (alpha[source] + beta[target] - transposed_cost[target, source]) / eta,
-        )
-        target += SINKHORN_WORKGROUP_SIZE
-    end
-    maxima[thread] = maximum_value
-    @synchronize
-    for offset in (128, 64, 32, 16, 8, 4, 2, 1)
-        thread <= offset && (maxima[thread] = max(maxima[thread], maxima[thread + offset]))
-        @synchronize
-    end
-
-    total = 0.0f0
-    target = thread
-    while target <= targets
-        total += exp(
-            (alpha[source] + beta[target] - transposed_cost[target, source]) / eta - maxima[1],
-        )
-        target += SINKHORN_WORKGROUP_SIZE
-    end
-    totals[thread] = total
-    @synchronize
-    for offset in (128, 64, 32, 16, 8, 4, 2, 1)
-        thread <= offset && (totals[thread] += totals[thread + offset])
-        @synchronize
-    end
-    thread == 1 && (output[source] = maxima[1] + log(totals[1]))
-end
-
-@kernel function _column_marginals!(cost, alpha, beta, eta, output, sources)
-    target = @index(Group, Linear)
-    thread = @index(Local, Linear)
-    maxima = @localmem Float32 (SINKHORN_WORKGROUP_SIZE,)
-    totals = @localmem Float32 (SINKHORN_WORKGROUP_SIZE,)
-    maximum_value = -Inf32
-    source = thread
-    while source <= sources
-        maximum_value = max(
-            maximum_value,
-            (alpha[source] + beta[target] - cost[source, target]) / eta,
-        )
-        source += SINKHORN_WORKGROUP_SIZE
-    end
-    maxima[thread] = maximum_value
-    @synchronize
-    for offset in (128, 64, 32, 16, 8, 4, 2, 1)
-        thread <= offset && (maxima[thread] = max(maxima[thread], maxima[thread + offset]))
-        @synchronize
-    end
-
-    total = 0.0f0
-    source = thread
-    while source <= sources
-        total += exp(
-            (alpha[source] + beta[target] - cost[source, target]) / eta - maxima[1],
-        )
-        source += SINKHORN_WORKGROUP_SIZE
-    end
-    totals[thread] = total
-    @synchronize
-    for offset in (128, 64, 32, 16, 8, 4, 2, 1)
-        thread <= offset && (totals[thread] += totals[thread + offset])
-        @synchronize
-    end
-    thread == 1 && (output[target] = maxima[1] + log(totals[1]))
-end
-
 @kernel unsafe_indices=true function _matrix_free_reduce!(
     output,
     output_x_hi,
@@ -311,21 +165,10 @@ function _marginal_error(log_marginals, expected)
     return total
 end
 
-function _validate_sinkhorn_options(max_iters_per_eta, tol, check_every)
-    max_iters_per_eta isa Integer && !(max_iters_per_eta isa Bool) && max_iters_per_eta > 0 ||
-        throw(ArgumentError("max_iters_per_eta must be a positive integer"))
-    check_every isa Integer && !(check_every isa Bool) && check_every > 0 ||
-        throw(ArgumentError("check_every must be a positive integer"))
-    !(tol isa Bool) && isfinite(tol) && 10eps(Float32) <= tol < 1 ||
-        throw(ArgumentError("tol must be finite and in [$(10eps(Float32)), 1)"))
-    return nothing
-end
-
 function _run_sinkhorn(
     source_mass,
     target_mass,
     backend,
-    alpha,
     beta,
     row_sums,
     column_sums,
@@ -380,77 +223,6 @@ function _run_sinkhorn(
         end
     end
     return diagnostics
-end
-
-function _solve_sinkhorn(
-    problem,
-    backend;
-    eta_schedule,
-    observed_etas,
-    observer,
-    max_iters_per_eta,
-    tol,
-    check_every,
-)
-    _validate_sinkhorn_options(max_iters_per_eta, tol, check_every)
-    return _solve_sinkhorn_impl(
-        problem,
-        backend;
-        eta_schedule,
-        observed_etas,
-        observer,
-        max_iters_per_eta,
-        tol,
-        check_every,
-    )
-end
-
-function _solve_sinkhorn_impl(problem::DenseProblem, backend; kwargs...)
-    sources, targets = size(problem.cost)
-    transposed_cost = Matrix(transpose(problem.cost))
-    cost_device = _copy_to_backend(backend, problem.cost)
-    transposed_device = _copy_to_backend(backend, transposed_cost)
-    source_mass_device = _copy_to_backend(backend, problem.source_mass)
-    target_mass_device = _copy_to_backend(backend, problem.target_mass)
-    alpha = KA.zeros(backend, Float32, sources)
-    beta = KA.zeros(backend, Float32, targets)
-    row_sums = KA.allocate(backend, Float32, sources)
-    column_sums = KA.allocate(backend, Float32, targets)
-    row_kernel! = _sinkhorn_row!(backend, SINKHORN_WORKGROUP_SIZE)
-    column_kernel! = _sinkhorn_column!(backend, SINKHORN_WORKGROUP_SIZE)
-    row_marginal_kernel! = _row_marginals!(backend, SINKHORN_WORKGROUP_SIZE)
-    column_marginal_kernel! = _column_marginals!(backend, SINKHORN_WORKGROUP_SIZE)
-
-    row_update!(eta) = row_kernel!(
-        transposed_device, alpha, beta, eta, source_mass_device, targets;
-        ndrange=sources * SINKHORN_WORKGROUP_SIZE,
-    )
-    column_update!(eta) = column_kernel!(
-        cost_device, alpha, beta, eta, target_mass_device, sources;
-        ndrange=targets * SINKHORN_WORKGROUP_SIZE,
-    )
-    row_marginals!(eta) = row_marginal_kernel!(
-        transposed_device, alpha, beta, eta, row_sums, targets;
-        ndrange=sources * SINKHORN_WORKGROUP_SIZE,
-    )
-    column_marginals!(eta) = column_marginal_kernel!(
-        cost_device, alpha, beta, eta, column_sums, sources;
-        ndrange=targets * SINKHORN_WORKGROUP_SIZE,
-    )
-    return _run_sinkhorn(
-        problem.source_mass,
-        problem.target_mass,
-        backend,
-        alpha,
-        beta,
-        row_sums,
-        column_sums,
-        row_update!,
-        column_update!,
-        row_marginals!,
-        column_marginals!;
-        kwargs...,
-    )
 end
 
 function _matrix_free_cpu_value(
@@ -512,7 +284,7 @@ function _matrix_free_cpu_reduce!(
     return nothing
 end
 
-function _solve_sinkhorn_impl(problem::MatrixFreeProblem, backend::KA.CPU; kwargs...)
+function _solve_sinkhorn(problem::MatrixFreeProblem, backend::KA.CPU; kwargs...)
     sources = length(problem.source_mass)
     targets = length(problem.target_mass)
     alpha = zeros(Float32, sources)
@@ -543,7 +315,6 @@ function _solve_sinkhorn_impl(problem::MatrixFreeProblem, backend::KA.CPU; kwarg
         problem.source_mass,
         problem.target_mass,
         backend,
-        alpha,
         beta,
         row_sums,
         column_sums,
@@ -616,7 +387,7 @@ function _matrix_free_device_data(problem, backend)
     )
 end
 
-function _solve_sinkhorn_impl(problem::MatrixFreeProblem, backend; kwargs...)
+function _solve_exact_sinkhorn(problem::MatrixFreeProblem, backend; kwargs...)
     sources = length(problem.source_mass)
     targets = length(problem.target_mass)
     device = _matrix_free_device_data(problem, backend)
@@ -648,7 +419,6 @@ function _solve_sinkhorn_impl(problem::MatrixFreeProblem, backend; kwargs...)
         problem.source_mass,
         problem.target_mass,
         backend,
-        alpha,
         beta,
         row_sums,
         column_sums,

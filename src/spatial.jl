@@ -7,21 +7,18 @@ function _scale_to_cartogram(values, cartogram_values)
     source_min, source_max = extrema(values)
     target_min, target_max = extrema(cartogram_values)
     source_min == source_max && return fill((target_min + target_max) / 2, length(values))
-    return target_min .+ (values .- source_min) .*
-                         ((target_max - target_min) / (source_max - source_min))
+    source_midpoint = source_min / 2 + source_max / 2
+    source_halfspan = source_max / 2 - source_min / 2
+    target_midpoint = target_min / 2 + target_max / 2
+    target_halfspan = target_max / 2 - target_min / 2
+    return target_midpoint .+
+           ((values .- source_midpoint) ./ source_halfspan) .* target_halfspan
 end
-
 
 function _normalized_axis(values)
     converted = _coordinate_value.(values)
     scale = maximum(abs, converted)
     return scale == 0 ? converted : converted ./ scale
-end
-
-struct DenseProblem
-    cost::Matrix{Float32}
-    source_mass::Vector{Float32}
-    target_mass::Vector{Float32}
 end
 
 struct MatrixFreeProblem
@@ -77,8 +74,6 @@ end
     return min(distance * inverse_scale, 1.0f0)
 end
 
-@inline _cost(problem::DenseProblem, source, target) = problem.cost[source, target]
-@inline _target_mass(problem::Union{DenseProblem,MatrixFreeProblem}) = problem.target_mass
 @inline function _cost(problem::MatrixFreeProblem, source, target)
     return _matrix_free_cost(
         problem.source_x_hi[source],
@@ -134,35 +129,6 @@ function _split_coordinates(values, origin, step, distance_bound)
         low[index] = Float32(coordinate - Float64(high[index]))
     end
     return high, low
-end
-
-function _prepare_dense_problem(
-    source_x,
-    source_y,
-    target_x,
-    target_y,
-    step_x,
-    step_y,
-    distance_bound,
-    cost_power,
-    source_mass,
-    target_mass,
-)
-    cost = Matrix{Float32}(undef, length(source_x), length(target_x))
-    Threads.@threads for target in eachindex(target_x)
-        @inbounds for source in eachindex(source_x)
-            if distance_bound == 0
-                cost[source, target] = 0
-            else
-                dx = (source_x[source] - target_x[target]) / step_x / distance_bound
-                dy = (source_y[source] - target_y[target]) / step_y / distance_bound
-                cost[source, target] = Float32(hypot(dx, dy))
-            end
-        end
-    end
-    distance_scale = maximum(cost)
-    distance_scale > 0 && (cost .= (cost ./ distance_scale) .^ cost_power)
-    return DenseProblem(cost, source_mass, target_mass)
 end
 
 function _prepare_matrix_free_problem(
@@ -226,37 +192,15 @@ function _masses(cartogram, sources)
     all(value -> isfinite(value) && value > 0, source_mass) || throw(ArgumentError(
         "source values have too much dynamic range for the Float32 solver",
     ))
-    source_mass ./= sum(source_mass)
+    source_mass ./= sum(Float64, source_mass)
+    all(>(0), source_mass) || throw(ArgumentError(
+        "source values have too much dynamic range for the Float32 solver",
+    ))
     target_mass = fill(inv(Float32(nrow(cartogram))), nrow(cartogram))
-    target_mass .*= sum(source_mass) / sum(target_mass)
-    target_mass[argmax(target_mass)] += sum(source_mass) - sum(target_mass)
     return source_mass, target_mass
 end
 
-function _prepare_problem(
-    cartogram,
-    sources;
-    cost_power,
-    cost_mode,
-    truncation_tolerance=1e-6,
-    truncation_eta=0.001,
-)
-    !(cost_power isa Bool) && isfinite(cost_power) && cost_power > 0 ||
-        throw(ArgumentError("cost_power must be finite and positive"))
-    cost_mode in (:dense, :matrix_free, :truncated) || throw(ArgumentError(
-        "cost_mode must be :dense, :matrix_free, or :truncated",
-    ))
-    cost_mode in (:matrix_free, :truncated) && cost_power != 2 && throw(ArgumentError(
-        "cost_mode=$cost_mode requires cost_power=2",
-    ))
-    if cost_mode === :truncated
-        !(truncation_tolerance isa Bool) && isfinite(truncation_tolerance) &&
-            0 < truncation_tolerance < 1 || throw(ArgumentError(
-                "truncation_tolerance must be finite and in (0, 1)",
-            ))
-        !(truncation_eta isa Bool) && isfinite(truncation_eta) && truncation_eta > 0 ||
-            throw(ArgumentError("truncation_eta must be finite and positive"))
-    end
+function _prepare_problem(cartogram, sources)
     target_x = _normalized_axis(cartogram.x)
     target_y = _normalized_axis(cartogram.y)
     source_x = _scale_to_cartogram(Float64.(sources.x), target_x)
@@ -271,19 +215,7 @@ function _prepare_problem(
     ))
     source_mass, target_mass = _masses(cartogram, sources)
 
-    cost_mode === :dense && return _prepare_dense_problem(
-        source_x,
-        source_y,
-        target_x,
-        target_y,
-        step_x,
-        step_y,
-        distance_bound,
-        cost_power,
-        source_mass,
-        target_mass,
-    )
-    matrix_free = _prepare_matrix_free_problem(
+    return _prepare_matrix_free_problem(
         source_x,
         source_y,
         target_x,
@@ -293,11 +225,5 @@ function _prepare_problem(
         distance_bound,
         source_mass,
         target_mass,
-    )
-    cost_mode === :matrix_free && return matrix_free
-    return _prepare_truncated_problem(
-        matrix_free;
-        tolerance=_float32_down(truncation_tolerance),
-        maximum_eta=Float32(truncation_eta),
     )
 end

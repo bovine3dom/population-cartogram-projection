@@ -209,32 +209,26 @@ provides an end-to-end Sinkhorn backend or sparse-plan extractor.
 The lowest-risk direction is to adopt the **GeomLoss online abstraction with
 FlashSinkhorn's fused streaming reduction**, not either library's public API:
 
-1. Preserve the dense implementation as a numerical oracle and small-problem
-   path.
-2. Study an all-pairs matrix-free `cost_power=2` path that preserves the current
+1. Study an all-pairs matrix-free squared-cost path that preserves the current
    maximum-distance scale, alternating eta continuation, and marginal checks.
-3. Initially reconstruct sparse rows on the host from coordinates and `beta`;
+2. Initially reconstruct sparse rows on the host from coordinates and `beta`;
    evaluate bounded or adaptive backend top-k only if profiling identifies this
    stage as dominant.
-4. Benchmark alternate row-owning and split-row kernels on CPU, CUDA, ROCm,
+3. Benchmark alternate row-owning and split-row kernels on CPU, CUDA, ROCm,
    Metal, and oneAPI rather than assuming one 256-item layout.
-5. Consider dual-aware multiscale truncation only after the exact online solver
+4. Consider dual-aware multiscale truncation only after the exact online solver
    establishes numerical and performance baselines.
 
-As of 2 August 2026, those prerequisites are met. The experimental
-`cost_mode=:truncated` path uses Morton-ordered 256-point coarse blocks over
-32-point leaves, current per-block dual maxima, a real pair as a row witness,
-and a conservative omitted-mass budget. Eta-boundary updates and marginal audits
-remain exact all-pairs operations. It is opt-in because dynamic truncation does
-not inherit a general convergence proof and because broad kernels above roughly
-eta `1e-3` did not amortize block traversal for France factor 3 on the tested
-oneAPI backend; smaller workloads crossed over later or not at all.
+As of 2 August 2026, the package has one production path. CPU backends use exact
+matrix-free reductions. Accelerator backends add Morton-ordered 256-point coarse
+blocks over 32-point leaves, current per-block dual maxima, a real-pair witness,
+and a conservative omitted-mass budget below eta `1e-3`. Eta-boundary updates
+and marginal audits remain exact all-pairs operations.
 
-The decisive validation risk is floating point rather than OT theory. Dense
-costs use host `Float64` distance arithmetic, round to `Float32`, normalize, and
-then apply the power. Matrix-free squared costs instead use high/low `Float32`
-coordinates and normalize regenerated squared distances. This changes operation
-order, and the default eta list reaches `1e-7`, far below the `0.01` low-eta case
+The decisive validation risk is floating point rather than OT theory.
+Matrix-free squared costs use high/low `Float32` coordinates and normalize
+regenerated squared distances. The default eta list reaches `1e-7`, far below
+the `0.01` low-eta case
 evaluated in the FlashSinkhorn paper. Benchmarks should record cost parity,
 convergence checkpoint, selected eta, retained rows and mass, keyed weights, and
 peak host/backend memory for synthetic fixtures and France factors 1, 3, and 6.
