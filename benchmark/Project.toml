@@ -1,0 +1,16 @@
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+KernelAbstractions = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
+PopulationCartogramProjection = "c8499a48-226f-4b8e-883b-6bf873220240"
+oneAPI = "8f75cd03-7ff8-4ecb-9b8f-daf728133b1b"
+
+[sources]
+PopulationCartogramProjection = {path = ".."}
+
+[compat]
+CSV = "=0.10.16"
+DataFrames = "=1.8.2"
+KernelAbstractions = "=0.9.42"
+oneAPI = "=2.7.2"
+julia = "1.12"

@@ -45,11 +45,11 @@ function _sparse_options(targets; cumulative_weight, minimum_weight, minimum_cel
     )
 end
 
-function _source_weights(cost, result, source)
-    logits = Vector{Float64}(undef, size(cost, 2))
+function _source_weights(problem, result, source)
+    logits = Vector{Float64}(undef, length(problem.target_mass))
     maximum_logit = -Inf
-    @inbounds for target in axes(cost, 2)
-        logit = (Float64(result.beta[target]) - Float64(cost[source, target])) /
+    @inbounds for target in eachindex(problem.target_mass)
+        logit = (Float64(result.beta[target]) - Float64(_cost(problem, source, target))) /
                 Float64(result.eta)
         logits[target] = logit
         maximum_logit = max(maximum_logit, logit)
@@ -97,7 +97,7 @@ function _sparse_stats(problem, result, options, values, tie_keys)
     retained = Vector{Float64}(undef, length(values))
     Threads.@threads for source in eachindex(values)
         selection = _select_weights(
-            _source_weights(problem.cost, result, source), options, tie_keys,
+            _source_weights(problem, result, source), options, tie_keys,
         )
         counts[source] = selection.count
         retained[source] = selection.retained
@@ -119,7 +119,7 @@ function _extract_distribution(cartogram, sources, problem, result, options, sta
     value_scale = maximum(Float64.(sources.value))
 
     Threads.@threads for source in 1:nrow(sources)
-        source_weights = _source_weights(problem.cost, result, source)
+        source_weights = _source_weights(problem, result, source)
         selection = _select_weights(source_weights, options, tie_keys; indices=true)
         selection.count == stats.counts[source] ||
             error("sparse row count changed during extraction")
@@ -152,6 +152,7 @@ function _fit_distribution(
     sources,
     backend;
     cost_power::Real=2,
+    cost_mode=:dense,
     candidate_etas=DEFAULT_AUTO_ETA_CANDIDATES,
     base_eta_schedule=DEFAULT_ETA_BASE_SCHEDULE,
     target_rows_multiplier::Real=2,
@@ -177,7 +178,7 @@ function _fit_distribution(
     )
     target_rows = round(Int, target_rows_multiplier * (nrow(sources) + nrow(cartogram)))
     target_rows > 0 || throw(ArgumentError("target_rows_multiplier produces no rows"))
-    problem = _prepare_problem(cartogram, sources; cost_power)
+    problem = _prepare_problem(cartogram, sources; cost_power, cost_mode)
     tie_keys = collect(zip(_coordinate_value.(cartogram.x), _coordinate_value.(cartogram.y)))
     best_result = nothing
     best_stats = nothing
@@ -197,9 +198,7 @@ function _fit_distribution(
     end
 
     _solve_sinkhorn(
-        problem.cost,
-        problem.source_mass,
-        problem.target_mass,
+        problem,
         backend;
         eta_schedule=schedule,
         observed_etas=Set(candidates),

@@ -18,6 +18,8 @@
       outputs and record keyed numerical tolerances.
 - [ ] Decide whether sparse source weights should remain loss-reporting or gain
       an explicit opt-in renormalization mode.
-- [ ] Investigate matrix-free or blockwise costs before adding larger workflows;
-      dense source-by-cell storage remains the principal scaling limit.
+- [ ] Reuse per-thread sparse reconstruction and sorting buffers if end-to-end
+      profiling shows candidate extraction allocations are material.
+- [x] Add an all-pairs matrix-free squared-cost path with tiled accelerator
+      kernels while retaining dense costs as the numerical oracle.
 - [ ] Add CI jobs for accelerator backends that have available hardware.

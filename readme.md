@@ -74,6 +74,8 @@ mapping = distribute(cartogram, sources; backend=AMDGPU.ROCBackend())
 using Metal
 mapping = distribute(cartogram, sources; backend=Metal.MetalBackend())
 
+# on my old thinkpad, julia needs to be launched with
+# export ZE_ENABLE_ALT_DRIVERS=/usr/lib/libze_intel_gpu_legacy1.so.1
 using oneAPI
 mapping = distribute(cartogram, sources; backend=oneAPI.oneAPIBackend())
 ```
@@ -106,6 +108,7 @@ mapping = distribute(
     cartogram,
     sources;
     backend,
+    cost_mode=:dense,
     candidate_etas=Float32[0.005, 0.002, 0.001, 0.0005],
     target_rows_multiplier=2,
     cumulative_weight=0.995,
@@ -115,6 +118,15 @@ mapping = distribute(
     minimum_retained_value=0,
 )
 ```
+
+`cost_mode=:matrix_free` selects an all-pairs, non-truncated solver for the
+default `cost_power=2`. Accelerator backends stream `32 x 8` coordinate tiles
+through local memory; CPU uses a threaded matrix-free reduction. Both avoid
+materializing the source-by-cell cost matrix, so working cost storage is linear
+in the source and cell counts. High/low `Float32` coordinate pairs preserve
+small displacements without requiring backend `Float64`, but operation order is
+not bitwise identical to dense cost construction. Dense mode remains the
+default and numerical oracle while backend crossover points are measured.
 
 Sparse `weight` values are not renormalized. Their sum records the retained
 fraction of each source, while `weight_mean` is calculated from retained rows and
@@ -189,3 +201,27 @@ The suite checks input validation, conservation, both weight normalizations,
 warmed automatic eta selection, opaque `UInt64` IDs, caller-provided backends,
 example-owned UK H3 and France IRIS input adapters, and Europe orchestration and
 split-index compatibility.
+
+## oneAPI Benchmark
+
+Instantiate the isolated benchmark environment, then compare the dense and
+matrix-free paths. The final argument is the fixed iteration cap:
+
+```sh
+julia +1.12.1 --project=benchmark -e 'using Pkg; Pkg.instantiate()'
+ZE_ENABLE_ALT_DRIVERS=/usr/lib/libze_intel_gpu_legacy1.so.1 \
+  julia +1.12.1 --threads=auto --project=benchmark \
+  benchmark/compare_solvers.jl 1024 1024 5 50
+```
+
+Use the checked-in France IRIS fixtures at subdivision factor 1 with:
+
+```sh
+ZE_ENABLE_ALT_DRIVERS=/usr/lib/libze_intel_gpu_legacy1.so.1 \
+  julia +1.12.1 --threads=auto --project=benchmark \
+  benchmark/compare_solvers.jl france 1 5 50
+```
+
+Preparation time, warm solver timing, host allocations, convergence diagnostics,
+and theoretical host-plus-device cost storage are reported separately. See the
+[recorded Intel UHD 620 results](benchmark/results.md).

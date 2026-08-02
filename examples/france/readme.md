@@ -54,25 +54,29 @@ julia +1.12.1 --threads=auto --project=make-lookup-table \
   examples/france/iris_population.jl 3
 ```
 
-| Factor | Cells | IRIS rows/cell | Host + accelerator dense baseline |
-|---:|---:|---:|---:|
-| 1 | 438 | 110.54 | 0.32 GiB |
-| 3 | 3,942 | 12.28 | 2.84 GiB |
-| 6 | 15,768 | 3.07 | 11.38 GiB |
+| Factor | Cells | IRIS rows/cell | Dense cost state | Matrix-free cost state |
+|---:|---:|---:|---:|---:|
+| 1 | 438 | 110.54 | 0.32 GiB | 1.49 MiB |
+| 3 | 3,942 | 12.28 | 2.84 GiB | 1.60 MiB |
+| 6 | 15,768 | 3.07 | 11.38 GiB | 1.96 MiB |
 
-The solver stores the cost and its transpose on both host and accelerator, so
-subdivision is an explicit quality/performance choice. Subdivision and country
-filtering are example-owned:
+Dense mode stores the cost and its transpose on both host and accelerator.
+`cost_mode=:matrix_free` instead retains high/low coordinate vectors and
+regenerates squared costs inside the solver. Subdivision and country filtering
+remain example-owned:
 
 ```julia
 cartogram = load_cartogram(250; factor=3)
 mapping = distribute(
     select(cartogram, :x, :y), sources;
     backend=CUDA.CUDABackend(),
+    cost_mode=:matrix_free,
 )
 ```
 
-The estimates exclude temporary allocations and runtime overhead.
+The estimates model explicit host-plus-accelerator cost state and exclude shared
+solver vectors, runtime temporaries, and returned output. See the
+[oneAPI benchmark results](../../benchmark/results.md#france-iris).
 
 The output `mapping.csv` remains the authoritative `x, y, id, weight,
 weight_mean` mapping.

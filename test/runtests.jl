@@ -102,6 +102,10 @@ end
     )
     @test_throws ArgumentError distribute(cartogram, sources; backend, candidate_etas=Float32[])
     @test_throws ArgumentError distribute(cartogram, sources; backend, tol=1e-9)
+    @test_throws ArgumentError distribute(cartogram, sources; backend, cost_mode=:invalid)
+    @test_throws ArgumentError distribute(
+        cartogram, sources; backend, cost_mode=:matrix_free, cost_power=1,
+    )
     @test_throws TypeError distribute(cartogram, sources; backend, max_iters_per_eta=true)
     @test_throws TypeError distribute(cartogram, sources; backend, check_every=true)
 end
@@ -175,6 +179,139 @@ end
     @test selected[:, [:x, :y]] == reversed[:, [:x, :y]]
 end
 
+@testset "matrix-free tiled costs" begin
+    (; cartogram, sources) = fixture()
+    dense = sort(distribute(
+        cartogram,
+        sources;
+        backend=KA.CPU(),
+        cost_mode=:dense,
+        cumulative_weight=1,
+        QUICK_OPTIONS...,
+    ), [:id, :x, :y])
+    matrix_free = sort(distribute(
+        cartogram,
+        sources;
+        backend=KA.CPU(),
+        cost_mode=:matrix_free,
+        cumulative_weight=1,
+        QUICK_OPTIONS...,
+    ), [:id, :x, :y])
+    @test matrix_free[:, [:id, :x, :y]] == dense[:, [:id, :x, :y]]
+    @test matrix_free.weight ≈ dense.weight atol=2e-5
+    @test matrix_free.weight_mean ≈ dense.weight_mean atol=2e-5
+
+    one_cell = distribute(
+        DataFrame(x=[0], y=[0]),
+        sources;
+        backend=KA.CPU(),
+        cost_mode=:matrix_free,
+        cumulative_weight=1,
+        QUICK_OPTIONS...,
+    )
+    check_distribution(one_cell, DataFrame(x=[0], y=[0]), sources; dense=true)
+
+    tiled_cartogram = DataFrame(x=collect(0:36), y=mod.(0:36, 7))
+    tiled_sources = DataFrame(
+        id=collect(1:9),
+        x=collect(range(-2, 2; length=9)),
+        y=collect(range(55, 47; length=9)),
+        value=Float64.(1:9),
+    )
+    dense_problem = PopulationCartogramProjection._prepare_problem(
+        tiled_cartogram, tiled_sources; cost_power=2, cost_mode=:dense,
+    )
+    matrix_free_problem = PopulationCartogramProjection._prepare_problem(
+        tiled_cartogram, tiled_sources; cost_power=2, cost_mode=:matrix_free,
+    )
+    @test maximum(
+        abs(
+            Float64(dense_problem.cost[source, target]) -
+            Float64(PopulationCartogramProjection._cost(
+                matrix_free_problem, source, target,
+            )),
+        )
+        for source in 1:nrow(tiled_sources), target in 1:nrow(tiled_cartogram)
+    ) <= 2e-6
+
+    tiled_options = (
+        candidate_etas=Float32[0.1],
+        base_eta_schedule=Float32[0.1],
+        max_iters_per_eta=500,
+        tol=1e-5,
+        check_every=10,
+        cumulative_weight=1,
+    )
+    tiled_dense = sort(distribute(
+        tiled_cartogram,
+        tiled_sources;
+        backend=KA.CPU(),
+        cost_mode=:dense,
+        tiled_options...,
+    ), [:id, :x, :y])
+    tiled_matrix_free = sort(distribute(
+        tiled_cartogram,
+        tiled_sources;
+        backend=KA.CPU(),
+        cost_mode=:matrix_free,
+        tiled_options...,
+    ), [:id, :x, :y])
+    @test tiled_matrix_free[:, [:id, :x, :y]] == tiled_dense[:, [:id, :x, :y]]
+    @test tiled_matrix_free.weight ≈ tiled_dense.weight atol=2e-5
+    @test tiled_matrix_free.weight_mean ≈ tiled_dense.weight_mean atol=2e-5
+
+    close_cartogram = DataFrame(x=Float64[0, 33_554_432, 33_554_433], y=zeros(3))
+    close_sources = DataFrame(
+        id=1:3, x=[0.0, 0.5, 1.0], y=zeros(3), value=ones(3),
+    )
+    close_options = (
+        candidate_etas=Float32[1e-6],
+        base_eta_schedule=Float32[0.1, 0.01, 0.001, 0.0001, 1e-5, 1e-6],
+        max_iters_per_eta=10_000,
+        tol=0.02,
+        check_every=20,
+        cumulative_weight=1,
+    )
+    close_dense = sort(distribute(
+        close_cartogram,
+        close_sources;
+        backend=KA.CPU(),
+        cost_mode=:dense,
+        close_options...,
+    ), [:id, :x])
+    close_matrix_free = sort(distribute(
+        close_cartogram,
+        close_sources;
+        backend=KA.CPU(),
+        cost_mode=:matrix_free,
+        close_options...,
+    ), [:id, :x])
+    @test close_matrix_free[:, [:id, :x]] == close_dense[:, [:id, :x]]
+    @test close_matrix_free.weight ≈ close_dense.weight atol=1e-8
+
+    small_terms = 100_000
+    small_logit = Float32(log(1e-8))
+    reduction_dual = fill(small_logit, small_terms + 1)
+    reduction_dual[1] = 0
+    accumulator_problem = PopulationCartogramProjection.DenseProblem(
+        zeros(Float32, 1, small_terms + 1),
+        Float32[1],
+        fill(inv(Float32(small_terms + 1)), small_terms + 1),
+    )
+    logsum = PopulationCartogramProjection._matrix_free_cpu_value(
+        accumulator_problem,
+        Float32[0],
+        reduction_dual,
+        Float32[1],
+        1.0f0,
+        1,
+        small_terms + 1,
+        Val(true),
+        Val(false),
+    )
+    @test logsum ≈ log1p(small_terms * exp(Float64(small_logit))) atol=1e-7
+end
+
 @testset "automatic eta and sparsity" begin
     cartogram = DataFrame(x=[0, 0], y=[0, 2])
     sources = DataFrame(
@@ -195,6 +332,18 @@ end
     @test fit.rows == nrow(fit.mapping)
     @test fit.target_rows == 2
     @test fit.retained_value >= 0.995
+    matrix_free_fit = PopulationCartogramProjection._fit_distribution(
+        cartogram,
+        sources,
+        KA.CPU();
+        cost_mode=:matrix_free,
+        target_rows_multiplier=0.5,
+        cumulative_weight=0.995,
+        QUICK_OPTIONS...,
+    )
+    @test matrix_free_fit.selected_eta == fit.selected_eta
+    @test matrix_free_fit.rows == fit.rows
+    @test matrix_free_fit.retained_value ≈ fit.retained_value atol=2e-5
 
     sparse = distribute(
         DataFrame(x=0:5, y=zeros(Int, 6)),
@@ -216,15 +365,24 @@ end
     )
 end
 
-function backend_result(backend)
+function backend_result(backend; cost_mode=:dense)
     (; cartogram, sources) = fixture()
     return distribute(
         cartogram,
         sources;
         backend,
+        cost_mode,
         cumulative_weight=1,
         QUICK_OPTIONS...,
     )
+end
+
+function check_backend(backend, expected)
+    for cost_mode in (:dense, :matrix_free)
+        actual = sort(backend_result(backend; cost_mode), [:id, :x, :y])
+        @test actual.weight ≈ expected.weight atol=2e-4
+        @test actual.weight_mean ≈ expected.weight_mean atol=2e-4
+    end
 end
 
 @testset "consumer-provided backends" begin
@@ -235,24 +393,16 @@ end
     expected = sort(backend_result(KA.CPU()), [:id, :x, :y])
 
     if CUDA.functional()
-        actual = sort(backend_result(CUDA.CUDABackend()), [:id, :x, :y])
-        @test actual.weight ≈ expected.weight atol=2e-4
-        @test actual.weight_mean ≈ expected.weight_mean atol=2e-4
+        check_backend(CUDA.CUDABackend(), expected)
     end
     if AMDGPU.functional() && AMDGPU.has_rocm_gpu()
-        actual = sort(backend_result(AMDGPU.ROCBackend()), [:id, :x, :y])
-        @test actual.weight ≈ expected.weight atol=2e-4
-        @test actual.weight_mean ≈ expected.weight_mean atol=2e-4
+        check_backend(AMDGPU.ROCBackend(), expected)
     end
     if oneAPI.functional()
-        actual = sort(backend_result(oneAPI.oneAPIBackend()), [:id, :x, :y])
-        @test actual.weight ≈ expected.weight atol=2e-4
-        @test actual.weight_mean ≈ expected.weight_mean atol=2e-4
+        check_backend(oneAPI.oneAPIBackend(), expected)
     end
     if Sys.isapple() && Sys.ARCH === :aarch64 && Metal.functional()
-        actual = sort(backend_result(Metal.MetalBackend()), [:id, :x, :y])
-        @test actual.weight ≈ expected.weight atol=2e-4
-        @test actual.weight_mean ≈ expected.weight_mean atol=2e-4
+        check_backend(Metal.MetalBackend(), expected)
     end
 end
 

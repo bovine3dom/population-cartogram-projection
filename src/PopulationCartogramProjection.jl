@@ -2,13 +2,15 @@ module PopulationCartogramProjection
 
 using DataFrames
 import KernelAbstractions as KA
-using KernelAbstractions: @index, @kernel, @localmem, @synchronize
+using KernelAbstractions: @index, @kernel, @localmem, @private, @synchronize
 
 export distribute
 
 const CARTOGRAM_COLUMNS = (:x, :y)
 const SOURCE_COLUMNS = (:x, :y, :value, :id)
 const SINKHORN_WORKGROUP_SIZE = 256
+const MATRIX_FREE_REDUCTION_LANES = 32
+const MATRIX_FREE_OUTPUTS_PER_GROUP = 8
 
 struct SinkhornResult
     beta::Vector{Float32}
@@ -70,6 +72,7 @@ Distribute one country's positive source values over a balanced cartogram.
 The returned `x, y, id, weight, weight_mean` table contains source-normalized
 transport weights and target-normalized contributions. The caller supplies an
 instantiated `KernelAbstractions.Backend` such as `CPU()` or `CUDABackend()`.
+Use `cost_mode=:matrix_free` for the all-pairs matrix-free squared-cost path.
 """
 function distribute(
     cartogram::AbstractDataFrame,
