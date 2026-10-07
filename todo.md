@@ -12,6 +12,18 @@
 - [x] Use exact matrix-free CPU reductions and conservative low-eta truncation
       on accelerators.
 
+## Example Workflow
+
+- [x] Keep a documented UK path from Kontur input to both H3-MON Arrow files.
+- [x] Record the completed oneAPI H3-7/factor-5 result and H3-8 size estimates.
+- [x] Test parent population sums, H3 validation, split indexes, and city labels
+      without external data or GPU hardware.
+- [ ] Add example checks to CI without adding example dependencies to the core.
+- [ ] Record eta-stage progress and iteration counts for long fits. Keep the
+      returned mapping schema unchanged.
+- [ ] Compare H3-8/factor-11 with the completed H3-7/factor-5 result before treating
+      any subdivision factor as a quality threshold.
+
 ## Follow-Up
 
 - [ ] Benchmark the reduced implementation against the previous UK and France

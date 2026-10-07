@@ -1,6 +1,7 @@
 /output/
 /coverage/
 /Manifest.toml
+/examples/uk-h3/Manifest.toml
 /*.arrow
 /.idea/
 /.vscode/

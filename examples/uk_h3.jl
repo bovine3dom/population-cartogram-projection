@@ -12,7 +12,6 @@ include(joinpath(@__DIR__, "common.jl"))
 
 const ROOT = normpath(joinpath(@__DIR__, ".."))
 const UK_CODE = 826
-const EXPECTED_RESOLUTION = 6
 const DEFAULT_SOURCE_PATH = joinpath(
     ROOT, "make-lookup-table", "population-data", "country-826-res6.arrow",
 )
@@ -39,8 +38,8 @@ function load_sources(path::AbstractString=DEFAULT_SOURCE_PATH)
         error("UK H3 cache is missing required columns")
     ids = h3_indexes(cached.id)
     allunique(ids) || error("H3 ids must be unique")
-    all(==(EXPECTED_RESOLUTION), Int.(H3.API.getResolution.(ids))) ||
-        error("UK H3 cache must contain only resolution-$EXPECTED_RESOLUTION cells")
+    length(unique(H3.API.getResolution.(ids))) == 1 ||
+        error("UK H3 cache must contain one H3 resolution")
     all(==(UK_CODE), cached.country_code) || error("UK H3 cache has the wrong country code")
     all(value -> value isa Real && isfinite(value) && value > 0, cached.population) ||
         error("population must be finite and positive")
@@ -54,7 +53,7 @@ function load_sources(path::AbstractString=DEFAULT_SOURCE_PATH)
     )
 end
 
-function main(args=ARGS)
+function main(args=ARGS; backend=KA.CPU())
     length(args) <= 3 || error(
         "usage: uk_h3.jl [SOURCE.arrow] [OUTPUT_DIRECTORY] [SUBDIVISION_FACTOR]",
     )
@@ -65,9 +64,18 @@ function main(args=ARGS)
     cartogram = load_cartogram(UK_CODE; factor)
     println("Using $(nrow(sources)) H3 sources and $(nrow(cartogram)) cartogram cells.")
 
-    # Substitute another KernelAbstractions backend here for larger runs.
-    mapping = distribute(select(cartogram, :x, :y), sources; backend=KA.CPU())
+    println("Backend: $backend")
+    flush(stdout)
+    elapsed = @elapsed mapping = distribute(select(cartogram, :x, :y), sources; backend)
+    println("Distribution completed in $(round(elapsed; digits=2)) seconds.")
     population = projected_values(mapping, sources, cartogram)
+    density = DataFrame(id=sources.id,
+                        density=sources.value ./ Float64.(H3.API.cellAreaKm2.(sources.id)))
+    contributions = leftjoin(mapping, density; on=:id, validate=(false, true))
+    contributions.population_density = contributions.weight_mean .* contributions.density
+    projected_density = combine(groupby(contributions, [:x, :y]),
+                                :population_density => sum => :population_density)
+    population = leftjoin(population, projected_density; on=[:x, :y])
     rename!(population, :x => :grid_x, :y => :grid_y, :value => :population)
     paths = (;
         mapping=joinpath(output_dir, "mapping.csv"),
@@ -78,13 +86,19 @@ function main(args=ARGS)
     CSV.write(paths.mapping, mapping)
     CSV.write(paths.population, population)
     CSV.write(paths.summary, DataFrame(
-        metric=["sources", "targets", "subdivision_factor", "mapping_rows", "retained_value"],
+        metric=["sources", "targets", "subdivision_factor", "mapping_rows", "retained_value",
+                "h3_resolution", "source_population", "population_per_target", "solve_seconds", "backend"],
         value=string.(Any[
             nrow(sources),
             nrow(cartogram),
             factor,
             nrow(mapping),
             retained_value_share(mapping, sources),
+            Int(H3.API.getResolution(first(sources.id))),
+            sum(sources.value),
+            sum(sources.value) / nrow(cartogram),
+            elapsed,
+            string(backend),
         ]),
     ))
     println("Wrote UK H3 distribution to $output_dir")

@@ -1,5 +1,9 @@
 # oneAPI Benchmark
 
+For a completed UK fit on the Intel HD Graphics P630, see the
+[UK H3-7 result and H3-8 runtime estimates](../examples/uk-h3/results.md).
+The fixed-work measurements below serve a different purpose.
+
 Measured 2 August 2026 on an Intel UHD Graphics 620 (`0x5917`) with Julia
 1.12.1, eight Julia threads, oneAPI.jl 2.7.2, KernelAbstractions.jl 0.9.42, and
 the legacy Level Zero driver selected by:

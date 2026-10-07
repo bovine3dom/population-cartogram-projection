@@ -1,7 +1,22 @@
 # Population Cartogram Projection
 
+For a single-country run with Kontur H3 data and oneAPI, see the
+[UK H3 workflow](examples/uk-h3/readme.md) and its
+[measured results and runtime estimates](examples/uk-h3/results.md).
+
 A small Julia package that distributes one country's positive geographic source
 values over a balanced cartogram with entropic optimal transport.
+
+## Scope
+
+Keep the solver small, but retain a complete example workflow.
+The core owns transport weights and accepts a caller-supplied KernelAbstractions
+backend. Examples and scripts own data preparation, H3, file formats, city labels,
+and rendering. Their dependencies stay outside the root project.
+
+The UK trial showed a gap in the documented workflow, not a need to restore the
+removed country, projection, and persistence APIs. Keep preparation and export
+steps tested and documented outside the core.
 
 ## Interface
 
