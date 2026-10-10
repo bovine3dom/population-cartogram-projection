@@ -28,19 +28,19 @@ function h3_indexes(values)
     return indexes
 end
 
-function load_sources(path::AbstractString=DEFAULT_SOURCE_PATH)
+function load_sources(path::AbstractString=DEFAULT_SOURCE_PATH; country_code=UK_CODE)
     isfile(path) || error(
-        "UK H3 cache not found at $path; run " *
+        "H3 cache not found at $path; for the UK, run " *
         "`julia scripts/extract_country_h3.jl 826 6` first",
     )
     cached = DataFrame(Arrow.Table(path))
     all(column -> column in propertynames(cached), (:id, :population, :country_code)) ||
-        error("UK H3 cache is missing required columns")
+        error("H3 cache is missing required columns")
     ids = h3_indexes(cached.id)
     allunique(ids) || error("H3 ids must be unique")
     length(unique(H3.API.getResolution.(ids))) == 1 ||
-        error("UK H3 cache must contain one H3 resolution")
-    all(==(UK_CODE), cached.country_code) || error("UK H3 cache has the wrong country code")
+        error("H3 cache must contain one H3 resolution")
+    all(==(country_code), cached.country_code) || error("H3 cache has the wrong country code")
     all(value -> value isa Real && isfinite(value) && value > 0, cached.population) ||
         error("population must be finite and positive")
     centres = H3.API.cellToLatLng.(ids)
@@ -53,15 +53,15 @@ function load_sources(path::AbstractString=DEFAULT_SOURCE_PATH)
     )
 end
 
-function main(args=ARGS; backend=KA.CPU())
+function main(args=ARGS; backend=KA.CPU(), country_code=UK_CODE)
     length(args) <= 3 || error(
         "usage: uk_h3.jl [SOURCE.arrow] [OUTPUT_DIRECTORY] [SUBDIVISION_FACTOR]",
     )
     source_path = length(args) >= 1 ? abspath(args[1]) : DEFAULT_SOURCE_PATH
     output_dir = length(args) >= 2 ? abspath(args[2]) : DEFAULT_OUTPUT_DIR
     factor = length(args) >= 3 ? parse(Int, args[3]) : 1
-    sources = load_sources(source_path)
-    cartogram = load_cartogram(UK_CODE; factor)
+    sources = load_sources(source_path; country_code)
+    cartogram = load_cartogram(country_code; factor)
     println("Using $(nrow(sources)) H3 sources and $(nrow(cartogram)) cartogram cells.")
 
     println("Backend: $backend")
@@ -101,7 +101,7 @@ function main(args=ARGS; backend=KA.CPU())
             string(backend),
         ]),
     ))
-    println("Wrote UK H3 distribution to $output_dir")
+    println("Wrote country $country_code H3 distribution to $output_dir")
     return paths
 end
 

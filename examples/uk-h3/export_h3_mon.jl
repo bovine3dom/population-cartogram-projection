@@ -7,8 +7,9 @@ using Arrow, CSV, DataFrames, H3
 lower(id) = UInt32(id & 0xffffffff)
 upper(id) = UInt32(id >> 32)
 
-function build_output(mapping, sources, cities; minimum_population=50_000)
-    all(==(826), sources.country_code) || error("expected UK sources")
+function build_output(mapping, sources, cities; minimum_population=50_000,
+                      country_code=826, city_country="GB")
+    all(==(country_code), sources.country_code) || error("unexpected source country")
     all(id -> H3.API.isValidCell(id), sources.id) || error("invalid source H3 ids")
     resolution = Int(only(unique(H3.API.getResolution.(sources.id))))
     Set(mapping.id) == Set(sources.id) || error("mapping and source ids differ")
@@ -19,7 +20,7 @@ function build_output(mapping, sources, cities; minimum_population=50_000)
     totals = combine(groupby(output, [:x, :y]), :weight_mean => sum => :total)
     all(t -> isapprox(t, 1; atol=1e-10), totals.total) || error("target weights do not sum to one")
 
-    cities = filter(row -> row.country_code == "GB" && row.population > minimum_population, cities)
+    cities = filter(row -> row.country_code == city_country && row.population > minimum_population, cities)
     sort!(cities, [:population, :name]; rev=[true, false])
     cities.id = UInt64[H3.API.latLngToCell(
         H3.API.LatLng(deg2rad(row.latitude), deg2rad(row.longitude)), resolution,
@@ -50,7 +51,7 @@ function build_output(mapping, sources, cities; minimum_population=50_000)
     return (; output, unmatched)
 end
 
-function main(args=ARGS)
+function main(args=ARGS; country_code=826, city_country="GB")
     length(args) == 4 || error(
         "usage: export_h3_mon.jl MAPPING.csv SOURCES.arrow CITIES.csv OUTPUT_hilo.arrow",
     )
@@ -63,7 +64,7 @@ function main(args=ARGS)
     mapping = CSV.read(mapping_path, DataFrame; types=Dict(:id => UInt64))
     sources = DataFrame(Arrow.Table(source_path))
     cities = CSV.read(cities_path, DataFrame)
-    result = build_output(mapping, sources, cities)
+    result = build_output(mapping, sources, cities; country_code, city_country)
     Arrow.write(output_path, result.output; compress=nothing)
     CSV.write(unmatched_path, result.unmatched)
     Arrow.write(density_path, (

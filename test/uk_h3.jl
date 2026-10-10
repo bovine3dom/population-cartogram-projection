@@ -20,6 +20,10 @@ include(joinpath(@__DIR__, "..", "examples", "uk-h3", "export_h3_mon.jl"))
         source.country_code[1] = 250
         Arrow.write(path, source)
         @test_throws ErrorException UKH3Example.load_sources(path)
+        source.country_code .= 276
+        Arrow.write(path, source)
+        @test_throws ErrorException UKH3Example.load_sources(path)
+        @test UKH3Example.load_sources(path; country_code=276).value == source.population
     end
     base = UKH3Example.load_cartogram(826)
     subdivided = UKH3Example.load_cartogram(826; factor=3)
@@ -48,6 +52,22 @@ end
     @test result.output.weight == mapping.weight
     @test result.output.weight_mean == mapping.weight_mean
     @test result.output.population == [100.0, 100.0]
+end
+
+@testset "Germany H3-MON export" begin
+    berlin = H3.API.latLngToCell(H3.API.LatLng(deg2rad(52.52), deg2rad(13.405)), 7)
+    sources = DataFrame(id=[berlin], population=[100.0], country_code=[276])
+    mapping = DataFrame(id=[berlin], x=[0], y=[0], weight=[1.0], weight_mean=[1.0])
+    cities = DataFrame(name=["Berlin", "Excluded"], country_code=["DE", "GB"],
+                       latitude=[52.52, 52.52], longitude=[13.405, 13.405],
+                       population=[3_000_000, 100_000])
+    @test_throws ErrorException UKH3MonExport.build_output(mapping, sources, cities)
+    result = UKH3MonExport.build_output(mapping, sources, cities; country_code=276, city_country="DE")
+    @test result.output.label == ["Berlin"]
+    @test result.output.code == [276]
+    @test isempty(result.unmatched)
+    @test size(UKH3Example.load_cartogram(276; factor=5), 1) ==
+          25size(UKH3Example.load_cartogram(276), 1)
 end
 
 @testset "Parent population sums" begin
