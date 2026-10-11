@@ -373,7 +373,10 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   borders=Set([(276,616)]), border_share=nothing, scale_km=300.0,
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
-                  fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5)
+                  fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
+                  proximal=0.0)
+    proximal>=0 || error("proximal weight must be nonnegative")
+    matrix_free && proximal>0 && error("proximal costs require the dense experimental path")
     ispath(outdir) && error("refusing to overwrite $outdir")
     mkpath(outdir)
     edges = graph(countries; borders)
@@ -384,7 +387,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],
-        matrix_free=[matrix_free],internal_scale=[internal_scale],inner_tolerance=[inner_tolerance],outer_steps=[outer_steps],
+        matrix_free=[matrix_free],internal_scale=[internal_scale],inner_tolerance=[inner_tolerance],
+        proximal=[proximal],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
@@ -418,7 +422,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             gradient = [g .+ fold_strength.*f for (g,f) in zip(gradient,fg)]
         end
         solutions = [matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance) :
-                     sinkhorn(c.cost .+ g,c.a,c.b,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance)
+                     sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
+                              eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance)
                      for (k,(c,g)) in enumerate(zip(countries,gradient))]
         println("Inner $iteration: ",[(c.code,s.iterations,s.refinement_iterations,s.marginal_error)
                                       for (c,s) in zip(countries,solutions)])

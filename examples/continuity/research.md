@@ -132,6 +132,17 @@ full set. A comma separates multiple case names. Refined grids select this case
 by default to limit run time. Set `CONTINUITY_CASES` to an empty string to run all
 cases. `CONTINUITY_OUTER_STEPS` sets the step limit; its default is 30.
 
+## Proximal step check
+
+`proximal_study.jl BASELINE_STUDY_DIRECTORY NEW_OUTPUT_DIRECTORY` tests smaller
+transport changes on the coarse Africa case. The inner objective adds
+`proximal * KL(plan || previous_plan)`. This changes its cost by
+`-proximal * log(previous_plan)` and its entropy coefficient by `+proximal`.
+The outer acceptance test still uses the original objective. The inner solve
+still uses KA/oneAPI. This test uses dense GPU costs, not the matrix-free path.
+It checks whether smaller changes reduce folds without moving the border gap
+into the interior. A fixed-point test checks the cost and entropy signs.
+
 ## Full line previews
 
 ```sh
