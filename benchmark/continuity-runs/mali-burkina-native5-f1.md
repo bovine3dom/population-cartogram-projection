@@ -29,3 +29,11 @@ Completed in 47.9 seconds.
 Border median: 461.3 km. Local internal median: 114.3 km.
 
 Positive-area triangles: 36. See the CSV and per-pair outputs before selecting this result.
+
+## 2026-10-11T10:52:59.143 UTC — border0.25-fold0.01
+
+Completed in 4.5 seconds.
+
+Border median: 789.0 km. Local internal median: 42.9 km.
+
+Positive-area triangles: 8. See the CSV and per-pair outputs before selecting this result.
