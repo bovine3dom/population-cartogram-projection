@@ -43,7 +43,7 @@ end
 ContinuityExperiment.checkpoint(joinpath(out,"choices.jls"),choices)
 ContinuityExperiment.checkpoint(joinpath(out,"countries.jls"),countries)
 rows=NamedTuple[]
-best=Inf
+best=Ref(Inf)
 for indices in Iterators.product((eachindex(angles) for c in countries)...)
     plans=[choices[k][i] for (k,i) in enumerate(indices)]
     orientation=ContinuityDiagnostics.orientations(countries,plans)
@@ -51,10 +51,10 @@ for indices in Iterators.product((eachindex(angles) for c in countries)...)
     score=ContinuityExperiment.objective(countries,plans,edges,1.,eta;weights,scale_km=900.,form=:distribution,saturating=false)
     name=join(angles[collect(indices)],'-')
     push!(rows,(;name,objective=score,positive_area_km2=sum(orientation.positive_area_km2),metrics...))
-    if score<best
-        best=score
+    if score<best[]
+        best[]=score
         ContinuityExperiment.checkpoint(joinpath(out,"best.jls"),plans)
     end
 end
 CSV.write(joinpath(out,"summary.csv"),DataFrame(rows))
-println("Completed $(length(rows)) pose combinations. Best original objective=$best")
+println("Completed $(length(rows)) pose combinations. Best original objective=$(best[])")
