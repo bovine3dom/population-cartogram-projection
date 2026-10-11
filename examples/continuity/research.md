@@ -144,8 +144,13 @@ cases. `CONTINUITY_OUTER_STEPS` sets the step limit; its default is 30.
 
 ## Proximal step check
 
-`proximal_study.jl BASELINE_STUDY_DIRECTORY NEW_OUTPUT_DIRECTORY` tests smaller
-transport changes on the coarse Africa case. The inner objective adds
+`proximal_study.jl BASELINE_STUDY_DIRECTORY NEW_OUTPUT_DIRECTORY [FACTOR=1]`
+tests smaller transport changes. It loads a complete matched baseline and checks
+that its entropy matches the requested subdivision factor. Select cases with
+`CONTINUITY_PROXIMAL_CASES=proximal0.1-fold0.01`. Its default step limit is 100.
+`CONTINUITY_INTERIOR_LIMIT` changes the diagnostic internal-distance guard from
+its default of 2 times baseline. A relaxed guard is not a production acceptance
+rule. The inner objective adds
 `proximal * KL(plan || previous_plan)`. This changes its cost by
 `-proximal * log(previous_plan)` and its entropy coefficient by `+proximal`.
 The outer acceptance test still uses the original objective. The inner solve
