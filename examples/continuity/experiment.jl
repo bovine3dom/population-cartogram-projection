@@ -137,7 +137,8 @@ function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,ma
     error = Inf
     best_error=Inf
     stagnant=0
-    polished=false
+    polish_error=Inf
+    last_polish=0
     for iteration in 1:maxiters
         update!(alpha, dc, beta, da, Float32(eta), length(b), Val(true); ndrange=32length(a))
         update!(beta, dc, alpha, db, Float32(eta), length(a), Val(false); ndrange=32length(b))
@@ -152,9 +153,11 @@ function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,ma
                 return (; plan, beta=Float64.(host_beta).+offset,
                         iterations=iteration, marginal_error=error,polished=false,refinement_iterations=0)
             end
-            if (!polished || iteration==maxiters) && error<.05 && max_relative<.5 &&
+            retry=error<polish_error/2 || (stagnant>=4 && iteration-last_polish>=500)
+            if (retry || iteration==maxiters) && error<.05 && max_relative<.5 &&
                (error<.001 || stagnant>=4 || iteration==maxiters)
-                polished=true
+                polish_error=error
+                last_polish=iteration
                 refined=polish_plan(plan,a,b,backend;tolerance)
                 if !isnothing(refined)
                     return (;plan=refined.plan,beta=Float64.(host_beta).+offset.+eta.*refined.log_beta_correction,
