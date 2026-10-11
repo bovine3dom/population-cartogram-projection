@@ -421,7 +421,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
                   fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
-                  proximal=0.0,anneal=false,accelerate=false,internal_form=form)
+                  proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing)
     proximal>=0 || error("proximal weight must be nonnegative")
     matrix_free && proximal>0 && error("proximal costs require the dense experimental path")
     ispath(outdir) && error("refusing to overwrite $outdir")
@@ -459,6 +459,22 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     export_seams(joinpath(outdir,"baseline-seams.csv"),countries,plans,edges)
     rows = [(; iteration=0, damping=0.0, accepted=true, objective=score_plan(plans), baseline...)]
     CSV.write(joinpath(outdir,"metrics.csv"), DataFrame(rows))
+    within_limits(m) = m.spread_mean <= spread_limit*baseline.spread_mean &&
+                       m.spread_p90 <= spread_limit*baseline.spread_p90 &&
+                       m.interior_p90 <= interior_limit*baseline.interior_p90 &&
+                       m.interior_max <= interior_limit*baseline.interior_max
+    if !isnothing(starting_plans)
+        length(starting_plans)==length(countries) || error("seed country count differs")
+        for (c,p) in zip(countries,starting_plans)
+            size(p)==size(c.cost) && all(x->isfinite(x)&&x>=0,p) || error("invalid seed plan")
+            maximum(abs.(vec(sum(p;dims=2))./c.a.-1))<=1e-8 || error("seed source masses differ")
+        end
+        seed_metrics=metrics(countries,starting_plans,edges)
+        seed_metrics.marginal_error<=inner_tolerance && seed_metrics.target_max_relative<=.001 || error("seed target masses differ")
+        within_limits(seed_metrics) || error("seed exceeds distortion guards")
+        plans=copy(starting_plans)
+        CSV.write(joinpath(outdir,"seed-metrics.csv"),DataFrame([(;objective=score_plan(plans),seed_metrics...)]))
+    end
     trials = NamedTuple[]
     duals = Any[nothing for c in countries]
     for iteration in 1:outer_steps
@@ -483,9 +499,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             trial = [(1-damping).*p .+ damping.*s for (p,s) in zip(plans,candidate)]
             score = score_plan(trial)
             m = metrics(countries,trial,edges)
-            acceptable = score < before - 1e-10 && m.spread_mean <= spread_limit*baseline.spread_mean && m.spread_p90 <= spread_limit*baseline.spread_p90 &&
-                         m.interior_p90 <= interior_limit*baseline.interior_p90 &&
-                         m.interior_max <= interior_limit*baseline.interior_max
+            acceptable = score < before - 1e-10 && within_limits(m)
             push!(trials, (; iteration, damping, accepted=acceptable, objective=score, m...))
             if acceptable
                 plans = trial
