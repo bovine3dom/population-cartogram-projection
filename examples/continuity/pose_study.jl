@@ -49,12 +49,13 @@ for indices in Iterators.product((eachindex(angles) for c in countries)...)
     orientation=ContinuityDiagnostics.orientations(countries,plans)
     metrics=ContinuityExperiment.metrics(countries,plans,edges)
     score=ContinuityExperiment.objective(countries,plans,edges,1.,eta;weights,scale_km=900.,form=:distribution,saturating=false)
+    strong_score=ContinuityExperiment.objective(countries,plans,edges,10.,eta;weights,scale_km=900.,form=:distribution,saturating=false)
     name=join(angles[collect(indices)],'-')
-    push!(rows,(;name,objective=score,positive_area_km2=sum(orientation.positive_area_km2),metrics...))
-    if score<best[]
-        best[]=score
+    push!(rows,(;name,objective=score,strong_objective=strong_score,positive_area_km2=sum(orientation.positive_area_km2),metrics...))
+    if strong_score<best[]
+        best[]=strong_score
         ContinuityExperiment.checkpoint(joinpath(out,"best.jls"),plans)
     end
 end
 CSV.write(joinpath(out,"summary.csv"),DataFrame(rows))
-println("Completed $(length(rows)) pose combinations. Best original objective=$(best[])")
+println("Completed $(length(rows)) pose combinations. Best strength-10 objective=$(best[])")
