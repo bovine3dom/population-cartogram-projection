@@ -127,7 +127,21 @@ function sinkhorn(cost,a,b,backend;kwargs...)
 end
 
 function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,maxiters=10000,
-                    initial_beta=nothing)
+                    initial_beta=nothing,anneal=false)
+    if anneal
+        iterations=refinement_iterations=0
+        result=nothing
+        for factor in (64.,16.,4.,1.)
+            result=solve_cost(shifted,dc,offset,a,b,backend;eta=eta*factor,
+                              tolerance=factor==1 ? tolerance : max(tolerance,1e-3),maxiters,initial_beta)
+            initial_beta=result.beta
+            iterations+=result.iterations
+            refinement_iterations+=result.refinement_iterations
+            println("Temperature factor $factor: $(result.iterations) dual + $(result.refinement_iterations) primal, residual=$(result.marginal_error)")
+            flush(stdout)
+        end
+        return merge(result,(;iterations,refinement_iterations))
+    end
     da, db = PCP._copy_to_backend(backend, Float32.(a)), PCP._copy_to_backend(backend, Float32.(b))
     alpha = KA.zeros(backend,Float32,length(a))
     beta = isnothing(initial_beta) ? KA.zeros(backend,Float32,length(b)) :
@@ -374,7 +388,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
                   fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
-                  proximal=0.0)
+                  proximal=0.0,anneal=false)
     proximal>=0 || error("proximal weight must be nonnegative")
     matrix_free && proximal>0 && error("proximal costs require the dense experimental path")
     ispath(outdir) && error("refusing to overwrite $outdir")
@@ -388,7 +402,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],
         matrix_free=[matrix_free],internal_scale=[internal_scale],inner_tolerance=[inner_tolerance],
-        proximal=[proximal],outer_steps=[outer_steps],
+        proximal=[proximal],anneal=[anneal],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
@@ -396,8 +410,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     if isnothing(initial_plans)
         for c in countries
             elapsed = @elapsed result = matrix_free ?
-                feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta,tolerance=inner_tolerance) :
-                sinkhorn(c.cost,c.a,c.b,backend;eta,tolerance=inner_tolerance)
+                feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta,tolerance=inner_tolerance,anneal) :
+                sinkhorn(c.cost,c.a,c.b,backend;eta,tolerance=inner_tolerance,anneal)
             println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) dual + $(result.refinement_iterations) primal iterations, residual=$(result.marginal_error)")
             flush(stdout)
             push!(plans, result.plan)
@@ -421,9 +435,9 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             _,fg=fold_penalty_gradient(countries,plans,faces;forces_only=matrix_free)
             gradient = [g .+ fold_strength.*f for (g,f) in zip(gradient,fg)]
         end
-        solutions = [matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance) :
+        solutions = [matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance,anneal) :
                      sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
-                              eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance)
+                              eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal)
                      for (k,(c,g)) in enumerate(zip(countries,gradient))]
         println("Inner $iteration: ",[(c.code,s.iterations,s.refinement_iterations,s.marginal_error)
                                       for (c,s) in zip(countries,solutions)])

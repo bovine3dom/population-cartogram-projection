@@ -23,6 +23,8 @@ const CD = ContinuityDiagnostics
     @test warm.plan ≈ offset.plan atol=1e-6
     proximal=CE.sinkhorn(c .- .2log.(result.plan),a,b,CE.KA.CPU();eta=.3,tolerance=1e-6)
     @test proximal.plan ≈ result.plan atol=1e-6
+    annealed=CE.sinkhorn(c,a,b,CE.KA.CPU();eta=.1,tolerance=1e-6,anneal=true)
+    @test annealed.plan ≈ result.plan atol=1e-6
     @test_throws ErrorException CE.sinkhorn(c,a,b,CE.KA.CPU();maxiters=1)
     if get(ENV,"CONTINUITY_GPU_TEST","") == "1"
         @eval using oneAPI

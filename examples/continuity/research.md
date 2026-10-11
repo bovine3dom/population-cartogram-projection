@@ -119,7 +119,13 @@ For subdivision factor `f`, the study scales entropy by `1/f²` and internal
 penalty weight by `f²`. This is an experimental discretization choice: the mean
 squared difference across internal edges decreases with cell width squared.
 Border weight is not multiplied by `f²`. Always compare with a fresh baseline
-at the same settings. Subdivision preserves the OWID outline but reduces the
+at the same settings. Refined studies now use entropy continuation: solve at
+64, 16, and 4 times the requested entropy, then solve at the requested value.
+Each stage uses the preceding dual potentials. Intermediate target L1 tolerance
+is 0.001; the final stage retains the specified strict tests. This does not
+accept a higher-entropy result as the final mapping.
+
+Subdivision preserves the OWID outline but reduces the
 population that must fit in its one-cell-wide border strip.
 
 Set `CONTINUITY_DEADLINE` to an ISO date and time in UTC. The runner checks it

@@ -54,12 +54,12 @@ for cfg in configs
     println("$(now(UTC)) Trial: $name"); flush(stdout)
     try
         base=get!(base_cache,eta) do
-            [ContinuityExperiment.feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta,tolerance=1e-4).plan for c in countries]
+            [ContinuityExperiment.feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta,tolerance=1e-4,anneal=factor>1).plan for c in countries]
         end
         result=ContinuityExperiment.run_case(countries,backend,path;
             borders,border_share,fold_strength=fold_strength*factor^2,eta,strength=1.0,form=:distribution,saturating=false,
             scale_km=900.,interior_limit=2.,spread_limit=1.25,outer_steps,
-            initial_plans=base,export_arrow=false,matrix_free=true,internal_scale=factor^2,inner_tolerance=1e-4)
+            initial_plans=base,export_arrow=false,matrix_free=true,internal_scale=factor^2,inner_tolerance=1e-4,anneal=factor>1)
         plans=deserialize(joinpath(path,"candidate.jls"))
         orientation=ContinuityDiagnostics.orientations(countries,plans)
         CSV.write(joinpath(path,"candidate-orientation.csv"),orientation)
