@@ -118,3 +118,25 @@ agreement, force gradients, orientation gradients, and marginal refinement.
 
 Next: repeat the fold study, then validate at native H3-5 and subdivided targets.
 The core package and production H3-MON files remain unchanged.
+
+## 08:30 UTC — Bounded validation queue
+
+Started a deadline-bounded queue for fold tests, native H3-5 fits at factors 1,
+3, and 5, Mali–Burkina Faso and Germany–Poland holdouts, and a Kontur H3-6/factor-2
+check. The three H3-6 country extracts finished successfully in the background.
+The queue writes small case reports and commits only those report paths. Large
+plans remain ignored. Candidate checkpoints now use an atomic rename, so an
+interrupted write does not replace the previous complete plan.
+
+The strict fold rerun is producing balanced candidates but spends too much time
+near the Float32 precision limit. Added row and column cost offsets to the
+matrix-free path. These leave the constrained optimum unchanged. A real Angola
+inner solve then converged in 1,250 dual iterations, without primal refinement,
+at target L1 error 0.00000974.
+
+For subsequent native-resolution studies, use target L1 tolerance 0.0001 instead
+of 0.00001. Keep the maximum relative target error limit at 0.001 and keep exact
+source normalization. This is an explicit numerical-budget change, not a
+relaxation of country membership or target geometry. Baseline and candidate use
+the same tolerance, and both achieved errors are recorded. It limits average
+absolute target error to 0.01% and each target's relative error to 0.1%.

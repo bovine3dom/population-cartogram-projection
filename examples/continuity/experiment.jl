@@ -19,8 +19,9 @@ end
     s,t=c.source,c.target
     base=PCP._matrix_free_cost(s[1][i],s[2][i],s[3][i],s[4][i],
                                t[1][j],t[2][j],t[3][j],t[4][j],c.scale)
-    return base + muladd(c.geo[1,i],c.force[1,j],
-                        muladd(c.geo[2,i],c.force[2,j],c.geo[3,i]*c.force[3,j]))
+    value = base + muladd(c.geo[1,i],c.force[1,j],
+                         muladd(c.geo[2,i],c.force[2,j],c.geo[3,i]*c.force[3,j]))
+    return (value-c.source_offset[i])-c.target_offset[j]
 end
 
 # Exact reductions: experimental costs must not use the core's spatial pruning.
@@ -171,17 +172,23 @@ function feature_sinkhorn(c,forces,backend;kwargs...)
     source=(p.source_x_hi,p.source_x_lo,p.source_y_hi,p.source_y_lo)
     target=(p.target_x_hi,p.target_x_lo,p.target_y_hi,p.target_y_lo)
     host=(;source,target,scale=p.inverse_distance_scale,
-          geo=Float32.(c.xyz .- mean(c.xyz;dims=2)),force=Float32.(forces .- mean(forces;dims=2)))
+          geo=Float32.(c.xyz .- mean(c.xyz;dims=2)),force=Float32.(forces .- mean(forces;dims=2)),
+          source_offset=zeros(Float32,length(c.a)),target_offset=zeros(Float32,length(c.b)))
     cost=Matrix{Float32}(undef,length(c.a),length(c.b))
     Threads.@threads for j in eachindex(c.b)
         for i in eachindex(c.a)
             cost[i,j]=pair_cost(host,i,j)
         end
     end
+    host.source_offset .= vec(minimum(cost;dims=2))
+    cost .-= host.source_offset
+    host.target_offset .= vec(minimum(cost;dims=1))
+    cost .-= transpose(host.target_offset)
     copy_device(x)=PCP._copy_to_backend(backend,x)
     device=(source=map(copy_device,source),target=map(copy_device,target),scale=host.scale,
-            geo=copy_device(host.geo),force=copy_device(host.force))
-    return solve_cost(cost,device,zeros(length(c.b)),c.a,c.b,backend;kwargs...)
+            geo=copy_device(host.geo),force=copy_device(host.force),
+            source_offset=copy_device(host.source_offset),target_offset=copy_device(host.target_offset))
+    return solve_cost(cost,device,Float64.(host.target_offset),c.a,c.b,backend;kwargs...)
 end
 
 function country(path, code; factor=1)
@@ -363,7 +370,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   borders=Set([(276,616)]), border_share=nothing, scale_km=300.0,
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
-                  fold_strength=0.0, matrix_free=false, internal_scale=1.0)
+                  fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5)
     ispath(outdir) && error("refusing to overwrite $outdir")
     mkpath(outdir)
     edges = graph(countries; borders)
@@ -374,7 +381,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],
-        matrix_free=[matrix_free],internal_scale=[internal_scale],outer_steps=[outer_steps],
+        matrix_free=[matrix_free],internal_scale=[internal_scale],inner_tolerance=[inner_tolerance],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
@@ -382,7 +389,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     if isnothing(initial_plans)
         for c in countries
             elapsed = @elapsed result = matrix_free ?
-                feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta) : sinkhorn(c.cost,c.a,c.b,backend;eta)
+                feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta,tolerance=inner_tolerance) :
+                sinkhorn(c.cost,c.a,c.b,backend;eta,tolerance=inner_tolerance)
             println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) dual + $(result.refinement_iterations) primal iterations, residual=$(result.marginal_error)")
             flush(stdout)
             push!(plans, result.plan)
@@ -406,9 +414,12 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             _,fg=fold_penalty_gradient(countries,plans,faces;forces_only=matrix_free)
             gradient = [g .+ fold_strength.*f for (g,f) in zip(gradient,fg)]
         end
-        solutions = [matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k]) :
-                     sinkhorn(c.cost .+ g,c.a,c.b,backend;eta,initial_beta=duals[k])
+        solutions = [matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance) :
+                     sinkhorn(c.cost .+ g,c.a,c.b,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance)
                      for (k,(c,g)) in enumerate(zip(countries,gradient))]
+        println("Inner $iteration: ",[(c.code,s.iterations,s.refinement_iterations,s.marginal_error)
+                                      for (c,s) in zip(countries,solutions)])
+        flush(stdout)
         duals = [s.beta for s in solutions]
         candidate = [s.plan for s in solutions]
         before = score_plan(plans)

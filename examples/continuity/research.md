@@ -107,9 +107,11 @@ path with the dense solver.
 Near convergence, Float32 dual potentials can stop changing before the strict
 marginal test passes. A short primal matrix-scaling refinement then runs on
 KA/oneAPI. It temporarily stores the candidate matrix on the GPU. It does not
-use a CPU solver or relax tolerances. Accepted plans require total target
-marginal L1 error at most 0.00001 and maximum relative target error at most 0.001.
-Warm starts retain dual offsets and any primal-refinement correction.
+use a CPU solver or change the specified tolerance. The default target marginal
+L1 tolerance is 0.00001. The subdivision studies use 0.0001 to reduce solve time.
+Both require maximum relative target error at most 0.001. Source masses remain
+exact after row normalization. Warm starts retain dual offsets and any
+primal-refinement correction.
 
 For subdivision factor `f`, the study scales entropy by `1/f²` and internal
 penalty weight by `f²`. This is an experimental discretization choice: the mean
