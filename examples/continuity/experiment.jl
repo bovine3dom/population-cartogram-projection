@@ -1,6 +1,6 @@
 module ContinuityExperiment
 
-using Arrow, CSV, DataFrames, H3, LinearAlgebra, Statistics
+using Arrow, CSV, DataFrames, H3, LinearAlgebra, Statistics, Serialization
 using PopulationCartogramProjection
 import KernelAbstractions as KA
 using KernelAbstractions: @kernel, @index, @localmem, @synchronize
@@ -78,14 +78,14 @@ function sinkhorn(cost, a, b, backend; eta=0.002, tolerance=0.00001, maxiters=10
     Base.error("Sinkhorn did not converge: marginal error=$error")
 end
 
-function country(path, code)
+function country(path, code; factor=1)
     raw = DataFrame(Arrow.Table(path))
     all(==(code), raw.country_code) || error("wrong source country")
     allunique(raw.id) || error("duplicate source ids")
     centres = H3.API.cellToLatLng.(raw.id)
     source = DataFrame(id=UInt64.(raw.id), x=[rad2deg(c.lng) for c in centres],
                        y=[rad2deg(c.lat) for c in centres], value=Float64.(raw.population))
-    target = load_cartogram(code)
+    target = load_cartogram(code; factor)
     PCP._validate_inputs(target, source)
     problem = PCP._prepare_problem(target, source)
     cost = Float64[PCP._cost(problem, i, j) for i in 1:nrow(source), j in 1:nrow(target)]
@@ -121,25 +121,34 @@ function export_seams(path,countries,plans,edges)
     pairs = sort!(unique([minmax(k,l) for (k,j,l,t) in edges if k != l]))
     isempty(pairs) && return
     CSV.write(path,DataFrame([(; country_a=countries[k].code,country_b=countries[l].code,
-        metrics(countries,plans,filter(e -> minmax(e[1],e[3])==(k,l),edges))...)
+        metrics(countries,plans,filter(e -> e[1]==e[3] || minmax(e[1],e[3])==(k,l),edges))...)
         for (k,l) in pairs]))
 end
 
 means(c, p) = (c.xyz * p) ./ sum(p; dims=1)
 
 function penalty_gradient(countries, plans, edges; scale_km=300.0,
-                          weights=fill(1/max(length(edges),1),length(edges)))
+                          weights=fill(1/max(length(edges),1),length(edges)),
+                          form=:mean, saturating=true)
     q = [means(c, p) for (c, p) in zip(countries, plans)]
     g = [zeros(size(v)) for v in q]
     tau2 = (scale_km / 6371)^2
+    form in (:mean,:distribution) || error("unknown continuity penalty")
     penalty = 0.0
     for ((k, j, l, t), weight) in zip(edges, weights)
         d = q[k][:, j] - q[l][:, t]
-        decay = exp(-sum(abs2, d) / (2tau2))
-        penalty += weight * (1 - decay)
-        derivative = weight .* decay .* d ./ tau2
-        g[k][:, j] .+= derivative
-        g[l][:, t] .-= derivative
+        squared = form == :mean ? sum(abs2,d) : max(0.0,2-2dot(q[k][:,j],q[l][:,t]))
+        scaled = squared / (2tau2)
+        decay = saturating ? exp(-scaled) : 1.0
+        penalty += weight * (saturating ? -expm1(-scaled) : scaled)
+        if form == :mean
+            derivative = weight .* decay .* d ./ tau2
+            g[k][:, j] .+= derivative
+            g[l][:, t] .-= derivative
+        else
+            g[k][:,j] .-= weight .* decay .* q[l][:,t] ./ tau2
+            g[l][:,t] .-= weight .* decay .* q[k][:,j] ./ tau2
+        end
     end
     gradient = [(transpose(c.xyz) * v .- sum(q[k] .* v; dims=1)) ./ sum(plans[k]; dims=1)
                 for (k, (c, v)) in enumerate(zip(countries, g))]
@@ -162,7 +171,21 @@ function metrics(countries, plans, edges)
     spread = vcat([6371sqrt.(max.(0.0, 1 .- vec(sum(abs2,v; dims=1)))) for v in q]...)
     percentile(v, p) = isempty(v) ? 0.0 : quantile(v, p)
     marginal = maximum(sum(abs.(vec(sum(p; dims=1)) .- c.b)) for (c,p) in zip(countries,plans))
-    return (; interior_p50=percentile(interior,.5), interior_p90=percentile(interior,.9),
+    border_targets = Set{Tuple{Int,Int}}()
+    for (k,j,l,t) in edges
+        k == l && continue
+        push!(border_targets,(k,j)); push!(border_targets,(l,t))
+    end
+    local_indices = [i for (i,(k,j,l,t)) in enumerate(edges)
+                     if k==l && ((k,j) in border_targets || (l,t) in border_targets)]
+    local_internal = distances[local_indices]
+    rms = [6371sqrt(max(0.0,2-2dot(q[k][:,j],q[l][:,t]))) for (k,j,l,t) in edges]
+    cross_rms = [d for (d,e) in zip(rms,edges) if e[1]!=e[3]]
+    local_rms = rms[local_indices]
+    return (; local_p50=percentile(local_internal,.5),local_p90=percentile(local_internal,.9),
+            cross_rms_p50=percentile(cross_rms,.5),cross_rms_p90=percentile(cross_rms,.9),
+            local_rms_p50=percentile(local_rms,.5),local_rms_p90=percentile(local_rms,.9),
+            interior_p50=percentile(interior,.5), interior_p90=percentile(interior,.9),
             interior_max=percentile(interior,1), seam_p50=percentile(seam,.5),
             seam_p90=percentile(seam,.9), spread_mean=mean(spread),
             spread_p90=percentile(spread,.9), marginal_error=marginal)
@@ -187,33 +210,38 @@ end
 
 function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_steps=3,
                   borders=Set([(276,616)]), border_share=nothing, scale_km=300.0,
-                  interior_limit=Inf)
+                  interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
+                  initial_plans=nothing, export_arrow=true)
     ispath(outdir) && error("refusing to overwrite $outdir")
     mkpath(outdir)
     edges = graph(countries; borders)
     weights = edge_weights(edges, border_share)
-    score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km)
+    score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km,form,saturating)
     CSV.write(joinpath(outdir,"settings.csv"), DataFrame(;
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
-        interior_limit=[interior_limit], outer_steps=[outer_steps],
+        interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],
+        saturating=[saturating],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
-    plans = Matrix{Float64}[]
-    for c in countries
-        elapsed = @elapsed result = sinkhorn(c.cost, c.a, c.b, backend; eta)
-        println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) iterations, residual=$(result.marginal_error)")
-        flush(stdout)
-        push!(plans, result.plan)
+    plans = isnothing(initial_plans) ? Matrix{Float64}[] : copy(initial_plans)
+    if isnothing(initial_plans)
+        for c in countries
+            elapsed = @elapsed result = sinkhorn(c.cost, c.a, c.b, backend; eta)
+            println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) iterations, residual=$(result.marginal_error)")
+            flush(stdout)
+            push!(plans, result.plan)
+        end
     end
     baseline = metrics(countries, plans, edges)
-    export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
+    export_arrow && export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
+    serialize(joinpath(outdir,"baseline.jls"),plans)
     export_seams(joinpath(outdir,"baseline-seams.csv"),countries,plans,edges)
     rows = [(; iteration=0, damping=0.0, accepted=true, objective=score_plan(plans), baseline...)]
     CSV.write(joinpath(outdir,"metrics.csv"), DataFrame(rows))
     trials = NamedTuple[]
     for iteration in 1:outer_steps
-        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km)
+        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,saturating)
         candidate = [sinkhorn(c.cost .+ strength .* g, c.a, c.b, backend; eta).plan
                      for (c,g) in zip(countries,gradient)]
         before = score_plan(plans)
@@ -222,7 +250,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             trial = [(1-damping).*p .+ damping.*s for (p,s) in zip(plans,candidate)]
             score = score_plan(trial)
             m = metrics(countries,trial,edges)
-            acceptable = score < before - 1e-10 && m.spread_mean <= 1.05baseline.spread_mean && m.spread_p90 <= 1.05baseline.spread_p90 &&
+            acceptable = score < before - 1e-10 && m.spread_mean <= spread_limit*baseline.spread_mean && m.spread_p90 <= spread_limit*baseline.spread_p90 &&
                          m.interior_p90 <= interior_limit*baseline.interior_p90 &&
                          m.interior_max <= interior_limit*baseline.interior_max
             push!(trials, (; iteration, damping, accepted=acceptable, objective=score, m...))
@@ -236,13 +264,15 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         if !accepted
             push!(rows, (; iteration, damping=0.0, accepted=false, objective=before, metrics(countries,plans,edges)...))
         end
+        serialize(joinpath(outdir,"candidate.jls"),plans)
         CSV.write(joinpath(outdir,"metrics.csv"),DataFrame(rows))
         CSV.write(joinpath(outdir,"trials.csv"),DataFrame(trials))
         println("Outer $iteration: $(last(rows))")
         flush(stdout)
         accepted || break
     end
-    export_mapping(joinpath(outdir,"candidate.arrow"), countries, plans)
+    export_arrow && export_mapping(joinpath(outdir,"candidate.arrow"), countries, plans)
+    serialize(joinpath(outdir,"candidate.jls"),plans)
     export_seams(joinpath(outdir,"candidate-seams.csv"),countries,plans,edges)
     return rows
 end

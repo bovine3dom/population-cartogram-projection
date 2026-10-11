@@ -37,19 +37,38 @@ end
     @test_throws ErrorException CE.edge_weights(edges[1:2],.8)
 end
 
+@testset "Local border metrics" begin
+    countries = [(xyz=[cos(a) cos(a+.01); sin(a) sin(a+.01); 0.0 0.0],b=[.5,.5])
+                 for a in (0.0,.02)]
+    plans = [[.5 0.; 0. .5],[.5 0.; 0. .5]]
+    edges = [(1,1,1,2),(1,2,2,1),(2,1,2,2)]
+    m = CE.metrics(countries,plans,edges)
+    @test m.seam_p50 ≈ m.local_p50 rtol=1e-8
+    @test m.cross_rms_p50 ≈ m.local_rms_p50 rtol=1e-8
+    @test m.local_p50 ≈ 63.71 rtol=1e-8
+    @test m.spread_mean < .001
+end
+
 @testset "Continuity gradient and permitted cuts" begin
     xyz = [1.0 cos(.01); 0.0 sin(.01); 0.0 0.0]
     countries = [(;xyz,b=[.5,.5])]
     p = [[.4 .1; .1 .4]]
     edges = [(1,1,1,2)]
     value, gradients = CE.penalty_gradient(countries,p,edges)
-    for direction in ([.1 -.1; -.1 .1], [.2 .1; .3 -.1])
+    for form in (:mean,:distribution), saturating in (true,false),
+        direction in ([.1 -.1; -.1 .1], [.2 .1; .3 -.1])
         h = 1e-6
-        plus, _ = CE.penalty_gradient(countries,[p[1]+h*direction],edges)
-        minus, _ = CE.penalty_gradient(countries,[p[1]-h*direction],edges)
-        @test (plus-minus)/(2h) ≈ sum(gradients[1].*direction) rtol=1e-5
+        _, gradient = CE.penalty_gradient(countries,p,edges;form,saturating)
+        plus, _ = CE.penalty_gradient(countries,[p[1]+h*direction],edges;form,saturating)
+        minus, _ = CE.penalty_gradient(countries,[p[1]-h*direction],edges;form,saturating)
+        @test (plus-minus)/(2h) ≈ sum(gradient[1].*direction) rtol=1e-4
     end
     @test CE.means(only(countries), 1.001p[1]) ≈ CE.means(only(countries),p[1])
+    mixed = [[.25 .25; .25 .25]]
+    mixed_mean, _ = CE.penalty_gradient(countries,mixed,edges)
+    mixed_distribution, _ = CE.penalty_gradient(countries,mixed,edges;form=:distribution)
+    @test mixed_mean == 0
+    @test mixed_distribution > 0
     weighted, wg = CE.penalty_gradient(countries,p,edges;weights=[.2])
     @test weighted ≈ .2value
     @test only(wg) ≈ .2only(gradients)

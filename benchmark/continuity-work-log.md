@@ -38,3 +38,22 @@ Planned stages:
 4. Compare outcomes with nearby internal edges and inspect full line footprints.
 5. Validate useful settings on other African borders and at higher H3 resolution.
 6. Record limits, tests, and the best supported result before the deadline.
+
+## 07:08 UTC — Distribution checks and a stronger sweep
+
+Committed the starting point as `fdb0d70`. Stopped the unproductive Russia
+extraction. Added local border comparisons, full-plan checkpoints, and an
+expected source-to-source squared-distance penalty. The latter accounts for
+spread instead of considering target means alone. Both penalty forms have
+finite-difference derivative tests, including changes to target mass.
+
+All 37 experimental checks pass, including oneAPI/CPU agreement. The first
+12-setting sweep is running on oneAPI with a hard timeout at the window's end.
+Outputs: `output/continuity/africa-sweep-1/`.
+
+Early observation: stronger border forces improve the seam but increase jumps
+immediately inside it. Global internal percentiles hide part of this effect.
+Both baseline-local and candidate-local statistics must therefore be retained.
+The first distribution/quadratic setting reaches its 25% internal-maximum guard
+before the border median becomes comparable to the local internal median.
+
