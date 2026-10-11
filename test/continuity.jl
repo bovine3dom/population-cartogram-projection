@@ -25,12 +25,18 @@ const CD = ContinuityDiagnostics
     @test proximal.plan ≈ result.plan atol=1e-6
     annealed=CE.sinkhorn(c,a,b,CE.KA.CPU();eta=.1,tolerance=1e-6,anneal=true)
     @test annealed.plan ≈ result.plan atol=1e-6
+    @test only(CE.anderson_candidate([[.5],[.75]],[[.5],[.25]])) ≈ 1 atol=1e-9
+    sharp=CE.sinkhorn(c,a,b,CE.KA.CPU();eta=.01,tolerance=1e-6)
+    accelerated=CE.sinkhorn(c,a,b,CE.KA.CPU();eta=.01,tolerance=1e-6,accelerate=true)
+    @test accelerated.plan ≈ sharp.plan atol=1e-6
     @test_throws ErrorException CE.sinkhorn(c,a,b,CE.KA.CPU();maxiters=1)
     if get(ENV,"CONTINUITY_GPU_TEST","") == "1"
         @eval using oneAPI
         @test oneAPI.functional()
         gpu = CE.sinkhorn(c,a,b,oneAPI.oneAPIBackend();eta=.1,tolerance=1e-6)
         @test gpu.plan ≈ result.plan atol=1e-6
+        accelerated_gpu=CE.sinkhorn(c,a,b,oneAPI.oneAPIBackend();eta=.01,tolerance=1e-6,accelerate=true,anneal=true)
+        @test accelerated_gpu.plan ≈ sharp.plan atol=1e-6
     end
 end
 

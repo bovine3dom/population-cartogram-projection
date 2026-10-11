@@ -126,14 +126,25 @@ function sinkhorn(cost,a,b,backend;kwargs...)
     return solve_cost(shifted,dc,offset,a,b,backend;kwargs...)
 end
 
+function anderson_candidate(outputs,residuals)
+    length(outputs)>=2 || return nothing
+    r=hcat(residuals...)
+    gram=transpose(r)*r
+    ridge=max(1e-12*tr(gram),1e-30)
+    coefficients=(gram+ridge*I)\ones(length(outputs))
+    coefficients ./= sum(coefficients)
+    all(isfinite,coefficients) && maximum(abs,coefficients)<=20 || return nothing
+    return hcat(outputs...)*coefficients
+end
+
 function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,maxiters=10000,
-                    initial_beta=nothing,anneal=false)
+                    initial_beta=nothing,anneal=false,accelerate=false)
     if anneal
         iterations=refinement_iterations=0
         result=nothing
         for factor in (64.,16.,4.,1.)
             result=solve_cost(shifted,dc,offset,a,b,backend;eta=eta*factor,
-                              tolerance=factor==1 ? tolerance : max(tolerance,1e-3),maxiters,initial_beta)
+                              tolerance=factor==1 ? tolerance : max(tolerance,1e-3),maxiters,initial_beta,accelerate)
             initial_beta=result.beta
             iterations+=result.iterations
             refinement_iterations+=result.refinement_iterations
@@ -153,6 +164,9 @@ function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,ma
     stagnant=0
     polish_error=Inf
     last_polish=0
+    outputs=Vector{Float64}[]; residuals=Vector{Float64}[]
+    block_beta=isnothing(initial_beta) ? zeros(length(b)) : Float64.(initial_beta .- offset)
+    block_beta .-= mean(block_beta)
     for iteration in 1:maxiters
         update!(alpha, dc, beta, da, Float32(eta), length(b), Val(true); ndrange=32length(a))
         update!(beta, dc, alpha, db, Float32(eta), length(a), Val(false); ndrange=32length(b))
@@ -161,6 +175,25 @@ function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,ma
             plan = reconstruct(shifted, host_beta, a, eta)
             error = sum(abs.(vec(sum(plan; dims=1)) .- b))
             max_relative = maximum(abs.(vec(sum(plan;dims=1))./b .- 1))
+            if accelerate
+                current=Float64.(host_beta); current .-= mean(current)
+                push!(outputs,current); push!(residuals,current-block_beta)
+                length(outputs)>5 && (popfirst!(outputs);popfirst!(residuals))
+                proposal=anderson_candidate(outputs,residuals)
+                if !isnothing(proposal)
+                    proposed_beta=Float32.(proposal)
+                    proposed_plan=reconstruct(shifted,proposed_beta,a,eta)
+                    totals=vec(sum(proposed_plan;dims=1))
+                    proposed_error=sum(abs.(totals.-b))
+                    proposed_relative=maximum(abs.(totals./b.-1))
+                    if max(proposed_error/tolerance,proposed_relative/.001)<.9max(error/tolerance,max_relative/.001)
+                        host_beta .= proposed_beta
+                        beta=PCP._copy_to_backend(backend,host_beta)
+                        plan=proposed_plan; error=proposed_error; max_relative=proposed_relative
+                    end
+                end
+                block_beta=Float64.(host_beta); block_beta .-= mean(block_beta)
+            end
             stagnant = error >= best_error*(1-1e-3) ? stagnant+1 : 0
             best_error=min(best_error,error)
             if error <= tolerance && max_relative <= 0.001
@@ -388,7 +421,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
                   fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
-                  proximal=0.0,anneal=false)
+                  proximal=0.0,anneal=false,accelerate=false)
     proximal>=0 || error("proximal weight must be nonnegative")
     matrix_free && proximal>0 && error("proximal costs require the dense experimental path")
     ispath(outdir) && error("refusing to overwrite $outdir")
@@ -402,7 +435,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],
         matrix_free=[matrix_free],internal_scale=[internal_scale],inner_tolerance=[inner_tolerance],
-        proximal=[proximal],anneal=[anneal],outer_steps=[outer_steps],
+        proximal=[proximal],anneal=[anneal],accelerate=[accelerate],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
@@ -410,8 +443,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     if isnothing(initial_plans)
         for c in countries
             elapsed = @elapsed result = matrix_free ?
-                feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta,tolerance=inner_tolerance,anneal) :
-                sinkhorn(c.cost,c.a,c.b,backend;eta,tolerance=inner_tolerance,anneal)
+                feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta,tolerance=inner_tolerance,anneal,accelerate) :
+                sinkhorn(c.cost,c.a,c.b,backend;eta,tolerance=inner_tolerance,anneal,accelerate)
             println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) dual + $(result.refinement_iterations) primal iterations, residual=$(result.marginal_error)")
             flush(stdout)
             push!(plans, result.plan)
@@ -435,9 +468,9 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             _,fg=fold_penalty_gradient(countries,plans,faces;forces_only=matrix_free)
             gradient = [g .+ fold_strength.*f for (g,f) in zip(gradient,fg)]
         end
-        solutions = [matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance,anneal) :
+        solutions = [matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate) :
                      sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
-                              eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal)
+                              eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)
                      for (k,(c,g)) in enumerate(zip(countries,gradient))]
         println("Inner $iteration: ",[(c.code,s.iterations,s.refinement_iterations,s.marginal_error)
                                       for (c,s) in zip(countries,solutions)])

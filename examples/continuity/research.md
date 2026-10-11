@@ -123,7 +123,11 @@ at the same settings. Refined studies now use entropy continuation: solve at
 64, 16, and 4 times the requested entropy, then solve at the requested value.
 Each stage uses the preceding dual potentials. Intermediate target L1 tolerance
 is 0.001; the final stage retains the specified strict tests. This does not
-accept a higher-entropy result as the final mapping.
+accept a higher-entropy result as the final mapping. These studies also test
+Anderson acceleration of the dual potentials. A five-vector host calculation
+proposes a potential update after each 50 GPU steps. Accept it only if the
+measured marginal error improves by at least 10%. The final acceptance tests
+are unchanged. This small host calculation does not replace the GPU reductions.
 
 Subdivision preserves the OWID outline but reduces the
 population that must fit in its one-cell-wide border strip.
