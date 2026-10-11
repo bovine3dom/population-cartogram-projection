@@ -7,7 +7,16 @@ using KernelAbstractions: @kernel, @index, @localmem, @synchronize
 const PCP = PopulationCartogramProjection
 include(joinpath(@__DIR__, "..", "common.jl"))
 
-# Exact dense reductions: experimental costs must not use the core's spatial pruning.
+@inline pair_cost(cost::AbstractMatrix,i,j) = cost[i,j]
+@inline function pair_cost(c::NamedTuple,i,j)
+    s,t=c.source,c.target
+    base=PCP._matrix_free_cost(s[1][i],s[2][i],s[3][i],s[4][i],
+                               t[1][j],t[2][j],t[3][j],t[4][j],c.scale)
+    return base + muladd(c.geo[1,i],c.force[1,j],
+                        muladd(c.geo[2,i],c.force[2,j],c.geo[3,i]*c.force[3,j]))
+end
+
+# Exact reductions: experimental costs must not use the core's spatial pruning.
 @kernel function dense_reduce!(out, cost, dual, mass, eta, n, ::Val{ROWS}) where ROWS
     lane = @index(Local, Linear)
     j = @index(Group, Linear)
@@ -15,7 +24,7 @@ include(joinpath(@__DIR__, "..", "common.jl"))
     totals = @localmem Float32 (32,)
     high = -Inf32
     for i in lane:32:n
-        c = ROWS ? cost[j, i] : cost[i, j]
+        c = ROWS ? pair_cost(cost,j,i) : pair_cost(cost,i,j)
         high = max(high, dual[i] - c)
     end
     maxima[lane] = high
@@ -29,7 +38,7 @@ include(joinpath(@__DIR__, "..", "common.jl"))
     j = @index(Group, Linear)
     total = 0.0f0
     for i in lane:32:n
-        c = ROWS ? cost[j, i] : cost[i, j]
+        c = ROWS ? pair_cost(cost,j,i) : pair_cost(cost,i,j)
         total += exp((dual[i] - c - maxima[1]) / eta)
     end
     totals[lane] = total
@@ -46,6 +55,53 @@ include(joinpath(@__DIR__, "..", "common.jl"))
     end
 end
 
+@kernel function scale_reduce!(out,kernel,scale,mass,n,::Val{ROWS}) where ROWS
+    lane=@index(Local,Linear)
+    j=@index(Group,Linear)
+    totals=@localmem Float32 (32,)
+    total=0.0f0
+    for i in lane:32:n
+        value=ROWS ? kernel[j,i] : kernel[i,j]
+        total+=value*scale[i]
+    end
+    totals[lane]=total
+    @synchronize
+    for offset in (16,8,4,2,1)
+        if lane<=offset
+            totals[lane]+=totals[lane+offset]
+        end
+        @synchronize
+    end
+    j=@index(Group,Linear)
+    if lane==1
+        out[j]=mass[j]/totals[1]
+    end
+end
+
+function polish_plan(plan,a,b,backend; tolerance=1e-5,maxiters=500)
+    kernel=PCP._copy_to_backend(backend,Float32.(plan))
+    da,db=PCP._copy_to_backend(backend,Float32.(a)),PCP._copy_to_backend(backend,Float32.(b))
+    u,v=PCP._copy_to_backend(backend,ones(Float32,length(a))),PCP._copy_to_backend(backend,ones(Float32,length(b)))
+    host_u,host_v=ones(Float32,length(a)),ones(Float32,length(b))
+    update! = scale_reduce!(backend,32)
+    for iteration in 1:maxiters
+        update!(u,kernel,v,da,length(b),Val(true);ndrange=32length(a))
+        update!(v,kernel,u,db,length(a),Val(false);ndrange=32length(b))
+        if iteration%20==0
+            PCP._copy_to_host!(backend,host_u,u); PCP._copy_to_host!(backend,host_v,v)
+            all(x->isfinite(x)&&x>0,host_u) && all(x->isfinite(x)&&x>0,host_v) || return nothing
+            result=plan .* host_u .* transpose(host_v)
+            result .*= a ./ vec(sum(result;dims=2))
+            totals=vec(sum(result;dims=1))
+            error=sum(abs.(totals.-b))
+            if error<=tolerance && maximum(abs.(totals./b.-1))<=.001
+                return (;plan=result,log_beta_correction=log.(Float64.(host_v)),marginal_error=error)
+            end
+        end
+    end
+    return nothing
+end
+
 function reconstruct(cost, beta, a, eta)
     logits = (transpose(Float64.(beta)) .- cost) ./ eta
     logits .-= maximum(logits; dims=2)
@@ -54,15 +110,24 @@ function reconstruct(cost, beta, a, eta)
     return plan
 end
 
-function sinkhorn(cost, a, b, backend; eta=0.002, tolerance=0.00001, maxiters=10000)
+function sinkhorn(cost,a,b,backend;kwargs...)
     # A target-only offset does not change the optimum. It improves Float32 conditioning.
-    shifted = Float32.(cost .- minimum(cost; dims=1))
+    offset = vec(minimum(cost;dims=1))
+    shifted = Float32.(cost .- transpose(offset))
     dc = PCP._copy_to_backend(backend, shifted)
+    return solve_cost(shifted,dc,offset,a,b,backend;kwargs...)
+end
+
+function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,maxiters=10000,
+                    initial_beta=nothing)
     da, db = PCP._copy_to_backend(backend, Float32.(a)), PCP._copy_to_backend(backend, Float32.(b))
-    alpha, beta = KA.zeros(backend, Float32, length(a)), KA.zeros(backend, Float32, length(b))
+    alpha = KA.zeros(backend,Float32,length(a))
+    beta = isnothing(initial_beta) ? KA.zeros(backend,Float32,length(b)) :
+        PCP._copy_to_backend(backend,Float32.(initial_beta .- offset))
     host_beta = zeros(Float32, length(b))
     update! = dense_reduce!(backend, 32)
     error = Inf
+    polished=false
     for iteration in 1:maxiters
         update!(alpha, dc, beta, da, Float32(eta), length(b), Val(true); ndrange=32length(a))
         update!(beta, dc, alpha, db, Float32(eta), length(a), Val(false); ndrange=32length(b))
@@ -70,12 +135,40 @@ function sinkhorn(cost, a, b, backend; eta=0.002, tolerance=0.00001, maxiters=10
             PCP._copy_to_host!(backend, host_beta, beta)
             plan = reconstruct(shifted, host_beta, a, eta)
             error = sum(abs.(vec(sum(plan; dims=1)) .- b))
-            if error <= tolerance
-                return (; plan, iterations=iteration, marginal_error=error)
+            max_relative = maximum(abs.(vec(sum(plan;dims=1))./b .- 1))
+            if error <= tolerance && max_relative <= 0.001
+                return (; plan, beta=Float64.(host_beta).+offset,
+                        iterations=iteration, marginal_error=error,polished=false)
+            end
+            if (!polished || iteration==maxiters) && error<.001 && max_relative<.05
+                polished=true
+                refined=polish_plan(plan,a,b,backend;tolerance)
+                if !isnothing(refined)
+                    return (;plan=refined.plan,beta=Float64.(host_beta).+offset.+eta.*refined.log_beta_correction,
+                            iterations=iteration,marginal_error=refined.marginal_error,polished=true)
+                end
             end
         end
     end
     Base.error("Sinkhorn did not converge: marginal error=$error")
+end
+
+function feature_sinkhorn(c,forces,backend;kwargs...)
+    p=hasproperty(c,:problem) ? c.problem : PCP._prepare_problem(c.target,c.source)
+    source=(p.source_x_hi,p.source_x_lo,p.source_y_hi,p.source_y_lo)
+    target=(p.target_x_hi,p.target_x_lo,p.target_y_hi,p.target_y_lo)
+    host=(;source,target,scale=p.inverse_distance_scale,
+          geo=Float32.(c.xyz .- mean(c.xyz;dims=2)),force=Float32.(forces .- mean(forces;dims=2)))
+    cost=Matrix{Float32}(undef,length(c.a),length(c.b))
+    Threads.@threads for j in eachindex(c.b)
+        for i in eachindex(c.a)
+            cost[i,j]=pair_cost(host,i,j)
+        end
+    end
+    copy_device(x)=PCP._copy_to_backend(backend,x)
+    device=(source=map(copy_device,source),target=map(copy_device,target),scale=host.scale,
+            geo=copy_device(host.geo),force=copy_device(host.force))
+    return solve_cost(cost,device,zeros(length(c.b)),c.a,c.b,backend;kwargs...)
 end
 
 function country(path, code; factor=1)
@@ -92,7 +185,7 @@ function country(path, code; factor=1)
     xyz = hcat([[cos(c.lat)*cos(c.lng), cos(c.lat)*sin(c.lng), sin(c.lat)] for c in centres]...)
     a = source.value ./ sum(source.value)
     b = fill(1 / nrow(target), nrow(target))
-    return (; code, source, target, cost, xyz, a, b)
+    return (; code, source, target, cost, xyz, a, b, problem)
 end
 
 function graph(countries; borders=Set([(276,616)]))
@@ -129,7 +222,7 @@ means(c, p) = (c.xyz * p) ./ sum(p; dims=1)
 
 function penalty_gradient(countries, plans, edges; scale_km=300.0,
                           weights=fill(1/max(length(edges),1),length(edges)),
-                          form=:mean, saturating=true, reference=nothing)
+                          form=:mean, saturating=true, reference=nothing, forces_only=false)
     q = [means(c, p) for (c, p) in zip(countries, plans)]
     g = [zeros(size(v)) for v in q]
     tau2 = (scale_km / 6371)^2
@@ -153,15 +246,49 @@ function penalty_gradient(countries, plans, edges; scale_km=300.0,
             g[l][:,t] .-= weight .* decay .* q[k][:,j] ./ tau2
         end
     end
-    gradient = [(transpose(c.xyz) * v .- sum(q[k] .* v; dims=1)) ./ sum(plans[k]; dims=1)
-                for (k, (c, v)) in enumerate(zip(countries, g))]
+    gradient = forces_only ? [v./sum(p;dims=1) for (v,p) in zip(g,plans)] :
+        [(transpose(c.xyz) * v .- sum(q[k] .* v; dims=1)) ./ sum(plans[k]; dims=1)
+         for (k, (c, v)) in enumerate(zip(countries, g))]
     return penalty, gradient
+end
+
+function triangles(countries)
+    result=NTuple{4,Int}[]
+    for (k,c) in enumerate(countries)
+        lookup=Dict((r.x,r.y)=>j for (j,r) in enumerate(eachrow(c.target)))
+        for ((x,y),j) in lookup
+            all(haskey(lookup,pos) for pos in ((x+2,y),(x,y+2),(x+2,y+2))) || continue
+            right,down,diagonal=[lookup[pos] for pos in ((x+2,y),(x,y+2),(x+2,y+2))]
+            push!(result,(k,j,right,down),(k,diagonal,down,right))
+        end
+    end
+    return sort!(result)
+end
+
+function fold_penalty_gradient(countries,plans,triangles;area_scale=2500.0,area_tolerance=1.0,forces_only=false)
+    q=[means(c,p) for (c,p) in zip(countries,plans)]
+    g=[zeros(size(v)) for v in q]
+    penalty=0.0
+    coefficient=6371^2/(2area_scale*max(length(triangles),1))
+    for (k,a,b,d) in triangles
+        qa,qb,qd=q[k][:,a],q[k][:,b],q[k][:,d]
+        area=dot(qa,cross(qb,qd)) - 2area_tolerance/6371^2
+        area<=0 && continue
+        penalty+=coefficient*area
+        g[k][:,a].+=coefficient.*cross(qb,qd)
+        g[k][:,b].+=coefficient.*cross(qd,qa)
+        g[k][:,d].+=coefficient.*cross(qa,qb)
+    end
+    gradient=forces_only ? [v./sum(p;dims=1) for (v,p) in zip(g,plans)] :
+        [(transpose(c.xyz)*v .- sum(q[k].*v;dims=1))./sum(plans[k];dims=1)
+         for (k,(c,v)) in enumerate(zip(countries,g))]
+    return penalty,gradient
 end
 
 function objective(countries, plans, edges, strength, eta; kwargs...)
     base = sum(sum(c.cost .* p) + eta * sum(x -> x > 0 ? x * (log(x)-1) : 0.0, p)
                for (c, p) in zip(countries, plans))
-    penalty, _ = penalty_gradient(countries, plans, edges; kwargs...)
+    penalty, _ = penalty_gradient(countries, plans, edges; forces_only=true,kwargs...)
     return base + strength * penalty
 end
 
@@ -191,10 +318,13 @@ function metrics(countries, plans, edges)
             interior_p50=percentile(interior,.5), interior_p90=percentile(interior,.9),
             interior_max=percentile(interior,1), seam_p50=percentile(seam,.5),
             seam_p90=percentile(seam,.9), spread_mean=mean(spread),
-            spread_p90=percentile(spread,.9), marginal_error=marginal)
+            spread_p90=percentile(spread,.9), marginal_error=marginal,
+            target_max_relative=maximum(maximum(abs.(vec(sum(p;dims=1))./c.b .- 1))
+                                        for (c,p) in zip(countries,plans)))
 end
 
-function export_mapping(path, countries, plans)
+function export_mapping(path, countries, plans; retained=PCP.CUMULATIVE_WEIGHT)
+    0 < retained < 1 || error("retained must be between zero and one")
     output = DataFrame(x=Int[], y=Int[], id=UInt64[], code=Int[], weight=Float64[], weight_mean=Float64[])
     population = Dict{UInt64,Float64}()
     for c in countries, row in eachrow(c.source)
@@ -204,8 +334,9 @@ function export_mapping(path, countries, plans)
         totals = vec(sum(p; dims=1))
         for i in axes(p,1)
             weights = p[i,:] ./ c.a[i]
-            choice = PCP._select_weights(weights, collect(zip(c.target.x,c.target.y)); indices=true)
-            for j in choice.selected
+            order=sortperm(weights;rev=true)
+            count=searchsortedfirst(cumsum(weights[order]),retained)
+            for j in order[1:count]
                 push!(output, (c.target.x[j], c.target.y[j], c.source.id[i], c.code,
                                weights[j]*c.source.value[i]/population[c.source.id[i]], p[i,j]/totals[j]))
             end
@@ -218,29 +349,35 @@ end
 function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_steps=3,
                   borders=Set([(276,616)]), border_share=nothing, scale_km=300.0,
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
-                  initial_plans=nothing, export_arrow=true, preserve_displacements=false)
+                  initial_plans=nothing, export_arrow=true, preserve_displacements=false,
+                  fold_strength=0.0, matrix_free=false, internal_scale=1.0)
     ispath(outdir) && error("refusing to overwrite $outdir")
     mkpath(outdir)
     edges = graph(countries; borders)
     weights = edge_weights(edges, border_share)
+    weights .*= [e[1]==e[3] ? internal_scale : 1.0 for e in edges]
+    faces = triangles(countries)
     CSV.write(joinpath(outdir,"settings.csv"), DataFrame(;
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],
-        saturating=[saturating],preserve_displacements=[preserve_displacements],outer_steps=[outer_steps],
+        saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],
+        matrix_free=[matrix_free],internal_scale=[internal_scale],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
     plans = isnothing(initial_plans) ? Matrix{Float64}[] : copy(initial_plans)
     if isnothing(initial_plans)
         for c in countries
-            elapsed = @elapsed result = sinkhorn(c.cost, c.a, c.b, backend; eta)
+            elapsed = @elapsed result = matrix_free ?
+                feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta) : sinkhorn(c.cost,c.a,c.b,backend;eta)
             println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) iterations, residual=$(result.marginal_error)")
             flush(stdout)
             push!(plans, result.plan)
         end
     end
     reference = preserve_displacements ? [means(c,p) for (c,p) in zip(countries,plans)] : nothing
-    score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km,form,saturating,reference)
+    score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km,form,saturating,reference) +
+                    (fold_strength==0 ? 0.0 : fold_strength*first(fold_penalty_gradient(countries,p,faces;forces_only=true)))
     baseline = metrics(countries, plans, edges)
     export_arrow && export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
     serialize(joinpath(outdir,"baseline.jls"),plans)
@@ -248,10 +385,19 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     rows = [(; iteration=0, damping=0.0, accepted=true, objective=score_plan(plans), baseline...)]
     CSV.write(joinpath(outdir,"metrics.csv"), DataFrame(rows))
     trials = NamedTuple[]
+    duals = Any[nothing for c in countries]
     for iteration in 1:outer_steps
-        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,saturating,reference)
-        candidate = [sinkhorn(c.cost .+ strength .* g, c.a, c.b, backend; eta).plan
-                     for (c,g) in zip(countries,gradient)]
+        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,saturating,reference,forces_only=matrix_free)
+        gradient = [strength.*g for g in gradient]
+        if fold_strength>0
+            _,fg=fold_penalty_gradient(countries,plans,faces;forces_only=matrix_free)
+            gradient = [g .+ fold_strength.*f for (g,f) in zip(gradient,fg)]
+        end
+        solutions = [matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k]) :
+                     sinkhorn(c.cost .+ g,c.a,c.b,backend;eta,initial_beta=duals[k])
+                     for (k,(c,g)) in enumerate(zip(countries,gradient))]
+        duals = [s.beta for s in solutions]
+        candidate = [s.plan for s in solutions]
         before = score_plan(plans)
         accepted = false
         for damping in (2.0^-k for k in 1:10)

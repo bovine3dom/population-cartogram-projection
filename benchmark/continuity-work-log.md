@@ -87,3 +87,34 @@ source-normalized weights now account for each country's fraction of the parent
 population. Otherwise a line score could be counted twice. Full-plan optimisation
 is unchanged. All 50 CPU checks pass; GPU agreement was checked in the preceding
 stage. No production exports were changed.
+
+## 07:59 UTC — Subdivision, folds, and solver precision
+
+The native H3-5 data confirms the Angola–Zambia supply bound: 251 km on Angola's
+side. Subdivision changes this constraint without changing the artwork. The
+bound falls to 174 km at factor 2, 138 km at factor 3, and 99 km at factor 5.
+The number of cells along the seam grows more slowly than the total cell count,
+so the seam requires a smaller fraction of country population. This is a useful
+route to test, not a guarantee of continuity.
+
+The balanced coarse sweep completed. Strong distribution penalties can make the
+regional seam median smaller than the nearby internal median. However, the local
+internal median has increased, some country pairs still have large gaps, and
+orientation checks expose folds. The full before/after line plots at
+`output/continuity/preview-balanced4/lines.png` show these trade-offs. They use
+H3-MON's actual stroke projection. Transported population is nearly unchanged.
+
+Added a soft positive-area penalty and derivative tests. Added a matrix-free GPU
+cost representation for the geographic forces, while retaining full host plans
+for objective checks. Target/source-only cost constants are removed to improve
+conditioning. Warm starts preserve dual cost offsets.
+
+The first matrix-free fold study failed its strict marginal test at residuals
+of roughly 0.00002–0.00004. Failed outputs are retained. Added a short primal
+matrix-scaling refinement on KA/oneAPI to correct this Float32 dual precision
+limit. It runs only near a balanced solution. It does not use a CPU solver or
+relax the marginal criteria. All 65 experimental checks pass, including GPU
+agreement, force gradients, orientation gradients, and marginal refinement.
+
+Next: repeat the fold study, then validate at native H3-5 and subdivided targets.
+The core package and production H3-MON files remain unchanged.

@@ -18,12 +18,48 @@ const CD = ContinuityDiagnostics
           -(c[1,1]+c[2,2]-c[1,2]-c[2,1])/.1 atol=1e-5
     offset = CE.sinkhorn(c .+ [5.0 1.0 -3.0],a,b,CE.KA.CPU();eta=.1,tolerance=1e-6)
     @test offset.plan ≈ result.plan atol=1e-6
+    warm = CE.sinkhorn(c .+ [5.0 1.0 -3.0],a,b,CE.KA.CPU();eta=.1,tolerance=1e-6,
+                      initial_beta=result.beta)
+    @test warm.plan ≈ offset.plan atol=1e-6
     @test_throws ErrorException CE.sinkhorn(c,a,b,CE.KA.CPU();maxiters=1)
     if get(ENV,"CONTINUITY_GPU_TEST","") == "1"
         @eval using oneAPI
         @test oneAPI.functional()
         gpu = CE.sinkhorn(c,a,b,oneAPI.oneAPIBackend();eta=.1,tolerance=1e-6)
         @test gpu.plan ≈ result.plan atol=1e-6
+    end
+end
+
+@testset "GPU-compatible marginal refinement" begin
+    kernel=[.1 .3;.3 .3]
+    a,b=[.4,.6],[.5,.5]
+    expected=CE.sinkhorn(-log.(kernel),a,b,CE.KA.CPU();eta=1.,tolerance=1e-6)
+    result=CE.polish_plan(kernel,a,b,CE.KA.CPU();tolerance=1e-6)
+    @test !isnothing(result)
+    @test result.plan ≈ expected.plan atol=1e-6
+    @test vec(sum(result.plan;dims=2)) ≈ a atol=1e-12
+    @test isnothing(CE.polish_plan(kernel,a,b,CE.KA.CPU();maxiters=1))
+    if get(ENV,"CONTINUITY_GPU_TEST","")=="1"
+        gpu=CE.polish_plan(kernel,a,b,oneAPI.oneAPIBackend();tolerance=1e-6)
+        @test gpu.plan ≈ expected.plan atol=1e-6
+    end
+end
+
+@testset "Matrix-free geographic forces" begin
+    source=CE.DataFrame(id=[1,2],x=[.1,.2],y=[0.,.1],value=[.4,.6])
+    target=CE.DataFrame(x=[0,2,4],y=[0,0,0])
+    problem=CE.PCP._prepare_problem(target,source)
+    cost=[CE.PCP._cost(problem,i,j) for i in 1:2,j in 1:3]
+    xyz=[cos(.1) cos(.2);sin(.1) sin(.2);0. 0.]
+    c=(;source,target,problem,cost,xyz,a=[.4,.6],b=fill(1/3,3))
+    forces=[.1 .2 .3;.5 -.2 .1;.2 .8 -.5]
+    dense=cost+transpose(xyz.-CE.mean(xyz;dims=2))*forces
+    expected=CE.sinkhorn(dense,c.a,c.b,CE.KA.CPU();eta=.1,tolerance=1e-6)
+    result=CE.feature_sinkhorn(c,forces,CE.KA.CPU();eta=.1,tolerance=1e-6)
+    @test result.plan ≈ expected.plan atol=1e-6
+    if get(ENV,"CONTINUITY_GPU_TEST","")=="1"
+        gpu=CE.feature_sinkhorn(c,forces,oneAPI.oneAPIBackend();eta=.1,tolerance=1e-6)
+        @test gpu.plan ≈ expected.plan atol=1e-6
     end
 end
 
@@ -52,6 +88,17 @@ end
     @test CD.orientations([c],[p]).positive == [0]
     @test CD.orientations([c],[p]).negative == [2]
     @test CD.orientations([c],[p[:,[1,3,2,4]]]).positive == [2]
+    faces=CE.triangles([c])
+    @test length(faces)==2
+    @test first(CE.fold_penalty_gradient([c],[p],faces))==0
+    inverted=.9p[:,[1,3,2,4]].+.1/16
+    value,g=CE.fold_penalty_gradient([c],[inverted],faces)
+    @test value>0
+    direction=zeros(4,4); direction[1,2]=.05
+    h=1e-6
+    plus=first(CE.fold_penalty_gradient([c],[inverted+h*direction],faces))
+    minus=first(CE.fold_penalty_gradient([c],[inverted-h*direction],faces))
+    @test (plus-minus)/(2h) ≈ sum(only(g).*direction) rtol=1e-5
 end
 
 @testset "Shared parent export" begin
@@ -99,6 +146,9 @@ end
     mixed_distribution, _ = CE.penalty_gradient(countries,mixed,edges;form=:distribution)
     @test mixed_mean == 0
     @test mixed_distribution > 0
+    _, forces = CE.penalty_gradient(countries,p,edges;forces_only=true)
+    difference=only(gradients)-transpose(xyz)*only(forces)
+    @test maximum(abs,maximum(difference;dims=1)-minimum(difference;dims=1)) < 1e-10
     weighted, wg = CE.penalty_gradient(countries,p,edges;weights=[.2])
     @test weighted ≈ .2value
     @test only(wg) ≈ .2only(gradients)
