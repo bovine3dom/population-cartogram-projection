@@ -123,7 +123,7 @@ end
 end
 
 @testset "Coarse geographic field refinement" begin
-    xyz=[1. 1. 1. 1.; 0. .01 0. .01; 0. 0. .01 .01]
+    xyz=[1. 1. 1. 1.; 0. .01 0. .01; 0. 0. -.01 -.01]
     xyz ./= sqrt.(sum(abs2,xyz;dims=1))
     target=CE.DataFrame(x=[0,2,0,2],y=[0,0,2,2],parent_cell_id=string.(1:4))
     coarse=(;xyz,target)
