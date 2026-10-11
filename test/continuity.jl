@@ -1,4 +1,4 @@
-using Test
+using Test, Random
 include(joinpath(@__DIR__, "..", "examples", "continuity", "experiment.jl"))
 using .ContinuityExperiment
 const CE = ContinuityExperiment
@@ -125,6 +125,38 @@ end
     plus=first(CE.fold_penalty_gradient([c],[inverted+h*direction],faces))
     minus=first(CE.fold_penalty_gradient([c],[inverted-h*direction],faces))
     @test (plus-minus)/(2h) ≈ sum(only(g).*direction) rtol=1e-5
+end
+
+@testset "Population capacity bounds" begin
+    a=(code=1,xyz=[1. cos(.4);0. sin(.4);0. 0.],a=[.25,.75],b=[.5,.5])
+    b=(code=2,xyz=reshape([1.,0.,0.],3,1),a=[1.],b=[.5,.5])
+    distance=6371sqrt(2-2cos(.4))
+    one=CD.capacity_rms_bounds([a,b],[(1,2,2,1)];relative_tolerance=0.)
+    duplicate=CD.capacity_rms_bounds([a,b],[(1,2,2,1),(1,2,2,2)];relative_tolerance=0.)
+    @test one.all_edge_rms_lower_bound_km[1]≈distance/sqrt(2)
+    @test one.p90_rms_lower_bound_km[1]≈distance/sqrt(2)
+    @test duplicate.all_edge_rms_lower_bound_km≈one.all_edge_rms_lower_bound_km
+    relaxed=CD.capacity_rms_bounds([a,b],[(1,2,2,1)];relative_tolerance=.001)
+    @test relaxed.all_edge_rms_lower_bound_km[1]<one.all_edge_rms_lower_bound_km[1]
+    b=merge(b,(b=fill(.25,4),))
+    unequal=CD.capacity_rms_bounds([a,b],[(1,1,2,1),(1,1,2,2),(1,1,2,3),(1,2,2,4)];relative_tolerance=0.)
+    @test unequal.all_edge_rms_lower_bound_km[1]≈sqrt(.625)*distance
+    rng=MersenneTwister(41)
+    edges=[(1,1,2,1),(1,1,2,2),(1,2,2,2),(1,3,2,3),(1,4,2,1)]
+    for _ in 1:20
+        plans=[rand(rng,5,4),rand(rng,6,3)]
+        plans=[p./sum(p) for p in plans]
+        countries=map(enumerate(plans)) do (k,p)
+            xyz=randn(rng,3,size(p,1))
+            xyz./=sqrt.(sum(abs2,xyz;dims=1))
+            (;code=k,xyz,a=vec(sum(p;dims=2)),b=vec(sum(p;dims=1)))
+        end
+        q=[CE.means(c,p) for (c,p) in zip(countries,plans)]
+        distances=[6371sqrt(max(0.,2-2CE.dot(q[k][:,j],q[l][:,t]))) for (k,j,l,t) in edges]
+        bounds=CD.capacity_rms_bounds(countries,edges;relative_tolerance=0.)
+        @test all(bounds.all_edge_rms_lower_bound_km .<= sqrt(sum(abs2,distances)/length(edges))+1e-7)
+        @test all(bounds.p90_rms_lower_bound_km .<= CE.quantile(distances,.9)+1e-7)
+    end
 end
 
 @testset "Coupled country pose graph" begin

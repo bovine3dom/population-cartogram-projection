@@ -256,6 +256,35 @@ contacts continuous with the artwork unchanged. Keep them as explicit cuts, or
 change the target layout or country membership. Do not hide them with mean-only
 measurements.
 
+## Population limits at real borders
+
+Run `capacity_bounds.jl STUDY_DIRECTORY BORDER_CSV NEW_OUTPUT.csv FACTORS...`.
+This checks the source population needed by boundary cells. It does not run a fit.
+
+For each source point, let `d²` be its squared chord distance to the nearest source in
+the other country. A target with mass `b` and `m` border edges contributes at least
+`m P d² / b` to the sum of squared edge distances. Keep the source mass limits.
+Assign the nearest available population to targets with the largest `m / b`.
+This gives a lower bound because the other country's mass limits are omitted.
+Repeated edges use the same target mass. The calculation permits the fit's 0.1%
+relative target-mass error.
+
+The percentile bound also limits how much source mass any set of edges can use.
+Use `maximum_exposure = max(m / ((1 - ε) b))`, where `ε` is the relative mass tolerance.
+For `r` edges, this requires at least `r / maximum_exposure` of the source mass.
+The nearest available mass gives a bound on the `r`th ordered RMS value. The code
+combines this with the all-edge bound and interpolates the two ranks used by the
+90th percentile. Tests cover unequal target masses, repeated endpoints, and
+random feasible plans.
+
+With H3-4 sources and the original grid, Algeria–Mali has all-edge and 90th
+percentile lower bounds of 793 and 520 km. Algeria–Niger has bounds of 1,022 and
+972 km. Thus even these real borders cannot reach small internal distances on
+this grid. At subdivision 14, the all-edge bounds fall to 256 and 278 km.
+These are lower bounds, not predicted fit results. They support finer boundary
+cells rather than a larger penalty alone. This bound uses the existing source
+data. It does not need island population totals.
+
 ## Full line previews
 
 ```sh
