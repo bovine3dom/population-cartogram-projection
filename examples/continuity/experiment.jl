@@ -301,12 +301,24 @@ function refined_centres(coarse,plan,fine)
     for (t,row) in enumerate(eachrow(fine.target))
         j=parents[row.parent_cell_id]
         x,y=coarse.target.x[j],coarse.target.y[j]
+        fx,fy=row.x/factor,row.y/factor
+        boxes=[(bx,by) for bx in (x-2,x),by in (y-2,y)
+               if all(haskey(lookup,pos) for pos in ((bx,by),(bx+2,by),(bx,by+2),(bx+2,by+2)))]
         value=copy(q[:,j])
-        for (axis,delta) in ((1,row.x/factor-x),(2,row.y/factor-y))
-            dx,dy=axis==1 ? (2,0) : (0,2)
-            left=get(lookup,(x-dx,y-dy),j); right=get(lookup,(x+dx,y+dy),j)
-            width=2*((left!=j)+(right!=j))
-            width>0 && (value .+= delta.*(q[:,right]-q[:,left])./width)
+        if !isempty(boxes)
+            distance(b)=max(b[1]-fx,0,fx-b[1]-2)^2+max(b[2]-fy,0,fy-b[2]-2)^2
+            bx,by=boxes[argmin(distance.(boxes))]
+            a,b,d,z=[lookup[pos] for pos in ((bx,by),(bx+2,by),(bx,by+2),(bx+2,by+2))]
+            u,v=(fx-bx)/2,(fy-by)/2
+            value=u+v<=1 ? q[:,a]+u*(q[:,b]-q[:,a])+v*(q[:,d]-q[:,a]) :
+                          q[:,z]+(1-v)*(q[:,b]-q[:,z])+(1-u)*(q[:,d]-q[:,z])
+        else
+            for (axis,delta) in ((1,fx-x),(2,fy-y))
+                dx,dy=axis==1 ? (2,0) : (0,2)
+                left=get(lookup,(x-dx,y-dy),j); right=get(lookup,(x+dx,y+dy),j)
+                width=2*((left!=j)+(right!=j))
+                width>0 && (value .+= delta.*(q[:,right]-q[:,left])./width)
+            end
         end
         result[:,t]=value./norm(value)
     end

@@ -183,7 +183,10 @@ separate; `seed-metrics.csv` records the starting point for each fit.
 
 `refine_grid.jl COARSE_STUDY COARSE_TRIAL SOURCE_DIRECTORY NEW_OUTPUT RESOLUTION FACTOR`
 interpolates a fitted coarse geographic field to finer target cells. It uses
-local finite differences within each country. A new Sinkhorn solve assigns the
+continuous affine interpolation on coarse grid triangles within each country.
+Near the edge it uses the nearest complete grid block. Thin parts with no complete
+block use local finite differences. Edge extrapolation can still create folds;
+the field and the balanced seed therefore have separate orientation reports. A new Sinkhorn solve assigns the
 same source population to those geographic starting positions. A fresh standard
 baseline is calculated at the same resolution and entropy. The final fit again
 uses the original cost and fixed OWID targets. The source IDs and normalized

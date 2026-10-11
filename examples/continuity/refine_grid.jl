@@ -24,6 +24,9 @@ for (c,p,d) in zip(coarse,coarse_plans,countries)
     println("$(now(UTC)) Baseline $(d.code)");flush(stdout)
     push!(baseline,ContinuityExperiment.sinkhorn(d.cost,d.a,d.b,backend;eta,tolerance=1e-4,anneal=true,accelerate=true).plan)
     centres=ContinuityExperiment.refined_centres(c,p,d)
+    field=(code=d.code,xyz=centres,target=d.target)
+    field_plan=ContinuityExperiment.Diagonal(fill(1/length(d.b),length(d.b)))
+    CSV.write(joinpath(out,"field-$(d.code)-orientation.csv"),ContinuityDiagnostics.orientations([field],[field_plan]))
     cost=max.(0.,1 .- transpose(d.xyz)*centres)
     cost ./= maximum(cost)
     println("$(now(UTC)) Geographic seed $(d.code)");flush(stdout)
@@ -40,7 +43,7 @@ end
 result=ContinuityExperiment.run_case(countries,backend,joinpath(out,"fit");
     initial_plans=baseline,starting_plans=seed,borders,strength=10.,border_share=.25,
     scale_km=900.,eta,outer_steps=parse(Int,get(ENV,"CONTINUITY_OUTER_STEPS","100")),
-    form=:distribution,saturating=false,fold_strength=1.*factor^2,proximal=.1,internal_scale=factor^2,
+    form=:distribution,saturating=false,fold_strength=factor^2,proximal=.1,internal_scale=factor^2,
     interior_limit=4.,spread_limit=1.25,inner_tolerance=1e-4,accelerate=true,export_arrow=false)
 orientation=ContinuityDiagnostics.orientations(countries,deserialize(joinpath(out,"fit","candidate.jls")))
 CSV.write(joinpath(out,"fit","candidate-orientation.csv"),orientation)

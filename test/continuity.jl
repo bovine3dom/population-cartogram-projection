@@ -127,6 +127,7 @@ end
     expected=xyz[:,1]-.25(xyz[:,2]-xyz[:,1])-.25(xyz[:,3]-xyz[:,1])
     @test q[:,1] ≈ expected/CE.norm(expected)
     @test vec(sum(abs2,q;dims=1)) ≈ ones(16)
+    @test CD.orientations([(code=1,xyz=q,target=fine.target)],[CE.Diagonal(fill(1/16,16))]).positive == [0]
     @test_throws ErrorException CE.refined_centres(coarse,plan,(target=fine.target[1:15,:],))
 end
 
