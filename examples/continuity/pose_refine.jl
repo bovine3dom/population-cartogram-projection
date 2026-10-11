@@ -11,6 +11,7 @@ mkpath(out)
 countries=deserialize(joinpath(input,"countries.jls"))
 pose_names=split(get(ENV,"CONTINUITY_POSES",join(fill("0",length(countries)),'-')),',')
 strengths=parse.(Float64,split(get(ENV,"CONTINUITY_STRENGTHS","1,10"),','))
+outer_steps=parse(Int,get(ENV,"CONTINUITY_OUTER_STEPS","100"))
 trials=sort(filter(name->isfile(joinpath(input,name,"baseline.jls")),readdir(input)))
 baseline=deserialize(joinpath(input,first(trials),"baseline.jls"))
 choices=deserialize(joinpath(poses,"choices.jls"))
@@ -27,7 +28,7 @@ for pose in pose_names, strength in strengths
         seed=[choices[k][j] for (k,j) in enumerate(indices)]
         result=ContinuityExperiment.run_case(countries,oneAPI.oneAPIBackend(),path;
             initial_plans=baseline,starting_plans=seed,borders=Set([(24,180),(24,894),(180,894),(466,854),(276,616)]),
-            strength,border_share=.25,scale_km=900.,eta=.002,outer_steps=100,
+            strength,border_share=.25,scale_km=900.,eta=.002,outer_steps,
             form=:distribution,saturating=false,fold_strength=.1strength,proximal=.1,
             interior_limit=4.,spread_limit=1.25,inner_tolerance=1e-4,accelerate=true,export_arrow=false)
         orientation=ContinuityDiagnostics.orientations(countries,deserialize(joinpath(path,"candidate.jls")))

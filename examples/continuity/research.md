@@ -163,6 +163,22 @@ still uses KA/oneAPI. This test uses dense GPU costs, not the matrix-free path.
 It checks whether smaller changes reduce folds without moving the border gap
 into the interior. A fixed-point test checks the cost and entropy signs.
 
+## Country pose search
+
+`pose_study.jl BASELINE_STUDY_DIRECTORY NEW_OUTPUT_DIRECTORY` tries eight rotations
+per country at 45-degree intervals. It rotates source coordinates only to make
+starting transport plans. It does not rotate the OWID artwork or the exported
+geographic coordinates. It tests combinations with the original cost and the
+continuity objective. It saves the country plans and a small metrics table.
+
+`pose_refine.jl BASELINE_STUDY_DIRECTORY POSE_STUDY_DIRECTORY NEW_OUTPUT_DIRECTORY`
+then fits selected starting plans against the original cost. Set
+`CONTINUITY_POSES=0-0,270-270` for a two-country comparison. Angles follow the
+country order in `countries.jls`. `CONTINUITY_STRENGTHS=1,10` selects strengths.
+The default step limit is 100. Seeds must have the correct source and target
+masses and pass the stated distortion guards. The original baseline remains
+separate; `seed-metrics.csv` records the starting point for each fit.
+
 ## Full line previews
 
 ```sh

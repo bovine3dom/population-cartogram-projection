@@ -208,3 +208,35 @@ the original distribution penalty increases both when multiplied by subdivision
 factor squared. The border penalty will still include spread. All 73 CPU checks
 pass after this option; the preceding solver changes passed 75 GPU checks before
 these three new checks. Outputs and limits remain separate from production.
+
+
+## 13:18 UTC — A useful Mali result and an initialization check
+
+Mali–Burkina Faso now has a substantially better result. A 270-degree starting
+pose for each country, followed by strength-10 fitting, reduces the border
+median from 853 to 78 km. The current local internal median is 84 km. Border
+RMS distance is 92 km versus 104 km locally. Mean source spread decreases to
+39 km. One positive triangle remains, with area 1.74 km². The largest internal
+jump is 354 km, versus 182 km at baseline. Thus internal distances do increase,
+but the result is not made by broad source mixing or large folds.
+
+The same straight-line previews are at
+`output/continuity/preview-mali-pose5/lines.png`. The selected high-jump line has
+one geographic footprint component after fitting, versus two before. The other
+line retains a gap in a sparsely populated region. Source population is conserved
+to the sparse export tolerance. Red centre traces alone are not used as proof.
+
+An ablation with the same strength and the original starting pose stops at
+563 km, with much larger folds. The starting pose matters in this case; simply
+increasing strength is insufficient. Rotations only make starting assignments.
+The artwork and true source coordinates do not change. Refinement uses the
+original cost, not a rotated replacement objective.
+
+The unseeded H3-5/factor-3 mean-internal fit completed at 249 km border median
+versus 40 km local median. Subdivision alone is not sufficient. Its distribution
+variant is running. Native Africa pose search completed 512 combinations. The
+best coarse candidate rotates Angola by 45 degrees and leaves DRC and Zambia
+unchanged. A 15-minute native refinement pilot completed 91 steps of the original
+pose comparison before its timeout; checkpoints remain valid. Further selected
+pose tests will use smaller step limits. The fine job was paused during small
+GPU pilots and then resumed, so its wall time includes those pauses.
