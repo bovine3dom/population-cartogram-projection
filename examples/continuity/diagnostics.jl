@@ -95,7 +95,7 @@ function orientations(countries, plans)
         q=c.xyz*p
         q ./= sqrt.(sum(abs2,q;dims=1))
         lookup=Dict((r.x,r.y)=>i for (i,r) in enumerate(eachrow(c.target)))
-        step=minimum(diff(sort!(unique(c.target.x))))
+        step=2
         positive=negative=flat=0
         positive_area=negative_area=maximum_positive_area=0.0
         for ((x,y),i) in lookup

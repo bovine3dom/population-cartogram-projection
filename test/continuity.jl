@@ -110,6 +110,10 @@ end
     p=Matrix{Float64}(CE.I,4,4)/4
     @test CD.orientations([c],[p]).positive == [0]
     @test CD.orientations([c],[p]).negative == [2]
+    tiny=(code=1,xyz=xyz[:,1:1],target=CE.DataFrame(x=[0],y=[0]))
+    @test CD.orientations([tiny],[ones(1,1)]).positive==[0]
+    separated=merge(c,(target=CE.DataFrame(x=[0,4,0,4],y=[0,0,4,4]),))
+    @test CD.orientations([separated],[p]).negative==[0]
     reversed=CD.orientations([c],[p[:,[1,3,2,4]]])
     @test reversed.positive == [2]
     @test reversed.positive_area_km2 ≈ CD.orientations([c],[p]).negative_area_km2
