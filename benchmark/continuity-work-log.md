@@ -314,3 +314,58 @@ Continuation now copies the original border mask and checks its edge count.
 Older runners used a fixed list suitable only for the original small cases.
 That list would have omitted regional borders. No regional continuation used it
 before this correction.
+
+
+## 17:50 UTC — Final audits and limits
+
+The full-plan audit strengthens the Mali result. Border RMS over all edges falls
+from 906.9 to 53.4 km. Nearby internal RMS falls from 52.8 to 49.6 km. The maximum
+border RMS falls from 1,090.1 to 81.4 km. Source spread decreases at the mean,
+90th percentile, 99th percentile, and maximum. The largest internal mean-position
+gap still increases from 361 to 536 km. Reversed area decreases, but the count
+of reversed triangles rises from 5 to 15. Saved the matched headless line image.
+
+The 15-country weighted tests are not a global fix. Stronger local-scale weights
+reduce border RMS median to 133 km, versus 86 km locally. Border p90 remains
+1,550 km, versus 247 km locally. Capacity scaling gives a similar median but a
+worse p90 of 2,087 km. It is not enough to downweight a difficult border.
+Reversed triangle areas also remain much larger than at baseline. Saved line
+images for Algeria–Mali, Benin–Nigeria, and Mali–Burkina Faso, including failures.
+
+Confirmed the population limits with native H3-5 sources. At subdivision 1,
+Algeria–Mali has an all-edge RMS lower bound of 802 km and a p90 bound of 525 km.
+Algeria–Niger has bounds of 1,032 and 978 km. At subdivision 14, their all-edge
+bounds are still 265 and 278 km. The bounds retain source capacities, account for
+repeated endpoints, and allow 0.1% target-mass error. They also apply to optimal
+pairings of the source distributions. They are not only independent-draw bounds.
+
+Stopped the fine Africa trial after 3 original steps, 11 larger-proximal steps,
+and 8 smooth-fold steps. Border RMS improves, but the final reversed area is
+79,797 km², versus 6,462 km² at baseline. Maximum spread is 576 km, versus 191 km.
+These defects prevent a success claim. The final checkpoint passes independent
+mass and capacity checks. It is not a converged result.
+
+Added a reusable snapshot audit. All fit snapshots used in the findings report
+pass it. The production suite passes 108 CPU checks. Research checks pass on CPU
+and oneAPI. They include mass preservation, objective decrease, fold gradients,
+pose tables, mask recovery, and capacity bounds. A small Gambia–Senegal H3-4 /
+factor-2 run checks the updated refinement runner on oneAPI. That is a workflow
+check, not a new scientific result. Orientation checks now use the same grid
+spacing as the solver and do not bridge isolated cells.
+
+Refinement now retains fit settings, border masks, and border factors. It uses
+the relative change in grid scale. The old defaults were suitable for the small
+cases but not for a general regional continuation. Exact older runs retain their
+settings and code commit in the output directories.
+
+Process correction: the final queue logged status 0 for the manually stopped
+Africa stage. Its timestamp command changed `$?` before the status was printed.
+Verified this shell behaviour and corrected the logger. Completion messages,
+saved summaries, and independent audits establish the completed results. Do not
+use that old exit-status line as evidence of completion. The interrupted H3-6 /
+factor-2 run has no completed result; its note now states this explicitly.
+
+All fitting jobs are stopped. The last GPU workflow check ended at 17:36 UTC.
+The remaining work is report review and repository checks. No production solver
+file was changed during this research window. The original data and unrelated
+untracked files remain in place.

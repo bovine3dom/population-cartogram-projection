@@ -1,5 +1,6 @@
 # Border-focused research
 
+Read the [findings](../../benchmark/continuity-findings.md) first.
 See `benchmark/continuity-work-log.md` for the time window and decisions.
 All research outputs are separate from production H3-MON files.
 
@@ -11,8 +12,8 @@ A candidate must not appear successful merely because its internal jumps grow.
 Per-pair CSV files include each border's own local comparison.
 
 The experiments now save full plans in Julia Serialization files:
-`baseline.jls` and `candidate.jls`. Candidate plans are saved after every outer
-iteration. These files require a compatible Julia environment. They are not
+`baseline.jls` and `candidate.jls`. Candidate plans are saved after each completed
+update attempt. These files require a compatible Julia environment. They are not
 H3-MON files. Sparse Arrow exports remain optional.
 
 ## Check source distributions, not only their centres
@@ -205,8 +206,11 @@ sets the step limit. Optional overrides are `CONTINUITY_STRENGTH`,
 `CONTINUITY_FOLD_STRENGTH`, `CONTINUITY_BORDER_SCALE`, `CONTINUITY_SPREAD_LIMIT`, and
 `CONTINUITY_PROXIMAL`. Set `CONTINUITY_FOLD_SMOOTHING` to an area in km² to
 replace the sharp positive-area penalty with a Huber penalty. It is quadratic
-below that area and linear above it. Zero retains the original penalty. This
-changes the optimization objective, not the reported triangle areas.
+in small excess areas and linear above the specified width. Excess area is area
+above the 1 km² tolerance. Zero retains the original penalty. This changes the
+optimization objective, not the reported triangle areas. The penalty uses raw
+source means; orientation reports use normalized means. Area values use a
+small-triangle approximation on the sphere.
 The runner copies the border mask and checks its edge count against the checkpoint.
 
 A fixed border penalty can leave a finite jump as target cells get smaller.
@@ -304,7 +308,13 @@ percentile lower bounds of 793 and 520 km. Algeria–Niger has bounds of 1,022 a
 this grid. At subdivision 14, the all-edge bounds fall to 256 and 278 km.
 These are lower bounds, not predicted fit results. They support finer boundary
 cells rather than a larger penalty alone. This bound uses the existing source
-data. It does not need island population totals.
+data. It does not need island population totals. The bounds also apply when
+source points are paired optimally across an edge, not only to independent draws.
+
+`audit_trial.jl COUNTRIES.jls TRIAL_DIRECTORY NEW_OUTPUT` checks a saved snapshot.
+It checks nonnegative entries, source masses, target masses, and capacity bounds.
+It writes full RMS statistics, spread tails, and triangle areas. It can audit a
+checkpoint from a stopped run. A valid checkpoint is not a convergence result.
 
 ## Full line previews
 
