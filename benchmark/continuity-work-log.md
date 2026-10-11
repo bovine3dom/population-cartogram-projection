@@ -161,3 +161,25 @@ The full line preview for share 0.1 and fold strength 0.01 is at
 Angola–Zambia. Native-resolution and subdivision tests are needed before selecting
 an approach. Added case and step filters to keep larger tests within the time
 budget. No production settings were changed.
+
+
+## 10:48 UTC — Native results and a proximal check
+
+The H3-5/factor-1 study completed. It confirms the coarse result: DRC–Angola and
+DRC–Zambia can improve substantially, but Angola–Zambia remains difficult.
+For border share 0.25 without a fold penalty, its median remains 420 km, versus
+239 km for nearby internal edges. The combined regional median hides this case.
+The H3-5/factor-3 baseline completed and its outer fit is running.
+
+Added a KL-proximal variant to test smaller transport changes. All 71 checks pass,
+including oneAPI checks and the proximal fixed-point test. Paused the factor-3
+process for about seven minutes to give this coarse test sole GPU use, then
+resumed it. Do not compare its wall time with uninterrupted runs without that
+qualification.
+
+All four proximal cases completed. Proximal weight 0.01 with fold weight 0.1 gives
+border median 157 km, local median 176 km, and positive area 9,102 km². Proximal
+weight 0.1 reduces positive area further, to 1,225 km², but its border median is
+249 km. This is a trade-off, not a complete solution. Reports are in
+`benchmark/continuity-runs/africa-proximal4.csv`. The experiment does not change
+the population constraints, and the core solver remains unchanged.
