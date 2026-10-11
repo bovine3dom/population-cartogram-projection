@@ -1,0 +1,64 @@
+using Test
+include(joinpath(@__DIR__, "..", "examples", "continuity", "experiment.jl"))
+using .ContinuityExperiment
+const CE = ContinuityExperiment
+
+@testset "Experimental dense Sinkhorn" begin
+    c = [0.0 0.8 0.2; 0.7 0.0 0.4]
+    a, b = [0.4,0.6], [0.2,0.3,0.5]
+    result = CE.sinkhorn(c,a,b,CE.KA.CPU(); eta=.1,tolerance=1e-6)
+    @test vec(sum(result.plan;dims=2)) ≈ a atol=1e-12
+    @test vec(sum(result.plan;dims=1)) ≈ b atol=1e-6
+    @test all(isfinite,result.plan)
+    independent = CE.sinkhorn(zeros(2,3),a,b,CE.KA.CPU();eta=.1,tolerance=1e-6)
+    @test independent.plan ≈ a * transpose(b) atol=1e-6
+    @test log(result.plan[1,1]*result.plan[2,2]/(result.plan[1,2]*result.plan[2,1])) ≈
+          -(c[1,1]+c[2,2]-c[1,2]-c[2,1])/.1 atol=1e-5
+    offset = CE.sinkhorn(c .+ [5.0 1.0 -3.0],a,b,CE.KA.CPU();eta=.1,tolerance=1e-6)
+    @test offset.plan ≈ result.plan atol=1e-6
+    @test_throws ErrorException CE.sinkhorn(c,a,b,CE.KA.CPU();maxiters=1)
+    if get(ENV,"CONTINUITY_GPU_TEST","") == "1"
+        @eval using oneAPI
+        @test oneAPI.functional()
+        gpu = CE.sinkhorn(c,a,b,oneAPI.oneAPIBackend();eta=.1,tolerance=1e-6)
+        @test gpu.plan ≈ result.plan atol=1e-6
+    end
+end
+
+@testset "Explicit international seams" begin
+    countries = [(code=code,target=CE.DataFrame(x=[x],y=[0]))
+                 for (code,x) in [(24,0),(180,2),(894,4)]]
+    @test isempty(CE.graph(countries))
+    @test CE.graph(countries;borders=Set([(24,180),(180,894)])) == [(1,1,2,1),(2,1,3,1)]
+    edges = [(1,1,1,2),(1,2,1,3),(1,3,2,1)]
+    @test CE.edge_weights(edges,.8) ≈ [.1,.1,.8]
+    @test sum(CE.edge_weights(edges,nothing)) ≈ 1
+    @test_throws ErrorException CE.edge_weights(edges,1.1)
+    @test_throws ErrorException CE.edge_weights(edges[1:2],.8)
+end
+
+@testset "Continuity gradient and permitted cuts" begin
+    xyz = [1.0 cos(.01); 0.0 sin(.01); 0.0 0.0]
+    countries = [(;xyz,b=[.5,.5])]
+    p = [[.4 .1; .1 .4]]
+    edges = [(1,1,1,2)]
+    value, gradients = CE.penalty_gradient(countries,p,edges)
+    for direction in ([.1 -.1; -.1 .1], [.2 .1; .3 -.1])
+        h = 1e-6
+        plus, _ = CE.penalty_gradient(countries,[p[1]+h*direction],edges)
+        minus, _ = CE.penalty_gradient(countries,[p[1]-h*direction],edges)
+        @test (plus-minus)/(2h) ≈ sum(gradients[1].*direction) rtol=1e-5
+    end
+    @test CE.means(only(countries), 1.001p[1]) ≈ CE.means(only(countries),p[1])
+    weighted, wg = CE.penalty_gradient(countries,p,edges;weights=[.2])
+    @test weighted ≈ .2value
+    @test only(wg) ≈ .2only(gradients)
+    @test 0 < value < 1
+    far = [(;xyz=[1.0 -1.0; 0.0 0.0; 0.0 0.0],b=[.5,.5])]
+    penalty, gradient = CE.penalty_gradient(far,[[.5 0.; 0. .5]],edges)
+    @test penalty ≈ 1
+    @test maximum(abs,only(gradient)) < 1e-10
+    empty_penalty, empty_gradient = CE.penalty_gradient(countries,p,Tuple{Int,Int,Int,Int}[])
+    @test empty_penalty == 0
+    @test all(iszero,only(empty_gradient))
+end
