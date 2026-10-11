@@ -26,7 +26,8 @@ ismissing(settings[:border_share]) && (settings[:border_share]=nothing)
 settings[:outer_steps]=parse(Int,get(ENV,"CONTINUITY_OUTER_STEPS","50"))
 haskey(ENV,"CONTINUITY_COORDINATE") && (settings[:coordinate]=ENV["CONTINUITY_COORDINATE"]=="1")
 for (key,variable) in ((:border_scale,"CONTINUITY_BORDER_SCALE"),(:strength,"CONTINUITY_STRENGTH"),
-                       (:fold_strength,"CONTINUITY_FOLD_STRENGTH"),(:spread_limit,"CONTINUITY_SPREAD_LIMIT"))
+                       (:fold_strength,"CONTINUITY_FOLD_STRENGTH"),(:spread_limit,"CONTINUITY_SPREAD_LIMIT"),
+                       (:proximal,"CONTINUITY_PROXIMAL"))
     haskey(ENV,variable) && (settings[key]=parse(Float64,ENV[variable]))
 end
 ContinuityExperiment.checkpoint(joinpath(out,"countries.jls"),countries)

@@ -202,7 +202,8 @@ the seed against the distortion guards. Failed seeds are not accepted fits.
 `continue_fit.jl STUDY_DIRECTORY TRIAL_NAME NEW_OUTPUT_DIRECTORY` continues a
 valid checkpoint while retaining its original baseline. `CONTINUITY_OUTER_STEPS`
 sets the step limit. Optional overrides are `CONTINUITY_STRENGTH`,
-`CONTINUITY_FOLD_STRENGTH`, `CONTINUITY_BORDER_SCALE`, and `CONTINUITY_SPREAD_LIMIT`.
+`CONTINUITY_FOLD_STRENGTH`, `CONTINUITY_BORDER_SCALE`, `CONTINUITY_SPREAD_LIMIT`, and
+`CONTINUITY_PROXIMAL`.
 The runner copies the border mask and checks its edge count against the checkpoint.
 
 A fixed border penalty can leave a finite jump as target cells get smaller.
