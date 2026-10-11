@@ -10,7 +10,7 @@ groups=Dict("africa"=>[24,180,894],"mali-burkina"=>[466,854],"germany-poland"=>[
 haskey(groups,group) || error("unknown study group")
 mode in ("fold","validate") || error("unknown study mode")
 deadline=DateTime(get(ENV,"CONTINUITY_DEADLINE","9999-12-31T23:59:59"))
-selected=Set(filter(!isempty,split(get(ENV,"CONTINUITY_CASES",""),',')))
+selected=Set(filter(!isempty,split(get(ENV,"CONTINUITY_CASES",factor>1 ? "border0.25-fold0.01" : ""),',')))
 outer_steps=parse(Int,get(ENV,"CONTINUITY_OUTER_STEPS","30"))
 outer_steps>0 || error("outer steps must be positive")
 ispath(outdir) && error("refusing to overwrite $outdir")

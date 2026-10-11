@@ -128,8 +128,9 @@ between cases; also use a shell timeout for a hard stop. Set
 under `benchmark/continuity-runs/`. Only those report paths are committed. Large
 plans stay under the ignored output directory. Failed cases are logged.
 Use `CONTINUITY_CASES=border0.25-fold0.01` to select a case without running the
-full set. A comma separates multiple case names. `CONTINUITY_OUTER_STEPS` sets
-the step limit; its default is 30.
+full set. A comma separates multiple case names. Refined grids select this case
+by default to limit run time. Set `CONTINUITY_CASES` to an empty string to run all
+cases. `CONTINUITY_OUTER_STEPS` sets the step limit; its default is 30.
 
 ## Full line previews
 
