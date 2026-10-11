@@ -114,6 +114,22 @@ end
     @test (plus-minus)/(2h) ≈ sum(only(g).*direction) rtol=1e-5
 end
 
+@testset "Coarse geographic field refinement" begin
+    xyz=[1. 1. 1. 1.; 0. .01 0. .01; 0. 0. .01 .01]
+    xyz ./= sqrt.(sum(abs2,xyz;dims=1))
+    target=CE.DataFrame(x=[0,2,0,2],y=[0,0,2,2],parent_cell_id=string.(1:4))
+    coarse=(;xyz,target)
+    plan=Matrix{Float64}(CE.I,4,4)/4
+    @test CE.refined_centres(coarse,plan,coarse) ≈ xyz
+    fine=(target=CE.DataFrame([(x=2r.x+dx,y=2r.y+dy,parent_cell_id=r.parent_cell_id)
+                              for r in eachrow(target) for dx in (-1,1) for dy in (-1,1)]),)
+    q=CE.refined_centres(coarse,plan,fine)
+    expected=xyz[:,1]-.25(xyz[:,2]-xyz[:,1])-.25(xyz[:,3]-xyz[:,1])
+    @test q[:,1] ≈ expected/CE.norm(expected)
+    @test vec(sum(abs2,q;dims=1)) ≈ ones(16)
+    @test_throws ErrorException CE.refined_centres(coarse,plan,(target=fine.target[1:15,:],))
+end
+
 @testset "Atomic plan checkpoints" begin
     mktempdir() do dir
         path=joinpath(dir,"plan.jls")

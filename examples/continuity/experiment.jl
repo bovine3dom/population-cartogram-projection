@@ -290,6 +290,29 @@ end
 
 means(c, p) = (c.xyz * p) ./ sum(p; dims=1)
 
+function refined_centres(coarse,plan,fine)
+    allunique(coarse.target.parent_cell_id) || error("expected unsubdivided coarse targets")
+    factor=round(Int,sqrt(nrow(fine.target)/nrow(coarse.target)))
+    factor>0 && factor^2*nrow(coarse.target)==nrow(fine.target) || error("invalid refinement ratio")
+    parents=Dict(id=>j for (j,id) in enumerate(coarse.target.parent_cell_id))
+    lookup=Dict((r.x,r.y)=>j for (j,r) in enumerate(eachrow(coarse.target)))
+    q=means(coarse,plan); q ./= sqrt.(sum(abs2,q;dims=1))
+    result=zeros(3,nrow(fine.target))
+    for (t,row) in enumerate(eachrow(fine.target))
+        j=parents[row.parent_cell_id]
+        x,y=coarse.target.x[j],coarse.target.y[j]
+        value=copy(q[:,j])
+        for (axis,delta) in ((1,row.x/factor-x),(2,row.y/factor-y))
+            dx,dy=axis==1 ? (2,0) : (0,2)
+            left=get(lookup,(x-dx,y-dy),j); right=get(lookup,(x+dx,y+dy),j)
+            width=2*((left!=j)+(right!=j))
+            width>0 && (value .+= delta.*(q[:,right]-q[:,left])./width)
+        end
+        result[:,t]=value./norm(value)
+    end
+    return result
+end
+
 function penalty_gradient(countries, plans, edges; scale_km=300.0,
                           weights=fill(1/max(length(edges),1),length(edges)),
                           form=:mean, internal_form=form, saturating=true, reference=nothing, forces_only=false)

@@ -179,6 +179,21 @@ The default step limit is 100. Seeds must have the correct source and target
 masses and pass the stated distortion guards. The original baseline remains
 separate; `seed-metrics.csv` records the starting point for each fit.
 
+## Coarse-to-fine starting fields
+
+`refine_grid.jl COARSE_STUDY COARSE_TRIAL SOURCE_DIRECTORY NEW_OUTPUT RESOLUTION FACTOR`
+interpolates a fitted coarse geographic field to finer target cells. It uses
+local finite differences within each country. A new Sinkhorn solve assigns the
+same source population to those geographic starting positions. A fresh standard
+baseline is calculated at the same resolution and entropy. The final fit again
+uses the original cost and fixed OWID targets. The source IDs and normalized
+populations must match the coarse input.
+
+This test is for the selected mainland cases. It does not define which internal
+island cuts must remain. Do not apply its interpolation across such cuts without
+an explicit mask. The script records baseline and seed metrics before it tests
+the seed against the distortion guards. Failed seeds are not accepted fits.
+
 ## Full line previews
 
 ```sh
