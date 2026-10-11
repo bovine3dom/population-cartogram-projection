@@ -205,7 +205,7 @@ function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,ma
                (error<.001 || stagnant>=4 || iteration==maxiters)
                 polish_error=error
                 last_polish=iteration
-                refined=polish_plan(plan,a,b,backend;tolerance)
+                refined=polish_plan(plan,a,b,backend;tolerance,maxiters=iteration==maxiters ? 10000 : 500)
                 if !isnothing(refined)
                     return (;plan=refined.plan,beta=Float64.(host_beta).+offset.+eta.*refined.log_beta_correction,
                             iterations=iteration,marginal_error=refined.marginal_error,polished=true,
@@ -214,7 +214,7 @@ function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,ma
             end
         end
     end
-    Base.error("Sinkhorn did not converge: marginal error=$error")
+    Base.error("Sinkhorn did not converge: marginal error=$error; eta=$eta")
 end
 
 function feature_sinkhorn(c,forces,backend;kwargs...)
