@@ -258,6 +258,17 @@ function country(path, code; factor=1)
     return (; code, source, target, cost, xyz, a, b, problem)
 end
 
+function pose_cost(c,angle)
+    angle==0 && return c.cost
+    source=copy(c.source)
+    x=(source.x.-mean(source.x)).*cosd(mean(source.y))
+    y=source.y.-mean(source.y)
+    source.x=x.*cosd(angle).-y.*sind(angle)
+    source.y=x.*sind(angle).+y.*cosd(angle)
+    problem=PCP._prepare_problem(c.target,source)
+    return [PCP._cost(problem,i,j) for i in eachindex(c.a),j in eachindex(c.b)]
+end
+
 function graph(countries; borders=Set([(276,616)]))
     lookup = Dict((r.x, r.y) => (k, j) for (k, c) in enumerate(countries)
                   for (j, r) in enumerate(eachrow(c.target)))

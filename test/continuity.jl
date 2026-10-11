@@ -4,6 +4,8 @@ using .ContinuityExperiment
 const CE = ContinuityExperiment
 include(joinpath(@__DIR__,"..","examples","continuity","diagnostics.jl"))
 const CD = ContinuityDiagnostics
+include(joinpath(@__DIR__,"..","examples","continuity","pose_graph.jl"))
+const PG = PoseGraph
 
 @testset "Research script syntax" begin
     has_error(x)=x isa Expr && (x.head in (:error,:incomplete) || any(has_error,x.args))
@@ -120,6 +122,27 @@ end
     plus=first(CE.fold_penalty_gradient([c],[inverted+h*direction],faces))
     minus=first(CE.fold_penalty_gradient([c],[inverted-h*direction],faces))
     @test (plus-minus)/(2h) ≈ sum(only(g).*direction) rtol=1e-5
+end
+
+@testset "Coupled country pose graph" begin
+    p=[.5 0.;0. .5]; swapped=p[:,[2,1]]
+    countries=[(code=k,cost=[0. 1.;1. 0.],xyz=[cos(a) cos(a+.01);sin(a) sin(a+.01);0. 0.],
+                target=CE.DataFrame(x=[x,x+2],y=[0,0])) for (k,a,x) in ((1,.02,4),(2,0.,0))]
+    choices=[[p,swapped],[p,swapped]]
+    edges=CE.graph(countries;borders=Set([(1,2)]))
+    weights=CE.edge_weights(edges,.25)
+    unary,pair=PG.tables(countries,choices,edges,weights;strength=.3,eta=.1)
+    scores=Float64[]
+    for labels in ([a,b] for a in 1:2 for b in 1:2)
+        plans=[choices[k][j] for (k,j) in enumerate(labels)]
+        expected=CE.objective(countries,plans,edges,.3,.1;weights,scale_km=900.,form=:distribution,saturating=false)
+        @test PG.energy(unary,pair,labels) ≈ expected
+        push!(scores,expected)
+    end
+    results=PG.search(unary,pair)
+    @test first(results).energy ≈ minimum(scores)
+    @test first(results).labels == first(PG.search(unary,pair)).labels
+    @test CE.pose_cost(first(countries),0) === first(countries).cost
 end
 
 @testset "Coarse geographic field refinement" begin

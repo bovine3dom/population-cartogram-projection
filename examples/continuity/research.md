@@ -207,6 +207,27 @@ The internal penalty already scales with `f²`. Test a border scale of `f` to
 increase the border constraint as cell width decreases. This is an experimental
 scaling rule, not a guarantee of continuity or of an invertible map.
 
+## Several neighbouring countries
+
+`shared_borders.py BOUNDARY.geojson NEW_OUTPUT.csv COUNTRY_CODES...` lists pairs
+with shared boundary segments. A common point alone does not create a border.
+The regional runner intersects this list with actual OWID grid contacts. It
+records missing true contacts and false artwork contacts in `graph-audit.csv`.
+
+`regional_pose.jl SOURCE_DIRECTORY NEW_OUTPUT RESOLUTION BORDERS.csv COUNTRY_CODES...`
+tests eight poses per country. It stores country costs and pairwise border costs
+in small tables. A deterministic search changes one country's pose at a time,
+from several starting configurations. This avoids an exhaustive search over all
+pose combinations. It is not a proof of a global optimum. Tests compare the
+table objective with the full transport objective and check a small exhaustive
+example.
+
+The runner compares original and selected starting poses with the same settings.
+Strength scales with country count because the transport objective is a sum over
+countries, while edge penalties are averages. This regional test includes all
+seven neighbours of Mali. Borders outside the selected region are not constrained.
+An improvement for one pair does not establish a solution for the whole planet.
+
 ## Full line previews
 
 ```sh

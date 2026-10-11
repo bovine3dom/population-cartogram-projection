@@ -1,7 +1,7 @@
 using Serialization, Dates, oneAPI
 include("experiment.jl")
 include("diagnostics.jl")
-using .ContinuityExperiment: CSV, DataFrame, mean
+using .ContinuityExperiment: CSV, DataFrame
 
 length(ARGS)==2 || error("usage: pose_study.jl BASELINE_STUDY_DIRECTORY NEW_OUTPUT_DIRECTORY")
 input,out=ARGS
@@ -22,17 +22,11 @@ angles=collect(0:45:315)
 choices=Vector{Matrix{Float64}}[]
 for (k,c) in enumerate(countries)
     plans=Matrix{Float64}[]
-    x=(c.source.x.-mean(c.source.x)).*cosd(mean(c.source.y))
-    y=c.source.y.-mean(c.source.y)
     for angle in angles
         if angle==0
             push!(plans,baseline[k])
         else
-            source=copy(c.source)
-            source.x=x.*cosd(angle).-y.*sind(angle)
-            source.y=x.*sind(angle).+y.*cosd(angle)
-            problem=ContinuityExperiment.PCP._prepare_problem(c.target,source)
-            cost=[ContinuityExperiment.PCP._cost(problem,i,j) for i in eachindex(c.a),j in eachindex(c.b)]
+            cost=ContinuityExperiment.pose_cost(c,angle)
             result=ContinuityExperiment.sinkhorn(cost,c.a,c.b,backend;eta,tolerance=1e-4,accelerate=true)
             push!(plans,result.plan)
         end
