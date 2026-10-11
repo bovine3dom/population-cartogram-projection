@@ -7,6 +7,8 @@ countries=deserialize(ARGS[1])
 trial,outdir=abspath.(ARGS[2:3])
 ispath(outdir) && error("refusing to overwrite $outdir")
 mkpath(outdir)
+seams=joinpath(trial,"baseline-seams.csv")
+isfile(seams) && cp(seams,joinpath(outdir,"seams.csv"))
 population=Dict{UInt64,Float64}()
 for c in countries,r in eachrow(c.source)
     population[r.id]=get(population,r.id,0.)+r.value

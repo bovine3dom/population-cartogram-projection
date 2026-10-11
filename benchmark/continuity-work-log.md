@@ -240,3 +240,39 @@ unchanged. A 15-minute native refinement pilot completed 91 steps of the origina
 pose comparison before its timeout; checkpoints remain valid. Further selected
 pose tests will use smaller step limits. The fine job was paused during small
 GPU pilots and then resumed, so its wall time includes those pauses.
+
+
+## 14:20 UTC — Fine-grid validation and a wider regional check
+
+The Mali H3-5/factor-3 fit completed. Its border median is 50.5 km, versus 878.6 km
+at the matched baseline. The nearby internal median is 24.3 km. Border and local
+90th percentiles are 70.8 and 64.3 km. Border RMS distance is 57.8 km, versus
+38.6 km locally. Mean source spread decreases from 19.8 to 18.6 km. Total positive
+triangle area is 130 km², versus 318 km² at baseline. The internal maximum grows
+from 361 to 540 km. This is a substantial improvement, not an exact continuous map.
+
+The first interpolation used separate local linear fields. Their joins created
+folds before transport started. Replaced these with continuous affine fields on
+the coarse triangles. Edge extrapolation still needs checks. The first runner
+also exposed a parse error after saving its seed. Added syntax tests for all
+Julia research scripts. Corrected the orientation of the new test fixture.
+All current CPU tests and the shared-border Python test pass.
+
+A fixed border weight becomes relatively weaker as internal penalties scale with
+subdivision. A continuation now tests border weight multiplied by factor 3.
+It retains the original matched baseline and strict mass tests.
+
+Prepared 15 West African countries, including all seven neighbours of Mali.
+Natural Earth supplies 28 shared-segment pairs. The next test will constrain only
+pairs that also touch in the artwork. A country-pose graph tests many starting
+configurations without enumerating all combinations. Its objective has tests
+against the full transport objective. This check is necessary: a good pair fit
+can make other borders worse.
+
+Process note: stopping the queue parent at 13:43 UTC did not stop one nested
+stage timeout. That stage had its own process group. It continued beside the
+native Africa pose test until 14:08 UTC, when its group was stopped directly.
+Its last complete checkpoint has 68 steps. Those overlapping wall times are not
+benchmark results. The new queue uses foreground stage timeouts and a shared
+process group. Each stage also has a remaining-time limit. All jobs stop before
+18:55 UTC, which leaves time for final checks before the exclusive window ends.

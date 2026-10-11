@@ -5,6 +5,10 @@ const h3=require(path.join(mon,'node_modules/h3-js'));
 const dir=process.argv[2];if(!dir)throw Error('usage: plot-lines.cjs EXPORTED_TRIAL_DIRECTORY');
 const names={24:'Angola',180:'DRC',894:'Zambia',466:'Mali',854:'Burkina Faso',276:'Germany',616:'Poland'};
 const boundaries=JSON.parse(fs.readFileSync('make-lookup-table/population-data/country-boundaries/ne_10m_admin_0_map_units.geojson'));
+for(const f of boundaries.features){const p=f.properties,code=Number(p.ISO_N3_EH);names[code]??=p.NAME_EN||p.NAME||String(code);}
+const seamPath=path.join(dir,'seams.csv');
+const allowed=fs.existsSync(seamPath)?new Set(fs.readFileSync(seamPath,'utf8').trim().split('\n').slice(1).map(r=>r.split(',').slice(0,2).map(Number).sort((a,b)=>a-b).join('-'))):null;
+const requested=new Set((process.env.CONTINUITY_LINE_PAIRS||'').split(',').filter(Boolean));
 const radians=Math.PI/180;
 const position=new Map(),population=new Map();
 function load(name){
@@ -28,6 +32,7 @@ for(const a of data.baseline.centres)for(const [x,y] of [[a.x+2,a.y],[a.x,a.y+2]
  const i=data.baseline.lookup.get(`${x},${y}`);if(i===undefined)continue;
  const b=data.baseline.centres[i];if(a.code===b.code)continue;
  const pair=[a.code,b.code].sort((a,b)=>a-b).join('-');
+ if((allowed&&!allowed.has(pair))||(requested.size&&!requested.has(pair)))continue;
  if(!pairs.has(pair))pairs.set(pair,[]);pairs.get(pair).push({a,b,distance:distance(a,b)});
 }
 function components(projected,threshold){const ids=new Set(projected.filter(p=>p.weight>=threshold).map(p=>p.index)),sizes=[];

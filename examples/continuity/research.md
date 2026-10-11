@@ -158,7 +158,9 @@ scaling it by `f²` also increases its pressure to reduce spread.
 The inner objective adds
 `proximal * KL(plan || previous_plan)`. This changes its cost by
 `-proximal * log(previous_plan)` and its entropy coefficient by `+proximal`.
-The outer acceptance test still uses the original objective. The inner solve
+Zero entries use the smallest normal positive Float64 value in this cost.
+This permits moves from entries that became zero numerically. The outer
+acceptance test still uses the original objective. The inner solve
 still uses KA/oneAPI. This test uses dense GPU costs, not the matrix-free path.
 It checks whether smaller changes reduce folds without moving the border gap
 into the interior. A fixed-point test checks the cost and entropy signs.
@@ -245,7 +247,9 @@ The plotter uses H3-MON's actual `strokeCoverage` and `projectStroke` functions.
 It selects lines at the baseline median and 90th-percentile seam edges, then
 uses identical cartogram coordinates for both fits. Blue points show source
 scores. Red segments connect target means; they are not geographic paths.
-Geographic extents match between each pair of panels. Component counts depend
+Geographic extents match between each pair of panels. New previews copy the
+fitted seam list, so the plotter excludes false artwork contacts. Set
+`CONTINUITY_LINE_PAIRS=466-854` to limit the plot to one pair. Component counts depend
 on a score threshold and population coverage; fewer components alone do not
 prove a better mapping. Transported population is reported as a conservation
 check. Chromium runs headlessly and closes after the screenshot. No server starts.
