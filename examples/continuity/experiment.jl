@@ -7,6 +7,13 @@ using KernelAbstractions: @kernel, @index, @localmem, @synchronize
 const PCP = PopulationCartogramProjection
 include(joinpath(@__DIR__, "..", "common.jl"))
 
+function checkpoint(path,value)
+    temporary=path*".tmp"
+    serialize(temporary,value)
+    mv(temporary,path;force=true)
+    return nothing
+end
+
 @inline pair_cost(cost::AbstractMatrix,i,j) = cost[i,j]
 @inline function pair_cost(c::NamedTuple,i,j)
     s,t=c.source,c.target
@@ -95,7 +102,7 @@ function polish_plan(plan,a,b,backend; tolerance=1e-5,maxiters=500)
             totals=vec(sum(result;dims=1))
             error=sum(abs.(totals.-b))
             if error<=tolerance && maximum(abs.(totals./b.-1))<=.001
-                return (;plan=result,log_beta_correction=log.(Float64.(host_v)),marginal_error=error)
+                return (;plan=result,log_beta_correction=log.(Float64.(host_v)),marginal_error=error,iterations=iteration)
             end
         end
     end
@@ -127,6 +134,8 @@ function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,ma
     host_beta = zeros(Float32, length(b))
     update! = dense_reduce!(backend, 32)
     error = Inf
+    best_error=Inf
+    stagnant=0
     polished=false
     for iteration in 1:maxiters
         update!(alpha, dc, beta, da, Float32(eta), length(b), Val(true); ndrange=32length(a))
@@ -136,16 +145,20 @@ function solve_cost(shifted,dc,offset,a,b,backend;eta=0.002,tolerance=0.00001,ma
             plan = reconstruct(shifted, host_beta, a, eta)
             error = sum(abs.(vec(sum(plan; dims=1)) .- b))
             max_relative = maximum(abs.(vec(sum(plan;dims=1))./b .- 1))
+            stagnant = error >= best_error*(1-1e-3) ? stagnant+1 : 0
+            best_error=min(best_error,error)
             if error <= tolerance && max_relative <= 0.001
                 return (; plan, beta=Float64.(host_beta).+offset,
-                        iterations=iteration, marginal_error=error,polished=false)
+                        iterations=iteration, marginal_error=error,polished=false,refinement_iterations=0)
             end
-            if (!polished || iteration==maxiters) && error<.001 && max_relative<.05
+            if (!polished || iteration==maxiters) && error<.05 && max_relative<.5 &&
+               (error<.001 || stagnant>=4 || iteration==maxiters)
                 polished=true
                 refined=polish_plan(plan,a,b,backend;tolerance)
                 if !isnothing(refined)
                     return (;plan=refined.plan,beta=Float64.(host_beta).+offset.+eta.*refined.log_beta_correction,
-                            iterations=iteration,marginal_error=refined.marginal_error,polished=true)
+                            iterations=iteration,marginal_error=refined.marginal_error,polished=true,
+                            refinement_iterations=refined.iterations)
                 end
             end
         end
@@ -370,7 +383,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         for c in countries
             elapsed = @elapsed result = matrix_free ?
                 feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta) : sinkhorn(c.cost,c.a,c.b,backend;eta)
-            println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) iterations, residual=$(result.marginal_error)")
+            println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) dual + $(result.refinement_iterations) primal iterations, residual=$(result.marginal_error)")
             flush(stdout)
             push!(plans, result.plan)
         end
@@ -380,7 +393,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                     (fold_strength==0 ? 0.0 : fold_strength*first(fold_penalty_gradient(countries,p,faces;forces_only=true)))
     baseline = metrics(countries, plans, edges)
     export_arrow && export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
-    serialize(joinpath(outdir,"baseline.jls"),plans)
+    checkpoint(joinpath(outdir,"baseline.jls"),plans)
     export_seams(joinpath(outdir,"baseline-seams.csv"),countries,plans,edges)
     rows = [(; iteration=0, damping=0.0, accepted=true, objective=score_plan(plans), baseline...)]
     CSV.write(joinpath(outdir,"metrics.csv"), DataFrame(rows))
@@ -418,7 +431,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         if !accepted
             push!(rows, (; iteration, damping=0.0, accepted=false, objective=before, metrics(countries,plans,edges)...))
         end
-        serialize(joinpath(outdir,"candidate.jls"),plans)
+        checkpoint(joinpath(outdir,"candidate.jls"),plans)
         CSV.write(joinpath(outdir,"metrics.csv"),DataFrame(rows))
         CSV.write(joinpath(outdir,"trials.csv"),DataFrame(trials))
         println("Outer $iteration: $(last(rows))")
@@ -426,7 +439,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         accepted || break
     end
     export_arrow && export_mapping(joinpath(outdir,"candidate.arrow"), countries, plans)
-    serialize(joinpath(outdir,"candidate.jls"),plans)
+    checkpoint(joinpath(outdir,"candidate.jls"),plans)
     export_seams(joinpath(outdir,"candidate-seams.csv"),countries,plans,edges)
     return rows
 end

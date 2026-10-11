@@ -19,7 +19,7 @@ backend=oneAPI.oneAPIBackend()
 println("Started: $(now(UTC)); group=$group resolution=$resolution factor=$factor")
 oneAPI.versioninfo(); flush(stdout)
 countries=[ContinuityExperiment.country(joinpath(source_dir,"country-$code-res$resolution.arrow"),code;factor) for code in codes]
-serialize(joinpath(outdir,"countries.jls"),countries)
+ContinuityExperiment.checkpoint(joinpath(outdir,"countries.jls"),countries)
 configs=[(;border_share,fold_strength,eta=.002/factor^2) for border_share in (.1,.25),
          fold_strength in (mode=="fold" ? (0.,.01,.1) : (0.,.01))]
 rows=NamedTuple[]
@@ -53,7 +53,7 @@ for cfg in configs
             [ContinuityExperiment.feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta).plan for c in countries]
         end
         result=ContinuityExperiment.run_case(countries,backend,path;
-            borders,border_share,fold_strength,eta,strength=1.0,form=:distribution,saturating=false,
+            borders,border_share,fold_strength=fold_strength*factor^2,eta,strength=1.0,form=:distribution,saturating=false,
             scale_km=900.,interior_limit=2.,spread_limit=1.25,outer_steps=30,
             initial_plans=base,export_arrow=false,matrix_free=true,internal_scale=factor^2)
         plans=deserialize(joinpath(path,"candidate.jls"))

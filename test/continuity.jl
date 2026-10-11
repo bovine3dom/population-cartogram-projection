@@ -101,6 +101,17 @@ end
     @test (plus-minus)/(2h) ≈ sum(only(g).*direction) rtol=1e-5
 end
 
+@testset "Atomic plan checkpoints" begin
+    mktempdir() do dir
+        path=joinpath(dir,"plan.jls")
+        CE.checkpoint(path,[1.,2.])
+        @test CE.deserialize(path)==[1.,2.]
+        CE.checkpoint(path,[3.,4.])
+        @test CE.deserialize(path)==[3.,4.]
+        @test !ispath(path*".tmp")
+    end
+end
+
 @testset "Shared parent export" begin
     countries=[(code=k,source=CE.DataFrame(id=UInt64[1],value=[v]),a=[1.],
                 target=CE.DataFrame(x=[2k],y=[0])) for (k,v) in enumerate((20.,80.))]
