@@ -125,6 +125,13 @@ end
     plus=first(CE.fold_penalty_gradient([c],[inverted+h*direction],faces))
     minus=first(CE.fold_penalty_gradient([c],[inverted-h*direction],faces))
     @test (plus-minus)/(2h) ≈ sum(only(g).*direction) rtol=1e-5
+    for smoothing_area in (100.,5000.)
+        smooth,gradient=CE.fold_penalty_gradient([c],[inverted],faces;smoothing_area)
+        @test 0<smooth<value
+        plus=first(CE.fold_penalty_gradient([c],[inverted+h*direction],faces;smoothing_area))
+        minus=first(CE.fold_penalty_gradient([c],[inverted-h*direction],faces;smoothing_area))
+        @test (plus-minus)/(2h)≈sum(only(gradient).*direction) rtol=1e-5
+    end
 end
 
 @testset "Population capacity bounds" begin

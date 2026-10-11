@@ -203,7 +203,10 @@ the seed against the distortion guards. Failed seeds are not accepted fits.
 valid checkpoint while retaining its original baseline. `CONTINUITY_OUTER_STEPS`
 sets the step limit. Optional overrides are `CONTINUITY_STRENGTH`,
 `CONTINUITY_FOLD_STRENGTH`, `CONTINUITY_BORDER_SCALE`, `CONTINUITY_SPREAD_LIMIT`, and
-`CONTINUITY_PROXIMAL`.
+`CONTINUITY_PROXIMAL`. Set `CONTINUITY_FOLD_SMOOTHING` to an area in km² to
+replace the sharp positive-area penalty with a Huber penalty. It is quadratic
+below that area and linear above it. Zero retains the original penalty. This
+changes the optimization objective, not the reported triangle areas.
 The runner copies the border mask and checks its edge count against the checkpoint.
 
 A fixed border penalty can leave a finite jump as target cells get smaller.

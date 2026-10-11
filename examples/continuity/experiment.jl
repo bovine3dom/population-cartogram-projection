@@ -381,19 +381,23 @@ function triangles(countries)
     return sort!(result)
 end
 
-function fold_penalty_gradient(countries,plans,triangles;area_scale=2500.0,area_tolerance=1.0,forces_only=false)
+function fold_penalty_gradient(countries,plans,triangles;area_scale=2500.0,area_tolerance=1.0,smoothing_area=0.0,forces_only=false)
+    isfinite(smoothing_area) && smoothing_area>=0 || error("invalid fold smoothing")
     q=[means(c,p) for (c,p) in zip(countries,plans)]
     g=[zeros(size(v)) for v in q]
     penalty=0.0
     coefficient=6371^2/(2area_scale*max(length(triangles),1))
+    width=2smoothing_area/6371^2
     for (k,a,b,d) in triangles
         qa,qb,qd=q[k][:,a],q[k][:,b],q[k][:,d]
         area=dot(qa,cross(qb,qd)) - 2area_tolerance/6371^2
         area<=0 && continue
-        penalty+=coefficient*area
-        g[k][:,a].+=coefficient.*cross(qb,qd)
-        g[k][:,b].+=coefficient.*cross(qd,qa)
-        g[k][:,d].+=coefficient.*cross(qa,qb)
+        smooth=width>0 && area<width
+        penalty+=coefficient*(smooth ? area^2/(2width) : area-width/2)
+        slope=coefficient*(smooth ? area/width : 1.)
+        g[k][:,a].+=slope.*cross(qb,qd)
+        g[k][:,b].+=slope.*cross(qd,qa)
+        g[k][:,d].+=slope.*cross(qa,qb)
     end
     gradient=forces_only ? [v./sum(p;dims=1) for (v,p) in zip(g,plans)] :
         [(transpose(c.xyz)*v .- sum(q[k].*v;dims=1))./sum(plans[k];dims=1)
@@ -430,11 +434,13 @@ function metrics(countries, plans, edges)
     local_rms = rms[local_indices]
     return (; local_p50=percentile(local_internal,.5),local_p90=percentile(local_internal,.9),
             cross_rms_p50=percentile(cross_rms,.5),cross_rms_p90=percentile(cross_rms,.9),
+            cross_rms_all=isempty(cross_rms) ? 0. : sqrt(mean(abs2,cross_rms)),cross_rms_max=percentile(cross_rms,1),
             local_rms_p50=percentile(local_rms,.5),local_rms_p90=percentile(local_rms,.9),
+            local_rms_all=isempty(local_rms) ? 0. : sqrt(mean(abs2,local_rms)),local_rms_max=percentile(local_rms,1),
             interior_p50=percentile(interior,.5), interior_p90=percentile(interior,.9),
             interior_max=percentile(interior,1), seam_p50=percentile(seam,.5),
-            seam_p90=percentile(seam,.9), spread_mean=mean(spread),
-            spread_p90=percentile(spread,.9), marginal_error=marginal,
+            seam_p90=percentile(seam,.9),seam_max=percentile(seam,1),spread_mean=mean(spread),
+            spread_p90=percentile(spread,.9),spread_p99=percentile(spread,.99),spread_max=maximum(spread),marginal_error=marginal,
             target_max_relative=maximum(maximum(abs.(vec(sum(p;dims=1))./c.b .- 1))
                                         for (c,p) in zip(countries,plans)))
 end
@@ -466,7 +472,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   borders=Set([(276,616)]), border_share=nothing, scale_km=300.0,
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
-                  fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
+                  fold_strength=0.0, fold_smoothing=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
                   border_scale=1.0,coordinate=false)
     proximal>=0 || error("proximal weight must be nonnegative")
@@ -483,7 +489,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     CSV.write(joinpath(outdir,"settings.csv"), DataFrame(;
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],internal_form=[string(internal_form)],
-        saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],
+        saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],fold_smoothing=[fold_smoothing],
         matrix_free=[matrix_free],internal_scale=[internal_scale],border_scale=[border_scale],inner_tolerance=[inner_tolerance],
         proximal=[proximal],anneal=[anneal],accelerate=[accelerate],coordinate=[coordinate],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
@@ -502,7 +508,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     end
     reference = preserve_displacements ? [means(c,p) for (c,p) in zip(countries,plans)] : nothing
     score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km,form,internal_form,saturating,reference) +
-                    (fold_strength==0 ? 0.0 : fold_strength*first(fold_penalty_gradient(countries,p,faces;forces_only=true)))
+                    (fold_strength==0 ? 0.0 : fold_strength*first(fold_penalty_gradient(countries,p,faces;smoothing_area=fold_smoothing,forces_only=true)))
     baseline = metrics(countries, plans, edges)
     export_arrow && export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
     checkpoint(joinpath(outdir,"baseline.jls"),plans)
@@ -538,7 +544,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,internal_form,saturating,reference,forces_only=matrix_free)
         gradient = [strength.*g for g in gradient]
         if fold_strength>0
-            _,fg=fold_penalty_gradient(countries,plans,faces;forces_only=matrix_free)
+            _,fg=fold_penalty_gradient(countries,plans,faces;smoothing_area=fold_smoothing,forces_only=matrix_free)
             gradient = [g .+ fold_strength.*f for (g,f) in zip(gradient,fg)]
         end
         solutions=map(selected) do k

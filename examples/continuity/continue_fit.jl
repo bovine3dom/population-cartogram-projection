@@ -13,8 +13,9 @@ path=joinpath(input,trial)
 baseline=deserialize(joinpath(path,"baseline.jls"))
 seed=deserialize(joinpath(path,"candidate.jls"))
 row=only(eachrow(CSV.read(joinpath(path,"settings.csv"),DataFrame)))
-mask=filter(isfile,[joinpath(path,"borders.csv"),joinpath(input,"borders.csv")])
-borders=isempty(mask) ? Set([(24,180),(24,894),(180,894),(466,854),(276,616)]) :
+mask=filter(isfile,[joinpath(path,"borders.csv"),joinpath(path,"baseline-seams.csv"),joinpath(input,"borders.csv")])
+isempty(mask) && row.border_edges>0 && error("checkpoint has no border mask")
+borders=isempty(mask) ? Set{Tuple{Int,Int}}() :
     Set(minmax(r.country_a,r.country_b) for r in eachrow(CSV.read(first(mask),DataFrame)))
 count(e->e[1]!=e[3],ContinuityExperiment.graph(countries;borders))==row.border_edges || error("border mask differs from checkpoint")
 border_pairs=sort!(collect(borders))
@@ -27,7 +28,7 @@ settings[:outer_steps]=parse(Int,get(ENV,"CONTINUITY_OUTER_STEPS","50"))
 haskey(ENV,"CONTINUITY_COORDINATE") && (settings[:coordinate]=ENV["CONTINUITY_COORDINATE"]=="1")
 for (key,variable) in ((:border_scale,"CONTINUITY_BORDER_SCALE"),(:strength,"CONTINUITY_STRENGTH"),
                        (:fold_strength,"CONTINUITY_FOLD_STRENGTH"),(:spread_limit,"CONTINUITY_SPREAD_LIMIT"),
-                       (:proximal,"CONTINUITY_PROXIMAL"))
+                       (:proximal,"CONTINUITY_PROXIMAL"),(:fold_smoothing,"CONTINUITY_FOLD_SMOOTHING"))
     haskey(ENV,variable) && (settings[key]=parse(Float64,ENV[variable]))
 end
 ContinuityExperiment.checkpoint(joinpath(out,"countries.jls"),countries)
