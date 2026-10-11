@@ -129,7 +129,7 @@ means(c, p) = (c.xyz * p) ./ sum(p; dims=1)
 
 function penalty_gradient(countries, plans, edges; scale_km=300.0,
                           weights=fill(1/max(length(edges),1),length(edges)),
-                          form=:mean, saturating=true)
+                          form=:mean, saturating=true, reference=nothing)
     q = [means(c, p) for (c, p) in zip(countries, plans)]
     g = [zeros(size(v)) for v in q]
     tau2 = (scale_km / 6371)^2
@@ -137,11 +137,14 @@ function penalty_gradient(countries, plans, edges; scale_km=300.0,
     penalty = 0.0
     for ((k, j, l, t), weight) in zip(edges, weights)
         d = q[k][:, j] - q[l][:, t]
-        squared = form == :mean ? sum(abs2,d) : max(0.0,2-2dot(q[k][:,j],q[l][:,t]))
+        displacement = !isnothing(reference) && k==l
+        displacement && (d -= reference[k][:,j] - reference[l][:,t])
+        mean_form = form == :mean || displacement
+        squared = mean_form ? sum(abs2,d) : max(0.0,2-2dot(q[k][:,j],q[l][:,t]))
         scaled = squared / (2tau2)
         decay = saturating ? exp(-scaled) : 1.0
         penalty += weight * (saturating ? -expm1(-scaled) : scaled)
-        if form == :mean
+        if mean_form
             derivative = weight .* decay .* d ./ tau2
             g[k][:, j] .+= derivative
             g[l][:, t] .-= derivative
@@ -193,6 +196,10 @@ end
 
 function export_mapping(path, countries, plans)
     output = DataFrame(x=Int[], y=Int[], id=UInt64[], code=Int[], weight=Float64[], weight_mean=Float64[])
+    population = Dict{UInt64,Float64}()
+    for c in countries, row in eachrow(c.source)
+        population[row.id] = get(population,row.id,0.0) + row.value
+    end
     for (c, p) in zip(countries, plans)
         totals = vec(sum(p; dims=1))
         for i in axes(p,1)
@@ -200,7 +207,7 @@ function export_mapping(path, countries, plans)
             choice = PCP._select_weights(weights, collect(zip(c.target.x,c.target.y)); indices=true)
             for j in choice.selected
                 push!(output, (c.target.x[j], c.target.y[j], c.source.id[i], c.code,
-                               weights[j], p[i,j]/totals[j]))
+                               weights[j]*c.source.value[i]/population[c.source.id[i]], p[i,j]/totals[j]))
             end
         end
     end
@@ -211,16 +218,15 @@ end
 function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_steps=3,
                   borders=Set([(276,616)]), border_share=nothing, scale_km=300.0,
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
-                  initial_plans=nothing, export_arrow=true)
+                  initial_plans=nothing, export_arrow=true, preserve_displacements=false)
     ispath(outdir) && error("refusing to overwrite $outdir")
     mkpath(outdir)
     edges = graph(countries; borders)
     weights = edge_weights(edges, border_share)
-    score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km,form,saturating)
     CSV.write(joinpath(outdir,"settings.csv"), DataFrame(;
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],
-        saturating=[saturating],outer_steps=[outer_steps],
+        saturating=[saturating],preserve_displacements=[preserve_displacements],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
@@ -233,6 +239,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             push!(plans, result.plan)
         end
     end
+    reference = preserve_displacements ? [means(c,p) for (c,p) in zip(countries,plans)] : nothing
+    score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km,form,saturating,reference)
     baseline = metrics(countries, plans, edges)
     export_arrow && export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
     serialize(joinpath(outdir,"baseline.jls"),plans)
@@ -241,7 +249,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     CSV.write(joinpath(outdir,"metrics.csv"), DataFrame(rows))
     trials = NamedTuple[]
     for iteration in 1:outer_steps
-        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,saturating)
+        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,saturating,reference)
         candidate = [sinkhorn(c.cost .+ strength .* g, c.a, c.b, backend; eta).plan
                      for (c,g) in zip(countries,gradient)]
         before = score_plan(plans)

@@ -2,6 +2,8 @@ using Test
 include(joinpath(@__DIR__, "..", "examples", "continuity", "experiment.jl"))
 using .ContinuityExperiment
 const CE = ContinuityExperiment
+include(joinpath(@__DIR__,"..","examples","continuity","diagnostics.jl"))
+const CD = ContinuityDiagnostics
 
 @testset "Experimental dense Sinkhorn" begin
     c = [0.0 0.8 0.2; 0.7 0.0 0.4]
@@ -37,6 +39,33 @@ end
     @test_throws ErrorException CE.edge_weights(edges[1:2],.8)
 end
 
+@testset "Capacity bounds and orientation" begin
+    countries = [(code=k,xyz=reshape([cos(a),sin(a),0.0],3,1),a=[1.0],b=[.5,.5])
+                 for (k,a) in enumerate((0.0,.1))]
+    bounds = CD.nearest_supply(countries,[(1,2,2,1)])
+    @test bounds.mean_nearest_lower_bound_km ≈ [637.1,637.1]
+    @test bounds.population_fraction == [.5,.5]
+    xyz=hcat([[cos(lat)*cos(lon),cos(lat)*sin(lon),sin(lat)]
+              for (lon,lat) in ((0.,.01),(.01,.01),(0.,0.),(.01,0.))]...)
+    c=(code=24,xyz=xyz,target=CE.DataFrame(x=[0,2,0,2],y=[0,0,2,2]))
+    p=Matrix{Float64}(CE.I,4,4)/4
+    @test CD.orientations([c],[p]).positive == [0]
+    @test CD.orientations([c],[p]).negative == [2]
+    @test CD.orientations([c],[p[:,[1,3,2,4]]]).positive == [2]
+end
+
+@testset "Shared parent export" begin
+    countries=[(code=k,source=CE.DataFrame(id=UInt64[1],value=[v]),a=[1.],
+                target=CE.DataFrame(x=[2k],y=[0])) for (k,v) in enumerate((20.,80.))]
+    mktempdir() do dir
+        path=joinpath(dir,"mapping.arrow")
+        CE.export_mapping(path,countries,[ones(1,1),ones(1,1)])
+        result=CE.DataFrame(CE.Arrow.Table(path))
+        @test result.weight ≈ [.2,.8]
+        @test result.weight_mean == [1.,1.]
+    end
+end
+
 @testset "Local border metrics" begin
     countries = [(xyz=[cos(a) cos(a+.01); sin(a) sin(a+.01); 0.0 0.0],b=[.5,.5])
                  for a in (0.0,.02)]
@@ -56,11 +85,12 @@ end
     edges = [(1,1,1,2)]
     value, gradients = CE.penalty_gradient(countries,p,edges)
     for form in (:mean,:distribution), saturating in (true,false),
+        reference in (nothing, [xyz .* [.8 .9]]),
         direction in ([.1 -.1; -.1 .1], [.2 .1; .3 -.1])
         h = 1e-6
-        _, gradient = CE.penalty_gradient(countries,p,edges;form,saturating)
-        plus, _ = CE.penalty_gradient(countries,[p[1]+h*direction],edges;form,saturating)
-        minus, _ = CE.penalty_gradient(countries,[p[1]-h*direction],edges;form,saturating)
+        _, gradient = CE.penalty_gradient(countries,p,edges;form,saturating,reference)
+        plus, _ = CE.penalty_gradient(countries,[p[1]+h*direction],edges;form,saturating,reference)
+        minus, _ = CE.penalty_gradient(countries,[p[1]-h*direction],edges;form,saturating,reference)
         @test (plus-minus)/(2h) ≈ sum(gradient[1].*direction) rtol=1e-4
     end
     @test CE.means(only(countries), 1.001p[1]) ≈ CE.means(only(countries),p[1])

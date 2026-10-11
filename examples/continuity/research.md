@@ -58,3 +58,32 @@ limits, not acceptance criteria for production.
 `failures.log` retains failed solves. A failed configuration does not stop the
 remaining configurations. Inspect each pair and its full distributions before
 selecting a setting. The launch is bounded by the 19:01 UTC deadline.
+
+## Balanced sweep and diagnostics
+
+Pass `balanced` as the third argument to `sweep.jl` to give more weight to
+internal edges. This tests border shares 0.1, 0.25, and 0.5, strengths 0.1 and 1,
+and two internal objectives. One uses absolute source-distribution separation.
+The other penalizes changes in the baseline internal mean-displacement field.
+The cross-border term remains a source-distribution penalty in both cases.
+It allows 40 steps and an internal-maximum increase of up to 100% for diagnosis.
+
+`diagnostics.jl SWEEP_DIRECTORY TRIAL_DIRECTORY` writes orientation counts and
+optimistic source-supply bounds. Orientation uses two triangles per complete
+2×2 target block. Positive geographic area is opposite to the expected direction
+of this downward-y grid. Areas below 1 km² in magnitude count as flat. This is a
+fold diagnostic, not a proof of injectivity.
+
+For the supply bound, count distinct border targets in one country. Their equal
+masses determine how much country population must be assigned to the seam.
+Select that much source mass in order of distance to the nearest source in the
+other country. Ignore all other constraints. The resulting mean is a lower bound
+on mean physical source separation for those targets. It is not a lower bound
+on centre separation or on the median over edges. Repeated target contacts and
+shared coarse H3 parents require care when interpreting it.
+
+`prepare_global.jl GLOBAL_HILO.arrow OUTPUT_DIRECTORY RESOLUTION COUNTRY_CODES...`
+prepares matched source inputs without repeating the expensive boundary extract.
+It refuses to replace existing output. Native H3-5 checks avoid shared-parent
+quantization at borders. Experimental sparse exports now weight shared H3 parents
+by their country population fractions, so a line score is not counted twice.
