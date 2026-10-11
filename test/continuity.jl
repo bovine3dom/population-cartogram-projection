@@ -227,7 +227,7 @@ end
             path=joinpath(dir,"fit")
             rows=CE.run_case(countries,backend,path;initial_plans=baseline,borders=Set([(1,2)]),
                 eta=.05,strength=100.,scale_km=300.,border_share=.25,form=:distribution,saturating=false,
-                coordinate=true,proximal=.1,outer_steps=2,spread_limit=Inf,interior_limit=Inf,
+                coordinate=true,border_factors=Dict((1,2)=>.75),proximal=.1,outer_steps=2,spread_limit=Inf,interior_limit=Inf,
                 inner_tolerance=1e-4,anneal=true,accelerate=true,export_arrow=false)
             @test Set(r.updated_country for r in rows[2:end]) == Set([1,2])
             @test all(diff(getproperty.(rows,:objective)).<=1e-10)
@@ -237,6 +237,11 @@ end
             @test last(rows).marginal_error<=1e-4
             mask=CE.CSV.read(joinpath(path,"borders.csv"),CE.DataFrame)
             @test (only(mask.country_a),only(mask.country_b))==(1,2)
+            saved=CE.saved_case(path,countries)
+            @test saved.settings[:coordinate]
+            @test saved.border_factors[(1,2)]==.75
+            rm(joinpath(path,"borders.csv"))
+            @test CE.saved_case(path,countries).borders==Set([(1,2)])
         end
     end
 end

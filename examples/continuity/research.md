@@ -242,6 +242,24 @@ countries, while edge penalties are averages. This regional test includes all
 seven neighbours of Mali. Borders outside the selected region are not constrained.
 An improvement for one pair does not establish a solution for the whole planet.
 
+`reweight_region.jl REGIONAL_STUDY NEW_OUTPUT` reuses the saved eight poses from
+`regional_pose.jl`. It compares two fixed border scales. The first uses the RMS
+over nearby internal edges at baseline. The second also uses the population
+capacity bound, if that bound is larger. Border factors are inverse squared
+scales. Their edge-weighted mean is one, so the total border budget stays fixed.
+The pose search and country-wise updates use the same factors. All fitted borders
+remain in the reports, including borders with small factors. This test changes
+the objective; it does not prove that a large residual gap is acceptable.
+
+Saved trials now contain `border-factors.csv`. Continuation and refinement keep
+these factors and the fitted border mask. Older trials can recover the mask from
+`baseline-seams.csv`. Refinement keeps the other fit settings. It scales internal
+and fold weights by the squared grid ratio, and border weights by the grid ratio.
+It divides temperature and fold-smoothing area by the squared grid ratio. The
+factor argument is the absolute OWID subdivision, not an extra subdivision.
+The saved border factors are reused, not recalculated. Check capacity again when
+the source or target resolution changes.
+
 ## Contacts that cannot become continuous
 
 `contact_bounds.jl REGIONAL_STUDY_DIRECTORY NEW_OUTPUT.csv` checks every artwork

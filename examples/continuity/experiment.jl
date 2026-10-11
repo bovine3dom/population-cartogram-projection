@@ -291,6 +291,23 @@ function edge_weights(edges, border_share)
     return [v ? border_share/n : (1-border_share)/(length(edges)-n) for v in cross]
 end
 
+function saved_case(path,countries;root=dirname(path))
+    row=only(eachrow(CSV.read(joinpath(path,"settings.csv"),DataFrame)))
+    masks=filter(isfile,[joinpath(path,"borders.csv"),joinpath(path,"baseline-seams.csv"),joinpath(root,"borders.csv")])
+    isempty(masks) && row.border_edges>0 && error("checkpoint has no border mask")
+    borders=isempty(masks) ? Set{Tuple{Int,Int}}() :
+        Set(minmax(r.country_a,r.country_b) for r in eachrow(CSV.read(first(masks),DataFrame)))
+    count(e->e[1]!=e[3],graph(countries;borders))==row.border_edges || error("border mask differs from checkpoint")
+    file=joinpath(path,"border-factors.csv")
+    border_factors=isfile(file) ? Dict(minmax(r.country_a,r.country_b)=>r.factor for r in eachrow(CSV.read(file,DataFrame))) : Dict()
+    settings=Dict(k=>v for (k,v) in pairs(row) if !(k in (:internal_edges,:border_edges)))
+    for key in (:form,:internal_form)
+        haskey(settings,key) && (settings[key]=Symbol(settings[key]))
+    end
+    ismissing(settings[:border_share]) && (settings[:border_share]=nothing)
+    return (;settings,borders,border_factors)
+end
+
 function export_seams(path,countries,plans,edges)
     pairs = sort!(unique([minmax(k,l) for (k,j,l,t) in edges if k != l]))
     isempty(pairs) && return
@@ -474,18 +491,23 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
                   fold_strength=0.0, fold_smoothing=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
-                  border_scale=1.0,coordinate=false)
+                  border_scale=1.0,coordinate=false,border_factors=Dict())
     proximal>=0 || error("proximal weight must be nonnegative")
     all(x->isfinite(x)&&x>=0,(internal_scale,border_scale)) || error("invalid edge scale")
+    all(x->isfinite(x)&&x>=0,values(border_factors)) || error("invalid border factors")
     matrix_free && proximal>0 && error("proximal costs require the dense experimental path")
     ispath(outdir) && error("refusing to overwrite $outdir")
     mkpath(outdir)
     edges = graph(countries; borders)
     weights = edge_weights(edges, border_share)
-    weights .*= [e[1]==e[3] ? internal_scale : border_scale for e in edges]
+    weights .*= [k==l ? internal_scale : border_scale*get(border_factors,minmax(countries[k].code,countries[l].code),1.)
+                 for (k,j,l,t) in edges]
     faces = triangles(countries)
     border_pairs=sort!(collect(borders))
     CSV.write(joinpath(outdir,"borders.csv"),DataFrame(country_a=first.(border_pairs),country_b=last.(border_pairs)))
+    factor_pairs=sort!(collect(keys(border_factors)))
+    CSV.write(joinpath(outdir,"border-factors.csv"),DataFrame(country_a=first.(factor_pairs),country_b=last.(factor_pairs),
+        factor=[border_factors[p] for p in factor_pairs]))
     CSV.write(joinpath(outdir,"settings.csv"), DataFrame(;
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],internal_form=[string(internal_form)],
