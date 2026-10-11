@@ -468,7 +468,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
                   fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
-                  border_scale=1.0)
+                  border_scale=1.0,coordinate=false)
     proximal>=0 || error("proximal weight must be nonnegative")
     all(x->isfinite(x)&&x>=0,(internal_scale,border_scale)) || error("invalid edge scale")
     matrix_free && proximal>0 && error("proximal costs require the dense experimental path")
@@ -478,12 +478,14 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     weights = edge_weights(edges, border_share)
     weights .*= [e[1]==e[3] ? internal_scale : border_scale for e in edges]
     faces = triangles(countries)
+    border_pairs=sort!(collect(borders))
+    CSV.write(joinpath(outdir,"borders.csv"),DataFrame(country_a=first.(border_pairs),country_b=last.(border_pairs)))
     CSV.write(joinpath(outdir,"settings.csv"), DataFrame(;
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],internal_form=[string(internal_form)],
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],
         matrix_free=[matrix_free],internal_scale=[internal_scale],border_scale=[border_scale],inner_tolerance=[inner_tolerance],
-        proximal=[proximal],anneal=[anneal],accelerate=[accelerate],outer_steps=[outer_steps],
+        proximal=[proximal],anneal=[anneal],accelerate=[accelerate],coordinate=[coordinate],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
@@ -505,12 +507,12 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     export_arrow && export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
     checkpoint(joinpath(outdir,"baseline.jls"),plans)
     export_seams(joinpath(outdir,"baseline-seams.csv"),countries,plans,edges)
-    rows = [(; iteration=0, damping=0.0, accepted=true, objective=score_plan(plans), baseline...)]
+    rows = [(; iteration=0, updated_country=0, damping=0.0, accepted=true, objective=score_plan(plans), baseline...)]
     CSV.write(joinpath(outdir,"metrics.csv"), DataFrame(rows))
-    within_limits(m) = m.spread_mean <= spread_limit*baseline.spread_mean &&
-                       m.spread_p90 <= spread_limit*baseline.spread_p90 &&
-                       m.interior_p90 <= interior_limit*baseline.interior_p90 &&
-                       m.interior_max <= interior_limit*baseline.interior_max
+    within_limits(m) = (spread_limit==Inf || (m.spread_mean <= spread_limit*baseline.spread_mean &&
+                       m.spread_p90 <= spread_limit*baseline.spread_p90)) &&
+                      (interior_limit==Inf || (m.interior_p90 <= interior_limit*baseline.interior_p90 &&
+                       m.interior_max <= interior_limit*baseline.interior_max))
     if !isnothing(starting_plans)
         length(starting_plans)==length(countries) || error("seed country count differs")
         for (c,p) in zip(countries,starting_plans)
@@ -525,46 +527,65 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     end
     trials = NamedTuple[]
     duals = Any[nothing for c in countries]
-    for iteration in 1:outer_steps
+    groups=coordinate ? length(countries) : 1
+    order=sortperm(length.(getproperty.(countries,:b)))
+    accepted_in_sweep=false
+    for step in 1:outer_steps*groups
+        iteration=cld(step,groups)
+        active=order[mod1(step,groups)]
+        selected=coordinate ? (active:active) : eachindex(countries)
+        updated_country=coordinate ? countries[first(selected)].code : 0
         _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,internal_form,saturating,reference,forces_only=matrix_free)
         gradient = [strength.*g for g in gradient]
         if fold_strength>0
             _,fg=fold_penalty_gradient(countries,plans,faces;forces_only=matrix_free)
             gradient = [g .+ fold_strength.*f for (g,f) in zip(gradient,fg)]
         end
-        solutions = [matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate) :
-                     sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
-                              eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)
-                     for (k,(c,g)) in enumerate(zip(countries,gradient))]
-        println("Inner $iteration: ",[(c.code,s.iterations,s.refinement_iterations,s.marginal_error)
-                                      for (c,s) in zip(countries,solutions)])
+        solutions=map(selected) do k
+            c,g=countries[k],gradient[k]
+            matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate) :
+                sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
+                         eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)
+        end
+        println("Inner $iteration/$updated_country: ",[(countries[k].code,s.iterations,s.refinement_iterations,s.marginal_error)
+                                                     for (k,s) in zip(selected,solutions)])
         flush(stdout)
-        duals = [s.beta for s in solutions]
-        candidate = [s.plan for s in solutions]
+        candidate=copy(plans)
+        for (k,s) in zip(selected,solutions)
+            duals[k]=s.beta
+            candidate[k]=s.plan
+        end
         before = score_plan(plans)
         accepted = false
         for damping in (2.0^-k for k in 1:10)
-            trial = [(1-damping).*p .+ damping.*s for (p,s) in zip(plans,candidate)]
+            trial=copy(plans)
+            for k in selected
+                trial[k]=(1-damping).*plans[k].+damping.*candidate[k]
+            end
             score = score_plan(trial)
             m = metrics(countries,trial,edges)
             acceptable = score < before - 1e-10 && within_limits(m)
-            push!(trials, (; iteration, damping, accepted=acceptable, objective=score, m...))
+            push!(trials, (; iteration, updated_country, damping, accepted=acceptable, objective=score, m...))
             if acceptable
                 plans = trial
-                push!(rows, (; iteration, damping, accepted=true, objective=score, m...))
+                push!(rows, (; iteration, updated_country, damping, accepted=true, objective=score, m...))
                 accepted = true
                 break
             end
         end
         if !accepted
-            push!(rows, (; iteration, damping=0.0, accepted=false, objective=before, metrics(countries,plans,edges)...))
+            push!(rows, (; iteration, updated_country, damping=0.0, accepted=false, objective=before, metrics(countries,plans,edges)...))
         end
         checkpoint(joinpath(outdir,"candidate.jls"),plans)
         CSV.write(joinpath(outdir,"metrics.csv"),DataFrame(rows))
         CSV.write(joinpath(outdir,"trials.csv"),DataFrame(trials))
         println("Outer $iteration: $(last(rows))")
         flush(stdout)
-        accepted || break
+        accepted_in_sweep |= accepted
+        if step%groups==0
+            accepted_in_sweep || break
+            accepted_in_sweep=false
+        end
     end
     export_arrow && export_mapping(joinpath(outdir,"candidate.arrow"), countries, plans)
     checkpoint(joinpath(outdir,"candidate.jls"),plans)

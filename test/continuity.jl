@@ -176,6 +176,32 @@ end
     end
 end
 
+@testset "Country-wise continuity steps" begin
+    countries=[(code=k,cost=k==1 ? [0. 1.;1. 0.] : [1. 0.;0. 1.],
+                xyz=[cos(a) cos(a+.01);sin(a) sin(a+.01);0. 0.],a=[.5,.5],b=[.5,.5],
+                source=CE.DataFrame(id=UInt64[1,2]),target=CE.DataFrame(x=[x,x+2],y=[0,0]))
+               for (k,a,x) in ((1,0.,0),(2,.03,4))]
+    baseline=[CE.sinkhorn(c.cost,c.a,c.b,CE.KA.CPU();eta=.05,tolerance=1e-6).plan for c in countries]
+    backends=get(ENV,"CONTINUITY_GPU_TEST","")=="1" ? (CE.KA.CPU(),oneAPI.oneAPIBackend()) : (CE.KA.CPU(),)
+    for backend in backends
+        mktempdir() do dir
+            path=joinpath(dir,"fit")
+            rows=CE.run_case(countries,backend,path;initial_plans=baseline,borders=Set([(1,2)]),
+                eta=.05,strength=100.,scale_km=300.,border_share=.25,form=:distribution,saturating=false,
+                coordinate=true,proximal=.1,outer_steps=2,spread_limit=Inf,interior_limit=Inf,
+                inner_tolerance=1e-4,anneal=true,accelerate=true,export_arrow=false)
+            @test Set(r.updated_country for r in rows[2:end]) == Set([1,2])
+            @test all(diff(getproperty.(rows,:objective)).<=1e-10)
+            @test last(rows).objective<first(rows).objective
+            plans=CE.deserialize(joinpath(path,"candidate.jls"))
+            @test all(vec(sum(p;dims=2))≈c.a for (c,p) in zip(countries,plans))
+            @test last(rows).marginal_error<=1e-4
+            mask=CE.CSV.read(joinpath(path,"borders.csv"),CE.DataFrame)
+            @test (only(mask.country_a),only(mask.country_b))==(1,2)
+        end
+    end
+end
+
 @testset "Shared parent export" begin
     countries=[(code=k,source=CE.DataFrame(id=UInt64[1],value=[v]),a=[1.],
                 target=CE.DataFrame(x=[2k],y=[0])) for (k,v) in enumerate((20.,80.))]

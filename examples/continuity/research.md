@@ -202,12 +202,20 @@ the seed against the distortion guards. Failed seeds are not accepted fits.
 `continue_fit.jl STUDY_DIRECTORY TRIAL_NAME NEW_OUTPUT_DIRECTORY` continues a
 valid checkpoint while retaining its original baseline. `CONTINUITY_OUTER_STEPS`
 sets the step limit. Optional overrides are `CONTINUITY_STRENGTH`,
-`CONTINUITY_FOLD_STRENGTH`, and `CONTINUITY_BORDER_SCALE`.
+`CONTINUITY_FOLD_STRENGTH`, `CONTINUITY_BORDER_SCALE`, and `CONTINUITY_SPREAD_LIMIT`.
+The runner copies the border mask and checks its edge count against the checkpoint.
 
 A fixed border penalty can leave a finite jump as target cells get smaller.
 The internal penalty already scales with `f²`. Test a border scale of `f` to
 increase the border constraint as cell width decreases. This is an experimental
 scaling rule, not a guarantee of continuity or of an invertible map.
+
+Set `CONTINUITY_COORDINATE=1` to update one country at a time. Countries with fewer
+target cells go first. Each accepted update lowers the same full objective.
+A blocked country does not stop updates to the others. Stop when a complete pass
+accepts no updates, or at the pass limit. This is alternating optimization, not a
+permanent one-way lock. `updated_country` identifies each update in the CSV.
+Tests check objective decrease and mass constraints on CPU and oneAPI.
 
 ## Several neighbouring countries
 

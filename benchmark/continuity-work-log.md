@@ -276,3 +276,41 @@ Its last complete checkpoint has 68 steps. Those overlapping wall times are not
 benchmark results. The new queue uses foreground stage timeouts and a shared
 process group. Each stage also has a remaining-time limit. All jobs stop before
 18:55 UTC, which leaves time for final checks before the exclusive window ends.
+
+
+## 15:30 UTC — Structural limits and country-wise updates
+
+The stronger fine-grid Mali fit completed. Border median and 90th percentile are
+41.9 and 63.1 km. Local values are 26.5 and 63.7 km. Border RMS median and 90th
+percentile are 50.2 and 74.9 km; local values are 38.9 and 75.9 km. Positive
+triangle area is 91.7 km². Mean source spread is 18.0 km. This is the best matched
+Mali–Burkina Faso result so far.
+
+The 15-country run did not reproduce that result. Its best low-strength posed
+case has a border median of 197 km and local median of 48 km. The Mali–Burkina
+Faso median is 371 km. Algeria's two constrained borders remain about 1,600–1,800
+km apart. The global spread guard stops further joint steps. The pair result is
+therefore not a regional solution.
+
+The artwork itself imposes stronger limits. It has 25 contacts in this region,
+but only 15 are geographic neighbours. It omits 13 of the 28 real neighbour pairs.
+Only two of Mali's seven real neighbours touch it in the grid. Added a bound
+from the closest pair of source points. Every cross-border RMS distance must be
+at least this distance. At native H3-5, Nigeria–Senegal is bounded below by
+1,609 km, Ghana–Senegal by 966 km, and Senegal–Burkina Faso by 682 km.
+No country-preserving fit can make these contacts continuous with the layout
+unchanged. The bound does not apply to mean positions, which can hide distant
+sources. Saved both coarse and native-resolution checks.
+
+Added country-wise updates to test the smaller-first approach without locking
+countries permanently. Countries with fewer target cells go first. Each update
+must decrease the same full objective and pass the same guards. A rejected
+country does not stop the other updates. The next pass permits both sides of a
+border to move again. CPU and oneAPI tests check mass constraints and objective
+decrease. The first sharp two-point test needed temperature continuation to meet
+its mass tolerance; the continued test passes on both backends.
+
+Continuation now copies the original border mask and checks its edge count.
+Older runners used a fixed list suitable only for the original small cases.
+That list would have omitted regional borders. No regional continuation used it
+before this correction.
