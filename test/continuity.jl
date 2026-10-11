@@ -170,6 +170,10 @@ end
     mixed_distribution, _ = CE.penalty_gradient(countries,mixed,edges;form=:distribution)
     @test mixed_mean == 0
     @test mixed_distribution > 0
+    internal_mean,internal_gradient=CE.penalty_gradient(countries,p,edges;form=:distribution,internal_form=:mean)
+    @test internal_mean ≈ value
+    @test only(internal_gradient) ≈ only(gradients)
+    @test_throws ErrorException CE.penalty_gradient(countries,p,edges;internal_form=:unknown)
     _, forces = CE.penalty_gradient(countries,p,edges;forces_only=true)
     difference=only(gradients)-transpose(xyz)*only(forces)
     @test maximum(abs,maximum(difference;dims=1)-minimum(difference;dims=1)) < 1e-10

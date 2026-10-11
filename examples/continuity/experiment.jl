@@ -292,17 +292,17 @@ means(c, p) = (c.xyz * p) ./ sum(p; dims=1)
 
 function penalty_gradient(countries, plans, edges; scale_km=300.0,
                           weights=fill(1/max(length(edges),1),length(edges)),
-                          form=:mean, saturating=true, reference=nothing, forces_only=false)
+                          form=:mean, internal_form=form, saturating=true, reference=nothing, forces_only=false)
     q = [means(c, p) for (c, p) in zip(countries, plans)]
     g = [zeros(size(v)) for v in q]
     tau2 = (scale_km / 6371)^2
-    form in (:mean,:distribution) || error("unknown continuity penalty")
+    form in (:mean,:distribution) && internal_form in (:mean,:distribution) || error("unknown continuity penalty")
     penalty = 0.0
     for ((k, j, l, t), weight) in zip(edges, weights)
         d = q[k][:, j] - q[l][:, t]
         displacement = !isnothing(reference) && k==l
         displacement && (d -= reference[k][:,j] - reference[l][:,t])
-        mean_form = form == :mean || displacement
+        mean_form = (k==l ? internal_form : form) == :mean || displacement
         squared = mean_form ? sum(abs2,d) : max(0.0,2-2dot(q[k][:,j],q[l][:,t]))
         scaled = squared / (2tau2)
         decay = saturating ? exp(-scaled) : 1.0
@@ -421,7 +421,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
                   fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
-                  proximal=0.0,anneal=false,accelerate=false)
+                  proximal=0.0,anneal=false,accelerate=false,internal_form=form)
     proximal>=0 || error("proximal weight must be nonnegative")
     matrix_free && proximal>0 && error("proximal costs require the dense experimental path")
     ispath(outdir) && error("refusing to overwrite $outdir")
@@ -432,7 +432,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     faces = triangles(countries)
     CSV.write(joinpath(outdir,"settings.csv"), DataFrame(;
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
-        interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],
+        interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],internal_form=[string(internal_form)],
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],
         matrix_free=[matrix_free],internal_scale=[internal_scale],inner_tolerance=[inner_tolerance],
         proximal=[proximal],anneal=[anneal],accelerate=[accelerate],outer_steps=[outer_steps],
@@ -451,7 +451,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         end
     end
     reference = preserve_displacements ? [means(c,p) for (c,p) in zip(countries,plans)] : nothing
-    score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km,form,saturating,reference) +
+    score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km,form,internal_form,saturating,reference) +
                     (fold_strength==0 ? 0.0 : fold_strength*first(fold_penalty_gradient(countries,p,faces;forces_only=true)))
     baseline = metrics(countries, plans, edges)
     export_arrow && export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
@@ -462,7 +462,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     trials = NamedTuple[]
     duals = Any[nothing for c in countries]
     for iteration in 1:outer_steps
-        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,saturating,reference,forces_only=matrix_free)
+        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,internal_form,saturating,reference,forces_only=matrix_free)
         gradient = [strength.*g for g in gradient]
         if fold_strength>0
             _,fg=fold_penalty_gradient(countries,plans,faces;forces_only=matrix_free)

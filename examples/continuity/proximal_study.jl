@@ -10,6 +10,7 @@ factor>0 || error("factor must be positive")
 selected=Set(filter(!isempty,split(get(ENV,"CONTINUITY_PROXIMAL_CASES",""),',')))
 outer_steps=parse(Int,get(ENV,"CONTINUITY_OUTER_STEPS","100"))
 interior_limit=parse(Float64,get(ENV,"CONTINUITY_INTERIOR_LIMIT","2"))
+internal_form=Symbol(get(ENV,"CONTINUITY_INTERNAL_FORM","distribution"))
 ispath(out) && error("refusing to overwrite $out")
 oneAPI.functional() || error("oneAPI is not functional")
 mkpath(out)
@@ -38,7 +39,7 @@ for proximal in (.01,.1), fold_strength in (.01,.1)
         result=ContinuityExperiment.run_case(countries,oneAPI.oneAPIBackend(),path;
             initial_plans=baseline,borders=Set([(24,180),(24,894),(180,894),(466,854),(276,616)]),
             strength=1.,border_share=.25,scale_km=900.,eta=.002/factor^2,outer_steps,
-            form=:distribution,saturating=false,fold_strength=fold_strength*factor^2,proximal,
+            form=:distribution,internal_form,saturating=false,fold_strength=fold_strength*factor^2,proximal,
             internal_scale=factor^2,accelerate=true,
             interior_limit,spread_limit=1.25,inner_tolerance=1e-4,export_arrow=false)
         orientation=ContinuityDiagnostics.orientations(countries,deserialize(joinpath(path,"candidate.jls")))

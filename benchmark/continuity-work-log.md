@@ -183,3 +183,28 @@ weight 0.1 reduces positive area further, to 1,225 km², but its border median i
 249 km. This is a trade-off, not a complete solution. Reports are in
 `benchmark/continuity-runs/africa-proximal4.csv`. The experiment does not change
 the population constraints, and the core solver remains unchanged.
+
+
+## 12:16 UTC — Refined solver limits and next tests
+
+Stopped the original queue at 11:20 UTC. The factor-3 fit failed its first sharp
+inner solve; its complete baseline is saved. The H3-6/factor-2 baseline is also
+saved, but its first inner solve was still running. Neither is an accepted fit.
+Mali–Burkina Faso remains a difficult holdout: the best initial setting reaches
+a border median of 454 km from 853 km, then stops near its internal-maximum guard.
+Other settings stop much earlier. Germany–Poland completed separately.
+
+Entropy continuation reduces the Angola factor-3 inner residual from about
+0.044 to 0.00025, but this still fails the final test. Anderson acceleration alone
+does not remove that limit. A longer final primal refinement succeeds: 6,900
+primal steps reach 0.0000999. The complete Angola solve takes 258 seconds. DRC is
+still running. These checks show that the larger costs need more than a relaxed
+iteration count. No failed candidate has been exported as a valid mapping.
+
+Next, test the proximal method on the saved refined baseline. Its larger inner
+entropy permits smaller transport changes while the outer objective retains the
+requested entropy. Also separate internal mean smoothness from source spread:
+the original distribution penalty increases both when multiplied by subdivision
+factor squared. The border penalty will still include spread. All 73 CPU checks
+pass after this option; the preceding solver changes passed 75 GPU checks before
+these three new checks. Outputs and limits remain separate from production.

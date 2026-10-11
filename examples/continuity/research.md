@@ -150,7 +150,12 @@ that its entropy matches the requested subdivision factor. Select cases with
 `CONTINUITY_PROXIMAL_CASES=proximal0.1-fold0.01`. Its default step limit is 100.
 `CONTINUITY_INTERIOR_LIMIT` changes the diagnostic internal-distance guard from
 its default of 2 times baseline. A relaxed guard is not a production acceptance
-rule. The inner objective adds
+rule. Set `CONTINUITY_INTERNAL_FORM=mean` to test internal mean differences while
+keeping the full source-distribution penalty across borders. This separates
+internal smoothness from source spread. A distribution penalty contains both;
+scaling it by `f²` also increases its pressure to reduce spread.
+
+The inner objective adds
 `proximal * KL(plan || previous_plan)`. This changes its cost by
 `-proximal * log(previous_plan)` and its entropy coefficient by `+proximal`.
 The outer acceptance test still uses the original objective. The inner solve
