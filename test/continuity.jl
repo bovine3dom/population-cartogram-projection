@@ -101,6 +101,9 @@ end
     bounds = CD.nearest_supply(countries,[(1,2,2,1)])
     @test bounds.mean_nearest_lower_bound_km ≈ [637.1,637.1]
     @test bounds.population_fraction == [.5,.5]
+    @test CD.source_separation_bound(countries[1],countries[2]) ≈ 12742sin(.05)
+    @test CD.source_separation_bound(countries[1],countries[1]) ≈ 0 atol=1e-6
+    @test CD.source_separation_bound((xyz=hcat(countries[1].xyz,countries[2].xyz),),countries[2];chunk=1) ≈ 0 atol=1e-4
     xyz=hcat([[cos(lat)*cos(lon),cos(lat)*sin(lon),sin(lat)]
               for (lon,lat) in ((0.,.01),(.01,.01),(0.,0.),(.01,0.))]...)
     c=(code=24,xyz=xyz,target=CE.DataFrame(x=[0,2,0,2],y=[0,0,2,2]))

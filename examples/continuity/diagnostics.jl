@@ -1,6 +1,15 @@
 module ContinuityDiagnostics
 using LinearAlgebra, Statistics, DataFrames, CSV
 
+function source_separation_bound(a,b;chunk=256)
+    largest=-1.0
+    for first in 1:chunk:size(a.xyz,2)
+        indices=first:min(first+chunk-1,size(a.xyz,2))
+        largest=max(largest,maximum(transpose(a.xyz[:,indices])*b.xyz))
+    end
+    return 6371sqrt(max(0.,2-2largest))
+end
+
 # Lower bounds on expected physical separation, not on centroid separation.
 function nearest_supply(countries, edges)
     pairs=sort!(unique([minmax(k,l) for (k,j,l,t) in edges if k!=l]))

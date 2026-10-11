@@ -230,6 +230,23 @@ countries, while edge penalties are averages. This regional test includes all
 seven neighbours of Mali. Borders outside the selected region are not constrained.
 An improvement for one pair does not establish a solution for the whole planet.
 
+## Contacts that cannot become continuous
+
+`contact_bounds.jl REGIONAL_STUDY_DIRECTORY NEW_OUTPUT.csv` checks every artwork
+contact, including contacts excluded from fitting. It finds the smallest chord
+distance between any source point in each country. Every cross-seam RMS distance
+must be at least this value. Population constraints can only increase the minimum.
+This is not a bound on distances between mean positions: mixing distant sources
+can move a mean into an empty region.
+
+The West Africa grid has 25 country contacts. Only 15 are geographic neighbours.
+It omits 13 of the region's 28 geographic neighbour pairs. At native H3-5, the
+Nigeria–Senegal contact has a minimum source RMS distance of 1,609 km. Ghana–Senegal
+has a minimum of 966 km. No country-preserving transport fit can make these
+contacts continuous with the artwork unchanged. Keep them as explicit cuts, or
+change the target layout or country membership. Do not hide them with mean-only
+measurements.
+
 ## Full line previews
 
 ```sh
