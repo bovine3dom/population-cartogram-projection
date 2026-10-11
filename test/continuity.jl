@@ -5,6 +5,14 @@ const CE = ContinuityExperiment
 include(joinpath(@__DIR__,"..","examples","continuity","diagnostics.jl"))
 const CD = ContinuityDiagnostics
 
+@testset "Research script syntax" begin
+    has_error(x)=x isa Expr && (x.head in (:error,:incomplete) || any(has_error,x.args))
+    for path in readdir(joinpath(@__DIR__,"..","examples","continuity");join=true)
+        endswith(path,".jl") || continue
+        @test !has_error(Meta.parseall(read(path,String);filename=path))
+    end
+end
+
 @testset "Experimental dense Sinkhorn" begin
     c = [0.0 0.8 0.2; 0.7 0.0 0.4]
     a, b = [0.4,0.6], [0.2,0.3,0.5]

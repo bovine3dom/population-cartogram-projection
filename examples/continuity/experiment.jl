@@ -456,20 +456,22 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   interior_limit=Inf, spread_limit=1.05, form=:mean, saturating=true,
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
                   fold_strength=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
-                  proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing)
+                  proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
+                  border_scale=1.0)
     proximal>=0 || error("proximal weight must be nonnegative")
+    all(x->isfinite(x)&&x>=0,(internal_scale,border_scale)) || error("invalid edge scale")
     matrix_free && proximal>0 && error("proximal costs require the dense experimental path")
     ispath(outdir) && error("refusing to overwrite $outdir")
     mkpath(outdir)
     edges = graph(countries; borders)
     weights = edge_weights(edges, border_share)
-    weights .*= [e[1]==e[3] ? internal_scale : 1.0 for e in edges]
+    weights .*= [e[1]==e[3] ? internal_scale : border_scale for e in edges]
     faces = triangles(countries)
     CSV.write(joinpath(outdir,"settings.csv"), DataFrame(;
         strength=[strength], eta=[eta], scale_km=[scale_km], border_share=[something(border_share,missing)],
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],internal_form=[string(internal_form)],
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],
-        matrix_free=[matrix_free],internal_scale=[internal_scale],inner_tolerance=[inner_tolerance],
+        matrix_free=[matrix_free],internal_scale=[internal_scale],border_scale=[border_scale],inner_tolerance=[inner_tolerance],
         proximal=[proximal],anneal=[anneal],accelerate=[accelerate],outer_steps=[outer_steps],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")

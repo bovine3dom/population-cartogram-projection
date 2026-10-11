@@ -197,6 +197,16 @@ island cuts must remain. Do not apply its interpolation across such cuts without
 an explicit mask. The script records baseline and seed metrics before it tests
 the seed against the distortion guards. Failed seeds are not accepted fits.
 
+`continue_fit.jl STUDY_DIRECTORY TRIAL_NAME NEW_OUTPUT_DIRECTORY` continues a
+valid checkpoint while retaining its original baseline. `CONTINUITY_OUTER_STEPS`
+sets the step limit. Optional overrides are `CONTINUITY_STRENGTH`,
+`CONTINUITY_FOLD_STRENGTH`, and `CONTINUITY_BORDER_SCALE`.
+
+A fixed border penalty can leave a finite jump as target cells get smaller.
+The internal penalty already scales with `f²`. Test a border scale of `f` to
+increase the border constraint as cell width decreases. This is an experimental
+scaling rule, not a guarantee of continuity or of an invertible map.
+
 ## Full line previews
 
 ```sh
