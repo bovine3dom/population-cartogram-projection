@@ -72,7 +72,9 @@ It allows 40 steps and an internal-maximum increase of up to 100% for diagnosis.
 optimistic source-supply bounds. Orientation uses two triangles per complete
 2×2 target block. Positive geographic area is opposite to the expected direction
 of this downward-y grid. Areas below 1 km² in magnitude count as flat. This is a
-fold diagnostic, not a proof of injectivity.
+fold diagnostic, not a proof of injectivity. `inspect_study.jl STUDY_DIRECTORY`
+also records total positive area and the largest positive triangle. A count alone
+can hide a large reduction in fold size.
 
 For the supply bound, count distinct border targets in one country. Their equal
 masses determine how much country population must be assigned to the seam.
@@ -125,6 +127,9 @@ between cases; also use a shell timeout for a hard stop. Set
 `CONTINUITY_COMMIT_REPORTS=1` to commit each case's small CSV and Markdown report
 under `benchmark/continuity-runs/`. Only those report paths are committed. Large
 plans stay under the ignored output directory. Failed cases are logged.
+Use `CONTINUITY_CASES=border0.25-fold0.01` to select a case without running the
+full set. A comma separates multiple case names. `CONTINUITY_OUTER_STEPS` sets
+the step limit; its default is 30.
 
 ## Full line previews
 

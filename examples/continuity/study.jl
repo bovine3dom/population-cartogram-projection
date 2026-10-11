@@ -10,6 +10,9 @@ groups=Dict("africa"=>[24,180,894],"mali-burkina"=>[466,854],"germany-poland"=>[
 haskey(groups,group) || error("unknown study group")
 mode in ("fold","validate") || error("unknown study mode")
 deadline=DateTime(get(ENV,"CONTINUITY_DEADLINE","9999-12-31T23:59:59"))
+selected=Set(filter(!isempty,split(get(ENV,"CONTINUITY_CASES",""),',')))
+outer_steps=parse(Int,get(ENV,"CONTINUITY_OUTER_STEPS","30"))
+outer_steps>0 || error("outer steps must be positive")
 ispath(outdir) && error("refusing to overwrite $outdir")
 oneAPI.functional() || error("oneAPI is not functional")
 mkpath(outdir)
@@ -45,6 +48,7 @@ for cfg in configs
     now(UTC)>=deadline && break
     (;border_share,fold_strength,eta)=cfg
     name="border$border_share-fold$fold_strength"
+    isempty(selected) || name in selected || continue
     path=joinpath(outdir,name)
     started=time()
     println("$(now(UTC)) Trial: $name"); flush(stdout)
@@ -54,7 +58,7 @@ for cfg in configs
         end
         result=ContinuityExperiment.run_case(countries,backend,path;
             borders,border_share,fold_strength=fold_strength*factor^2,eta,strength=1.0,form=:distribution,saturating=false,
-            scale_km=900.,interior_limit=2.,spread_limit=1.25,outer_steps=30,
+            scale_km=900.,interior_limit=2.,spread_limit=1.25,outer_steps,
             initial_plans=base,export_arrow=false,matrix_free=true,internal_scale=factor^2,inner_tolerance=1e-4)
         plans=deserialize(joinpath(path,"candidate.jls"))
         orientation=ContinuityDiagnostics.orientations(countries,plans)

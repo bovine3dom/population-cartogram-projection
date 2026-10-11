@@ -87,7 +87,10 @@ end
     p=Matrix{Float64}(CE.I,4,4)/4
     @test CD.orientations([c],[p]).positive == [0]
     @test CD.orientations([c],[p]).negative == [2]
-    @test CD.orientations([c],[p[:,[1,3,2,4]]]).positive == [2]
+    reversed=CD.orientations([c],[p[:,[1,3,2,4]]])
+    @test reversed.positive == [2]
+    @test reversed.positive_area_km2 ≈ CD.orientations([c],[p]).negative_area_km2
+    @test only(reversed.maximum_positive_area_km2) > 1
     faces=CE.triangles([c])
     @test length(faces)==2
     @test first(CE.fold_penalty_gradient([c],[p],faces))==0

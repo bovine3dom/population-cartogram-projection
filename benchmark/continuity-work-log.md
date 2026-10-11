@@ -140,3 +140,24 @@ source normalization. This is an explicit numerical-budget change, not a
 relaxation of country membership or target geometry. Baseline and candidate use
 the same tolerance, and both achieved errors are recorded. It limits average
 absolute target error to 0.01% and each target's relative error to 0.1%.
+
+
+## 09:16 UTC — Fold size and native-resolution validation
+
+The revised coarse study completed. Cost conditioning reduced the first no-fold
+case from 866 to 145 seconds with the stated tolerance change. All 68 GPU checks
+passed before launch. Native H3-5 validation is now running.
+
+Triangle counts alone concealed useful information. At border share 0.25, the
+unpenalized candidate has 84 positive triangles with total positive area
+356,410 km². Fold strength 0.1 leaves 49 positive triangles but reduces that area
+to 8,157 km². Its border median is 209 km, versus 553 km at baseline and 161 km
+for current nearby internal edges. This is progress, not a fold-free result.
+The smaller penalty gives a lower median but larger remaining folds.
+
+Added positive-area totals and maxima to the diagnostic, with two tests.
+The full line preview for share 0.1 and fold strength 0.01 is at
+`output/continuity/preview-fold4/lines.png`. Some gaps remain, especially along
+Angola–Zambia. Native-resolution and subdivision tests are needed before selecting
+an approach. Added case and step filters to keep larger tests within the time
+budget. No production settings were changed.

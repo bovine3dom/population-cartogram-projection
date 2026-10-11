@@ -39,6 +39,7 @@ function orientations(countries, plans)
         lookup=Dict((r.x,r.y)=>i for (i,r) in enumerate(eachrow(c.target)))
         step=minimum(diff(sort!(unique(c.target.x))))
         positive=negative=flat=0
+        positive_area=negative_area=maximum_positive_area=0.0
         for ((x,y),i) in lookup
             all(haskey(lookup,k) for k in ((x+step,y),(x,y+step),(x+step,y+step))) || continue
             right,down,diagonal=[lookup[k] for k in ((x+step,y),(x,y+step),(x+step,y+step))]
@@ -46,14 +47,18 @@ function orientations(countries, plans)
                 area=6371^2*dot(q[:,a],cross(q[:,b]-q[:,a],q[:,d]-q[:,a]))/2
                 if area>1
                     positive+=1
+                    positive_area+=area
+                    maximum_positive_area=max(maximum_positive_area,area)
                 elseif area < -1
                     negative+=1
+                    negative_area-=area
                 else
                     flat+=1
                 end
             end
         end
-        push!(rows,(;country=c.code,positive,negative,flat))
+        push!(rows,(;country=c.code,positive,negative,flat,positive_area_km2=positive_area,
+                    negative_area_km2=negative_area,maximum_positive_area_km2=maximum_positive_area))
     end
     return DataFrame(rows)
 end
