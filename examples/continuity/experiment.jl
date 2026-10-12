@@ -241,7 +241,7 @@ function feature_sinkhorn(c,forces,backend;kwargs...)
     return solve_cost(cost,device,Float64.(host.target_offset),c.a,c.b,backend;kwargs...)
 end
 
-function country(path, code; factor=1, target=load_cartogram(code; factor))
+function country(path, code; factor=1, target=load_cartogram(code; factor),dense=true)
     raw = DataFrame(Arrow.Table(path))
     all(==(code), raw.country_code) || error("wrong source country")
     allunique(raw.id) || error("duplicate source ids")
@@ -250,7 +250,7 @@ function country(path, code; factor=1, target=load_cartogram(code; factor))
                        y=[rad2deg(c.lat) for c in centres], value=Float64.(raw.population))
     PCP._validate_inputs(target, source)
     problem = PCP._prepare_problem(target, source)
-    cost = Float64[PCP._cost(problem, i, j) for i in 1:nrow(source), j in 1:nrow(target)]
+    cost = dense ? Float64[PCP._cost(problem, i, j) for i in 1:nrow(source), j in 1:nrow(target)] : GeometryCost(problem)
     xyz = hcat([[cos(c.lat)*cos(c.lng), cos(c.lat)*sin(c.lng), sin(c.lat)] for c in centres]...)
     a = source.value ./ sum(source.value)
     b = fill(1 / nrow(target), nrow(target))
@@ -511,7 +511,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
                   fold_strength=0.0, fold_smoothing=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
-                  border_scale=1.0,coordinate=false,border_factors=Dict(),checkpoint_interval=1)
+                  border_scale=1.0,coordinate=false,border_factors=Dict(),checkpoint_interval=1,compact=false)
+    compact && (matrix_free || anneal) && error("compact mode has its own matrix-free solver; annealing is not enabled")
     checkpoint_interval>=1 || error("checkpoint interval must be positive")
     proximal>=0 || error("proximal weight must be nonnegative")
     all(x->isfinite(x)&&x>=0,(internal_scale,border_scale)) || error("invalid edge scale")
@@ -535,14 +536,15 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],fold_smoothing=[fold_smoothing],
         matrix_free=[matrix_free],internal_scale=[internal_scale],border_scale=[border_scale],inner_tolerance=[inner_tolerance],
         proximal=[proximal],anneal=[anneal],accelerate=[accelerate],coordinate=[coordinate],outer_steps=[outer_steps],
-        checkpoint_interval=[checkpoint_interval],
+        checkpoint_interval=[checkpoint_interval],compact=[compact],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
-    plans = isnothing(initial_plans) ? Matrix{Float64}[] : copy(initial_plans)
+    plans = isnothing(initial_plans) ? (compact ? CompactPlan[] : Matrix{Float64}[]) : copy(initial_plans)
     if isnothing(initial_plans)
         for c in countries
-            elapsed = @elapsed result = matrix_free ?
+            elapsed = @elapsed result = compact ?
+                compact_sinkhorn(c,zeros(3,length(c.b)),nothing,backend;eta,tolerance=inner_tolerance,accelerate) : matrix_free ?
                 feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta,tolerance=inner_tolerance,anneal,accelerate) :
                 sinkhorn(c.cost,c.a,c.b,backend;eta,tolerance=inner_tolerance,anneal,accelerate)
             println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) dual + $(result.refinement_iterations) primal iterations, residual=$(result.marginal_error)")
@@ -567,7 +569,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     if !isnothing(starting_plans)
         length(starting_plans)==length(countries) || error("seed country count differs")
         for (c,p) in zip(countries,starting_plans)
-            size(p)==size(c.cost) && all(x->isfinite(x)&&x>=0,p) || error("invalid seed plan")
+            size(p)==size(c.cost) && valid_plan(p) || error("invalid seed plan")
             maximum(abs.(vec(sum(p;dims=2))./c.a.-1))<=1e-8 || error("seed source masses differ")
         end
         seed_metrics=metrics(countries,starting_plans,edges)
@@ -595,9 +597,10 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         end
         solutions=map(selected) do k
             c,g=countries[k],gradient[k]
-            if !matrix_free
+            if !matrix_free && !compact
                 g=transpose(c.xyz)*g .- sum(means(c,plans[k]).*g;dims=1)
             end
+            compact ? compact_sinkhorn(c,g,plans[k],backend;eta,proximal,initial_beta=duals[k],tolerance=inner_tolerance,accelerate) :
             matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate) :
                 sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
                          eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)
@@ -615,7 +618,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         for damping in (2.0^-k for k in 1:10)
             trial=copy(plans)
             for k in selected
-                trial[k]=(1-damping).*plans[k].+damping.*candidate[k]
+                trial[k]=mix_plans(plans[k],candidate[k],damping)
             end
             score = score_plan(trial)
             m = metrics(countries,trial,edges)
@@ -647,5 +650,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     export_seams(joinpath(outdir,"candidate-seams.csv"),countries,plans,edges)
     return rows
 end
+
+include("compact.jl")
 
 end

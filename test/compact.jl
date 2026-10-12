@@ -1,0 +1,69 @@
+using Test, Serialization
+include(joinpath(@__DIR__,"..","examples","continuity","experiment.jl"))
+const CE=ContinuityExperiment
+using .ContinuityExperiment: DataFrame
+
+function fixture()
+    source=DataFrame(id=UInt64.(1:4),x=[-2.,-1.,1.,2.],y=[49.,51.,50.,52.],value=[1.,2.,3.,4.])
+    target=DataFrame(x=[0,2,4,0,2,4],y=[0,0,0,2,2,2])
+    problem=CE.PCP._prepare_problem(target,source)
+    xyz=hcat([[cosd(y)*cosd(x),cosd(y)*sind(x),sind(y)] for (x,y) in zip(source.x,source.y)]...)
+    return (;source,target,problem,xyz,cost=CE.GeometryCost(problem),a=source.value./sum(source.value),b=fill(1/6,6),code=1)
+end
+
+backends=Any[CE.KA.CPU()]
+if get(ENV,"CONTINUITY_GPU_TEST","")=="1"
+    using oneAPI
+    @test oneAPI.functional()
+    push!(backends,oneAPI.oneAPIBackend())
+end
+for backend in backends
+    @testset "Compact plans: $backend" begin
+        c=fixture();eta=.02
+        force=zeros(3,length(c.b))
+        @test_throws ErrorException CE.compact_sinkhorn(c,force,nothing,backend;eta=0.)
+        @test_throws ErrorException CE.compact_sinkhorn(c,force,nothing,backend;proximal=.1)
+        @test_throws ErrorException CE.compact_sinkhorn(c,zeros(3,1),nothing,backend)
+        dense=CE.sinkhorn(Matrix(c.cost),c.a,c.b,backend;eta,tolerance=1e-6,accelerate=true)
+        result=CE.compact_sinkhorn(c,force,nothing,backend;eta,tolerance=1e-6,block_pairs=12)
+        p=result.plan
+        @test Matrix(p) ≈ dense.plan atol=2e-6
+        @test vec(sum(Matrix(p);dims=2)) ≈ c.a atol=1e-12
+        @test vec(sum(p;dims=1)) ≈ c.b atol=1e-5
+        @test CE.means(c,p) ≈ CE.means(c,Matrix(p)) atol=1e-12
+        @test p.stats.base ≈ CE.dot(c.cost,Matrix(p)) atol=1e-12
+        @test p.stats.entropy ≈ sum(x->x>0 ? x*(log(x)-1) : 0.,Matrix(p)) atol=1e-12
+        for iteration in 1:3
+            force=[.2sin(i+j+iteration) for i in 1:3,j in 1:6]
+            prior=Matrix(p)
+            cost=Matrix(c.cost)+transpose(c.xyz)*force-.1log.(max.(prior,floatmin(Float64)))
+            reference=CE.sinkhorn(cost,c.a,c.b,backend;eta=eta+.1,tolerance=1e-6,accelerate=true)
+            candidate=CE.compact_sinkhorn(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,block_pairs=12).plan
+            @test Matrix(candidate) ≈ reference.plan atol=2e-6
+            mixed=CE.mix_plans(p,candidate,.25)
+            CE.compact_stats!(mixed,c;block_pairs=12)
+            @test Matrix(mixed) ≈ .75prior+.25Matrix(candidate) atol=1e-12
+            @test vec(sum(Matrix(mixed);dims=2)) ≈ c.a atol=1e-12
+            p=mixed
+        end
+        mktempdir() do dir
+            other=merge(c,(;code=2,target=DataFrame(x=c.target.x.+6,y=c.target.y),xyz=c.xyz[:,end:-1:1]))
+            countries=[c,other]
+            kwargs=(;borders=Set([(1,2)]),eta=.02,strength=10.,scale_km=900.,border_share=.25,
+                form=:distribution,saturating=false,proximal=.1,coordinate=true,outer_steps=2,
+                spread_limit=Inf,interior_limit=Inf,inner_tolerance=1e-6,accelerate=true,export_arrow=false)
+            dense_rows=CE.run_case(countries,backend,joinpath(dir,"dense");kwargs...)
+            compact_rows=CE.run_case(countries,backend,joinpath(dir,"compact");compact=true,kwargs...)
+            @test last(compact_rows).objective ≈ last(dense_rows).objective atol=2e-5
+            @test all(diff(getproperty.(compact_rows,:objective)).<=1e-10)
+            dense_plans=deserialize(joinpath(dir,"dense","candidate.jls"))
+            compact_plans=deserialize(joinpath(dir,"compact","candidate.jls"))
+            @test all(isapprox(Matrix(a),b;atol=2e-5) for (a,b) in zip(compact_plans,dense_plans))
+            path=joinpath(dir,"plan.jls")
+            serialize(path,p)
+            q=deserialize(path)
+            @test Matrix(q)==Matrix(p)
+            @test CE.means(c,q)==CE.means(c,p)
+        end
+    end
+end
