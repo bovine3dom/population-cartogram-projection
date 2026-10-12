@@ -251,7 +251,12 @@ function country(path, code; factor=1, target=load_cartogram(code; factor),dense
     PCP._validate_inputs(target, source)
     problem = PCP._prepare_problem(target, source)
     cost = dense ? Float64[PCP._cost(problem, i, j) for i in 1:nrow(source), j in 1:nrow(target)] : GeometryCost(problem)
-    xyz = hcat([[cos(c.lat)*cos(c.lng), cos(c.lat)*sin(c.lng), sin(c.lat)] for c in centres]...)
+    xyz = Matrix{Float64}(undef,3,length(centres))
+    for (i,c) in enumerate(centres)
+        xyz[1,i]=cos(c.lat)*cos(c.lng)
+        xyz[2,i]=cos(c.lat)*sin(c.lng)
+        xyz[3,i]=sin(c.lat)
+    end
     a = source.value ./ sum(source.value)
     b = fill(1 / nrow(target), nrow(target))
     return (; code, source, target, cost, xyz, a, b, problem)

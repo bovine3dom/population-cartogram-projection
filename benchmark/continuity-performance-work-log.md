@@ -124,7 +124,7 @@ H3-6, factor 2, with eta 0.002. It is not a tuned H3-6 planet quality test.
 The full planet input is now prepared in a separate compact output directory.
 Production datasets and the stopped dense study remain unchanged.
 
-## 09:00 UTC: uncached solve and host work
+## 08:57 UTC: uncached solve and host work
 
 The uncached H3-6 test completed one pass in 724 seconds. It passed the mass
 checks, and the kernel journal shows no new GPU reset. The cached path is faster;
@@ -146,3 +146,12 @@ metric calculations. No objective formula changed. On the saved Africa case,
 Border calculation allocations fell from 16.2 MB to 1.05 MB per call. These are
 host-operation measurements, not full-solver speedups. Compact and research
 CPU/oneAPI tests pass after the changes, including finite-difference gradients.
+
+## 09:03 UTC: country preparation
+
+Started the compact planet fit with a 2 GiB active cost cache. A startup profile
+showed LLVM compiling `hcat` with country-sized splatted argument lists. Stopped
+this attempt before any baseline solve. The prepared input remains intact.
+Replaced the splat with a fixed three-row matrix and a coordinate loop. A real
+H3-6 input check passes coordinate shape and unit-length checks. This removes
+country-size-specific compilation without changing coordinates or costs.
