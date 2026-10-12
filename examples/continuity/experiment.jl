@@ -276,6 +276,10 @@ function graph(countries; borders=Set([(276,616)]))
         haskey(lookup,pos) && push!(mixed,pos)
         lookup[pos]=(k,j)
     end
+    # Retain cuts whose other owner is outside this fitted group.
+    for c in countries
+        hasproperty(c,:cut_targets) && union!(mixed,c.cut_targets)
+    end
     # A shared target has no single country owner. Leave its incident edges out.
     foreach(pos->delete!(lookup,pos),mixed)
     edges = Tuple{Int,Int,Int,Int}[]
