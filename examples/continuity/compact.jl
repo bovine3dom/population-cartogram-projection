@@ -277,6 +277,7 @@ function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=n
         err isa CompactConvergenceError || rethrow()
         println("Temperature retry country=$(c.code): $err");flush(stdout)
     end
+    GC.gc() # Release the failed solve's device cache before the retry.
     result=nothing;iterations=0
     for factor in (16.,8.,4.,2.,1.)
         # Scale the full effective temperature, not only its non-proximal part.

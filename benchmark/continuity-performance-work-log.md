@@ -172,7 +172,7 @@ reuse now checks exact field values after the fast identity check. A serializati
 regression test passes. The running planet process retains its earlier loaded
 code; subsequent processes will use this additional storage reduction.
 
-## 10:00 UTC: continuation for coupled solves
+## 09:57 UTC: continuation for coupled solves
 
 All native planet baselines and pose checks completed. The first coupled pass
 then stopped at Canada: strong border forces required more than 10,000 fixed-
@@ -188,3 +188,17 @@ history. CPU and oneAPI tests force this path and compare its final plan with
 the dense proximal reference. All tests pass. The final objective and mass
 limits are unchanged. Archive the partial first pass and restart from the saved
 native seeds, so the published study still has ten complete passes.
+
+## 10:13 UTC: reduction-kernel check
+
+Paused the planet process from 10:01:13 to 10:02:53 UTC for an isolated kernel
+comparison, then resumed it. On a five-million-pair sample from the DRC input,
+100 cached dual iterations took 0.86–0.98 seconds with the online reduction,
+versus 1.10–1.13 seconds with the dense two-pass reduction. Final centered duals
+differed by less than 0.000000002. Keep the online kernel; a second cost pass
+would not help this case. No solver code was changed for this comparison.
+
+Added collection before a temperature retry, so the failed solve's device
+cache can be released before the next stage allocates its cache. Successful
+retry stages already collect their completed resources. The planet fit remains
+on its previously loaded code and is still in its first pass.
