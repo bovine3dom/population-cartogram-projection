@@ -417,8 +417,18 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
                     refined=compact_polish(plan,c,backend,cost_device;maxiters=limit,options...)
                 end
                 if !isnothing(refined)
-                    return (;plan=refined.plan,beta=b.+eta.*refined.log_beta_correction,iterations=iteration,
-                        refinement_iterations=refinements[],marginal_error=refined.marginal_error)
+                    corrected=b.+eta.*refined.log_beta_correction
+                    if refined.converged
+                        return (;plan=refined.plan,beta=corrected,iterations=iteration,
+                            refinement_iterations=refinements[],marginal_error=refined.marginal_error)
+                    end
+                    # Keep useful scaling progress, but do not accept this plan.
+                    warm=Float32.(corrected.-offset)
+                    if warm!=host_beta
+                        beta=PCP._copy_to_backend(backend,warm)
+                        previous=Float64.(warm);previous.-=mean(previous)
+                        empty!(outputs);empty!(residuals);checked_error=Inf
+                    end
                 end
                 used_dense && materialize_cost!(cost_device)
             end

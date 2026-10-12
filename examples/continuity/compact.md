@@ -80,6 +80,12 @@ reuse that cache for dense primal scaling. Restore its cost values if this also
 fails. No second full device matrix is needed. Dense refinement uploads whole
 source columns; one column is the minimum. The persistent plan is never pruned.
 
+A refinement attempt can improve the full-plan residual without meeting both
+mass limits. In that case, retain its corrected dual as a warm start only if
+the largest normalized mass residual falls by at least 10%. Reset the Anderson
+history when this changes the device dual. Do not accept the partial plan or
+add it to the transport history. Later iterations must pass the full checks.
+
 Host log and weight buffers are reused across blocks. Device launches are
 synchronized in batches. Periodic garbage collection releases completed native
 command lists on oneAPI; their large driver allocations are not visible to

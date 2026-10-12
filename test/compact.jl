@@ -44,6 +44,7 @@ for backend in backends
         cache=CE.KA.zeros(backend,Float32,size(p))
         polished=CE.compact_polish(perturbed,c,backend,cache;tolerance=1e-6,max_pairs=16,block_pairs=16)
         @test !isnothing(polished)
+        @test polished.converged
         @test Matrix(polished.plan) ≈ Matrix(p) atol=2e-6
         @test Matrix(perturbed)==before
         @test length(polished.plan.data.rho)==length(p.data.rho)
@@ -65,9 +66,17 @@ for backend in backends
         @test isnothing(CE.sparse_primal_arrays(emptyrow,c;budget=10000))
         refined=CE.compact_sparse_polish(perturbed,c,backend;budget=10000,tolerance=1e-6,max_pairs=16,block_pairs=16)
         @test !isnothing(refined)
+        @test refined.converged
         @test Matrix(refined.plan) ≈ Matrix(p) atol=2e-6
         @test Matrix(perturbed)==before
         @test vec(sum(Matrix(refined.plan);dims=2)) ≈ c.a atol=1e-12
+        shifted=deepcopy(p);shifted.data.v[:,end].+=10 .* c.target.x
+        CE.compact_stats!(shifted,c;normalize=true)
+        partial=CE.compact_sparse_polish(shifted,c,backend;budget=10000,maxiters=20,tolerance=1e-8)
+        @test !isnothing(partial)
+        @test !partial.converged
+        @test partial.marginal_error<sum(abs.(shifted.stats.target.-c.b))
+        @test length(partial.plan.data.rho)==length(shifted.data.rho)
         posed=merge(c,(;problem=CE.pose_problem(c,90)))
         pose_plan=CE.compact_sinkhorn(posed,force,nothing,backend;eta,tolerance=1e-6).plan
         pose_reference=CE.sinkhorn(CE.pose_cost(c,90),c.a,c.b,backend;eta,tolerance=1e-6).plan

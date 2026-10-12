@@ -99,6 +99,9 @@ function compact_scale_plan(p,c,backend,kernel;tolerance=1e-4,maxiters=1000,
     tolerance>0 && maxiters>0 && block_pairs>0 && max_pairs>0 || error("invalid refinement limits")
     last(p.data.keep)==-Inf && last(p.data.take)==0 || error("refine an unmixed candidate")
     n,m=size(p)
+    isnothing(p.stats) && compact_stats!(p,c;block_pairs)
+    initial_residual=max(sum(abs.(p.stats.target.-c.b))/tolerance,
+        maximum(abs.(p.stats.target./c.b.-1))/.001)
     da=PCP._copy_to_backend(backend,Float32.(c.a));db=PCP._copy_to_backend(backend,Float32.(c.b))
     u=PCP._copy_to_backend(backend,ones(Float32,n));v=PCP._copy_to_backend(backend,ones(Float32,m))
     probe=KA.zeros(backend,Float32,m)
@@ -124,7 +127,8 @@ function compact_scale_plan(p,c,backend,kernel;tolerance=1e-4,maxiters=1000,
         PCP._copy_to_host!(backend,host_v,v);PCP._copy_to_host!(backend,host_probe,probe)
         all(x->isfinite(x)&&x>0,host_v) && all(x->isfinite(x)&&x>0,host_probe) || return nothing
         ratios=Float64.(host_v)./host_probe
-        sum(c.b.*abs.(ratios.-1))<=.8tolerance && maximum(abs.(ratios.-1))<=.0008 || continue
+        ready=sum(c.b.*abs.(ratios.-1))<=.8tolerance && maximum(abs.(ratios.-1))<=.0008
+        ready || iteration==maxiters || continue
         host_u=PCP._copy_to_host!(backend,zeros(Float32,n),u)
         all(x->isfinite(x)&&x>0,host_u) || return nothing
         correction=log.(Float64.(host_v))
@@ -134,8 +138,10 @@ function compact_scale_plan(p,c,backend,kernel;tolerance=1e-4,maxiters=1000,
         compact_stats!(candidate,c;normalize=true,block_pairs)
         error=sum(abs.(candidate.stats.target.-c.b))
         relative=maximum(abs.(candidate.stats.target./c.b.-1))
-        if error<=tolerance && relative<=.001
-            return (;plan=candidate,log_beta_correction=correction,marginal_error=error,iterations=iteration)
+        converged=error<=tolerance && relative<=.001
+        improved=max(error/tolerance,relative/.001)<.9initial_residual
+        if converged || improved
+            return (;plan=candidate,log_beta_correction=correction,marginal_error=error,iterations=iteration,converged)
         end
         # Truncated weights cannot certify the full implicit plan. Fall back.
         dense || return nothing

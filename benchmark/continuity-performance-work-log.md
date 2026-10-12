@@ -458,3 +458,25 @@ Saved and verified a complete pass-2 checkpoint as a time-budget fallback.
 A separate watcher saves later complete-pass checkpoints without modifying the
 fit. Any fallback still needs full-plan and publication checks. The runner
 deadline is 04:50 UTC; no new GPU tests will interrupt it for now.
+
+## 23:20 UTC: retain useful partial refinement progress
+
+China's third-pass final stage is slow. The running code discards a refinement
+attempt if it reaches its iteration limit before passing both mass checks.
+Added a conservative warm-start path: evaluate the full implicit plan at the
+refinement limit, and retain its dual correction only when the largest
+normalized mass residual improves by at least 10%. The partial plan is never
+accepted. Reset the Anderson history and host-check delay only if the device
+dual changes after Float32 conversion.
+
+All 65 compact checks pass on CPU and oneAPI, including a deliberately
+unfinished sparse refinement and unchanged history depth. A saved US
+integration test limits sparse attempts to 200 iterations. It uses two partial
+warm starts and then passes in 150 dual and 600 primal iterations. Final target
+L1 error is 0.0000897, maximum relative error 0.000321, and source relative
+error is below 0.000000000000003. This tests progress retention; it is not a
+new full-fit speedup measurement.
+
+The planet was paused from 23:08:41–23:11:17 and 23:11:47–23:14:32 UTC for
+these GPU tests, then resumed. Its loaded code has not changed. CPU tests use
+the same normalized-residual rule as the device convergence check.
