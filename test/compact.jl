@@ -94,7 +94,10 @@ for backend in backends
             candidate=CE.compact_sinkhorn(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,block_pairs=12,max_pairs=10).plan
             @test Matrix(candidate) ≈ reference.plan atol=2e-6
             if iteration==1
-                retried=CE.compact_solve(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,retry_after=1)
+                stages=Float64[]
+                retried=CE.compact_solve(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,retry_after=1,
+                    stage_callback=(factor,result)->push!(stages,factor))
+                @test stages==[16.,8.,4.,2.,1.]
                 @test Matrix(retried.plan) ≈ reference.plan atol=2e-6
                 @test length(retried.plan.data.rho)==length(p.data.rho)+1
             end
@@ -120,6 +123,10 @@ for backend in backends
             @test all(diff(getproperty.(compact_rows,:objective)).<=1e-10)
             dense_plans=deserialize(joinpath(dir,"dense","candidate.jls"))
             compact_plans=deserialize(joinpath(dir,"compact","candidate.jls"))
+            stage=deserialize(joinpath(dir,"compact","inner-stage.jls"))
+            @test (stage.step,stage.country,stage.factor)==(4,2,1.)
+            @test stage.result.marginal_error<=1e-6
+            @test all(isfinite,stage.result.beta)
             @test all(isapprox(Matrix(a),b;atol=2e-5) for (a,b) in zip(compact_plans,dense_plans))
             baseline=deserialize(joinpath(dir,"compact","baseline.jls"))
             CE.run_case(countries,backend,joinpath(dir,"first-pass");compact=true,initial_plans=baseline,

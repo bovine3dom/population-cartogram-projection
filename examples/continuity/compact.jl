@@ -274,11 +274,13 @@ end
 
 include("primal.jl")
 
-function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=nothing,maxiters=10000,retry_after=1000,kwargs...)
+function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=nothing,maxiters=10000,retry_after=1000,stage_callback=nothing,kwargs...)
     retry_after>0 || error("invalid retry interval")
     first_limit=min(retry_after,maxiters)
     try
-        return compact_sinkhorn(c,force,prior,backend;eta,proximal,initial_beta,maxiters=first_limit,kwargs...)
+        result=compact_sinkhorn(c,force,prior,backend;eta,proximal,initial_beta,maxiters=first_limit,kwargs...)
+        isnothing(stage_callback) || stage_callback(1.,result)
+        return result
     catch err
         err isa CompactConvergenceError || rethrow()
         println("Temperature retry country=$(c.code): $err");flush(stdout)
@@ -290,6 +292,7 @@ function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=n
         temperature=(eta+proximal)*factor-proximal
         result=compact_sinkhorn(c,force,prior,backend;eta=temperature,proximal,initial_beta,maxiters,kwargs...)
         initial_beta=result.beta;iterations+=result.iterations
+        isnothing(stage_callback) || stage_callback(factor,result)
         println("Temperature factor=$factor iterations=$(result.iterations) residual=$(result.marginal_error)");flush(stdout)
         GC.gc()
     end

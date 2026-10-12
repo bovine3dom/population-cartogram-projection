@@ -624,7 +624,9 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             if !matrix_free && !compact
                 g=transpose(c.xyz)*g .- sum(means(c,plans[k]).*g;dims=1)
             end
-            compact ? compact_solve(c,g,plans[k],backend;eta,proximal,initial_beta=duals[k],tolerance=inner_tolerance,accelerate,cache_bytes=compact_cache_bytes) :
+            save_stage=(factor,result)->checkpoint(joinpath(outdir,"inner-stage.jls"),(;step,country=c.code,factor,result))
+            compact ? compact_solve(c,g,plans[k],backend;eta,proximal,initial_beta=duals[k],tolerance=inner_tolerance,accelerate,
+                cache_bytes=compact_cache_bytes,stage_callback=save_stage) :
             matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate) :
                 sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
                          eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)

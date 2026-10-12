@@ -119,6 +119,13 @@ for a cold start in that country. These vectors initialize the solver only;
 they do not replace or validate a plan. The runner saves them in
 `initial-duals.jls`. Keep their source and temperature in the study provenance.
 
+The compact runner also writes `inner-stage.jls` after each validated inner
+temperature stage. It keeps only the latest stage, with the update index,
+country, temperature factor, plan, and dual. This is not an accepted outer
+checkpoint. Before reusing its dual, check the index, prior, force, and
+temperature against the intended solve. Never publish this proposal as a fitted
+country. `compact_solve` exposes a `stage_callback` for other research runners.
+
 ## Tests
 
 ```sh

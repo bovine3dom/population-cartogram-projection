@@ -480,3 +480,23 @@ new full-fit speedup measurement.
 The planet was paused from 23:08:41–23:11:17 and 23:11:47–23:14:32 UTC for
 these GPU tests, then resumed. Its loaded code has not changed. CPU tests use
 the same normalized-residual rule as the device convergence check.
+
+## 23:32 UTC: keep validated inner stages
+
+Added one bounded inner-stage checkpoint to compact research fits. Each
+successful temperature stage overwrites the previous file atomically. Save
+the step, country, temperature factor, compact proposal, and dual. This
+avoids repeating a completed hot stage after an interruption. It does not
+make an inner proposal an accepted outer plan, and it is not automatic
+crash recovery. Input checks are still required before a warm restart.
+
+All 69 compact checks pass on CPU and oneAPI. They check the retry callback
+sequence and the saved stage metadata and residual. The planet was paused
+from 23:27:08–23:30:55 UTC for these tests, then resumed briefly.
+
+The old solver is still in China's third-pass final stage. Restart from its
+last verified outer checkpoint with partial-refinement progress retention.
+Limit this publication attempt to four passes, not the original ten, to keep
+time for full validation and export within the reserved window. Keep all
+original mass and distortion limits. The accepted pass-2 fallback remains
+available if the four-pass attempt does not finish.
