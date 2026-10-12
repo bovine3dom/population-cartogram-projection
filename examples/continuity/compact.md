@@ -61,9 +61,9 @@ moments, masses, and base cost; its entropy is calculated from the actual mixtur
 No full dense plan is needed for the continuity objective or its force gradient.
 
 Strong forces can cause a Float32 device result to fail the Float64 mass check.
-With a nonzero cache budget, try sparse refinement when the device target L1
-residual is at most ten times the tolerance and maximum relative error is at
-most 1%. These are refinement-entry limits, not acceptance limits. Keep the
+After 1,000 iterations, with a nonzero cache budget, try sparse refinement when
+the device target L1 residual is at most ten times the tolerance and maximum
+relative error is at most 1%. These are refinement-entry limits, not acceptance limits. Keep the
 stricter original entry limit for dense refinement and zero-budget solves.
 First try sparse primal scaling on the device. Build row and column lists from
 accurate weights in bounded Float64 host blocks. Limit their combined storage

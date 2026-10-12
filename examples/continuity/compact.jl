@@ -392,7 +392,8 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
         if iteration%1000==0
             println("Compact inner iteration=$iteration scaled_device_residual=$error history=$(length(host.compact_prior.rho))");flush(stdout)
         end
-        if error<=(cache_bytes>0 ? 10 : 1.2) && (error<.9checked_error || iteration-last_check>=500 || iteration==maxiters)
+        check_limit=cache_bytes>0 && iteration>=1000 ? 10 : 1.2
+        if error<=check_limit && (error<.9checked_error || iteration-last_check>=500 || iteration==maxiters)
             last_check=iteration;checked_error=error
             a=Float64.(PCP._copy_to_host!(backend,zeros(Float32,length(c.a)),alpha)).+row_offset
             b=Float64.(host_beta).+offset

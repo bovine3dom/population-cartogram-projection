@@ -425,3 +425,17 @@ including a continued fit with explicit duals and invalid-input checks.
 The old process required SIGKILL after its shutdown grace period. Its files
 remain unchanged for review. A new continuation will retain both metric
 prefixes and use the tested longer, earlier sparse refinement.
+
+## 19:38 UTC: protect fast solves from early-refinement overhead
+
+The full regional rerun caught a regression: unrestricted earlier refinement
+raised warm time from 345 to 390 seconds. Several cases that normally need only
+100–400 dual iterations paid for sparse construction to save a few iterations.
+The result still passed its mass checks, but the runtime change is not useful.
+
+Restrict the wider sparse-entry threshold to solves that have already used
+1,000 dual iterations. Faster solves retain the old threshold. Keep the longer
+sparse iteration limit for difficult cases. All 59 compact CPU checks pass.
+The regional table still refers to the measured `f7dc433` comparison; do not
+replace it with the regressed result. The new threshold has no effect on those
+regional solves, all of which finish before 1,000 dual iterations.
