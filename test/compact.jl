@@ -81,6 +81,9 @@ for backend in backends
             q=deserialize(path)
             @test Matrix(q)==Matrix(p)
             @test CE.means(c,q)==CE.means(c,p)
+            updated=CE.append_plan(c,q,force,eta+.1,.1,zeros(length(c.a)),zeros(length(c.b)))
+            @test length(updated.problems)==length(q.problems)
+            @test updated.data.base_id[end]==q.data.base_id[end]
         end
     end
 end

@@ -79,7 +79,8 @@ end
 function append_plan(c,prior,force,eta,proximal,alpha,beta)
     h=isnothing(prior) ? empty_history(c) : prior.data
     problems=isnothing(prior) ? [c.problem] : copy(prior.problems)
-    index=findfirst(p->p===c.problem,problems)
+    index=findfirst(p->p===c.problem || all(getfield(p,name)==getfield(c.problem,name)
+        for name in fieldnames(PCP.MatrixFreeProblem)),problems)
     if isnothing(index)
         push!(problems,c.problem);index=length(problems)
     end

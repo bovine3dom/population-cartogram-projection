@@ -155,3 +155,19 @@ this attempt before any baseline solve. The prepared input remains intact.
 Replaced the splat with a fixed three-row matrix and a coordinate loop. A real
 H3-6 input check passes coordinate shape and unit-length checks. This removes
 country-size-specific compilation without changing coordinates or costs.
+
+## 09:30 UTC: sharp coarse poses and checkpoint geometry
+
+The revised planet run completed all coarse baselines, then stopped at a
+135-degree Eswatini pose. That coarse case has 12 source cells and nine targets.
+Both compact and dense fixed-temperature solves stalled above the mass limit.
+A test with decreasing temperatures reached the original eta 0.002 and passed
+the original tolerance. Added this retry only for planet baselines and poses.
+All stages remain on oneAPI. A failed retry still stops the fit. No mass limit
+was relaxed. The planet run has resumed from its country caches.
+
+A separate restart check found that separately loaded, equal geometries could
+get duplicate history entries because their object identities differ. Geometry
+reuse now checks exact field values after the fast identity check. A serialization
+regression test passes. The running planet process retains its earlier loaded
+code; subsequent processes will use this additional storage reduction.
