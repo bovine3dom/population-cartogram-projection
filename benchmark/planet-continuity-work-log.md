@@ -38,3 +38,12 @@ Arrow files and diagnostics. Only then does it publish the destination folder.
 H3-MON stays stopped. The existing dataset remains unchanged.
 
 See `examples/continuity/planet.md` for commands, file names, and limitations.
+
+## 05:40 UTC: launch
+
+Started the detached fit-and-publish job from commit `d9f67bf`. Runner PID:
+`2163081`. Initial Julia PID: `2163084`. The log confirms the Intel HD Graphics
+P630 oneAPI device. Country cost preparation is in progress. No output has been
+published yet. The log is `output/planet-h3-5-factor1-continuity/job.log`.
+The runner writes its final exit status and publishes only after a successful
+fit and export. No reliable whole-planet runtime estimate is available yet.
