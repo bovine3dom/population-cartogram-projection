@@ -365,7 +365,7 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
     outputs=Vector{Float64}[];residuals=Vector{Float64}[]
     previous=isnothing(initial_beta) ? zeros(length(c.b)) : Float64.(initial_beta.-offset)
     previous.-=mean(previous)
-    error=Inf;last_polish=0;refinements=Ref(0)
+    error=Inf;checked_error=Inf;last_check=0;refinements=Ref(0)
     for iteration in 1:maxiters
         update!(alpha,beta,da,length(c.b),Val(true))
         update!(beta,alpha,db,length(c.a),Val(false))
@@ -392,7 +392,8 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
         if iteration%1000==0
             println("Compact inner iteration=$iteration scaled_device_residual=$error history=$(length(host.compact_prior.rho))");flush(stdout)
         end
-        if error<=1.2
+        if error<=1.2 && (error<.9checked_error || iteration-last_check>=500 || iteration==maxiters)
+            last_check=iteration;checked_error=error
             a=Float64.(PCP._copy_to_host!(backend,zeros(Float32,length(c.a)),alpha)).+row_offset
             b=Float64.(host_beta).+offset
             plan=append_plan(c,prior,force,eta,proximal,a,b)
@@ -402,8 +403,7 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
             if actual<=tolerance && relative<=.001
                 return (;plan,beta=b,iterations=iteration,refinement_iterations=refinements[],marginal_error=actual)
             end
-            if cache_bytes>0 && (iteration-last_polish>=500 || iteration==maxiters)
-                last_polish=iteration
+            if cache_bytes>0
                 limit=iteration==maxiters ? 10000 : 1000
                 dense=cost_device isa AbstractMatrix
                 dense_bytes=sizeof(Float32)*length(c.a)*length(c.b)

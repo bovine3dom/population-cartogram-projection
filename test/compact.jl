@@ -53,6 +53,16 @@ for backend in backends
         sparse=CE.sparse_primal_arrays(perturbed,c;budget=10000,tolerance=1e-6,block_pairs=16)
         @test sparse.bytes<=10000
         @test length(sparse.rows.values)==length(sparse.columns.values)
+        @test isnothing(CE.sparse_primal_arrays(perturbed,c;budget=sparse.bytes-1,tolerance=1e-6))
+        for (layout,reference) in ((sparse.rows,before),(sparse.columns,transpose(before)))
+            weights=zeros(size(reference))
+            for i in axes(weights,1),entry in layout.ptr[i]:layout.ptr[i+1]-1
+                weights[i,layout.indices[entry]]=layout.values[entry]
+            end
+            @test weights ≈ reference rtol=1e-6
+        end
+        emptyrow=deepcopy(perturbed);emptyrow.data.u[1,end]-=1000
+        @test isnothing(CE.sparse_primal_arrays(emptyrow,c;budget=10000))
         refined=CE.compact_sparse_polish(perturbed,c,backend;budget=10000,tolerance=1e-6,max_pairs=16,block_pairs=16)
         @test !isnothing(refined)
         @test Matrix(refined.plan) ≈ Matrix(p) atol=2e-6

@@ -41,7 +41,10 @@ limits long kernels on the Intel legacy driver. One complete reduction row is
 the minimum launch size. Each check
 first uses device reductions. A candidate close to convergence is checked in
 Float64 host blocks. Normalize its source rows exactly and check target L1 error
-and maximum relative error before accepting it.
+and maximum relative error before accepting it. After a failed host check, check
+again when the device residual improves by 10%, after 500 iterations, or at the
+iteration limit. This avoids repeated full-plan checks at a Float32 rounding
+floor. No plan is accepted without the full check.
 
 `compact_sinkhorn` performs one fixed-temperature solve. The research runner uses
 `compact_solve`: first try up to 1,000 iterations, then use temperature factors

@@ -305,3 +305,25 @@ The planet was paused from 13:58:43–14:00:13 and 14:00:57–14:08:18 UTC for
 these tests, then resumed. Its running code does not yet use sparse refinement.
 Logs are in `output/continuity-performance/benchmark-sparse-primal-paired.log`
 and `test-compact-sparse-gpu.log`.
+
+## 14:36 UTC: reduce repeated full-plan checks
+
+China completed its first update at about 14:30 UTC. The first full pass is
+complete. A stack sample during China's final stage showed repeated full-plan
+host checks while the device residual changed little. After a failed full
+check, now repeat it only after a 10% device-residual improvement, 500 more
+iterations, or the iteration limit. Try refinement at the first failed check.
+The acceptance limits are unchanged.
+
+The dense and compact research tests and toy planet publication passed after
+the sparse change. The planet was paused from 14:10:42–14:16:58 UTC for those
+tests. Added explicit tests of both sparse index layouts, an exact storage
+budget limit, and empty-row refusal. All 55 compact checks now pass on CPU and
+oneAPI, including the revised host-check schedule.
+
+Stopped the old planet process at 14:31:54 UTC, during its second pass, after
+country 524. The complete first pass and the partial second pass remain saved.
+The process required SIGKILL after SIGTERM did not finish shutdown. No outputs
+were published. Verify the saved objective and metric index before continuing
+with the new code; do not repeat the expensive first pass. A final regional
+performance test will run before the continuation.
