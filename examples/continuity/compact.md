@@ -75,6 +75,24 @@ The block size defaults to one million source–target pairs. If the target coun
 exceeds that size, one full source row is the minimum block. Saved plans contain
 cached statistics and can be read after loading `experiment.jl`.
 
+## Continue from a checkpoint
+
+`continue_fit.jl` writes a new study and keeps the original baseline for the
+mass and distortion checks. Set `CONTINUITY_START_STEP` to the next saved update
+index when resuming within a run. The index starts at 1. In country-wise mode,
+one pass contains one update per country, in target-count order. With a later
+start index, `CONTINUITY_OUTER_STEPS` is the total pass limit, not the number of
+additional passes. The default start index is 1 for a new continuation study.
+
+Check that the seed checkpoint matches that index. Logs can be ahead of a
+checkpoint, and plan and CSV writes are separate. This option does not repair
+an interrupted write. Keep the parent logs and provenance with the new study;
+the new metric file does not contain the skipped prefix. Planet publication
+still requires the original input metadata and verification of the complete run.
+
+Compact seeds retain the last pure proposal's dual vector. Use it as a warm
+start after a restart. It is not an averaged dual for the damped mixture.
+
 ## Tests
 
 ```sh

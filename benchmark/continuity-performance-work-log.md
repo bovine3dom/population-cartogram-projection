@@ -266,3 +266,18 @@ The US update in the real planet fit has now passed the original mass checks
 and the outer objective test. India is still in its first update. Memory remains
 bounded; `/proc` high-water readings are being saved to
 `output/continuity-performance/planet-memory.csv`.
+
+## 13:00 UTC: avoid repeated work after an interruption
+
+Added an explicit start-update index to the existing continuation workflow.
+It still uses a new output directory and the original baseline guards. Recover
+a warm-start dual from the last pure proposal in each compact seed; do not
+average mixture duals. This permits a verified partial-pass checkpoint to skip
+already completed updates. It is not automatic crash recovery: the checkpoint
+must match the requested index, and parent logs must be retained.
+
+A two-country test resumes halfway through a pass and matches the uninterrupted
+result. All 44 compact checks pass on CPU and oneAPI. The planet was paused for
+these tests from 12:55:26–12:58:48 UTC, then resumed. Its loaded code and original
+ten-pass plan are unchanged. China is still in its first temperature retry;
+resident memory remains about 2.5 GiB.

@@ -16,6 +16,7 @@ seed=deserialize(joinpath(path,"candidate.jls"))
 border_pairs=sort!(collect(borders))
 CSV.write(joinpath(out,"borders.csv"),DataFrame(country_a=first.(border_pairs),country_b=last.(border_pairs)))
 settings[:outer_steps]=parse(Int,get(ENV,"CONTINUITY_OUTER_STEPS","50"))
+settings[:start_step]=parse(Int,get(ENV,"CONTINUITY_START_STEP","1"))
 haskey(ENV,"CONTINUITY_COORDINATE") && (settings[:coordinate]=ENV["CONTINUITY_COORDINATE"]=="1")
 for (key,variable) in ((:border_scale,"CONTINUITY_BORDER_SCALE"),(:strength,"CONTINUITY_STRENGTH"),
                        (:fold_strength,"CONTINUITY_FOLD_STRENGTH"),(:spread_limit,"CONTINUITY_SPREAD_LIMIT"),

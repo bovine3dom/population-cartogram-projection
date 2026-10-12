@@ -326,6 +326,7 @@ function saved_case(path,countries;root=dirname(path))
         haskey(settings,key) && (settings[key]=Symbol(settings[key]))
     end
     ismissing(settings[:border_share]) && (settings[:border_share]=nothing)
+    get!(settings,:start_step,1)
     return (;settings,borders,border_factors)
 end
 
@@ -524,7 +525,10 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   fold_strength=0.0, fold_smoothing=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
                   border_scale=1.0,coordinate=false,border_factors=Dict(),checkpoint_interval=1,compact=false,
-                  compact_cache_bytes=512*1024^2)
+                  compact_cache_bytes=512*1024^2,start_step::Int=1)
+    groups=coordinate ? length(countries) : 1
+    1<=start_step<=outer_steps*groups+1 || error("invalid starting step")
+    start_step>1 && isnothing(starting_plans) && error("a later starting step requires seed plans")
     compact && (matrix_free || anneal) && error("compact mode has its own matrix-free solver; annealing is not enabled")
     checkpoint_interval>=1 || error("checkpoint interval must be positive")
     proximal>=0 || error("proximal weight must be nonnegative")
@@ -549,7 +553,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],fold_smoothing=[fold_smoothing],
         matrix_free=[matrix_free],internal_scale=[internal_scale],border_scale=[border_scale],inner_tolerance=[inner_tolerance],
         proximal=[proximal],anneal=[anneal],accelerate=[accelerate],coordinate=[coordinate],outer_steps=[outer_steps],
-        checkpoint_interval=[checkpoint_interval],compact=[compact],compact_cache_bytes=[compact_cache_bytes],
+        checkpoint_interval=[checkpoint_interval],compact=[compact],compact_cache_bytes=[compact_cache_bytes],start_step=[start_step],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
@@ -594,11 +598,11 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     end
     checkpoint(joinpath(outdir,"candidate.jls"),plans)
     trials = NamedTuple[]
-    duals = Any[nothing for c in countries]
-    groups=coordinate ? length(countries) : 1
+    duals = Any[warm_beta(p) for p in plans]
     order=sortperm(length.(getproperty.(countries,:b)))
-    accepted_in_sweep=false
-    for step in 1:outer_steps*groups
+    # A partial sweep can already contain accepted steps. Do not stop it early.
+    accepted_in_sweep=mod(start_step-1,groups)!=0
+    for step in start_step:outer_steps*groups
         iteration=cld(step,groups)
         active=order[mod1(step,groups)]
         selected=coordinate ? (active:active) : eachindex(countries)

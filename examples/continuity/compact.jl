@@ -26,6 +26,9 @@ function Base.sum(p::CompactPlan;dims=:)
     dims==(:) && return sum(p.stats.source)
     error("unsupported compact sum dimensions")
 end
+# Use the last pure proposal for a restart, not an averaged mixture dual.
+warm_beta(p)=nothing
+warm_beta(p::CompactPlan)=length(p.data.rho)>1 ? p.data.v[:,end]./last(p.data.inverse_eta) : nothing
 means(c,p::CompactPlan)=p.stats.moment./transpose(p.stats.target)
 transport_score(c,p::CompactPlan,eta,cache)=p.stats.base+eta*p.stats.entropy
 valid_plan(p)=all(x->isfinite(x)&&x>=0,p)

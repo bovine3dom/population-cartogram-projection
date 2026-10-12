@@ -93,6 +93,18 @@ for backend in backends
             dense_plans=deserialize(joinpath(dir,"dense","candidate.jls"))
             compact_plans=deserialize(joinpath(dir,"compact","candidate.jls"))
             @test all(isapprox(Matrix(a),b;atol=2e-5) for (a,b) in zip(compact_plans,dense_plans))
+            baseline=deserialize(joinpath(dir,"compact","baseline.jls"))
+            CE.run_case(countries,backend,joinpath(dir,"first-pass");compact=true,initial_plans=baseline,
+                merge(kwargs,(;outer_steps=1))...)
+            firstpass=deserialize(joinpath(dir,"first-pass","candidate.jls"))
+            partial=copy(baseline);partial[1]=firstpass[1]
+            resumed=CE.run_case(countries,backend,joinpath(dir,"resumed");compact=true,initial_plans=baseline,
+                starting_plans=partial,start_step=2,kwargs...)
+            @test resumed[2].iteration==1 && resumed[2].updated_country==2
+            resumed_plans=deserialize(joinpath(dir,"resumed","candidate.jls"))
+            @test all(isapprox(Matrix(a),Matrix(b);atol=2e-5) for (a,b) in zip(resumed_plans,compact_plans))
+            @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"invalid-start");start_step=0)
+            @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"no-seed");start_step=2)
             path=joinpath(dir,"plan.jls")
             serialize(path,p)
             q=deserialize(path)
