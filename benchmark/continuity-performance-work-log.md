@@ -439,3 +439,22 @@ sparse iteration limit for difficult cases. All 59 compact CPU checks pass.
 The regional table still refers to the measured `f7dc433` comparison; do not
 replace it with the regressed result. The new threshold has no effect on those
 regional solves, all of which finish before 1,000 dual iterations.
+
+## 20:25 UTC: second planet pass complete
+
+The new continuation started at 19:38 UTC in
+`output/planet-h3-5-factor1-sparse-v2`, at commit `8c02b00`. The verified
+hot-stage dual reduced the repeated factor-16 solve to 50 iterations. The
+factor-4 and factor-2 stages each passed at 1,000 iterations with the new
+refinement policy. China then passed the final-temperature check and the
+outer objective test. Pass 2 is complete; pass 3 is running.
+
+The pass-2 objective is 67.6970. Cross-border RMS is 629.9 km and internal
+edge RMS is 201.7 km. Large defects remain; this is not a continuity solution.
+Peak process resident memory so far is about 2.4 GiB. No new GPU reset was
+reported by the kernel journal.
+
+Saved and verified a complete pass-2 checkpoint as a time-budget fallback.
+A separate watcher saves later complete-pass checkpoints without modifying the
+fit. Any fallback still needs full-plan and publication checks. The runner
+deadline is 04:50 UTC; no new GPU tests will interrupt it for now.
