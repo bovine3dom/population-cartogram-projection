@@ -79,6 +79,25 @@ The job writes both files to a temporary sibling directory. It publishes that
 directory only after both files and the diagnostics are complete. It does not
 start H3-MON or change its default dataset.
 
+## Compact mode
+
+Use a new prepared output directory for compact mode. Set
+`CONTINUITY_PLANET_MODE=compact` when starting `run_planet.sh`, or call
+`planet.jl fit-compact OUTPUT` directly. Do not reuse dense country caches.
+
+This mode uses implicit transport plans and bounded host blocks. It tests poses
+with H3-4 source populations, summed from the H3-5 input. It then tests the chosen
+angle at H3-5 against the native-resolution objective and distortion limits.
+A rejected angle leaves the native baseline in place. Thus there is at most one
+additional pose solve per country at the native resolution, not seven.
+The final fit and both exports still use the original H3-5 sources and factor 1.
+
+Compact checkpoints are small enough to save after each country update.
+`fit-config.csv` records the mode and pose resolution. A restart with different
+settings is refused. Compact plans retain proximal updates and damped mixtures;
+see `compact.md` for the representation and tests. Publication recalculates plan
+statistics in blocks before checking masses.
+
 ## Files in H3-MON
 
 - `cartogram_weights_planet_h3_5_factor1_continuity_hilo.arrow`

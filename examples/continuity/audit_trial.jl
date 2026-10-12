@@ -16,7 +16,10 @@ CSV.write(joinpath(out,"bounds.csv"),bounds)
 rows=NamedTuple[]
 for name in ("baseline","candidate")
     plans=deserialize(joinpath(trial,"$name.jls"))
-    all(p->all(x->isfinite(x)&&x>=0,p),plans) || error("invalid plan")
+    for (c,p) in zip(countries,plans)
+        p isa CE.CompactPlan && CE.compact_stats!(p,c)
+    end
+    all(CE.valid_plan,plans) || error("invalid plan")
     source_error=maximum(maximum(abs.(vec(sum(p;dims=2))./c.a.-1)) for (c,p) in zip(countries,plans))
     m=CE.metrics(countries,plans,edges)
     source_error<=1e-8 && m.marginal_error<=get(saved.settings,:inner_tolerance,1e-5)+1e-10 &&

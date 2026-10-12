@@ -44,17 +44,20 @@ if get(ENV,"CONTINUITY_GPU_TEST","")=="1"
                 end
             end
             input=joinpath(root,"input.arrow");Arrow.write(input,DataFrame(rows))
-            out=joinpath(root,"study");dest=joinpath(root,"published")
-            prepare(input,out)
-            withenv("CONTINUITY_OUTER_STEPS"=>"1") do
-                fit(out)
+            for compact in (false,true)
+                out=joinpath(root,"study-$compact");dest=joinpath(root,"published-$compact")
+                prepare(input,out)
+                withenv("CONTINUITY_OUTER_STEPS"=>"1") do
+                    fit(out;compact)
+                end
+                publish(out,dest)
+                @test isfile(joinpath(dest,"population_density_hilo.arrow"))
+                @test isfile(joinpath(dest,"cartogram_weights_planet_h3_5_factor1_continuity_hilo.arrow"))
+                @test isfile(joinpath(out,"published.txt"))
+                @test !ispath(dest*".pending")
+                @test_throws ErrorException publish(out,dest)
+                compact && @test isfile(joinpath(out,"coarse-poses","poses.csv"))
             end
-            publish(out,dest)
-            @test isfile(joinpath(dest,"population_density_hilo.arrow"))
-            @test isfile(joinpath(dest,"cartogram_weights_planet_h3_5_factor1_continuity_hilo.arrow"))
-            @test isfile(joinpath(out,"published.txt"))
-            @test !ispath(dest*".pending")
-            @test_throws ErrorException publish(out,dest)
         end
     end
 end

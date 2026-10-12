@@ -79,100 +79,7 @@ function local_factors(countries,plans,edges)
     return Dict(p=>f*norm for (p,f) in factors)
 end
 
-function fit(out)
-    oneAPI.functional() || error("oneAPI is not functional; no CPU fallback")
-    backend=oneAPI.oneAPIBackend()
-    open(joinpath(out,"provenance.txt"),"a") do io
-        println(io,"Fit started: $(now(UTC)) UTC\nFit commit: ",strip(read(`git rev-parse HEAD`,String)))
-    end
-    oneAPI.versioninfo()
-    flush(stdout)
-    ispath(joinpath(out,"fit")) && error("fit already exists; use continue_fit.jl to resume a checkpoint")
-    metadata=CSV.read(joinpath(out,"countries.csv"),DataFrame)
-    active=Set(metadata.code[metadata.fitted])
-    targets=deserialize(joinpath(out,"targets.jls"))
-    countries_path=joinpath(out,"countries.jls")
-    countries=if isfile(countries_path)
-        deserialize(countries_path)
-    else
-        owners=Dict{Tuple{Int,Int},Int}()
-        for c in targets,r in eachrow(c.target)
-            pos=(Int(r.x),Int(r.y));owners[pos]=get(owners,pos,0)+1
-        end
-        cuts=Set(pos for (pos,n) in owners if n>1)
-        cs=[merge(CE.country(joinpath(out,"sources","$(c.code).arrow"),c.code;target=c.target),
-                  (;cut_targets=cuts)) for c in targets if c.code in active]
-        CE.checkpoint(countries_path,cs)
-        cs
-    end
-    br=CSV.read(joinpath(out,"borders.csv"),DataFrame)
-    borders=Set(minmax(r.country_a,r.country_b) for r in eachrow(br) if r.country_a in active && r.country_b in active)
-    edges=CE.graph(countries;borders)
-    contacts=CSV.read(joinpath(out,"contacts.csv"),DataFrame)
-    count(e->e[1]!=e[3],edges)==sum(contacts.edges[contacts.fitted]) || error("fitted contact mask changed")
-    eta=.002
-    cache=joinpath(out,"baseline-cache"); mkpath(cache)
-    baseline=Vector{Matrix{Float64}}(undef,length(countries))
-    for k in sortperm(length.(getproperty.(countries,:b)))
-        c=countries[k]; path=joinpath(cache,"$(c.code).jls")
-        if !isfile(path)
-            println("$(now(UTC)) baseline country=$(c.code) sources=$(length(c.a)) targets=$(length(c.b))");flush(stdout)
-            result=CE.sinkhorn(c.cost,c.a,c.b,backend;eta,tolerance=1e-4,accelerate=true)
-            CE.checkpoint(path,result.plan)
-            baseline[k]=result.plan
-            println("$(now(UTC)) baseline complete country=$(c.code) residual=$(result.marginal_error)");flush(stdout)
-        else
-            baseline[k]=deserialize(path)
-        end
-        GC.gc()
-    end
-    factors=local_factors(countries,baseline,edges)
-    weights=CE.edge_weights(edges,.25)
-    for (i,(k,j,l,t)) in enumerate(edges)
-        k==l || (weights[i]*=factors[minmax(countries[k].code,countries[l].code)])
-    end
-    strength=15.0length(countries); fold_strength=.5length(countries)
-    faces=CE.triangles(countries)
-    base_cache=Dict()
-    score(p)=CE.objective(countries,p,edges,strength,eta;base_cache,weights,scale_km=900.,form=:distribution,saturating=false)+
-        fold_strength*first(CE.fold_penalty_gradient(countries,p,faces;forces_only=true))
-    reference=CE.metrics(countries,baseline,edges)
-    within(m)=m.spread_mean<=1.25reference.spread_mean && m.spread_p90<=1.25reference.spread_p90 &&
-        m.interior_p90<=4reference.interior_p90 && m.interior_max<=4reference.interior_max
-    # Stream pose candidates: eight full global pose sets do not fit in memory.
-    seed=copy(baseline)
-    posecache=joinpath(out,"pose-cache");mkpath(posecache)
-    isfile(joinpath(out,"poses.csv")) || write(joinpath(out,"poses.csv"),"code,angle,objective\n")
-    for k in sortperm(length.(getproperty.(countries,:b)))
-        c=countries[k]; path=joinpath(posecache,"$(c.code).jls")
-        if isfile(path)
-            seed[k]=deserialize(path)
-            continue
-        end
-        best=score(seed); angle_chosen=0
-        for angle in 45:45:315
-            println("$(now(UTC)) pose country=$(c.code) angle=$angle");flush(stdout)
-            result=CE.sinkhorn(CE.pose_cost(c,angle),c.a,c.b,backend;eta,tolerance=1e-4,accelerate=true)
-            trial=copy(seed);trial[k]=result.plan
-            value=score(trial)
-            if value<best && within(CE.metrics(countries,trial,edges))
-                seed=trial;best=value;angle_chosen=angle
-            end
-            GC.gc()
-        end
-        CE.checkpoint(path,seed[k])
-        open(joinpath(out,"poses.csv"),"a") do io
-            println(io,"$(c.code),$angle_chosen,$best")
-        end
-    end
-    CE.run_case(countries,backend,joinpath(out,"fit");initial_plans=baseline,starting_plans=seed,
-        borders,border_factors=factors,strength,eta,border_share=.25,scale_km=900.,
-        form=:distribution,saturating=false,fold_strength,proximal=.1,coordinate=true,
-        outer_steps=parse(Int,get(ENV,"CONTINUITY_OUTER_STEPS","10")),
-        interior_limit=4.,spread_limit=1.25,inner_tolerance=1e-4,accelerate=true,export_arrow=false,
-        checkpoint_interval=length(countries))
-    write(joinpath(out,"fit-complete.txt"),"Completed: $(now(UTC)) UTC\n")
-end
+include("planet_fit.jl")
 
 function assemble(original,replacement)
     active=Set(replacement.code)
@@ -211,7 +118,8 @@ function publish(out,destination)
     countries=deserialize(joinpath(out,"countries.jls"))
     plans=deserialize(joinpath(out,"fit","candidate.jls"))
     for (c,p) in zip(countries,plans)
-        all(x->isfinite(x)&&x>=0,p) || error("invalid plan")
+        p isa CE.CompactPlan && CE.compact_stats!(p,c)
+        CE.valid_plan(p) || error("invalid plan")
         maximum(abs.(vec(sum(p;dims=2))./c.a.-1))<=1e-8 || error("source mass check failed")
         totals=vec(sum(p;dims=1))
         sum(abs.(totals.-c.b))<=1e-4 && maximum(abs.(totals./c.b.-1))<=.001 || error("target mass check failed")
@@ -234,6 +142,8 @@ function publish(out,destination)
         cp(joinpath(out,"fit",name),joinpath(staging,name))
     end
     cp(joinpath(@__DIR__,"planet.md"),joinpath(staging,"README.md"))
+    cp(joinpath(@__DIR__,"compact.md"),joinpath(staging,"compact.md"))
+    isfile(joinpath(out,"fit-config.csv")) && cp(joinpath(out,"fit-config.csv"),joinpath(staging,"fit-config.csv"))
     # Publish only after both Arrow files and the diagnostics are complete.
     mv(staging,destination)
     println("Published $(nrow(d)) rows and $(nrow(sources)) sources to $destination")
@@ -243,11 +153,11 @@ end
 if abspath(PROGRAM_FILE)==@__FILE__
     if length(ARGS)==3 && ARGS[1]=="prepare"
         prepare(ARGS[2],ARGS[3])
-    elseif length(ARGS)==2 && ARGS[1]=="fit"
-        fit(ARGS[2])
+    elseif length(ARGS)==2 && ARGS[1] in ("fit","fit-compact")
+        fit(ARGS[2];compact=ARGS[1]=="fit-compact")
     elseif length(ARGS)==3 && ARGS[1]=="publish"
         publish(ARGS[2],ARGS[3])
     else
-        error("usage: planet.jl prepare INPUT.arrow NEW_OUT | fit OUT | publish OUT NEW_H3_MON_FOLDER")
+        error("usage: planet.jl prepare INPUT.arrow NEW_OUT | fit OUT | fit-compact OUT | publish OUT NEW_H3_MON_FOLDER")
     end
 end
