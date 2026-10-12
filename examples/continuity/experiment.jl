@@ -556,6 +556,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) dual + $(result.refinement_iterations) primal iterations, residual=$(result.marginal_error)")
             flush(stdout)
             push!(plans, result.plan)
+            compact && GC.gc()
         end
     end
     reference = preserve_displacements ? [means(c,p) for (c,p) in zip(countries,plans)] : nothing
@@ -611,6 +612,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                 sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
                          eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)
         end
+        compact && GC.gc()
         println("Inner $iteration/$updated_country: ",[(countries[k].code,s.iterations,s.refinement_iterations,s.marginal_error)
                                                      for (k,s) in zip(selected,solutions)])
         flush(stdout)

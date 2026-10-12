@@ -86,3 +86,25 @@ Added a synchronization after at most eight launches and at the end of each
 reduction. This also keeps temporary offset buffers alive until their kernels
 finish. CPU and oneAPI compact tests still pass. A new large-case test is needed;
 the stopped run is not evidence of convergence or a completed timing.
+
+## 08:13 UTC: cached large-case results and driver memory
+
+The cached H3-6 Africa test completed three passes and a warm repeat. Compact
+plans use 7.54 MB; dense plans use 954 MB, about 126 times more. Cold fit times
+were 439 seconds compact and 559 seconds dense. Warm times were 345 and 475
+seconds. Final objectives differ by 0.00000124; cross-border RMS differs by
+1.2 metres. Independent block checks pass source and target mass limits. The
+largest target centre difference is 355 metres, so these are close, not identical,
+solutions. Plan L1 differences are below 0.00037 per country.
+
+However, peak resident memory was 32.0 GiB compact versus 8.0 GiB dense. The
+compact solver allocated less Julia memory, but native command lists accumulated.
+The installed oneAPI code creates a Level Zero command list for each launch;
+its Julia finalizer releases the native allocation. Julia's heap checks cannot
+measure those allocations. Synchronization alone does not release them.
+
+Added periodic garbage collection after synchronized launch batches, and after
+completed compact solves. Host log and weight buffers now remain in use across
+blocks instead of being allocated for each block. CPU and oneAPI compact tests
+pass. A new large-case measurement is running to check actual peak memory. No
+memory improvement is claimed from plan storage alone. No SDK files were changed.

@@ -48,6 +48,11 @@ Reuse moments and masses for unchanged countries. A damped mixture has linear
 moments, masses, and base cost; its entropy is calculated from the actual mixture.
 No full dense plan is needed for the continuity objective or its force gradient.
 
+Host log and weight buffers are reused across blocks. Device launches are
+synchronized in batches. Periodic garbage collection releases completed native
+command lists on oneAPI; their large driver allocations are not visible to
+Julia's normal heap-pressure check.
+
 The block size defaults to one million source–target pairs. If the target count
 exceeds that size, one full source row is the minimum block. Saved plans contain
 cached statistics and can be read after loading `experiment.jl`.

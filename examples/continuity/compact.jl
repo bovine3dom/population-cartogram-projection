@@ -84,8 +84,8 @@ function append_plan(c,prior,force,eta,proximal,alpha,beta)
     return CompactPlan(data,problems,nothing)
 end
 
-function logblock(p,rows)
-    result=Matrix{Float64}(undef,length(rows),size(p,2))
+function logblock!(result,p,rows)
+    size(result)==(length(rows),size(p,2)) || error("wrong log block shape")
     Threads.@threads for j in axes(result,2)
         @inbounds for (k,i) in enumerate(rows)
             result[k,j]=logentry(p.data,i,j)
@@ -93,25 +93,28 @@ function logblock(p,rows)
     end
     return result
 end
+logblock(p,rows)=logblock!(Matrix{Float64}(undef,length(rows),size(p,2)),p,rows)
 
 function compact_stats!(p,c;normalize=false,block_pairs=1_000_000)
     normalize && !(last(p.data.keep)==-Inf && last(p.data.take)==0) && error("normalize the unmixed candidate first")
     n,m=size(p)
-    block=max(1,fld(block_pairs,m))
+    block=min(n,max(1,fld(block_pairs,m)))
+    log_buffer=Matrix{Float64}(undef,block,m);weight_buffer=similar(log_buffer)
     target=zeros(m);source=zeros(n);moment=zeros(3,m);base=entropy=0.
     for firstrow in 1:block:n
         rows=firstrow:min(n,firstrow+block-1)
-        logs=logblock(p,rows)
+        logs=view(log_buffer,1:length(rows),:);weights=view(weight_buffer,1:length(rows),:)
+        logblock!(logs,p,rows)
         if normalize
             maximums=maximum(logs;dims=2)
-            weights=exp.(logs.-maximums)
+            weights.=exp.(logs.-maximums)
             totals=sum(weights;dims=2)
             shifts=log.(c.a[rows]).-vec(maximums).-log.(vec(totals))
             p.data.u[rows,end].+=shifts
             logs.+=shifts
             weights.*=c.a[rows]./vec(totals)
         else
-            weights=exp.(logs)
+            weights.=exp.(logs)
         end
         source[rows]=vec(sum(weights;dims=2))
         target.+=vec(sum(weights;dims=1))
@@ -139,9 +142,12 @@ function mix_plans(old::CompactPlan,new::CompactPlan,damping)
     keep[end]=log1p(-damping);take[end]=log(damping)
     p=CompactPlan(merge(new.data,(;keep,take)),new.problems,nothing)
     entropy=0.
-    block=max(1,fld(1_000_000,size(p,2)))
+    block=min(size(p,1),max(1,fld(1_000_000,size(p,2))))
+    buffer=Matrix{Float64}(undef,block,size(p,2))
     for firstrow in 1:block:size(p,1)
-        logs=logblock(p,firstrow:min(size(p,1),firstrow+block-1))
+        rows=firstrow:min(size(p,1),firstrow+block-1)
+        logs=view(buffer,1:length(rows),:)
+        logblock!(logs,p,rows)
         entropy+=sum(x->isfinite(x) ? exp(x)*(x-1) : 0.,logs)
     end
     a,b=old.stats,new.stats
@@ -239,10 +245,17 @@ end
     out[i,j+offset]=pair_cost(cost,i,j+offset)
 end
 
-function compact_launches(f,backend,outputs,block)
+function compact_launches(f,backend,outputs,block,commands)
     for (launch,offset) in enumerate(0:block:outputs-1)
         f(offset,min(block,outputs-offset))
-        launch%8==0 && KA.synchronize(backend)
+        commands[]+=1
+        if launch%8==0 || commands[]%256==0
+            KA.synchronize(backend)
+        end
+        # Level Zero command lists own native allocations hidden from Julia's GC.
+        if !(backend isa KA.CPU) && commands[]%256==0
+            GC.gc(commands[]%4096==0)
+        end
     end
     KA.synchronize(backend)
 end
@@ -265,10 +278,11 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
     row_device=KA.zeros(backend,Float32,length(c.a))
     offset_device=KA.zeros(backend,Float32,length(c.b))
     budget=max(1,div(max_pairs,1+length(host.compact_prior.rho)))
+    commands=Ref(0)
     minimum_kernel! = compact_minimum!(backend,32)
     function minimum!(out,cost,n,rows)
         block=max(1,div(budget,n))
-        compact_launches(backend,length(out),block) do offset,count
+        compact_launches(backend,length(out),block,commands) do offset,count
             minimum_kernel!(out,cost,n,offset,rows;ndrange=32count)
         end
     end
@@ -283,7 +297,7 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
         cached=KA.allocate(backend,Float32,(length(c.a),length(c.b)))
         block=max(1,div(budget,length(c.a)))
         materialize! = compact_materialize!(backend,(32,8))
-        compact_launches(backend,length(c.b),block) do offset,count
+        compact_launches(backend,length(c.b),block,commands) do offset,count
             materialize!(cached,device,offset;ndrange=(length(c.a),count))
         end
         cached
@@ -299,7 +313,7 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
     reduction_budget=cost_device isa AbstractMatrix ? max_pairs : budget
     function update!(out,dual,mass,n,rows)
         block=max(1,div(reduction_budget,n))
-        compact_launches(backend,length(out),block) do offset,count
+        compact_launches(backend,length(out),block,commands) do offset,count
             update_kernel!(out,cost_device,dual,mass,Float32(eta),n,offset,rows;ndrange=32count)
         end
     end
