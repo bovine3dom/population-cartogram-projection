@@ -49,12 +49,22 @@ and maximum relative error before accepting it.
 keep the prior plan and proximal weight fixed. Each stage checks the original
 mass tolerance. Only the last stage becomes a candidate, with the requested
 temperature. Earlier stages supply dual initial values, not extra plan history.
-A failed final solve raises an error. No dense or CPU fallback is used.
+A failed final solve raises an error. No dense host plan or CPU solver fallback
+is used.
 
 Calculate target moments, transport cost, and entropy in bounded host blocks.
 Reuse moments and masses for unchanged countries. A damped mixture has linear
 moments, masses, and base cost; its entropy is calculated from the actual mixture.
 No full dense plan is needed for the continuity objective or its force gradient.
+
+Strong forces can cause a Float32 device result to fail the Float64 mass check.
+If a device cost cache exists, reuse it for marginal refinement. Calculate
+accurate weights in bounded Float64 host blocks, copy them into that same cache
+as Float32 weights, and run primal scaling on the device. The accepted plan
+keeps only corrected dual vectors. Check its masses again in Float64. If
+refinement fails, restore the cached cost before the next dual update. There
+is no second full device matrix. Uncached solves cannot use this refinement.
+Refinement blocks contain whole source columns; one column is the minimum.
 
 Host log and weight buffers are reused across blocks. Device launches are
 synchronized in batches. Periodic garbage collection releases completed native

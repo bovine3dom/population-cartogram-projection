@@ -213,3 +213,25 @@ The test scripts remain with the local diagnostic outputs, not in the solver.
 The planet process was paused for these isolated tests from 10:18:48–10:20:30
 and 10:22:07–10:23:45 UTC, then resumed. Include these pauses when interpreting
 its total wall time.
+
+## 11:04 UTC: bounded GPU marginal refinement
+
+Stopped the planet fit at 10:38 UTC after the US device residual stopped falling.
+The device check was below tolerance, but Float64 host reconstruction still
+failed. The last valid checkpoint remains intact. No result was published.
+
+A direct host scaling test reduced the error but was too slow: 30 passes still
+left target L1 error at 0.000144. Added bounded GPU primal refinement instead.
+Calculate accurate weights in host blocks and copy them into the existing device
+cost cache. Reuse that cache, rather than allocating another full matrix. Run
+primal scaling with bounded oneAPI kernels. Store only the resulting dual
+corrections, and recheck masses in Float64. A failed refinement restores the
+original cached cost before log-domain iterations continue.
+
+The saved US candidate now passes after 1,000 primal iterations: target L1 error
+0.0000797, maximum relative target error 0.000214, and maximum relative source
+error below 0.000000000000003. The cold refinement test took 100 seconds,
+including compilation. Compact CPU and oneAPI tests pass, including refinement,
+parent-plan immutability, and bounded uploads. Full regression tests are next.
+Uncached solves still use the implicit log-domain path; they do not allocate a
+primal matrix outside the requested cache budget.

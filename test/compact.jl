@@ -37,6 +37,18 @@ for backend in backends
         @test (@inferred CE.transport_score(c,p,eta,nothing)) ≈ CE.transport_score(c,Matrix(p),eta,nothing) atol=1e-12
         @test p.stats.base ≈ CE.dot(c.cost,Matrix(p)) atol=1e-12
         @test p.stats.entropy ≈ sum(x->x>0 ? x*(log(x)-1) : 0.,Matrix(p)) atol=1e-12
+        perturbed=deepcopy(p)
+        perturbed.data.v[:,end].+=.01sin.(1:length(c.b))
+        CE.compact_stats!(perturbed,c;normalize=true)
+        before=Matrix(perturbed)
+        cache=CE.KA.zeros(backend,Float32,size(p))
+        polished=CE.compact_polish(perturbed,c,backend,cache;tolerance=1e-6,max_pairs=16,block_pairs=16)
+        @test !isnothing(polished)
+        @test Matrix(polished.plan) ≈ Matrix(p) atol=2e-6
+        @test Matrix(perturbed)==before
+        @test length(polished.plan.data.rho)==length(p.data.rho)
+        @test vec(sum(Matrix(polished.plan);dims=2)) ≈ c.a atol=1e-12
+        @test isnothing(CE.compact_polish(perturbed,c,backend,cache;maxiters=1))
         posed=merge(c,(;problem=CE.pose_problem(c,90)))
         pose_plan=CE.compact_sinkhorn(posed,force,nothing,backend;eta,tolerance=1e-6).plan
         pose_reference=CE.sinkhorn(CE.pose_cost(c,90),c.a,c.b,backend;eta,tolerance=1e-6).plan

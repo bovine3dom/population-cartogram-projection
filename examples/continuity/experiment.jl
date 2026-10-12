@@ -63,9 +63,10 @@ end
     end
 end
 
-@kernel function scale_reduce!(out,kernel,scale,mass,n,::Val{ROWS}) where ROWS
+@kernel function scale_reduce!(out,kernel,scale,mass,n,output_offset,::Val{ROWS}) where ROWS
     lane=@index(Local,Linear)
-    j=@index(Group,Linear)
+    group=@index(Group,Linear)
+    j=output_offset+group
     totals=@localmem Float32 (32,)
     total=0.0f0
     for i in lane:32:n
@@ -80,9 +81,9 @@ end
         end
         @synchronize
     end
-    j=@index(Group,Linear)
+    group=@index(Group,Linear)
     if lane==1
-        out[j]=mass[j]/totals[1]
+        out[output_offset+group]=mass[output_offset+group]/totals[1]
     end
 end
 
@@ -93,8 +94,8 @@ function polish_plan(plan,a,b,backend; tolerance=1e-5,maxiters=500)
     host_u,host_v=ones(Float32,length(a)),ones(Float32,length(b))
     update! = scale_reduce!(backend,32)
     for iteration in 1:maxiters
-        update!(u,kernel,v,da,length(b),Val(true);ndrange=32length(a))
-        update!(v,kernel,u,db,length(a),Val(false);ndrange=32length(b))
+        update!(u,kernel,v,da,length(b),0,Val(true);ndrange=32length(a))
+        update!(v,kernel,u,db,length(a),0,Val(false);ndrange=32length(b))
         if iteration%20==0
             PCP._copy_to_host!(backend,host_u,u); PCP._copy_to_host!(backend,host_v,v)
             all(x->isfinite(x)&&x>0,host_u) && all(x->isfinite(x)&&x>0,host_v) || return nothing
