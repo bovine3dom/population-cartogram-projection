@@ -1,23 +1,4 @@
 # Fitting helpers for planet.jl. Preparation and publication stay in that script.
-function planet_compact_solve(c,backend,cache_bytes)
-    force=zeros(3,length(c.b))
-    try
-        return CE.compact_sinkhorn(c,force,nothing,backend;eta=.002,tolerance=1e-4,cache_bytes)
-    catch err
-        err isa CE.CompactConvergenceError || rethrow()
-        println("$(now(UTC)) temperature retry country=$(c.code): $err");flush(stdout)
-    end
-    # Sharply separated coarse populations can converge very slowly at fixed eta.
-    beta=nothing;result=nothing
-    for factor in (16.,8.,4.,2.,1.)
-        result=CE.compact_sinkhorn(c,force,nothing,backend;eta=.002factor,tolerance=1e-4,cache_bytes,initial_beta=beta)
-        beta=result.beta
-        println("$(now(UTC)) temperature factor=$factor iterations=$(result.iterations) residual=$(result.marginal_error)");flush(stdout)
-        GC.gc()
-    end
-    return result
-end
-
 function planet_baseline(countries,backend,out;compact,cache_bytes=512*1024^2)
     cache=joinpath(out,"baseline-cache");mkpath(cache)
     plans=compact ? Vector{CE.CompactPlan}(undef,length(countries)) : Vector{Matrix{Float64}}(undef,length(countries))
@@ -27,7 +8,7 @@ function planet_baseline(countries,backend,out;compact,cache_bytes=512*1024^2)
             plans[k]=deserialize(path)
         else
             println("$(now(UTC)) baseline country=$(c.code) sources=$(length(c.a)) targets=$(length(c.b)) compact=$compact");flush(stdout)
-            result=compact ? planet_compact_solve(c,backend,cache_bytes) :
+            result=compact ? CE.compact_solve(c,zeros(3,length(c.b)),nothing,backend;eta=.002,tolerance=1e-4,cache_bytes) :
                 CE.sinkhorn(c.cost,c.a,c.b,backend;eta=.002,tolerance=1e-4,accelerate=true)
             plans[k]=result.plan
             CE.checkpoint(path,result.plan)
@@ -77,7 +58,7 @@ function planet_poses(countries,baseline,borders,backend,out;compact,proposals=n
             result=if compact
                 # Change the solve geometry but retain the original objective cost.
                 posed=merge(c,(;problem=CE.pose_problem(c,angle)))
-                planet_compact_solve(posed,backend,cache_bytes)
+                CE.compact_solve(posed,zeros(3,length(c.b)),nothing,backend;eta=.002,tolerance=1e-4,cache_bytes)
             else
                 CE.sinkhorn(CE.pose_cost(c,angle),c.a,c.b,backend;eta=.002,tolerance=1e-4,accelerate=true)
             end

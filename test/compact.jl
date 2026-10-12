@@ -53,6 +53,11 @@ for backend in backends
             reference=CE.sinkhorn(cost,c.a,c.b,backend;eta=eta+.1,tolerance=1e-6,accelerate=true)
             candidate=CE.compact_sinkhorn(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,block_pairs=12,max_pairs=10).plan
             @test Matrix(candidate) ≈ reference.plan atol=2e-6
+            if iteration==1
+                retried=CE.compact_solve(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,retry_after=1)
+                @test Matrix(retried.plan) ≈ reference.plan atol=2e-6
+                @test length(retried.plan.data.rho)==length(p.data.rho)+1
+            end
             if iteration==3
                 implicit=CE.compact_sinkhorn(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,cache_bytes=0,max_pairs=10).plan
                 @test Matrix(implicit) ≈ Matrix(candidate) atol=2e-6

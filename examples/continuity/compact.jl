@@ -268,6 +268,27 @@ function compact_launches(f,backend,outputs,block,commands)
     KA.synchronize(backend)
 end
 
+function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=nothing,maxiters=10000,retry_after=1000,kwargs...)
+    retry_after>0 || error("invalid retry interval")
+    first_limit=min(retry_after,maxiters)
+    try
+        return compact_sinkhorn(c,force,prior,backend;eta,proximal,initial_beta,maxiters=first_limit,kwargs...)
+    catch err
+        err isa CompactConvergenceError || rethrow()
+        println("Temperature retry country=$(c.code): $err");flush(stdout)
+    end
+    result=nothing;iterations=0
+    for factor in (16.,8.,4.,2.,1.)
+        # Scale the full effective temperature, not only its non-proximal part.
+        temperature=(eta+proximal)*factor-proximal
+        result=compact_sinkhorn(c,force,prior,backend;eta=temperature,proximal,initial_beta,maxiters,kwargs...)
+        initial_beta=result.beta;iterations+=result.iterations
+        println("Temperature factor=$factor iterations=$(result.iterations) residual=$(result.marginal_error)");flush(stdout)
+        GC.gc()
+    end
+    return merge(result,(;iterations=iterations+first_limit))
+end
+
 function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1e-4,
                           maxiters=10000,initial_beta=nothing,accelerate=true,block_pairs=1_000_000,
                           cache_bytes=512*1024^2,max_pairs=8_000_000)

@@ -43,6 +43,14 @@ first uses device reductions. A candidate close to convergence is checked in
 Float64 host blocks. Normalize its source rows exactly and check target L1 error
 and maximum relative error before accepting it.
 
+`compact_sinkhorn` performs one fixed-temperature solve. The research runner uses
+`compact_solve`: first try up to 1,000 iterations, then use temperature factors
+16, 8, 4, 2, and 1 if needed. Scale the full effective temperature `eta + lambda`;
+keep the prior plan and proximal weight fixed. Each stage checks the original
+mass tolerance. Only the last stage becomes a candidate, with the requested
+temperature. Earlier stages supply dual initial values, not extra plan history.
+A failed final solve raises an error. No dense or CPU fallback is used.
+
 Calculate target moments, transport cost, and entropy in bounded host blocks.
 Reuse moments and masses for unchanged countries. A damped mixture has linear
 moments, masses, and base cost; its entropy is calculated from the actual mixture.

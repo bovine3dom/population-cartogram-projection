@@ -171,3 +171,20 @@ get duplicate history entries because their object identities differ. Geometry
 reuse now checks exact field values after the fast identity check. A serialization
 regression test passes. The running planet process retains its earlier loaded
 code; subsequent processes will use this additional storage reduction.
+
+## 10:00 UTC: continuation for coupled solves
+
+All native planet baselines and pose checks completed. The first coupled pass
+then stopped at Canada: strong border forces required more than 10,000 fixed-
+temperature iterations. The last balanced country checkpoint is preserved.
+A direct retry of that exact Canada problem, with the full effective temperature
+scaled by 16, 8, 4, 2, and 1, converged in 1,100 total iterations. The final
+residual was 0.0000984 at the original temperature and proximal weight.
+
+Moved temperature continuation into a shared compact solve wrapper. It retries
+after 1,000 fixed-temperature iterations instead of waiting for 10,000. The
+prior plan stays fixed throughout the retry; intermediate stages do not add
+history. CPU and oneAPI tests force this path and compare its final plan with
+the dense proximal reference. All tests pass. The final objective and mass
+limits are unchanged. Archive the partial first pass and restart from the saved
+native seeds, so the published study still has ten complete passes.
