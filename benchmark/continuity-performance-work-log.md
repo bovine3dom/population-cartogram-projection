@@ -75,3 +75,14 @@ check proposed rotations against the native objective and limits. Dense mode
 remains available as a reference. The complete small planet workflow passes in
 both modes, including mass checks, city labels, and atomic H3-MON publication.
 No real planet result has been published yet.
+
+## 07:27 UTC: bound queued command lists
+
+The uncached H3-6 retry passed the two smaller countries, then remained in a
+Level Zero command submission while resident memory grew past 6 GB. A Julia
+SIGUSR1 profile showed the command-list submission and reclaim path. The kernel
+journal showed no new reset. Stopped this diagnostic run after about 12 minutes.
+Added a synchronization after at most eight launches and at the end of each
+reduction. This also keeps temporary offset buffers alive until their kernels
+finish. CPU and oneAPI compact tests still pass. A new large-case test is needed;
+the stopped run is not evidence of convergence or a completed timing.

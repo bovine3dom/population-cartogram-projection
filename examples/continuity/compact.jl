@@ -239,6 +239,14 @@ end
     out[i,j+offset]=pair_cost(cost,i,j+offset)
 end
 
+function compact_launches(f,backend,outputs,block)
+    for (launch,offset) in enumerate(0:block:outputs-1)
+        f(offset,min(block,outputs-offset))
+        launch%8==0 && KA.synchronize(backend)
+    end
+    KA.synchronize(backend)
+end
+
 function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1e-4,
                           maxiters=10000,initial_beta=nothing,accelerate=true,block_pairs=1_000_000,
                           cache_bytes=512*1024^2,max_pairs=8_000_000)
@@ -260,8 +268,8 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
     minimum_kernel! = compact_minimum!(backend,32)
     function minimum!(out,cost,n,rows)
         block=max(1,div(budget,n))
-        for offset in 0:block:length(out)-1
-            minimum_kernel!(out,cost,n,offset,rows;ndrange=32min(block,length(out)-offset))
+        compact_launches(backend,length(out),block) do offset,count
+            minimum_kernel!(out,cost,n,offset,rows;ndrange=32count)
         end
     end
     minimum!(row_device,device,length(c.b),Val(true))
@@ -275,8 +283,8 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
         cached=KA.allocate(backend,Float32,(length(c.a),length(c.b)))
         block=max(1,div(budget,length(c.a)))
         materialize! = compact_materialize!(backend,(32,8))
-        for offset in 0:block:length(c.b)-1
-            materialize!(cached,device,offset;ndrange=(length(c.a),min(block,length(c.b)-offset)))
+        compact_launches(backend,length(c.b),block) do offset,count
+            materialize!(cached,device,offset;ndrange=(length(c.a),count))
         end
         cached
     else
@@ -291,8 +299,8 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
     reduction_budget=cost_device isa AbstractMatrix ? max_pairs : budget
     function update!(out,dual,mass,n,rows)
         block=max(1,div(reduction_budget,n))
-        for offset in 0:block:length(out)-1
-            update_kernel!(out,cost_device,dual,mass,Float32(eta),n,offset,rows;ndrange=32min(block,length(out)-offset))
+        compact_launches(backend,length(out),block) do offset,count
+            update_kernel!(out,cost_device,dual,mass,Float32(eta),n,offset,rows;ndrange=32count)
         end
     end
     function residual!()
@@ -328,6 +336,9 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
                 end
             end
             previous=Float64.(host_beta);previous.-=mean(previous)
+        end
+        if iteration%1000==0
+            println("Compact inner iteration=$iteration scaled_device_residual=$error history=$(length(host.compact_prior.rho))");flush(stdout)
         end
         if error<=1.2
             a=Float64.(PCP._copy_to_host!(backend,zeros(Float32,length(c.a)),alpha)).+row_offset
