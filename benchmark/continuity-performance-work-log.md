@@ -202,3 +202,14 @@ Added collection before a temperature retry, so the failed solve's device
 cache can be released before the next stage allocates its cache. Successful
 retry stages already collect their completed resources. The planet fit remains
 on its previously loaded code and is still in its first pass.
+
+## 10:24 UTC: acceleration checks
+
+Tested larger Anderson coefficient limits (20, 200, and 2,000) on the exact
+Canada problem that had stopped the fit. Also tested damped Anderson proposals.
+None improved the residual after 1,000 fixed-temperature iterations. Keep the
+existing acceleration rule and the temperature retry; do not add these options.
+The test scripts remain with the local diagnostic outputs, not in the solver.
+The planet process was paused for these isolated tests from 10:18:48–10:20:30
+and 10:22:07–10:23:45 UTC, then resumed. Include these pauses when interpreting
+its total wall time.
