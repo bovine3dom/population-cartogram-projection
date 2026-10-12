@@ -123,3 +123,26 @@ from the dense result by 1.17 metres. The test uses three African countries at
 H3-6, factor 2, with eta 0.002. It is not a tuned H3-6 planet quality test.
 The full planet input is now prepared in a separate compact output directory.
 Production datasets and the stopped dense study remain unchanged.
+
+## 09:00 UTC: uncached solve and host work
+
+The uncached H3-6 test completed one pass in 724 seconds. It passed the mass
+checks, and the kernel journal shows no new GPU reset. The cached path is faster;
+the uncached path is a bounded-memory fallback, not a speed improvement. Research
+CPU and oneAPI tests, the small planet publication test, and core tests pass.
+
+A host-only profile found dynamic dispatch through the compact statistics field.
+Gave this field a concrete optional named-tuple type. Existing saved plans still
+load. Also replaced temporary column copies with views in border, fold, and
+metric calculations. No objective formula changed. On the saved Africa case,
+100 warm repetitions gave these mean times:
+
+| Operation | Before | Typed statistics and views |
+| --- | ---: | ---: |
+| Border penalty and force | 78.2 ms | 1.73 ms |
+| Fold penalty and force | 21.3 ms | 1.03 ms |
+| Metrics | 3.82 ms | 1.79 ms |
+
+Border calculation allocations fell from 16.2 MB to 1.05 MB per call. These are
+host-operation measurements, not full-solver speedups. Compact and research
+CPU/oneAPI tests pass after the changes, including finite-difference gradients.

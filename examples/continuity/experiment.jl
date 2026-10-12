@@ -376,7 +376,7 @@ function penalty_gradient(countries, plans, edges; scale_km=300.0,
     tau2 = (scale_km / 6371)^2
     form in (:mean,:distribution) && internal_form in (:mean,:distribution) || error("unknown continuity penalty")
     penalty = 0.0
-    for ((k, j, l, t), weight) in zip(edges, weights)
+    @views for ((k, j, l, t), weight) in zip(edges, weights)
         d = q[k][:, j] - q[l][:, t]
         displacement = !isnothing(reference) && k==l
         displacement && (d -= reference[k][:,j] - reference[l][:,t])
@@ -420,14 +420,15 @@ function fold_penalty_gradient(countries,plans,triangles;area_scale=2500.0,area_
     penalty=0.0
     coefficient=6371^2/(2area_scale*max(length(triangles),1))
     width=2smoothing_area/6371^2
-    for (k,a,b,d) in triangles
+    @views for (k,a,b,d) in triangles
         qa,qb,qd=q[k][:,a],q[k][:,b],q[k][:,d]
-        area=dot(qa,cross(qb,qd)) - 2area_tolerance/6371^2
+        normal=cross(qb,qd)
+        area=dot(qa,normal) - 2area_tolerance/6371^2
         area<=0 && continue
         smooth=width>0 && area<width
         penalty+=coefficient*(smooth ? area^2/(2width) : area-width/2)
         slope=coefficient*(smooth ? area/width : 1.)
-        g[k][:,a].+=slope.*cross(qb,qd)
+        g[k][:,a].+=slope.*normal
         g[k][:,b].+=slope.*cross(qd,qa)
         g[k][:,d].+=slope.*cross(qa,qb)
     end
@@ -457,7 +458,7 @@ end
 function metrics(countries, plans, edges)
     q = [means(c, p) for (c, p) in zip(countries, plans)]
     unit = [v ./ sqrt.(sum(abs2, v; dims=1)) for v in q]
-    distances = [6371acos(clamp(dot(unit[k][:,j], unit[l][:,t]), -1, 1)) for (k,j,l,t) in edges]
+    distances = @views [6371acos(clamp(dot(unit[k][:,j], unit[l][:,t]), -1, 1)) for (k,j,l,t) in edges]
     interior = [d for (d,e) in zip(distances, edges) if e[1] == e[3]]
     seam = [d for (d,e) in zip(distances, edges) if e[1] != e[3]]
     spread = vcat([6371sqrt.(max.(0.0, 1 .- vec(sum(abs2,v; dims=1)))) for v in q]...)
@@ -471,7 +472,7 @@ function metrics(countries, plans, edges)
     local_indices = [i for (i,(k,j,l,t)) in enumerate(edges)
                      if k==l && ((k,j) in border_targets || (l,t) in border_targets)]
     local_internal = distances[local_indices]
-    rms = [6371sqrt(max(0.0,2-2dot(q[k][:,j],q[l][:,t]))) for (k,j,l,t) in edges]
+    rms = @views [6371sqrt(max(0.0,2-2dot(q[k][:,j],q[l][:,t]))) for (k,j,l,t) in edges]
     cross_rms = [d for (d,e) in zip(rms,edges) if e[1]!=e[3]]
     local_rms = rms[local_indices]
     return (; local_p50=percentile(local_internal,.5),local_p90=percentile(local_internal,.9),

@@ -5,10 +5,12 @@ end
 Base.size(c::GeometryCost)=(length(c.problem.source_x_hi),length(c.problem.target_x_hi))
 Base.getindex(c::GeometryCost,i::Int,j::Int)=Float64(PCP._cost(c.problem,i,j))
 
+const CompactStats=NamedTuple{(:source,:target,:moment,:base,:entropy),
+    Tuple{Vector{Float64},Vector{Float64},Matrix{Float64},Float64,Float64}}
 mutable struct CompactPlan{D} <: AbstractMatrix{Float64}
     data::D
     problems::Vector{PCP.MatrixFreeProblem}
-    stats::Any
+    stats::Union{Nothing,CompactStats}
 end
 Base.size(p::CompactPlan)=(size(p.data.u,1),size(p.data.v,1))
 Base.getindex(p::CompactPlan,i::Int,j::Int)=exp(logentry(p.data,i,j))
