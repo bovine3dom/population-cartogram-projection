@@ -392,7 +392,7 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
         if iteration%1000==0
             println("Compact inner iteration=$iteration scaled_device_residual=$error history=$(length(host.compact_prior.rho))");flush(stdout)
         end
-        if error<=1.2 && (error<.9checked_error || iteration-last_check>=500 || iteration==maxiters)
+        if error<=(cache_bytes>0 ? 10 : 1.2) && (error<.9checked_error || iteration-last_check>=500 || iteration==maxiters)
             last_check=iteration;checked_error=error
             a=Float64.(PCP._copy_to_host!(backend,zeros(Float32,length(c.a)),alpha)).+row_offset
             b=Float64.(host_beta).+offset
@@ -410,7 +410,7 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
                 sparse_budget=min(cache_bytes-(dense ? dense_bytes : 0),dense_bytes)
                 options=(;tolerance,block_pairs,max_pairs,commands,work=refinements)
                 refined=compact_sparse_polish(plan,c,backend;budget=sparse_budget,maxiters=10000,options...)
-                used_dense=isnothing(refined) && dense
+                used_dense=isnothing(refined) && dense && error<=1.2
                 if used_dense
                     GC.gc() # Release any sparse workspace before the dense fallback.
                     refined=compact_polish(plan,c,backend,cost_device;maxiters=limit,options...)

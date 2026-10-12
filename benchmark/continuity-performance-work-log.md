@@ -369,3 +369,37 @@ The planet was paused from 16:00:26–16:01:55 and 16:02:14–16:03:48 UTC for
 these tests, then resumed. Logs are `test-sparse-limit.log` and
 `test-sparse-limit-linear.log`. Its loaded code still has the shorter sparse
 limit. Apply the change only after another verified checkpoint.
+
+## 18:10 UTC: refine earlier, but keep the original acceptance tests
+
+Tested earlier sparse refinement on China's second-pass hot stage. A candidate
+at scaled device residual 121.75 failed primal scaling: some Float32 scale
+values became zero at about 900 iterations. Smaller cutoffs did not fix it.
+A diagnostic log-domain sparse kernel avoided this arithmetic failure, but
+the full-plan mass check failed. The next support set was unavailable within
+the tested limits. None of those changes were added to the solver.
+
+A separate diagnostic pooled source rows at H3-3 to get a coarse dual estimate.
+It reduced the native residual after 1,000 iterations to 7.66, compared with
+121.75 without that estimate. The coarse solve and 1,000 native iterations did
+not complete a valid native solve. This is not a measured full-solver speedup,
+and no coarse warm-start feature was added.
+
+The resulting saved near-converged candidate did pass sparse refinement:
+3,980 primal iterations, 120 cold seconds including construction and checks,
+target L1 error 0.0000278. Its starting target L1 error was 0.000272. Permit
+sparse refinement earlier, at device L1 residual up to ten times the tolerance
+and maximum relative error up to 1%. Dense refinement still uses the old
+near-convergence limit. Every accepted plan must pass the original full-plan
+Float64 limits; the new entry threshold does not relax them.
+
+All 55 compact checks pass on both CPU and oneAPI with the revised entry limit.
+The tests above paused the planet at these UTC intervals:
+17:10:20–17:18:35, 17:19:52–17:23:25, 17:25:15–17:25:36,
+17:25:51–17:28:56, 17:29:52–17:30:32, 17:33:35–17:43:38,
+17:44:39–17:51:01, 17:53:43–18:02:42, and 18:04:35–18:08:08.
+The first log-kernel test had a script scope error; the rerun reached the
+full-plan check. The first coarse test hit its ten-minute limit. Its saved
+coarse dual was then checked in a separate bounded native test. All logs and
+invalid diagnostic candidates remain under `output/continuity-performance`.
+They are not exportable cartogram results.
