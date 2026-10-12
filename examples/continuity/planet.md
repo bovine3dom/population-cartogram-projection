@@ -91,6 +91,10 @@ angle at H3-5 against the native-resolution objective and distortion limits.
 A rejected angle leaves the native baseline in place. Thus there is at most one
 additional pose solve per country at the native resolution, not seven.
 The final fit and both exports still use the original H3-5 sources and factor 1.
+If a baseline or pose solve reaches its iteration limit, compact mode retries
+with decreasing temperatures. All stages use the same mass tolerance. The final
+stage returns to eta 0.002. The log records each retry. A failed retry still
+stops the job; it does not permit publication of an unbalanced plan.
 
 Compact checkpoints are small enough to save after each country update.
 `fit-config.csv` records the mode and pose resolution. A restart with different

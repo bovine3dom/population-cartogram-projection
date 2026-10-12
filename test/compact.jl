@@ -24,6 +24,7 @@ for backend in backends
         @test_throws ErrorException CE.compact_sinkhorn(c,force,nothing,backend;eta=0.)
         @test_throws ErrorException CE.compact_sinkhorn(c,force,nothing,backend;proximal=.1)
         @test_throws ErrorException CE.compact_sinkhorn(c,zeros(3,1),nothing,backend)
+        @test_throws CE.CompactConvergenceError CE.compact_sinkhorn(c,force,nothing,backend;maxiters=1)
         dense=CE.sinkhorn(Matrix(c.cost),c.a,c.b,backend;eta,tolerance=1e-6,accelerate=true)
         result=CE.compact_sinkhorn(c,force,nothing,backend;eta,tolerance=1e-6,block_pairs=12,max_pairs=10)
         p=result.plan

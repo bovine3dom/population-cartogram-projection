@@ -34,9 +34,8 @@ but repeats cost evaluation and is slower. It is not the preferred mode when
 the active cost fits the cache budget.
 
 Independent checks recompute compact masses and moments from bounded blocks.
-Source and target checks pass. Against the earlier compact run, the maximum
-final target-centre difference from dense was 355 metres; plan L1 differences
-were below 0.00037 per country. Thus the numerical results are close, not
+Source and target checks pass. The maximum final target-centre difference from
+dense was 355 metres; plan L1 differences were below 0.00037 per country. Thus the numerical results are close, not
 identical. Fold and border defects remain. Lower runtime does not establish
 better map quality.
 

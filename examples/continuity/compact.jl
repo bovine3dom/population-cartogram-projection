@@ -1,4 +1,9 @@
 # Included inside ContinuityExperiment. All persistent storage is O((n+m)*depth).
+struct CompactConvergenceError <: Exception
+    residual::Float64
+end
+Base.showerror(io::IO,e::CompactConvergenceError)=print(io,"compact Sinkhorn did not converge; scaled GPU residual=",e.residual)
+
 struct GeometryCost <: AbstractMatrix{Float64}
     problem::PCP.MatrixFreeProblem
 end
@@ -368,5 +373,5 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
             end
         end
     end
-    Base.error("compact Sinkhorn did not converge; scaled GPU residual=$error")
+    throw(CompactConvergenceError(error))
 end
