@@ -235,3 +235,13 @@ including compilation. Compact CPU and oneAPI tests pass, including refinement,
 parent-plan immutability, and bounded uploads. Full regression tests are next.
 Uncached solves still use the implicit log-domain path; they do not allocate a
 primal matrix outside the requested cache budget.
+
+## 11:17 UTC: regression checks and restart
+
+Core tests, research CPU/oneAPI tests, compact tests, and the small planet
+publication workflow pass. Compact tests include partial column uploads and
+partial primal kernel launches. There are 40 compact checks on each backend.
+Archived the stopped fit and restarted from the same saved native pose seeds.
+This discards the partial pass rather than counting it as a complete pass or
+changing the initial solution. The fit again requests ten complete passes.
+The archived checkpoints and diagnostic logs remain available.
