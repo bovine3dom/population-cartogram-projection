@@ -65,6 +65,8 @@ First try sparse primal scaling on the device. Build row and column lists from
 accurate weights in bounded Float64 host blocks. Limit their combined storage
 to the unused cost-cache budget and the size of one dense Float32 matrix.
 Skip sparse refinement if the lists do not fit or leave an empty row or column.
+Allow up to 10,000 sparse scaling iterations before the dense fallback. Sparse
+iterations are much cheaper; a short limit can discard useful progress.
 A zero cache budget disables both sparse and dense refinement.
 
 The cutoff bounds the omitted mass before scaling. It does not certify the

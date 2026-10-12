@@ -350,3 +350,22 @@ prefixes, require a complete final pass, and run the normal publication checks.
 The runner has a fixed deadline of 04:53 UTC, before the 05:51 UTC end of the
 exclusive-use window. Publication remains conditional on successful checks.
 No H3-MON server has been started.
+
+## 16:05 UTC: avoid an early sparse-to-dense fallback
+
+The second US update passed, but its reported final-stage refinement work
+included 14,960 iterations across repeated attempts. The sparse path had the
+same 1,000-iteration limit as the much slower dense path. This can discard useful
+progress and then repeat the same scaling with a dense matrix.
+
+Tested a saved US plan with a smooth linear perturbation to its target dual.
+Its initial target L1 error is 0.0789. Sparse refinement fails at 1,000
+iterations, but passes at 4,500 in 18.3 warm seconds with the original tolerance.
+Allow up to 10,000 sparse iterations before falling back to dense refinement.
+Dense limits, cache limits, and the final full-plan checks are unchanged.
+A separate high-frequency perturbation still finishes at 1,000 iterations.
+
+The planet was paused from 16:00:26–16:01:55 and 16:02:14–16:03:48 UTC for
+these tests, then resumed. Logs are `test-sparse-limit.log` and
+`test-sparse-limit-linear.log`. Its loaded code still has the shorter sparse
+limit. Apply the change only after another verified checkpoint.

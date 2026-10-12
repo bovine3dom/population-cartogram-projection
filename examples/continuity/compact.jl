@@ -408,12 +408,12 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
                 dense=cost_device isa AbstractMatrix
                 dense_bytes=sizeof(Float32)*length(c.a)*length(c.b)
                 sparse_budget=min(cache_bytes-(dense ? dense_bytes : 0),dense_bytes)
-                options=(;tolerance,maxiters=limit,block_pairs,max_pairs,commands,work=refinements)
-                refined=compact_sparse_polish(plan,c,backend;budget=sparse_budget,options...)
+                options=(;tolerance,block_pairs,max_pairs,commands,work=refinements)
+                refined=compact_sparse_polish(plan,c,backend;budget=sparse_budget,maxiters=10000,options...)
                 used_dense=isnothing(refined) && dense
                 if used_dense
                     GC.gc() # Release any sparse workspace before the dense fallback.
-                    refined=compact_polish(plan,c,backend,cost_device;options...)
+                    refined=compact_polish(plan,c,backend,cost_device;maxiters=limit,options...)
                 end
                 if !isnothing(refined)
                     return (;plan=refined.plan,beta=b.+eta.*refined.log_beta_correction,iterations=iteration,
