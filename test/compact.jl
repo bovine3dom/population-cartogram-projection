@@ -32,7 +32,8 @@ for backend in backends
         @test Matrix(p) ≈ dense.plan atol=2e-6
         @test vec(sum(Matrix(p);dims=2)) ≈ c.a atol=1e-12
         @test vec(sum(p;dims=1)) ≈ c.b atol=1e-5
-        @test CE.means(c,p) ≈ CE.means(c,Matrix(p)) atol=1e-12
+        @test (@inferred CE.means(c,p)) ≈ CE.means(c,Matrix(p)) atol=1e-12
+        @test (@inferred CE.transport_score(c,p,eta,nothing)) ≈ CE.transport_score(c,Matrix(p),eta,nothing) atol=1e-12
         @test p.stats.base ≈ CE.dot(c.cost,Matrix(p)) atol=1e-12
         @test p.stats.entropy ≈ sum(x->x>0 ? x*(log(x)-1) : 0.,Matrix(p)) atol=1e-12
         posed=merge(c,(;problem=CE.pose_problem(c,90)))
