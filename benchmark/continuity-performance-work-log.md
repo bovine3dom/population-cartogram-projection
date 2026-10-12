@@ -108,3 +108,18 @@ completed compact solves. Host log and weight buffers now remain in use across
 blocks instead of being allocated for each block. CPU and oneAPI compact tests
 pass. A new large-case measurement is running to check actual peak memory. No
 memory improvement is claimed from plan storage alone. No SDK files were changed.
+
+## 08:29 UTC: lower measured memory
+
+The revised cached test completed three passes and a warm repeat. Peak process
+resident memory fell to 2.29 GiB, versus 8.00 GiB for the dense reference and
+32.04 GiB for the earlier compact run. Warm fit time was 346 seconds, versus
+475 seconds dense: 27% less time. Cold fit time was 436 seconds. Warm Julia
+allocations fell from 108.6 GB dense to 1.44 GB compact. These allocation totals
+are cumulative, not peak memory. Process RSS does not measure all GPU residency.
+
+The result retains 7.54 MB of compact plans. Final cross-border RMS differs
+from the dense result by 1.17 metres. The test uses three African countries at
+H3-6, factor 2, with eta 0.002. It is not a tuned H3-6 planet quality test.
+The full planet input is now prepared in a separate compact output directory.
+Production datasets and the stopped dense study remain unchanged.
