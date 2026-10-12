@@ -14,7 +14,7 @@ compact=mode=="compact"
 backend=oneAPI.oneAPIBackend()
 write(joinpath(out,"provenance.txt"),"$(now(UTC)) UTC\n"*read(`git rev-parse HEAD`,String))
 mkpath(joinpath(out,"code"))
-for file in ("benchmark_compact.jl","experiment.jl","compact.jl","../common.jl","../../src/spatial.jl")
+for file in ("benchmark_compact.jl","experiment.jl","compact.jl","primal.jl","../common.jl","../../src/spatial.jl")
     path=joinpath(@__DIR__,file)
     cp(path,joinpath(out,"code",basename(file)))
 end

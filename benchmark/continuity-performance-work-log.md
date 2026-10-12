@@ -281,3 +281,27 @@ result. All 44 compact checks pass on CPU and oneAPI. The planet was paused for
 these tests from 12:55:26–12:58:48 UTC, then resumed. Its loaded code and original
 ten-pass plan are unchanged. China is still in its first temperature retry;
 resident memory remains about 2.5 GiB.
+
+## 14:10 UTC: sparse GPU marginal refinement
+
+The saved US candidate needs only 522,072 retained pairs out of 71,174,732.
+Added bounded row and column lists for primal refinement on KernelAbstractions.
+Their combined device storage is 8.49 MB, versus 284.7 MB for dense weights.
+The lists use only the unused cache budget and must be smaller than a dense
+matrix. The cutoff applies only to temporary weights. Corrected duals still
+define the full implicit plan, which must pass the original Float64 checks.
+Failure uses the existing dense refinement or returns to log-domain updates.
+
+A paired oneAPI test takes 67.9 seconds for warm dense refinement and 14.9
+seconds for sparse construction, upload, and refinement. Both need 1,000
+iterations, with target L1 error 0.0000797. Source relative error is below
+0.000000000000003. Target mean-coordinate differences are below 0.000000011.
+These timings measure refinement only, not the full solve.
+
+All 51 compact checks pass on CPU and oneAPI, including sparse refinement,
+budget refusal, bounded kernels, and unchanged parent plans. The first CPU
+test caught a shared closure-variable name; this was corrected before GPU use.
+The planet was paused from 13:58:43–14:00:13 and 14:00:57–14:08:18 UTC for
+these tests, then resumed. Its running code does not yet use sparse refinement.
+Logs are in `output/continuity-performance/benchmark-sparse-primal-paired.log`
+and `test-compact-sparse-gpu.log`.

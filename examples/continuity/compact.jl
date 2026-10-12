@@ -272,54 +272,7 @@ function compact_launches(f,backend,outputs,block,commands)
     KA.synchronize(backend)
 end
 
-# Reuse the cost cache for accurate primal weights; never form a dense host plan.
-function compact_polish(p,c,backend,kernel::AbstractMatrix{Float32}; tolerance=1e-4,maxiters=1000,
-                        block_pairs=1_000_000,max_pairs=8_000_000,commands=Ref(0))
-    tolerance>0 && maxiters>0 && block_pairs>0 && max_pairs>0 || error("invalid refinement limits")
-    last(p.data.keep)==-Inf && last(p.data.take)==0 || error("refine an unmixed candidate")
-    size(kernel)==size(p) || error("wrong refinement cache shape")
-    n,m=size(p);block=min(m,max(1,div(block_pairs,n)))
-    logs=Matrix{Float64}(undef,n,block);weights=Matrix{Float32}(undef,n,block)
-    for firstcol in 1:block:m
-        cols=firstcol:min(m,firstcol+block-1)
-        logblock!(view(logs,:,1:length(cols)),p,1:n,cols)
-        view(weights,:,1:length(cols)).=exp.(view(logs,:,1:length(cols)))
-        copyto!(kernel,n*(firstcol-1)+1,weights,1,n*length(cols))
-        KA.synchronize(backend) # The next block reuses the host upload buffer.
-    end
-    da=PCP._copy_to_backend(backend,Float32.(c.a));db=PCP._copy_to_backend(backend,Float32.(c.b))
-    u=PCP._copy_to_backend(backend,ones(Float32,n));v=PCP._copy_to_backend(backend,ones(Float32,m))
-    probe=KA.zeros(backend,Float32,m)
-    host_v=zeros(Float32,m);host_probe=similar(host_v)
-    reduce! = scale_reduce!(backend,32)
-    function update!(out,scale,mass,count,rows)
-        compact_launches(backend,length(out),max(1,div(max_pairs,count)),commands) do offset,outputs
-            reduce!(out,kernel,scale,mass,count,offset,rows;ndrange=32outputs)
-        end
-    end
-    for iteration in 1:maxiters
-        update!(u,v,da,m,Val(true));update!(v,u,db,n,Val(false))
-        iteration%20==0 || continue
-        update!(u,v,da,m,Val(true));update!(probe,u,db,n,Val(false))
-        PCP._copy_to_host!(backend,host_v,v);PCP._copy_to_host!(backend,host_probe,probe)
-        all(x->isfinite(x)&&x>0,host_v) && all(x->isfinite(x)&&x>0,host_probe) || return nothing
-        ratios=Float64.(host_v)./host_probe
-        sum(c.b.*abs.(ratios.-1))<=.8tolerance && maximum(abs.(ratios.-1))<=.0008 || continue
-        host_u=PCP._copy_to_host!(backend,zeros(Float32,n),u)
-        all(x->isfinite(x)&&x>0,host_u) || return nothing
-        correction=log.(Float64.(host_v))
-        data=merge(p.data,(;u=copy(p.data.u),v=copy(p.data.v)))
-        data.u[:,end].+=log.(Float64.(host_u));data.v[:,end].+=correction
-        candidate=CompactPlan(data,p.problems,nothing)
-        compact_stats!(candidate,c;normalize=true,block_pairs)
-        error=sum(abs.(candidate.stats.target.-c.b))
-        relative=maximum(abs.(candidate.stats.target./c.b.-1))
-        if error<=tolerance && relative<=.001
-            return (;plan=candidate,log_beta_correction=correction,marginal_error=error,iterations=iteration)
-        end
-    end
-    return nothing
-end
+include("primal.jl")
 
 function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=nothing,maxiters=10000,retry_after=1000,kwargs...)
     retry_after>0 || error("invalid retry interval")
@@ -412,7 +365,7 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
     outputs=Vector{Float64}[];residuals=Vector{Float64}[]
     previous=isnothing(initial_beta) ? zeros(length(c.b)) : Float64.(initial_beta.-offset)
     previous.-=mean(previous)
-    error=Inf;last_polish=0;refinements=0
+    error=Inf;last_polish=0;refinements=Ref(0)
     for iteration in 1:maxiters
         update!(alpha,beta,da,length(c.b),Val(true))
         update!(beta,alpha,db,length(c.a),Val(false))
@@ -447,18 +400,26 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
             actual=sum(abs.(plan.stats.target.-c.b))
             relative=maximum(abs.(plan.stats.target./c.b.-1))
             if actual<=tolerance && relative<=.001
-                return (;plan,beta=b,iterations=iteration,refinement_iterations=refinements,marginal_error=actual)
+                return (;plan,beta=b,iterations=iteration,refinement_iterations=refinements[],marginal_error=actual)
             end
-            if cost_device isa AbstractMatrix && (iteration-last_polish>=500 || iteration==maxiters)
+            if cache_bytes>0 && (iteration-last_polish>=500 || iteration==maxiters)
                 last_polish=iteration
                 limit=iteration==maxiters ? 10000 : 1000
-                refined=compact_polish(plan,c,backend,cost_device;tolerance,maxiters=limit,block_pairs,max_pairs,commands)
+                dense=cost_device isa AbstractMatrix
+                dense_bytes=sizeof(Float32)*length(c.a)*length(c.b)
+                sparse_budget=min(cache_bytes-(dense ? dense_bytes : 0),dense_bytes)
+                options=(;tolerance,maxiters=limit,block_pairs,max_pairs,commands,work=refinements)
+                refined=compact_sparse_polish(plan,c,backend;budget=sparse_budget,options...)
+                used_dense=isnothing(refined) && dense
+                if used_dense
+                    GC.gc() # Release any sparse workspace before the dense fallback.
+                    refined=compact_polish(plan,c,backend,cost_device;options...)
+                end
                 if !isnothing(refined)
                     return (;plan=refined.plan,beta=b.+eta.*refined.log_beta_correction,iterations=iteration,
-                        refinement_iterations=refinements+refined.iterations,marginal_error=refined.marginal_error)
+                        refinement_iterations=refinements[],marginal_error=refined.marginal_error)
                 end
-                refinements+=limit
-                materialize_cost!(cost_device)
+                used_dense && materialize_cost!(cost_device)
             end
         end
     end

@@ -51,14 +51,31 @@ better map quality.
 - Use typed statistics and column views for border and fold calculations.
 - Retry difficult solves with decreasing temperatures. Keep the original final
   temperature, proximal term, and mass limits.
-- Reuse the device cost cache for primal marginal refinement when Float32
-  rounding prevents the reconstructed plan from passing its mass check.
+- Use bounded sparse primal refinement when Float32 rounding prevents the
+  reconstructed plan from passing its mass check. Check the full implicit plan.
+  Fall back to refinement in the existing dense device cache when needed.
 - Select planet poses at H3-4, then check each proposed angle at native H3-5.
   This reduces pose-search work, but can change the selected initial solution.
 
 The host-only border-force calculation fell from 78.2 ms to 1.73 ms per call
 on the saved Africa case. This is not a full-solver speedup estimate. It was
 measured after the table above. The final planet fit uses the host changes.
+
+## Sparse marginal refinement
+
+A saved US H3-5 candidate has 71,174,732 source–target pairs. Both refinement
+modes need 1,000 primal iterations and pass the full Float64 mass checks.
+On a warm run, dense refinement takes 67.9 seconds. Sparse construction, upload,
+and refinement together take 14.9 seconds, about 4.6 times faster. Sparse weights
+and indices use 8.49 MB for 522,072 retained pairs, versus 284.7 MB for dense
+weights. Target L1 error is 0.0000797 in both modes. Maximum relative source
+error is below 0.000000000000003.
+
+This is a refinement-stage comparison, not a full fit timing. It excludes an
+existing cost cache, which remains allocated during sparse refinement. The
+combined sparse and cost-cache storage must fit the configured cache budget.
+The result comes from `benchmark-sparse-primal-paired.log` in
+`output/continuity-performance`. The regional table above predates this change.
 
 ## Reproduce
 
@@ -94,10 +111,11 @@ history makes implicit evaluation more expensive as accepted updates accumulate.
 The cache budget is not a total process-memory limit. No measured whole-planet
 H3-6 runtime is available yet; do not extrapolate it from plan size alone.
 
-A possible next step is an adaptive sparse inner kernel. Use candidate pairs for
-iterations, then check the full implicit plan in bounded blocks. Expand the
-candidate set when the full check fails. This could reduce repeated pair work,
-but it is not implemented or benchmarked here. Do not use geometric distance
+Sparse primal refinement is implemented. The main log-domain iterations still
+use all pairs. A possible next step is an adaptive sparse log-domain kernel.
+Use candidate pairs for iterations, then check the full implicit plan in bounded
+blocks. Expand the candidate set when the full check fails. This extension is
+not implemented or benchmarked here. Do not use geometric distance
 alone to exclude pairs: the force and proximal terms can change which pairs
 are important.
 

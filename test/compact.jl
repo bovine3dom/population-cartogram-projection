@@ -49,6 +49,15 @@ for backend in backends
         @test length(polished.plan.data.rho)==length(p.data.rho)
         @test vec(sum(Matrix(polished.plan);dims=2)) ≈ c.a atol=1e-12
         @test isnothing(CE.compact_polish(perturbed,c,backend,cache;maxiters=1))
+        @test isnothing(CE.sparse_primal_arrays(perturbed,c;budget=0))
+        sparse=CE.sparse_primal_arrays(perturbed,c;budget=10000,tolerance=1e-6,block_pairs=16)
+        @test sparse.bytes<=10000
+        @test length(sparse.rows.values)==length(sparse.columns.values)
+        refined=CE.compact_sparse_polish(perturbed,c,backend;budget=10000,tolerance=1e-6,max_pairs=16,block_pairs=16)
+        @test !isnothing(refined)
+        @test Matrix(refined.plan) ≈ Matrix(p) atol=2e-6
+        @test Matrix(perturbed)==before
+        @test vec(sum(Matrix(refined.plan);dims=2)) ≈ c.a atol=1e-12
         posed=merge(c,(;problem=CE.pose_problem(c,90)))
         pose_plan=CE.compact_sinkhorn(posed,force,nothing,backend;eta,tolerance=1e-6).plan
         pose_reference=CE.sinkhorn(CE.pose_cost(c,90),c.a,c.b,backend;eta,tolerance=1e-6).plan

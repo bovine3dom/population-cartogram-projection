@@ -58,13 +58,18 @@ moments, masses, and base cost; its entropy is calculated from the actual mixtur
 No full dense plan is needed for the continuity objective or its force gradient.
 
 Strong forces can cause a Float32 device result to fail the Float64 mass check.
-If a device cost cache exists, reuse it for marginal refinement. Calculate
-accurate weights in bounded Float64 host blocks, copy them into that same cache
-as Float32 weights, and run primal scaling on the device. The accepted plan
-keeps only corrected dual vectors. Check its masses again in Float64. If
-refinement fails, restore the cached cost before the next dual update. There
-is no second full device matrix. Uncached solves cannot use this refinement.
-Refinement blocks contain whole source columns; one column is the minimum.
+First try sparse primal scaling on the device. Build row and column lists from
+accurate weights in bounded Float64 host blocks. Limit their combined storage
+to the unused cost-cache budget and the size of one dense Float32 matrix.
+Skip sparse refinement if the lists do not fit or leave an empty row or column.
+A zero cache budget disables both sparse and dense refinement.
+
+The cutoff bounds the omitted mass before scaling. It does not certify the
+scaled result. Store only corrected dual vectors and check the full, untruncated
+plan again in Float64. If sparse refinement fails and a dense cost cache exists,
+reuse that cache for dense primal scaling. Restore its cost values if this also
+fails. No second full device matrix is needed. Dense refinement uploads whole
+source columns; one column is the minimum. The persistent plan is never pruned.
 
 Host log and weight buffers are reused across blocks. Device launches are
 synchronized in batches. Periodic garbage collection releases completed native
