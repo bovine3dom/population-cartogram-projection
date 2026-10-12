@@ -179,10 +179,14 @@ end
     weights=CE.edge_weights(edges,.25)
     unary,pair=PG.tables(countries,choices,edges,weights;strength=.3,eta=.1)
     scores=Float64[]
+    cache=Dict()
     for labels in ([a,b] for a in 1:2 for b in 1:2)
         plans=[choices[k][j] for (k,j) in enumerate(labels)]
         expected=CE.objective(countries,plans,edges,.3,.1;weights,scale_km=900.,form=:distribution,saturating=false)
         @test PG.energy(unary,pair,labels) ≈ expected
+        for _ in 1:2
+            @test CE.objective(countries,plans,edges,.3,.1;base_cache=cache,weights,scale_km=900.,form=:distribution,saturating=false) ≈ expected
+        end
         push!(scores,expected)
     end
     results=PG.search(unary,pair)
@@ -232,7 +236,7 @@ end
             rows=CE.run_case(countries,backend,path;initial_plans=baseline,borders=Set([(1,2)]),
                 eta=.05,strength=100.,scale_km=300.,border_share=.25,form=:distribution,saturating=false,
                 coordinate=true,border_factors=Dict((1,2)=>.75),proximal=.1,outer_steps=2,spread_limit=Inf,interior_limit=Inf,
-                inner_tolerance=1e-4,anneal=true,accelerate=true,export_arrow=false)
+                inner_tolerance=1e-4,anneal=true,accelerate=true,export_arrow=false,checkpoint_interval=2)
             @test Set(r.updated_country for r in rows[2:end]) == Set([1,2])
             @test all(diff(getproperty.(rows,:objective)).<=1e-10)
             @test last(rows).objective<first(rows).objective
@@ -243,6 +247,7 @@ end
             @test (only(mask.country_a),only(mask.country_b))==(1,2)
             saved=CE.saved_case(path,countries)
             @test saved.settings[:coordinate]
+            @test saved.settings[:checkpoint_interval]==2
             @test saved.border_factors[(1,2)]==.75
             rm(joinpath(path,"borders.csv"))
             @test CE.saved_case(path,countries).borders==Set([(1,2)])

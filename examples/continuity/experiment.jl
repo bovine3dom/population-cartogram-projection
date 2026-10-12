@@ -241,14 +241,13 @@ function feature_sinkhorn(c,forces,backend;kwargs...)
     return solve_cost(cost,device,Float64.(host.target_offset),c.a,c.b,backend;kwargs...)
 end
 
-function country(path, code; factor=1)
+function country(path, code; factor=1, target=load_cartogram(code; factor))
     raw = DataFrame(Arrow.Table(path))
     all(==(code), raw.country_code) || error("wrong source country")
     allunique(raw.id) || error("duplicate source ids")
     centres = H3.API.cellToLatLng.(raw.id)
     source = DataFrame(id=UInt64.(raw.id), x=[rad2deg(c.lng) for c in centres],
                        y=[rad2deg(c.lat) for c in centres], value=Float64.(raw.population))
-    target = load_cartogram(code; factor)
     PCP._validate_inputs(target, source)
     problem = PCP._prepare_problem(target, source)
     cost = Float64[PCP._cost(problem, i, j) for i in 1:nrow(source), j in 1:nrow(target)]
@@ -270,8 +269,15 @@ function pose_cost(c,angle)
 end
 
 function graph(countries; borders=Set([(276,616)]))
-    lookup = Dict((r.x, r.y) => (k, j) for (k, c) in enumerate(countries)
-                  for (j, r) in enumerate(eachrow(c.target)))
+    lookup = Dict{Tuple{Float64,Float64},Tuple{Int,Int}}()
+    mixed = Set{Tuple{Float64,Float64}}()
+    for (k,c) in enumerate(countries), (j,r) in enumerate(eachrow(c.target))
+        pos=(Float64(r.x),Float64(r.y))
+        haskey(lookup,pos) && push!(mixed,pos)
+        lookup[pos]=(k,j)
+    end
+    # A shared target has no single country owner. Leave its incident edges out.
+    foreach(pos->delete!(lookup,pos),mixed)
     edges = Tuple{Int,Int,Int,Int}[]
     for ((x, y), (k, j)) in lookup, pos in ((x+2, y), (x, y+2))
         haskey(lookup, pos) || continue
@@ -422,9 +428,19 @@ function fold_penalty_gradient(countries,plans,triangles;area_scale=2500.0,area_
     return penalty,gradient
 end
 
-function objective(countries, plans, edges, strength, eta; kwargs...)
-    base = sum(sum(c.cost .* p) + eta * sum(x -> x > 0 ? x * (log(x)-1) : 0.0, p)
-               for (c, p) in zip(countries, plans))
+# Plans are immutable within a fit. Weak references do not retain rejected plans.
+function transport_score(c,p,eta,cache)
+    key=(objectid(c.cost),eta)
+    if !isnothing(cache) && haskey(cache,key) && cache[key][1].value===p
+        return cache[key][2]
+    end
+    value=dot(c.cost,p)+eta*sum(x->x>0 ? x*(log(x)-1) : 0.,p)
+    isnothing(cache) || (cache[key]=(WeakRef(p),value))
+    return value
+end
+
+function objective(countries, plans, edges, strength, eta; base_cache=nothing,kwargs...)
+    base = sum(transport_score(c,p,eta,base_cache) for (c,p) in zip(countries,plans))
     penalty, _ = penalty_gradient(countries, plans, edges; forces_only=true,kwargs...)
     return base + strength * penalty
 end
@@ -491,7 +507,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   initial_plans=nothing, export_arrow=true, preserve_displacements=false,
                   fold_strength=0.0, fold_smoothing=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
-                  border_scale=1.0,coordinate=false,border_factors=Dict())
+                  border_scale=1.0,coordinate=false,border_factors=Dict(),checkpoint_interval=1)
+    checkpoint_interval>=1 || error("checkpoint interval must be positive")
     proximal>=0 || error("proximal weight must be nonnegative")
     all(x->isfinite(x)&&x>=0,(internal_scale,border_scale)) || error("invalid edge scale")
     all(x->isfinite(x)&&x>=0,values(border_factors)) || error("invalid border factors")
@@ -514,6 +531,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],fold_smoothing=[fold_smoothing],
         matrix_free=[matrix_free],internal_scale=[internal_scale],border_scale=[border_scale],inner_tolerance=[inner_tolerance],
         proximal=[proximal],anneal=[anneal],accelerate=[accelerate],coordinate=[coordinate],outer_steps=[outer_steps],
+        checkpoint_interval=[checkpoint_interval],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
@@ -529,7 +547,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         end
     end
     reference = preserve_displacements ? [means(c,p) for (c,p) in zip(countries,plans)] : nothing
-    score_plan(p) = objective(countries,p,edges,strength,eta; weights,scale_km,form,internal_form,saturating,reference) +
+    base_cache=Dict()
+    score_plan(p) = objective(countries,p,edges,strength,eta; base_cache,weights,scale_km,form,internal_form,saturating,reference) +
                     (fold_strength==0 ? 0.0 : fold_strength*first(fold_penalty_gradient(countries,p,faces;smoothing_area=fold_smoothing,forces_only=true)))
     baseline = metrics(countries, plans, edges)
     export_arrow && export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
@@ -553,6 +572,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         plans=copy(starting_plans)
         CSV.write(joinpath(outdir,"seed-metrics.csv"),DataFrame([(;objective=score_plan(plans),seed_metrics...)]))
     end
+    checkpoint(joinpath(outdir,"candidate.jls"),plans)
     trials = NamedTuple[]
     duals = Any[nothing for c in countries]
     groups=coordinate ? length(countries) : 1
@@ -563,14 +583,17 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         active=order[mod1(step,groups)]
         selected=coordinate ? (active:active) : eachindex(countries)
         updated_country=coordinate ? countries[first(selected)].code : 0
-        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,internal_form,saturating,reference,forces_only=matrix_free)
+        _, gradient = penalty_gradient(countries, plans, edges; weights,scale_km,form,internal_form,saturating,reference,forces_only=true)
         gradient = [strength.*g for g in gradient]
         if fold_strength>0
-            _,fg=fold_penalty_gradient(countries,plans,faces;smoothing_area=fold_smoothing,forces_only=matrix_free)
+            _,fg=fold_penalty_gradient(countries,plans,faces;smoothing_area=fold_smoothing,forces_only=true)
             gradient = [g .+ fold_strength.*f for (g,f) in zip(gradient,fg)]
         end
         solutions=map(selected) do k
             c,g=countries[k],gradient[k]
+            if !matrix_free
+                g=transpose(c.xyz)*g .- sum(means(c,plans[k]).*g;dims=1)
+            end
             matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate) :
                 sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
                          eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)
@@ -604,7 +627,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         if !accepted
             push!(rows, (; iteration, updated_country, damping=0.0, accepted=false, objective=before, metrics(countries,plans,edges)...))
         end
-        checkpoint(joinpath(outdir,"candidate.jls"),plans)
+        step%checkpoint_interval==0 && checkpoint(joinpath(outdir,"candidate.jls"),plans)
         CSV.write(joinpath(outdir,"metrics.csv"),DataFrame(rows))
         CSV.write(joinpath(outdir,"trials.csv"),DataFrame(trials))
         println("Outer $iteration: $(last(rows))")
