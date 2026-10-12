@@ -327,3 +327,26 @@ The process required SIGKILL after SIGTERM did not finish shutdown. No outputs
 were published. Verify the saved objective and metric index before continuing
 with the new code; do not repeat the expensive first pass. A final regional
 performance test will run before the continuation.
+
+## 15:20 UTC: final paired regional benchmark
+
+Repeated the three-pass H3-6, factor-2 Africa comparison at commit `f7dc433`.
+The runs used the GPU in sequence. Compact cold/warm times are 437/345 seconds;
+dense times are 562/476 seconds. Peak process memory is 2.17 GiB for compact
+and 7.79 GiB for dense. Warm cumulative Julia allocations are 0.875 GB and
+108.4 GB. Stored plans are 7.54 MB and 954 MB. The final compact result matches
+the earlier compact benchmark; this case does not need sparse refinement.
+Independent full-plan mass and moment checks pass again.
+
+The planet continuation started at 15:09 UTC in
+`output/planet-h3-5-factor1-sparse`. Before starting, the one-time script
+checked every parent update index and recomputed the checkpoint objective and
+all saved metrics. They match. It resumes at update 259 of 1,520, after country
+524 in pass 2. The original baseline and guards are unchanged. The original
+fit is copied into `parent-fit`; code, the seed hash, and the continuation
+script are saved. At completion, the script will check and combine metric
+prefixes, require a complete final pass, and run the normal publication checks.
+
+The runner has a fixed deadline of 04:53 UTC, before the 05:51 UTC end of the
+exclusive-use window. Publication remains conditional on successful checks.
+No H3-MON server has been started.

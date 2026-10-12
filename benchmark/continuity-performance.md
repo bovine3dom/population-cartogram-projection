@@ -14,14 +14,15 @@ setting, not a tuned H3-6 quality recommendation.
 
 | Measurement | Dense | Compact |
 | --- | ---: | ---: |
-| Cold fit, including compilation | 559 s | 436 s |
-| Warm fit | 475 s | 346 s |
-| Peak process resident memory | 8.00 GiB | 2.29 GiB |
+| Cold fit, including compilation | 562 s | 437 s |
+| Warm fit | 476 s | 345 s |
+| Peak process resident memory | 7.79 GiB | 2.17 GiB |
 | Stored plans | 954 MB | 7.54 MB |
-| Warm cumulative Julia allocations | 108.6 GB | 1.44 GB |
+| Warm cumulative Julia allocations | 108.4 GB | 0.875 GB |
 | Final objective | 0.2956169 | 0.2956181 |
 | Cross-border RMS | 292.7545 km | 292.7534 km |
 
+The warm compact fit is 28% faster and uses 3.6 times less peak resident memory.
 Peak process memory covers preparation, the cold fit, and the warm fit in one
 process. It does not measure all GPU memory. Cumulative allocations are not peak
 memory. These are individual runs, not confidence intervals. Input preparation
@@ -59,7 +60,7 @@ better map quality.
 
 The host-only border-force calculation fell from 78.2 ms to 1.73 ms per call
 on the saved Africa case. This is not a full-solver speedup estimate. It was
-measured after the table above. The final planet fit uses the host changes.
+measured separately. The table and final planet continuation use these changes.
 
 ## Sparse marginal refinement
 
@@ -75,7 +76,8 @@ This is a refinement-stage comparison, not a full fit timing. It excludes an
 existing cost cache, which remains allocated during sparse refinement. The
 combined sparse and cost-cache storage must fit the configured cache budget.
 The result comes from `benchmark-sparse-primal-paired.log` in
-`output/continuity-performance`. The regional table above predates this change.
+`output/continuity-performance`. The regional table uses the final code, but
+that regional case does not need sparse refinement.
 
 ## Reproduce
 
@@ -97,8 +99,8 @@ not at the same time. Set `CONTINUITY_COMPACT_CACHE_BYTES=0` for the uncached te
 Compare their `fit` directories with `examples/continuity/compare_compact.jl`.
 The benchmark saves code snapshots, settings, timings, and diagnostics.
 
-The table uses `output/continuity-performance/africa6-dense-v4` and
-`output/continuity-performance/africa6-cached-v5`. See the
+The table uses `output/continuity-performance/africa6-dense-v6` and
+`output/continuity-performance/africa6-cached-v6`, both at commit `f7dc433`. See the
 [work log](continuity-performance-work-log.md) for failed driver tests and fixes.
 See [compact plans](../examples/continuity/compact.md) for the representation and
 [planet instructions](../examples/continuity/planet.md) for publication.
