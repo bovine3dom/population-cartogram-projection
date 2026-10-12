@@ -107,6 +107,12 @@ still requires the original input metadata and verification of the complete run.
 Compact seeds retain the last pure proposal's dual vector. Use it as a warm
 start after a restart. It is not an averaged dual for the damped mixture.
 
+An explicit `initial_duals` vector can supply a better saved warm start to
+`run_case`. Supply one finite target-dual vector per country, or `nothing`
+for a cold start in that country. These vectors initialize the solver only;
+they do not replace or validate a plan. The runner saves them in
+`initial-duals.jls`. Keep their source and temperature in the study provenance.
+
 ## Tests
 
 ```sh

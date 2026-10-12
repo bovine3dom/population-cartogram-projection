@@ -403,3 +403,25 @@ full-plan check. The first coarse test hit its ten-minute limit. Its saved
 coarse dual was then checked in a separate bounded native test. All logs and
 invalid diagnostic candidates remain under `output/continuity-performance`.
 They are not exportable cartogram results.
+
+## 19:20 UTC: reuse a verified hot-stage dual
+
+The old process remained in China's second pass. At 19:10 UTC, its factor-2
+stage had reached 5,000 iterations with little residual change. Stopped it at
+19:11:38 UTC rather than continue with the old short refinement limit. The
+saved checkpoint still ends after India at update 303. Recomputed its objective
+and all metrics, checked the parent prefix, and confirmed next update 304.
+
+The earlier diagnostic produced a valid China hot-stage plan for this exact
+checkpoint. Its prior history and force match exactly. Recomputed its full
+masses: target L1 error 0.0000278 and maximum relative error 0.000792, at effective
+temperature 1.632. Use its dual only as a warm start. Do not install this
+high-temperature plan as the final country plan.
+
+Added an explicit per-country initial-dual argument to the research runner.
+It checks dimensions and finite values and saves the input vectors. This avoids
+a country-specific solver patch. All 59 compact checks pass on CPU and oneAPI,
+including a continued fit with explicit duals and invalid-input checks.
+The old process required SIGKILL after its shutdown grace period. Its files
+remain unchanged for review. A new continuation will retain both metric
+prefixes and use the tested longer, earlier sparse refinement.

@@ -525,10 +525,15 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   fold_strength=0.0, fold_smoothing=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
                   border_scale=1.0,coordinate=false,border_factors=Dict(),checkpoint_interval=1,compact=false,
-                  compact_cache_bytes=512*1024^2,start_step::Int=1)
+                  compact_cache_bytes=512*1024^2,start_step::Int=1,initial_duals=nothing)
     groups=coordinate ? length(countries) : 1
     1<=start_step<=outer_steps*groups+1 || error("invalid starting step")
     start_step>1 && isnothing(starting_plans) && error("a later starting step requires seed plans")
+    if !isnothing(initial_duals)
+        length(initial_duals)==length(countries) || error("initial dual country count differs")
+        all(isnothing(d) || (d isa AbstractVector && length(d)==length(c.b) && all(isfinite,d))
+            for (c,d) in zip(countries,initial_duals)) || error("invalid initial dual vector")
+    end
     compact && (matrix_free || anneal) && error("compact mode has its own matrix-free solver; annealing is not enabled")
     checkpoint_interval>=1 || error("checkpoint interval must be positive")
     proximal>=0 || error("proximal weight must be nonnegative")
@@ -598,7 +603,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     end
     checkpoint(joinpath(outdir,"candidate.jls"),plans)
     trials = NamedTuple[]
-    duals = Any[warm_beta(p) for p in plans]
+    duals = isnothing(initial_duals) ? Any[warm_beta(p) for p in plans] : Any[initial_duals...]
+    isnothing(initial_duals) || checkpoint(joinpath(outdir,"initial-duals.jls"),duals)
     order=sortperm(length.(getproperty.(countries,:b)))
     # A partial sweep can already contain accepted steps. Do not stop it early.
     accepted_in_sweep=mod(start_step-1,groups)!=0

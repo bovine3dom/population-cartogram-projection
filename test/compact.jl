@@ -118,12 +118,16 @@ for backend in backends
             firstpass=deserialize(joinpath(dir,"first-pass","candidate.jls"))
             partial=copy(baseline);partial[1]=firstpass[1]
             resumed=CE.run_case(countries,backend,joinpath(dir,"resumed");compact=true,initial_plans=baseline,
-                starting_plans=partial,start_step=2,kwargs...)
+                starting_plans=partial,start_step=2,initial_duals=CE.warm_beta.(partial),kwargs...)
+            @test isfile(joinpath(dir,"resumed","initial-duals.jls"))
             @test resumed[2].iteration==1 && resumed[2].updated_country==2
             resumed_plans=deserialize(joinpath(dir,"resumed","candidate.jls"))
             @test all(isapprox(Matrix(a),Matrix(b);atol=2e-5) for (a,b) in zip(resumed_plans,compact_plans))
             @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"invalid-start");start_step=0)
             @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"no-seed");start_step=2)
+            for invalid in ([],[nothing,zeros(1)],[nothing,fill(NaN,length(other.b))])
+                @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"bad-dual");initial_duals=invalid)
+            end
             path=joinpath(dir,"plan.jls")
             serialize(path,p)
             q=deserialize(path)
