@@ -54,3 +54,24 @@ online reduction and two-sided cost offsets. Its files end in `mali-compact-v1`.
 One earlier compact attempt was stopped by a command timeout before any baseline
 completed; it is not a benchmark result. The newer process-measurement wrapper
 uses a fresh parent process for each peak-RSS measurement.
+
+## 07:00 UTC: bounded device work and coarse poses
+
+The H3-6/factor-2 dense Africa test completed one pass in 236 seconds, including
+compilation. Its plans occupy 954 MB. The corresponding implicit test completed
+two country updates, then the Intel driver reset during the DRC reduction.
+The kernel journal records a fence expiration and GPU preemption timeout. This
+is a failed run, not a completed performance result.
+
+Added bounded output ranges to minimum, materialization, and Sinkhorn kernels.
+The implicit pair budget decreases with history depth. Added a bounded cache for
+the active country's device cost, with a 512 MiB default. Larger costs remain
+implicit. Tests force very small launch ranges and compare cached and uncached
+CPU and oneAPI solves, including rotated initial plans. They pass after fixing
+index-variable lifetime across KernelAbstractions CPU barriers.
+
+Added coarse H3-4 pose selection for the compact planet path. Native H3-5 solves
+check proposed rotations against the native objective and limits. Dense mode
+remains available as a reference. The complete small planet workflow passes in
+both modes, including mass checks, city labels, and atomic H3-MON publication.
+No real planet result has been published yet.

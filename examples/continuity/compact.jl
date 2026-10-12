@@ -168,9 +168,10 @@ compact_device(backend,x)=x
     return (value-c.offset[1][i])-c.offset[2][j]
 end
 
-@kernel function compact_minimum!(out,cost,n,::Val{ROWS}) where ROWS
+@kernel function compact_minimum!(out,cost,n,output_offset,::Val{ROWS}) where ROWS
     lane=@index(Local,Linear)
-    j=@index(Group,Linear)
+    group=@index(Group,Linear)
+    j=output_offset+group
     minima=@localmem Float32 (32,)
     value=Inf32
     for i in lane:32:n
@@ -184,15 +185,17 @@ end
         end
         @synchronize
     end
+    group=@index(Group,Linear)
     if lane==1
-        out[j]=minima[1]
+        out[output_offset+group]=minima[1]
     end
 end
 
 # Online log-sum-exp evaluates the implicit history once, not twice, per pair.
-@kernel function compact_reduce!(out,cost,dual,mass,eta,n,::Val{ROWS}) where ROWS
+@kernel function compact_reduce!(out,cost,dual,mass,eta,n,output_offset,::Val{ROWS}) where ROWS
     lane=@index(Local,Linear)
-    j=@index(Group,Linear)
+    group=@index(Group,Linear)
+    j=output_offset+group
     maxima=@localmem Float32 (32,)
     totals=@localmem Float32 (32,)
     high=-Inf32;total=0.0f0
@@ -225,15 +228,22 @@ end
         end
         @synchronize
     end
+    group=@index(Group,Linear)
     if lane==1
-        out[j]=eta*log(mass[j])-maxima[1]-eta*log(totals[1])
+        out[output_offset+group]=eta*log(mass[output_offset+group])-maxima[1]-eta*log(totals[1])
     end
 end
 
+@kernel function compact_materialize!(out,cost,offset)
+    i,j=@index(Global,NTuple)
+    out[i,j+offset]=pair_cost(cost,i,j+offset)
+end
+
 function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1e-4,
-                          maxiters=10000,initial_beta=nothing,accelerate=true,block_pairs=1_000_000)
+                          maxiters=10000,initial_beta=nothing,accelerate=true,block_pairs=1_000_000,
+                          cache_bytes=512*1024^2,max_pairs=8_000_000)
     isfinite(eta) && eta>0 && isfinite(proximal) && proximal>=0 || Base.error("invalid temperature or proximal weight")
-    tolerance>0 && maxiters>0 && block_pairs>0 || Base.error("invalid solve limits")
+    tolerance>0 && maxiters>0 && block_pairs>0 && cache_bytes>=0 && max_pairs>0 || Base.error("invalid solve limits")
     size(force)==(3,length(c.b)) && all(isfinite,force) || Base.error("invalid geographic forces")
     (!isnothing(prior) || proximal==0) || Base.error("proximal update requires a prior plan")
     isnothing(prior) || (size(prior)==size(c.cost) && valid_plan(prior)) || Base.error("invalid prior plan")
@@ -246,22 +256,48 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
     device=compact_device(backend,host)
     row_device=KA.zeros(backend,Float32,length(c.a))
     offset_device=KA.zeros(backend,Float32,length(c.b))
-    minimum! = compact_minimum!(backend,32)
-    minimum!(row_device,device,length(c.b),Val(true);ndrange=32length(c.a))
+    budget=max(1,div(max_pairs,1+length(host.compact_prior.rho)))
+    minimum_kernel! = compact_minimum!(backend,32)
+    function minimum!(out,cost,n,rows)
+        block=max(1,div(budget,n))
+        for offset in 0:block:length(out)-1
+            minimum_kernel!(out,cost,n,offset,rows;ndrange=32min(block,length(out)-offset))
+        end
+    end
+    minimum!(row_device,device,length(c.b),Val(true))
     device=merge(device,(;offset=(row_device,device.offset[2])))
-    minimum!(offset_device,device,length(c.a),Val(false);ndrange=32length(c.b))
+    minimum!(offset_device,device,length(c.a),Val(false))
     row_offset=PCP._copy_to_host!(backend,zeros(Float32,length(c.a)),row_device)
     offset=PCP._copy_to_host!(backend,zeros(Float32,length(c.b)),offset_device)
     device=merge(device,(;offset=(row_device,offset_device)))
+    # Cache only the current country's cost, within an explicit device budget.
+    cost_device=if length(c.a)*length(c.b)<=div(cache_bytes,sizeof(Float32))
+        cached=KA.allocate(backend,Float32,(length(c.a),length(c.b)))
+        block=max(1,div(budget,length(c.a)))
+        materialize! = compact_materialize!(backend,(32,8))
+        for offset in 0:block:length(c.b)-1
+            materialize!(cached,device,offset;ndrange=(length(c.a),min(block,length(c.b)-offset)))
+        end
+        cached
+    else
+        device
+    end
     da=PCP._copy_to_backend(backend,Float32.(c.a));db=PCP._copy_to_backend(backend,Float32.(c.b))
     alpha=KA.zeros(backend,Float32,length(c.a))
     beta=PCP._copy_to_backend(backend,isnothing(initial_beta) ? zeros(Float32,length(c.b)) : Float32.(initial_beta.-offset))
     probe=KA.zeros(backend,Float32,length(c.b))
     host_beta=zeros(Float32,length(c.b));host_probe=similar(host_beta)
-    update! = compact_reduce!(backend,32)
+    update_kernel! = compact_reduce!(backend,32)
+    reduction_budget=cost_device isa AbstractMatrix ? max_pairs : budget
+    function update!(out,dual,mass,n,rows)
+        block=max(1,div(reduction_budget,n))
+        for offset in 0:block:length(out)-1
+            update_kernel!(out,cost_device,dual,mass,Float32(eta),n,offset,rows;ndrange=32min(block,length(out)-offset))
+        end
+    end
     function residual!()
-        update!(alpha,device,beta,da,Float32(eta),length(c.b),Val(true);ndrange=32length(c.a))
-        update!(probe,device,alpha,db,Float32(eta),length(c.a),Val(false);ndrange=32length(c.b))
+        update!(alpha,beta,da,length(c.b),Val(true))
+        update!(probe,alpha,db,length(c.a),Val(false))
         PCP._copy_to_host!(backend,host_beta,beta);PCP._copy_to_host!(backend,host_probe,probe)
         ratios=exp.((Float64.(host_beta).-host_probe)./eta)
         return max(sum(c.b.*abs.(ratios.-1))/tolerance,maximum(abs.(ratios.-1))/.001)
@@ -271,8 +307,8 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
     previous.-=mean(previous)
     error=Inf
     for iteration in 1:maxiters
-        update!(alpha,device,beta,da,Float32(eta),length(c.b),Val(true);ndrange=32length(c.a))
-        update!(beta,device,alpha,db,Float32(eta),length(c.a),Val(false);ndrange=32length(c.b))
+        update!(alpha,beta,da,length(c.b),Val(true))
+        update!(beta,alpha,db,length(c.a),Val(false))
         iteration%50==0 || continue
         error=residual!()
         if accelerate

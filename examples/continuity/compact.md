@@ -2,8 +2,9 @@
 
 This is an experimental alternative to the dense research solver. It does not
 change the production `distribute` API. Use `country(...; dense=false)` and
-`run_case(...; compact=true)` to avoid dense cost and transport matrices.
-The device backend must still be supplied by the caller.
+`run_case(...; compact=true)` to avoid persistent dense cost and transport matrices.
+The device backend must still be supplied by the caller. A bounded active-country
+cost cache is optional, as described below.
 
 ## Representation
 
@@ -29,7 +30,15 @@ grows. This is a memory improvement, not a guarantee of faster inner solves.
 ## Reductions and checks
 
 KernelAbstractions evaluates costs and history entries directly on the backend.
-Online log-sum-exp avoids evaluating the history twice per reduction. Each check
+Online log-sum-exp avoids evaluating the history twice per reduction. The solver
+can cache the current country's cost on the device, with a default limit of
+512 MiB. This avoids repeated history evaluation for countries that fit the
+budget. Larger countries use implicit costs. No dense host cost or transport
+plan is created. Set `compact_cache_bytes=0` in `run_case`, or `cache_bytes=0` in
+`compact_sinkhorn`, to disable this cache. Kernel launches are split into bounded
+output ranges. The implicit pair budget decreases as history depth grows. This
+limits long kernels on the Intel legacy driver. One complete reduction row is
+the minimum launch size. Each check
 first uses device reductions. A candidate close to convergence is checked in
 Float64 host blocks. Normalize its source rows exactly and check target L1 error
 and maximum relative error before accepting it.

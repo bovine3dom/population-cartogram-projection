@@ -25,21 +25,36 @@ for backend in backends
         @test_throws ErrorException CE.compact_sinkhorn(c,force,nothing,backend;proximal=.1)
         @test_throws ErrorException CE.compact_sinkhorn(c,zeros(3,1),nothing,backend)
         dense=CE.sinkhorn(Matrix(c.cost),c.a,c.b,backend;eta,tolerance=1e-6,accelerate=true)
-        result=CE.compact_sinkhorn(c,force,nothing,backend;eta,tolerance=1e-6,block_pairs=12)
+        result=CE.compact_sinkhorn(c,force,nothing,backend;eta,tolerance=1e-6,block_pairs=12,max_pairs=10)
         p=result.plan
+        implicit=CE.compact_sinkhorn(c,force,nothing,backend;eta,tolerance=1e-6,cache_bytes=0,max_pairs=10).plan
+        @test Matrix(implicit) ≈ Matrix(p) atol=2e-6
         @test Matrix(p) ≈ dense.plan atol=2e-6
         @test vec(sum(Matrix(p);dims=2)) ≈ c.a atol=1e-12
         @test vec(sum(p;dims=1)) ≈ c.b atol=1e-5
         @test CE.means(c,p) ≈ CE.means(c,Matrix(p)) atol=1e-12
         @test p.stats.base ≈ CE.dot(c.cost,Matrix(p)) atol=1e-12
         @test p.stats.entropy ≈ sum(x->x>0 ? x*(log(x)-1) : 0.,Matrix(p)) atol=1e-12
+        posed=merge(c,(;problem=CE.pose_problem(c,90)))
+        pose_plan=CE.compact_sinkhorn(posed,force,nothing,backend;eta,tolerance=1e-6).plan
+        pose_reference=CE.sinkhorn(CE.pose_cost(c,90),c.a,c.b,backend;eta,tolerance=1e-6).plan
+        @test Matrix(pose_plan) ≈ pose_reference atol=2e-6
+        @test pose_plan.stats.base ≈ CE.dot(c.cost,Matrix(pose_plan)) atol=1e-12
+        returned=CE.compact_sinkhorn(c,force,pose_plan,backend;eta,proximal=.1,tolerance=1e-6).plan
+        return_cost=Matrix(c.cost)-.1log.(max.(Matrix(pose_plan),floatmin(Float64)))
+        return_reference=CE.sinkhorn(return_cost,c.a,c.b,backend;eta=eta+.1,tolerance=1e-6).plan
+        @test Matrix(returned) ≈ return_reference atol=2e-6
         for iteration in 1:3
             force=[.2sin(i+j+iteration) for i in 1:3,j in 1:6]
             prior=Matrix(p)
             cost=Matrix(c.cost)+transpose(c.xyz)*force-.1log.(max.(prior,floatmin(Float64)))
             reference=CE.sinkhorn(cost,c.a,c.b,backend;eta=eta+.1,tolerance=1e-6,accelerate=true)
-            candidate=CE.compact_sinkhorn(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,block_pairs=12).plan
+            candidate=CE.compact_sinkhorn(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,block_pairs=12,max_pairs=10).plan
             @test Matrix(candidate) ≈ reference.plan atol=2e-6
+            if iteration==3
+                implicit=CE.compact_sinkhorn(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,cache_bytes=0,max_pairs=10).plan
+                @test Matrix(implicit) ≈ Matrix(candidate) atol=2e-6
+            end
             mixed=CE.mix_plans(p,candidate,.25)
             CE.compact_stats!(mixed,c;block_pairs=12)
             @test Matrix(mixed) ≈ .75prior+.25Matrix(candidate) atol=1e-12
