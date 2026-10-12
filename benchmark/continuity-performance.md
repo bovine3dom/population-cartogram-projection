@@ -49,6 +49,10 @@ better map quality.
 - Collect completed native command lists periodically. Their driver allocations
   are not visible to Julia's normal heap-pressure check.
 - Use typed statistics and column views for border and fold calculations.
+- Retry difficult solves with decreasing temperatures. Keep the original final
+  temperature, proximal term, and mass limits.
+- Reuse the device cost cache for primal marginal refinement when Float32
+  rounding prevents the reconstructed plan from passing its mass check.
 - Select planet poses at H3-4, then check each proposed angle at native H3-5.
   This reduces pose-search work, but can change the selected initial solution.
 
@@ -89,3 +93,15 @@ Pair evaluation still grows with source count times target count. Mixture
 history makes implicit evaluation more expensive as accepted updates accumulate.
 The cache budget is not a total process-memory limit. No measured whole-planet
 H3-6 runtime is available yet; do not extrapolate it from plan size alone.
+
+A possible next step is an adaptive sparse inner kernel. Use candidate pairs for
+iterations, then check the full implicit plan in bounded blocks. Expand the
+candidate set when the full check fails. This could reduce repeated pair work,
+but it is not implemented or benchmarked here. Do not use geometric distance
+alone to exclude pairs: the force and proximal terms can change which pairs
+are important.
+
+Schmitzer's [stabilized sparse scaling paper](https://arxiv.org/abs/1610.06519)
+combines log-domain stabilization, temperature scaling, adaptive kernel
+truncation, and coarse-to-fine solves. It is a relevant starting point, not a
+performance guarantee for this continuity objective.

@@ -245,3 +245,24 @@ Archived the stopped fit and restarted from the same saved native pose seeds.
 This discards the partial pass rather than counting it as a complete pass or
 changing the initial solution. The fit again requests ten complete passes.
 The archived checkpoints and diagnostic logs remain available.
+
+## 12:13 UTC: further rejected optimizations
+
+A temperature schedule based on a conservative force-range bound started at
+8,192 times the requested temperature for the saved US problem. Extra stages
+reduced some iteration counts, but the run exceeded its ten-minute test limit
+at the final stage. It is not a completed timing or a solver improvement. Keep
+the tested fixed retry schedule. The planet was paused from 11:50:20–12:00:23
+UTC for this test, then resumed.
+
+A separate 32-by-32 tiled device-cost layout preserved the dual results exactly,
+but took 0.93–0.97 seconds per 100 iterations on the five-million-pair sample,
+versus 0.87–0.91 seconds for the linear layout. Do not add the extra indexing
+and upload code without evidence of a gain. The planet was paused from
+12:05:38–12:07:25 UTC for this test, then resumed. Neither experiment changed
+the running solver.
+
+The US update in the real planet fit has now passed the original mass checks
+and the outer objective test. India is still in its first update. Memory remains
+bounded; `/proc` high-water readings are being saved to
+`output/continuity-performance/planet-memory.csv`.
