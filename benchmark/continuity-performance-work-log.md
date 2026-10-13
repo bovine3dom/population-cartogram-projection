@@ -525,3 +525,42 @@ pair reductions. This is not a whole-fit speedup measurement.
 The planet was paused from 00:00:20–00:04:20 UTC for the GPU tests and setup
 measurement, then resumed. Its loaded code does not use workspace reuse.
 Do not restart it solely for this small setup saving.
+
+## 08:30–08:45 UTC, 13 October: recover status after the interruption
+
+The background continuation survived the conversation interruption. It exited
+with status zero after 13,412 seconds. Four complete passes finished at
+02:55:19 UTC. Both Arrow files were published at about 03:18:24 UTC. No Julia
+fit or monitor remained active when work resumed. No kernel OOM or GPU-reset
+message was found for the overnight interval. The cause of the conversation
+interruption is not established.
+
+The partial-progress change resolved the stalled third-pass China solve:
+its final temperature needed 1,050 dual iterations and 13,480 primal iterations.
+The fourth-pass China solve also completed. The complete history has 608
+country updates and a final objective of 62.17798.
+
+The export phase exposed a separate memory problem. Before export, the sampled
+process high-water record reached 2,719,840 KiB, or 2.59 GiB. The process-wide
+measurement, including export, reached 32,432,384 KiB, or 30.93 GiB. The flat
+cartogram Arrow has 120,753,287 rows and uses 8,241,430,130 bytes. The density
+Arrow uses 6,197,474 bytes. Do not report the fit memory as the full-job peak.
+
+A read-only, two-thread audit passed. It checks both Arrow files against the
+original input: source and target coverage, population and country values,
+UInt32 halves, H3 resolution, positive density, source sums, target mean-weight
+sums, and physical target weights. It also checks all labels on 1,715 source
+cells, their placement at maximum source weight, all four update sequences,
+and the descending objective. Details are in
+`output/continuity-performance/audit-published-planet.log`.
+
+The unfinished logarithmic-refinement edit was not loaded by the planet job.
+Saved its source and patch as `unfinished-log-refinement-primal.jl` and
+`unfinished-log-refinement.patch` under `output/continuity-performance`.
+Restored `primal.jl` to the tested commit. No untested solver edit remains.
+The latest compact regression result is 72 passing checks on each of CPU and
+oneAPI. A final regional timing of the later commits is still pending.
+
+H3-MON remains stopped. Production, UK, and Germany files remain unchanged.
+No browser-load test was run. Next, reduce export memory without silently
+changing the fitted transport or its mass checks.

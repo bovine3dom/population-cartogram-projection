@@ -61,7 +61,8 @@ better map quality.
 
 The host-only border-force calculation fell from 78.2 ms to 1.73 ms per call
 on the saved Africa case. This is not a full-solver speedup estimate. It was
-measured separately. The table and final planet continuation use these changes.
+measured separately. The regional table uses commit `f7dc433`. The published
+planet fit uses `f52d40b`; it does not include the later cost-workspace reuse.
 
 ## Sparse marginal refinement
 
@@ -77,8 +78,8 @@ This is a refinement-stage comparison, not a full fit timing. It excludes an
 existing cost cache, which remains allocated during sparse refinement. The
 combined sparse and cost-cache storage must fit the configured cache budget.
 The result comes from `benchmark-sparse-primal-paired.log` in
-`output/continuity-performance`. The regional table uses the final code, but
-that regional case does not need sparse refinement.
+`output/continuity-performance`. The regional case at `f7dc433` does not need
+sparse refinement. Later changes have unit tests, but no new regional timing.
 
 ## Reproduce
 
@@ -105,6 +106,34 @@ The table uses `output/continuity-performance/africa6-dense-v6` and
 [work log](continuity-performance-work-log.md) for failed driver tests and fixes.
 See [compact plans](../examples/continuity/compact.md) for the representation and
 [planet instructions](../examples/continuity/planet.md) for publication.
+
+## Published planet result
+
+The H3-5, factor-1 fit completed four passes, not the initial ten-pass target.
+It contains 608 country updates. The fit finished at 02:55 UTC on 13 October
+2026. Publication finished at 03:18 UTC, before the reserved window ended.
+
+Both hi/lo Arrow files are in:
+
+`/home/olie/projects/H3-MON/www/data/planet-h3-5-factor1-continuity/`
+
+An independent audit checked all 120,753,287 transport rows. It confirmed
+387,294 source cells, 54,942 country-target cells, UInt32 index halves, H3-5
+resolution, positive density values, and all labels on 1,715 source cells.
+Source sums differ from one by at most 0.000000000000009. Target mean-weight
+sums differ by at most 0.000000000000025. Physical target weights also pass.
+
+The objective fell from 143.182 to 62.178. Cross-border RMS fell from
+709.59 km to 613.45 km, but major defects remain. This is not a converged
+solution to the border problem. H3-MON remains stopped; browser loading has
+not been checked.
+
+**Export is still expensive.** The recorded fit high-water mark was 2.59 GiB.
+The complete process, including export, peaked at 30.93 GiB. These are process
+RSS values, not total GPU memory. The cartogram Arrow is 8.24 GB; the density
+Arrow is 6.20 MB. Plan compression does not reduce the size of a flat transport
+export. The next memory task is to avoid full-table export assembly. Any
+reduction in exported rows needs separate checks of lost mass and map quality.
 
 ## Limits
 
