@@ -40,3 +40,43 @@ Apache Arrow 19.0.1 through loaders.gl. Its actual decoder is the final check.
 - https://arrow.apache.org/julia/stable/reference/
 - https://loaders.gl/docs/arrowjs/developer-guide/reading-and-writing
 - https://github.com/apache/arrow-js/issues/109
+
+## 11:05 UTC: culling profiles and sparse weight adjustment
+
+Built a source and target index for all 120,753,287 rows. Saved separate
+country caches for bounded tests. The reference has 387,294 source cells,
+54,942 country-target pairs, and 1,715 labelled source cells. Eleven target
+coordinates occur in more than one country.
+
+Simple culling causes large errors. Keeping four rows per source, plus
+coverage guards, gives an estimated 44 MB transport file. But its 99th
+percentile geographic mean error is 114 km. Keeping 32 rows per target gives
+an estimated 56 MB and a 62 km error. These estimates exclude the density
+file and assume Float32 population. Neither is a safe default.
+
+Tested nonnegative weight adjustment with linear constraints. It preserves
+source totals, target population, target geographic means, source forward
+means, and optionally target mean population density. Each labelled source
+keeps its original anchor with at least half its original weight. These
+constraints do not preserve arbitrary data values or the full transport.
+
+A Germany reference test reduced 100,137 rows to 7,746 in 121 seconds.
+Maximum geographic mean error was below 0.001 metres. Maximum relative
+target population error was 2.3e-9. However, median target total variation
+was 0.494. This is an approximation, not lossless compression. This test
+did not change the Germany dataset.
+
+Added a separate Julia environment with HiGHS 1.26.0. Direct crossover in
+its native HiGHS 1.15.1 crashed before worker initialization. A zero-iteration
+solve initializes the workers before crossover. No installed package was
+changed. Unit tests pass: 25 export checks and 13 moment checks.
+
+Two dense 128-source blocks from the US and China did not finish crossover
+within the 600-second limit. Their results were rejected. Test smaller
+target blocks next, then merge their sparse results. Keep the full reference
+and do not publish a reduced file until independent checks pass.
+
+HiGHS references:
+
+- https://ergo-code.github.io/HiGHS/dev/interfaces/julia/
+- https://jump.dev/JuMP.jl/stable/packages/HiGHS/

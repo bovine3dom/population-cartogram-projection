@@ -21,6 +21,9 @@ const ME=MobileExport
     @test full.forward_max<1e-12
     @test full.target_mass_error_max<1e-12
     @test full.target_tv_max<1e-12
+    @test ME.evaluate(data,Int32[1,2,3,4],reference;weights=w)==full
+    @test_throws ErrorException ME.evaluate(data,Int32[1,2,3,4],reference;weights=[.4,.6,.95,0.])
+    @test_throws ErrorException ME.evaluate(data,Int32[1,2,3,4],reference;weights=[1.])
     reduced=ME.evaluate(data,ME.select_rows(data),reference)
     @test reduced.rows==3
     @test reduced.population_retained≈10.95/11
@@ -30,4 +33,9 @@ const ME=MobileExport
     @test_throws ErrorException ME.select_rows(data;source_retained=1.1)
     @test_throws ErrorException ME.select_rows(data;source_top=-1)
     @test_throws ErrorException ME.group_rows(Int32[1],2)
+    local_data=ME.country_data(data,1)
+    @test local_data.original_rows==[2,1,3,4]
+    @test local_data.weight==w[local_data.original_rows]
+    @test ME.reference_stats(local_data).target_mass≈reference.target_mass
+    @test_throws ErrorException ME.country_data(data,9)
 end
