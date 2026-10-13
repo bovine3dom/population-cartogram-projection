@@ -1,6 +1,6 @@
 # Mobile export results
 
-Status: 2026-10-13 16:05 UTC. Work continues until 2026-10-14 01:45 UTC.
+Status: 2026-10-13 16:53 UTC. Work continues until 2026-10-14 01:45 UTC.
 
 ## Published experiment
 
@@ -77,13 +77,15 @@ mode builds geographic polygons for the visible region after movement. It
 does not remove source data or cartogram rows. Dataset metadata enables it
 for this experiment; its default remains off for other datasets.
 
+Packed source navigation indexes reduce per-source JavaScript objects.
 With the published profile, initial JavaScript heap plus backing storage is
-about 342 MB, versus 508 MB without visible-region geometry. A world view
-still uses about 514 MB. Returning to the initial view uses about 379 MB.
+about 285 MB, versus 508 MB before these changes and visible-region geometry.
+A world view still uses about 456 MB. Returning to the initial view uses
+about 322 MB.
 These measurements exclude embedder and GPU memory. They are from headless
 desktop Chromium, not a phone. This is not a 100 MB browser-memory solution.
 
-All current export, moment, audit, and publication checks pass. All 66 H3-MON
+All current export, moment, audit, and publication checks pass. All 68 H3-MON
 unit tests and isolated desktop/mobile dictionary, viewport, and line-probe
 checks pass. The full rendering suite has a separate animation timeout that
 also occurs on the unchanged baseline. Do not report that suite as passing.

@@ -463,3 +463,26 @@ The production input hash is unchanged. No normal H3-MON service is running.
 No production, UK, or Germany dataset was replaced. The stronger 80% and
 mixed 75% trials continue within their deadlines. Keep this checked public
 profile unless a stronger result meets the byte and quality limits.
+
+## 16:53 UTC: packed browser indexes and stronger-profile limits
+
+H3-MON commit `15a2fae` stores source navigation bounds and adjacency in
+shared typed buffers. An independent comparison checks all 387,294 source
+bounds, all transport adjacency entries, and four nearest-point queries.
+No source or transport row is removed. Initial browser heap and backing
+storage fall from 342 MB to 285 MB. A world view uses 456 MB; the return
+view uses 322 MB. These figures still exclude embedder and GPU memory.
+All 68 unit checks pass. The isolated rendering checks pass. The full
+rendering suite still has the same baseline animation timeout.
+
+The 80% profile has completed all countries. Its first pack uses 114.7 MB
+for both files, which exceeds the publication limit. Its independent audit
+continues. Larger blocks remove only 14,331 further China rows and no US
+rows. A China native factorization exceeds the 8 GiB worker address-space
+limit. Failed blocks retain their valid inputs. A 75% China trial ends at
+1,443,700 rows, only a small reduction from its 80% seed.
+
+A diagnostic objective that favours already-protected rows times out on a
+Germany block. No new result is accepted and no solver option is shipped.
+A separate bounded primal-simplex diagnostic is in progress. Keep the
+validated 70% public export while these tests run.
