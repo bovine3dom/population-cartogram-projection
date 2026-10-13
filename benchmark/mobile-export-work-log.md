@@ -686,3 +686,32 @@ Logs are in `output/mobile-export/browser-chunk-dictionary-*`,
 `h3mon-chunk-dictionary-*`. The published dataset is unchanged. No normal
 H3-MON service was started. Unrelated auto-cartogram jobs belong to other
 work and were not stopped.
+
+
+## 23:50 UTC: repeat the public audit and test repeated navigation
+
+The final regression run passes 68 export checks, 70 moment checks, 18
+independent audit checks, and the publication test. A new full binary audit
+reads the public files against the 8.24 GB reference. Its report matches the
+previous audit exactly. All 22 public manifest hashes and both decompressed
+gzip payload hashes match. The production input hash is unchanged.
+
+The full H3-MON rendering run still fails only at the known desktop Frame 2
+animation wait on line 998. It is not a passing suite. The isolated
+mobile/desktop dictionary, viewport, and line-probe checks remain passing.
+
+A 90-movement capped-heap check passes. A subsequent 600-movement check
+also passes, with all source cells and return-view coverage unchanged.
+The latter takes about 67 minutes with 4× CPU throttling and the confirmed
+64 MiB V8 heap limit. Each cycle shows the world, the date line, and the
+initial region. It collects garbage after each movement. World-view heap
+plus backing storage ranges from 362.0 to 364.2 MB. Return-view memory
+ranges from 227.4 to 229.2 MB. Small growth remains; these results do not
+prove a fixed memory bound. Inspector logs and measurement records are also
+retained during the test.
+
+Logs are `final-test-*`, `audit-public-final.toml`, `final-public-hashes.log`,
+`h3mon-final-full-render.log`, `browser-soak-final/`, and `browser-soak-long/`
+in `output/mobile-export/`. All these jobs have stopped. The normal H3-MON
+service is still stopped. No further dataset reduction is planned in the
+remaining window; the checked public 65.7 MB profile remains selected.

@@ -1,6 +1,6 @@
 # Mobile export results
 
-Status: 2026-10-13 22:16 UTC. Work continues until 2026-10-14 01:45 UTC.
+Status: 2026-10-13 23:50 UTC. Work continues until 2026-10-14 01:45 UTC.
 
 ## Published experiment
 
@@ -103,12 +103,16 @@ limit** passes, including world and date-line navigation. Its sampled initial
 heap plus backing storage reaches 196 MB. The V8 limit does not include
 backing buffers or other browser memory. Default-heap load times range from
 23.2 to 34.3 seconds with 4× CPU throttling. Other local work affects timing;
-these runs do not establish an end-to-end speed gain.
+these runs do not establish an end-to-end speed gain. A longer capped-heap
+test completes 600 world/date-line/return movements without errors or lost
+cells. After collection, it uses 362–364 MB in the world view and 227–229 MB
+after return. This does not prove a fixed long-term memory bound.
 
 These measurements exclude embedder and GPU memory. They are from headless
 desktop Chromium, not a phone. This is not a 100 MB browser-memory solution.
 
-All current export, moment, audit, and publication checks pass. All 74 H3-MON
+The final 68 export, 70 moment, and 18 audit checks pass. Publication checks
+pass. A second full audit of the public files matches the original report. All 74 H3-MON
 unit tests, actual Arrow dictionary checks, and isolated desktop/mobile
 dictionary, viewport, and line-probe checks pass. The full rendering suite has a separate animation timeout that
 also occurs on the unchanged baseline. Do not report that suite as passing.
