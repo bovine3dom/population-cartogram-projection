@@ -99,6 +99,29 @@ class AdapterTests(unittest.TestCase):
             result = subprocess.run(self.command(inputs,weights,directory),capture_output=True,timeout=30)
             self.assertNotEqual(result.returncode,0)
 
+    def test_topology_mode_reports_an_impossible_one_tile_degree(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory=Path(tmp)
+            positions={"c":(0,0),"a":(3,11),"b":(11,1),"d":(7,-9),"e":(-8,-7),"f":(-11,5)}
+            lines=["STAGE 1","OUTLINES 6"]
+            for i,(label,(x,y)) in enumerate(positions.items()):
+                lines += [f"OUT {i}\t{label}\t{x} {y}\t100 100 100",
+                          f"{x-.5} {y-.5}\t{x+.5} {y-.5}\t{x+.5} {y+.5}\t{x-.5} {y+.5}","SITECOUNT 0"]
+            inputs,weights=directory/"input.wkt",directory/"weights.tsv"
+            inputs.write_text("\n".join(lines)+"\n")
+            weights.write_text("".join(f"{v}\t1\n" for v in positions))
+            (directory/"embedding.tsv").write_text("".join(f"{v}\t{x}\t{y}\n" for v,(x,y) in positions.items()))
+            (directory/"embedding-edges.tsv").write_text("".join(f"c\t{v}\n" for v in positions if v != "c"))
+            output=directory/"star"
+            command=self.command(inputs,weights,output)+[str(directory)]
+            command[1:1]=["-Dmosaic.maxRounds=1","-Dmosaic.forceIterations=100"]
+            result=subprocess.run(command,capture_output=True,timeout=60)
+            self.assertEqual(result.returncode,0,result.stderr)
+            cells={(int(r["x"]),int(r["y"])):r["component_id"] for r in review.read_csv(output/"cells.csv")}
+            neighbours={cells.get((x+dx,y+dy)) for (x,y),v in cells.items() if v == "c" for dx,dy in review.NEIGHBOURS}-{None,"c"}
+            self.assertEqual(neighbours,set(positions)-{"c"})
+            self.assertGreater(sum(v == "c" for v in cells.values()),1)
+
     def test_explicit_two_vertex_embedding(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory=Path(tmp)
@@ -107,9 +130,12 @@ class AdapterTests(unittest.TestCase):
             (directory/"embedding-edges.tsv").write_text("a\tb\n")
             output=directory/"embedded"
             command=self.command(inputs,weights,output)+[str(directory)]
+            command.insert(1,"-Dmosaic.orientInitial=true")
             result=subprocess.run(command,capture_output=True,timeout=60)
             self.assertEqual(result.returncode,0,result.stderr)
+            self.assertIn(b"Initial geographic orientation=",result.stdout)
             self.assertIn("embedding=planar",(output/"complete.txt").read_text())
+            self.assertIn("orientInitial=true",(output/"complete.txt").read_text())
 
     def test_round_budget_is_validated_and_recorded(self):
         with tempfile.TemporaryDirectory() as tmp:

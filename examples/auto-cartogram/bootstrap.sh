@@ -41,7 +41,7 @@ if [[ -z ${JAVA_HOME:-} ]]; then
 fi
 
 mkdir -p "$VENDOR/classes"
-patched=(arrange/algorithms/GuideConstructor.java arrange/algorithms/MoveAndReshape.java
+patched=(arrange/DeformAlgorithm.java arrange/algorithms/GuideConstructor.java arrange/algorithms/MoveAndReshape.java
     arrange/algorithms/sub/Polisher.java common/gridmath/util/CoordinateSet.java
     common/mcf/SuccessiveShortestPathMininumCostFlow.java)
 exclusions=(); patched_sources=()
@@ -58,7 +58,8 @@ mapfile -d '' sources < <(fd -0 --extension java "${exclusions[@]}" . \
 "$JAVA_HOME/bin/javac" --release 21 -encoding UTF-8 -d "$VENDOR/classes" \
     "${sources[@]}" "${patched_sources[@]}" \
     "$ROOT/examples/auto-cartogram/MosaicAdapter.java" \
-    "$ROOT/examples/auto-cartogram/DirectionalPlacement.java"
+    "$ROOT/examples/auto-cartogram/DirectionalPlacement.java" \
+    "$ROOT/examples/auto-cartogram/GeographicOrientation.java"
 printf '%s\n' "$JAVA_HOME/bin/java" > "$VENDOR/java-path.txt"
 "$JAVA_HOME/bin/java" -version
 printf 'Built headless adapter in %s/classes\n' "$VENDOR"
