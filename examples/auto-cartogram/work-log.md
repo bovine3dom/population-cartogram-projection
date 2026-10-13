@@ -259,3 +259,22 @@ under ignored `output/auto-cartogram/`.
   geographic-baseline archives; they were not used by that method.
 - Refreshed the three world baselines and Indonesia review checks. Production
   targets and solver files remain unchanged.
+
+## 22:54–23:12 UTC — completed fits and border repair
+
+- The all-assertions 10,000-tile topology reference finished. It keeps all 352
+  represented contacts, but has 10,411 tiles and 4,593 tiles of absolute region
+  count error. Its country axis-order check has 3,217 errors in 7,500 comparisons.
+  The oriented fit also keeps the contacts, but count and position errors remain.
+- Added a separate greedy border-repair experiment. It keeps exact component
+  counts and prevents false contacts, disconnection, and holes. The first
+  checked results restore 270 of 352 borders at 10,000 tiles and 312 of 368 at
+  55,000. Long thin connectors damage shape. These are not production layouts.
+- Added rollback and repeated-move tests. All 12 geometry tests pass. The final
+  script records its hash at load time. Restarted the large repair runs after
+  adding input checks, so their source hashes identify the code actually used.
+- Added an independent CSV transport checker and corruption tests. All four
+  corrected coarse transport exports pass. The checker does not renormalize
+  missing mass. Native H3-8 grouped transport is still in progress.
+- Started tighter-spacing repair comparisons and exact-mode Java fits. The
+  latter may break borders; independent checks will decide what they preserve.

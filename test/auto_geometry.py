@@ -16,6 +16,7 @@ import geographic_baseline as baseline
 import geographic_embedding as geographic
 import planar_embedding as embedding
 import review_layout as review
+import repair_contacts as repair
 import validate_outlines as outlines
 
 
@@ -89,6 +90,52 @@ class OutlineTests(unittest.TestCase):
             self.assertIn("0.0 0.0\t1.0 0.0",(root/"validated.wkt").read_text())
             with self.assertRaises(ValueError):
                 outlines.run(root)
+
+
+class RepairTests(unittest.TestCase):
+    def test_reject_invalid_starting_regions(self):
+        for cells in [{(0,0),(2,0)}, {(x,y) for x in range(3) for y in range(3)}-{(1,1)}, set()]:
+            with self.assertRaises(ValueError):
+                repair.Repair({"a":cells},set())
+
+    def test_repeated_repairs_preserve_constraints(self):
+        for count in [1,2,5,20]:
+            tiles={str(i):{(i%3*12+x,i//3*12+y) for x,y in baseline.grow(box(0,0,2,1),count)[0]} for i in range(9)}
+            required={tuple(sorted((str(i),str(j)))) for i in range(9) for j in range(i+1,9) if j == i+3 or (j == i+1 and i//3 == j//3)}
+            state=repair.Repair(tiles,required,max_search=1000)
+            for a,b in sorted(required):
+                old=set(state.contacts)
+                if (a,b) not in old:
+                    state.connect(a,b)
+                self.assertTrue(old <= set(state.contacts) <= required)
+                checked=repair.Repair(state.tiles,required)
+                self.assertEqual(checked.contacts,state.contacts)
+                self.assertEqual(checked.owners,state.owners)
+                self.assertTrue(all(len(p) == count for p in state.tiles.values()))
+
+    def test_exact_counts_connectivity_and_no_false_contacts(self):
+        tiles={"a":{(0,0)},"b":{(4,0)},"c":{(2,0)}}
+        state=repair.Repair(tiles,{("a","b")},max_search=1000)
+        success,_=state.connect("a","b")
+        self.assertTrue(success)
+        self.assertEqual(set(state.contacts),{("a","b")})
+        self.assertEqual({c:len(p) for c,p in state.tiles.items()},{"a":1,"b":1,"c":1})
+        self.assertEqual(state.tiles["c"],tiles["c"])
+        for cells in state.tiles.values():
+            self.assertEqual(review.connectivity(cells),1)
+            self.assertEqual(review.holes(cells),0)
+
+    def test_failed_bridge_rolls_back_tiles_and_contacts(self):
+        tiles={"a":{(0,0)},"b":{(-1,0)},"c":{(4,0)}}
+        state=repair.Repair(tiles,{("a","b"),("a","c")},max_search=1000)
+        owners=dict(state.owners); contacts=dict(state.contacts)
+        success,_=state.connect("a","c")
+        self.assertFalse(success)
+        self.assertEqual(state.tiles,tiles)
+        self.assertEqual(state.owners,owners)
+        self.assertEqual(dict(state.contacts),contacts)
+        self.assertTrue(state.connect("c","a")[0])
+        self.assertEqual(set(state.contacts),{("a","b"),("a","c")})
 
 
 class BaselineTests(unittest.TestCase):

@@ -36,7 +36,7 @@ def run(inputs, layout, output, refresh=False):
     for name in input_names:
         if (inputs/name).exists():
             shutil.copyfile(inputs/name,output/("input-"+name))
-    for name in ["baseline.json","build-info.properties"]:
+    for name in ["baseline.json","repair.json","attempts.csv","build-info.properties"]:
         if (layout/name).exists():
             shutil.copyfile(layout/name,output/name)
     hashes={str(p):digest(p) for directory in [inputs,layout] for p in sorted(directory.iterdir()) if p.is_file()}
