@@ -67,7 +67,7 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
                 last+=1
             end
             positions=view(order,first:last);rr=rows[positions];ww=weights[positions]
-            if blocks>0 && length(rr)>12000 && time()-last_checkpoint>30
+            if blocks>0 && length(rr)>BoundedReduction.MAX_INLINE && time()-last_checkpoint>30
                 remaining=view(order,first:length(order))
                 checked_checkpoint(working,data,vcat(newrows,rows[remaining]),vcat(newweights,weights[remaining]),reference;
                     target_retained,stage,source_block=sb,target_block=tb,blocks,failures,seconds,complete=false)

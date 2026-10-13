@@ -309,3 +309,17 @@ All 64 H3-MON unit checks pass. The isolated desktop and mobile dictionary,
 layout, and line-probe checks pass after each change. The whole-planet
 render still has 54,931 targets and 1,711 labels. The normal service remains
 off. Public data files remain unchanged.
+
+## 14:10 UTC: compare a stronger contribution floor
+
+Started a separate 80% protected-contribution trial with two workers. It has
+a 23:15 UTC queue deadline and a two-hour country limit. Its launcher kills
+the entire country process group on timeout. Keep the 70% trial and the
+validated moment-only file as fallbacks. Compare actual Arrow bytes and
+query errors before selecting the public export.
+
+A 70% India block with fewer than 12,000 rows still spends many minutes in
+native crossover. The process boundary now applies above 1,024 rows. Use
+the same threshold for working checkpoints. Existing processes keep their
+loaded code; do not discard their valid saved stages. All 44 moment and
+worker checks pass after this change.

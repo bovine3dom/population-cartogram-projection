@@ -3,6 +3,7 @@ using Serialization
 const CODE=Dict(name=>read(joinpath(@__DIR__,name)) for name in ("bounded.jl","moments.jl"))
 include("moments.jl")
 const MR=MomentReduction
+const MAX_INLINE=1024
 
 mutable struct Worker
     root::String
@@ -102,7 +103,7 @@ function compact_block(data,rows)
     return (;meta,index,weight=data.weight[rows]),targets
 end
 
-function reduce_block!(worker,data,rows,weights,target_mass;limit=30.,floors=nothing,max_inline=12000,kwargs...)
+function reduce_block!(worker,data,rows,weights,target_mass;limit=30.,floors=nothing,max_inline=MAX_INLINE,kwargs...)
     if length(rows)<=max_inline
         return MR.reduce_block(data,rows,weights,target_mass;limit,floors,kwargs...)
     end
