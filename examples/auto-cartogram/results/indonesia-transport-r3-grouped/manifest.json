@@ -1,0 +1,34 @@
+{
+  "backend": "CPU",
+  "coarse_h3_resolution": 3,
+  "coarse_sources": 619,
+  "cross_group_population": 0.0,
+  "elapsed_seconds": 11.611083030700684,
+  "groups": 51,
+  "inputs": [
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-reviewed/source-components.arrow",
+      "sha256": "db6449eb1f4a59cc1c25bd8891950ea7298aecca72ceb91d13cada4fb25891f6"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-1894-v2-input/groups.csv",
+      "sha256": "3f38998797c74f2c4d8386608075897a5a5e3de3e37acd2f80b3c1b09a6b1123"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-1894-v2-layout/cells.csv",
+      "sha256": "109656c22606c4bea3b4625539e683d1b82e43f97891e2f863025fc2b352cdbe"
+    }
+  ],
+  "limit": "Coarse transport experiment, not native H3-8 validation. Grouped islands can exchange mass within their declared group. Each group has its own population per tile.",
+  "maximum_relative_target_error": 0.10812531308060791,
+  "maximum_source_retained_share": 1.0000000000000002,
+  "minimum_source_retained_share": 0.9950038013876127,
+  "pooled": false,
+  "retained_population": 2.6905750861666906e8,
+  "retained_share": 0.996063110236302,
+  "script_sha256_at_load": "7f0079d61ed7b0d90b22debe4e05555250a12f6fdf7ba0e49cecaf52a9142977",
+  "source_coordinates": "population-weighted Equal Earth centres; aggregate by ORIGINAL component and H3 parent",
+  "source_population": 2.70120945e8,
+  "target_coordinates": "north-up grid; y negated for the screen-coordinate solver, then restored in export",
+  "targets": 1894
+}

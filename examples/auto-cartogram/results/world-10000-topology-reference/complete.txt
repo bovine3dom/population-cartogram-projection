@@ -1,0 +1,11 @@
+mode=topology
+seed=1
+placement=directional
+embedding=planar
+forceIterations=2000
+scaledPatience=50
+finalPatience=100
+maxRounds=100
+polishIterations=40
+orientInitial=false
+regionAssertions=true

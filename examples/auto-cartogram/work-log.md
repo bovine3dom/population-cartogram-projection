@@ -278,3 +278,14 @@ under ignored `output/auto-cartogram/`.
   missing mass. Native H3-8 grouped transport is still in progress.
 - Started tighter-spacing repair comparisons and exact-mode Java fits. The
   latter may break borders; independent checks will decide what they preserve.
+
+## 23:13 UTC — saved comparisons
+
+- Saved border-repair images at all three world resolutions. The 110,000-tile
+  result restores 311 of 382 represented borders. More tiles do not guarantee
+  more retained borders with this greedy method. All three keep exact counts
+  and pass independent connectivity, no-hole, and no-false-contact checks.
+- Saved the complete 10,000-tile topology reference and oriented comparison,
+  including their large count errors. Added the images and limits to the gallery.
+- Published corrected coarse transport results with flow tables, target errors,
+  independent checks, and input hashes. The native result remains pending.
