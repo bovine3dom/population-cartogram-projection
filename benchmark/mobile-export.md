@@ -1,6 +1,6 @@
 # Mobile export results
 
-Status: 2026-10-13 17:05 UTC. Work continues until 2026-10-14 01:45 UTC.
+Status: 2026-10-13 17:48 UTC. Work continues until 2026-10-14 01:45 UTC.
 
 ## Published experiment
 
@@ -79,13 +79,14 @@ for this experiment; its default remains off for other datasets.
 
 Packed source navigation indexes reduce per-source JavaScript objects.
 The bundle also shares one H3 runtime instead of two. Initial JavaScript heap
-plus backing storage is about 251 MB, versus 508 MB before these changes and
-visible-region geometry. A world view still uses about 422 MB. Returning to
-the initial view uses about 288 MB.
+plus backing storage is about 242 MB, versus 508 MB before these changes and
+visible-region geometry. A world view still uses about 413 MB. Returning to
+the initial view uses about 278 MB. The largest sampled initial-load value
+is 313 MB; sampling can miss short peaks.
 These measurements exclude embedder and GPU memory. They are from headless
 desktop Chromium, not a phone. This is not a 100 MB browser-memory solution.
 
-All current export, moment, audit, and publication checks pass. All 68 H3-MON
+All current export, moment, audit, and publication checks pass. All 69 H3-MON
 unit tests and isolated desktop/mobile dictionary, viewport, and line-probe
 checks pass. The full rendering suite has a separate animation timeout that
 also occurs on the unchanged baseline. Do not report that suite as passing.

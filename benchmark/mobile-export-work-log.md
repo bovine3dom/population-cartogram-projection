@@ -534,3 +534,19 @@ unchanged. It subtracts the protected contribution, reduces the nonnegative
 remaining weights, and adds the protected contribution back. City anchors
 are held separately too. Solver failure, worker deadlines, and full-country
 checks still apply. All 60 moment, worker, floor, and restart checks pass.
+
+## 17:48 UTC: bounded refinement queue and narrow browser bounds
+
+Started a two-worker fixed-contribution queue from the checked 70% stages.
+It uses a frozen copy of commit `94107d3`, a 30-minute country limit, a
+12 GiB process address-space limit, and a 23:00 UTC queue deadline. It kills
+the whole country process group on timeout. China and India start from the
+smaller checked diagnostic stages. Countries with fewer than 1,000 rows
+are not rerun. Keep completed stages; do not use an incomplete file.
+
+H3-MON commit `73852ac` keeps Int16 navigation bounds in Int16 storage.
+Other coordinate types still use Float64 bounds. No coordinate changes.
+Initial browser heap and backing storage use 242 MB; the world view uses
+413 MB; the return view uses 278 MB. The largest sampled initial-load value
+is 313 MB. Sampling is not a proof of the true peak. All 69 unit checks and
+the isolated desktop/mobile rendering checks pass.
