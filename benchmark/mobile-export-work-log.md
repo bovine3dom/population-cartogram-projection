@@ -358,3 +358,21 @@ The headless check can now use the intended relative dataset URL and its
 actual JSON metadata. That path check passes for the moment-only candidate,
 with all source cells, physical targets, and displayed labels present. No
 small export has been put in the public data directory yet.
+
+## 14:50 UTC: verify fallbacks and reject a weaker moment trial
+
+The fresh moment-only audit passes with file hashes. It took 664 seconds
+while other reductions ran. The staging tool also passes on this real planet
+candidate. It is staged outside the web root, not published.
+
+The bounded India restart finished. Its complete 70% result has 448,401 rows,
+down from 480,605. It keeps the original moment limits. Failed blocks kept
+their input. The 80% US result has 409,157 rows and maximum conditional total
+variation 0.1942. The two whole-planet queues continue.
+
+Tested a diagnostic with small source-mean intervals instead of equalities.
+Direct native crossover aborted; no stage was accepted. Stopped that process
+and retained its log. A separate simplex trial completed on Germany, but it
+kept 25,356 rows versus 13,598 with the exact method. It also moved source
+means by up to 0.060 coordinate units. This is not an improvement. Do not
+ship this diagnostic or relax the audit limits.
