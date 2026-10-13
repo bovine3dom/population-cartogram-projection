@@ -1,6 +1,6 @@
 # Mobile export results
 
-Status: 2026-10-13 21:28 UTC. Work continues until 2026-10-14 01:45 UTC.
+Status: 2026-10-13 22:16 UTC. Work continues until 2026-10-14 01:45 UTC.
 
 ## Published experiment
 
@@ -92,15 +92,25 @@ shares one H3 runtime instead of two. It also releases unused Arrow columns
 after navigation and cell metadata are built. For the selected profile,
 JavaScript heap plus backing storage after forced garbage collection is
 about **191 MB** initially, **362 MB** in a world view, and **227 MB** after
-returning. The largest sampled initial-load value is **279 MB**. Sampling
-can miss short peaks. Copying retained columns briefly holds both buffers.
+returning. Four default-heap checks of the latest reader sampled initial-load
+peaks of **305–315 MB**. Sampling can miss short peaks. Copying retained
+columns briefly holds both buffers. Garbage-collection timing also changes
+these peaks.
+
+The reader now decodes dictionary H3 words directly into typed buffers.
+It avoids a large temporary object array. A test with a **64 MiB V8 heap
+limit** passes, including world and date-line navigation. Its sampled initial
+heap plus backing storage reaches 196 MB. The V8 limit does not include
+backing buffers or other browser memory. Default-heap load times range from
+23.2 to 34.3 seconds with 4× CPU throttling. Other local work affects timing;
+these runs do not establish an end-to-end speed gain.
 
 These measurements exclude embedder and GPU memory. They are from headless
 desktop Chromium, not a phone. This is not a 100 MB browser-memory solution.
 
-All current export, moment, audit, and publication checks pass. All 71 H3-MON
-unit tests and isolated desktop/mobile dictionary, viewport, and line-probe
-checks pass. The full rendering suite has a separate animation timeout that
+All current export, moment, audit, and publication checks pass. All 74 H3-MON
+unit tests, actual Arrow dictionary checks, and isolated desktop/mobile
+dictionary, viewport, and line-probe checks pass. The full rendering suite has a separate animation timeout that
 also occurs on the unchanged baseline. Do not report that suite as passing.
 
 See [the work log](mobile-export-work-log.md) for trial details and commits.

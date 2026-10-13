@@ -114,6 +114,9 @@ new result directory. Set `CHROMIUM_PATH` if necessary. This headless check
 uses the real application build with an isolated local HTTP server. It does
 not start the normal H3-MON service. It records file transfer sizes, cell and
 label counts, browser errors, a screenshot, and memory measurements.
+Set `JS_HEAP_MB=64` to test a 64 MiB V8 heap limit. The check records and
+verifies the applied limit. This limit does not include backing buffers,
+rendering, or other browser memory. It is not a total RAM limit.
 
 Use `publish.py CANDIDATE AUDIT_TOML FULL_REFERENCE NEW_DESTINATION` to stage
 an audited export. It checks file hashes and refuses an existing directory.

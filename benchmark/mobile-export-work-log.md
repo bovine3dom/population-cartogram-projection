@@ -646,3 +646,43 @@ The selected profile uses about 191 MB heap and backing storage after
 collection, 362 MB in the world view, and 227 MB after return. The largest
 sampled initial-load value is 279 MB. These are desktop headless measures,
 not phone limits. The remaining window is for verification and cleanup.
+
+
+## 22:16 UTC: browser heap checks and direct dictionary decode
+
+H3-MON commit `373cb8e` builds navigation bounds directly in typed buffers.
+It avoids six growing object arrays. Independent checks compare all
+2,392,689 adjacency entries, 387,294 bounds, and four nearest-cell queries
+with the earlier implementation. Three earlier paired browser checks reduced
+sampled initial peaks from 289–378 MB to 261–262 MB. Retained memory did not
+change. These peaks depend on collection timing.
+
+A separate 64 MiB V8 heap test found an out-of-memory failure in dictionary
+H3 decoding. The old path first built a full JavaScript array, then copied it
+into a typed array. A direct scalar decoder passed the limited-heap test.
+The final decoder instead reads Arrow chunk indexes and their dictionaries.
+It keeps dictionary validity, sliced indexes, replacement dictionaries, and
+UInt64 fallback behavior. It does not create the full temporary object array.
+
+H3-MON commit `a0803ce` contains the decoder and tests. All 74 unit checks,
+actual Arrow 19 chunk tests, and isolated desktop/mobile rendering checks
+pass. Every H3 half in both public files matches the original reader exactly.
+Commit `301e084` fixes a test race: a replacement viewport layer can exist
+before its geometry state is ready.
+
+The final reader passes world/date-line/return navigation with the confirmed
+67,108,864-byte V8 heap limit. The reusable browser check now supports
+`JS_HEAP_MB`. This is not a total memory limit. The capped run still uses
+about 191 MB heap plus backing storage after collection, and samples a
+196 MB initial peak. Default-heap runs sample 305–315 MB initial peaks.
+Their load times range from 23.2 to 34.3 seconds. Lower-word decoding itself
+uses 36–61 ms, versus 1.8–2.4 seconds in two new old-reader checks. Other
+local jobs were active. Do not infer a precise end-to-end speed gain from
+these runs. The earlier scalar-decoder timing difference was not enough to
+establish a regression.
+
+Logs are in `output/mobile-export/browser-chunk-dictionary-*`,
+`browser-dictionary-baseline-*`, `browser-final-heap64`, and
+`h3mon-chunk-dictionary-*`. The published dataset is unchanged. No normal
+H3-MON service was started. Unrelated auto-cartogram jobs belong to other
+work and were not stopped.

@@ -12,6 +12,8 @@ const require = createRequire(join(appRoot, 'package.json'));
 const {chromium} = require('playwright');
 await mkdir(output, {recursive: true});
 const failures = [], warnings = [], requests = [], samples = [], timings = [];
+const heapMB = Number(process.env.JS_HEAP_MB || 0);
+assert(Number.isSafeInteger(heapMB) && heapMB >= 0, 'JS_HEAP_MB must be a nonnegative integer');
 const dataPath = process.env.DATA_PATH || 'mobile.arrow';
 const metadata = process.env.METADATA_PATH ? JSON.parse(await readFile(process.env.METADATA_PATH, 'utf8'))
     : {cartogram: 'mobile-cartogram_hilo.arrow', trimFactor: 0};
@@ -49,7 +51,8 @@ try {
     await new Promise(done => server.listen(0, '127.0.0.1', done));
     const origin = `http://127.0.0.1:${server.address().port}`;
     browser = await chromium.launch({headless: true, executablePath: process.env.CHROMIUM_PATH,
-        args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--disable-dev-shm-usage']});
+        args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--disable-dev-shm-usage',
+            ...(heapMB ? [`--js-flags=--max-heap-size=${heapMB}`, '--enable-precise-memory-info'] : [])]});
     const context = await browser.newContext({viewport: {width: 390, height: 844}, deviceScaleFactor: 2,
         reducedMotion: 'reduce', serviceWorkers: 'block'});
     await context.route('**/*', route => new URL(route.request().url()).origin === origin
@@ -66,11 +69,14 @@ try {
             (text === 'Error: <g> attribute transform: Expected transform function, "0".' ? warnings : failures).push(text);
         }
         if (message.text().startsWith('[perf]')) {
-            timings.push(await Promise.all(message.args().map(arg => arg.jsonValue())));
+            try { timings.push(await Promise.all(message.args().map(arg => arg.jsonValue()))); }
+            catch (error) { failures.push(`Console capture: ${error}`); }
         }
     });
     const cdp = await context.newCDPSession(page);
     await cdp.send('Emulation.setCPUThrottlingRate', {rate: Number(process.env.CPU_THROTTLE || 4)});
+    const heapLimit = await page.evaluate(() => performance.memory?.jsHeapSizeLimit);
+    if (heapMB) assert(heapLimit <= heapMB * 1024 ** 2, 'requested V8 heap limit was not applied');
     const start = performance.now();
     let sampling = false;
     interval = setInterval(async () => {
@@ -90,7 +96,9 @@ try {
         const c = window._columnData;
         const layer = window.m._controls.find(control => control.getCanvas?.()?.id === 'deckgl-overlay')
             ._deck.props.layers.find(layer => layer.id.startsWith('H3HexagonLayer'));
-        return {sourceCells: c.value.length, finiteValues: Array.from(c.value).filter(Number.isFinite).length,
+        let finiteValues = 0;
+        for (const value of c.value) if (Number.isFinite(value)) finiteValues++;
+        return {sourceCells: c.value.length, finiteValues,
             geographicCells: layer.props.data.length};
     });
     assert.equal(data.finiteValues, data.sourceCells, 'nonfinite source value');
@@ -126,7 +134,7 @@ try {
     data.targetCells = render[1].rows;
     data.targetLabels = labels?.[1]?.labels;
     await writeFile(join(output, 'cells.json'), JSON.stringify(data));
-    await writeFile(join(output, 'memory.json'), JSON.stringify({browser: browser.version(), loadMs,
+    await writeFile(join(output, 'memory.json'), JSON.stringify({browser: browser.version(), loadMs, heapLimit,
         throttle: Number(process.env.CPU_THROTTLE || 4), h3Precision: process.env.H3_PRECISION || 'default',
         beforeGC, afterGC, pans, samples, timings, resources, failures, warnings, requests}, null, 2));
     console.log(JSON.stringify({loadMs, ...data, beforeGC, afterGC, failures, warnings}));
