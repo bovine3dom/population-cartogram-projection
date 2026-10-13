@@ -17,9 +17,9 @@ function checked_checkpoint(path,data,rows,weights,reference;target_retained=0.,
     return summary
 end
 
-function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing,target_retained=0.,fixed_floors=false)
+function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing,target_retained=0.,fixed_floors=false,block_shift::Tuple{Int,Int}=(0,0))
     mkpath(out)
-    config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,target_retained,fixed_floors,
+    config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,target_retained,fixed_floors,block_shift,
         seed=isnothing(seed) ? nothing : (abspath(seed),bytes2hex(sha256(read(seed)))), 
         code=[bytes2hex(sha256(read(joinpath(@__DIR__,file)))) for file in ("reduce.jl","bounded.jl","moments.jl","../mobile_export.jl")])
     config_path=joinpath(out,"config.jls")
@@ -31,8 +31,8 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
     end
     data=deserialize(input);reference=ME.reference_stats(data)
     floors=ME.target_floor_rows(data,target_retained)
-    source_order=sortperm(data.meta.ids)
-    target_order=sortperm(data.meta.targets)
+    source_order=circshift(sortperm(data.meta.ids),block_shift[1])
+    target_order=circshift(sortperm(data.meta.targets),block_shift[2])
     srank=invperm(source_order);trank=invperm(target_order)
     if isnothing(seed)
         rows=Int32.(eachindex(data.weight));weights=copy(data.weight)

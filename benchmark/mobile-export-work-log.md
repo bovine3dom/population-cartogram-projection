@@ -552,7 +552,7 @@ Initial browser heap and backing storage use 242 MB; the world view uses
 is 313 MB. Sampling is not a proof of the true peak. All 69 unit checks and
 the isolated desktop/mobile rendering checks pass.
 
-## 18:35 UTC: check the refinement result before replacement
+## 18:33 UTC: check the refinement result before replacement
 
 The fixed-contribution queue has completed its largest countries without a
 country timeout. Its China result has 544,025 rows; India has 421,545. The
@@ -564,3 +564,19 @@ Started separate China and India diagnostics with shifted block boundaries.
 These can combine rows across the old block cuts without larger matrices.
 Each diagnostic has a 90-minute process-group deadline and the same weight
 and geometry checks. No shifted-block option has been added to the exporter.
+
+## 19:17 UTC: smaller checked profile and shifted blocks
+
+The fixed-contribution queue is complete. A manifest selects smaller stages
+for 21 countries and keeps the other checked results. The new pack has
+2,723,935 rows and uses 74.1 MB for both files. Its full binary audit and
+headless world/date-line/return checks pass. Maximum geographic mean error
+is 0.184 m. The synthetic noise P99 error is 0.0642. The half-missing probe
+loses 89 target values, versus 87 in the current public profile. This is
+still an approximation. The public files have not yet changed again.
+
+Shifted-block diagnostics reduce China further to 520,389 rows and India
+to 375,846. Their full-country checks pass with the same 70% bound. Added
+`block_shift` with a zero default. It rotates only the block assignment,
+not the coordinates or constraints. All 65 moment, worker, floor, shift,
+and restart checks pass. Further trials will use the committed option.
