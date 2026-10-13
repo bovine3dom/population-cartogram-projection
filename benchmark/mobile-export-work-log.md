@@ -442,3 +442,24 @@ Also started a 75% China trial from the valid 80% seed. This is a possible
 middle profile if the 80% planet exceeds 100 MB. It has the same exact moment
 checks, an 8 GiB address-space limit, and a three-hour deadline. No small
 candidate has replaced the public experiment yet.
+
+## 16:05 UTC: publish the validated 70% profile
+
+Replaced only the experimental directory:
+`/home/olie/projects/H3-MON/www/data/planet-h3-5-factor1-continuity/`.
+It now contains the 79.9 MB pair, the binary query audit, fit and reduction
+diagnostics, a clear README, and dataset-specific browser metadata. This
+profile still has the original lossless density file; later packs use the
+smaller dictionary density file.
+
+Checked all staged file hashes and ran the actual metadata URL with the
+headless world/date-line/return test before moving the directory. All checks
+pass. Kept the former public directory in
+`output/mobile-export/former-public-full/`. The immutable full reference
+also remains at `output/mobile-export/full-reference/`. These use hard links
+for the large original files. Do not edit them in place.
+
+The production input hash is unchanged. No normal H3-MON service is running.
+No production, UK, or Germany dataset was replaced. The stronger 80% and
+mixed 75% trials continue within their deadlines. Keep this checked public
+profile unless a stronger result meets the byte and quality limits.

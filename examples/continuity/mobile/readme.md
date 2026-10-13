@@ -118,5 +118,6 @@ Small files do not imply small browser memory. Report raw bytes, compressed
 transfer bytes, JavaScript heap, and backing buffers separately. Browser
 measurements on a throttled desktop are not measurements on a phone.
 
-See [the work log](../../../benchmark/mobile-export-work-log.md) for measured
-results, failed trials, and the selected publication status.
+See [the results](../../../benchmark/mobile-export.md) for the published
+profile. See [the work log](../../../benchmark/mobile-export-work-log.md) for
+measurements, failed trials, and commits.
