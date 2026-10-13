@@ -1,0 +1,60 @@
+{
+  "boundary_sensitive_population": 7.714381e6,
+  "coarse_cross_component_lower_bound": 1.99810629250264e7,
+  "component_identity": "country plus SHA-256 prefix of polygon coordinate JSON; geometry edits change IDs",
+  "country_code": 360,
+  "elapsed_seconds": 40.24234700202942,
+  "geographic_components": 264,
+  "grid_step": 2,
+  "inputs": [
+    {
+      "path": "/home/olie/projects/gtfs_ffs/data/kontur_h3.arrow",
+      "role": "population",
+      "sha256": "c21eaf6c3eb65563e80f2055347ad13f979014a190f8472817c25a591f427eb3"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/make-lookup-table/population-data/country-boundaries/ne_10m_admin_0_map_units.geojson",
+      "role": "boundary",
+      "sha256": "13c0aa23f535f8e4ec0ff52956d69f761933413b4fb7aa4a311c5f492256441b"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/data/cartogram.csv",
+      "role": "cartogram",
+      "sha256": "a08f41f7b3f8912e3956c8882a255a0e6ea60b5a720216a0746416ba5d62c257"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/audit.jl",
+      "role": "script",
+      "sha256": "ff826dd81f540f86b4806867eb3b94e792bd8e71cc217856f8a70b4fae8c7d9c"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/scripts/extract_kontur_country.jl",
+      "role": "extractor",
+      "sha256": "b59200db0645ef40d1bf1aef38b8c3918aed3154e25c886b7caaeddad083dee5"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/Manifest.toml",
+      "role": "environment",
+      "sha256": "de83c9ce0312c19fa6378792127e69fd99954ee96e440ab72a22b4aaa06805a3"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/indonesia-matches.csv",
+      "role": "matches",
+      "sha256": "c0facf884ac3456e0d17346ecf811b432059fdcf266a0a5247fdb97682a34b77"
+    }
+  ],
+  "julia_version": "1.12.7",
+  "membership": "H3-8 cell centre in a supplied polygon, outside its holes; no coastal splitting",
+  "polygons_without_h3_centres": 0,
+  "polygons_without_population": 12,
+  "population_total": 2.70120945e8,
+  "population_without_budget": 1.564232e6,
+  "population_year": "unknown: input Arrow has no declared year",
+  "positive_components_without_budget": 201,
+  "reviewed_matches": 4,
+  "source_cells": 832166,
+  "source_resolution": 8,
+  "target_components": 25,
+  "target_tiles": 1894,
+  "unmatched_policy": "pool unreviewed sources and targets only for the coarse lower bound"
+}

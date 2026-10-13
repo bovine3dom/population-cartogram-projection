@@ -1,0 +1,6 @@
+label,longitude,latitude,target_x,target_y,status,evidence
+Sumatra,101.0,-1.0,942,530,reviewed,"Agent visual review: long northwest-southeast island west of Kalimantan and northwest of Java; seed selects the main Sumatra polygon only. Offshore islands remain unresolved."
+Kalimantan,114.0,-1.0,1020,546,reviewed,"Agent visual review: southern part of Borneo north of Java; the target shares its northern boundary with Malaysian cells (458). Seed selects Indonesian mainland Borneo only."
+Sulawesi,120.0,-2.0,1086,550,reviewed,"Agent visual review: branched island east of Kalimantan and west of Maluku. Seed selects the main Sulawesi polygon only; offshore islands remain unresolved."
+Papua-Indonesia,138.0,-4.0,1132,558,reviewed,"Agent visual review: easternmost Indonesian component; its eastern edge touches Papua New Guinea cells (598). Seed selects the Indonesian mainland portion of New Guinea only."
+Java-candidate,110.0,-7.5,992,600,provisional,"Position identifies the Java artwork region, but the connected shape may also include Madura or other islands. A one-polygon match is not established; exclude it from the capacity bound."
