@@ -4,6 +4,7 @@ import argparse
 import csv
 import hashlib
 import json
+import os
 from pathlib import Path
 
 import networkx as nx
@@ -39,7 +40,7 @@ def integer_positions(graph, geography):
     positions = nx.combinatorial_embedding_to_pos(embedding)
     labels = sorted(graph)
     coordinates = np.array([positions[label] for label in labels], dtype=float)
-    target = np.array([geography[label] for label in labels])
+    target = np.array([geography[label] for label in labels], dtype=float)
     target -= target.mean(axis=0)
     # Select from eight signed axis permutations. Keep integer coordinates to
     # avoid additional near-collinear cases in upstream geometric predicates.
@@ -66,7 +67,7 @@ def run(inputs):
             if r["both_represented"] == "true":
                 graph.add_edge(r["a"],r["b"])
     # The input writer emits STAGE 1, one outer ring, and zero sites per shape.
-    lines = (inputs/"input.wkt").read_text().splitlines()
+    lines = (inputs/"validated.wkt").read_text().splitlines()
     records = {}
     for start in range(2,len(lines),3):
         header = lines[start].split("\t")
@@ -112,7 +113,8 @@ def run(inputs):
             stream.write("\t".join(header)+"\n"+ring+"\nSITECOUNT 0\n")
             weights.write(f"{label}\t{weight}\n")
     metadata={"method":"Biconnected planar dual with temporary sea vertices; Chrobak-Payne integer drawing",
-              "networkx_version":nx.__version__,"land_vertices":len(graph),"land_edges":graph.number_of_edges(),
+              "networkx_version":nx.__version__,"python_hash_seed":os.environ.get("PYTHONHASHSEED", "random"),
+              "land_vertices":len(graph),"land_edges":graph.number_of_edges(),
               "sea_vertices":len(sea),"augmented_edges":len(edges),
               "connected_component_sizes":sorted(sizes,reverse=True),
               "sea_policy":"One temporary tile per added-edge subdivision; these are not population targets and are removed at export",
@@ -124,6 +126,8 @@ def run(inputs):
 
 
 if __name__ == "__main__":
+    if os.environ.get("PYTHONHASHSEED") != "0":
+        raise SystemExit("Run with PYTHONHASHSEED=0 for repeatable NetworkX choices")
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("inputs",type=Path)
     args=parser.parse_args()

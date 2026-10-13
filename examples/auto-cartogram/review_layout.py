@@ -33,10 +33,17 @@ def connectivity(cells):
     return pieces
 
 
+def holes(cells):
+    xmin, xmax = min(x for x,y in cells)-1, max(x for x,y in cells)+1
+    ymin, ymax = min(y for x,y in cells)-1, max(y for x,y in cells)+1
+    sea = {(x,y) for x in range(xmin,xmax+1) for y in range(ymin,ymax+1)} - cells
+    return connectivity(sea)-1
+
+
 def quality(cells):
     perimeter = sum((x + dx, y + dy) not in cells
                     for x, y in cells for dx, dy in NEIGHBOURS)
-    return {"connected_parts": connectivity(cells), "perimeter": perimeter,
+    return {"connected_parts": connectivity(cells), "holes": holes(cells), "perimeter": perimeter,
             "compactness": 4 * math.pi * len(cells) / perimeter**2}
 
 
@@ -59,6 +66,25 @@ def load(inputs, layout):
     if set(shapes) != set(tiles):
         raise ValueError("Missing component tiles")
     return shapes, tiles, owners
+
+
+def island_order(shapes, tiles):
+    centres = {c:(sum(x for x,y in cells)/len(cells),sum(y for x,y in cells)/len(cells)) for c,cells in tiles.items()}
+    errors, tested = [], 0
+    labels = sorted(shapes)
+    for i,a in enumerate(labels):
+        for b in labels[i+1:]:
+            ra,rb = shapes[a],shapes[b]
+            if ra["country_id"] != rb["country_id"]:
+                continue
+            for axis,(lo,hi) in enumerate((("west","east"),("south","north"))):
+                delta = (float(rb[lo])+float(rb[hi])-float(ra[lo])-float(ra[hi]))/2
+                if abs(delta) < 1 or (axis == 0 and abs(delta) > 180):
+                    continue  # Near ties and seam-spanning pairs have no stable sign.
+                tested += 1
+                if delta*(centres[b][axis]-centres[a][axis]) <= 0:
+                    errors.append((ra["country_id"],a,b,"east" if axis == 0 else "north"))
+    return tested,errors
 
 
 def country_color(country):
@@ -87,6 +113,7 @@ def draw(path, shapes, tiles, owners, metrics, title):
              f'{metrics["population_total"]/1e9:.3f} billion people in scope</text>',
              f'<text x="40" y="91" font-size="15">Grouped population: {metrics["grouped_population"]:,.0f}; '
              f'omitted from shapes: {metrics["omitted_population"]:,.0f}; '
+             f'unmatched source: {metrics.get("unmatched_source_population", 0):,.0f}; '
              f'count error: {metrics["absolute_tile_error"]:,} tiles.</text>',
              f'<text x="40" y="114" font-size="15" fill="#973b28">EXPERIMENT: '
              f'{metrics["missing_contacts"]} missing and {metrics["false_contacts"]} false represented contacts; '
@@ -139,8 +166,9 @@ def draw(path, shapes, tiles, owners, metrics, title):
         boxes.append(box)
         parts.append(f'<text x="{fmt(px)}" y="{fmt(py)}" text-anchor="middle" font-size="12" '
                      f'paint-order="stroke" stroke="#faf9f6" stroke-width="2" stroke-linejoin="round">{html.escape(label)}</text>')
+    method = "Separate geographic baseline" if "mode=geographic-baseline" in metrics["generation"] else "GridMapPipeline"
     parts.append('<text x="40" y="1094" font-size="13">Sources: Kontur population; Natural Earth map units. '
-                 'Layout: GridMapPipeline. Population year is not declared by the input file.</text></g></svg>')
+                 f'Layout: {method}. Population year is not declared by the input file.</text></g></svg>')
     path.write_text("\n".join(parts))
 
 
@@ -167,14 +195,34 @@ def run(inputs, layout, title):
     metrics.update(tiles=len(owners), countries=len({r["country_id"] for r in shapes.values()}),
                    absolute_tile_error=sum(abs(r["requested"] - r["actual"]) for r in regions),
                    disconnected_regions=sum(r["connected_parts"] != 1 for r in regions),
+                   regions_with_holes=sum(r["holes"] > 0 for r in regions),
+                   unmatched_source_population=metadata.get("unmatched_source_population", 0),
                    required_contacts=len(required), missing_contacts=len(missing), false_contacts=len(false),
                    contacts_with_unrepresented_components=len(geographic)-len(required),
                    actual_contacts=len(actual),
-                   generated_mode=(layout / "complete.txt").read_text().splitlines()[0],
+                   generation=(layout / "complete.txt").read_text().splitlines(),
                    occupied_fraction=len(owners)/((max(x for x,y in owners)-min(x for x,y in owners)+1)*
                                                   (max(y for x,y in owners)-min(y for x,y in owners)+1)))
+    country_rows = []
+    for country in sorted({r["country_id"] for r in shapes.values()}):
+        labels = [c for c,r in shapes.items() if r["country_id"] == country]
+        population = sum(float(shapes[c]["group_population"]) for c in labels)
+        actual_tiles = sum(len(tiles[c]) for c in labels)
+        ideal_tiles = population/metadata["population_total"]*metadata["tile_budget"]
+        country_rows.append({"country_id":country,"population":population,"actual_tiles":actual_tiles,
+                             "ideal_tiles":ideal_tiles,"relative_area_error":actual_tiles/ideal_tiles-1})
+    metrics["country_absolute_area_error_tiles"] = sum(abs(r["actual_tiles"]-r["ideal_tiles"]) for r in country_rows)
+    metrics["maximum_country_relative_area_error"] = max(abs(r["relative_area_error"]) for r in country_rows)
+    with (layout / "country-counts.csv").open("w", newline="") as stream:
+        writer = csv.DictWriter(stream,fieldnames=list(country_rows[0]))
+        writer.writeheader(); writer.writerows(country_rows)
+    tested, order_errors = island_order(shapes, tiles)
+    metrics.update(island_axis_comparisons=tested, island_axis_order_errors=len(order_errors))
+    with (layout / "island-order-errors.csv").open("w", newline="") as stream:
+        writer = csv.writer(stream); writer.writerow(["country_id", "a", "b", "axis"])
+        writer.writerows(order_errors)
     metrics["passes_represented_constraints"] = (metrics["absolute_tile_error"] == 0 and
-        metrics["disconnected_regions"] == 0 and not missing and not false)
+        metrics["disconnected_regions"] == 0 and metrics["regions_with_holes"] == 0 and not missing and not false)
     (layout / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
     with (layout / "region-quality.csv").open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(regions[0]))
