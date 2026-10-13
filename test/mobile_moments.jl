@@ -1,8 +1,5 @@
 using Test, Random, LinearAlgebra
-include("../examples/continuity/mobile_export.jl")
-include("../examples/continuity/mobile/moments.jl")
-const ME=MobileExport
-const MR=MomentReduction
+include("../examples/continuity/mobile/reduce.jl")
 @testset "Moment-preserving export" begin
     @test size(MR.features(ones(3,8)))==(1,8)
     @test size(MR.features([1. 2. 3.;2. 4. 6.]))==(2,3)
@@ -30,5 +27,21 @@ const MR=MomentReduction
     anchor=index.source_rows[index.source_ptr[1]]
     @test anchor in result.rows
     @test result.weights[findfirst(==(anchor),result.rows)]>=.5w[anchor]-1e-10
+    tiny=merge(data,(;weight=1e-7.*w))
+    reduced=MR.reduce_block(tiny,Int32.(eachindex(w)),tiny.weight,reference.target_mass)
+    @test length(reduced.rows)<length(w)
+    @test reduced.residual<1e-14
+    @test sum(reduced.weights)≈sum(tiny.weight) rtol=1e-8
     @test_throws ErrorException MR.reduce_block(data,Int32[],Float64[],reference.target_mass)
+    mktempdir() do dir
+        ids=[MR.H3.API.latLngToCell(MR.H3.API.LatLng(.4+.01s,.1),5) for s in 1:ns]
+        input=joinpath(dir,"input.jls");out=joinpath(dir,"out")
+        serialize(input,merge(data,(;meta=merge(meta,(;ids)))))
+        reduce_country(input,out;stages=[(8,9)])
+        saved=deserialize(joinpath(out,"stage-1.jls"))
+        @test saved.summary.rows<length(w)
+        @test saved.summary.inverse_km_max<.001
+        @test isnothing(reduce_country(input,out;stages=[(8,9)]))
+        @test_throws ErrorException reduce_country(input,out;stages=[(4,9)])
+    end
 end

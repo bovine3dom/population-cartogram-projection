@@ -41,7 +41,7 @@ Apache Arrow 19.0.1 through loaders.gl. Its actual decoder is the final check.
 - https://loaders.gl/docs/arrowjs/developer-guide/reading-and-writing
 - https://github.com/apache/arrow-js/issues/109
 
-## 11:05 UTC: culling profiles and sparse weight adjustment
+## 11:00 UTC: culling profiles and sparse weight adjustment
 
 Built a source and target index for all 120,753,287 rows. Saved separate
 country caches for bounded tests. The reference has 387,294 source cells,
@@ -71,8 +71,9 @@ its native HiGHS 1.15.1 crashed before worker initialization. A zero-iteration
 solve initializes the workers before crossover. No installed package was
 changed. Unit tests pass: 25 export checks and 13 moment checks.
 
-Two dense 128-source blocks from the US and China did not finish crossover
-within the 600-second limit. Their results were rejected. Test smaller
+Two dense 128-source blocks from the US and China failed crossover with a
+600-second limit. Their results were rejected. The first log did not include
+the failure status or elapsed time; this was not proof of a timeout. Test smaller
 target blocks next, then merge their sparse results. Keep the full reference
 and do not publish a reduced file until independent checks pass.
 
@@ -80,3 +81,21 @@ HiGHS references:
 
 - https://ergo-code.github.io/HiGHS/dev/interfaces/julia/
 - https://jump.dev/JuMP.jl/stable/packages/HiGHS/
+
+## 11:10 UTC: bounded blocks and numerical scaling
+
+The smaller blocks exposed a numerical failure, not a time limit. Tiny
+weights and redundant moment equations caused crossover to return an unknown
+status. Scale the block weights and remove the known shared equations with
+pivoted QR. Still check every original equation, including those removed.
+A new small-weight regression test passes. There are now 16 moment checks.
+
+A dense US block fell from 217,800 rows to 9,535. Four target-block stages
+used 7.3 seconds in crossover. A China block fell from 420,379 to 23,612.
+Some small China blocks failed the nonnegative-weight check and retained
+their input. Later merges succeeded. No failed result was accepted.
+
+Added a country driver with stage checkpoints and full-country checks.
+Started US and China trials. Each stage merges source and target blocks.
+The driver retains the input of any failed block. This can increase file
+size, but cannot silently install an invalid sparse solution.

@@ -49,6 +49,17 @@ function reduce_block(data,rows,weights,target_mass;forward=true,density=false,l
     end
     all(weights .>= lower.-1e-8) || error("label anchor was lost")
     matrix=SparseMatrixCSC(nr,nc,ptr,ri,va);rhs=matrix*weights
+    # The two sets of moment equations share sf*tf exact dependencies.
+    pivots=qr(a,ColumnNorm()).p[1:tf]
+    independent=trues(nr)
+    for i in pivots
+        independent[sf*(i-1)+1:sf*i].=false
+    end
+    full_matrix,full_rhs=matrix,rhs
+    matrix=matrix[independent,:];rhs=rhs[independent];nr=size(matrix,1)
+    ptr,ri,va=matrix.colptr,matrix.rowval,matrix.nzval
+    scale=maximum(weights)
+    seed=weights./scale;rhs=rhs./scale;lower=lower./scale
     h=HiGHS.Highs_create();h==C_NULL && error("could not create HiGHS")
     check(status)=status>=0 || error("HiGHS call failed: $status")
     try
@@ -66,14 +77,15 @@ function reduce_block(data,rows,weights,target_mass;forward=true,density=false,l
         check(HiGHS.Highs_setIntOptionValue(h,"simplex_iteration_limit",0))
         check(HiGHS.Highs_run(h))
         check(HiGHS.Highs_setIntOptionValue(h,"simplex_iteration_limit",typemax(Cint)))
-        seconds=@elapsed status=HiGHS.Highs_crossover(h,nc,nr,weights,zeros(nc),zeros(nr))
+        seconds=@elapsed status=HiGHS.Highs_crossover(h,nc,nr,seed,zeros(nc),zeros(nr))
         check(status)
-        HiGHS.Highs_getModelStatus(h)==HiGHS.kHighsModelStatusOptimal || error("crossover did not finish")
+        model_status=HiGHS.Highs_getModelStatus(h)
+        model_status==HiGHS.kHighsModelStatusOptimal || error("crossover status $status, model $model_status after $seconds seconds")
         solution=zeros(nc);check(HiGHS.Highs_getSolution(h,solution,C_NULL,C_NULL,C_NULL))
         minimum(solution)>=-1e-8 || error("negative reduced weight")
         maximum(lower.-solution)<=1e-8 || error("label bound failed")
-        solution=max.(solution,0.)
-        residual=maximum(abs.(matrix*solution.-rhs))
+        solution=max.(solution,0.).*scale
+        residual=maximum(abs.(full_matrix*solution.-full_rhs))
         residual<=1e-6 || error("moment residual $residual")
         keep=findall(>(0),solution)
         length(keep)<=nr+count(>(0),lower) || error("crossover did not give a sparse solution")
