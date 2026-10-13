@@ -288,3 +288,24 @@ H3-MON commit `00c9a85` adds streaming HTTP gzip for Arrow responses. All
 public data directory has changed. The animation test limitation still
 applies. Keep the new candidate in research output until quality selection
 and publication checks are complete.
+
+## 14:05 UTC: reduce browser allocations without changing data
+
+H3-MON now disables spare Deck attribute capacity and the released-buffer
+pool (`61acf4f`). It uses exact 52-bit keys under a 12-bit prefix for split
+H3 lookup (`b60b39e`). All 64 input bits remain distinct. Cartogram row
+indexes now share one Uint32 buffer. Numeric weights use their existing
+Float32 or Float64 buffer, and decoded dictionary H3 words use Uint32
+storage (`978b389`). No map values or transport weights change.
+
+With the same whole-planet candidate, forced-GC JavaScript heap fell from
+172.4 to 120.5 MB. Backing storage fell from 465.4 to 367.7 MB. The total
+is about 488 MB, excluding embedder and GPU memory. This is still too large
+for a strict 100 MB memory budget. The geographic layer still builds full
+world geometry. Load times in these trials range from 25.4 to 27.7 seconds.
+Do not infer a speed gain from concurrent desktop trials.
+
+All 64 H3-MON unit checks pass. The isolated desktop and mobile dictionary,
+layout, and line-probe checks pass after each change. The whole-planet
+render still has 54,931 targets and 1,711 labels. The normal service remains
+off. Public data files remain unchanged.
