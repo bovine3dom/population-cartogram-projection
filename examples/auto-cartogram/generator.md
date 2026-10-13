@@ -17,7 +17,10 @@ python3 -m venv output/auto-cartogram/geometry-env
 output/auto-cartogram/geometry-env/bin/pip install -r examples/auto-cartogram/geometry-requirements.txt
 ```
 
-The build checks upstream revisions and the downloaded JDK checksum. It applies
+The build checks upstream revisions and the downloaded JDK checksum. It writes
+`build-info.properties` with revisions and source hashes. The adapter copies
+this record into new layouts. Copy the class directory before long experiments
+so later builds cannot change their class files. It applies
 `upstream-fixes.patch` to copies, not to the upstream checkout. The patch fixes
 an inverted size assertion, removal-queue ties, and a local connectivity check.
 Keep Java assertions enabled for reference runs. The independent flood-fill test checks
@@ -103,6 +106,12 @@ assertions with `'-da:arrange.model.MosaicCartogram$MosaicRegion'`. Other Java
 assertions stay enabled. The completion marker records `regionAssertions=false`.
 This is not equivalent to an all-assertions run. Independent final count,
 connectivity, hole, and contact checks remain required.
+
+The review tool also reports country and island axis-order errors, shape
+compactness, and a country-uniform-tile cross-group capacity lower bound.
+These are separate diagnostics. Unknown source coverage is shown as unknown,
+not as zero. `save_review.py --refresh` can update derived checks only when the
+saved tile export and input manifest still match.
 
 The outline check rejects invalid original projected rings. If a simplified ring
 crosses itself, it restores the original projected ring and records the change.

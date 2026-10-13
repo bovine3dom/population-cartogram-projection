@@ -6,6 +6,7 @@
   "omitted_population": 0.0,
   "holes_not_encoded_in_wkt": 20,
   "policy": "group",
+  "review_script_sha256": "9c4d52a7c1980cc432d79c33c77c7159bcedecde27dbb176a2b2a7759fcd6bf4",
   "tiles": 55000,
   "countries": 250,
   "absolute_tile_error": 0,
@@ -22,8 +23,14 @@
     "contacts=not-preserved"
   ],
   "occupied_fraction": 0.09569844202936376,
+  "country_uniform_tile_cross_group_lower_bound": 6365919.682338778,
   "country_absolute_area_error_tiles": 108.42557727971565,
   "maximum_country_relative_area_error": 36156.62722727273,
+  "country_axis_comparisons": 7500,
+  "country_axis_order_errors": 41,
+  "country_axis_population_threshold": 10000000,
+  "country_axis_degree_threshold": 5,
+  "population_weighted_compactness": 0.22413800651935778,
   "island_axis_comparisons": 3727,
   "island_axis_order_errors": 135,
   "passes_represented_constraints": false

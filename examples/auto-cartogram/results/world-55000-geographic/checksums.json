@@ -17,8 +17,10 @@
   "output/auto-cartogram/world-55000-v2-baseline/complete.txt": "e08243e8a56ba83f36b5157a94a4a6a61a9825501a13d001e9f368d977b15e23",
   "output/auto-cartogram/world-55000-v2-baseline/contact-errors.csv": "f17883bcd071049603d29155c23769a5bce07ce71ae8d028bf341cfd95925ef2",
   "output/auto-cartogram/world-55000-v2-baseline/country-counts.csv": "71bcdc216c6b0e30cdb830aa44f69df1753ce21818279bfce2bf4431c92be8d0",
+  "output/auto-cartogram/world-55000-v2-baseline/country-order-errors.csv": "1383c3f64be720edf3f087c992e3af6e70db82a0846cb50339c64e382fe2c2ec",
+  "output/auto-cartogram/world-55000-v2-baseline/group-capacities.csv": "fc81dd84850a875ef3e32a63c32ea6f1b686f75104adc84904184599c9b0c5b7",
   "output/auto-cartogram/world-55000-v2-baseline/island-order-errors.csv": "b4ad2216fc2c2b51916bca14c8a93170d0de72cb774b16ff14773b0abc3c08e6",
-  "output/auto-cartogram/world-55000-v2-baseline/metrics.json": "3b5925dd461a7f55b861d2b1bc1203c84c6e0d896e8d2c71007c3f0dc3dcd49c",
+  "output/auto-cartogram/world-55000-v2-baseline/metrics.json": "c7f1b60ec6a0eda47cd73753624c517781a444f6882f4117169c8498227e5d9a",
   "output/auto-cartogram/world-55000-v2-baseline/region-quality.csv": "cc9abf9933c7a232b474f12b9828d88efe8a54b776e2e07f9b5c36c3605681d1",
   "output/auto-cartogram/world-55000-v2-baseline/review.png": "2805e4b642315461134b6f6951b93085fa2d567d2948d1d6dfc77a07e1520dca",
   "output/auto-cartogram/world-55000-v2-baseline/review.svg": "54af86ba7b679dcc571d647d54567d92a78c3d06185ed6ab36fab5ddde4a9010"

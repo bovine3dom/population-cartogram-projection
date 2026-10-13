@@ -151,7 +151,7 @@ function run(summary_path, boundary_path, output, n; country="world", policy="gr
     source_manifest = joinpath(dirname(summary_path), "manifest.json")
     if country == "world" && isfile(source_manifest)
         source = JSON.parsefile(source_manifest)
-        manifest["unmatched_source_population"] = get(source, "unmatched_population", 0)
+        manifest["unmatched_source_population"] = get(source, "unmatched_population", nothing)
         manifest["source_manifest_sha256"] = Audit.file_hash(source_manifest)
     end
     mkpath(dirname(abspath(output)))

@@ -236,3 +236,26 @@ under ignored `output/auto-cartogram/`.
 - The orientation path and infeasible-count test pass. All ten Python/Java
   tests pass. The ongoing reference fits use their earlier frozen class copy;
   they do not receive changes while running.
+
+## 22:44–22:52 UTC — review evidence and provenance
+
+- The frozen reference fit reached the predicted Polisher assertion in a later
+  component. Restarted it with the tested fix. Stopped the older large-resolution
+  loop before it could launch another job with the same known error.
+- The five-round orientation preview preserves all represented contacts and
+  has no region holes, but its count error remains above 10,000 tiles. It is
+  not a valid population layout.
+- Added country axis-order checks for entities with at least 10 million matched
+  people, excluding differences below five degrees. The geography-first
+  baselines have 48, 41, and 39 reversed comparisons out of 7,500. The oriented
+  five-round preview has 1,098. This supports the visual finding that geographic
+  arrangement still needs work.
+- Corrected the Indonesia coverage caption: missing source coverage is unknown
+  by country, not zero. The world join excludes unmatched sources before the
+  Indonesia subset is formed. Nearest-polygon diagnostics do not assign them.
+- New Java builds record upstream revisions and source hashes in each layout.
+  Review archives can refresh derived checks only if their cells and input
+  manifest still match. Removed unused planar embeddings from the separate
+  geographic-baseline archives; they were not used by that method.
+- Refreshed the three world baselines and Indonesia review checks. Production
+  targets and solver files remain unchanged.

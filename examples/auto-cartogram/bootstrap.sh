@@ -60,6 +60,14 @@ mapfile -d '' sources < <(fd -0 --extension java "${exclusions[@]}" . \
     "$ROOT/examples/auto-cartogram/MosaicAdapter.java" \
     "$ROOT/examples/auto-cartogram/DirectionalPlacement.java" \
     "$ROOT/examples/auto-cartogram/GeographicOrientation.java"
+{
+    printf 'gridmap_revision=%s\n' "$(git -C "$VENDOR/GridMapPipeline" rev-parse HEAD)"
+    printf 'geometry_revision=%s\n' "$(git -C "$VENDOR/GeometryCore" rev-parse HEAD)"
+    for path in bootstrap.sh upstream-fixes.patch MosaicAdapter.java DirectionalPlacement.java GeographicOrientation.java; do
+        read -r hash _ < <(sha256sum "$ROOT/examples/auto-cartogram/$path")
+        printf 'sha256.%s=%s\n' "$path" "$hash"
+    done
+} > "$VENDOR/classes/build-info.properties"
 printf '%s\n' "$JAVA_HOME/bin/java" > "$VENDOR/java-path.txt"
 "$JAVA_HOME/bin/java" -version
 printf 'Built headless adapter in %s/classes\n' "$VENDOR"

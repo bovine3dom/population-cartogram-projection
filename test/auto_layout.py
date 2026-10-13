@@ -11,6 +11,9 @@ EXAMPLE = ROOT / "examples" / "auto-cartogram"
 spec = importlib.util.spec_from_file_location("review_layout", EXAMPLE / "review_layout.py")
 review = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(review)
+spec = importlib.util.spec_from_file_location("save_review", EXAMPLE / "save_review.py")
+publish = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(publish)
 VENDOR = ROOT / "output" / "auto-cartogram" / "vendor"
 
 
@@ -19,6 +22,15 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(review.connectivity({(0, 0), (1, 0), (1, 1)}), 1)
         self.assertEqual(review.connectivity({(0, 0), (1, 1)}), 2)
         self.assertEqual(review.quality({(0, 0)})["perimeter"], 4)
+
+    def test_country_order_detects_reversed_axes(self):
+        shapes={"a":dict(country_id="A",west=0,east=1,south=0,north=1),
+                "b":dict(country_id="B",west=10,east=11,south=10,north=11)}
+        tiles={"a":{(1,1)},"b":{(0,0)}}
+        tested,errors=review.axis_order(shapes,tiles,same_country=False,threshold=5)
+        self.assertEqual(tested,2)
+        self.assertEqual(len(errors),2)
+        self.assertEqual(review.axis_order(shapes,tiles)[0],0)
 
     def test_review_reports_uniform_tile_capacity_mismatch(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -36,6 +48,16 @@ class ReviewTests(unittest.TestCase):
             self.assertTrue(metrics["passes_represented_constraints"])
             self.assertAlmostEqual(metrics["country_uniform_tile_cross_group_lower_bound"],100/15)
             self.assertEqual(metrics["island_axis_order_errors"],0)
+            self.assertIsNone(metrics["unmatched_source_population"])
+            (layout/"review.png").write_bytes(b"test image fixture")
+            archive=Path(tmp)/"archive"
+            publish.run(inputs,layout,archive)
+            publish.run(inputs,layout,archive,refresh=True)
+            with self.assertRaises(ValueError):
+                publish.run(inputs,layout,archive)
+            (layout/"cells.csv").write_text("changed cells")
+            with self.assertRaises(ValueError):
+                publish.run(inputs,layout,archive,refresh=True)
 
     def test_unknown_duplicate_and_missing_owners(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -82,6 +104,7 @@ class AdapterTests(unittest.TestCase):
                     counts = {r["component_id"]:int(r["actual"]) for r in review.read_csv(output/"counts.csv")}
                     self.assertEqual(counts, {"a":9,"b":3})
                     self.assertTrue((output/"complete.txt").exists())
+                    self.assertIn("sha256.MosaicAdapter.java=",(output/"build-info.properties").read_text())
                     results.append(sorted((r["component_id"],r["x"],r["y"]) for r in cells))
                 self.assertEqual(*results)
 
