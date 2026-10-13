@@ -95,3 +95,22 @@ under ignored `output/auto-cartogram/`.
   assertions have a substantial cost in the global Java fit.
 - Added tests for polygon holes, ambiguous membership, batch boundaries,
   planar augmentation, guide fallback, and separate-shape growth.
+
+## 21:40 UTC — saved review gallery
+
+- Saved world PNGs at 10,000, 55,000, and 110,000 tiles, with checks and source
+  grouping tables. All three geography-first baselines have exact requested
+  counts, unique cells, connected regions, and no holes. They retain no land
+  borders and are not production candidates.
+- Grouped population falls from 27,896,450 to 6,099,545 across these resolutions.
+  All layouts exclude the same 77,246,034 unmatched source people.
+- Saved a checked Indonesia Java layout at 1,894 tiles. Counts and structural
+  checks pass. The same-country axis-order diagnostic still finds 426 errors
+  in 2,323 comparisons; compact placement is not geographic accuracy.
+- Added country area-error tables. A one-tile country minimum can greatly
+  exaggerate tiny source populations, even when requested counts match exactly.
+- Found that NetworkX can make different choices across Python hash seeds.
+  Future CLI runs require `PYTHONHASHSEED=0`. Save the actual embedding files
+  for the earlier pending runs, which did not pin this seed.
+- Global Java fits remain in progress. No global topology-preserving success
+  has been established. The gallery states this limit.

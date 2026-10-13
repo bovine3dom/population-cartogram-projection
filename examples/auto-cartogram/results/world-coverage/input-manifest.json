@@ -1,0 +1,48 @@
+{
+  "population_total": 7954677990.0,
+  "input_population": 8031924024.0,
+  "source_cells": 32668501,
+  "input_cells": 32957699,
+  "unmatched_cells": 289198,
+  "unmatched_population": 77246034.0,
+  "ambiguous_cells": 0,
+  "ambiguous_population": 0.0,
+  "skipped": [
+    {
+      "component_id": "ATA:9ff469ec4c9f1da7",
+      "component_index": 172,
+      "country_id": "ATA",
+      "map_unit": "ATA",
+      "name": "Antarctica",
+      "raw_country_code": "010",
+      "reason": "longitude_span_over_180"
+    }
+  ],
+  "population_year": "not declared by input Arrow",
+  "membership": "GEOS contains on native H3-8 centres in longitude/latitude; excludes boundary points",
+  "country_identity": "Natural Earth ADM0_A3, not raw numeric ISO_N3_EH",
+  "shapely_version": "2.1.2",
+  "geos_version": "3.13.1",
+  "pyarrow_version": "23.0.1",
+  "numpy_version": "2.4.2",
+  "batch_size": 250000,
+  "elapsed_seconds": 25.179519139695913,
+  "inputs": [
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-centres/centres.arrow",
+      "sha256": "d106ba32c139475982859fcf0ca19dedb02eed5e01c16aa90d8630ce42bdda91"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-centres/polygons.geojson",
+      "sha256": "e2933367e9c44040c35379499a67e9ae2415be63ad976a0361979a4891cd6476"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-centres/manifest.json",
+      "sha256": "446eef161f6b65570a5eb602fcfce233d65f1df7cd8d674bc342d0c3392702a4"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/assign_population.py",
+      "sha256": "b42da4b8127869fb1baf8cb21b410035d8499f0b161214d79dd0442c88e03bdd"
+    }
+  ]
+}

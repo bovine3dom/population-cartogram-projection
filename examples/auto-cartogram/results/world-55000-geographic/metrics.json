@@ -1,0 +1,30 @@
+{
+  "tile_budget": 55000,
+  "population_total": 7954677990.0,
+  "represented_population": 7954677990.0,
+  "grouped_population": 10264374.0,
+  "omitted_population": 0.0,
+  "holes_not_encoded_in_wkt": 20,
+  "policy": "group",
+  "tiles": 55000,
+  "countries": 250,
+  "absolute_tile_error": 0,
+  "disconnected_regions": 0,
+  "regions_with_holes": 0,
+  "unmatched_source_population": 77246034.0,
+  "required_contacts": 368,
+  "missing_contacts": 368,
+  "false_contacts": 0,
+  "contacts_with_unrepresented_components": 50,
+  "actual_contacts": 0,
+  "generation": [
+    "mode=geographic-baseline",
+    "contacts=not-preserved"
+  ],
+  "occupied_fraction": 0.09569844202936376,
+  "country_absolute_area_error_tiles": 108.42557727971565,
+  "maximum_country_relative_area_error": 36156.62722727273,
+  "island_axis_comparisons": 3727,
+  "island_axis_order_errors": 135,
+  "passes_represented_constraints": false
+}

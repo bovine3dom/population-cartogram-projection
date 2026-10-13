@@ -1,0 +1,271 @@
+{
+  "fallbacks": [
+    {
+      "component_id": "AGO:704113b148b7974b",
+      "reason": "Self-intersection[0.197352286137398 -0.178343308413846]",
+      "simplified_vertices": 1135,
+      "original_vertices": 1490
+    },
+    {
+      "component_id": "ALB:c931cc5315aed954",
+      "reason": "Self-intersection[0.257967975106486 0.791634526161185]",
+      "simplified_vertices": 377,
+      "original_vertices": 553
+    },
+    {
+      "component_id": "AUS:adfd7567b2399535",
+      "reason": "Self-intersection[2.03340610202996 -0.246022792807684]",
+      "simplified_vertices": 1967,
+      "original_vertices": 9461
+    },
+    {
+      "component_id": "BGD:ee4951d7c5e4344f",
+      "reason": "Self-intersection[1.33462161334118 0.434898207357025]",
+      "simplified_vertices": 11,
+      "original_vertices": 42
+    },
+    {
+      "component_id": "BLZ:4f146436bd0251b5",
+      "reason": "Self-intersection[-1.30147659641164 0.334583674205746]",
+      "simplified_vertices": 125,
+      "original_vertices": 313
+    },
+    {
+      "component_id": "BMU:4a0d97b264a07eaa",
+      "reason": "Self-intersection[-0.902445536372138 0.634999421964723]",
+      "simplified_vertices": 15,
+      "original_vertices": 72
+    },
+    {
+      "component_id": "BRA:c9a395c2d321cd60",
+      "reason": "Self-intersection[-0.675332934384314 -0.0332344810080586]",
+      "simplified_vertices": 5032,
+      "original_vertices": 9153
+    },
+    {
+      "component_id": "CAN:2f9cda75c78586e5",
+      "reason": "Self-intersection[-1.5713322219613 0.935975666619725]",
+      "simplified_vertices": 162,
+      "original_vertices": 877
+    },
+    {
+      "component_id": "CAN:614ec007a6324298",
+      "reason": "Self-intersection[-0.92763728151752 1.20185534105427]",
+      "simplified_vertices": 4244,
+      "original_vertices": 20058
+    },
+    {
+      "component_id": "CAN:95c7ebac82699331",
+      "reason": "Self-intersection[-0.734576687596447 0.91685635054591]",
+      "simplified_vertices": 589,
+      "original_vertices": 3163
+    },
+    {
+      "component_id": "CAN:c2f1e4e52d5cc0c3",
+      "reason": "Self-intersection[-0.827544305561572 0.877358080447416]",
+      "simplified_vertices": 738,
+      "original_vertices": 2590
+    },
+    {
+      "component_id": "CHN:72cd37e37e634df7",
+      "reason": "Self-intersection[1.71292016971427 0.54076885239213]",
+      "simplified_vertices": 7189,
+      "original_vertices": 11895
+    },
+    {
+      "component_id": "CIV:1c18880d4492d85c",
+      "reason": "Self-intersection[-0.0597712568223796 0.106723956408875]",
+      "simplified_vertices": 1203,
+      "original_vertices": 1576
+    },
+    {
+      "component_id": "COL:08d1c79f212fc17e",
+      "reason": "Self-intersection[-1.12625532204771 0.211827330552885]",
+      "simplified_vertices": 1889,
+      "original_vertices": 3087
+    },
+    {
+      "component_id": "DEU:0b0480fae55fd996",
+      "reason": "Self-intersection[0.144869584946043 1.00525140185565]",
+      "simplified_vertices": 1746,
+      "original_vertices": 2373
+    },
+    {
+      "component_id": "DNK:d4951f6fa8360f9a",
+      "reason": "Self-intersection[0.096517762368642 1.04355521682844]",
+      "simplified_vertices": 200,
+      "original_vertices": 969
+    },
+    {
+      "component_id": "EST:50bd04ff06509a99",
+      "reason": "Self-intersection[0.270030820716298 1.07478378226499]",
+      "simplified_vertices": 285,
+      "original_vertices": 604
+    },
+    {
+      "component_id": "GAB:9b0fa4569aef69bd",
+      "reason": "Self-intersection[0.135877381823975 -0.0264075377647177]",
+      "simplified_vertices": 847,
+      "original_vertices": 1430
+    },
+    {
+      "component_id": "GMB:e5cba77f98187ac4",
+      "reason": "Self-intersection[-0.240498734310709 0.267428304137937]",
+      "simplified_vertices": 220,
+      "original_vertices": 405
+    },
+    {
+      "component_id": "GNB:06bb5bdc3716e8ff",
+      "reason": "Self-intersection[-0.234843115548794 0.242215331915681]",
+      "simplified_vertices": 285,
+      "original_vertices": 868
+    },
+    {
+      "component_id": "GRL:2a53232ea84e3e84",
+      "reason": "Self-intersection[-0.205435791264569 1.26119998880372]",
+      "simplified_vertices": 2770,
+      "original_vertices": 15547
+    },
+    {
+      "component_id": "GUF:4acf8ebf720d2a5f",
+      "reason": "Self-intersection[-0.785020057757221 0.0975489246697035]",
+      "simplified_vertices": 361,
+      "original_vertices": 486
+    },
+    {
+      "component_id": "HRV:23be6296644271a5",
+      "reason": "Self-intersection[0.179295626624189 0.857130187163309]",
+      "simplified_vertices": 945,
+      "original_vertices": 1362
+    },
+    {
+      "component_id": "IDN:51a10640dee7162b",
+      "reason": "Self-intersection[1.74547321722385 -0.0654343980719585]",
+      "simplified_vertices": 772,
+      "original_vertices": 1837
+    },
+    {
+      "component_id": "IRL:9661cba0fca9f89c",
+      "reason": "Self-intersection[-0.103977433838042 0.96784744516805]",
+      "simplified_vertices": 599,
+      "original_vertices": 2260
+    },
+    {
+      "component_id": "ISL:a7601b85cd746eec",
+      "reason": "Self-intersection[-0.192225792647382 1.13670700390376]",
+      "simplified_vertices": 502,
+      "original_vertices": 3062
+    },
+    {
+      "component_id": "JPN:f07fed45233efce3",
+      "reason": "Self-intersection[1.8849401260509 0.671834700742229]",
+      "simplified_vertices": 539,
+      "original_vertices": 2478
+    },
+    {
+      "component_id": "MEX:aa67baf61acd20f3",
+      "reason": "Self-intersection[-1.31640067086205 0.417523969008157]",
+      "simplified_vertices": 2154,
+      "original_vertices": 6119
+    },
+    {
+      "component_id": "MMR:e9f27e99686071f9",
+      "reason": "Self-intersection[1.40065323492523 0.326255963300208]",
+      "simplified_vertices": 2233,
+      "original_vertices": 3604
+    },
+    {
+      "component_id": "NOW:a387a8ce67e0d957",
+      "reason": "Self-intersection[0.305905564671504 1.21293179194715]",
+      "simplified_vertices": 1945,
+      "original_vertices": 7910
+    },
+    {
+      "component_id": "NZL:8f99f1c50259113a",
+      "reason": "Self-intersection[2.37636713443527 -0.707148243336396]",
+      "simplified_vertices": 378,
+      "original_vertices": 1847
+    },
+    {
+      "component_id": "PAN:04773d2112e86006",
+      "reason": "Self-intersection[-1.1812191270296 0.184322246356872]",
+      "simplified_vertices": 449,
+      "original_vertices": 1603
+    },
+    {
+      "component_id": "PHL:7516d4fddea7755b",
+      "reason": "Self-intersection[1.88161285352559 0.191076231483953]",
+      "simplified_vertices": 226,
+      "original_vertices": 1069
+    },
+    {
+      "component_id": "ROU:8bc181463815c013",
+      "reason": "Self-intersection[0.373965507820867 0.855053697198788]",
+      "simplified_vertices": 1018,
+      "original_vertices": 1197
+    },
+    {
+      "component_id": "RUS:b85c5bca1852870f",
+      "reason": "Self-intersection[1.87314363116289 1.09398440799397]",
+      "simplified_vertices": 9236,
+      "original_vertices": 22907
+    },
+    {
+      "component_id": "SCT:40eee4f7009925dd",
+      "reason": "Self-intersection[-0.0651047262911498 1.04853985206942]",
+      "simplified_vertices": 443,
+      "original_vertices": 2012
+    },
+    {
+      "component_id": "SEN:fa5de3704b02f675",
+      "reason": "Self-intersection[-0.229463269872995 0.258642992520596]",
+      "simplified_vertices": 982,
+      "original_vertices": 1377
+    },
+    {
+      "component_id": "SUR:1d7cda681e299b07",
+      "reason": "Self-intersection[-0.838510944188674 0.116670375191148]",
+      "simplified_vertices": 590,
+      "original_vertices": 736
+    },
+    {
+      "component_id": "SWE:1320ee42b8e1186c",
+      "reason": "Self-intersection[0.21226621276705 1.08940677703511]",
+      "simplified_vertices": 978,
+      "original_vertices": 3387
+    },
+    {
+      "component_id": "THA:2d2e3dd6e4f6c675",
+      "reason": "Self-intersection[1.47147880794007 0.198232909297111]",
+      "simplified_vertices": 1975,
+      "original_vertices": 2891
+    },
+    {
+      "component_id": "UKR:52622876ebf1ecb8",
+      "reason": "Self-intersection[0.403258983961581 0.896479099997304]",
+      "simplified_vertices": 2037,
+      "original_vertices": 2607
+    },
+    {
+      "component_id": "USA:13c14a072880aac5",
+      "reason": "Self-intersection[-1.46938669816052 1.20794344131571]",
+      "simplified_vertices": 1843,
+      "original_vertices": 9114
+    },
+    {
+      "component_id": "USA:90107a05206832e4",
+      "reason": "Self-intersection[-1.14088861967423 0.566688472307951]",
+      "simplified_vertices": 3899,
+      "original_vertices": 12504
+    },
+    {
+      "component_id": "VNM:749468814d903c2a",
+      "reason": "Self-intersection[1.59603353016905 0.213043697475808]",
+      "simplified_vertices": 1890,
+      "original_vertices": 3510
+    }
+  ],
+  "method": "Invalid simplified guides use original projected outer rings",
+  "source_sha256": "c5afe32ae55be8b12d059174b738134b1e8ef218f5fe9b32d20109a0a79278c5",
+  "script_sha256": "77370f1e53b86aa62516fec5d7a57bd02680f6bc11833c7245a03a98ffb84ac8"
+}

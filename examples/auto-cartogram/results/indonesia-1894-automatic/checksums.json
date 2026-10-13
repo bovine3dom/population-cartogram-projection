@@ -1,0 +1,22 @@
+{
+  "output/auto-cartogram/indonesia-1894-v2-input/geographic-contacts.csv": "2aa84004572e5a38468ab1ac968f83888314ee328a8c7ea2b83f81ed34c7f56f",
+  "output/auto-cartogram/indonesia-1894-v2-input/groups.csv": "3f38998797c74f2c4d8386608075897a5a5e3de3e37acd2f80b3c1b09a6b1123",
+  "output/auto-cartogram/indonesia-1894-v2-input/input.wkt": "f967994fd0271ca775f0e2af843d6448d58740bd9e3556716e01de7e8cd0411e",
+  "output/auto-cartogram/indonesia-1894-v2-input/manifest.json": "4ea868fb8d3ee2732d96061af1350b6a01f27ac99374165348a342b6d9f5c285",
+  "output/auto-cartogram/indonesia-1894-v2-input/original-outlines.json": "b45adf2179d9a6869c1a9bac7e385095b1dd396130379b24ebad95ca28db8b89",
+  "output/auto-cartogram/indonesia-1894-v2-input/outline-checks.json": "2e2074afde0ddd544796c4b098bb008539b81bba2242be01e746794b14df26bb",
+  "output/auto-cartogram/indonesia-1894-v2-input/validated.wkt": "b4d578cec76769b01eb0b74d569dc68c5ff7270bf524cb4c825ad569abe93639",
+  "output/auto-cartogram/indonesia-1894-v2-input/weights.tsv": "6e6471d61774b4dea71cb8c4e9bcb63a3c843c6c6254c827e6ce7f68b973ce8e",
+  "output/auto-cartogram/indonesia-1894-v2-layout/cells.csv": "109656c22606c4bea3b4625539e683d1b82e43f97891e2f863025fc2b352cdbe",
+  "output/auto-cartogram/indonesia-1894-v2-layout/complete.txt": "57d21be761811a4fd90e91e85b9bf1db8d91ab6cf77c8f4b75472d087cd3ab1c",
+  "output/auto-cartogram/indonesia-1894-v2-layout/contact-errors.csv": "ad296a373ba2bc99f8df65ea9079a64b0eb7a3a3ec182704b8dfa6a6ba203ee0",
+  "output/auto-cartogram/indonesia-1894-v2-layout/country-counts.csv": "0338e275f945567730a5c31ba8b830c08bb346562b17bb518a983ca01cf262f4",
+  "output/auto-cartogram/indonesia-1894-v2-layout/counts.csv": "a9da211f169ca186abd49ebeca3415a347be97219c5c618b5b786850d1af55f2",
+  "output/auto-cartogram/indonesia-1894-v2-layout/island-order-errors.csv": "1ea00644455d9a1ab3ef2fa106269315d01b9681f771516dfd3e06058d865260",
+  "output/auto-cartogram/indonesia-1894-v2-layout/layout.wkt": "cd20e23805e406f1892ed308466893f5c2e3ada61ea3f2978113fb30bc832654",
+  "output/auto-cartogram/indonesia-1894-v2-layout/metrics.json": "9c1d50e163a3d5feb0f6476ed0cf9420d894898420ad0ca0a28c4ea047a475f9",
+  "output/auto-cartogram/indonesia-1894-v2-layout/region-quality.csv": "d6976d8ad1c0571dc58503a2d0025854190be7d3af905f42ead9c63ae9dac994",
+  "output/auto-cartogram/indonesia-1894-v2-layout/review.png": "2b2f562ca71a85fd40242528641bb6e316501deafac62f2b39e20f5e2d08dddc",
+  "output/auto-cartogram/indonesia-1894-v2-layout/review.svg": "81b77ee5899ace8486ae625c674a5452e818b32793ef6f9b5410fb3b28b94472",
+  "output/auto-cartogram/indonesia-1894-v2-layout/sea.csv": "a651582ee8107d1128f5c27c86549c0ef56bf73101e8a1427175f395eef68f69"
+}
