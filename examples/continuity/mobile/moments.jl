@@ -50,7 +50,7 @@ function reduce_block(data,rows,weights,target_mass;forward=true,density=false,l
     all(weights .>= lower.-1e-8) || error("label anchor was lost")
     matrix=SparseMatrixCSC(nr,nc,ptr,ri,va);rhs=matrix*weights
     # The two sets of moment equations share sf*tf exact dependencies.
-    pivots=qr(a,ColumnNorm()).p[1:tf]
+    pivots=qr(a.*transpose(meta.population[sources]),ColumnNorm()).p[1:tf]
     independent=trues(nr)
     for i in pivots
         independent[sf*(i-1)+1:sf*i].=false
@@ -58,8 +58,16 @@ function reduce_block(data,rows,weights,target_mass;forward=true,density=false,l
     full_matrix,full_rhs=matrix,rhs
     matrix=matrix[independent,:];rhs=rhs[independent];nr=size(matrix,1)
     ptr,ri,va=matrix.colptr,matrix.rowval,matrix.nzval
-    scale=maximum(weights)
-    seed=weights./scale;rhs=rhs./scale;lower=lower./scale
+    scale=weights
+    row_scale=zeros(nr)
+    for col in 1:nc, k in ptr[col]:ptr[col+1]-1
+        va[k]*=scale[col];row_scale[ri[k]]+=abs(va[k])
+    end
+    all(>(0),row_scale) || error("empty moment equation")
+    for k in eachindex(va)
+        va[k]/=row_scale[ri[k]]
+    end
+    seed=ones(nc);rhs=rhs./row_scale;lower=lower./scale
     h=HiGHS.Highs_create();h==C_NULL && error("could not create HiGHS")
     check(status)=status>=0 || error("HiGHS call failed: $status")
     try

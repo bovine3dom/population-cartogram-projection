@@ -10,9 +10,10 @@ function save_checkpoint(path,value)
     mv(path*".tmp",path;force=true)
 end
 
-function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.)
+function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing)
     mkpath(out)
     config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,
+        seed=isnothing(seed) ? nothing : (abspath(seed),bytes2hex(sha256(read(seed)))), 
         code=[bytes2hex(sha256(read(joinpath(@__DIR__,file)))) for file in ("reduce.jl","moments.jl","../mobile_export.jl")])
     config_path=joinpath(out,"config.jls")
     if isfile(config_path)
@@ -25,7 +26,13 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
     source_order=sortperm(data.meta.ids)
     target_order=sortperm(data.meta.targets)
     srank=invperm(source_order);trank=invperm(target_order)
-    rows=Int32.(eachindex(data.weight));weights=copy(data.weight)
+    if isnothing(seed)
+        rows=Int32.(eachindex(data.weight));weights=copy(data.weight)
+    else
+        saved=deserialize(seed);rows,weights=saved.rows,saved.weights
+        length(unique(rows))==length(rows) || error("duplicate seed rows")
+        validate(ME.evaluate(data,rows,reference;weights))
+    end
     for (stage,(sb,tb)) in enumerate(stages)
         path=joinpath(out,"stage-$stage.jls")
         if isfile(path)
@@ -59,14 +66,18 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
             end
         end
         summary=ME.evaluate(data,newrows,reference;weights=newweights)
-        summary.source_sum_error<=1e-5 && summary.target_mass_error_max<=1e-5 &&
-            summary.forward_max<=.001 && summary.inverse_km_max<=.001 || error("country validation failed: $summary")
+        validate(summary)
         save_checkpoint(path,(;rows=newrows,weights=newweights,source_block=sb,target_block=tb,summary,failures,blocks,seconds))
         println((;time=now(UTC),stage,elapsed=time()-start,failures,blocks,summary));flush(stdout)
         rows,weights=newrows,newweights
         GC.gc()
     end
     return nothing
+end
+
+function validate(summary)
+    summary.source_sum_error<=1e-5 && summary.target_mass_error_max<=1e-5 &&
+        summary.forward_max<=.001 && summary.inverse_km_max<=.001 || error("country validation failed: $summary")
 end
 
 if abspath(PROGRAM_FILE)==@__FILE__

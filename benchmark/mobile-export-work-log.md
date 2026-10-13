@@ -119,3 +119,23 @@ A synthetic half-missing field loses coverage at two of 571 targets and has
 a 0.984 error in log density at the 99th percentile. These probes are not
 real travel-time data. The sparse file must be described as an approximation.
 Preserved map geometry does not imply exact results for arbitrary queries.
+
+## 11:30 UTC: improve scaling for unequal population
+
+The first planet reduction has valid stage checkpoints, but many India and
+Russia blocks fail crossover. Do not accept those solver results. A trial
+that clipped negative weights and checked the repaired equations did not
+help; it was removed. An unknown solver status is still rejected.
+
+Use population-weighted pivots for the shared equations. Scale each variable
+by its supplied weight, then scale each equation by its absolute coefficient
+sum. This gives a feasible seed of ones and improves small-tail conditioning.
+The dense India test block now falls from 368,914 rows to 22,944. Its first
+stage rejected one block; later stages completed without a failed block.
+The largest checked moment residual was 9.5e-8. Full-country checks remain
+required before export.
+
+Added checked restart from a prior stage. Record its SHA256 in the new run
+configuration. This avoids discarding valid reductions when scaling changes.
+There are now 26 moment and checkpoint checks, including unequal population,
+small weights, restart, and changed-input rejection.

@@ -1,5 +1,6 @@
 using Test, Random, LinearAlgebra
 include("../examples/continuity/mobile/reduce.jl")
+include("../examples/continuity/mobile/quality.jl")
 @testset "Moment-preserving export" begin
     @test size(MR.features(ones(3,8)))==(1,8)
     @test size(MR.features([1. 2. 3.;2. 4. 6.]))==(2,3)
@@ -27,6 +28,12 @@ include("../examples/continuity/mobile/reduce.jl")
     anchor=index.source_rows[index.source_ptr[1]]
     @test anchor in result.rows
     @test result.weights[findfirst(==(anchor),result.rows)]>=.5w[anchor]-1e-10
+    uneven=merge(data,(;meta=merge(meta,(;population=10.0.^range(-3,3;length=ns)))))
+    unequal_reference=ME.reference_stats(uneven)
+    unequal=MR.reduce_block(uneven,Int32.(eachindex(w)),w,unequal_reference.target_mass)
+    unequal_summary=ME.evaluate(uneven,unequal.rows,unequal_reference;weights=unequal.weights)
+    @test unequal_summary.source_sum_error<1e-6
+    @test unequal_summary.inverse_km_max<.001
     tiny=merge(data,(;weight=1e-7.*w))
     reduced=MR.reduce_block(tiny,Int32.(eachindex(w)),tiny.weight,reference.target_mass)
     @test length(reduced.rows)<length(w)
@@ -35,6 +42,10 @@ include("../examples/continuity/mobile/reduce.jl")
     @test_throws ErrorException MR.reduce_block(data,Int32[],Float64[],reference.target_mass)
     mktempdir() do dir
         ids=[MR.H3.API.latLngToCell(MR.H3.API.LatLng(.4+.01s,.1),5) for s in 1:ns]
+        names,fields=MobileQuality.probe_fields(merge(meta,(;ids)))
+        noise=fields[findfirst(==("synthetic_noise"),names),:]
+        @test all(v->0<=v<1,noise)
+        @test length(names)==size(fields,1)==10
         input=joinpath(dir,"input.jls");out=joinpath(dir,"out")
         serialize(input,merge(data,(;meta=merge(meta,(;ids)))))
         reduce_country(input,out;stages=[(8,9)])
@@ -43,5 +54,8 @@ include("../examples/continuity/mobile/reduce.jl")
         @test saved.summary.inverse_km_max<.001
         @test isnothing(reduce_country(input,out;stages=[(8,9)]))
         @test_throws ErrorException reduce_country(input,out;stages=[(4,9)])
+        seeded=joinpath(dir,"seeded")
+        @test isnothing(reduce_country(input,seeded;stages=[(8,9)],seed=joinpath(out,"stage-1.jls")))
+        @test deserialize(joinpath(seeded,"stage-1.jls")).summary.source_sum_error<1e-6
     end
 end
