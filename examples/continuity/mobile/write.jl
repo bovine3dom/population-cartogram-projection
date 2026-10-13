@@ -12,7 +12,7 @@ function select_part(data,result)
 end
 
 # Keep population in Float64. Shared target coordinates use one physical mass.
-function columns(parts)
+function columns(parts;owners=Dict())
     count=sum(length(p.weights) for p in parts)
     x=Vector{Int16}(undef,count);y=similar(x);code=Vector{UInt16}(undef,count)
     weight=Vector{Float32}(undef,count);weight_mean=similar(weight)
@@ -29,10 +29,31 @@ function columns(parts)
             isfinite(weight[i]) && weight[i]>0 || error("invalid Float32 weight")
             population[i]=meta.population[s]
             index_lower[i]=id&0xffffffff;index_upper[i]=id>>32
-            key=(x[i],y[i]);mass[key]=get(mass,key,0.)+Float64(weight[i])*population[i]
             haskey(labels,k) && (label[i]=labels[k])
         end
         offset+=length(weights)
+    end
+    # The consumer chooses country ownership by row count, not transported mass.
+    # Split an existing row if sparsification would change a shared cell's owner.
+    for ((tx,ty),owner) in owners
+        counts=Dict{UInt16,Int}();best=0
+        for i in eachindex(weight)
+            x[i]==tx && y[i]==ty || continue
+            counts[code[i]]=get(counts,code[i],0)+1
+            code[i]==owner && (best==0 || weight[i]>weight[best]) && (best=i)
+        end
+        best>0 || error("missing shared-cell owner")
+        extra=max(0,maximum((n for (c,n) in counts if c!=owner);init=0)+1-counts[UInt16(owner)])
+        weight[best]/=extra+1
+        for _ in 1:extra
+            for col in (x,y,code,weight,population,index_lower,index_upper)
+                push!(col,col[best])
+            end
+            push!(label,missing);push!(weight_mean,0)
+        end
+    end
+    for i in eachindex(weight)
+        key=(x[i],y[i]);mass[key]=get(mass,key,0.)+Float64(weight[i])*population[i]
     end
     for i in eachindex(weight)
         weight_mean[i]=Float64(weight[i])*population[i]/mass[(x[i],y[i])]
@@ -41,12 +62,13 @@ function columns(parts)
     return (;x,y,weight,population,code,label,weight_mean,index_lower,index_upper)
 end
 
-function write_file(path,parts)
+function write_file(path,parts;owners=Dict())
     ispath(path) && error("refusing to replace $path")
-    table=columns(parts)
+    table=columns(parts;owners)
     mkpath(dirname(path))
     Arrow.write(path*".pending",table;ntasks=1)
     mv(path*".pending",path)
-    return (;rows=length(table.weight),bytes=filesize(path))
+    return (;rows=length(table.weight),bytes=filesize(path),
+        ownership_rows=length(table.weight)-sum(length(p.weights) for p in parts))
 end
 end

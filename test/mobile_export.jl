@@ -58,6 +58,12 @@ const MW=MobileWriter
     @test eltype(table.population)==Float64
     @test all(isapprox(sum(table.weight_mean[table.x.==x]),1;atol=1e-7) for x in [0,2])
     @test count(!ismissing,table.label)==2
+    owned=MW.columns([part,second];owners=Dict((0,0)=>2,(2,0)=>2))
+    @test length(owned.weight)==10
+    @test all(count((owned.x.==x).&(owned.code.==2))>count((owned.x.==x).&(owned.code.==1)) for x in [0,2])
+    @test sum(owned.weight)≈sum(table.weight) atol=1e-6
+    @test count(!ismissing,owned.label)==2
+    @test_throws ErrorException MW.columns([part];owners=Dict((0,0)=>2))
     @test_throws ErrorException MW.select_part(data,(;rows=Int32[1,2,4],weights=w[[1,2,4]]))
     mktempdir() do dir
         path=joinpath(dir,"test.arrow")

@@ -139,3 +139,42 @@ Added checked restart from a prior stage. Record its SHA256 in the new run
 configuration. This avoids discarding valid reductions when scaling changes.
 There are now 26 moment and checkpoint checks, including unequal population,
 small weights, restart, and changed-input rejection.
+
+## 11:50 UTC: browser checks and checked country export
+
+Restarted the four largest trials from valid stage files at 11:31 UTC.
+The new runs use the committed column scaling. The other-country queue
+continues with two workers. The US completed five new stages: 29,878,741
+reference rows became 201,231 rows. Maximum target geographic mean error
+was 0.095 metres. Maximum source forward mean error was 0.000024 coordinate
+units. No failed block was accepted. Other large-country runs are in progress.
+
+Added a manifest-based packer. It checks source and target coverage, source
+metadata, all city names, and per-country errors. It records input hashes.
+The consumer assigns shared-cell country ownership by row count. Where
+necessary, split an existing positive row to preserve the reference owner.
+This keeps the same transport, apart from Float32 rounding. Tests cover this
+case. There are now 46 export checks and 26 moment checks. A complete Germany
+pack test passed, without changing its published dataset.
+
+The actual loaders.gl decoder accepts every narrow column. An isolated
+Chromium 153 test renders all 571 Germany target cells and 20 target labels.
+H3-MON's normal service remains stopped. The test uses its existing build,
+a local HTTP server, a mobile viewport, and software rendering. It is not a
+measurement on a phone. One existing SVG legend warning is recorded; the
+application's own rendering tests also exclude that warning from failures.
+
+With four-times CPU throttling, the Germany cartogram plus the full-world
+density file loaded in 25.5 seconds. After forced collection, the browser
+reported 19.1 MB JavaScript heap and 374.9 MB ArrayBuffer/string backing
+storage. With only Germany density sources, the same cartogram loaded in
+7.0 seconds, with 14.4 MB heap and 75.2 MB backing storage. This isolates a
+large cost in the full-world source display and its data processing. It is
+not the transport file size. A low-precision flag did not reduce this cost.
+These figures exclude some browser and GPU memory. Do not claim that the
+current application fits a 100 MB memory budget.
+
+Browser measurement references:
+
+- https://playwright.dev/docs/api/class-cdpsession
+- https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-getHeapUsage
