@@ -52,6 +52,8 @@ const MW=MobileWriter
     part=MW.select_part(data,(;rows=Int32[1,2,3,4],weights=w))
     second=merge(part,(;meta=merge(meta,(;population=2meta.population,codes=[2,2],targets=[(0,0,2),(2,0,2)]))))
     table=MW.columns([part,second])
+    shifted=merge(part,(;weights=part.weights.*[1.00001,1.00001,.99999,.99999]))
+    @test MW.columns([shifted]).weight≈Float32.(w) atol=1e-7
     @test eltype(table.x)==Int16
     @test eltype(table.code)==UInt16
     @test eltype(table.weight)==Float32

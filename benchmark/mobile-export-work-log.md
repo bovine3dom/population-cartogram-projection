@@ -178,3 +178,21 @@ Browser measurement references:
 
 - https://playwright.dev/docs/api/class-cdpsession
 - https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-getHeapUsage
+
+## 12:00 UTC: independent binary audit
+
+Added a separate audit of the emitted Arrow file against the full reference.
+It checks every source, target, population, city anchor, and country owner.
+It also checks source sums, physical target weights, density values, and
+projection errors. The writer now removes small source-sum drift before
+Float32 conversion. The audit then checks the actual emitted numbers, not
+only the solver's Float64 result.
+
+The Germany binary audit passed. Maximum source-sum error was 4.5e-8;
+maximum relative target population error was 3.3e-8; maximum geographic
+mean error was 0.00074 metres. Added eight audit checks, including deliberate
+schema, city-anchor, and density errors. There are now 47 export checks.
+
+Next compare weight floors on the largest original target contributions.
+These may improve arbitrary-query accuracy while keeping the file small.
+Preserving moments alone does not bound the error of an arbitrary query.

@@ -21,11 +21,16 @@ function columns(parts;owners=Dict())
     label=Vector{Union{Missing,String}}(missing,count)
     mass=Dict{Tuple{Int16,Int16},Float64}();offset=0
     for (;meta,source,target,weights,labels) in parts
+        sums=zeros(length(meta.ids))
+        for k in eachindex(weights)
+            sums[source[k]]+=weights[k]
+        end
+        all(s->isfinite(s)&&s>0,sums) || error("missing or invalid source mass")
         for k in eachindex(weights)
             i=offset+k;s=source[k];t=target[k]
             tx,ty,c=meta.targets[t];id=meta.ids[s]
             x[i]=tx;y[i]=ty;code[i]=c
-            weight[i]=weights[k]
+            weight[i]=weights[k]/sums[s]
             isfinite(weight[i]) && weight[i]>0 || error("invalid Float32 weight")
             population[i]=meta.population[s]
             index_lower[i]=id&0xffffffff;index_upper[i]=id>>32
