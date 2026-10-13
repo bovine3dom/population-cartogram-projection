@@ -1,6 +1,6 @@
 # Mobile export results
 
-Status: 2026-10-13 16:53 UTC. Work continues until 2026-10-14 01:45 UTC.
+Status: 2026-10-13 17:05 UTC. Work continues until 2026-10-14 01:45 UTC.
 
 ## Published experiment
 
@@ -78,10 +78,10 @@ does not remove source data or cartogram rows. Dataset metadata enables it
 for this experiment; its default remains off for other datasets.
 
 Packed source navigation indexes reduce per-source JavaScript objects.
-With the published profile, initial JavaScript heap plus backing storage is
-about 285 MB, versus 508 MB before these changes and visible-region geometry.
-A world view still uses about 456 MB. Returning to the initial view uses
-about 322 MB.
+The bundle also shares one H3 runtime instead of two. Initial JavaScript heap
+plus backing storage is about 251 MB, versus 508 MB before these changes and
+visible-region geometry. A world view still uses about 422 MB. Returning to
+the initial view uses about 288 MB.
 These measurements exclude embedder and GPU memory. They are from headless
 desktop Chromium, not a phone. This is not a 100 MB browser-memory solution.
 

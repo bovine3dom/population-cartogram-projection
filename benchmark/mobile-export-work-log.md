@@ -486,3 +486,22 @@ A diagnostic objective that favours already-protected rows times out on a
 Germany block. No new result is accepted and no solver option is shipped.
 A separate bounded primal-simplex diagnostic is in progress. Keep the
 validated 70% public export while these tests run.
+
+## 17:05 UTC: remove a second H3 heap
+
+A browser heap snapshot found two 32 MiB H3 runtimes. Deck loaded H3 4.1,
+while the application loaded H3 4.4. Both dependency ranges permit 4.4.
+H3-MON commit `8a55410` makes the bundler resolve both imports to the root
+package. No installed package is changed. Initial heap and backing storage
+now use 251 MB; the world view uses 422 MB; the return view uses 288 MB.
+The initial screenshot is pixel-identical to the previous build. All 68
+unit checks and the isolated desktop/mobile rendering checks pass.
+Commit `934f563` also checks an empty viewport and return navigation.
+
+The esbuild alias rules were checked at https://esbuild.github.io/api/#alias.
+The 80% binary audit passes, but its 114.7 MB raw size remains over budget.
+A ten-minute primal-simplex trial still has no feasible solver result. It
+is rejected. A separate trial holds protected contributions fixed and solves
+only their residual weights. It removes 44,177 further China rows in small
+blocks without changing the validation limits. Larger China and India trials
+are in progress. This residual method is not yet in the committed exporter.
