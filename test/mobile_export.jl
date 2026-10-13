@@ -78,5 +78,11 @@ const MW=MobileWriter
         @test collect(saved.weight)==table.weight
         @test isequal(collect(saved.label),table.label)
         @test_throws ErrorException MW.write_file(path,[part])
+        encoded=joinpath(dir,"dictionary.arrow")
+        MW.write_file(encoded,[part,second];dictionary=true)
+        decoded=ME.Arrow.Table(encoded)
+        @test all(isequal(collect(getproperty(decoded,name)),getproperty(table,name)) for name in keys(table))
+        @test eltype(decoded.index_lower)==UInt32
+        @test eltype(decoded.population)==Float64
     end
 end

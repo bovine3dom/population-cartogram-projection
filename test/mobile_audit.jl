@@ -33,6 +33,9 @@ const MW=MobileWriter
         @test result["target_tv_max"]<1e-15
         @test result["source_sum_error"]<1e-7
         @test isfile(report)
+        Arrow.write(candidate,merge(table,(;index_lower=Arrow.DictEncode(table.index_lower),
+            population=Arrow.DictEncode(table.population),label=Arrow.DictEncode(table.label))))
+        @test MA.audit(input,reference,candidate,density,report)["source_sum_error"]<1e-7
         Arrow.write(candidate,merge(table,(;weight=Float64.(table.weight))))
         @test_throws ErrorException MA.audit(input,reference,candidate,density,report)
         changed=copy(table.label);changed[1],changed[2]=changed[2],changed[1]

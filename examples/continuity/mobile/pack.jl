@@ -53,7 +53,7 @@ function pack(manifest,input,density,out)
     end
     owners=Dict(key=>first(sort(entries;by=e->(-e.count,e.first))).code for (key,entries) in ownership if length(entries)>1)
     mkpath(out)
-    report=MobileWriter.write_file(joinpath(out,"cartogram_weights_planet_h3_5_factor1_continuity_hilo.arrow"),parts;owners)
+    report=MobileWriter.write_file(joinpath(out,"cartogram_weights_planet_h3_5_factor1_continuity_hilo.arrow"),parts;owners,dictionary=true)
     cp(density,joinpath(out,"population_density_hilo.arrow"))
     CSV.write(joinpath(out,"countries.csv"),summaries)
     CSV.write(joinpath(out,"query-errors.csv"),qualities)
@@ -62,7 +62,8 @@ function pack(manifest,input,density,out)
     open(joinpath(out,"export.toml"),"w") do io
         TOML.print(io,Dict("rows"=>report.rows,"transport_bytes"=>report.bytes,"density_bytes"=>filesize(density),
             "ownership_rows"=>report.ownership_rows,"sources"=>length(ids),"country_targets"=>length(expected.targets),
-            "labels"=>length(labels),"approximate"=>true,"input_sha256"=>open(bytes2hex∘sha256,input),
+            "labels"=>length(labels),"approximate"=>true,"dictionary_columns"=>["index_lower","population","label"],
+            "input_sha256"=>open(bytes2hex∘sha256,input),
             "manifest_sha256"=>open(bytes2hex∘sha256,manifest)))
     end
     println(report)

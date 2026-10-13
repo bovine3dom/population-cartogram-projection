@@ -67,9 +67,13 @@ function columns(parts;owners=Dict())
     return (;x,y,weight,population,code,label,weight_mean,index_lower,index_upper)
 end
 
-function write_file(path,parts;owners=Dict())
+function write_file(path,parts;owners=Dict(),dictionary=false)
     ispath(path) && error("refusing to replace $path")
     table=columns(parts;owners)
+    if dictionary
+        table=merge(table,(;index_lower=Arrow.DictEncode(table.index_lower),
+            population=Arrow.DictEncode(table.population),label=Arrow.DictEncode(table.label)))
+    end
     mkpath(dirname(path))
     Arrow.write(path*".pending",table;ntasks=1)
     mv(path*".pending",path)
