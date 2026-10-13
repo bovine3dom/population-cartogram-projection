@@ -1,0 +1,7 @@
+mode=topology
+seed=1
+placement=directional
+embedding=native
+forceIterations=2147483647
+scaledPatience=500
+finalPatience=3000

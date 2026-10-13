@@ -1,0 +1,7 @@
+{
+  "unmatched_population": 77246034.0,
+  "unmatched_cells": 289198,
+  "within_0_01_degree_population": 58590218.0,
+  "beyond_0_1_degree_population": 1097467.0,
+  "limit": "Nearest polygon is not ownership. Angular distances are not uniform physical distances."
+}
