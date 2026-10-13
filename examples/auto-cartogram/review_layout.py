@@ -203,14 +203,23 @@ def run(inputs, layout, title):
                    generation=(layout / "complete.txt").read_text().splitlines(),
                    occupied_fraction=len(owners)/((max(x for x,y in owners)-min(x for x,y in owners)+1)*
                                                   (max(y for x,y in owners)-min(y for x,y in owners)+1)))
-    country_rows = []
+    country_rows, capacity_rows = [], []
     for country in sorted({r["country_id"] for r in shapes.values()}):
         labels = [c for c,r in shapes.items() if r["country_id"] == country]
         population = sum(float(shapes[c]["group_population"]) for c in labels)
         actual_tiles = sum(len(tiles[c]) for c in labels)
+        for c in labels:
+            source_mass = float(shapes[c]["group_population"])
+            capacity = population*len(tiles[c])/actual_tiles
+            capacity_rows.append({"country_id":country,"component_id":c,"group_population":source_mass,
+                                  "country_uniform_tile_capacity":capacity,"capacity_excess":capacity-source_mass})
         ideal_tiles = population/metadata["population_total"]*metadata["tile_budget"]
         country_rows.append({"country_id":country,"population":population,"actual_tiles":actual_tiles,
                              "ideal_tiles":ideal_tiles,"relative_area_error":actual_tiles/ideal_tiles-1})
+    metrics["country_uniform_tile_cross_group_lower_bound"] = sum(abs(r["capacity_excess"]) for r in capacity_rows)/2
+    with (layout / "group-capacities.csv").open("w", newline="") as stream:
+        writer = csv.DictWriter(stream,fieldnames=list(capacity_rows[0]))
+        writer.writeheader(); writer.writerows(capacity_rows)
     metrics["country_absolute_area_error_tiles"] = sum(abs(r["actual_tiles"]-r["ideal_tiles"]) for r in country_rows)
     metrics["maximum_country_relative_area_error"] = max(abs(r["relative_area_error"]) for r in country_rows)
     with (layout / "country-counts.csv").open("w", newline="") as stream:
