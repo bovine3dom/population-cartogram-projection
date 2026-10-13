@@ -105,6 +105,7 @@ public class MosaicAdapter {
             + "finalPatience=" + MosaicConstants.MAX_NO_IMPROVE_FINAL + "\n"
             + "maxRounds=" + maxRounds + "\n"
             + "polishIterations=" + polishIterations + "\n"
+            + "orientInitial=" + Boolean.getBoolean("mosaic.orientInitial") + "\n"
             + "regionAssertions=" + Class.forName("arrange.model.MosaicCartogram$MosaicRegion").desiredAssertionStatus() + "\n");
     }
 

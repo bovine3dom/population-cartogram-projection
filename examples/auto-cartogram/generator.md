@@ -89,6 +89,10 @@ For bounded preview runs, set Java properties such as
 `-Dmosaic.forceIterations=2000 -Dmosaic.scaledPatience=50 -Dmosaic.finalPatience=100`.
 The optional `-Dmosaic.maxRounds=50` stops each reshape stage after 50 rounds
 and returns its best state. This can increase tile-count and shape errors.
+The optional `-Dmosaic.orientInitial=true` selects a rigid square-grid rotation
+or reflection before guide fitting. It fits region centres to source centres,
+with square-root population-budget weights. Counts and contacts do not change
+in this step. It is an experiment, not a guarantee of geographic order.
 In topology mode, `-Dmosaic.polishIterations=0` skips the final count correction.
 Use this only to inspect an unfinished preview. The marker records the setting.
 These limit force iterations and rounds without improvement. They do not impose
@@ -180,7 +184,8 @@ output/auto-cartogram/geometry-env/bin/python test/auto_geometry.py
 
 ## License boundary
 
-`MosaicAdapter.java`, `DirectionalPlacement.java`, `upstream-fixes.patch`, and
+`MosaicAdapter.java`, `DirectionalPlacement.java`, `GeographicOrientation.java`,
+`upstream-fixes.patch`, and
 the Java oracle tests are GPL-3.0-or-later experimental code. See
 `MosaicAdapter.LICENSE`. GridMapPipeline is GPL-3.0; GeometryCore is
 GPL-3.0-or-later. Keep this optional Java experiment separate from the main

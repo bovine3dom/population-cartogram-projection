@@ -222,3 +222,17 @@ under ignored `output/auto-cartogram/`.
   zero population across groups and retains 99.757%. The pooled comparison
   moves 83,826,177.77 people across groups and retains 99.753%. The native-cell
   run has reached Sumatra and is still in progress.
+
+## 22:35–22:41 UTC — infeasible counts and initial orientation
+
+- A six-region star proves another upstream assertion error. A one-tile centre
+  cannot have five side neighbours. Topology mode must stop with count error,
+  not assert that an unchanged polishing pass improved the error. Fixed this
+  condition and added an integration test that keeps all five contacts.
+- Added an optional rigid orientation step before guide fitting. It compares
+  region centres with geographic centres, then rotates or reflects the initial
+  square grid. The step preserves cells, counts, and contacts. Later shape and
+  position checks are still required.
+- The orientation path and infeasible-count test pass. All ten Python/Java
+  tests pass. The ongoing reference fits use their earlier frozen class copy;
+  they do not receive changes while running.
