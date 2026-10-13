@@ -540,9 +540,10 @@ checks still apply. All 60 moment, worker, floor, and restart checks pass.
 Started a two-worker fixed-contribution queue from the checked 70% stages.
 It uses a frozen copy of commit `94107d3`, a 30-minute country limit, a
 12 GiB process address-space limit, and a 23:00 UTC queue deadline. It kills
-the whole country process group on timeout. China and India start from the
-smaller checked diagnostic stages. Countries with fewer than 1,000 rows
-are not rerun. Keep completed stages; do not use an incomplete file.
+the whole country process group on timeout. China starts from its smaller
+checked diagnostic stage. India's large diagnostic run was still active,
+so India starts from its original checked 70% stage. Countries with fewer
+than 1,000 rows are not rerun. Keep completed stages; do not use an incomplete file.
 
 H3-MON commit `73852ac` keeps Int16 navigation bounds in Int16 storage.
 Other coordinate types still use Float64 bounds. No coordinate changes.
@@ -550,3 +551,16 @@ Initial browser heap and backing storage use 242 MB; the world view uses
 413 MB; the return view uses 278 MB. The largest sampled initial-load value
 is 313 MB. Sampling is not a proof of the true peak. All 69 unit checks and
 the isolated desktop/mobile rendering checks pass.
+
+## 18:35 UTC: check the refinement result before replacement
+
+The fixed-contribution queue has completed its largest countries without a
+country timeout. Its China result has 544,025 rows; India has 421,545. The
+US is unchanged. A new manifest will use a refined stage only when it has
+fewer rows than the original checked stage. The pack, full binary audit,
+and browser checks will then run automatically, but publication will not.
+
+Started separate China and India diagnostics with shifted block boundaries.
+These can combine rows across the old block cuts without larger matrices.
+Each diagnostic has a 90-minute process-group deadline and the same weight
+and geometry checks. No shifted-block option has been added to the exporter.
