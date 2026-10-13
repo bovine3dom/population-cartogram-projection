@@ -1,0 +1,77 @@
+--- a/arrange/algorithms/GuideConstructor.java
++++ b/arrange/algorithms/GuideConstructor.java
+@@ -190,6 +190,11 @@
+         // because we added all holes, the coordinate set is now simply connected
+         // keep a list of candidates to be removed, sorted by increasing quality
+-        TreeSet<CoordinateQuality> removeCandidates = new TreeSet<>((a, b) -> Double.compare(a.quality, b.quality));
++        TreeSet<CoordinateQuality> removeCandidates = new TreeSet<>((a, b) -> {
++            int cmp = Double.compare(a.quality, b.quality);
++            if (cmp == 0) cmp = Integer.compare(a.coordinate.x, b.coordinate.x);
++            if (cmp == 0) cmp = Integer.compare(a.coordinate.y, b.coordinate.y);
++            return cmp;
++        });
+         for (Coordinate c : shape.coordinates()) {
+             if (shape.contiguousNeighborhood(c, MosaicConstants.CONN_WITHIN_REGION)) {
+                 removeCandidates.add(new CoordinateQuality(c, qmap.get(c)));
+@@ -202,9 +206,10 @@
+         for (int i = 0; i < surplus; i++) {
+ 
+             CoordinateQuality cq = removeCandidates.pollFirst();
+-            while (!shape.contiguousNeighborhood(cq.coordinate, MosaicConstants.CONN_WITHIN_REGION)) {
++            while (cq != null && (!shape.contains(cq.coordinate) || !shape.contiguousNeighborhood(cq.coordinate, MosaicConstants.CONN_WITHIN_REGION))) {
+                 cq = removeCandidates.pollFirst();
+             }
++            if (cq == null) throw new IllegalStateException("No removable boundary tile");
+ 
+             shape.remove(cq.coordinate);
+ 
+@@ -219,7 +224,7 @@
+ 
+         }
+ 
+-        assert shape.size() != numTiles : "Guiding shape with wrong number of tiles";
++        assert shape.size() == numTiles : "Guiding shape with wrong number of tiles";
+     }
+ 
+     public GuidingShape compute() {
+--- a/common/gridmath/util/CoordinateSet.java
++++ b/common/gridmath/util/CoordinateSet.java
+@@ -643,27 +643,18 @@
+ 
+         boolean prevIn = containsLocal(nbrs[nbrs.length - 1]);
+         int containedRuns = 0;
+-        boolean runToConsider = prevIn && (raq == null || raq[nbrs.length - 1]);
+-
++        boolean hasRook = false;
++        boolean hasOutsideRook = false;
+         for (int i = 0; i < nbrs.length; i++) {
+-            Coordinate nbr = nbrs[i];
+-
+-            boolean in = containsLocal(nbr);
+-            if (in == prevIn) {
+-                // keep going
+-                
+-                // NB: raq != null if runToConsider is to be false
+-                runToConsider = runToConsider || (in && !runToConsider && raq[i]); 
+-            } else {
+-                if (runToConsider) {
+-                    containedRuns++;
+-                }
+-                prevIn = in;
+-                
+-                runToConsider = in && (raq == null || raq[i]);
+-            }
+-        }
+-        return containedRuns == 1;
++            boolean in = containsLocal(nbrs[i]);
++            if (in && !prevIn) containedRuns++;
++            if (in && (raq == null || raq[i])) hasRook = true;
++            if (!in && (raq == null || raq[i])) hasOutsideRook = true;
++            prevIn = in;
++        }
++        // Count diagonal-only runs too: ignoring them can close a four-neighbour
++        // sea channel and create a hole even when land remains connected.
++        return containedRuns == 1 && hasRook && hasOutsideRook;
+     }
+        
+     public Coordinate arbitraryCoordinate() {
