@@ -196,3 +196,24 @@ schema, city-anchor, and density errors. There are now 47 export checks.
 Next compare weight floors on the largest original target contributions.
 These may improve arbitrary-query accuracy while keeping the file small.
 Preserving moments alone does not bound the error of an arbitrary query.
+
+## 12:15 UTC: protect important original contributions
+
+Counted the largest contributions needed for each target. Keeping at least
+70% of each target's original population mass needs 616,327 protected rows.
+Keeping 50% needs 267,304. A global basic solution with the existing moment
+constraints has a theoretical size bound of about 76 MB for the 70% case,
+including density. Blocked solves and failed blocks can exceed this bound.
+This is not a measured file size.
+
+Added optional lower bounds on these original weights. The original plan
+remains a feasible starting point. With unchanged target totals, a protected
+fraction of 70% bounds target total variation by 0.3. This bounds the error
+of an average of complete, bounded data by 0.3 times its range. It does not
+give the same bound after missing-data filtering and renormalization.
+
+Check the bound after each country stage. The independent binary audit now
+also measures total variation against the full reference, including duplicate
+rows used for country ownership. There are 51 export checks, 33 moment checks,
+and 11 audit checks. The new option defaults to zero and does not change the
+running moment-only trials. Real-data protected-weight trials are in progress.

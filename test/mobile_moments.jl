@@ -28,6 +28,13 @@ include("../examples/continuity/mobile/quality.jl")
     anchor=index.source_rows[index.source_ptr[1]]
     @test anchor in result.rows
     @test result.weights[findfirst(==(anchor),result.rows)]>=.5w[anchor]-1e-10
+    floors=ME.target_floor_rows(data,.5)
+    protected=MR.reduce_block(data,Int32.(eachindex(w)),w,reference.target_mass;floors)
+    protected_summary=ME.evaluate(data,protected.rows,reference;weights=protected.weights)
+    @test protected_summary.target_tv_max<=.5+1e-6
+    @test all(!floors[r] || protected.weights[k]>=w[r]-1e-8 for (k,r) in enumerate(protected.rows))
+    @test all(r->r in protected.rows,findall(floors))
+    @test_throws ErrorException MR.reduce_block(data,Int32.(eachindex(w)),w,reference.target_mass;floors=[true])
     uneven=merge(data,(;meta=merge(meta,(;population=10.0.^range(-3,3;length=ns)))))
     unequal_reference=ME.reference_stats(uneven)
     unequal=MR.reduce_block(uneven,Int32.(eachindex(w)),w,unequal_reference.target_mass)
@@ -57,5 +64,10 @@ include("../examples/continuity/mobile/quality.jl")
         seeded=joinpath(dir,"seeded")
         @test isnothing(reduce_country(input,seeded;stages=[(8,9)],seed=joinpath(out,"stage-1.jls")))
         @test deserialize(joinpath(seeded,"stage-1.jls")).summary.source_sum_error<1e-6
+        protected_out=joinpath(dir,"protected")
+        @test isnothing(reduce_country(input,protected_out;stages=[(8,9)],target_retained=.7))
+        @test deserialize(joinpath(protected_out,"stage-1.jls")).summary.target_tv_max<=.3+1e-6
+        @test_throws ErrorException reduce_country(input,joinpath(dir,"bad_seed");stages=[(8,9)],
+            seed=joinpath(out,"stage-1.jls"),target_retained=1.)
     end
 end

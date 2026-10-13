@@ -10,9 +10,9 @@ function save_checkpoint(path,value)
     mv(path*".tmp",path;force=true)
 end
 
-function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing)
+function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing,target_retained=0.)
     mkpath(out)
-    config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,
+    config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,target_retained,
         seed=isnothing(seed) ? nothing : (abspath(seed),bytes2hex(sha256(read(seed)))), 
         code=[bytes2hex(sha256(read(joinpath(@__DIR__,file)))) for file in ("reduce.jl","moments.jl","../mobile_export.jl")])
     config_path=joinpath(out,"config.jls")
@@ -23,6 +23,7 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
         save_checkpoint(config_path,config)
     end
     data=deserialize(input);reference=ME.reference_stats(data)
+    floors=ME.target_floor_rows(data,target_retained)
     source_order=sortperm(data.meta.ids)
     target_order=sortperm(data.meta.targets)
     srank=invperm(source_order);trank=invperm(target_order)
@@ -31,7 +32,12 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
     else
         saved=deserialize(seed);rows,weights=saved.rows,saved.weights
         length(unique(rows))==length(rows) || error("duplicate seed rows")
-        validate(ME.evaluate(data,rows,reference;weights))
+        validate(ME.evaluate(data,rows,reference;weights);target_retained)
+        if !isnothing(floors)
+            present=falses(length(data.weight));present[rows].=true
+            all(present[floors]) || error("seed lacks protected rows")
+            all(!floors[r] || weights[k]>=data.weight[r]-1e-8 for (k,r) in enumerate(rows)) || error("seed lost a protected weight")
+        end
     end
     for (stage,(sb,tb)) in enumerate(stages)
         path=joinpath(out,"stage-$stage.jls")
@@ -52,7 +58,7 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
             end
             positions=view(order,first:last);rr=rows[positions];ww=weights[positions]
             result=try
-                MR.reduce_block(data,rr,ww,reference.target_mass;density=true,limit)
+                MR.reduce_block(data,rr,ww,reference.target_mass;density=true,limit,floors)
             catch err
                 err isa InterruptException && rethrow()
                 failures+=1
@@ -66,8 +72,8 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
             end
         end
         summary=ME.evaluate(data,newrows,reference;weights=newweights)
-        validate(summary)
-        save_checkpoint(path,(;rows=newrows,weights=newweights,source_block=sb,target_block=tb,summary,failures,blocks,seconds))
+        validate(summary;target_retained)
+        save_checkpoint(path,(;rows=newrows,weights=newweights,source_block=sb,target_block=tb,target_retained,summary,failures,blocks,seconds))
         println((;time=now(UTC),stage,elapsed=time()-start,failures,blocks,summary));flush(stdout)
         rows,weights=newrows,newweights
         GC.gc()
@@ -75,7 +81,8 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
     return nothing
 end
 
-function validate(summary)
+function validate(summary;target_retained=0.)
+    summary.target_tv_max<=1-target_retained+1e-5 || error("target variation bound failed")
     summary.source_sum_error<=1e-5 && summary.target_mass_error_max<=1e-5 &&
         summary.forward_max<=.001 && summary.inverse_km_max<=.001 || error("country validation failed: $summary")
 end

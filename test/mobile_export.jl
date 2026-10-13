@@ -17,6 +17,10 @@ const MW=MobileWriter
     @test ME.select_rows(data)==[1,2,3]
     @test ME.select_rows(data;target_retained=.99)==[1,2,3]
     @test ME.select_rows(data;source_retained=1.)==[1,2,3,4]
+    @test isnothing(ME.target_floor_rows(data,0.))
+    @test ME.target_floor_rows(data,.5)==[true,true,false,false]
+    @test ME.target_floor_rows(data,.99)==[true,true,true,false]
+    @test_throws ErrorException ME.target_floor_rows(data,1.1)
     reference=ME.reference_stats(data)
     full=ME.evaluate(data,Int32[1,2,3,4],reference)
     @test full.population_retained≈1

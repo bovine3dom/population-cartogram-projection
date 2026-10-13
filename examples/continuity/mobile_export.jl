@@ -132,6 +132,15 @@ function select_rows(data;source_top=1,target_top=1,source_retained=0.,target_re
     return Int32.(findall(keep))
 end
 
+function target_floor_rows(data,fraction)
+    0<=fraction<=1 || error("invalid target floor fraction")
+    fraction==0 && return nothing
+    (;index,weight,meta)=data
+    keep=zeros(Bool,length(weight))
+    keep_groups!(keep,index.target_rows,index.target_ptr,r->(@inbounds weight[r]*meta.population[index.source[r]]);retained=fraction)
+    return BitVector(keep)
+end
+
 function reference_stats(data)
     (;index,weight,meta)=data
     ns,nt=length(meta.ids),length(meta.targets)

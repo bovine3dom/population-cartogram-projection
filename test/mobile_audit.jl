@@ -14,6 +14,12 @@ const MW=MobileWriter
     index=ME.index_rows(lo,hi,x,y,code,w,meta)
     data=(;meta,index,weight=w)
     table=MW.columns([MW.select_part(data,(;rows=Int32.(1:6),weights=w))])
+    kept=[2,3,4,5,6]
+    cut=(; (name=>getproperty(table,name)[kept] for name in keys(table))...)
+    cut.weight[1]=1
+    tv=MA.variation(cut,table,meta,MA.stats(cut,meta),MA.stats(table,meta))
+    @test tv[1]≈2.5/9.5
+    @test 0<tv[2]<tv[1]
     mktempdir() do dir
         input,reference,candidate,density,report=[joinpath(dir,name) for name in ["input.arrow","reference.arrow","candidate.arrow","density.arrow","audit.toml"]]
         Arrow.write(input,table);Arrow.write(reference,table);Arrow.write(candidate,table)
@@ -24,6 +30,7 @@ const MW=MobileWriter
         @test result["rows"]==6
         @test result["sources"]==3
         @test result["labels"]==1
+        @test result["target_tv_max"]<1e-15
         @test result["source_sum_error"]<1e-7
         @test isfile(report)
         Arrow.write(candidate,merge(table,(;weight=Float64.(table.weight))))

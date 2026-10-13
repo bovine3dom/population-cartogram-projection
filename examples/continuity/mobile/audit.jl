@@ -46,7 +46,34 @@ function stats(table,meta)
         labels,owners=Dict(k=>v[3] for (k,v) in owners),mean_error,mean_sum_error=maximum(abs.(mean_sum.-1)))
 end
 
-function audit(input,reference,candidate,density_file,report)
+function variation(table,reference,meta,reduced,full)
+    lookup=Dict{Tuple{UInt64,Int16,Int16},Int}()
+    mass=Float64[];original=Float64[];targets=Int[]
+    key(t,r)=(ME.cellid(t.index_lower[r],t.index_upper[r]),Int16(t.x[r]),Int16(t.y[r]))
+    for r in eachindex(table.weight)
+        edge=key(table,r);i=get(lookup,edge,0)
+        if i==0
+            i=length(mass)+1;lookup[edge]=i
+            push!(mass,0.);push!(original,0.)
+            push!(targets,meta.target_index[(Int(table.x[r]),Int(table.y[r]),Int(table.code[r]))])
+        end
+        mass[i]+=Float64(table.weight[r])*table.population[r]
+    end
+    for r in eachindex(reference.weight)
+        i=get(lookup,key(reference,r),0)
+        i==0 || (original[i]+=Float64(reference.weight[r])*reference.population[r])
+    end
+    all(>(0),original) || error("export added a new transport edge")
+    tv=ones(length(meta.targets))
+    for i in eachindex(mass)
+        t=targets[i];p=original[i]/full.mass[t]
+        tv[t]+=abs(mass[i]/reduced.mass[t]-p)-p
+    end
+    return max.(tv./2,0.)
+end
+
+function audit(input,reference,candidate,density_file,report;target_retained=0.)
+    0<=target_retained<=1 || error("invalid variation bound")
     original=Arrow.Table(input)
     meta=ME.metadata(original.index_lower,original.index_upper,original.x,original.y,
         original.population,original.code,original.label)
@@ -55,7 +82,10 @@ function audit(input,reference,candidate,density_file,report)
                         (:population,Float64),(:index_lower,UInt32),(:index_upper,UInt32)]
         eltype(getproperty(table,name))==type || error("wrong type for $name")
     end
-    reduced=stats(table,meta);full=stats(Arrow.Table(reference),meta)
+    reference_table=Arrow.Table(reference)
+    reduced=stats(table,meta);full=stats(reference_table,meta)
+    tv=variation(table,reference_table,meta,reduced,full)
+    maximum(tv)<=1-target_retained+2e-5 || error("target variation bound exceeded")
     reduced.labels==full.labels || error("city anchor changed")
     reduced.owners==full.owners || error("shared-cell country owner changed")
     forward=vec(sqrt.(sum(abs2,reduced.source_xy.-full.source_xy;dims=1)))
@@ -79,13 +109,15 @@ function audit(input,reference,candidate,density_file,report)
         "source_sum_error"=>source_error,"target_mean_sum_error"=>reduced.mean_sum_error,
         "physical_weight_relative_error"=>reduced.mean_error,"target_mass_relative_error_max"=>maximum(mass_error),
         "forward_error_max"=>maximum(forward),"geographic_error_km_max"=>maximum(inverse),
-        "density_relative_error_max"=>maximum(density_error),"density_relative_error_p99"=>quantile(density_error,.99))
+        "density_relative_error_max"=>maximum(density_error),"density_relative_error_p99"=>quantile(density_error,.99),
+        "target_tv_max"=>maximum(tv),"target_tv_p99"=>quantile(tv,.99),"target_tv_p50"=>quantile(tv,.5),
+        "requested_target_retained"=>target_retained)
     open(io->TOML.print(io,output),report,"w")
     return output
 end
 end
 
 if abspath(PROGRAM_FILE)==@__FILE__
-    length(ARGS)==5 || error("usage: audit.jl INPUT REFERENCE CANDIDATE DENSITY REPORT")
-    MobileAudit.audit(ARGS...)
+    length(ARGS) in (5,6) || error("usage: audit.jl INPUT REFERENCE CANDIDATE DENSITY REPORT [TARGET_RETAINED]")
+    MobileAudit.audit(ARGS[1:5]...;target_retained=length(ARGS)==6 ? parse(Float64,ARGS[6]) : 0.)
 end

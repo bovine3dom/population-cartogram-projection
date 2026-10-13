@@ -11,9 +11,10 @@ function features(points)
     return vcat(ones(1,size(points,2)),sqrt(size(points,2)).*f.Vt[active,:])
 end
 
-function reduce_block(data,rows,weights,target_mass;forward=true,density=false,limit=300.,verbose=false)
+function reduce_block(data,rows,weights,target_mass;forward=true,density=false,limit=300.,verbose=false,floors=nothing)
     (;meta,index)=data
     !isempty(rows) && length(rows)==length(weights) && all(w->isfinite(w)&&w>0,weights) || error("invalid block")
+    isnothing(floors) || length(floors)==length(data.weight) || error("invalid floor mask")
     sources=unique(index.source[rows]);targets=unique(index.target[rows])
     smap=zeros(Int32,length(meta.ids));smap[sources]=1:length(sources)
     tmap=zeros(Int32,length(meta.targets));tmap[targets]=1:length(targets)
@@ -36,7 +37,9 @@ function reduce_block(data,rows,weights,target_mass;forward=true,density=false,l
     ri=Vector{Int32}(undef,width*nc);va=Vector{Float64}(undef,width*nc);lower=zeros(nc)
     for (col,r) in enumerate(rows)
         s,t=index.source[r],index.target[r];i,j=smap[s],tmap[t];start=ptr[col]-1
-        if haskey(meta.labels,s) && r==index.source_rows[index.source_ptr[s]]
+        if !isnothing(floors) && floors[r]
+            lower[col]=data.weight[r]
+        elseif haskey(meta.labels,s) && r==index.source_rows[index.source_ptr[s]]
             lower[col]=.5data.weight[r]
         end
         for k in 1:sf
@@ -47,7 +50,7 @@ function reduce_block(data,rows,weights,target_mass;forward=true,density=false,l
             va[start+sf+k]=meta.population[s]/target_mass[t]*a[k,i]
         end
     end
-    all(weights .>= lower.-1e-8) || error("label anchor was lost")
+    all(weights .>= lower.-1e-8) || error("protected weight was lost")
     matrix=SparseMatrixCSC(nr,nc,ptr,ri,va);rhs=matrix*weights
     # The two sets of moment equations share sf*tf exact dependencies.
     pivots=qr(a.*transpose(meta.population[sources]),ColumnNorm()).p[1:tf]
@@ -91,7 +94,7 @@ function reduce_block(data,rows,weights,target_mass;forward=true,density=false,l
         model_status==HiGHS.kHighsModelStatusOptimal || error("crossover status $status, model $model_status after $seconds seconds")
         solution=zeros(nc);check(HiGHS.Highs_getSolution(h,solution,C_NULL,C_NULL,C_NULL))
         minimum(solution)>=-1e-8 || error("negative reduced weight")
-        maximum(lower.-solution)<=1e-8 || error("label bound failed")
+        maximum(lower.-solution)<=1e-8 || error("weight bound failed")
         solution=max.(solution,0.).*scale
         residual=maximum(abs.(full_matrix*solution.-full_rhs))
         residual<=1e-6 || error("moment residual $residual")
