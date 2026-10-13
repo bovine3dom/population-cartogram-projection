@@ -11,12 +11,14 @@ import networkx as nx
 import numpy as np
 
 
-def augment(graph):
-    planar, embedding = nx.check_planarity(graph)
-    if not planar:
-        raise ValueError("Geographic contact graph is nonplanar")
+def augment(graph, embedding=None):
+    if embedding is None:
+        planar, embedding = nx.check_planarity(graph)
+        if not planar:
+            raise ValueError("Geographic contact graph is nonplanar")
+    embedding.check_structure()
     if len(graph) < 3:
-        return graph.copy(), {}
+        return graph.copy(), {}, embedding
     triangulated, _ = nx.algorithms.planar_drawing.triangulate_embedding(embedding, fully_triangulate=False)
     result = graph.copy()
     sea = {}
@@ -29,17 +31,28 @@ def augment(graph):
         sea[label] = (a,b)
     if not nx.is_biconnected(result):
         raise ValueError("Augmented graph is not biconnected")
-    return result, sea
+    edge_sea = {pair:label for label,pair in sea.items()}
+    rotation = {v:[edge_sea.get(tuple(sorted((v,n))),n) for n in triangulated.neighbors_cw_order(v)] for v in triangulated}
+    rotation.update({label:list(pair) for label,pair in sea.items()})
+    augmented_embedding = nx.PlanarEmbedding()
+    augmented_embedding.set_data(rotation)
+    augmented_embedding.check_structure()
+    return result, sea, augmented_embedding
 
 
-def integer_positions(graph, geography):
-    planar, embedding = nx.check_planarity(graph)
-    if not planar:
-        raise ValueError("Augmented graph is nonplanar")
+def integer_positions(graph, geography, embedding=None):
+    if embedding is None:
+        planar, embedding = nx.check_planarity(graph)
+        if not planar:
+            raise ValueError("Augmented graph is nonplanar")
     embedding.check_structure()
     positions = nx.combinatorial_embedding_to_pos(embedding)
     labels = sorted(graph)
     coordinates = np.array([positions[label] for label in labels], dtype=float)
+    if len(labels) == 2:
+        # Avoid an axis-aligned two-vertex graph. Upstream outer-face edges
+        # can pass through the other vertex and fail its crossing assertion.
+        coordinates = np.array([[0.,0.],[2.,1.]])
     target = np.array([geography[label] for label in labels], dtype=float)
     target -= target.mean(axis=0)
     # Select from eight signed axis permutations. Keep integer coordinates to
@@ -54,7 +67,7 @@ def integer_positions(graph, geography):
     return dict(zip(labels,coordinates.tolist()))
 
 
-def run(inputs):
+def run(inputs, rotations_path=None):
     output_names = ["embedding.tsv", "embedding-edges.tsv", "embedding.json", "augmented.wkt", "augmented-weights.tsv"]
     if any((inputs/name).exists() for name in output_names):
         raise ValueError("Embedding files already exist")
@@ -78,13 +91,22 @@ def run(inputs):
         raise ValueError("Outline labels differ from group table")
     geography = {label:[(float(r["west"])+float(r["east"]))/2,
                        (float(r["south"])+float(r["north"]))/2] for label,r in shapes.items()}
+    prescribed = json.loads(rotations_path.read_text()) if rotations_path else None
+    if prescribed is not None and (set(prescribed) != set(graph) or
+            any(set(prescribed[v]) != set(graph[v]) for v in graph)):
+        raise ValueError("Prescribed rotations differ from the contact graph")
     poses, sea, edges, sizes = {}, {}, set(), []
     for members in nx.connected_components(graph):
         subgraph = graph.subgraph(sorted(members)).copy()
-        augmented, local_sea = augment(subgraph)
+        local_embedding = None
+        if prescribed is not None:
+            local_embedding = nx.PlanarEmbedding()
+            local_embedding.add_nodes_from(sorted(members))
+            local_embedding.set_data({v:prescribed[v] for v in sorted(members)})
+        augmented, local_sea, drawing_embedding = augment(subgraph, local_embedding)
         for label,(a,b) in local_sea.items():
             geography[label] = [(x+y)/2 for x,y in zip(geography[a],geography[b])]
-        poses.update(integer_positions(augmented,geography))
+        poses.update(integer_positions(augmented,geography,drawing_embedding))
         sea.update(local_sea)
         edges.update(tuple(sorted(e)) for e in augmented.edges)
         sizes.append(len(subgraph))
@@ -113,12 +135,14 @@ def run(inputs):
             stream.write("\t".join(header)+"\n"+ring+"\nSITECOUNT 0\n")
             weights.write(f"{label}\t{weight}\n")
     metadata={"method":"Biconnected planar dual with temporary sea vertices; Chrobak-Payne integer drawing",
+              "rotation_source":"geographic border portals" if prescribed is not None else "NetworkX planarity algorithm",
+              "rotation_sha256":hashlib.sha256(rotations_path.read_bytes()).hexdigest() if rotations_path else None,
               "networkx_version":nx.__version__,"python_hash_seed":os.environ.get("PYTHONHASHSEED", "random"),
               "land_vertices":len(graph),"land_edges":graph.number_of_edges(),
               "sea_vertices":len(sea),"augmented_edges":len(edges),
               "connected_component_sizes":sorted(sizes,reverse=True),
               "sea_policy":"One temporary tile per added-edge subdivision; these are not population targets and are removed at export",
-              "limit":"Geographic cyclic order and enclave containment are not guaranteed. Count and contact checks remain required.",
+              "limit":"Only one portal per border pair is retained. Outer-face choice and enclave containment are not guaranteed. Count and contact checks remain required.",
               "script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     (inputs/"embedding.json").write_text(json.dumps(metadata,indent=2)+"\n")
     print(json.dumps(metadata,indent=2))
@@ -130,5 +154,6 @@ if __name__ == "__main__":
         raise SystemExit("Run with PYTHONHASHSEED=0 for repeatable NetworkX choices")
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("inputs",type=Path)
+    parser.add_argument("--rotations",type=Path)
     args=parser.parse_args()
-    run(args.inputs)
+    run(args.inputs,args.rotations)

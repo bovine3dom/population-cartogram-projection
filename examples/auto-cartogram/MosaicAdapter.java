@@ -3,6 +3,7 @@
 // part of the Julia package. See generator.md for source and license details.
 import arrange.DeformAlgorithm;
 import arrange.MosaicConstants;
+import arrange.algorithms.GridEmbedder;
 import arrange.util.Random;
 import combine.CombineAlgorithm;
 import combine.combinations.AgnosticCombination;
@@ -64,7 +65,11 @@ public class MosaicAdapter {
         int maxRounds = setting("mosaic.maxRounds", Integer.MAX_VALUE);
         int polishIterations = setting("mosaic.polishIterations", MosaicConstants.POLISHER_MAX_ITERATIONS, 0);
         PartitionAlgorithm.trivialPartition(map);
-        if (args.length == 6) setEmbedding(map, Path.of(args[5]));
+        if (args.length == 6) {
+            setEmbedding(map, Path.of(args[5]));
+            // Check every graph before spending time on the largest fit.
+            for (Dual dual : map.duals) if (dual.vertexCount() > 1) new GridEmbedder(dual);
+        }
         new DeformAlgorithm(GridGeometrySpawner.inferFromString("SQUARE")).run(map);
         if (placement.equals("directional")) DirectionalPlacement.run(map);
         else new CombineAlgorithm(new AgnosticCombination()).run(map);

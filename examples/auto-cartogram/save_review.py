@@ -18,14 +18,14 @@ def run(inputs, layout, output):
     if not (layout/"complete.txt").exists():
         raise ValueError("Layout is incomplete")
     names=["review.png","metrics.json","region-quality.csv","country-counts.csv","contact-errors.csv",
-           "island-order-errors.csv","complete.txt"]
+           "island-order-errors.csv","group-capacities.csv","complete.txt"]
     for name in names:
         if not (layout/name).exists():
             raise ValueError(f"Missing review file: {name}")
     output.mkdir(parents=True)
     for name in names:
         shutil.copyfile(layout/name,output/name)
-    for name in ["manifest.json","groups.csv","outline-checks.json","embedding.json","embedding.tsv","embedding-edges.tsv"]:
+    for name in ["manifest.json","groups.csv","outline-checks.json","embedding.json","embedding.tsv","embedding-edges.tsv","geographic-rotation.json"]:
         if (inputs/name).exists():
             shutil.copyfile(inputs/name,output/("input-"+name))
     if (layout/"baseline.json").exists():

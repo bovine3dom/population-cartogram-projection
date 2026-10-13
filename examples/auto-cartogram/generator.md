@@ -22,6 +22,11 @@ The build checks upstream revisions and the downloaded JDK checksum. It applies
 an inverted size assertion, removal-queue ties, and a local connectivity check.
 Keep Java assertions enabled for reference runs. The independent flood-fill test checks
 accepted moves against both land connectivity and four-neighbour sea holes.
+A second oracle compares 1,000 small flow problems with exhaustive optima. The
+unpatched flow solver stalls on this test. The patch updates each reduced cost
+once and removes only tiny negative roundoff terms on usable edges. Larger
+negative reduced costs cause an error. The tolerance is 16 floating-point units
+at the network cost scale. Inactive reverse edges keep their negative costs.
 
 ## Prepare population and shapes
 
@@ -38,7 +43,8 @@ julia --project=examples/auto-cartogram examples/auto-cartogram/prepare_points.j
 "$PY" examples/auto-cartogram/assign_population.py "$BASE/world-centres" "$BASE/world-components"
 julia --project=examples/auto-cartogram examples/auto-cartogram/prepare_layout.jl "$BASE/world-components/components.csv" "$BOUNDARY" "$BASE/world-10000-input" 10000 world group
 "$PY" examples/auto-cartogram/validate_outlines.py "$BASE/world-10000-input"
-PYTHONHASHSEED=0 "$PY" examples/auto-cartogram/planar_embedding.py "$BASE/world-10000-input"
+PYTHONHASHSEED=0 "$PY" examples/auto-cartogram/geographic_embedding.py "$BASE/world-centres/polygons.geojson" "$BASE/world-10000-input" "$BASE/world-10000-rotation"
+PYTHONHASHSEED=0 "$PY" examples/auto-cartogram/planar_embedding.py "$BASE/world-10000-input" --rotations "$BASE/world-10000-rotation/rotations.json"
 ```
 
 Population assignment uses polygon interiors and H3 cell centres. It excludes
@@ -110,9 +116,19 @@ This baseline grows separate, connected shapes to exact tile counts. It keeps
 a gap between shapes and therefore removes all land borders. The review report
 records these missing contacts. It is not a topology-preserving substitute.
 
+Without `--rotations`, the initializer uses an arbitrary planar embedding. This
+can put entire continental regions inside the wrong faces. Retained contacts
+alone do not imply a useful geographic layout.
+
 The planar initializer requires `PYTHONHASHSEED=0` for repeatable NetworkX
 choices. Save its embedding files with each experiment.
-It uses original represented contact edges. It adds temporary
+It uses original represented contact edges. The recommended geographic rotation
+file selects one shared border segment per neighbour pair, on both sides of the
+border. It derives neighbour order from boundary traversal. It discards other
+shared segments; this is not full border or enclave preservation. Every connected
+graph is checked before the Java fit starts.
+
+The initializer adds temporary
 sea regions to remove cut vertices without adding false land borders. Sea tiles
 are exported separately and carry no population. This construction does not
 preserve the geographic order of borders or enclave containment. Original WKT
@@ -165,7 +181,7 @@ output/auto-cartogram/geometry-env/bin/python test/auto_geometry.py
 ## License boundary
 
 `MosaicAdapter.java`, `DirectionalPlacement.java`, `upstream-fixes.patch`, and
-`test/MosaicConnectivity.java` are GPL-3.0-or-later experimental code. See
+the Java oracle tests are GPL-3.0-or-later experimental code. See
 `MosaicAdapter.LICENSE`. GridMapPipeline is GPL-3.0; GeometryCore is
 GPL-3.0-or-later. Keep this optional Java experiment separate from the main
 Julia package. Review distribution terms before shipping a combined product.
@@ -177,3 +193,4 @@ Julia package. Review distribution terms before shipping a combined product.
 - [Equal Earth projection, EPSG method 1078](https://epsg.io/1078-method)
 - [Shapely spatial index](https://shapely.readthedocs.io/en/stable/strtree.html)
 - [NetworkX planar drawing](https://networkx.org/documentation/stable/reference/algorithms/planar_drawing.html)
+- [NetworkX minimum-cost flow: floating-point warning](https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.flow.min_cost_flow.html)
