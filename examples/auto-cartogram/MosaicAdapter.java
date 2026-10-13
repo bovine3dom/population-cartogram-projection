@@ -58,6 +58,9 @@ public class MosaicAdapter {
         Random.restart();
         MosaicConstants.configureMosaicCartograms();
         MosaicConstants.EXACT_TILES = args[3].equals("exact");
+        MosaicConstants.FORCE_TOTAL_ITERATIONS = setting("mosaic.forceIterations", MosaicConstants.FORCE_TOTAL_ITERATIONS);
+        MosaicConstants.MAX_NO_IMPROVE_SCALED = setting("mosaic.scaledPatience", MosaicConstants.MAX_NO_IMPROVE_SCALED);
+        MosaicConstants.MAX_NO_IMPROVE_FINAL = setting("mosaic.finalPatience", MosaicConstants.MAX_NO_IMPROVE_FINAL);
         PartitionAlgorithm.trivialPartition(map);
         if (args.length == 6) setEmbedding(map, Path.of(args[5]));
         new DeformAlgorithm(GridGeometrySpawner.inferFromString("SQUARE")).run(map);
@@ -89,7 +92,16 @@ public class MosaicAdapter {
         Files.writeString(output.resolve("sea.csv"), sea);
         Files.writeString(output.resolve("counts.csv"), counts);
         IO.write(output.resolve("layout.wkt").toFile(), map);
-        Files.writeString(output.resolve("complete.txt"), "mode=" + args[3] + "\nseed=" + Random.getSeed() + "\nplacement=" + placement + "\nembedding=" + (args.length == 6 ? "planar" : "native") + "\n");
+        Files.writeString(output.resolve("complete.txt"), "mode=" + args[3] + "\nseed=" + Random.getSeed() + "\nplacement=" + placement + "\nembedding=" + (args.length == 6 ? "planar" : "native") + "\n"
+            + "forceIterations=" + MosaicConstants.FORCE_TOTAL_ITERATIONS + "\n"
+            + "scaledPatience=" + MosaicConstants.MAX_NO_IMPROVE_SCALED + "\n"
+            + "finalPatience=" + MosaicConstants.MAX_NO_IMPROVE_FINAL + "\n");
+    }
+
+    private static int setting(String name, int fallback) {
+        int value = Integer.parseInt(System.getProperty(name, Integer.toString(fallback)));
+        if (value < 1) throw new IllegalArgumentException("Nonpositive setting: " + name);
+        return value;
     }
 
     private static void setEmbedding(SiteMap map, Path directory) throws Exception {

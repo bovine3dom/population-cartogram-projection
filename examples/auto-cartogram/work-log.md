@@ -70,3 +70,28 @@ under ignored `output/auto-cartogram/`.
 - Tests pass: 27 Julia checks and six Python/Java tests. These include repeated
   deterministic placement, invalid inputs, shared borders, and the move oracle.
 - No production map or transport code has changed.
+
+## 21:30–21:36 UTC — valid guides and first world images
+
+- Added a separate geography-first baseline. It preserves tile counts and
+  connected shapes, but removes all land borders. Its images state this limit.
+- The baseline rejected invalid simplified outlines. The 10,000-tile input had
+  43 self-intersections from coastline simplification. Added an outline check
+  that restores original projected rings in these cases. The 55,000- and
+  110,000-tile inputs each need 44 such changes.
+- Stopped the two Java runs that used unchecked guides. Started new runs with
+  checked guides. Do not use the earlier Indonesia or world attempts as final
+  evidence of geometry validity.
+- The first checked world baseline completed at 10,000 tiles in 2.53 seconds.
+  It has 349 shapes and 250 Natural Earth entity IDs. The review image has
+  geographic structure, but all 352 represented land contacts are absent.
+- Generated the 55,000-tile baseline and started the 110,000-tile baseline.
+  All images include the 77,246,034 unmatched source people in their captions.
+- Nearest-polygon diagnostics place 58,590,218 unmatched people within 0.01
+  degree of a source polygon. Another 1,097,467 are more than 0.1 degree away.
+  These angular distances are not physical distances or proof of ownership.
+- Added optional bounded optimizer settings. Completion markers record them.
+  Assertions remain enabled. A thread sample confirms that full connectivity
+  assertions have a substantial cost in the global Java fit.
+- Added tests for polygon holes, ambiguous membership, batch boundaries,
+  planar augmentation, guide fallback, and separate-shape growth.

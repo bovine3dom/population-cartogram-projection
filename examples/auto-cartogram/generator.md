@@ -37,7 +37,8 @@ PY=$BASE/geometry-env/bin/python
 julia --project=examples/auto-cartogram examples/auto-cartogram/prepare_points.jl "$POP" "$BOUNDARY" "$BASE/world-centres"
 "$PY" examples/auto-cartogram/assign_population.py "$BASE/world-centres" "$BASE/world-components"
 julia --project=examples/auto-cartogram examples/auto-cartogram/prepare_layout.jl "$BASE/world-components/components.csv" "$BOUNDARY" "$BASE/world-10000-input" 10000 world group
-"$PY" examples/auto-cartogram/planar_embedding.py "$BASE/world-10000-input"
+"$PY" examples/auto-cartogram/validate_outlines.py "$BASE/world-10000-input"
+PYTHONHASHSEED=0 "$PY" examples/auto-cartogram/planar_embedding.py "$BASE/world-10000-input"
 ```
 
 Population assignment uses polygon interiors and H3 cell centres. It excludes
@@ -64,7 +65,7 @@ Use the Java path printed by the build (also in `vendor/java-path.txt`). For exa
 JAVA=output/auto-cartogram/vendor/jdk-21.0.12.1/bin/java
 INPUT=output/auto-cartogram/world-10000-input
 LAYOUT=output/auto-cartogram/world-10000-layout
- timeout 3600s "$JAVA" -ea -Xmx8g -Djava.awt.headless=true \
+timeout 3600s "$JAVA" -ea -Xmx8g -Djava.awt.headless=true \
   -cp output/auto-cartogram/vendor/classes MosaicAdapter \
   "$INPUT/augmented.wkt" "$INPUT/augmented-weights.tsv" "$LAYOUT" \
   topology directional "$INPUT"
@@ -72,13 +73,36 @@ python3 examples/auto-cartogram/review_layout.py "$INPUT" "$LAYOUT"
 rsvg-convert "$LAYOUT/review.svg" -o "$LAYOUT/review.png"
 ```
 
-The adapter can also take plain `input.wkt` and `weights.tsv` without an embedding
+The adapter can also take `validated.wkt` and `weights.tsv` without an embedding
 directory. `agnostic` uses upstream placement. `directional` restricts placement
 of separate land groups to source bearings. Neither method guarantees good
 geographic position. `exact` requests exact tile counts; `topology` permits count
 errors when needed by upstream constraints. Always check exported counts.
 
-The planar initializer uses original represented contact edges. It adds temporary
+For bounded preview runs, set Java properties such as
+`-Dmosaic.forceIterations=2000 -Dmosaic.scaledPatience=50 -Dmosaic.finalPatience=100`.
+These limit force iterations and rounds without improvement. They do not impose
+a wall-clock limit; keep the external timeout. The completion marker records them.
+
+The outline check rejects invalid original projected rings. If a simplified ring
+crosses itself, it restores the original projected ring and records the change.
+Never send unchecked `input.wkt` to the generator. The first global check found
+43 invalid simplified rings at 10,000 tiles.
+
+For a fast geography-first comparison, run:
+
+```sh
+"$PY" examples/auto-cartogram/geographic_baseline.py "$INPUT" "$LAYOUT"
+python3 examples/auto-cartogram/review_layout.py "$INPUT" "$LAYOUT"
+```
+
+This baseline grows separate, connected shapes to exact tile counts. It keeps
+a gap between shapes and therefore removes all land borders. The review report
+records these missing contacts. It is not a topology-preserving substitute.
+
+The planar initializer requires `PYTHONHASHSEED=0` for repeatable NetworkX
+choices. Save its embedding files with each experiment.
+It uses original represented contact edges. It adds temporary
 sea regions to remove cut vertices without adding false land borders. Sea tiles
 are exported separately and carry no population. This construction does not
 preserve the geographic order of borders or enclave containment. Original WKT
@@ -94,6 +118,7 @@ checks plus a headless SVG. Inspect the image as well as the numbers.
 ```sh
 julia --project=examples/auto-cartogram test/auto_layout.jl
 python3 test/auto_layout.py
+output/auto-cartogram/geometry-env/bin/python test/auto_geometry.py
 ```
 
 ## License boundary

@@ -148,6 +148,12 @@ function run(summary_path, boundary_path, output, n; country="world", policy="gr
         "group_policy"=>policy=="group" ? "country minimum 1 tile, then zero-budget components join nearest represented component of same country; reallocate within country" : "global largest remainder; zero-budget components are omitted and their population is reported",
         "geometry_limit"=>"WKT supports outer rings only; hole-border contacts are audited separately",
         "inputs"=>[Dict("path"=>abspath(p),"sha256"=>Audit.file_hash(p)) for p in (summary_path,boundary_path,@__FILE__)])
+    source_manifest = joinpath(dirname(summary_path), "manifest.json")
+    if country == "world" && isfile(source_manifest)
+        source = JSON.parsefile(source_manifest)
+        manifest["unmatched_source_population"] = get(source, "unmatched_population", 0)
+        manifest["source_manifest_sha256"] = Audit.file_hash(source_manifest)
+    end
     mkpath(dirname(abspath(output)))
     temp = mktempdir(dirname(abspath(output));prefix="layout-input-")
     try
@@ -168,6 +174,8 @@ function run(summary_path, boundary_path, output, n; country="world", policy="gr
                 println(io,"SITECOUNT 0")
             end
         end
+        original = Dict(components[i].component_id => [project(p...) for p in first(components[i].rings)[1:end-1]] for i in live)
+        open(io -> JSON.print(io, original), joinpath(temp,"original-outlines.json"), "w")
         open(joinpath(temp,"weights.tsv"),"w") do io
             for i in live
                 println(io,"$(components[i].component_id)\t$(counts[i])")
