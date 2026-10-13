@@ -500,3 +500,28 @@ Limit this publication attempt to four passes, not the original ten, to keep
 time for full validation and export within the reserved window. Keep all
 original mass and distortion limits. The accepted pass-2 fallback remains
 available if the four-pass attempt does not finish.
+
+## 00:10 UTC, 13 October: reuse temperature-independent costs
+
+The new four-pass continuation started at 23:34:54 UTC in
+`output/planet-h3-5-factor1-sparse-v3`, at commit `f52d40b`. Its parent
+checkpoint matches objective 65.1975 and all metrics. It resumes at update 456,
+China in pass 3. The timeout ends at 04:40 UTC, with time left for validation
+and a fallback export if needed.
+
+Separated the compact cost workspace from the dual iterations. A temperature
+retry does not change the force, prior, or proximal weight, so it need not
+rebuild the same cost matrix and row/column offsets at every stage. Keep one
+workspace and mark its matrix dirty when dense refinement overwrites it.
+Restore the cost before the next use. Check workspace input identities.
+
+All 72 compact checks pass on CPU and oneAPI. Tests overwrite a cached matrix
+with NaNs, mark it dirty, and confirm that reuse restores the correct solve.
+They also reject a workspace with different inputs. A saved China problem has
+303,300,228 pairs and a 1.213 GB device cost cache. Workspace construction takes
+37.6 cold seconds and 5.8 warm seconds. Reuse avoids this setup, not the main
+pair reductions. This is not a whole-fit speedup measurement.
+
+The planet was paused from 00:00:20–00:04:20 UTC for the GPU tests and setup
+measurement, then resumed. Its loaded code does not use workspace reuse.
+Do not restart it solely for this small setup saving.

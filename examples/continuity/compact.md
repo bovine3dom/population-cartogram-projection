@@ -53,7 +53,9 @@ keep the prior plan and proximal weight fixed. Each stage checks the original
 mass tolerance. Only the last stage becomes a candidate, with the requested
 temperature. Earlier stages supply dual initial values, not extra plan history.
 A failed final solve raises an error. No dense host plan or CPU solver fallback
-is used.
+is used. Reuse the cost workspace across temperature stages: the force, prior,
+and proximal weight stay fixed. Restore the cached cost if dense refinement
+overwrote it. Do not change these inputs in a stage callback.
 
 Calculate target moments, transport cost, and entropy in bounded host blocks.
 Reuse moments and masses for unchanged countries. A damped mixture has linear

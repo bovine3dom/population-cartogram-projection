@@ -274,40 +274,12 @@ end
 
 include("primal.jl")
 
-function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=nothing,maxiters=10000,retry_after=1000,stage_callback=nothing,kwargs...)
-    retry_after>0 || error("invalid retry interval")
-    first_limit=min(retry_after,maxiters)
-    try
-        result=compact_sinkhorn(c,force,prior,backend;eta,proximal,initial_beta,maxiters=first_limit,kwargs...)
-        isnothing(stage_callback) || stage_callback(1.,result)
-        return result
-    catch err
-        err isa CompactConvergenceError || rethrow()
-        println("Temperature retry country=$(c.code): $err");flush(stdout)
-    end
-    GC.gc() # Release the failed solve's device cache before the retry.
-    result=nothing;iterations=0
-    for factor in (16.,8.,4.,2.,1.)
-        # Scale the full effective temperature, not only its non-proximal part.
-        temperature=(eta+proximal)*factor-proximal
-        result=compact_sinkhorn(c,force,prior,backend;eta=temperature,proximal,initial_beta,maxiters,kwargs...)
-        initial_beta=result.beta;iterations+=result.iterations
-        isnothing(stage_callback) || stage_callback(factor,result)
-        println("Temperature factor=$factor iterations=$(result.iterations) residual=$(result.marginal_error)");flush(stdout)
-        GC.gc()
-    end
-    return merge(result,(;iterations=iterations+first_limit))
-end
-
-function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1e-4,
-                          maxiters=10000,initial_beta=nothing,accelerate=true,block_pairs=1_000_000,
-                          cache_bytes=512*1024^2,max_pairs=8_000_000)
-    isfinite(eta) && eta>0 && isfinite(proximal) && proximal>=0 || Base.error("invalid temperature or proximal weight")
-    tolerance>0 && maxiters>0 && block_pairs>0 && cache_bytes>=0 && max_pairs>0 || Base.error("invalid solve limits")
+function compact_workspace(c,force,prior,backend;proximal=0.,cache_bytes=512*1024^2,max_pairs=8_000_000)
+    isfinite(proximal) && proximal>=0 && cache_bytes>=0 && max_pairs>0 || Base.error("invalid cost workspace limits")
     size(force)==(3,length(c.b)) && all(isfinite,force) || Base.error("invalid geographic forces")
     (!isnothing(prior) || proximal==0) || Base.error("proximal update requires a prior plan")
     isnothing(prior) || (size(prior)==size(c.cost) && valid_plan(prior)) || Base.error("invalid prior plan")
-    eta=eta+proximal
+    context=(c,force,prior,backend,proximal,cache_bytes,max_pairs)
     # Removing row and column terms leaves the balanced optimum unchanged.
     force=force.-mean(force;dims=2)
     host=(;compact_prior=isnothing(prior) ? empty_history(c) : prior.data,
@@ -344,6 +316,52 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
         materialize_cost!(KA.allocate(backend,Float32,(length(c.a),length(c.b))))
     else
         device
+    end
+    return (;context,force,device,cost_device,row_offset,offset,commands,budget,materialize_cost!,dirty=Ref(false))
+end
+
+function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=nothing,maxiters=10000,retry_after=1000,
+                       stage_callback=nothing,cache_bytes=512*1024^2,max_pairs=8_000_000,kwargs...)
+    retry_after>0 || error("invalid retry interval")
+    isfinite(eta) && eta>0 && maxiters>0 && get(kwargs,:tolerance,1e-4)>0 && get(kwargs,:block_pairs,1_000_000)>0 || error("invalid solve limits")
+    workspace=compact_workspace(c,force,prior,backend;proximal,cache_bytes,max_pairs)
+    first_limit=min(retry_after,maxiters)
+    try
+        result=compact_sinkhorn(c,force,prior,backend;eta,proximal,initial_beta,maxiters=first_limit,workspace,cache_bytes,max_pairs,kwargs...)
+        isnothing(stage_callback) || stage_callback(1.,result)
+        return result
+    catch err
+        err isa CompactConvergenceError || rethrow()
+        println("Temperature retry country=$(c.code): $err");flush(stdout)
+    end
+    GC.gc() # Release temporary solve buffers; keep the cost workspace.
+    result=nothing;iterations=0
+    for factor in (16.,8.,4.,2.,1.)
+        # Scale the full effective temperature, not only its non-proximal part.
+        temperature=(eta+proximal)*factor-proximal
+        result=compact_sinkhorn(c,force,prior,backend;eta=temperature,proximal,initial_beta,maxiters,workspace,cache_bytes,max_pairs,kwargs...)
+        initial_beta=result.beta;iterations+=result.iterations
+        isnothing(stage_callback) || stage_callback(factor,result)
+        println("Temperature factor=$factor iterations=$(result.iterations) residual=$(result.marginal_error)");flush(stdout)
+        GC.gc()
+    end
+    return merge(result,(;iterations=iterations+first_limit))
+end
+
+function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1e-4,
+                          maxiters=10000,initial_beta=nothing,accelerate=true,block_pairs=1_000_000,
+                          cache_bytes=512*1024^2,max_pairs=8_000_000,workspace=nothing)
+    isfinite(eta) && eta>0 && isfinite(proximal) && proximal>=0 || Base.error("invalid temperature or proximal weight")
+    tolerance>0 && maxiters>0 && block_pairs>0 && cache_bytes>=0 && max_pairs>0 || Base.error("invalid solve limits")
+    eta=eta+proximal
+    if isnothing(workspace)
+        workspace=compact_workspace(c,force,prior,backend;proximal,cache_bytes,max_pairs)
+    else
+        workspace.context===(c,force,prior,backend,proximal,cache_bytes,max_pairs) || Base.error("cost workspace inputs differ")
+    end
+    (;force,device,cost_device,row_offset,offset,commands,budget,materialize_cost!)=workspace
+    if workspace.dirty[]
+        materialize_cost!(cost_device);workspace.dirty[]=false
     end
     da=PCP._copy_to_backend(backend,Float32.(c.a));db=PCP._copy_to_backend(backend,Float32.(c.b))
     alpha=KA.zeros(backend,Float32,length(c.a))
@@ -393,7 +411,7 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
             previous=Float64.(host_beta);previous.-=mean(previous)
         end
         if iteration%1000==0
-            println("Compact inner iteration=$iteration scaled_device_residual=$error history=$(length(host.compact_prior.rho))");flush(stdout)
+            println("Compact inner iteration=$iteration scaled_device_residual=$error history=$(length(device.compact_prior.rho))");flush(stdout)
         end
         check_limit=cache_bytes>0 && iteration>=1000 ? 10 : 1.2
         if error<=check_limit && (error<.9checked_error || iteration-last_check>=500 || iteration==maxiters)
@@ -417,6 +435,7 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
                 used_dense=isnothing(refined) && dense && error<=1.2
                 if used_dense
                     GC.gc() # Release any sparse workspace before the dense fallback.
+                    workspace.dirty[]=true
                     refined=compact_polish(plan,c,backend,cost_device;maxiters=limit,options...)
                 end
                 if !isnothing(refined)
@@ -433,7 +452,9 @@ function compact_sinkhorn(c,force,prior,backend;eta=.002,proximal=0.,tolerance=1
                         empty!(outputs);empty!(residuals);checked_error=Inf
                     end
                 end
-                used_dense && materialize_cost!(cost_device)
+                if used_dense
+                    materialize_cost!(cost_device);workspace.dirty[]=false
+                end
             end
         end
     end

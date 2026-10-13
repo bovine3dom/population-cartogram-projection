@@ -28,6 +28,13 @@ for backend in backends
         dense=CE.sinkhorn(Matrix(c.cost),c.a,c.b,backend;eta,tolerance=1e-6,accelerate=true)
         result=CE.compact_sinkhorn(c,force,nothing,backend;eta,tolerance=1e-6,block_pairs=12,max_pairs=10)
         p=result.plan
+        workspace=CE.compact_workspace(c,force,nothing,backend;max_pairs=16)
+        cached=workspace.cost_device
+        fill!(cached,NaN32);CE.KA.synchronize(backend);workspace.dirty[]=true
+        reused=CE.compact_sinkhorn(c,force,nothing,backend;eta,tolerance=1e-6,workspace,max_pairs=16)
+        @test Matrix(reused.plan) ≈ Matrix(p) atol=2e-6
+        @test workspace.cost_device===cached && !workspace.dirty[]
+        @test_throws ErrorException CE.compact_sinkhorn(c,force.+1,nothing,backend;workspace,max_pairs=16)
         implicit=CE.compact_sinkhorn(c,force,nothing,backend;eta,tolerance=1e-6,cache_bytes=0,max_pairs=10).plan
         @test Matrix(implicit) ≈ Matrix(p) atol=2e-6
         @test Matrix(p) ≈ dense.plan atol=2e-6

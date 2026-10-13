@@ -46,6 +46,7 @@ better map quality.
 - Retain both proximal terms and damped mixtures; do not average duals.
 - Reuse bounded host buffers for mass, moment, and entropy calculations.
 - Cache only the active country's cost, with an explicit memory budget.
+  Reuse it across temperature stages when its inputs do not change.
 - Bound device launch sizes and queued work.
 - Collect completed native command lists periodically. Their driver allocations
   are not visible to Julia's normal heap-pressure check.
