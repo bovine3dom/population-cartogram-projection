@@ -1,0 +1,113 @@
+# Headless mosaic experiment
+
+This is a research tool, not a replacement for the production map. It does not
+change the transport solver. Read `work-log.md` for completed runs and failures.
+Read `../../auto-cartogram.md` for the research plan.
+
+## Build
+
+Run commands from the repository root. You need Julia 1.12, Python, Git, curl,
+`fd`, `patch`, and `sha256sum`. The default Java download requires Linux x86-64.
+On another platform, set `JAVA_HOME` to a JDK 21 installation.
+
+```sh
+bash examples/auto-cartogram/bootstrap.sh
+julia --project=examples/auto-cartogram -e 'using Pkg; Pkg.instantiate()'
+python3 -m venv output/auto-cartogram/geometry-env
+output/auto-cartogram/geometry-env/bin/pip install -r examples/auto-cartogram/geometry-requirements.txt
+```
+
+The build checks upstream revisions and the downloaded JDK checksum. It applies
+`upstream-fixes.patch` to copies, not to the upstream checkout. The patch fixes
+an inverted size assertion, removal-queue ties, and a local connectivity check.
+Java assertions must remain enabled. The independent flood-fill test checks
+accepted moves against both land connectivity and four-neighbour sea holes.
+
+## Prepare population and shapes
+
+The population file must contain H3 resolution-8 `h3` and `population` columns.
+The current external input does not declare a population year. Keep each output
+directory new. Large inputs and intermediate files stay under ignored `output/`.
+
+```sh
+BASE=output/auto-cartogram
+BOUNDARY=make-lookup-table/population-data/country-boundaries/ne_10m_admin_0_map_units.geojson
+POP=/path/to/kontur_h3.arrow
+PY=$BASE/geometry-env/bin/python
+julia --project=examples/auto-cartogram examples/auto-cartogram/prepare_points.jl "$POP" "$BOUNDARY" "$BASE/world-centres"
+"$PY" examples/auto-cartogram/assign_population.py "$BASE/world-centres" "$BASE/world-components"
+julia --project=examples/auto-cartogram examples/auto-cartogram/prepare_layout.jl "$BASE/world-components/components.csv" "$BOUNDARY" "$BASE/world-10000-input" 10000 world group
+"$PY" examples/auto-cartogram/planar_embedding.py "$BASE/world-10000-input"
+```
+
+Population assignment uses polygon interiors and H3 cell centres. It excludes
+holes. It records unmatched and ambiguous cells separately. It does not split
+coastal cells or repair the longitude seam. The first world run excludes about
+77.25 million unmatched people. Do not interpret the matched total as complete
+world coverage.
+
+Stable polygon IDs include the map-unit ID and a hash of the original rings.
+Country grouping uses Natural Earth `ADM0_A3`, not its inconsistent numeric
+codes. This choice records source entities; it does not resolve disputed borders.
+
+The `group` policy gives each populated country at least one tile. It allocates
+country totals, then component totals. Components with zero tiles join the
+nearest represented component in the same country. Their population remains in
+the group. This is an explicit loss of island detail, not individual island
+preservation. The `omit` policy instead leaves zero-tile population out of shapes.
+
+## Generate and inspect
+
+Use the Java path printed by the build (also in `vendor/java-path.txt`). For example:
+
+```sh
+JAVA=output/auto-cartogram/vendor/jdk-21.0.12.1/bin/java
+INPUT=output/auto-cartogram/world-10000-input
+LAYOUT=output/auto-cartogram/world-10000-layout
+ timeout 3600s "$JAVA" -ea -Xmx8g -Djava.awt.headless=true \
+  -cp output/auto-cartogram/vendor/classes MosaicAdapter \
+  "$INPUT/augmented.wkt" "$INPUT/augmented-weights.tsv" "$LAYOUT" \
+  topology directional "$INPUT"
+python3 examples/auto-cartogram/review_layout.py "$INPUT" "$LAYOUT"
+rsvg-convert "$LAYOUT/review.svg" -o "$LAYOUT/review.png"
+```
+
+The adapter can also take plain `input.wkt` and `weights.tsv` without an embedding
+directory. `agnostic` uses upstream placement. `directional` restricts placement
+of separate land groups to source bearings. Neither method guarantees good
+geographic position. `exact` requests exact tile counts; `topology` permits count
+errors when needed by upstream constraints. Always check exported counts.
+
+The planar initializer uses original represented contact edges. It adds temporary
+sea regions to remove cut vertices without adding false land borders. Sea tiles
+are exported separately and carry no population. This construction does not
+preserve the geographic order of borders or enclave containment. Original WKT
+outlines omit holes. A successful represented-contact check is not proof of full
+geographic topology.
+
+`complete.txt` appears only after export. The review tool rejects missing owners,
+unknown owners, and duplicate cells. It writes count, connectivity, and contact
+checks plus a headless SVG. Inspect the image as well as the numbers.
+
+## Tests
+
+```sh
+julia --project=examples/auto-cartogram test/auto_layout.jl
+python3 test/auto_layout.py
+```
+
+## License boundary
+
+`MosaicAdapter.java`, `DirectionalPlacement.java`, `upstream-fixes.patch`, and
+`test/MosaicConnectivity.java` are GPL-3.0-or-later experimental code. See
+`MosaicAdapter.LICENSE`. GridMapPipeline is GPL-3.0; GeometryCore is
+GPL-3.0-or-later. Keep this optional Java experiment separate from the main
+Julia package. Review distribution terms before shipping a combined product.
+
+## Method references
+
+- [GridMapPipeline](https://github.com/tue-alga/GridMapPipeline)
+- [GeometryCore](https://github.com/tue-alga/GeometryCore)
+- [Equal Earth projection, EPSG method 1078](https://epsg.io/1078-method)
+- [Shapely spatial index](https://shapely.readthedocs.io/en/stable/strtree.html)
+- [NetworkX planar drawing](https://networkx.org/documentation/stable/reference/algorithms/planar_drawing.html)
