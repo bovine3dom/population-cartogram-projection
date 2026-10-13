@@ -86,7 +86,10 @@ for population, lower H3 words, and labels. The density writer also uses a
 lossless dictionary for lower H3 words. Density values keep their precision.
 It drops an unlabelled roundoff
 row only when both its source and target fractions are below `1e-20`.
-It preserves country ownership at shared target positions.
+It preserves country ownership at shared target positions. The packer places
+the first row of each target first, then sorts other rows by source H3 and
+position. This reduces gzip bytes without changing weights or the browser's
+first-source navigation anchors.
 
 Use a dictionary-capable Arrow reader. H3-MON commit `6563a17` uses Apache
 Arrow directly. Its earlier loaders.gl reader rejects dictionary columns.

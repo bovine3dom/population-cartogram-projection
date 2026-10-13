@@ -505,3 +505,19 @@ is rejected. A separate trial holds protected contributions fixed and solves
 only their residual weights. It removes 44,177 further China rows in small
 blocks without changing the validation limits. Larger China and India trials
 are in progress. This residual method is not yet in the committed exporter.
+
+## 17:42 UTC: lossless row order for smaller transfers
+
+Sorting transport rows by source reduces gzip size. A pure source sort
+would change the browser's first-source navigation anchors. Instead, keep
+the first row of each target in a prefix, then sort the remaining rows.
+An independent comparison confirms that all 2,909,590 rows and all 54,931
+navigation anchors are unchanged. All 1,711 displayed city labels are also
+unchanged. The writer's 68 checks and the headless world/date-line/return
+check pass.
+
+With dictionary density, this candidate uses 78.7 MB raw and 30.6 MB gzip,
+versus 79.9 MB and 33.7 MB for the current public files. The difference is
+lossless. The smaller gzip transport is 26,965,999 bytes. A target-first
+sort was worse at 31,618,870 bytes, so it is not used. Keep the current
+public files until the final candidate has a fresh complete binary audit.

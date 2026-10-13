@@ -92,10 +92,24 @@ function write_density(path,input)
     return filesize(path)
 end
 
-function write_file(path,parts;owners=Dict(),dictionary=false)
+function write_file(path,parts;owners=Dict(),dictionary=false,source_order=false)
     ispath(path) && error("refusing to replace $path")
     counts=Ref((;dropped_rows=0,ownership_rows=0))
     table=columns(parts;owners,counts)
+    if source_order
+        # The browser uses each target's first source as a navigation anchor.
+        anchors=falses(length(table.weight));seen=Set{Tuple{Int16,Int16}}()
+        for i in eachindex(anchors)
+            key=(table.x[i],table.y[i])
+            if key ∉ seen
+                push!(seen,key);anchors[i]=true
+            end
+        end
+        order=sortperm(eachindex(table.weight);by=i->(table.index_upper[i],table.index_lower[i],table.x[i],table.y[i]))
+        filter!(i->!anchors[i],order)
+        order=vcat(findall(anchors),order)
+        table=map(col->col[order],table)
+    end
     if dictionary
         table=merge(table,(;index_lower=Arrow.DictEncode(table.index_lower),
             population=Arrow.DictEncode(table.population),label=Arrow.DictEncode(table.label)))
