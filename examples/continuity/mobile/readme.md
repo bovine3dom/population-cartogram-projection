@@ -59,6 +59,12 @@ in parallel. Output directories record code hashes and settings. A changed
 input or code requires a new output directory. Use `seed="checkpoint.jls"`
 to start a new run from a checked complete transport.
 
+For a further reduction, try `fixed_floors=true` with a checked seed. It holds
+the protected contribution fixed and reduces only the remaining mass. It can
+help when a block with lower bounds fails. It does not weaken the mass,
+geometry, city, or total-variation checks. It can also return the input
+unchanged; it does not guarantee the smallest support.
+
 Create a CSV manifest with `code,cache,result`. Use one row per country.
 `result` is a saved stage path. An empty result keeps the full reference
 country. The packer checks each country and then checks global coverage.

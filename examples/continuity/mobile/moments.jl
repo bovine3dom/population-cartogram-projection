@@ -11,10 +11,33 @@ function features(points)
     return vcat(ones(1,size(points,2)),sqrt(size(points,2)).*f.Vt[active,:])
 end
 
-function reduce_block(data,rows,weights,target_mass;forward=true,density=false,limit=300.,verbose=false,floors=nothing)
+# Keep the protected contribution fixed and reduce only the remaining mass.
+function reduce_residual(data,rows,weights,target_mass;floors,kwargs...)
+    fixed=zeros(length(rows))
+    for (k,r) in enumerate(rows)
+        s=data.index.source[r]
+        bound=!isnothing(floors)&&floors[r] ? data.weight[r] :
+            haskey(data.meta.labels,s)&&r==data.index.source_rows[data.index.source_ptr[s]] ? .5data.weight[r] : 0.
+        weights[k]>=bound-1e-8 || error("protected weight lost")
+        fixed[k]=min(weights[k],bound)
+    end
+    free=weights.-fixed;selected=findall(>(0),free)
+    isempty(selected) && return (;rows,weights,seconds=0.,residual=0.,constraints=0,skipped=true)
+    bare=merge(data,(;meta=merge(data.meta,(;labels=Dict{Int32,String}()))))
+    result=reduce_block(bare,rows[selected],free[selected],target_mass;kwargs...)
+    positions=Dict(r=>k for (k,r) in enumerate(rows))
+    for (r,w) in zip(result.rows,result.weights)
+        fixed[positions[r]]+=w
+    end
+    keep=findall(>(0),fixed)
+    return merge(result,(;rows=rows[keep],weights=fixed[keep]))
+end
+
+function reduce_block(data,rows,weights,target_mass;forward=true,density=false,limit=300.,verbose=false,floors=nothing,fixed_floors=false)
     (;meta,index)=data
     !isempty(rows) && length(rows)==length(weights) && all(w->isfinite(w)&&w>0,weights) || error("invalid block")
     isnothing(floors) || length(floors)==length(data.weight) || error("invalid floor mask")
+    fixed_floors && return reduce_residual(data,rows,weights,target_mass;floors,forward,density,limit,verbose)
     sources=unique(index.source[rows]);targets=unique(index.target[rows])
     smap=zeros(Int32,length(meta.ids));smap[sources]=1:length(sources)
     tmap=zeros(Int32,length(meta.targets));tmap[targets]=1:length(targets)

@@ -17,9 +17,9 @@ function checked_checkpoint(path,data,rows,weights,reference;target_retained=0.,
     return summary
 end
 
-function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing,target_retained=0.)
+function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing,target_retained=0.,fixed_floors=false)
     mkpath(out)
-    config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,target_retained,
+    config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,target_retained,fixed_floors,
         seed=isnothing(seed) ? nothing : (abspath(seed),bytes2hex(sha256(read(seed)))), 
         code=[bytes2hex(sha256(read(joinpath(@__DIR__,file)))) for file in ("reduce.jl","bounded.jl","moments.jl","../mobile_export.jl")])
     config_path=joinpath(out,"config.jls")
@@ -74,7 +74,7 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
                 last_checkpoint=time()
             end
             result=try
-                BoundedReduction.reduce_block!(worker,data,rr,ww,reference.target_mass;density=true,limit,floors)
+                BoundedReduction.reduce_block!(worker,data,rr,ww,reference.target_mass;density=true,limit,floors,fixed_floors)
             catch err
                 err isa InterruptException && rethrow()
                 failures+=1

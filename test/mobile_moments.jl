@@ -35,6 +35,20 @@ include("../examples/continuity/mobile/quality.jl")
     @test all(!floors[r] || protected.weights[k]>=w[r]-1e-8 for (k,r) in enumerate(protected.rows))
     @test all(r->r in protected.rows,findall(floors))
     @test_throws ErrorException MR.reduce_block(data,Int32.(eachindex(w)),w,reference.target_mass;floors=[true])
+    sparse_floors=ME.target_floor_rows(data,.1)
+    residual=MR.reduce_block(data,Int32.(eachindex(w)),w,reference.target_mass;floors=sparse_floors,fixed_floors=true)
+    @test length(residual.rows)<length(w)
+    residual_summary=ME.evaluate(data,residual.rows,reference;weights=residual.weights)
+    @test residual_summary.source_sum_error<1e-8
+    @test residual_summary.forward_max<1e-6
+    @test residual_summary.inverse_km_max<.001
+    @test residual_summary.target_tv_max<=.9+1e-6
+    @test all(r->r in residual.rows,findall(sparse_floors))
+    @test all(!sparse_floors[r] || residual.weights[k]>=w[r]-1e-8 for (k,r) in enumerate(residual.rows))
+    @test residual.weights[findfirst(==(anchor),residual.rows)]>=.5w[anchor]-1e-10
+    fixed=MR.reduce_block(data,Int32.(eachindex(w)),w,reference.target_mass;floors=trues(length(w)),fixed_floors=true)
+    @test fixed.weights==w
+    @test fixed.rows==eachindex(w)
     uneven=merge(data,(;meta=merge(meta,(;population=10.0.^range(-3,3;length=ns)))))
     unequal_reference=ME.reference_stats(uneven)
     unequal=MR.reduce_block(uneven,Int32.(eachindex(w)),w,unequal_reference.target_mass)
@@ -53,6 +67,10 @@ include("../examples/continuity/mobile/quality.jl")
             remote=BoundedReduction.reduce_block!(worker,data,Int32.(eachindex(w)),w,reference.target_mass;max_inline=0,limit=60.)
             @test remote.rows==result.rows
             @test remote.weights≈result.weights
+            remote_fixed=BoundedReduction.reduce_block!(worker,data,Int32.(eachindex(w)),w,reference.target_mass;
+                max_inline=0,limit=60.,floors=sparse_floors,fixed_floors=true)
+            @test remote_fixed.rows==residual.rows
+            @test remote_fixed.weights≈residual.weights
             @test_throws ErrorException BoundedReduction.execute!(worker,(;f=error,args=("expected failure",),kwargs=(;));seconds=10.)
             @test BoundedReduction.execute!(worker,(;f=identity,args=(42,),kwargs=(;));seconds=10.)==42
             @test_throws ErrorException BoundedReduction.execute!(worker,(;f=sleep,args=(10.,),kwargs=(;));seconds=.05)
@@ -89,6 +107,11 @@ include("../examples/continuity/mobile/quality.jl")
         protected_out=joinpath(dir,"protected")
         @test isnothing(reduce_country(input,protected_out;stages=[(8,9)],target_retained=.7))
         @test deserialize(joinpath(protected_out,"stage-1.jls")).summary.target_tv_max<=.3+1e-6
+        fixed_out=joinpath(dir,"fixed")
+        @test isnothing(reduce_country(input,fixed_out;stages=[(8,9)],target_retained=.7,fixed_floors=true))
+        @test deserialize(joinpath(fixed_out,"stage-1.jls")).summary.target_tv_max<=.3+1e-6
+        @test deserialize(joinpath(fixed_out,"config.jls")).fixed_floors
+        @test_throws ErrorException reduce_country(input,fixed_out;stages=[(8,9)],target_retained=.7)
         @test_throws ErrorException reduce_country(input,joinpath(dir,"bad_seed");stages=[(8,9)],
             seed=joinpath(out,"stage-1.jls"),target_retained=1.)
     end

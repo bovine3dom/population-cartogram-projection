@@ -506,7 +506,7 @@ only their residual weights. It removes 44,177 further China rows in small
 blocks without changing the validation limits. Larger China and India trials
 are in progress. This residual method is not yet in the committed exporter.
 
-## 17:42 UTC: lossless row order for smaller transfers
+## 17:41 UTC: lossless row order for smaller transfers
 
 Sorting transport rows by source reduces gzip size. A pure source sort
 would change the browser's first-source navigation anchors. Instead, keep
@@ -521,3 +521,16 @@ versus 79.9 MB and 33.7 MB for the current public files. The difference is
 lossless. The smaller gzip transport is 26,965,999 bytes. A target-first
 sort was worse at 31,618,870 bytes, so it is not used. Keep the current
 public files until the final candidate has a fresh complete binary audit.
+
+## 17:44 UTC: checked residual-weight reduction
+
+The fixed-contribution trial reduces China from 643,399 to 544,025 rows.
+India falls from 448,401 to 421,544 rows. Larger blocks still time out and
+keep their valid inputs. The full-country checks pass with the original
+70% variation bound. These checkpoints are not yet published.
+
+Added `fixed_floors=true` as an optional refinement. The default method is
+unchanged. It subtracts the protected contribution, reduces the nonnegative
+remaining weights, and adds the protected contribution back. City anchors
+are held separately too. Solver failure, worker deadlines, and full-country
+checks still apply. All 60 moment, worker, floor, and restart checks pass.
