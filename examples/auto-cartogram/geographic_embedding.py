@@ -86,6 +86,8 @@ def run(polygons, inputs, output):
     (output/"manifest.json").write_text(json.dumps({"method":"One shared border segment per neighbour pair, selected consistently on both sides",
         "limit":"Other shared segments are discarded. Outer-face and enclave containment are not fixed.","inputs":hashes},indent=2)+"\n")
     print(json.dumps([c for c in checks if c["vertices"]>1],indent=2))
+    if not all(c["valid"] for c in checks):
+        raise ValueError("Geographic rotations are not planar; inspect checks.json")
     return order,checks
 
 

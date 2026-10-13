@@ -11,12 +11,14 @@
   "output/auto-cartogram/indonesia-1894-v2-layout/complete.txt": "57d21be761811a4fd90e91e85b9bf1db8d91ab6cf77c8f4b75472d087cd3ab1c",
   "output/auto-cartogram/indonesia-1894-v2-layout/contact-errors.csv": "ad296a373ba2bc99f8df65ea9079a64b0eb7a3a3ec182704b8dfa6a6ba203ee0",
   "output/auto-cartogram/indonesia-1894-v2-layout/country-counts.csv": "0338e275f945567730a5c31ba8b830c08bb346562b17bb518a983ca01cf262f4",
+  "output/auto-cartogram/indonesia-1894-v2-layout/country-order-errors.csv": "75714906e7cad788b50d8cdac4bb632c20b13eb9c3d3d11c908745d2798827ef",
   "output/auto-cartogram/indonesia-1894-v2-layout/counts.csv": "a9da211f169ca186abd49ebeca3415a347be97219c5c618b5b786850d1af55f2",
+  "output/auto-cartogram/indonesia-1894-v2-layout/group-capacities.csv": "a4841bb2810325bed17851b2d2faf605903b3d8f5ae0d5dd62a2a359ce5d9fac",
   "output/auto-cartogram/indonesia-1894-v2-layout/island-order-errors.csv": "1ea00644455d9a1ab3ef2fa106269315d01b9681f771516dfd3e06058d865260",
   "output/auto-cartogram/indonesia-1894-v2-layout/layout.wkt": "cd20e23805e406f1892ed308466893f5c2e3ada61ea3f2978113fb30bc832654",
-  "output/auto-cartogram/indonesia-1894-v2-layout/metrics.json": "9c1d50e163a3d5feb0f6476ed0cf9420d894898420ad0ca0a28c4ea047a475f9",
+  "output/auto-cartogram/indonesia-1894-v2-layout/metrics.json": "fe35b30e9d91ab07456d495e191e9c2a86405444fda7460c126632097d2a65a3",
   "output/auto-cartogram/indonesia-1894-v2-layout/region-quality.csv": "d6976d8ad1c0571dc58503a2d0025854190be7d3af905f42ead9c63ae9dac994",
-  "output/auto-cartogram/indonesia-1894-v2-layout/review.png": "2b2f562ca71a85fd40242528641bb6e316501deafac62f2b39e20f5e2d08dddc",
-  "output/auto-cartogram/indonesia-1894-v2-layout/review.svg": "81b77ee5899ace8486ae625c674a5452e818b32793ef6f9b5410fb3b28b94472",
+  "output/auto-cartogram/indonesia-1894-v2-layout/review.png": "673d956a8816fbacb563798bb48c1457515df2f3459c4b0b961958ec6b38cbe2",
+  "output/auto-cartogram/indonesia-1894-v2-layout/review.svg": "542ebbeb9e06cc9c144e2f49333735b1e8c430bc8f032fcb9c150b965d3666bf",
   "output/auto-cartogram/indonesia-1894-v2-layout/sea.csv": "a651582ee8107d1128f5c27c86549c0ef56bf73101e8a1427175f395eef68f69"
 }

@@ -63,6 +63,11 @@ longitude-seam pairs. It finds 42 errors in 719 comparisons at 10,000 tiles,
 135 in 3,727 at 55,000, and 218 in 7,129 at 110,000. These are diagnostics,
 not a full geographic accuracy score.
 
+A second check compares the largest population-bearing shape of each country
+with at least 10 million matched people. It excludes axis differences below
+five degrees. The baseline has 48, 41, and 39 reversed comparisons out of 7,500
+at the three resolutions. This simple check does not assess shape or distance.
+
 ## Indonesia: GridMapPipeline with directional placement
 
 ![Indonesia at 1,894 tiles](results/indonesia-1894-automatic/review.png)
@@ -73,6 +78,9 @@ not a full geographic accuracy score.
 This checked run has 51 separate shapes and 1,894 tiles. It represents all
 270,120,945 people in the matched Indonesia input. It groups 1,564,232 people
 from zero-budget components into nearby represented components in Indonesia.
+Country-specific unmatched coverage is not assessed. The global nearest-polygon
+diagnostic finds 7,369,170 unmatched people nearest Indonesian polygons, but
+proximity is not proof of ownership. Do not read the matched total as a census.
 Counts, unique ownership, side connectivity, and no-hole checks pass. There are
 no required contacts among these Indonesia-only components, so the contact
 check does not test the difficult global land graph.

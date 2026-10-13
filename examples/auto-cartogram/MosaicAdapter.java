@@ -99,12 +99,16 @@ public class MosaicAdapter {
         Files.writeString(output.resolve("sea.csv"), sea);
         Files.writeString(output.resolve("counts.csv"), counts);
         IO.write(output.resolve("layout.wkt").toFile(), map);
+        try (var build = MosaicAdapter.class.getResourceAsStream("/build-info.properties")) {
+            if (build != null) Files.copy(build, output.resolve("build-info.properties"));
+        }
         Files.writeString(output.resolve("complete.txt"), "mode=" + args[3] + "\nseed=" + Random.getSeed() + "\nplacement=" + placement + "\nembedding=" + (args.length == 6 ? "planar" : "native") + "\n"
             + "forceIterations=" + MosaicConstants.FORCE_TOTAL_ITERATIONS + "\n"
             + "scaledPatience=" + MosaicConstants.MAX_NO_IMPROVE_SCALED + "\n"
             + "finalPatience=" + MosaicConstants.MAX_NO_IMPROVE_FINAL + "\n"
             + "maxRounds=" + maxRounds + "\n"
             + "polishIterations=" + polishIterations + "\n"
+            + "javaVersion=" + System.getProperty("java.version") + "\n"
             + "orientInitial=" + Boolean.getBoolean("mosaic.orientInitial") + "\n"
             + "regionAssertions=" + Class.forName("arrange.model.MosaicCartogram$MosaicRegion").desiredAssertionStatus() + "\n");
     }

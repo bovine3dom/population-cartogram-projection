@@ -68,22 +68,23 @@ def load(inputs, layout):
     return shapes, tiles, owners
 
 
-def island_order(shapes, tiles):
+def axis_order(shapes, tiles, *, same_country=True, threshold=1):
     centres = {c:(sum(x for x,y in cells)/len(cells),sum(y for x,y in cells)/len(cells)) for c,cells in tiles.items()}
     errors, tested = [], 0
     labels = sorted(shapes)
     for i,a in enumerate(labels):
         for b in labels[i+1:]:
             ra,rb = shapes[a],shapes[b]
-            if ra["country_id"] != rb["country_id"]:
+            if same_country and ra["country_id"] != rb["country_id"]:
                 continue
             for axis,(lo,hi) in enumerate((("west","east"),("south","north"))):
                 delta = (float(rb[lo])+float(rb[hi])-float(ra[lo])-float(ra[hi]))/2
-                if abs(delta) < 1 or (axis == 0 and abs(delta) > 180):
+                if abs(delta) < threshold or (axis == 0 and abs(delta) > 180):
                     continue  # Near ties and seam-spanning pairs have no stable sign.
                 tested += 1
                 if delta*(centres[b][axis]-centres[a][axis]) <= 0:
-                    errors.append((ra["country_id"],a,b,"east" if axis == 0 else "north"))
+                    scope=ra["country_id"] if same_country else ra["country_id"]+"|"+rb["country_id"]
+                    errors.append((scope,a,b,"east" if axis == 0 else "north"))
     return tested,errors
 
 
@@ -104,6 +105,8 @@ def draw(path, shapes, tiles, owners, metrics, title):
     tx = lambda x: left + (x - xmin) * scale
     ty = lambda y: top + (ymax - y) * scale
     fmt = lambda n: f"{n:.3f}"
+    unmatched=metrics.get("unmatched_source_population")
+    unmatched_label=f"{unmatched:,.0f}" if unmatched is not None else "not assessed"
     parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
              f'<rect width="{width}" height="{height}" fill="#faf9f6"/>',
              '<g font-family="sans-serif" fill="#242424">',
@@ -113,7 +116,7 @@ def draw(path, shapes, tiles, owners, metrics, title):
              f'{metrics["population_total"]/1e9:.3f} billion people in scope</text>',
              f'<text x="40" y="91" font-size="15">Grouped population: {metrics["grouped_population"]:,.0f}; '
              f'omitted from shapes: {metrics["omitted_population"]:,.0f}; '
-             f'unmatched source: {metrics.get("unmatched_source_population", 0):,.0f}; '
+             f'unmatched source: {unmatched_label}; '
              f'count error: {metrics["absolute_tile_error"]:,} tiles.</text>',
              f'<text x="40" y="114" font-size="15" fill="#973b28">EXPERIMENT: '
              f'{metrics["missing_contacts"]} missing and {metrics["false_contacts"]} false represented contacts; '
@@ -192,22 +195,26 @@ def run(inputs, layout, title):
                         **quality(tiles[component])})
     metrics = {k: metadata[k] for k in ("tile_budget", "population_total", "represented_population",
                "grouped_population", "omitted_population", "holes_not_encoded_in_wkt", "policy")}
-    metrics.update(tiles=len(owners), countries=len({r["country_id"] for r in shapes.values()}),
+    metrics.update(review_script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                   tiles=len(owners), countries=len({r["country_id"] for r in shapes.values()}),
                    absolute_tile_error=sum(abs(r["requested"] - r["actual"]) for r in regions),
                    disconnected_regions=sum(r["connected_parts"] != 1 for r in regions),
                    regions_with_holes=sum(r["holes"] > 0 for r in regions),
-                   unmatched_source_population=metadata.get("unmatched_source_population", 0),
+                   unmatched_source_population=metadata.get("unmatched_source_population"),
                    required_contacts=len(required), missing_contacts=len(missing), false_contacts=len(false),
                    contacts_with_unrepresented_components=len(geographic)-len(required),
                    actual_contacts=len(actual),
                    generation=(layout / "complete.txt").read_text().splitlines(),
                    occupied_fraction=len(owners)/((max(x for x,y in owners)-min(x for x,y in owners)+1)*
                                                   (max(y for x,y in owners)-min(y for x,y in owners)+1)))
-    country_rows, capacity_rows = [], []
+    country_rows, capacity_rows, anchors = [], [], {}
     for country in sorted({r["country_id"] for r in shapes.values()}):
         labels = [c for c,r in shapes.items() if r["country_id"] == country]
         population = sum(float(shapes[c]["group_population"]) for c in labels)
         actual_tiles = sum(len(tiles[c]) for c in labels)
+        if population >= 10_000_000:
+            anchor=max(labels,key=lambda c:(float(shapes[c]["group_population"]),c))
+            anchors[anchor]=shapes[anchor]
         for c in labels:
             source_mass = float(shapes[c]["group_population"])
             capacity = population*len(tiles[c])/actual_tiles
@@ -225,7 +232,13 @@ def run(inputs, layout, title):
     with (layout / "country-counts.csv").open("w", newline="") as stream:
         writer = csv.DictWriter(stream,fieldnames=list(country_rows[0]))
         writer.writeheader(); writer.writerows(country_rows)
-    tested, order_errors = island_order(shapes, tiles)
+    country_tested,country_errors=axis_order(anchors,{c:tiles[c] for c in anchors},same_country=False,threshold=5)
+    metrics.update(country_axis_comparisons=country_tested,country_axis_order_errors=len(country_errors),
+                   country_axis_population_threshold=10_000_000,country_axis_degree_threshold=5,
+                   population_weighted_compactness=sum(float(shapes[r["component_id"]]["group_population"])*r["compactness"] for r in regions)/metadata["represented_population"])
+    with (layout / "country-order-errors.csv").open("w",newline="") as stream:
+        writer=csv.writer(stream); writer.writerow(["countries","a","b","axis"]); writer.writerows(country_errors)
+    tested, order_errors = axis_order(shapes, tiles)
     metrics.update(island_axis_comparisons=tested, island_axis_order_errors=len(order_errors))
     with (layout / "island-order-errors.csv").open("w", newline="") as stream:
         writer = csv.writer(stream); writer.writerow(["country_id", "a", "b", "axis"])
