@@ -107,6 +107,7 @@ class AdapterTests(unittest.TestCase):
                 output=directory/f"rounds-{value}"
                 command=self.command(inputs,weights,output)
                 command.insert(1,f"-Dmosaic.maxRounds={value}")
+                command.insert(1,"-Dmosaic.polishIterations=0")
                 result=subprocess.run(command,capture_output=True,timeout=60)
                 if value == 0:
                     self.assertNotEqual(result.returncode,0)
@@ -114,6 +115,7 @@ class AdapterTests(unittest.TestCase):
                 else:
                     self.assertEqual(result.returncode,0,result.stderr)
                     self.assertIn("maxRounds=1",(output/"complete.txt").read_text())
+                    self.assertIn("polishIterations=0",(output/"complete.txt").read_text())
                     self.assertIn("regionAssertions=true",(output/"complete.txt").read_text())
 
     def test_local_moves_against_independent_flood_fill(self):

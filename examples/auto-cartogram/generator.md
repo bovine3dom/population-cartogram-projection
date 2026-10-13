@@ -83,6 +83,8 @@ For bounded preview runs, set Java properties such as
 `-Dmosaic.forceIterations=2000 -Dmosaic.scaledPatience=50 -Dmosaic.finalPatience=100`.
 The optional `-Dmosaic.maxRounds=50` stops each reshape stage after 50 rounds
 and returns its best state. This can increase tile-count and shape errors.
+In topology mode, `-Dmosaic.polishIterations=0` skips the final count correction.
+Use this only to inspect an unfinished preview. The marker records the setting.
 These limit force iterations and rounds without improvement. They do not impose
 a wall-clock limit; keep the external timeout. The completion marker records them.
 

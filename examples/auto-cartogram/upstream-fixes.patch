@@ -95,3 +95,15 @@
  
          grid = bestGrid;
  
+--- a/arrange/algorithms/sub/Polisher.java
++++ b/arrange/algorithms/sub/Polisher.java
+@@ -33,7 +33,7 @@
+     public void polish() {
+ 
+         int tileError = grid.totalTileError();
+-        int it = MosaicConstants.POLISHER_MAX_ITERATIONS;
++        int it = Integer.getInteger("mosaic.polishIterations", MosaicConstants.POLISHER_MAX_ITERATIONS);
+ 
+         boolean changed = true;
+         while (tileError > 0 && changed && it > 0) {
+
