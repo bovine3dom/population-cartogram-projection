@@ -81,6 +81,8 @@ errors when needed by upstream constraints. Always check exported counts.
 
 For bounded preview runs, set Java properties such as
 `-Dmosaic.forceIterations=2000 -Dmosaic.scaledPatience=50 -Dmosaic.finalPatience=100`.
+The optional `-Dmosaic.maxRounds=50` stops each reshape stage after 50 rounds
+and returns its best state. This can increase tile-count and shape errors.
 These limit force iterations and rounds without improvement. They do not impose
 a wall-clock limit; keep the external timeout. The completion marker records them.
 
@@ -136,7 +138,9 @@ julia --threads=2 --project=examples/auto-cartogram examples/auto-cartogram/grou
 
 Resolution 3 is a coarse test. The script combines sources by original component
 and H3 parent, without combining different component identities. It uses
-population-weighted source centres in the Equal Earth projection. Resolution 8
+population-weighted source centres in the Equal Earth projection. The wrapper
+converts north-up target y to the solver's downward screen convention, then
+restores north-up y in the export. Resolution 8
 keeps native source cells. `pooled` instead runs one unrestricted country solve
 as a comparison. Do not interpret a coarse comparison as a native-cell result.
 

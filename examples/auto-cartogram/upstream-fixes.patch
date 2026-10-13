@@ -75,3 +75,23 @@
      }
         
      public Coordinate arbitraryCoordinate() {
+--- a/arrange/algorithms/MoveAndReshape.java
++++ b/arrange/algorithms/MoveAndReshape.java
+@@ -43,7 +43,8 @@
+         Stopwatch sw_reshape = Stopwatch.get("- reshape");
+ 
+         int it = 0;
+-        while (currentBadIterations < max_no_improve_iterations) {
++        int maxRounds = Integer.getInteger("mosaic.maxRounds", Integer.MAX_VALUE);
++        while (currentBadIterations < max_no_improve_iterations && it < maxRounds) {
+             //move the guiding shapes
+ 
+             sw_force.start();
+@@ -78,6 +79,7 @@
+ 
+             it++;
+         }
++        System.out.printf("Reshape rounds=%d, relative difference=%.6f%n", it, relsymdiff);
+ 
+         grid = bestGrid;
+ 

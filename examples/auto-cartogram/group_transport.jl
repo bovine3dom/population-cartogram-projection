@@ -47,7 +47,12 @@ function solve(targets, sources; pooled=false)
                 weight=1.0/nrow(t),weight_mean=source.value/sum(s.value))
                 for source in eachrow(s) for target in eachrow(t)])
         else
-            mapping = PopulationCartogramProjection.distribute(select(t,:x,:y),select(s,:x,:y,:value,:id);backend=KA.CPU())
+            # The public solver expects screen coordinates (y increases down).
+            # Mosaic exports use north-up coordinates. Convert only at the call.
+            screen_targets = select(t,:x,:y)
+            screen_targets.y = -screen_targets.y
+            mapping = PopulationCartogramProjection.distribute(screen_targets,select(s,:x,:y,:value,:id);backend=KA.CPU())
+            mapping.y = -mapping.y
         end
         push!(mappings,mapping)
     end
@@ -101,6 +106,7 @@ function run(source_path, inputs, layout, output, resolution; pooled=false)
         "targets"=>nrow(targets),"groups"=>length(unique(sources.group_id)),"pooled"=>pooled,
         "elapsed_seconds"=>time()-started,"backend"=>"CPU",
         "source_coordinates"=>"population-weighted Equal Earth centres; aggregate by ORIGINAL component and H3 parent",
+        "target_coordinates"=>"north-up grid; y negated for the screen-coordinate solver, then restored in export",
         "script_sha256_at_load"=>SCRIPT_HASH,
         "limit"=>(resolution < 8 ? "Coarse transport experiment, not native H3-8 validation. " : "Native H3-8 centres. ") *
             "Grouped islands can exchange mass within their declared group. Each group has its own population per tile.",

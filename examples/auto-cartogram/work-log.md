@@ -136,3 +136,38 @@ under ignored `output/auto-cartogram/`.
   region assertions disabled. Other assertions remain enabled. Its completion
   marker records this setting. Final independent validation is still required.
   The all-assertions runs remain separate reference experiments.
+
+## 21:54–21:58 UTC — bounded world fits and native transport
+
+- Added an optional round limit to the upstream reshape loop. It returns the
+  best state reached in each stage. The default remains unlimited. The adapter
+  validates and records the setting. Use the limit for previews, not as proof
+  of convergence or exact counts.
+- Started a 110,000-tile world fit with 50 rounds per stage and a pinned Python
+  hash seed. Copied the compiled classes before the run to keep its build fixed.
+  One guide-offset trial reports a numeric intersection failure; the job has
+  not yet failed or completed.
+- The 10,000-tile performance run reached finalization after about 13 minutes.
+  It reports remaining gaps. Wait for the exported cells and independent checks
+  before drawing a conclusion about region holes or topology.
+- Started fixed-version grouped and pooled H3-3/H3-5 transport comparisons.
+  Restarted native H3-8 grouped transport with a five-hour timeout and two CPU
+  threads. This remains a pending result, not a completed validation.
+- The fixed H3-3 runs reproduce the earlier cross-group results. Their maximum
+  per-target population errors are 12.76% grouped and 11.04% pooled. Zero
+  cross-group movement alone is therefore not a sufficient acceptance test.
+
+## 21:59 UTC — visual check catches a coordinate error
+
+- The transport diagnostic image showed north/south inversion. Inspection of
+  `src/spatial.jl` confirms that the public solver expects target y to increase
+  downwards. The new mosaic export uses north-up grid coordinates.
+- Corrected the wrapper: negate target y before the solver call, then restore
+  it in the mapping export. Added a north/south regression test.
+- **Withdraw the preceding 214-million pooled result and target-error figures
+  as valid comparisons.** They came from the wrong coordinate convention.
+  Group restriction still gave zero cross-group mass, but within-group
+  positions were also inverted. None of these transport images were published.
+- Stopped our affected native and pooled H3-5 jobs. Restart only with the
+  corrected wrapper. This is why image review is part of validation, not just
+  a presentation step.
