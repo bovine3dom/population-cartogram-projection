@@ -95,6 +95,31 @@ end
     @test coarse <= fine
 end
 
+@testset "Saved Indonesia audit is internally consistent" begin
+    dir = joinpath(@__DIR__, "..", "examples", "auto-cartogram", "results", "indonesia")
+    components = CSV.read(joinpath(dir,"components.csv"), DataFrames.DataFrame)
+    targets = CSV.read(joinpath(dir,"targets.csv"), DataFrames.DataFrame)
+    saved = CSV.read(joinpath(dir,"capacity.csv"), DataFrames.DataFrame)
+    manifest = JSON.parsefile(joinpath(dir,"manifest.json"))
+    @test sum(components.population) == manifest["population_total"]
+    @test sum(components.source_cells) == manifest["source_cells"]
+    @test sum(targets.tiles) == manifest["target_tiles"]
+    _, budgets = IA.tile_budgets(components.population, components.component_id, sum(targets.tiles))
+    @test budgets == components.allocated_tiles
+    @test sum(components.population[budgets .== 0]) == manifest["population_without_budget"]
+    matches = [(; label=r.label, component_index=i,
+        target_index=only(findall(==(r.label), coalesce.(targets.label, ""))), status="reviewed")
+        for (i,r) in enumerate(eachrow(components)) if r.match_status == "reviewed"]
+    calculated, bound = IA.capacity_audit(components.population, targets.tiles, matches)
+    sort!(calculated,:group); sort!(saved,:group)
+    @test calculated.group == saved.group
+    @test calculated.population == saved.population
+    @test calculated.tiles == saved.tiles
+    @test calculated.excess_population ≈ saved.excess_population
+    @test bound ≈ manifest["coarse_cross_component_lower_bound"]
+    @test length(matches) == manifest["reviewed_matches"] == 4
+end
+
 @testset "Headless audit with synthetic files" begin
     mktempdir() do dir
         boundary = joinpath(dir,"boundary.geojson")

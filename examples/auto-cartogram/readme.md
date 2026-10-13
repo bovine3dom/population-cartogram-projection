@@ -3,6 +3,8 @@
 This example starts the [automatic cartogram plan](../../auto-cartogram.md).
 It identifies geographic polygon components, sums their Kontur populations,
 and compares reviewed matches with the fixed OWID tile layout.
+See the [measured Indonesia results](results.md) and
+[reviewed match table](indonesia-matches.csv).
 
 It does not generate a new layout or run population transport. It does not
 change production data or the core solver. All processing is headless and uses
@@ -26,8 +28,9 @@ Selected rows must have unique H3-8 IDs and finite positive population values.
 The boundary file uses Natural Earth's `ISO_N3_EH` country property.
 The target file is headerless `x,y,country`, on the current step-2 square grid.
 
-The optional final arguments are `[COUNTRY=360] [MATCHES.csv]`. Use a new output
-directory for each run. Existing paths are refused. Results are published only
+The optional final arguments are `[COUNTRY=360] [MATCHES.csv]`. Append
+`360 examples/auto-cartogram/indonesia-matches.csv` to use the reviewed matches.
+Use a new output directory for each run. Existing paths are refused. Results are published only
 after all calculations and file writes succeed.
 
 ## Review matches

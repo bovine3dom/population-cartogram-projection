@@ -11,10 +11,13 @@ Meulemans's 2026 **GridMapPipeline** [3, 4]. It extends the method in the suppli
 2015 paper and adds automatic placement of disconnected outlines. Test it before
 writing a new generator in Julia.
 
-This is a research proposal, not a completed replacement. I inspected the two
-supplied papers, current upstream documentation and selected source files, this
-repository, and issue #17. I also checked the local target CSV. I did not run a
-new layout generator or calculate island populations from Kontur.
+This research preceded implementation. A first
+[Indonesia island audit](examples/auto-cartogram/results.md) is now complete.
+It measures population and tile-capacity mismatches; it does not replace the map.
+
+For the research below, I inspected the two supplied papers, upstream
+documentation and selected source files, this repository, and issue #17.
+I also checked the local target CSV. No new layout generator was run.
 
 ## 1. What must change
 
