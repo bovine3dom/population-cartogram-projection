@@ -618,3 +618,31 @@ The final manifest will select the smallest complete stage for each country.
 It will then run the full pack, binary audit, gzip, and headless checks.
 No job can publish automatically. The 69.7 MB candidate and the public
 79.9 MB profile remain checked fallbacks.
+
+## 21:27 UTC: publish the selected 65.7 MB profile
+
+The latitude queue is complete. It ran 27 countries. India reached its
+20-minute country limit and its process group was stopped. The final
+manifest uses India's last complete, checked stage, not its unfinished
+block. The other 26 runs completed. The pack, full binary audit, gzip, and
+headless checks all pass.
+
+The selected transport has 2,392,689 rows and uses 60,697,906 bytes. Density
+uses 5,035,946 bytes. Together they use 65,733,852 bytes raw and 26,028,735
+bytes with gzip. Maximum geographic mean error is 0.184079 m. The full audit
+retains the 70% guarantee. The half-missing test loses 90 of 54,421 originally
+covered target values. All 1,711 displayed city names are independently
+checked against the earlier public profile and are unchanged.
+
+Verified all 22 staged file hashes. Tested the actual dataset metadata URL
+with world/date-line/return navigation. Then replaced only the experimental
+public directory. Saved the earlier 79.9 MB directory at
+`output/mobile-export/former-public-protected-07/`. The full original
+reference and its separate backup remain unchanged. The production input
+SHA256 is still `af126bbd70747c95d2921f5d63a81fed4b5f9aebde98e3b12db7628d40a49249`.
+H3-MON remains stopped. No production, UK, or Germany dataset was replaced.
+
+The selected profile uses about 191 MB heap and backing storage after
+collection, 362 MB in the world view, and 227 MB after return. The largest
+sampled initial-load value is 279 MB. These are desktop headless measures,
+not phone limits. The remaining window is for verification and cleanup.
