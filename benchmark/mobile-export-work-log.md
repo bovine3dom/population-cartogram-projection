@@ -323,3 +323,24 @@ native crossover. The process boundary now applies above 1,024 rows. Use
 the same threshold for working checkpoints. Existing processes keep their
 loaded code; do not discard their valid saved stages. All 44 moment and
 worker checks pass after this change.
+
+## 14:20 UTC: retain a full reference and bind audit reports to files
+
+Saved hard links to the full published reference in
+`output/mobile-export/full-reference/`. Do not edit these files in place.
+The original public directory is still unchanged. The hash in the old fit
+provenance identifies the input, not the 8 GB transport. A separate SHA256
+file now records the actual full transport, density, and input hashes.
+
+New audit reports include SHA256 hashes for all four inputs. Publication can
+therefore reject a report for a different file. The audit also checks that
+both density H3 halves are UInt32. All 15 audit checks pass.
+
+Stopped the old 70% India process after a long native call. It had no worker
+code directory; it predated the bounded worker. Its verified fifth stage
+has 480,605 rows. A new bounded run starts from that checkpoint. The other
+country queue continues. The new run keeps its input when a block times out.
+
+H3-MON commit `2ab2c30` limits Uint32 dictionary materialization to the actual
+UInt32 logical type. The browser test now includes a UInt64 dictionary index
+too. Desktop and mobile checks pass without conversion errors.

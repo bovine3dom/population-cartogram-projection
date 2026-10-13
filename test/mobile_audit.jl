@@ -1,4 +1,4 @@
-using Test, Arrow, H3
+using Test, Arrow, H3, SHA
 include("../examples/continuity/mobile/audit.jl")
 include("../examples/continuity/mobile/write.jl")
 const MA=MobileAudit
@@ -33,6 +33,8 @@ const MW=MobileWriter
         @test result["target_tv_max"]<1e-15
         @test result["source_sum_error"]<1e-7
         @test isfile(report)
+        @test result["sha256"]["transport"]==open(bytes2hex∘sha256,candidate)
+        @test result["sha256"]["density"]==open(bytes2hex∘sha256,density)
         Arrow.write(candidate,merge(table,(;index_lower=Arrow.DictEncode(table.index_lower),
             population=Arrow.DictEncode(table.population),label=Arrow.DictEncode(table.label))))
         @test MA.audit(input,reference,candidate,density,report)["source_sum_error"]<1e-7
@@ -42,6 +44,8 @@ const MW=MobileWriter
         Arrow.write(candidate,merge(table,(;label=changed)))
         @test_throws ErrorException MA.audit(input,reference,candidate,density,report)
         Arrow.write(candidate,table)
+        Arrow.write(density,merge(density_table,(;index_lower=Int64.(density_table.index_lower))))
+        @test_throws ErrorException MA.audit(input,reference,candidate,density,report)
         Arrow.write(density,merge(density_table,(;value=2density_table.value)))
         @test_throws ErrorException MA.audit(input,reference,candidate,density,report)
     end

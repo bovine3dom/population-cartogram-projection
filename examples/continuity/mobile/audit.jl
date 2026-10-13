@@ -1,5 +1,5 @@
 module MobileAudit
-using Arrow, H3, Statistics, TOML
+using Arrow, H3, Statistics, TOML, SHA
 include("../mobile_export.jl")
 const ME=MobileExport
 
@@ -100,6 +100,7 @@ function audit(input,reference,candidate,density_file,report;target_retained=0.)
     maximum(mass_error)<=2e-5 && maximum(forward)<=.002 && maximum(inverse)<=.002 || error("projection error budget exceeded")
     maximum(density_error)<=.001 || error("density error budget exceeded")
     density=Arrow.Table(density_file);seen=Set{UInt64}()
+    eltype(density.index_lower)==UInt32 && eltype(density.index_upper)==UInt32 || error("wrong density H3 type")
     for r in eachindex(density.value)
         id=ME.cellid(density.index_lower[r],density.index_upper[r]);s=meta.source_index[id]
         id in seen && error("duplicate density cell");push!(seen,id)
@@ -113,7 +114,9 @@ function audit(input,reference,candidate,density_file,report;target_retained=0.)
         "forward_error_max"=>maximum(forward),"geographic_error_km_max"=>maximum(inverse),
         "density_relative_error_max"=>maximum(density_error),"density_relative_error_p99"=>quantile(density_error,.99),
         "target_tv_max"=>maximum(tv),"target_tv_p99"=>quantile(tv,.99),"target_tv_p50"=>quantile(tv,.5),
-        "requested_target_retained"=>target_retained)
+        "requested_target_retained"=>target_retained,
+        "sha256"=>Dict(name=>open(bytes2hex∘sha256,path) for (name,path) in
+            ("input"=>input,"reference"=>reference,"transport"=>candidate,"density"=>density_file)))
     open(io->TOML.print(io,output),report,"w")
     return output
 end
