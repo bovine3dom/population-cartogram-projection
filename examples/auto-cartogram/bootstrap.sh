@@ -40,19 +40,20 @@ if [[ -z ${JAVA_HOME:-} ]]; then
     fi
 fi
 
-mkdir -p "$VENDOR/classes" "$VENDOR/patched-source/arrange/algorithms" "$VENDOR/patched-source/common/gridmath/util"
-for name in GuideConstructor MoveAndReshape; do
+mkdir -p "$VENDOR/classes" "$VENDOR/patched-source/arrange/algorithms/sub" "$VENDOR/patched-source/common/gridmath/util"
+for name in GuideConstructor MoveAndReshape sub/Polisher; do
     cp "$VENDOR/GridMapPipeline/GridmapPipeline/src/arrange/algorithms/$name.java" \
         "$VENDOR/patched-source/arrange/algorithms/$name.java"
 done
 cp "$VENDOR/GridMapPipeline/GridmapPipeline/src/common/gridmath/util/CoordinateSet.java" \
     "$VENDOR/patched-source/common/gridmath/util/CoordinateSet.java"
 patch --batch -p1 -d "$VENDOR/patched-source" < "$ROOT/examples/auto-cartogram/upstream-fixes.patch"
-mapfile -d '' sources < <(fd -0 --extension java --exclude GuideConstructor.java --exclude CoordinateSet.java --exclude MoveAndReshape.java . \
+mapfile -d '' sources < <(fd -0 --extension java --exclude GuideConstructor.java --exclude CoordinateSet.java --exclude MoveAndReshape.java --exclude Polisher.java . \
     "$VENDOR/GeometryCore/src" "$VENDOR/GridMapPipeline/GridmapPipeline/src")
 "$JAVA_HOME/bin/javac" --release 21 -encoding UTF-8 -d "$VENDOR/classes" \
     "${sources[@]}" "$VENDOR/patched-source/arrange/algorithms/GuideConstructor.java" \
     "$VENDOR/patched-source/arrange/algorithms/MoveAndReshape.java" \
+    "$VENDOR/patched-source/arrange/algorithms/sub/Polisher.java" \
     "$VENDOR/patched-source/common/gridmath/util/CoordinateSet.java" \
     "$ROOT/examples/auto-cartogram/MosaicAdapter.java" \
     "$ROOT/examples/auto-cartogram/DirectionalPlacement.java"

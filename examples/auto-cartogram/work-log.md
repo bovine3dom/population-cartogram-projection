@@ -171,3 +171,15 @@ under ignored `output/auto-cartogram/`.
 - Stopped our affected native and pooled H3-5 jobs. Restart only with the
   corrected wrapper. This is why image review is part of validation, not just
   a presentation step.
+
+## 22:03 UTC — preview count-correction limit
+
+- A thread sample places the 10,000-tile performance job in minimum-cost-flow
+  count correction. Added an optional polishing-iteration limit so an unfinished
+  shape preview can be exported without waiting for this stage.
+- The first implementation tried to set an upstream final constant and failed
+  compilation. Corrected it with a property read in the patched Polisher copy.
+  Rebuilt successfully. All eight Python/Java tests pass, including zero polish
+  iterations, a one-round limit, and invalid settings.
+- This preview option does not imply exact counts or convergence. Keep the
+  default polishing stage for reference experiments.

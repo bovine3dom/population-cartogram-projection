@@ -62,7 +62,7 @@ public class MosaicAdapter {
         MosaicConstants.MAX_NO_IMPROVE_SCALED = setting("mosaic.scaledPatience", MosaicConstants.MAX_NO_IMPROVE_SCALED);
         MosaicConstants.MAX_NO_IMPROVE_FINAL = setting("mosaic.finalPatience", MosaicConstants.MAX_NO_IMPROVE_FINAL);
         int maxRounds = setting("mosaic.maxRounds", Integer.MAX_VALUE);
-        MosaicConstants.POLISHER_MAX_ITERATIONS = setting("mosaic.polishIterations", MosaicConstants.POLISHER_MAX_ITERATIONS, 0);
+        int polishIterations = setting("mosaic.polishIterations", MosaicConstants.POLISHER_MAX_ITERATIONS, 0);
         PartitionAlgorithm.trivialPartition(map);
         if (args.length == 6) setEmbedding(map, Path.of(args[5]));
         new DeformAlgorithm(GridGeometrySpawner.inferFromString("SQUARE")).run(map);
@@ -99,7 +99,7 @@ public class MosaicAdapter {
             + "scaledPatience=" + MosaicConstants.MAX_NO_IMPROVE_SCALED + "\n"
             + "finalPatience=" + MosaicConstants.MAX_NO_IMPROVE_FINAL + "\n"
             + "maxRounds=" + maxRounds + "\n"
-            + "polishIterations=" + MosaicConstants.POLISHER_MAX_ITERATIONS + "\n"
+            + "polishIterations=" + polishIterations + "\n"
             + "regionAssertions=" + Class.forName("arrange.model.MosaicCartogram$MosaicRegion").desiredAssertionStatus() + "\n");
     }
 
