@@ -106,4 +106,35 @@
  
          boolean changed = true;
          while (tileError > 0 && changed && it > 0) {
+--- a/common/mcf/SuccessiveShortestPathMininumCostFlow.java
++++ b/common/mcf/SuccessiveShortestPathMininumCostFlow.java
+@@ -159,12 +159,16 @@
+-            for (Vertex v : residual.vertices()) {
+-                double d = dsp.distances[v.id];
+-                if (Double.isInfinite((d))) {
+-                    continue;
+-                }
+-                for (Edge e : v.getIncomingEdges()) {
+-                    e.setWeight(e.getWeight() - d);
+-                }
+-                for (Edge e : v.getOutgoingEdges()) {
+-                    e.setWeight(e.getWeight() + d);
+-                }
+-            }
++            for (Edge e : residual.edges()) {
++                double from = dsp.distances[e.getSource().id];
++                double to = dsp.distances[e.getTarget().id];
++                if (!Double.isFinite(from) || !Double.isFinite(to)) continue;
++                double weight = e.getWeight();
++                double reduced = (weight + from) - to;
++                double tolerance = 16 * Math.ulp(Math.max(FlowDigraph.MAX_VALUE, Math.abs(weight) + Math.abs(from) + Math.abs(to)));
++                // Usable reduced costs must be nonnegative. Tiny roundoff
++                // negatives can otherwise create endless improving cycles.
++                if (e.getCapacity() > 0 && reduced < 0) {
++                    if (reduced < -tolerance) throw new IllegalStateException("Negative reduced cost: " + reduced);
++                    reduced = 0;
++                }
++                // Keep negative costs on inactive reverse edges.
++                e.setWeight(reduced);
++            }
 

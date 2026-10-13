@@ -99,6 +99,18 @@ class AdapterTests(unittest.TestCase):
             result = subprocess.run(self.command(inputs,weights,directory),capture_output=True,timeout=30)
             self.assertNotEqual(result.returncode,0)
 
+    def test_explicit_two_vertex_embedding(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory=Path(tmp)
+            inputs,weights=self.fixture(directory,adjacent=True)
+            (directory/"embedding.tsv").write_text("a\t0\t0\nb\t10\t20\n")
+            (directory/"embedding-edges.tsv").write_text("a\tb\n")
+            output=directory/"embedded"
+            command=self.command(inputs,weights,output)+[str(directory)]
+            result=subprocess.run(command,capture_output=True,timeout=60)
+            self.assertEqual(result.returncode,0,result.stderr)
+            self.assertIn("embedding=planar",(output/"complete.txt").read_text())
+
     def test_round_budget_is_validated_and_recorded(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory=Path(tmp)
@@ -118,13 +130,15 @@ class AdapterTests(unittest.TestCase):
                     self.assertIn("polishIterations=0",(output/"complete.txt").read_text())
                     self.assertIn("regionAssertions=true",(output/"complete.txt").read_text())
 
-    def test_local_moves_against_independent_flood_fill(self):
+    def test_upstream_algorithms_against_independent_oracles(self):
         java = Path((VENDOR/"java-path.txt").read_text().strip())
+        classes=["MosaicConnectivity","MosaicMinCostFlow"]
         with tempfile.TemporaryDirectory() as tmp:
             subprocess.run([str(java.with_name("javac")), "-cp", str(VENDOR/"classes"),
-                            "-d", tmp, str(ROOT/"test"/"MosaicConnectivity.java")], check=True, timeout=30)
-            subprocess.run([str(java), "-ea", "-cp", f"{VENDOR/'classes'}:{tmp}",
-                            "MosaicConnectivity"], check=True, timeout=30)
+                            "-d", tmp, *[str(ROOT/"test"/(name+".java")) for name in classes]], check=True, timeout=30)
+            for name in classes:
+                subprocess.run([str(java), "-ea", "-cp", f"{VENDOR/'classes'}:{tmp}",
+                                name], check=True, timeout=30)
 
     def test_native_graph_layout_retains_a_shared_border(self):
         with tempfile.TemporaryDirectory() as tmp:

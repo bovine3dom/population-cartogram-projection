@@ -183,3 +183,42 @@ under ignored `output/auto-cartogram/`.
   iterations, a one-round limit, and invalid settings.
 - This preview option does not imply exact counts or convergence. Keep the
   default polishing stage for reference experiments.
+
+## 22:09–22:23 UTC — graph checks and geographic border order
+
+- The first unpolished world run reached a two-region graph and failed its
+  crossing assertion. An axis-aligned two-vertex drawing caused the problem.
+  Use a sloped two-vertex drawing and check every graph before optimization.
+- The new preflight rejects the old input immediately. Stopped the remaining
+  jobs that used that input; their long first stages could not produce a valid
+  complete world result.
+- A checked five-round world preview now exports all 349 shapes. It preserves
+  all 352 represented contacts, with no false contacts or region holes. It has
+  57,174 tiles instead of 10,000. Its geographic arrangement is unacceptable.
+- Built neighbour rotations from source border traversal. Selecting the first
+  occurrence independently on each side of a repeated border is inconsistent.
+  Selecting the same shared segment on both sides gives valid planar rotations
+  for every connected world graph at 10,000 tiles.
+- Preserve these rotations through temporary sea-node augmentation. The new
+  five-round preview has 15,118 tiles and still preserves all 352 contacts.
+  It remains geographically poor and has 10,544 tiles of absolute count error.
+  Neither unpolished image is a valid population map.
+
+## 22:24–22:33 UTC — minimum-cost-flow roundoff
+
+- A small independent flow test stalls with the original Java implementation.
+  The world count-correction thread was also repeatedly inside shortest-path
+  search. Reduced-cost updates can produce tiny negative residual costs.
+- Update each edge once and clamp only roundoff-scale negatives on usable
+  edges. Keep inactive reverse-edge costs. Reject larger negative values.
+- The first tolerance was too narrow for accumulated roundoff and correctly
+  rejected a value near -1e-19. Use a tolerance based on the network scale.
+- The patched solver passes 1,000 exhaustive small-graph comparisons, including
+  negative decimal costs and edge and vertex capacities. This tests the numeric
+  fix; it is not yet evidence that world polishing will complete.
+- Tests pass: nine Python/Java tests and eight geometry tests. These include
+  consistent shared-border portals and preservation of neighbour rotations.
+- Corrected H3-5 transport has 8,545 source aggregates. Grouped transport moves
+  zero population across groups and retains 99.757%. The pooled comparison
+  moves 83,826,177.77 people across groups and retains 99.753%. The native-cell
+  run has reached Sumatra and is still in progress.
