@@ -99,3 +99,23 @@ Added a country driver with stage checkpoints and full-country checks.
 Started US and China trials. Each stage merges source and target blocks.
 The driver retains the input of any failed block. This can increase file
 size, but cannot silently install an invalid sparse solution.
+
+## 11:30 UTC: file schema and data-query probes
+
+Added a flat Arrow writer with Int16 coordinates, UInt16 country codes,
+UInt32 H3 halves, and Float32 weights. Population remains Float64. Labels
+stay on their original source anchors. Recompute target weights across
+shared coordinates after Float32 conversion. Omit the unused all-missing
+prominence column; the consumer uses population as its fallback.
+
+The 7,746-row Germany test file is 266,274 bytes. It is a local test file,
+not a replacement for the Germany dataset. There are 41 export, writer, and
+quality checks. Actual JavaScript decoding is still pending.
+
+Added ten data-query probes. For the Germany sparse test, the 99th percentile
+error in distance from London is 0.135 km. Density is preserved to numerical
+precision. But synthetic noise has a 0.221 error on a zero-to-one scale.
+A synthetic half-missing field loses coverage at two of 571 targets and has
+a 0.984 error in log density at the 99th percentile. These probes are not
+real travel-time data. The sparse file must be described as an approximation.
+Preserved map geometry does not imply exact results for arbitrary queries.
