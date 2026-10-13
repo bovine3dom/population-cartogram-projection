@@ -7,18 +7,54 @@ from pathlib import Path
 
 import networkx as nx
 import numpy as np
-from shapely.geometry import Polygon, box
+from shapely.geometry import Polygon, box, mapping, shape
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"examples"/"auto-cartogram"))
 import assign_population as population
 import balance_transport as balance
+import check_native_sources as native_check
+import dissolve_map_units as dissolve
 import geographic_baseline as baseline
 import geographic_embedding as geographic
 import planar_embedding as embedding
 import review_layout as review
 import repair_contacts as repair
 import validate_outlines as outlines
+
+
+class DissolveTests(unittest.TestCase):
+    def test_country_borders_and_point_contacts_stay_separate(self):
+        geometry=[box(0,0,1,1),box(1,0,2,1),box(2,0,3,1),box(2,1,3,2)]
+        features=[dict(properties=dict(component_id=str(i)),geometry=mapping(p)) for i,p in enumerate(geometry)]
+        summaries={str(i):dict(country_id="Y" if i==2 else "X",map_unit=str(i),name=str(i),raw_country_code="1",population=10*(i+1),source_cells=1) for i in range(4)}
+        merged=dissolve.merge(features,summaries)
+        self.assertEqual(len(merged),3)
+        self.assertEqual(merged[0]["properties"]["original_components"],["0","1"])
+        self.assertEqual(shape(merged[0]["geometry"]).area,2)
+        self.assertEqual(sum(f["properties"]["population"] for f in merged),100)
+        self.assertEqual(merged[1]["geometry"],features[2]["geometry"])
+        self.assertEqual(merged[2]["geometry"],features[3]["geometry"])
+
+
+class NativeSourceTests(unittest.TestCase):
+    def test_identity_mass_and_group_parity(self):
+        import pyarrow as pa
+        import pyarrow.ipc as ipc
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); source=root/"source.arrow"; groups=root/"groups.csv"
+            table=pa.table({"id":[123,456],"value":[30.0,70.0],"component_id":["old:a","old:b"]})
+            with ipc.new_file(str(source),table.schema) as writer: writer.write_table(table)
+            groups.write_text("component_id,group_id\nnew:a,new:a\nnew:b,new:a\n")
+            original="id,component_id,group_id,value\nnew:a:123,new:a,new:a,30\nnew:b:456,new:b,new:a,70\n"
+            (root/"sources.csv").write_text(original)
+            metadata=dict(coarse_h3_resolution=8,coarse_sources=2,source_population=100,
+                inputs=[dict(sha256=native_check.digest(p)) for p in [source,groups]])
+            (root/"manifest.json").write_text(json.dumps(metadata))
+            self.assertEqual(native_check.check(source,groups,root)["native_sources"],2)
+            for old,new in [("new:a,30","new:b,30"),("new:a,70","new:a,71"),("new:b:456","new:b:123")]:
+                (root/"sources.csv").write_text(original.replace(old,new))
+                with self.assertRaises(ValueError): native_check.check(source,groups,root)
 
 
 class BalanceTests(unittest.TestCase):

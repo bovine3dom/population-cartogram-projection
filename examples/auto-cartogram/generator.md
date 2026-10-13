@@ -66,6 +66,27 @@ nearest represented component in the same country. Their population remains in
 the group. This is an explicit loss of island detail, not individual island
 preservation. The `omit` policy instead leaves zero-tile population out of shapes.
 
+### Remove internal map-unit borders
+
+Natural Earth map units are not always separate islands. For example, the input
+splits Great Britain and Belgium into adjacent units. Use the optional union
+stage before tile allocation to remove these internal borders:
+
+```sh
+"$PY" examples/auto-cartogram/dissolve_map_units.py "$BASE/world-centres/polygons.geojson" "$BASE/world-components/components.csv" "$BASE/world-dissolved"
+julia --project=examples/auto-cartogram examples/auto-cartogram/prepare_dissolved.jl "$BASE/world-dissolved"
+julia --project=examples/auto-cartogram examples/auto-cartogram/prepare_layout.jl "$BASE/world-dissolved/components.csv" "$BASE/world-dissolved/boundaries.geojson" "$BASE/world-10000-dissolved-input" 10000 world group
+```
+
+Then validate outlines and build the geographic rotation file using
+`world-dissolved/polygons.geojson`. The union stage merges exact shared-border
+polygons only within the same `ADM0_A3`. It does not join point contacts,
+disconnected islands, or different countries. It uses no coordinate snapping.
+It preserves the population assigned to original polygons and records an
+original-to-dissolved ID table. Future transport must apply that table before
+the small-island grouping table. The Indonesia-only transport tests still use
+their original, unchanged input.
+
 ## Generate and inspect
 
 Use the Java path printed by the build (also in `vendor/java-path.txt`). For example:
@@ -152,8 +173,8 @@ graph is checked before the Java fit starts.
 The initializer adds temporary
 sea regions to remove cut vertices without adding false land borders. Sea tiles
 are exported separately and carry no population. This construction does not
-preserve the geographic order of borders or enclave containment. Original WKT
-outlines omit holes. A successful represented-contact check is not proof of full
+guarantee geographic position or enclave containment. Original WKT outlines
+omit holes. A successful represented-contact check is not proof of full
 geographic topology.
 
 `complete.txt` appears only after export. The review tool rejects missing owners,
@@ -192,6 +213,9 @@ away these errors. Use `check_transport.py TRANSPORT_DIR NEW_CHECKS.json` to
 check the CSV export independently. It recomputes retained source weights,
 target totals, and cross-group population. It rejects unknown IDs, duplicate
 pairs, invalid weights, and differences from the saved summary.
+`check_native_sources.py SOURCE.arrow GROUPS.csv TRANSPORT_DIR NEW_CHECKS.json`
+also checks every native source ID, population, and group label against the
+original files. It requires the geometry Python environment.
 
 ### Optional sparse balance correction
 
@@ -229,6 +253,7 @@ Julia package. Review distribution terms before shipping a combined product.
 - [GridMapPipeline](https://github.com/tue-alga/GridMapPipeline)
 - [GeometryCore](https://github.com/tue-alga/GeometryCore)
 - [Equal Earth projection, EPSG method 1078](https://epsg.io/1078-method)
+- [Shapely polygon union](https://shapely.readthedocs.io/en/stable/reference/shapely.union_all.html)
 - [Shapely spatial index](https://shapely.readthedocs.io/en/stable/strtree.html)
 - [NetworkX planar drawing](https://networkx.org/documentation/stable/reference/algorithms/planar_drawing.html)
 - [Pukelsheim: matrix scaling and convergence conditions](https://d-nb.info/1275986811/34)

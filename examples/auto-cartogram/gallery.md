@@ -3,6 +3,13 @@
 These images are experiments. Do not replace the production map with them.
 The source file has no declared population year.
 
+The first runs below use individual Natural Earth map-unit polygons. Their
+contact graph includes internal borders, such as those within Great Britain
+and Belgium. These polygons are not all separate islands. A later experiment
+merges adjacent units of the same country before tile allocation. Its results
+are being checked separately; do not confuse that union with small-island
+grouping, which combines the budgets of disconnected polygons.
+
 ## World: geography-first baseline
 
 This method grows each represented polygon separately. It keeps its approximate
