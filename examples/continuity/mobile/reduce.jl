@@ -1,20 +1,27 @@
 # Run with --project=examples/continuity/mobile. Input is a country_data cache.
 using Serialization, Dates, SHA
 include("../mobile_export.jl")
-include("moments.jl")
+include("bounded.jl")
 const ME=MobileExport
-const MR=MomentReduction
+const MR=BoundedReduction.MomentReduction
 
 function save_checkpoint(path,value)
     serialize(path*".tmp",value)
     mv(path*".tmp",path;force=true)
 end
 
+function checked_checkpoint(path,data,rows,weights,reference;target_retained=0.,metadata...)
+    summary=ME.evaluate(data,rows,reference;weights)
+    validate(summary;target_retained)
+    save_checkpoint(path,(;rows,weights,target_retained,summary,metadata...))
+    return summary
+end
+
 function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing,target_retained=0.)
     mkpath(out)
     config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,target_retained,
         seed=isnothing(seed) ? nothing : (abspath(seed),bytes2hex(sha256(read(seed)))), 
-        code=[bytes2hex(sha256(read(joinpath(@__DIR__,file)))) for file in ("reduce.jl","moments.jl","../mobile_export.jl")])
+        code=[bytes2hex(sha256(read(joinpath(@__DIR__,file)))) for file in ("reduce.jl","bounded.jl","moments.jl","../mobile_export.jl")])
     config_path=joinpath(out,"config.jls")
     if isfile(config_path)
         deserialize(config_path)==config || error("checkpoint input or code changed")
@@ -39,6 +46,8 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
             all(!floors[r] || weights[k]>=data.weight[r]-1e-8 for (k,r) in enumerate(rows)) || error("seed lost a protected weight")
         end
     end
+    worker=BoundedReduction.Worker(out)
+    try
     for (stage,(sb,tb)) in enumerate(stages)
         path=joinpath(out,"stage-$stage.jls")
         if isfile(path)
@@ -50,15 +59,22 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
         nt=cld(length(trank),tb)
         groups=[(cld(srank[data.index.source[r]],sb)-1)*nt+cld(trank[data.index.target[r]],tb) for r in rows]
         order=sortperm(groups);newrows=Int32[];newweights=Float64[]
-        failures=0;blocks=0;seconds=0.;start=time();first=1
+        failures=0;blocks=0;seconds=0.;start=time();first=1;last_checkpoint=start
+        working=joinpath(out,"working.jls")
         while first<=length(order)
             last=first
             while last<length(order) && groups[order[last+1]]==groups[order[first]]
                 last+=1
             end
             positions=view(order,first:last);rr=rows[positions];ww=weights[positions]
+            if blocks>0 && length(rr)>12000 && time()-last_checkpoint>30
+                remaining=view(order,first:length(order))
+                checked_checkpoint(working,data,vcat(newrows,rows[remaining]),vcat(newweights,weights[remaining]),reference;
+                    target_retained,stage,source_block=sb,target_block=tb,blocks,failures,seconds,complete=false)
+                last_checkpoint=time()
+            end
             result=try
-                MR.reduce_block(data,rr,ww,reference.target_mass;density=true,limit,floors)
+                BoundedReduction.reduce_block!(worker,data,rr,ww,reference.target_mass;density=true,limit,floors)
             catch err
                 err isa InterruptException && rethrow()
                 failures+=1
@@ -71,14 +87,17 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
                 println((;time=now(UTC),stage,blocks,processed=last,total=length(rows),kept=length(newrows),failures));flush(stdout)
             end
         end
-        summary=ME.evaluate(data,newrows,reference;weights=newweights)
-        validate(summary;target_retained)
-        save_checkpoint(path,(;rows=newrows,weights=newweights,source_block=sb,target_block=tb,target_retained,summary,failures,blocks,seconds))
+        summary=checked_checkpoint(path,data,newrows,newweights,reference;
+            target_retained,stage,source_block=sb,target_block=tb,failures,blocks,seconds,complete=true)
+        isfile(working) && rm(working)
         println((;time=now(UTC),stage,elapsed=time()-start,failures,blocks,summary));flush(stdout)
         rows,weights=newrows,newweights
         GC.gc()
     end
     return nothing
+    finally
+        BoundedReduction.stop!(worker)
+    end
 end
 
 function validate(summary;target_retained=0.)

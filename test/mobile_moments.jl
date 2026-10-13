@@ -48,6 +48,28 @@ include("../examples/continuity/mobile/quality.jl")
     @test sum(reduced.weights)≈sum(tiny.weight) rtol=1e-8
     @test_throws ErrorException MR.reduce_block(data,Int32[],Float64[],reference.target_mass)
     mktempdir() do dir
+        worker=BoundedReduction.Worker(dir)
+        try
+            remote=BoundedReduction.reduce_block!(worker,data,Int32.(eachindex(w)),w,reference.target_mass;max_inline=0,limit=60.)
+            @test remote.rows==result.rows
+            @test remote.weights≈result.weights
+            @test_throws ErrorException BoundedReduction.execute!(worker,(;f=error,args=("expected failure",),kwargs=(;));seconds=10.)
+            @test BoundedReduction.execute!(worker,(;f=identity,args=(42,),kwargs=(;));seconds=10.)==42
+            @test_throws ErrorException BoundedReduction.execute!(worker,(;f=sleep,args=(10.,),kwargs=(;));seconds=.05)
+            @test isnothing(worker.process)
+            @test BoundedReduction.execute!(worker,(;f=identity,args=(43,),kwargs=(;));seconds=60.)==43
+        finally
+            BoundedReduction.stop!(worker)
+        end
+        @test isnothing(worker.process)
+        @test read(worker.program)==BoundedReduction.CODE["bounded.jl"]
+        write(worker.program,"changed")
+        @test_throws ErrorException BoundedReduction.Worker(dir)
+        checkpoint=joinpath(dir,"working.jls")
+        checked_checkpoint(checkpoint,data,result.rows,result.weights,reference;complete=false)
+        @test !deserialize(checkpoint).complete
+    end
+    mktempdir() do dir
         ids=[MR.H3.API.latLngToCell(MR.H3.API.LatLng(.4+.01s,.1),5) for s in 1:ns]
         names,fields=MobileQuality.probe_fields(merge(meta,(;ids)))
         noise=fields[findfirst(==("synthetic_noise"),names),:]

@@ -217,3 +217,46 @@ also measures total variation against the full reference, including duplicate
 rows used for country ownership. There are 51 export checks, 33 moment checks,
 and 11 audit checks. The new option defaults to zero and does not change the
 running moment-only trials. Real-data protected-weight trials are in progress.
+
+## 13:10 UTC: lossless dictionaries and decoder support
+
+Dictionary encoding reduced the Germany test file from 266,274 to 187,162
+bytes. Every decoded value is identical. Encode the repeated population,
+label, and lower H3-half columns. Keep their logical Float64, string, and
+UInt32 types. No Arrow compression codec is required.
+
+The installed loaders.gl wrapper rejects dictionary fields. Apache Arrow
+19.0.1 reads them correctly. H3-MON commit `6563a17` uses its public
+`tableFromIPC` reader directly and moves that existing package to runtime
+dependencies. The normal service remains stopped. No dataset was changed.
+The build and 57 unit tests pass. Desktop and mobile dictionary, layout, and
+line-probe checks pass. The real Germany file renders 571 targets and 20
+labels with no new browser errors.
+
+The full rendering suite has an animation timeout. The same timeout occurs
+at unchanged H3-MON commit `84cf3f0` in a separate worktree, with reduction
+jobs paused. That worktree was removed. Do not report the full suite as
+passing. A separate request-route race in the test was fixed by waiting for
+the route handler before fulfilling a request.
+
+The packer now uses dictionary encoding. Its output needs a dictionary-capable
+reader, such as the updated H3-MON build. The plain writer remains available.
+There are now 54 export checks and 12 independent audit checks.
+
+## 13:10 UTC: enforce large-block time limits
+
+Some native crossover calls exceed their configured time limit by many
+minutes. The direct Germany protected-weight test hit its external timeout;
+no result was accepted. The full-country blocked trials remain valid at
+saved stages. Large blocks need a process boundary, not only a solver option.
+
+Added a reusable local worker for blocks with more than 12,000 rows. It gets
+only the block's coordinates, weights, and indexes. A wall-clock timeout
+kills the worker and retains the valid input block. It then starts a fresh
+worker for the next large block. Save failed requests for diagnosis. Copy
+the worker code at run start so later edits cannot change a running trial.
+
+Save a checked whole-country snapshot before long blocks. Processed blocks
+use their reduced weights; unprocessed blocks keep their valid input. This
+is a complete transport, not a partial fitted map. There are now 44 moment,
+worker, deadline, restart, and checkpoint checks. All pass.
