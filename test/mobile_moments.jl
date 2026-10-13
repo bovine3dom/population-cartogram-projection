@@ -120,6 +120,14 @@ include("../examples/continuity/mobile/quality.jl")
         @test deserialize(joinpath(shifted_out,"config.jls")).block_shift==(2,-2)
         @test_throws ErrorException reduce_country(input,shifted_out;stages=[(4,4),(8,9)],target_retained=.7,
             fixed_floors=true,block_shift=(0,0))
+        latitude_out=joinpath(dir,"latitude")
+        @test isnothing(reduce_country(input,latitude_out;stages=[(4,4),(8,9)],target_retained=.7,
+            fixed_floors=true,block_order=:latitude))
+        latitude=deserialize(joinpath(latitude_out,"stage-2.jls"))
+        @test latitude.summary.source_sum_error<1e-6
+        @test latitude.summary.target_tv_max<=.3+1e-6
+        @test deserialize(joinpath(latitude_out,"config.jls")).block_order==:latitude
+        @test_throws ErrorException reduce_country(input,joinpath(dir,"bad_order");block_order=:unknown)
         @test_throws ErrorException reduce_country(input,fixed_out;stages=[(8,9)],target_retained=.7)
         @test_throws ErrorException reduce_country(input,joinpath(dir,"bad_seed");stages=[(8,9)],
             seed=joinpath(out,"stage-1.jls"),target_retained=1.)

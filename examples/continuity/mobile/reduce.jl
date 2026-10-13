@@ -17,9 +17,10 @@ function checked_checkpoint(path,data,rows,weights,reference;target_retained=0.,
     return summary
 end
 
-function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing,target_retained=0.,fixed_floors=false,block_shift::Tuple{Int,Int}=(0,0))
+function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512),(2048,1024)],limit=30.,seed=nothing,target_retained=0.,fixed_floors=false,block_shift::Tuple{Int,Int}=(0,0),block_order::Symbol=:h3)
+    block_order in (:h3,:latitude) || error("invalid block order")
     mkpath(out)
-    config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,target_retained,fixed_floors,block_shift,
+    config=(;input=abspath(input),bytes=filesize(input),modified=mtime(input),stages,limit,target_retained,fixed_floors,block_shift,block_order,
         seed=isnothing(seed) ? nothing : (abspath(seed),bytes2hex(sha256(read(seed)))), 
         code=[bytes2hex(sha256(read(joinpath(@__DIR__,file)))) for file in ("reduce.jl","bounded.jl","moments.jl","../mobile_export.jl")])
     config_path=joinpath(out,"config.jls")
@@ -31,8 +32,10 @@ function reduce_country(input,out;stages=[(128,64),(256,128),(512,256),(1024,512
     end
     data=deserialize(input);reference=ME.reference_stats(data)
     floors=ME.target_floor_rows(data,target_retained)
-    source_order=circshift(sortperm(data.meta.ids),block_shift[1])
-    target_order=circshift(sortperm(data.meta.targets),block_shift[2])
+    source_order=block_order==:h3 ? sortperm(data.meta.ids) :
+        sortperm(axes(data.meta.xyz,2);by=s->(data.meta.xyz[3,s],data.meta.xyz[1,s],data.meta.xyz[2,s]))
+    target_order=block_order==:h3 ? sortperm(data.meta.targets) : sortperm(data.meta.targets;by=t->(t[2],t[1],t[3]))
+    source_order=circshift(source_order,block_shift[1]);target_order=circshift(target_order,block_shift[2])
     srank=invperm(source_order);trank=invperm(target_order)
     if isnothing(seed)
         rows=Int32.(eachindex(data.weight));weights=copy(data.weight)

@@ -66,7 +66,11 @@ geometry, city, or total-variation checks. It can also return the input
 unchanged; it does not guarantee the smallest support. `block_shift=(1024,512)`
 rotates source and target order before block assignment. This can combine
 rows across old block cuts without larger matrices. The default `(0,0)`
-keeps the original order. Record the shift with each checkpoint.
+keeps the original order. `block_order=:latitude` orders sources by latitude
+and targets by Y position before the shift. The default `:h3` orders sources
+by H3 and targets by X position. Both options change block assignment only.
+They do not change coordinates or validation limits. Record the order and
+shift with each checkpoint.
 
 Create a CSV manifest with `code,cache,result`. Use one row per country.
 `result` is a saved stage path. An empty result keeps the full reference

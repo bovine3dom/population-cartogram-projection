@@ -580,3 +580,28 @@ to 375,846. Their full-country checks pass with the same 70% bound. Added
 `block_shift` with a zero default. It rotates only the block assignment,
 not the coordinates or constraints. All 65 moment, worker, floor, shift,
 and restart checks pass. Further trials will use the committed option.
+
+## 20:36 UTC: 69.7 MB candidate and release of decoded buffers
+
+The shifted-block queue completed all 27 selected countries without a country
+timeout. The checked pack has 2,552,293 rows and uses 69.7 MB raw or 27.4 MB
+gzip for both files. Its independent binary audit passes. Geographic mean
+error remains below 0.185 m. Synthetic noise P99 error is 0.0654; the
+half-missing probe loses 89 values. The public files still use the earlier
+79.9 MB profile.
+
+H3-MON commit `2451b73` copies the retained numeric join columns after cell
+metadata and navigation are built. This releases the larger original Arrow
+buffer. Strings and object-array inputs keep the old path. For the unchanged
+public profile, retained heap and backing storage fall from 242 MB to 203 MB.
+The world view uses 374 MB; the return view uses 239 MB. The largest sampled
+initial-load value is 318 MB, slightly higher than the previous trial.
+This reduces retained memory, not the transient copy cost. All 71 unit tests
+and isolated rendering checks pass. The full rendering run still reports
+only the known baseline Frame 2 timeout.
+
+A different block order reduces China to 491,040 rows and India to 314,102.
+It orders sources by latitude and targets by Y, with unchanged constraints.
+Added the optional `block_order=:latitude` mode after this checked result.
+All 70 moment, worker, floor, order, and restart checks pass. The next queue
+will test this order on the larger countries before the final selection.
