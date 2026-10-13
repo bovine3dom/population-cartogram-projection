@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {createReadStream} from 'node:fs';
-import {mkdir, stat, writeFile} from 'node:fs/promises';
+import {mkdir, readFile, stat, writeFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {resolve, join} from 'node:path';
 
@@ -12,15 +12,18 @@ const require = createRequire(join(appRoot, 'package.json'));
 const {chromium} = require('playwright');
 await mkdir(output, {recursive: true});
 const failures = [], warnings = [], requests = [], samples = [], timings = [];
+const dataPath = process.env.DATA_PATH || 'mobile.arrow';
+const metadata = process.env.METADATA_PATH ? JSON.parse(await readFile(process.env.METADATA_PATH, 'utf8'))
+    : {cartogram: 'mobile-cartogram_hilo.arrow', trimFactor: 0};
 const files = new Map([
     ['/', [join(appRoot, 'www/index.html'), 'text/html']],
     ['/app.js', [join(appRoot, 'www/app.js'), 'text/javascript']],
     ['/app.css', [join(appRoot, 'www/app.css'), 'text/css']],
-    ['/data/mobile.arrow', [density, 'application/octet-stream']],
-    ['/data/mobile-cartogram_hilo.arrow', [transport, 'application/octet-stream']],
+    [`/data/${dataPath}`, [density, 'application/octet-stream']],
+    [`/data/${metadata.cartogram}`, [transport, 'application/octet-stream']],
 ]);
 const json = new Map([
-    ['/data/mobile.json', {cartogram: 'mobile-cartogram_hilo.arrow', trimFactor: 0}],
+    [`/data/${dataPath.replace(/\.arrow$/, '.json')}`, metadata],
     ['/toner_ofm_moderatlist.json', {version: 8, sources: {}, layers: [
         {id: 'background', type: 'background', paint: {'background-color': '#eeeeee'}},
     ]}],
@@ -52,7 +55,7 @@ try {
     await context.route('**/*', route => new URL(route.request().url()).origin === origin
         ? route.continue() : (failures.push(`External request: ${route.request().url()}`), route.abort()));
     await context.routeWebSocket('**/*', socket => socket.onMessage(message => {
-        if (String(message).startsWith('watch:')) socket.send('watching:mobile.arrow');
+        if (String(message).startsWith('watch:')) socket.send(`watching:${dataPath}`);
     }));
     const page = await context.newPage();
     page.on('pageerror', error => failures.push(String(error)));
@@ -76,7 +79,7 @@ try {
         try { samples.push({ms: performance.now() - start, ...await cdp.send('Runtime.getHeapUsage')}); }
         catch {} finally { sampling = false; }
     }, 250);
-    const query = new URLSearchParams({data: 'mobile.arrow', perf: '1'});
+    const query = new URLSearchParams({data: dataPath, perf: '1'});
     if (process.env.H3_PRECISION) query.set('h3precision', process.env.H3_PRECISION);
     await page.goto(`${origin}/?${query}`, {timeout: 180000});
     await page.waitForFunction(() => document.body.classList.contains('load-complete')

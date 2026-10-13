@@ -95,6 +95,16 @@ uses the real application build with an isolated local HTTP server. It does
 not start the normal H3-MON service. It records file transfer sizes, cell and
 label counts, browser errors, a screenshot, and memory measurements.
 
+Use `publish.py CANDIDATE AUDIT_TOML FULL_REFERENCE NEW_DESTINATION` to stage
+an audited export. It checks file hashes and refuses an existing directory.
+It also refuses more than 100 MB for the two Arrow files. Use Python 3.11 or
+later. Name the destination after its final public directory, because the
+browser metadata includes that name. Keep a full reference outside the web
+root before replacing an experimental dataset. Do not change production data.
+
+Set `DATA_PATH` and `METADATA_PATH` for `browser.mjs` to test the published
+relative URL and its actual JSON metadata before moving the directory.
+
 Small files do not imply small browser memory. Report raw bytes, compressed
 transfer bytes, JavaScript heap, and backing buffers separately. Browser
 measurements on a throttled desktop are not measurements on a phone.

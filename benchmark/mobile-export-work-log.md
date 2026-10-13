@@ -344,3 +344,17 @@ country queue continues. The new run keeps its input when a block times out.
 H3-MON commit `2ab2c30` limits Uint32 dictionary materialization to the actual
 UInt32 logical type. The browser test now includes a UInt64 dictionary index
 too. Desktop and mobile checks pass without conversion errors.
+
+## 14:25 UTC: prepare checked publication
+
+Added a staging tool that checks the audit hashes, rejects more than 100 MB
+for the two Arrow files, and refuses existing output directories. It keeps
+fit and reduction diagnostics separate. Its README states the actual fit
+pass count, approximation limits, row counts, and reader requirements. It
+writes dataset-specific browser metadata and a hash list. The staging and
+changed-file and byte-budget rejection tests pass.
+
+The headless check can now use the intended relative dataset URL and its
+actual JSON metadata. That path check passes for the moment-only candidate,
+with all source cells, physical targets, and displayed labels present. No
+small export has been put in the public data directory yet.
