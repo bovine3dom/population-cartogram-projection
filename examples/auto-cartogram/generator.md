@@ -193,6 +193,18 @@ check the CSV export independently. It recomputes retained source weights,
 target totals, and cross-group population. It rejects unknown IDs, duplicate
 pairs, invalid weights, and differences from the saved summary.
 
+### Optional sparse balance correction
+
+`balance_transport.py TRANSPORT_DIR NEW_OUTPUT` alternates source and target
+scaling on the exported nonzero pairs. Run it with the geometry Python
+environment. It does not add pairs or change group eligibility. It rejects
+incompatible total mass and disconnected support with incompatible capacities.
+Other support constraints can also prevent convergence. A bounded failure is
+not proof of infeasibility. The script exports only if the target tolerance is
+met, then runs the independent CSV checker. Original solver exports remain
+unchanged. This correction changes transport weights and needs a separate
+spatial-quality review.
+
 ## Tests
 
 ```sh
@@ -219,4 +231,5 @@ Julia package. Review distribution terms before shipping a combined product.
 - [Equal Earth projection, EPSG method 1078](https://epsg.io/1078-method)
 - [Shapely spatial index](https://shapely.readthedocs.io/en/stable/strtree.html)
 - [NetworkX planar drawing](https://networkx.org/documentation/stable/reference/algorithms/planar_drawing.html)
+- [Pukelsheim: matrix scaling and convergence conditions](https://d-nb.info/1275986811/34)
 - [NetworkX minimum-cost flow: floating-point warning](https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.flow.min_cost_flow.html)
