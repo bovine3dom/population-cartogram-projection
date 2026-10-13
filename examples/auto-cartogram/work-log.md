@@ -114,3 +114,25 @@ under ignored `output/auto-cartogram/`.
   for the earlier pending runs, which did not pin this seed.
 - Global Java fits remain in progress. No global topology-preserving success
   has been established. The gallery states this limit.
+
+## 21:41–21:52 UTC — transport by declared group
+
+- Added a CPU wrapper around the existing transport solver. It solves each
+  declared island group separately and checks mass and tile-budget consistency.
+  Production solver code is unchanged.
+- Added an unrestricted pooled comparison. An exploratory H3-3 run uses 619
+  source aggregates and 1,894 targets. Grouped transport has zero cross-group
+  mass and retains about 99.62% of source population. The pooled run moves about
+  214 million people across these group labels. This coarse result is not a
+  measurement of the old OWID map or native H3-8 transport.
+- Added source-retention and per-target balance diagnostics. Stop and restart
+  the early native-cell run with this fixed diagnostic version. Its incomplete
+  attempt is not published. Capture the script hash when the module loads,
+  rather than after a long run during which the file could change.
+- Tests pass: 20 transport checks and seven Python/Java layout tests. The
+  transport checks include analytical cases, a real CPU solve, invalid inputs,
+  mass checks, and atomic output.
+- Started a Java performance comparison with only the expensive per-move
+  region assertions disabled. Other assertions remain enabled. Its completion
+  marker records this setting. Final independent validation is still required.
+  The all-assertions runs remain separate reference experiments.

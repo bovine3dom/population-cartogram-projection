@@ -20,7 +20,7 @@ output/auto-cartogram/geometry-env/bin/pip install -r examples/auto-cartogram/ge
 The build checks upstream revisions and the downloaded JDK checksum. It applies
 `upstream-fixes.patch` to copies, not to the upstream checkout. The patch fixes
 an inverted size assertion, removal-queue ties, and a local connectivity check.
-Java assertions must remain enabled. The independent flood-fill test checks
+Keep Java assertions enabled for reference runs. The independent flood-fill test checks
 accepted moves against both land connectivity and four-neighbour sea holes.
 
 ## Prepare population and shapes
@@ -84,6 +84,12 @@ For bounded preview runs, set Java properties such as
 These limit force iterations and rounds without improvement. They do not impose
 a wall-clock limit; keep the external timeout. The completion marker records them.
 
+A separate performance experiment disables only the expensive per-move region
+assertions with `'-da:arrange.model.MosaicCartogram$MosaicRegion'`. Other Java
+assertions stay enabled. The completion marker records `regionAssertions=false`.
+This is not equivalent to an all-assertions run. Independent final count,
+connectivity, hole, and contact checks remain required.
+
 The outline check rejects invalid original projected rings. If a simplified ring
 crosses itself, it restores the original projected ring and records the change.
 Never send unchecked `input.wkt` to the generator. The first global check found
@@ -113,10 +119,39 @@ geographic topology.
 unknown owners, and duplicate cells. It writes count, connectivity, and contact
 checks plus a headless SVG. Inspect the image as well as the numbers.
 
+## Island transport experiment
+
+`group_transport.jl` calls the existing CPU transport solver separately for each
+declared group. It does not change the solver. Its source input is the native
+`source-components.arrow` from the Indonesia audit. The group table and layout
+must have matching mass and tile budgets.
+
+```sh
+julia --threads=2 --project=examples/auto-cartogram examples/auto-cartogram/group_transport.jl \
+  output/auto-cartogram/indonesia-reviewed/source-components.arrow \
+  output/auto-cartogram/indonesia-1894-v2-input \
+  output/auto-cartogram/indonesia-1894-v2-layout \
+  output/auto-cartogram/indonesia-transport-r3-grouped 3 grouped
+```
+
+Resolution 3 is a coarse test. The script combines sources by original component
+and H3 parent, without combining different component identities. It uses
+population-weighted source centres in the Equal Earth projection. Resolution 8
+keeps native source cells. `pooled` instead runs one unrestricted country solve
+as a comparison. Do not interpret a coarse comparison as a native-cell result.
+
+Grouped transport permits movement within declared island groups, but not between
+groups. Each group has its own population per tile. It therefore does not enforce
+one exact population value per tile across the country. The existing sparse
+export also retains only part of each source contribution. Inspect retained mass
+and target error as well as cross-group mass. The script does not renormalize
+away these errors.
+
 ## Tests
 
 ```sh
 julia --project=examples/auto-cartogram test/auto_layout.jl
+julia --project=examples/auto-cartogram test/auto_transport.jl
 python3 test/auto_layout.py
 output/auto-cartogram/geometry-env/bin/python test/auto_geometry.py
 ```

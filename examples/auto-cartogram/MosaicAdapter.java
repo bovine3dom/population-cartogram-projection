@@ -95,7 +95,8 @@ public class MosaicAdapter {
         Files.writeString(output.resolve("complete.txt"), "mode=" + args[3] + "\nseed=" + Random.getSeed() + "\nplacement=" + placement + "\nembedding=" + (args.length == 6 ? "planar" : "native") + "\n"
             + "forceIterations=" + MosaicConstants.FORCE_TOTAL_ITERATIONS + "\n"
             + "scaledPatience=" + MosaicConstants.MAX_NO_IMPROVE_SCALED + "\n"
-            + "finalPatience=" + MosaicConstants.MAX_NO_IMPROVE_FINAL + "\n");
+            + "finalPatience=" + MosaicConstants.MAX_NO_IMPROVE_FINAL + "\n"
+            + "regionAssertions=" + Class.forName("arrange.model.MosaicCartogram$MosaicRegion").desiredAssertionStatus() + "\n");
     }
 
     private static int setting(String name, int fallback) {

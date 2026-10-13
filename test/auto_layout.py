@@ -20,6 +20,23 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(review.connectivity({(0, 0), (1, 1)}), 2)
         self.assertEqual(review.quality({(0, 0)})["perimeter"], 4)
 
+    def test_review_reports_uniform_tile_capacity_mismatch(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            inputs,layout=Path(tmp)/"input",Path(tmp)/"layout"
+            inputs.mkdir(); layout.mkdir()
+            (inputs/"groups.csv").write_text("component_id,tiles,country_id,name,group_population,west,east,south,north\n"
+                "a,4,XX,A,60,0,1,0,1\nb,2,XX,B,40,4,5,0,1\n")
+            (inputs/"manifest.json").write_text(json.dumps(dict(tile_budget=6,population_total=100,
+                represented_population=100,grouped_population=0,omitted_population=0,
+                holes_not_encoded_in_wkt=0,policy="group")))
+            (inputs/"geographic-contacts.csv").write_text("a,b,both_represented\n")
+            (layout/"complete.txt").write_text("mode=test\n")
+            (layout/"cells.csv").write_text("component_id,x,y\na,0,0\na,1,0\na,0,1\na,1,1\nb,4,0\nb,4,1\n")
+            metrics=review.run(inputs,layout,"Test")
+            self.assertTrue(metrics["passes_represented_constraints"])
+            self.assertAlmostEqual(metrics["country_uniform_tile_cross_group_lower_bound"],100/15)
+            self.assertEqual(metrics["island_axis_order_errors"],0)
+
     def test_unknown_duplicate_and_missing_owners(self):
         with tempfile.TemporaryDirectory() as tmp:
             inputs, layout = Path(tmp)/"input", Path(tmp)/"layout"
