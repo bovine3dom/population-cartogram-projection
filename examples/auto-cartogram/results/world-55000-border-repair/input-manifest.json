@@ -1,0 +1,34 @@
+{
+  "country": "world",
+  "country_identity": "Natural Earth ADM0_A3; no synthetic ISO numeric codes",
+  "geometry_limit": "WKT supports outer rings only; hole-border contacts are audited separately",
+  "group_policy": "country minimum 1 tile, then zero-budget components join nearest represented component of same country; reallocate within country",
+  "grouped_population": 1.0264374e7,
+  "holes_not_encoded_in_wkt": 20,
+  "input_components": 2639,
+  "inputs": [
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-components/components.csv",
+      "sha256": "d8df67ca5119aa6ac21e5ccd0c1221c6e5c889379ab094925da3dca4e6a5e164"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/make-lookup-table/population-data/country-boundaries/ne_10m_admin_0_map_units.geojson",
+      "sha256": "13c0aa23f535f8e4ec0ff52956d69f761933413b4fb7aa4a311c5f492256441b"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/prepare_layout.jl",
+      "sha256": "58a773431c0f352bc5cd5a999adfd705fbe7d4737fe15e9de7211caa22d6f9cc"
+    }
+  ],
+  "omitted_population": 0.0,
+  "policy": "group",
+  "population_total": 7.95467799e9,
+  "projection": "Equal Earth (EPSG method 1078)",
+  "represented_countries": 250,
+  "represented_population": 7.95467799e9,
+  "represented_shapes": 493,
+  "simplification_tolerance": 0.0003,
+  "source_manifest_sha256": "b1ed993dc36f29a2fa6a6196f3dd56cd1302210bc0100096fb64e2685e5631d4",
+  "tile_budget": 55000,
+  "unmatched_source_population": 7.7246034e7
+}

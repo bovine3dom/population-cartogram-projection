@@ -1,0 +1,87 @@
+# Island transport results
+
+These tests use the automatic Indonesia layout, not the handmade OWID map.
+They test an optional wrapper around the existing CPU solver. Production code
+and targets are unchanged.
+
+## What was tested
+
+The matched input has 270,120,945 people. The layout has 1,894 tiles in 51
+recorded groups. Small components with no tile budget join another component
+in the same country. Thus, a group can contain more than one island.
+
+The grouped wrapper solves each group separately. The pooled comparison solves
+all of Indonesia together. Both use the same source rows and target cells.
+The wrapper converts north-up layout coordinates to the solver's screen
+coordinates and restores north-up coordinates in the export.
+
+H3-3 and H3-5 tests combine native cells by original component and H3 parent.
+They use population-weighted projected centres. They do not combine different
+component IDs. These are coarse tests, not native H3-8 validation.
+
+| Source resolution | Source rows | Mode | Population sent to a different group | Retained population | Largest target error |
+| --- | ---: | --- | ---: | ---: | ---: |
+| H3-3 | 619 | Grouped | 0 | 99.606% | 10.813% |
+| H3-3 | 619 | Pooled | 83,707,437 | 99.580% | 9.788% |
+| H3-5 | 8,545 | Grouped | 0 | 99.757% | 3.865% |
+| H3-5 | 8,545 | Pooled | 83,826,178 | 99.753% | 4.522% |
+
+The pooled H3-5 result sends about 31% of input population to a different
+declared group. This is a measurement for this layout and input, not a general
+estimate for Indonesia or the OWID map. The independent CSV checker recomputes
+all totals and checks source IDs, target ownership, weights, and duplicate pairs.
+All four exports pass those checks.
+
+Native H3-8 grouped transport is still in progress. Do not use the coarse tests
+as proof of native-cell performance.
+
+## H3-5 grouped transport
+
+![Grouped transport](results/indonesia-transport-r5-grouped/review.png)
+
+[Independent checks](results/indonesia-transport-r5-grouped/independent-checks.json) ·
+[Group flows](results/indonesia-transport-r5-grouped/flows.csv) ·
+[Target errors](results/indonesia-transport-r5-grouped/target-quality.csv)
+
+## H3-5 pooled comparison
+
+![Pooled transport](results/indonesia-transport-r5-pooled/review.png)
+
+[Independent checks](results/indonesia-transport-r5-pooled/independent-checks.json) ·
+[Group flows](results/indonesia-transport-r5-pooled/flows.csv) ·
+[Target errors](results/indonesia-transport-r5-pooled/target-quality.csv)
+
+The right panel shows only the largest source-group contribution per tile.
+Grey combines many small groups. Read the flow tables for all contributions.
+The images alone cannot prove that transport stays within a group.
+
+## What this means for issue #17
+
+Separate solves prevent cross-group transport by construction. This result
+supports explicit component eligibility, rather than a distance penalty alone.
+It does not preserve every small island: the recorded grouping rule still
+permits movement between islands in the same group.
+
+There is also a capacity choice. Each group has its own population per tile.
+If every tile instead has one exact country-wide population value, the current
+integer budgets require at least 1,056,549 people to cross group boundaries.
+This lower bound is half the sum of absolute group capacity differences. We
+must choose between exact uniform tile capacity, exact integer budgets, and
+zero cross-group movement. They cannot all hold for these budgets.
+
+The sparse solver export drops some source contribution. These tests do not
+renormalize it. Zero cross-group mass therefore does not imply exact mass
+retention or equal target values. Target error is measured against each group's
+capacity in grouped mode, and the country-wide capacity in pooled mode.
+
+Before production use:
+
+1. Choose and document the capacity rule.
+2. Review which islands can share a group and which need an inset or separate tile.
+3. Set limits for source retention and target error, then test native cells.
+4. Resolve unmatched coastal coverage and the missing population year.
+5. Integrate group eligibility only after the layout and transport checks pass.
+
+See [generator instructions](generator.md), [layout gallery](gallery.md), and
+[work log](work-log.md). Raw mappings remain under ignored `output/`; the saved
+results contain small review files and hashes of the complete exports.

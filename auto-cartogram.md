@@ -15,10 +15,11 @@ This research preceded implementation. A first
 [Indonesia island audit](examples/auto-cartogram/results.md) is now complete.
 It measures population and tile-capacity mismatches; it does not replace the map.
 A later [review gallery](examples/auto-cartogram/gallery.md) contains automatic
-world previews at 10,000, 55,000, and 110,000 tiles. These geography-first
-baselines remove land borders. They are not production replacements. See the
-[work log](examples/auto-cartogram/work-log.md) for the separate mosaic and
-island-transport experiments.
+world previews at 10,000, 55,000, and 110,000 tiles. It compares geography-first
+baselines, border repair, and topology-first fits. None is a production
+replacement. The [transport tests](examples/auto-cartogram/transport-results.md)
+measure cross-group movement and target errors on the automatic Indonesia
+layout. See the [work log](examples/auto-cartogram/work-log.md) for run details.
 
 For the research below, I inspected the two supplied papers, upstream
 documentation and selected source files, this repository, and issue #17.

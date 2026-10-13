@@ -1,0 +1,12 @@
+{
+  "output/auto-cartogram/indonesia-transport-r5-v3-pooled/independent-checks.json": "f94bb3c8319a99e617c587e622108ea11beeb27b1b8d731077a5fc86618a4941",
+  "output/auto-cartogram/indonesia-transport-r5-v3-pooled/manifest.json": "de7c200f827d944561d720cfdfacabd5e234fefb3c9aef3a44c8bc9179813a77",
+  "output/auto-cartogram/indonesia-transport-r5-v3-pooled/mapping.csv": "1c997cb30d440cbfd33e0ce26d6f012e472dd3f43f5fbf30515d6456573a0056",
+  "output/auto-cartogram/indonesia-transport-r5-v3-pooled/sources.csv": "0e8d20f7656a909088086cac0901355272ae08175a47e97912df330a0da84810",
+  "output/auto-cartogram/indonesia-transport-r5-v3-pooled/target-quality.csv": "b5ded384c2618f2c7c286d0a17d7251b2c4da4ab8e7e162cade4157460dc652f",
+  "output/auto-cartogram/indonesia-transport-r5-v3-pooled/targets.csv": "38b91aa0d1010cb1acce15106da8f8aeb2bed7363821e8fbfc9188d108ed0ca9",
+  "output/auto-cartogram/indonesia-transport-r5-corrected-review-pooled/flows.csv": "024c9fb4ea8e34e569339e57f5a5f67eb93f45017634cbd5c8102c0342bee0d7",
+  "output/auto-cartogram/indonesia-transport-r5-corrected-review-pooled/manifest.json": "0e0e915bd49b98005696314ca961a606647ba7c502613053d39756c5b140f835",
+  "output/auto-cartogram/indonesia-transport-r5-corrected-review-pooled/review.png": "7d9bfbd9925a53deae2c225c4860e3599a5f7af8e61714f642c5586dc8c633c6",
+  "output/auto-cartogram/indonesia-transport-r5-corrected-review-pooled/review.svg": "87ec9341f6409e851a611e088bfa3617f0e88a79fda366a04d4c9f80a9e97145"
+}
