@@ -89,6 +89,13 @@ Other resolutions: [10,000 tiles](results/world-10000-border-repair/review.png) 
 Each directory contains the independent checks and attempted repairs.
 The coverage and grouping limits are the same as the geography-first baseline.
 
+Tighter initial spacing reduces some gaps, but damages geographic order and
+blocks more required borders. At 55,000 tiles, spacing 1.2 leaves 115 missing
+borders and 176 country axis-order errors, against 56 and 47 at spacing 1.6.
+See the [compact comparison](results/world-55000-compact-repair/review.png) and
+[nine-run parameter table](results/spacing-comparison.csv). None is an accepted
+layout.
+
 ## World: topology-first reference
 
 The Java fit below keeps all 352 represented borders with no false contacts,
@@ -105,6 +112,12 @@ improves global order but does not solve the problem: the
 of absolute count error and 1,098 country axis-order errors. That performance
 run disabled only per-move region assertions; independent final checks passed
 for connectivity, holes, and represented borders, not for tile counts.
+
+The [55,000-budget oriented fit](results/world-55000-topology-oriented/review.png)
+finishes with 44,616 tiles and 14,808 tiles of absolute component count error.
+It keeps all 368 represented borders, with no false contacts, disconnected
+regions, or region holes. Country axis-order errors remain high at 1,277.
+More tiles alone do not solve the fit.
 
 The results show why a contact check alone is not an acceptance test. We need
 area, shape, position, island, and containment checks together.

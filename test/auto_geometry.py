@@ -12,12 +12,35 @@ from shapely.geometry import Polygon, box
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"examples"/"auto-cartogram"))
 import assign_population as population
+import balance_transport as balance
 import geographic_baseline as baseline
 import geographic_embedding as geographic
 import planar_embedding as embedding
 import review_layout as review
 import repair_contacts as repair
 import validate_outlines as outlines
+
+
+class BalanceTests(unittest.TestCase):
+    def test_marginals_and_structural_zeros(self):
+        row=np.array([0,0,1,1,2]); column=np.array([0,1,0,1,2])
+        mass,iterations,error=balance.scale(row,column,[3,1,2,4,2],[6,4,2],[5,5,2])
+        np.testing.assert_allclose(np.bincount(row,weights=mass),[6,4,2],rtol=1e-12)
+        np.testing.assert_allclose(np.bincount(column,weights=mass),[5,5,2],rtol=1e-8)
+        self.assertLessEqual(error,1e-8)
+        self.assertGreater(iterations,1)
+        self.assertEqual(len(mass),5)
+
+    def test_infeasible_support_and_invalid_marginals_fail(self):
+        with self.assertRaisesRegex(ValueError,"Disconnected support"):
+            balance.scale([0,1],[0,1],[1,1],[1,3],[2,2],iterations=10)
+        with self.assertRaisesRegex(ValueError,"did not converge"):
+            balance.scale([0,0,1],[0,1,1],[1,1,1],[3,1],[1,3],iterations=2)
+        self.assertAlmostEqual(balance.support_error_bound([0,1],[0,1],[1,3],[2,2]),.5)
+        with self.assertRaisesRegex(ValueError,"differ"):
+            balance.scale([0],[0],[1],[1],[2])
+        with self.assertRaisesRegex(ValueError,"no positive support"):
+            balance.scale([0],[0],[1],[1,1],[2])
 
 
 class PopulationTests(unittest.TestCase):

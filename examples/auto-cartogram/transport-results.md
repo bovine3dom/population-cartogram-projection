@@ -55,6 +55,30 @@ The right panel shows only the largest source-group contribution per tile.
 Grey combines many small groups. Read the flow tables for all contributions.
 The images alone cannot prove that transport stays within a group.
 
+## Sparse balance correction
+
+A second experiment scales the saved nonzero weights to match source and target
+marginals. It does not add source-target pairs. This is separate from the solver
+and does not change the original results above.
+
+- H3-5 grouped transport reaches full source retention, zero cross-group mass,
+  and maximum relative target error below `1e-8` after 34,470 iterations.
+  Scaling takes 7.1 seconds, excluding input checks and file export.
+  [Independent checks](results/indonesia-transport-r5-balanced-grouped/independent-checks.json).
+- H3-3 pooled transport reaches the same target tolerance after 9,848 iterations.
+  It still sends 84,105,751 people across groups. Better balance does not fix
+  island eligibility.
+- H3-3 grouped transport cannot reach that tolerance on its saved support.
+  One group has two disconnected support blocks with incompatible capacities.
+  They require at least 0.312% maximum relative target error.
+- H3-5 pooled transport does not reach `1e-8` within 50,000 iterations. Its
+  residual is about `8.47e-7`. This bounded failure is not proof of infeasibility.
+
+This test uses [iterative proportional fitting](https://d-nb.info/1275986811/34).
+Convergence depends on the support and requested marginals. The successful
+correction changes weights, so spatial quality still needs review. It is not
+an excuse to report the uncorrected solver output as fully balanced.
+
 ## What this means for issue #17
 
 Separate solves prevent cross-group transport by construction. This result

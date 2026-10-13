@@ -1,0 +1,23 @@
+{
+  "source_population": 270120945.0,
+  "retained_population": 270120945.0,
+  "retained_share": 1.0,
+  "cross_group_population": 0.0,
+  "minimum_source_retained_share": 0.9999999999999996,
+  "maximum_source_retained_share": 1.0000000000000007,
+  "maximum_relative_target_error": 9.997908945180711e-09,
+  "coarse_sources": 8545,
+  "targets": 1894,
+  "groups": 51,
+  "mapping_rows": 19350,
+  "source_rows_below_99_5_percent": 0,
+  "checked": true,
+  "checker_sha256": "303e1a2fedb19b85e84b6ad2eb947f84ad7d713bcb2673781dd5786df47cbd40",
+  "files": {
+    "manifest.json": "f78ffa8499623b9175ce136ac9895edd114513f1e5fe848fe0ebbd740806b112",
+    "sources.csv": "0e8d20f7656a909088086cac0901355272ae08175a47e97912df330a0da84810",
+    "targets.csv": "38b91aa0d1010cb1acce15106da8f8aeb2bed7363821e8fbfc9188d108ed0ca9",
+    "mapping.csv": "274e9eea6418c1db3793d2974080e3f0b53654dc78e365d2c151816f5b56a10e",
+    "target-quality.csv": "abece33dabc73ba5df5b89a4f3a5a937a07dfe2aecf9c8b1c728b7e34749d380"
+  }
+}

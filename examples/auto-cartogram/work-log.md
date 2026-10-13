@@ -289,3 +289,24 @@ under ignored `output/auto-cartogram/`.
   including their large count errors. Added the images and limits to the gallery.
 - Published corrected coarse transport results with flow tables, target errors,
   independent checks, and input hashes. The native result remains pending.
+
+## 23:17–23:33 UTC — larger fits and sparse balance
+
+- The complete headless test suite passes: Python/Java layout, geometry, CSV
+  transport checks, and all three Julia suites. The original Indonesia audit
+  also passes. Logs stay under `output/auto-cartogram/world-jobs/`.
+- The 55,000-budget oriented topology fit finished with 44,616 tiles and 14,808
+  tiles of absolute component error. It preserves all 368 represented borders
+  but is not a valid population map. Saved its image and independent checks.
+- All nine spacing/repair combinations finished. Tighter placement improves
+  some compactness values but increases missing borders and country order
+  errors. Saved a parameter table and one compact comparison image.
+- Tested sparse iterative proportional fitting after transport. H3-5 grouped
+  weights reach full source retention to floating-point precision, zero
+  cross-group mass, and relative target error below 1e-8. H3-3 grouped support
+  has a measured capacity obstruction; no corrected export is written.
+  H3-5 pooled scaling stops at its iteration bound without an accepted export.
+- Inspected a stack sample from exact-mode Java. It is spending time in
+  hole-boundary checks during final polishing, not the earlier flow stall.
+  Its external timeout remains active. A separate default-settings topology
+  fit is testing whether the bounded previews stopped too early.
