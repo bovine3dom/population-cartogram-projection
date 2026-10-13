@@ -27,7 +27,7 @@ class PublicationTest(unittest.TestCase):
             (candidate / "export.toml").write_text(f'rows = 6\ninput_sha256 = "{input_hash}"\n')
             audit = root / "audit.toml"
             queries = root / "audit.queries.csv"
-            queries.write_text("field,absolute_max\nexample,0.1\n")
+            queries.write_text("field,targets,lost,absolute_max\nhalf_missing_log_density,2,1,0.1\n")
             audit.write_text(f'query_report_sha256 = "{publisher.digest(queries)}"\n'
                              'rows = 6\nsources = 3\ntargets = 2\nlabels = 1\nrequested_target_retained = 0.7\n'
                              'target_tv_max = 0.25\ngeographic_error_km_max = 0.0001\n[sha256]\n' +
@@ -38,6 +38,7 @@ class PublicationTest(unittest.TestCase):
             hashes = json.loads((destination / "sha256.json").read_text())
             self.assertEqual(hashes[publisher.TRANSPORT], publisher.digest(candidate / publisher.TRANSPORT))
             self.assertIn("4 passes", (destination / "README.md").read_text())
+            self.assertIn("loses values at 1 of 2 targets", (destination / "README.md").read_text())
             self.assertEqual(json.loads((destination / "population_density_hilo.json").read_text())["cartogram"],
                              f"public/{publisher.TRANSPORT}")
             self.assertTrue(json.loads((destination / "population_density_hilo.json").read_text())["viewportGeometry"])

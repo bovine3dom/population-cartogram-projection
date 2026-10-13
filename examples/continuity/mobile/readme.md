@@ -82,7 +82,9 @@ country in a mixed manifest. Never report a stronger guarantee.
 
 The writer uses Int16 positions, UInt16 country codes, Float32 weights,
 Float64 population, and UInt32 H3 halves. It uses lossless Arrow dictionaries
-for population, lower H3 words, and labels. It drops an unlabelled roundoff
+for population, lower H3 words, and labels. The density writer also uses a
+lossless dictionary for lower H3 words. Density values keep their precision.
+It drops an unlabelled roundoff
 row only when both its source and target fractions are below `1e-20`.
 It preserves country ownership at shared target positions.
 

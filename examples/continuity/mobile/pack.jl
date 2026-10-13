@@ -54,15 +54,15 @@ function pack(manifest,input,density,out)
     owners=Dict(key=>first(sort(entries;by=e->(-e.count,e.first))).code for (key,entries) in ownership if length(entries)>1)
     mkpath(out)
     report=MobileWriter.write_file(joinpath(out,"cartogram_weights_planet_h3_5_factor1_continuity_hilo.arrow"),parts;owners,dictionary=true)
-    cp(density,joinpath(out,"population_density_hilo.arrow"))
+    density_bytes=MobileWriter.write_density(joinpath(out,"population_density_hilo.arrow"),density)
     CSV.write(joinpath(out,"countries.csv"),summaries)
     CSV.write(joinpath(out,"query-errors.csv"),qualities)
     CSV.write(joinpath(out,"provenance.csv"),provenance)
     CSV.write(joinpath(out,"shared-cell-owners.csv"),[(;x=k[1],y=k[2],code=v) for (k,v) in owners])
     open(joinpath(out,"export.toml"),"w") do io
-        TOML.print(io,Dict("rows"=>report.rows,"transport_bytes"=>report.bytes,"density_bytes"=>filesize(density),
+        TOML.print(io,Dict("rows"=>report.rows,"transport_bytes"=>report.bytes,"density_bytes"=>density_bytes,
             "ownership_rows"=>report.ownership_rows,"negligible_rows_dropped"=>report.dropped_rows,"sources"=>length(ids),"country_targets"=>length(expected.targets),
-            "labels"=>length(labels),"approximate"=>true,"dictionary_columns"=>["index_lower","population","label"],
+            "labels"=>length(labels),"approximate"=>true,"dictionary_columns"=>["index_lower","population","label"],"density_dictionary_columns"=>["index_lower"],
             "input_sha256"=>open(bytes2hex∘sha256,input),
             "manifest_sha256"=>open(bytes2hex∘sha256,manifest)))
     end

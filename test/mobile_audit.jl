@@ -41,6 +41,8 @@ const MW=MobileWriter
         Arrow.write(candidate,merge(table,(;index_lower=Arrow.DictEncode(table.index_lower),
             population=Arrow.DictEncode(table.population),label=Arrow.DictEncode(table.label))))
         @test MA.audit(input,reference,candidate,density,report)["source_sum_error"]<1e-7
+        Arrow.write(density,merge(density_table,(;index_lower=Arrow.DictEncode(density_table.index_lower))))
+        @test MA.audit(input,reference,candidate,density,report)["sources"]==3
         Arrow.write(candidate,merge(table,(;weight=Float64.(table.weight))))
         @test_throws ErrorException MA.audit(input,reference,candidate,density,report)
         changed=copy(table.label);changed[1],changed[2]=changed[2],changed[1]

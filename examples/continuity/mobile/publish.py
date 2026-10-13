@@ -27,6 +27,8 @@ def publish(candidate, audit_file, reference, destination):
     query_report = audit_file.with_suffix(".queries.csv")
     if digest(query_report) != audit["query_report_sha256"]:
         raise ValueError("Query report hash mismatch")
+    with query_report.open() as stream:
+        missing_probe = next(row for row in csv.DictReader(stream) if row["field"] == "half_missing_log_density")
     with (candidate / "export.toml").open("rb") as stream:
         export = tomllib.load(stream)
     for key, path in (("transport", candidate / TRANSPORT), ("density", candidate / DENSITY),
@@ -85,7 +87,9 @@ variation bounds the mean error as a fraction of that range. The same bound
 does not apply unchanged after missing-data filtering and renormalization.
 See `query-errors.csv` for tests of the actual binary files at physical target
 positions. Distance tests are not travel times. The separate checkpoint query
-report gives pre-serialization results for each country.
+report gives pre-serialization results for each country. The half-missing test
+loses values at {missing_probe['lost']} of {missing_probe['targets']} targets that had an original
+value. Do not assume that all missing-data queries keep their coverage.
 
 `mobile-audit.toml` records independent checks of the binary files and their
 SHA256 hashes. `mobile-countries.csv` and `provenance.csv` record the reduction.

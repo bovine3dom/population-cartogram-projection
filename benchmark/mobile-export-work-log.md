@@ -416,3 +416,29 @@ Started larger-block refinements for China and the US from valid 80% seeds.
 Each process has an 8 GiB address-space limit and a three-hour deadline.
 Each native block has a 200-second wall-clock limit. Keep the 70% candidate
 as a validated fallback if stronger protection exceeds the byte budget.
+
+## 16:00 UTC: check missing-data limits and compress density losslessly
+
+The independent 70% query audit passes. Across physical target cells, the
+synthetic noise test has absolute P99 error 0.0627 on a 0–1 range. Distance
+P99 errors range from 0.088 to 0.707 km for the five test cities. These are
+geographic distances, not travel times.
+
+The actual binary half-missing test loses 87 of 54,421 originally covered
+target values. The checkpoint probe had reported 20 losses. Float32 tail
+removal explains why the binary check is necessary: even negligible mass
+can become important after missing-data renormalization. The published
+README will state the measured loss count. Do not claim coverage for every
+partial-data query. Complete density coverage and all source coverage still
+pass the independent checks.
+
+The density file has only four distinct lower H3 words. A lossless Arrow
+dictionary reduces it from 6,197,474 to 5,035,946 bytes. Every value and H3
+half matches the full file exactly. Its gzip size is 3,628,761 bytes. The
+actual browser reads it correctly. New packs use this encoding. There are
+67 export checks and 18 audit checks; all pass.
+
+Also started a 75% China trial from the valid 80% seed. This is a possible
+middle profile if the 80% planet exceeds 100 MB. It has the same exact moment
+checks, an 8 GiB address-space limit, and a three-hour deadline. No small
+candidate has replaced the public experiment yet.

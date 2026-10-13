@@ -81,6 +81,17 @@ function columns(parts;owners=Dict(),counts=nothing)
     return (;x,y,weight,population,code,label,weight_mean,index_lower,index_upper)
 end
 
+function write_density(path,input)
+    ispath(path) && error("refusing to replace $path")
+    table=Arrow.Table(input)
+    Set(propertynames(table))==Set((:index_lower,:index_upper,:value)) || error("unexpected density columns")
+    columns=(;index_lower=Arrow.DictEncode(table.index_lower),index_upper=table.index_upper,value=table.value)
+    mkpath(dirname(path))
+    Arrow.write(path*".pending",columns;ntasks=1)
+    mv(path*".pending",path)
+    return filesize(path)
+end
+
 function write_file(path,parts;owners=Dict(),dictionary=false)
     ispath(path) && error("refusing to replace $path")
     counts=Ref((;dropped_rows=0,ownership_rows=0))

@@ -94,5 +94,15 @@ const MW=MobileWriter
         @test all(isequal(collect(getproperty(decoded,name)),getproperty(table,name)) for name in keys(table))
         @test eltype(decoded.index_lower)==UInt32
         @test eltype(decoded.population)==Float64
+        density=(;index_lower=table.index_lower,index_upper=table.index_upper,value=table.population)
+        plain=joinpath(dir,"density-plain.arrow");packed=joinpath(dir,"density-packed.arrow")
+        ME.Arrow.write(plain,density)
+        @test MW.write_density(packed,plain)==filesize(packed)
+        decoded=ME.Arrow.Table(packed)
+        @test all(collect(getproperty(decoded,k))==density[k] for k in keys(density))
+        @test eltype(decoded.index_lower)==UInt32
+        @test eltype(decoded.value)==Float64
+        @test_throws ErrorException MW.write_density(packed,plain)
+        @test_throws ErrorException MW.write_density(joinpath(dir,"bad.arrow"),path)
     end
 end
