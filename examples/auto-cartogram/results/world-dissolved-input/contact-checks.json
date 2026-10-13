@@ -1,0 +1,12 @@
+{
+  "original_contacts": 423,
+  "expected_contacts": 384,
+  "actual_contacts": 384,
+  "missing": [],
+  "added": [],
+  "inputs": {
+    "output/auto-cartogram/world-centres/polygons.geojson": "e2933367e9c44040c35379499a67e9ae2415be63ad976a0361979a4891cd6476",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "output/auto-cartogram/world-dissolved/original-to-dissolved.csv": "22024065d336d35c13e20cf2bf4bf1071e9353c4893cf1632e51c60170568f65"
+  }
+}

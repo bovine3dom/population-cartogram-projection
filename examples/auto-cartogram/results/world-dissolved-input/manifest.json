@@ -1,0 +1,16 @@
+{
+  "method": "Union of exact shared-border map units within ADM0_A3; no snapping",
+  "input_polygons": 4292,
+  "output_polygons": 4274,
+  "merged_groups": 10,
+  "population": 7954677990.0,
+  "unmatched_population": 77246034.0,
+  "shapely_version": "2.1.2",
+  "limit": "Point contacts and disconnected islands are not merged. Source coverage and country policy are unchanged.",
+  "inputs": {
+    "output/auto-cartogram/world-centres/polygons.geojson": "e2933367e9c44040c35379499a67e9ae2415be63ad976a0361979a4891cd6476",
+    "output/auto-cartogram/world-components/components.csv": "d8df67ca5119aa6ac21e5ccd0c1221c6e5c889379ab094925da3dca4e6a5e164",
+    "output/auto-cartogram/world-components/manifest.json": "b1ed993dc36f29a2fa6a6196f3dd56cd1302210bc0100096fb64e2685e5631d4",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/dissolve_map_units.py": "bb5b14ad217a4420e8d12691efe0947a8eeaf76706e714b1b032e792f00db4f3"
+  }
+}

@@ -1,6 +1,7 @@
 using Test
 include(joinpath(@__DIR__, "..", "examples", "auto-cartogram", "prepare_layout.jl"))
 const LI = LayoutInputs
+include(joinpath(@__DIR__, "..", "examples", "auto-cartogram", "prepare_dissolved.jl"))
 using .LayoutInputs: DataFrame, CSV, JSON
 
 part(id, country, lon) = (; component_id=id, country_id=country,
@@ -51,7 +52,7 @@ end
 @testset "Input writer and reproducible group accounting" begin
     mktempdir() do dir
         boundary = joinpath(dir,"input.geojson")
-        props = Dict("GU_A3"=>"XXX","ADM0_A3"=>"XXX","NAME"=>"Test","ISO_N3_EH"=>"999")
+        props = Dict{String,Any}("GU_A3"=>"XXX","ADM0_A3"=>"XXX","NAME"=>"Test","ISO_N3_EH"=>"999")
         rings = [[[0.,0.],[1.,0.],[1.,1.],[0.,1.],[0.,0.]]]
         geo = Dict("type"=>"FeatureCollection","features"=>[Dict("properties"=>props,
             "geometry"=>Dict("type"=>"Polygon","coordinates"=>rings))])
@@ -67,5 +68,19 @@ end
         @test startswith(read(joinpath(out,"input.wkt"),String),"STAGE 1\nOUTLINES 1")
         @test read(joinpath(out,"weights.tsv"),String) == "$(component.component_id)\t10\n"
         @test_throws ErrorException LI.run(summary,boundary,out,10)
+        dissolved = joinpath(dir,"dissolved"); mkpath(dissolved)
+        merge!(props,Dict("original_components"=>["old:a","old:b"],"population"=>100.,"source_cells"=>3))
+        open(io->JSON.print(io,geo),joinpath(dissolved,"boundaries.geojson"),"w")
+        open(io->JSON.print(io,Dict("population"=>100.)),joinpath(dissolved,"manifest.json"),"w")
+        prepare_dissolved(dissolved)
+        rows=CSV.read(joinpath(dissolved,"components.csv"),DataFrame)
+        crosswalk=CSV.read(joinpath(dissolved,"original-to-dissolved.csv"),DataFrame)
+        @test only(rows.component_id) == component.component_id
+        @test only(rows.population) == 100.
+        @test only(rows.source_cells) == 3
+        @test crosswalk.original_component_id == ["old:a","old:b"]
+        @test all(==(component.component_id),crosswalk.component_id)
+        @test isfile(joinpath(dissolved,"complete.txt"))
+        @test_throws ErrorException prepare_dissolved(dissolved)
     end
 end

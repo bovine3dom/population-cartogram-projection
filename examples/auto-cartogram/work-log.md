@@ -310,3 +310,21 @@ under ignored `output/auto-cartogram/`.
   hole-boundary checks during final polishing, not the earlier flow stall.
   Its external timeout remains active. A separate default-settings topology
   fit is testing whether the bounded previews stopped too early.
+
+## 23:34–23:43 UTC — native identity checks and map-unit union
+
+- Added an independent native-source check. It compares each exported source
+  ID, population, component, and group with the original Arrow file and group
+  table. Synthetic tests reject changed mass, changed groups, and duplicate IDs.
+- Found an important modelling distinction: some Natural Earth map units share
+  a border within one country. They are not separate islands. Added an optional
+  union stage for these units before population budgets are allocated.
+- The world union reduces 4,292 polygons to 4,274 through ten merged groups.
+  It keeps all 7,954,677,990 matched people. No snapping or cross-country union
+  is used. A full contact comparison finds all 384 expected contacts after
+  union, with none added or missing. Saved the original-to-dissolved ID table.
+- The geometry suite now has 16 passing tests, and the Julia layout suite has
+  34 passing checks. Corrected a Julia entry-point parse error and a synthetic
+  test dictionary type before the successful runs.
+- Started three-resolution topology and geography comparisons with dissolved
+  country outlines. Earlier map-unit results remain available as comparisons.
