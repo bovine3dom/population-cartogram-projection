@@ -61,7 +61,7 @@ function pack(manifest,input,density,out)
     CSV.write(joinpath(out,"shared-cell-owners.csv"),[(;x=k[1],y=k[2],code=v) for (k,v) in owners])
     open(joinpath(out,"export.toml"),"w") do io
         TOML.print(io,Dict("rows"=>report.rows,"transport_bytes"=>report.bytes,"density_bytes"=>filesize(density),
-            "ownership_rows"=>report.ownership_rows,"sources"=>length(ids),"country_targets"=>length(expected.targets),
+            "ownership_rows"=>report.ownership_rows,"negligible_rows_dropped"=>report.dropped_rows,"sources"=>length(ids),"country_targets"=>length(expected.targets),
             "labels"=>length(labels),"approximate"=>true,"dictionary_columns"=>["index_lower","population","label"],
             "input_sha256"=>open(bytes2hex∘sha256,input),
             "manifest_sha256"=>open(bytes2hex∘sha256,manifest)))

@@ -260,3 +260,31 @@ Save a checked whole-country snapshot before long blocks. Processed blocks
 use their reduced weights; unprocessed blocks keep their valid input. This
 is a complete transport, not a partial fitted map. There are now 44 moment,
 worker, deadline, restart, and checkpoint checks. All pass.
+
+## 13:55 UTC: first planet file passes independent checks
+
+The moment-only file has 2,407,520 rows. Transport and density use 67.3 MB
+on disk and 29.0 MB with HTTP gzip. All 387,294 sources, 54,942 country
+cells, and 1,715 labelled sources remain. The independent binary-file audit
+passes. Maximum geographic mean error is 0.261 m. Maximum source sum error
+is 5.03e-8. This is not yet the selected public file: maximum conditional
+weight variation is 0.988. Means can be accurate while other queries change.
+The protected 70% trials continue. China and the US have finished.
+
+The first binary audit rejected tiny Float32 tails. Remove an unlabelled
+row only when both its source and target fractions are below 1e-20. Keep
+all city anchors. The new file passes the original audit limits. There are
+61 export checks, 44 moment and worker checks, and 12 audit checks.
+
+The actual browser renders all 54,931 distinct target positions and 1,711
+city labels. HTTP resource measurements confirm gzip decoding. Load time
+is 27.3 seconds with desktop Chromium at four-times CPU slowdown, while
+reduction jobs run. This is not a phone benchmark. After garbage collection,
+JavaScript heap and backing buffers still use about 638 MB. File reduction
+alone does not establish mobile memory safety.
+
+H3-MON commit `00c9a85` adds streaming HTTP gzip for Arrow responses. All
+61 unit checks pass. Its normal service remains stopped. No dataset in its
+public data directory has changed. The animation test limitation still
+applies. Keep the new candidate in research output until quality selection
+and publication checks are complete.

@@ -58,6 +58,16 @@ const MW=MobileWriter
     table=MW.columns([part,second])
     shifted=merge(part,(;weights=part.weights.*[1.00001,1.00001,.99999,.99999]))
     @test MW.columns([shifted]).weight≈Float32.(w) atol=1e-7
+    for tail in (1e-40,1e-100)
+        tiny=merge(part,(;source=vcat(part.source,Int32(1)),target=vcat(part.target,Int32(1)),weights=vcat(part.weights,tail)))
+        counts=Ref((;dropped_rows=0,ownership_rows=0))
+        trimmed=MW.columns([tiny];counts)
+        @test trimmed.weight==Float32.(w)
+        @test counts[].dropped_rows==1
+        @test counts[].ownership_rows==0
+        labelled=merge(tiny,(;labels=merge(tiny.labels,Dict(5=>"Required"))))
+        tail<1e-50 && @test_throws ErrorException MW.columns([labelled])
+    end
     @test eltype(table.x)==Int16
     @test eltype(table.code)==UInt16
     @test eltype(table.weight)==Float32

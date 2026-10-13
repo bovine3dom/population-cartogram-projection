@@ -37,7 +37,7 @@ const server = createServer(async (req, res) => {
     if (!file) { failures.push(`Unexpected request: ${path}`); res.writeHead(404); return res.end(); }
     try {
         res.writeHead(200, {'Content-Type': file[1], 'Content-Length': (await stat(file[0])).size,
-            'Cache-Control': 'no-store'});
+            'Cache-Control': 'no-store', ...(file[0].endsWith('.gz') ? {'Content-Encoding': 'gzip'} : {})});
         createReadStream(file[0]).pipe(res);
     } catch (error) { failures.push(String(error)); res.destroy(error); }
 });
@@ -89,6 +89,9 @@ try {
     });
     assert.equal(data.finiteValues, data.sourceCells, 'nonfinite source value');
     await page.screenshot({path: join(output, 'mobile.png')});
+    const resources = await page.evaluate(() => performance.getEntriesByType('resource')
+        .filter(entry => entry.name.includes('/data/'))
+        .map(({name, encodedBodySize, decodedBodySize, duration}) => ({name, encodedBodySize, decodedBodySize, duration})));
     const beforeGC = await cdp.send('Runtime.getHeapUsage');
     await cdp.send('HeapProfiler.collectGarbage');
     const afterGC = await cdp.send('Runtime.getHeapUsage');
@@ -100,7 +103,7 @@ try {
     await writeFile(join(output, 'cells.json'), JSON.stringify(data));
     await writeFile(join(output, 'memory.json'), JSON.stringify({browser: browser.version(), loadMs,
         throttle: Number(process.env.CPU_THROTTLE || 4), h3Precision: process.env.H3_PRECISION || 'default',
-        beforeGC, afterGC, samples, timings, failures, warnings, requests}, null, 2));
+        beforeGC, afterGC, samples, timings, resources, failures, warnings, requests}, null, 2));
     console.log(JSON.stringify({loadMs, ...data, beforeGC, afterGC, failures, warnings}));
     assert.deepEqual(failures, []);
 } finally {
