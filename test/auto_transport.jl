@@ -24,6 +24,15 @@ using .IslandTransport
     @test .995 <= report.retained_share <= 1.000001
 end
 
+@testset "North-up mosaic coordinates match the solver screen convention" begin
+    targets=DataFrame(x=[0,0,0],y=[0,5,10],group_id=["south","middle","north"])
+    sources=DataFrame(id=["s","m","n"],x=[0.,0.,0.],y=[0.,5.,10.],value=ones(3),group_id=copy(targets.group_id))
+    mapping,summary=IslandTransport.solve(targets,sources;pooled=true)
+    @test summary.cross_group_population < 1e-6
+    north=filter(:id=>==("n"),mapping)
+    @test north.y[argmax(north.weight)] == 10
+end
+
 @testset "Coarse source accounting and atomic export" begin
     mktempdir() do dir
         inputs=joinpath(dir,"input"); layout=joinpath(dir,"layout")

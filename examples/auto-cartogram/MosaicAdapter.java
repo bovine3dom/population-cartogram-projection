@@ -61,6 +61,8 @@ public class MosaicAdapter {
         MosaicConstants.FORCE_TOTAL_ITERATIONS = setting("mosaic.forceIterations", MosaicConstants.FORCE_TOTAL_ITERATIONS);
         MosaicConstants.MAX_NO_IMPROVE_SCALED = setting("mosaic.scaledPatience", MosaicConstants.MAX_NO_IMPROVE_SCALED);
         MosaicConstants.MAX_NO_IMPROVE_FINAL = setting("mosaic.finalPatience", MosaicConstants.MAX_NO_IMPROVE_FINAL);
+        int maxRounds = setting("mosaic.maxRounds", Integer.MAX_VALUE);
+        MosaicConstants.POLISHER_MAX_ITERATIONS = setting("mosaic.polishIterations", MosaicConstants.POLISHER_MAX_ITERATIONS, 0);
         PartitionAlgorithm.trivialPartition(map);
         if (args.length == 6) setEmbedding(map, Path.of(args[5]));
         new DeformAlgorithm(GridGeometrySpawner.inferFromString("SQUARE")).run(map);
@@ -96,12 +98,18 @@ public class MosaicAdapter {
             + "forceIterations=" + MosaicConstants.FORCE_TOTAL_ITERATIONS + "\n"
             + "scaledPatience=" + MosaicConstants.MAX_NO_IMPROVE_SCALED + "\n"
             + "finalPatience=" + MosaicConstants.MAX_NO_IMPROVE_FINAL + "\n"
+            + "maxRounds=" + maxRounds + "\n"
+            + "polishIterations=" + MosaicConstants.POLISHER_MAX_ITERATIONS + "\n"
             + "regionAssertions=" + Class.forName("arrange.model.MosaicCartogram$MosaicRegion").desiredAssertionStatus() + "\n");
     }
 
     private static int setting(String name, int fallback) {
+        return setting(name, fallback, 1);
+    }
+
+    private static int setting(String name, int fallback, int minimum) {
         int value = Integer.parseInt(System.getProperty(name, Integer.toString(fallback)));
-        if (value < 1) throw new IllegalArgumentException("Nonpositive setting: " + name);
+        if (value < minimum) throw new IllegalArgumentException("Setting below minimum: " + name);
         return value;
     }
 

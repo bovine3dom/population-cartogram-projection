@@ -99,6 +99,23 @@ class AdapterTests(unittest.TestCase):
             result = subprocess.run(self.command(inputs,weights,directory),capture_output=True,timeout=30)
             self.assertNotEqual(result.returncode,0)
 
+    def test_round_budget_is_validated_and_recorded(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory=Path(tmp)
+            inputs,weights=self.fixture(directory,adjacent=True)
+            for value in [0,1]:
+                output=directory/f"rounds-{value}"
+                command=self.command(inputs,weights,output)
+                command.insert(1,f"-Dmosaic.maxRounds={value}")
+                result=subprocess.run(command,capture_output=True,timeout=60)
+                if value == 0:
+                    self.assertNotEqual(result.returncode,0)
+                    self.assertFalse(output.exists())
+                else:
+                    self.assertEqual(result.returncode,0,result.stderr)
+                    self.assertIn("maxRounds=1",(output/"complete.txt").read_text())
+                    self.assertIn("regionAssertions=true",(output/"complete.txt").read_text())
+
     def test_local_moves_against_independent_flood_fill(self):
         java = Path((VENDOR/"java-path.txt").read_text().strip())
         with tempfile.TemporaryDirectory() as tmp:
