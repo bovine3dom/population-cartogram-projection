@@ -1,6 +1,6 @@
 # Mobile export results
 
-Status: 2026-10-13 17:48 UTC. Work continues until 2026-10-14 01:45 UTC.
+Status: 2026-10-13 20:39 UTC. Work continues until 2026-10-14 01:45 UTC.
 
 ## Published experiment
 
@@ -23,6 +23,9 @@ work. Production, UK, and Germany datasets are unchanged.
 MB means 1,000,000 bytes. The combined raw files are about 103 times smaller.
 The gzip measurement uses level 6 and includes both files. The headless
 browser confirms the encoded and decoded transfer sizes.
+
+A later checked candidate uses 69.7 MB raw and 27.4 MB gzip. It has not yet
+replaced the published profile. Further reductions are in progress.
 
 The full reference remains outside the web root in
 `output/mobile-export/full-reference/`. Its transport SHA256 is
@@ -79,14 +82,16 @@ for this experiment; its default remains off for other datasets.
 
 Packed source navigation indexes reduce per-source JavaScript objects.
 The bundle also shares one H3 runtime instead of two. Initial JavaScript heap
-plus backing storage is about 242 MB, versus 508 MB before these changes and
-visible-region geometry. A world view still uses about 413 MB. Returning to
-the initial view uses about 278 MB. The largest sampled initial-load value
-is 313 MB; sampling can miss short peaks.
+plus backing storage after forced garbage collection is about 203 MB,
+versus 508 MB before these changes and visible-region geometry. A world view
+still uses about 374 MB. Returning to the initial view uses about 239 MB.
+The largest sampled initial-load value is 318 MB. Copying retained columns
+releases the larger Arrow buffer, but briefly holds both. Sampling can miss
+short peaks.
 These measurements exclude embedder and GPU memory. They are from headless
 desktop Chromium, not a phone. This is not a 100 MB browser-memory solution.
 
-All current export, moment, audit, and publication checks pass. All 69 H3-MON
+All current export, moment, audit, and publication checks pass. All 71 H3-MON
 unit tests and isolated desktop/mobile dictionary, viewport, and line-probe
 checks pass. The full rendering suite has a separate animation timeout that
 also occurs on the unchanged baseline. Do not report that suite as passing.

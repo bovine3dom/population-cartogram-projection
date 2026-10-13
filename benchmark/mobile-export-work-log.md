@@ -605,3 +605,16 @@ It orders sources by latitude and targets by Y, with unchanged constraints.
 Added the optional `block_order=:latitude` mode after this checked result.
 All 70 moment, worker, floor, order, and restart checks pass. The next queue
 will test this order on the larger countries before the final selection.
+
+## 20:39 UTC: final bounded order trial
+
+Started the latitude-order queue from commit `be3dcbc`. It has two workers,
+a 20-minute country limit, a 12 GiB process address-space limit, and a
+23:00 UTC deadline. It uses only countries with at least 15,000 rows.
+China and India start from their checked latitude diagnostic stages.
+All other countries start from the checked 69.7 MB profile's manifest.
+
+The final manifest will select the smallest complete stage for each country.
+It will then run the full pack, binary audit, gzip, and headless checks.
+No job can publish automatically. The 69.7 MB candidate and the public
+79.9 MB profile remain checked fallbacks.
