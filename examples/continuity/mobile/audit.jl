@@ -1,9 +1,10 @@
 module MobileAudit
-using Arrow, H3, Statistics, TOML, SHA
+using Arrow, CSV, H3, Statistics, TOML, SHA
 include("../mobile_export.jl")
+include("quality.jl")
 const ME=MobileExport
 
-function stats(table,meta)
+function stats(table,meta;fields=nothing)
     ns,nt=length(meta.ids),length(meta.targets)
     xy=unique([(x,y) for (x,y,_) in meta.targets]);xy_index=Dict(k=>i for (i,k) in enumerate(xy))
     physical=[xy_index[(x,y)] for (x,y,_) in meta.targets]
@@ -11,6 +12,8 @@ function stats(table,meta)
     source_density=meta.population./H3.API.cellAreaKm2.(meta.ids)
     physical_mass=zeros(length(xy));mean_sum=zeros(length(xy));counts=zeros(Int,nt);firstrow=fill(typemax(Int),nt)
     labels=Dict{UInt64,Tuple{String,Int,Int}}()
+    nf=isnothing(fields) ? 0 : size(fields,1)
+    probe_sum=zeros(nf,length(xy));probe_mass=zero(probe_sum)
     for r in eachindex(table.weight)
         id=ME.cellid(table.index_lower[r],table.index_upper[r]);s=meta.source_index[id]
         x,y,code=Int(table.x[r]),Int(table.y[r]),Int(table.code[r])
@@ -24,6 +27,12 @@ function stats(table,meta)
             xyz[k,t]+=m*meta.xyz[k,s]
         end
         physical_mass[p]+=m;mean_sum[p]+=wm;counts[t]+=1;firstrow[t]=min(firstrow[t],r)
+        for k in 1:nf
+            v=fields[k,s]
+            if isfinite(v)
+                probe_sum[k,p]+=m*v;probe_mass[k,p]+=m
+            end
+        end
         if !ismissing(table.label[r])
             haskey(labels,id) && error("duplicate city label")
             labels[id]=(String(table.label[r]),x,y)
@@ -43,7 +52,8 @@ function stats(table,meta)
         (!haskey(owners,key) || value<owners[key]) && (owners[key]=value)
     end
     return (;source_sum,source_xy=source_xy./transpose(source_sum),mass,xyz=xyz./transpose(mass),density=density./mass,
-        labels,owners=Dict(k=>v[3] for (k,v) in owners),mean_error,mean_sum_error=maximum(abs.(mean_sum.-1)))
+        labels,owners=Dict(k=>v[3] for (k,v) in owners),mean_error,mean_sum_error=maximum(abs.(mean_sum.-1)),
+        probe_values=probe_sum./probe_mass,probe_mass)
 end
 
 function variation(table,reference,meta,reduced,full)
@@ -82,13 +92,14 @@ function audit(input,reference,candidate,density_file,report;target_retained=0.)
                         (:population,Float64),(:index_lower,UInt32),(:index_upper,UInt32)]
         eltype(getproperty(table,name))==type || error("wrong type for $name")
     end
-    reduced=stats(table,meta)
+    names,fields=MobileQuality.probe_fields(meta)
+    reduced=stats(table,meta;fields)
     source_error=maximum(abs.(reduced.source_sum.-1))
     source_error<=1e-7 || error("source sum error $source_error")
     reduced.mean_error<=1e-7 && reduced.mean_sum_error<=1e-7 ||
         error("target weight errors: relative=$(reduced.mean_error), sum=$(reduced.mean_sum_error)")
     reference_table=Arrow.Table(reference)
-    full=stats(reference_table,meta)
+    full=stats(reference_table,meta;fields)
     tv=variation(table,reference_table,meta,reduced,full)
     maximum(tv)<=1-target_retained+2e-5 || error("target variation bound exceeded")
     reduced.labels==full.labels || error("city anchor changed")
@@ -117,6 +128,10 @@ function audit(input,reference,candidate,density_file,report;target_retained=0.)
         "requested_target_retained"=>target_retained,
         "sha256"=>Dict(name=>open(bytes2hex∘sha256,path) for (name,path) in
             ("input"=>input,"reference"=>reference,"transport"=>candidate,"density"=>density_file)))
+    query_report=splitext(report)[1]*".queries.csv"
+    CSV.write(query_report,MobileQuality.compare_values(full.probe_values,full.probe_mass,
+        reduced.probe_values,reduced.probe_mass,names,fields))
+    output["query_report_sha256"]=open(bytes2hex∘sha256,query_report)
     open(io->TOML.print(io,output),report,"w")
     return output
 end

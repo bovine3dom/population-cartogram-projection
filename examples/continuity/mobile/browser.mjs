@@ -88,7 +88,10 @@ try {
     const loadMs = performance.now() - start;
     const data = await page.evaluate(() => {
         const c = window._columnData;
-        return {sourceCells: c.value.length, finiteValues: Array.from(c.value).filter(Number.isFinite).length};
+        const layer = window.m._controls.find(control => control.getCanvas?.()?.id === 'deckgl-overlay')
+            ._deck.props.layers.find(layer => layer.id.startsWith('H3HexagonLayer'));
+        return {sourceCells: c.value.length, finiteValues: Array.from(c.value).filter(Number.isFinite).length,
+            geographicCells: layer.props.data.length};
     });
     assert.equal(data.finiteValues, data.sourceCells, 'nonfinite source value');
     await page.screenshot({path: join(output, 'mobile.png')});
@@ -98,6 +101,25 @@ try {
     const beforeGC = await cdp.send('Runtime.getHeapUsage');
     await cdp.send('HeapProfiler.collectGarbage');
     const afterGC = await cdp.send('Runtime.getHeapUsage');
+    const pans = [];
+    if (process.env.VIEWPORT_STRESS) {
+        const initial = await page.evaluate(() => ({center: window.m.getCenter().toArray(), zoom: window.m.getZoom()}));
+        for (const camera of [{center: [0, 0], zoom: 0}, {center: [179, 0], zoom: 3}, initial]) {
+            await page.evaluate(camera => { window.m.jumpTo(camera); }, camera);
+            await page.waitForFunction(() => {
+                const layer = window.m._controls.find(control => control.getCanvas?.()?.id === 'deckgl-overlay')
+                    ._deck.props.layers.find(layer => layer.id.startsWith('H3HexagonLayer'));
+                return !window.m.isMoving() && layer.state?.geometry?.length === layer.props.data.length;
+            });
+            await page.evaluate(() => new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done))));
+            await cdp.send('HeapProfiler.collectGarbage');
+            const counts = await page.evaluate(() => ({sources: window._columnData.value.length,
+                visible: window.m._controls.find(control => control.getCanvas?.()?.id === 'deckgl-overlay')
+                    ._deck.props.layers.find(layer => layer.id.startsWith('H3HexagonLayer')).props.data.length}));
+            assert.equal(counts.sources, data.sourceCells);
+            pans.push({camera, ...counts, memory: await cdp.send('Runtime.getHeapUsage')});
+        }
+    }
     const render = timings.find(row => String(row[0]).startsWith('[perf] cartogram.canvas.render.total:'));
     const labels = timings.find(row => String(row[0]).startsWith('[perf] cartogram.canvas.labels.precompute:'));
     assert(render?.[1]?.rows > 0, 'missing cartogram render');
@@ -106,8 +128,9 @@ try {
     await writeFile(join(output, 'cells.json'), JSON.stringify(data));
     await writeFile(join(output, 'memory.json'), JSON.stringify({browser: browser.version(), loadMs,
         throttle: Number(process.env.CPU_THROTTLE || 4), h3Precision: process.env.H3_PRECISION || 'default',
-        beforeGC, afterGC, samples, timings, resources, failures, warnings, requests}, null, 2));
+        beforeGC, afterGC, pans, samples, timings, resources, failures, warnings, requests}, null, 2));
     console.log(JSON.stringify({loadMs, ...data, beforeGC, afterGC, failures, warnings}));
+    if (pans.length) assert.equal(pans.at(-1).visible, data.geographicCells, 'return view changed coverage');
     assert.deepEqual(failures, []);
 } finally {
     clearInterval(interval);

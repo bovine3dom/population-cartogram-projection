@@ -376,3 +376,43 @@ and retained its log. A separate simplex trial completed on Germany, but it
 kept 25,356 rows versus 13,598 with the exact method. It also moved source
 means by up to 0.060 coordinate units. This is not an improvement. Do not
 ship this diagnostic or relax the audit limits.
+
+## 15:45 UTC: validate the 70% planet and reduce visible geometry
+
+All 206 countries have a checked 70% result. The binary-file audit passes:
+2,909,590 rows, 79,882,492 bytes for both Arrow files, and 33,669,469 bytes
+for both gzip files. Maximum conditional total variation is 0.29494, below
+the 0.30 limit. Maximum geographic mean error is 0.184 m. All sources,
+country cells, city anchors, and shared-cell owners pass the checks.
+
+H3-MON `fe5b200` adds an optional visible-region geometry mode. It retains
+all source values and all cartogram rows. It uses polygon bounds with the
+renderer’s longitude unwrap, and includes edge intersections and padding.
+It rebuilds after movement or resize. A new layer releases old view buffers.
+The mode is off by default; experimental dataset metadata can enable it.
+
+The 70% candidate uses 342 MB of JavaScript heap plus backing storage in
+the initial regional view, versus 508 MB without this mode. A world view
+still uses about 514 MB. Returning from the world view uses about 379 MB.
+These values exclude embedder and GPU memory. Do not call this a 100 MB
+memory solution. The headless world/date-line/return test passes and keeps
+all 387,294 sources. Paired moment-only screenshots differ at only 100 of
+1,316,640 pixels, by one channel unit at most. All 66 unit tests and the
+isolated desktop/mobile rendering checks pass. The full-suite animation
+failure remains a separate known limitation.
+
+The first stress test found that a resize during data loading could leave
+extra off-screen polygons. Refresh geometry after the data update finishes.
+The corrected stress test restores the same 8,169 regional polygons.
+
+The audit now computes global query probes directly from both Arrow files,
+including physical cells shared by countries. Keep the packer’s per-country,
+pre-serialization probes as a separate file. New reports bind the query CSV
+with a hash. There are now 17 audit checks; all pass. The 61 export checks
+and publication tests also pass. A fresh 70% binary query audit is running.
+
+The 80% China result has 1,552,934 rows, including 683,502 protected rows.
+Started larger-block refinements for China and the US from valid 80% seeds.
+Each process has an 8 GiB address-space limit and a three-hour deadline.
+Each native block has a 200-second wall-clock limit. Keep the 70% candidate
+as a validated fallback if stronger protection exceeds the byte budget.

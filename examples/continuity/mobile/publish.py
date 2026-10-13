@@ -24,6 +24,9 @@ def publish(candidate, audit_file, reference, destination):
         raise ValueError("Destination or staging directory already exists")
     with audit_file.open("rb") as stream:
         audit = tomllib.load(stream)
+    query_report = audit_file.with_suffix(".queries.csv")
+    if digest(query_report) != audit["query_report_sha256"]:
+        raise ValueError("Query report hash mismatch")
     with (candidate / "export.toml").open("rb") as stream:
         export = tomllib.load(stream)
     for key, path in (("transport", candidate / TRANSPORT), ("density", candidate / DENSITY),
@@ -43,14 +46,16 @@ def publish(candidate, audit_file, reference, destination):
                  "countries.csv", "fit-config.csv", "metrics.csv", "settings.csv", "provenance.txt", "compact.md"):
         shutil.copy2(reference / name, pending / name)
     shutil.copy2(reference / "README.md", pending / "fit-method.md")
-    for name in (TRANSPORT, DENSITY, "export.toml", "query-errors.csv", "provenance.csv", "shared-cell-owners.csv"):
+    for name in (TRANSPORT, DENSITY, "export.toml", "provenance.csv", "shared-cell-owners.csv"):
         shutil.copy2(candidate / name, pending / name)
     shutil.copy2(candidate / "countries.csv", pending / "mobile-countries.csv")
+    shutil.copy2(candidate / "query-errors.csv", pending / "checkpoint-query-errors.csv")
+    shutil.copy2(query_report, pending / "query-errors.csv")
     shutil.copy2(audit_file, pending / "mobile-audit.toml")
     for key, name in (("transport", TRANSPORT), ("density", DENSITY)):
         if digest(pending / name) != audit["sha256"][key]:
             raise ValueError(f"Staged file changed: {name}")
-    metadata = {"cartogram": f"{destination.name}/{TRANSPORT}", "trimFactor": 0}
+    metadata = {"cartogram": f"{destination.name}/{TRANSPORT}", "trimFactor": 0, "viewportGeometry": True}
     (pending / "population_density_hilo.json").write_text(json.dumps(metadata, indent=2) + "\n")
     (pending / "README.md").write_text(f"""# Small experimental planet export
 
@@ -78,7 +83,9 @@ Maximum geographic mean error is {1000 * audit['geographic_error_km_max']:.6g} m
 Other queries can change. For complete values in a bounded range, total
 variation bounds the mean error as a fraction of that range. The same bound
 does not apply unchanged after missing-data filtering and renormalization.
-See `query-errors.csv` for test fields. Distance tests are not travel times.
+See `query-errors.csv` for tests of the actual binary files at physical target
+positions. Distance tests are not travel times. The separate checkpoint query
+report gives pre-serialization results for each country.
 
 `mobile-audit.toml` records independent checks of the binary files and their
 SHA256 hashes. `mobile-countries.csv` and `provenance.csv` record the reduction.
@@ -91,7 +98,9 @@ the full reference, not this small file.
 Use a dictionary-capable Arrow reader. H3-MON commit `6563a17` or later uses
 Apache Arrow directly. Older loaders.gl readers can reject these files.
 HTTP gzip reduces transfer bytes but does not reduce decoded data size.
-File size alone does not establish a safe memory limit on a phone.
+File size alone does not establish a safe memory limit on a phone. Metadata
+enables visible-region geometry in updated H3-MON builds. All source data
+remain available for queries. A world view still needs full-world geometry.
 
 Open `/?data={destination.name}/population_density_hilo.arrow` in H3-MON.
 The adjacent JSON file selects this experimental cartogram. Publication does

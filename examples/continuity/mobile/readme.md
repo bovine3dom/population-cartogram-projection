@@ -73,6 +73,8 @@ julia --project=examples/continuity/mobile examples/continuity/mobile/audit.jl \
 
 The audit reads the actual Arrow files, not only the solver checkpoints. It
 checks masses, means, density, labels, country ownership, and total variation.
+It also tests query fields on the actual binary rows at physical target
+positions. Its TOML report gives hashes for the inputs and the query CSV.
 It writes its report only after all checks pass. Use the floor of the weakest
 country in a mixed manifest. Never report a stronger guarantee.
 
@@ -103,7 +105,12 @@ browser metadata includes that name. Keep a full reference outside the web
 root before replacing an experimental dataset. Do not change production data.
 
 Set `DATA_PATH` and `METADATA_PATH` for `browser.mjs` to test the published
-relative URL and its actual JSON metadata before moving the directory.
+relative URL and its actual JSON metadata before moving the directory. Set
+`VIEWPORT_STRESS=1` to test a world view, the date line, and return navigation.
+The staged metadata enables visible-region geometry in H3-MON `fe5b200` or
+later. This limits rendered geographic polygons, not source data or queries.
+The option is off by default for other datasets. A world view can still use
+substantial memory.
 
 Small files do not imply small browser memory. Report raw bytes, compressed
 transfer bytes, JavaScript heap, and backing buffers separately. Browser

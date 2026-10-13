@@ -39,6 +39,10 @@ end
 function compare_fields(data,rows,weights,names,fields)
     original,original_mass=target_values(data,eachindex(data.weight),data.weight,fields)
     candidate,candidate_mass=target_values(data,rows,weights,fields)
+    return compare_values(original,original_mass,candidate,candidate_mass,names,fields)
+end
+
+function compare_values(original,original_mass,candidate,candidate_mass,names,fields)
     output=NamedTuple[]
     for k in eachindex(names)
         present=vec(original_mass[k,:].>0);both=present .& vec(candidate_mass[k,:].>0)

@@ -1,4 +1,4 @@
-using Test, Arrow, H3, SHA
+using Test, Arrow, CSV, H3, SHA
 include("../examples/continuity/mobile/audit.jl")
 include("../examples/continuity/mobile/write.jl")
 const MA=MobileAudit
@@ -35,6 +35,9 @@ const MW=MobileWriter
         @test isfile(report)
         @test result["sha256"]["transport"]==open(bytes2hex∘sha256,candidate)
         @test result["sha256"]["density"]==open(bytes2hex∘sha256,density)
+        query_report=joinpath(dir,"audit.queries.csv")
+        @test result["query_report_sha256"]==open(bytes2hex∘sha256,query_report)
+        @test all(r->r.absolute_max==0,CSV.File(query_report))
         Arrow.write(candidate,merge(table,(;index_lower=Arrow.DictEncode(table.index_lower),
             population=Arrow.DictEncode(table.population),label=Arrow.DictEncode(table.label))))
         @test MA.audit(input,reference,candidate,density,report)["source_sum_error"]<1e-7
