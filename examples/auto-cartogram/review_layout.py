@@ -169,7 +169,9 @@ def draw(path, shapes, tiles, owners, metrics, title):
         boxes.append(box)
         parts.append(f'<text x="{fmt(px)}" y="{fmt(py)}" text-anchor="middle" font-size="12" '
                      f'paint-order="stroke" stroke="#faf9f6" stroke-width="2" stroke-linejoin="round">{html.escape(label)}</text>')
-    method = "Separate geographic baseline" if "mode=geographic-baseline" in metrics["generation"] else "GridMapPipeline"
+    methods={"mode=geographic-baseline":"Separate geographic baseline",
+             "mode=geographic-border-repair":"Geographic baseline with border repair"}
+    method = methods.get(metrics["generation"][0],"GridMapPipeline")
     parts.append('<text x="40" y="1094" font-size="13">Sources: Kontur population; Natural Earth map units. '
                  f'Layout: {method}. Population year is not declared by the input file.</text></g></svg>')
     path.write_text("\n".join(parts))

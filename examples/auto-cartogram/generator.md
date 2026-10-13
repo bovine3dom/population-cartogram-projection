@@ -129,6 +129,14 @@ This baseline grows separate, connected shapes to exact tile counts. It keeps
 a gap between shapes and therefore removes all land borders. The review report
 records these missing contacts. It is not a topology-preserving substitute.
 
+`repair_contacts.py INPUT BASELINE NEW_OUTPUT` tries to restore these borders.
+Run it with the same Python environment. It grows a path toward a required
+neighbour and removes a boundary cell for each added cell. Local checks keep
+regions connected and prevent holes. The method keeps exact component counts
+and all contacts already restored. It forbids false contacts. Failed paths are
+rolled back. Some borders remain missing, and long thin connectors can damage
+shape and position. This is a separate experiment, not the published algorithm.
+
 Without `--rotations`, the initializer uses an arbitrary planar embedding. This
 can put entire continental regions inside the wrong faces. Retained contacts
 alone do not imply a useful geographic layout.
@@ -180,7 +188,10 @@ groups. Each group has its own population per tile. It therefore does not enforc
 one exact population value per tile across the country. The existing sparse
 export also retains only part of each source contribution. Inspect retained mass
 and target error as well as cross-group mass. The script does not renormalize
-away these errors.
+away these errors. Use `check_transport.py TRANSPORT_DIR NEW_CHECKS.json` to
+check the CSV export independently. It recomputes retained source weights,
+target totals, and cross-group population. It rejects unknown IDs, duplicate
+pairs, invalid weights, and differences from the saved summary.
 
 ## Tests
 
@@ -188,6 +199,7 @@ away these errors.
 julia --project=examples/auto-cartogram test/auto_layout.jl
 julia --project=examples/auto-cartogram test/auto_transport.jl
 python3 test/auto_layout.py
+python3 test/auto_transport.py
 output/auto-cartogram/geometry-env/bin/python test/auto_geometry.py
 ```
 
