@@ -163,6 +163,12 @@ an interrupted write. Keep the parent logs and provenance with the new study;
 the new metric file does not contain the skipped prefix. Planet publication
 still requires the original input metadata and verification of the complete run.
 
+Set `save_passes=true` in `run_case` to keep `pass-N.jls` at each complete
+pass boundary. Each atomic snapshot contains the plans, metrics, pass number,
+update index, and initial update index. This avoids copying a candidate while
+the next pass starts. For a mid-pass restart, the caller must still verify the
+seed and skipped prefix. The default does not write these extra snapshots.
+
 Compact seeds retain the last pure proposal's dual vector. Use it as a warm
 start after a restart. It is not an averaged dual for the damped mixture.
 

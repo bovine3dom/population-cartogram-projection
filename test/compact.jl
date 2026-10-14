@@ -164,7 +164,7 @@ for backend in backends
             @test resumed[2].iteration==1 && resumed[2].updated_country==2
             resumed_plans=deserialize(joinpath(dir,"resumed","candidate.jls"))
             @test all(isapprox(Matrix(a),Matrix(b);atol=2e-5) for (a,b) in zip(resumed_plans,compact_plans))
-            full_kwargs=merge(kwargs,(;max_damping=1.,country_etas=Dict(2=>.01)))
+            full_kwargs=merge(kwargs,(;max_damping=1.,country_etas=Dict(2=>.01),save_passes=true))
             full_dense=CE.run_case(countries,backend,joinpath(dir,"full-dense");full_kwargs...)
             full_compact=CE.run_case(countries,backend,joinpath(dir,"full-compact");compact=true,full_kwargs...)
             @test last(full_compact).objective ≈ last(full_dense).objective atol=2e-5
@@ -172,6 +172,13 @@ for backend in backends
             saved=CE.saved_case(joinpath(dir,"full-compact"),countries).settings
             @test saved[:max_damping]==1.
             @test saved[:country_etas]==Dict(1=>.02,2=>.01)
+            @test saved[:save_passes]
+            snapshot=deserialize(joinpath(dir,"full-compact","pass-2.jls"))
+            @test (snapshot.iteration,snapshot.step,snapshot.start_step)==(2,4,1)
+            @test last(snapshot.metrics)==last(full_compact)
+            final=deserialize(joinpath(dir,"full-compact","candidate.jls"))
+            @test all(Matrix(p)==Matrix(q) for (p,q) in zip(snapshot.plans,final))
+            @test !isfile(joinpath(dir,"compact","pass-2.jls"))
             for invalid in (Dict(3=>.01),Dict(1=>0.),Dict(1=>NaN),Dict(1=>Inf))
                 @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"bad-eta");country_etas=invalid)
             end

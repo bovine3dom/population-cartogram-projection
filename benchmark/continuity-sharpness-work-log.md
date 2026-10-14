@@ -184,3 +184,14 @@ do not retain the published mobile quality guarantee and are not published.
 The DRC full-block trial returns a nonoptimal solver status and is rejected.
 Logs and valid small-country snapshots are `inverse-only*`. Eta tuning and
 border refitting remain the main approach.
+
+## 08:26 UTC: complete-pass checkpoints
+
+Added the optional `save_passes=true` setting. It saves plans and their metric
+prefix together at complete pass boundaries. This lets the timed planet trial
+retain a complete pass without copying a mixed candidate during the next pass.
+The default is unchanged. All 110 compact CPU checks pass, including exact
+agreement between the final pass snapshot and candidate. The earlier oneAPI
+checks cover the unchanged numerical path. The next global trial will use
+sharp pose seeds, per-country eta, full-step trials, and a proximal weight of
+0.01. It will not replace a public dataset automatically.
