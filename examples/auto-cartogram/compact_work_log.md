@@ -350,6 +350,42 @@ The separated layout has exact budgets but is not an acceptable replacement.
   country positions without using the greedy placement's final country centres.
   Production code and targets remain unchanged.
 
+## 17:51–18:02 UTC — saved comparisons and further controls
+
+- Saved the connected 55,000-tile controls and the 10,000-tile world diagnostic.
+  Recomputed all layout and gap measurements from their compressed saved cells.
+  All values match. Checked every saved bundle hash.
+- The native-site trials initially stopped because an unused outline guide lay
+  outside the cost grid. Power partitions need only site distances. Removed
+  their unused dense outline grids, added a regression test, and repeated the
+  power trial. The outline-cost trial remains a recorded failure.
+- Inspected the native-site power world image. Russia is farther west, but
+  South America is split across distant land pieces, Japan is south of China,
+  and large holes remain. Three regions are disconnected. Reject this result.
+- The fixed-island reservation can itself leave holes when a mainland expands
+  past an island. Added an explicit control that does not reserve isolated
+  island cells in the mainland target. It moves intact islands outside the
+  assigned land with a side-neighbour gap. Counts and island shapes are checked.
+  This can change island order and is not an automatic approval.
+- Added a second control: native population sites on a continuous-flow
+  footprint. This separates the source of country positions from the source of
+  the outer land shape. Trials with zero and 0.5 flow-guide weight are running.
+- Inspected the completed 110,000-tile world image and its Europe, Africa, and
+  Indonesia details. Island detail improves, but the thin continents remain.
+  Counts are exact; one region is still split. Saved this result with visible
+  warnings. Repeated all four archive checks and 61 local HTTP resource checks.
+- The 500,000-tile flow retry at grid size 512 also failed its one-percent area
+  threshold. Its final maximum adjusted-area error was about 8.43 percent.
+  A separate run with a ten-percent tolerance also failed, at about 17.15
+  percent. These are separate solver trajectories, not a monotonic convergence
+  test. Added explicit grid and tolerance settings to the recorded pipeline.
+- Started a clearly labelled guide-only diagnostic from the first 512-grid
+  approximate geometry. It must pass geometry and overlap checks. Final tile
+  budgets still come from the original input, not the adjusted flow areas.
+  The external area solve remains a failure regardless of this later result.
+- The 14 partition tests pass after these changes. Saved population sites and
+  documented their limits. No production code or target file has changed.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
