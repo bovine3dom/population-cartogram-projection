@@ -198,6 +198,17 @@ class CapacityPartitionTests(unittest.TestCase):
         self.assertEqual(state.tiles['island'],tiles['island']);self.assertEqual(len(state.owners),11)
         blocked=Repair(tiles,{'b','island'});self.assertIsNone(blocked.relocate('a',borrow=True));self.assertEqual(blocked.tiles,tiles)
 
+    def test_coast_compensation_chain_and_rollback(self):
+        inner={(x,y) for x in range(1,4) for y in range(1,4)}
+        tiles={'a':{(2,2),(10,0)},'b':inner-{(2,2)},'d':{(x,y) for x in range(5) for y in range(5)}-inner}
+        state=Repair(tiles)
+        self.assertIsNone(state.borrow_coast('a',maximum_depth=2));self.assertEqual(state.tiles,tiles)
+        moved=state.borrow_coast('a',maximum_depth=3)
+        self.assertEqual(len(moved['coast_compensations']),2)
+        self.assertEqual(state.report()['disconnected_regions'],0)
+        self.assertTrue(all(len(state.tiles[c])==len(tiles[c]) for c in tiles))
+        self.assertEqual(len(state.owners),sum(map(len,tiles.values())))
+
     def test_random_fragment_swaps(self):
         rng=np.random.default_rng(11)
         for _ in range(20):

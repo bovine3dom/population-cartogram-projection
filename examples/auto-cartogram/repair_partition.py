@@ -65,30 +65,38 @@ class Repair:
                         return dict(component=c,other=d,fragment_cell=list(p),replacement_cell=list(q),fragment_reduction=before-after)
         return None
 
-    def borrow_coast(self,c,maximum_cells=32,choices=64):
+    def borrow_coast(self,c,maximum_cells=32,choices=64,maximum_depth=4):
         """Replace a blocked fragment through a neighbour that can grow at sea."""
         removed=self.tiles[c]-self.parts[c][0]
         if c in self.fixed or not 0<len(removed)<=maximum_cells:return None
         trial=Repair(self.tiles,self.fixed);trial.tiles[c]=set(self.parts[c][0]);trial.parts[c]=[trial.tiles[c]]
         for p in removed:del trial.owners[p]
         blocked=removed|{q for d in self.fixed for p in self.tiles[d] for q in [p]+adjacent(p)}
-        transfers=[];centre=tuple(sum(p[i] for p in trial.tiles[c])/len(trial.tiles[c]) for i in [0,1])
-        for _ in removed:
-            candidates={q for p in trial.tiles[c] for q in adjacent(p) if trial.owners.get(q) not in self.fixed|{None,c}}
-            accepted=False
-            for q in sorted(candidates,key=lambda q:((q[0]-centre[0])**2+(q[1]-centre[1])**2,q))[:choices]:
-                donor=trial.owners[q];remaining=trial.tiles[donor]-{q}
+        transfers=[]
+        def grow(receiver,visited,attempts):
+            points=trial.tiles[receiver];cx=sum(x for x,y in points)/len(points);cy=sum(y for x,y in points)/len(points)
+            coast={r for p in points for r in adjacent(p) if r not in trial.owners and r not in blocked}
+            if coast:
+                r=min(coast,key=lambda r:(4-2*sum(p in points for p in adjacent(r))+((r[0]-cx)**2+(r[1]-cy)**2)/len(points),r))
+                points.add(r);trial.owners[r]=receiver;return r,[]
+            if len(visited)>=maximum_depth:return None
+            candidates={q for p in points for q in adjacent(p) if trial.owners.get(q) not in self.fixed|visited|{None}}
+            for q in sorted(candidates,key=lambda q:((q[0]-cx)**2+(q[1]-cy)**2,q)):
+                if attempts[0]>=choices:return None
+                attempts[0]+=1;donor=trial.owners[q];remaining=trial.tiles[donor]-{q}
                 if not remaining or len(pieces(remaining))!=1:continue
-                coast={r for p in remaining for r in adjacent(p) if r not in trial.owners and r not in blocked}
-                if not coast:continue
-                cx=sum(x for x,y in remaining)/len(remaining);cy=sum(y for x,y in remaining)/len(remaining)
-                r=min(coast,key=lambda r:(4-2*sum(p in remaining for p in adjacent(r))+((r[0]-cx)**2+(r[1]-cy)**2)/len(remaining),r))
-                trial.tiles[c].add(q);trial.tiles[donor]=remaining|{r};trial.parts[donor]=[trial.tiles[donor]]
-                trial.owners[q]=c;trial.owners[r]=donor
-                transfers.append(dict(component=donor,removed=q,added=r));accepted=True;break
-            if not accepted:return None
+                points.add(q);trial.tiles[donor].remove(q);trial.owners[q]=receiver
+                tail=grow(donor,visited|{donor},attempts)
+                if tail is not None:
+                    r,chain=tail;return q,[dict(component=donor,removed=q,added=r)]+chain
+                points.remove(q);trial.tiles[donor].add(q);trial.owners[q]=donor
+            return None
+        for _ in removed:
+            result=grow(c,{c},[0])
+            if result is None:return None
+            transfers.extend(result[1])
         added=trial.tiles[c]-self.tiles[c]
-        self.tiles=trial.tiles;self.parts=trial.parts;self.owners=trial.owners
+        self.tiles=trial.tiles;self.parts={d:pieces(p) for d,p in trial.tiles.items()};self.owners=trial.owners
         return dict(component=c,removed=sorted(removed),added=sorted(added),coast_compensations=transfers)
 
     def relocate(self,c,borrow=False):
@@ -141,7 +149,7 @@ def run(inputs,layout,output,rounds=2000,choices=16,relocate_fragments=False,bor
     if not relocate_fragments and set(state.owners)!=set(owners):raise AssertionError('Footprint changed')
     if any(len(state.tiles[c])!=len(tiles[c]) for c in tiles):raise AssertionError('Budgets changed')
     if any(state.tiles[c]!=tiles[c] for c in fixed):raise AssertionError('Fixed island changed')
-    record=dict(method='Count-preserving fragment swaps, with optional compact relocation of secondary pieces',before=before,after=state.report(),swaps=len(history),maximum_rounds=rounds,choices=choices,relocate_fragments=relocate_fragments,borrow_coast=borrow_coast,borrow_limit_cells=32 if borrow_coast else None,borrow_choices=64 if borrow_coast else None,relocated_components=len(relocations),removed_land_cells=len(set(owners)-set(state.owners)),added_land_cells=len(set(state.owners)-set(owners)),fixed_components=len(fixed),elapsed_seconds=time.monotonic()-started,inputs=hashes,scripts=scripts,limit='Swaps leave the footprint unchanged and reduce cells outside the largest connected pieces without increasing region component counts. Optional relocation removes secondary pieces and grows the main piece into empty neighbour cells; it never connects to the discarded pieces. Relocation can change coasts and empty spaces. Optional coast borrowing replaces a blocked fragment with an adjacent donor cell and grows that donor into empty space. It is limited to 32 fragment cells and 64 donor-cell choices per step. Some fragments can remain if growth is blocked. Occupied holes are allowed; borders and geographic positions are not guaranteed.')
+    record=dict(method='Count-preserving fragment swaps, with optional compact relocation of secondary pieces',before=before,after=state.report(),swaps=len(history),maximum_rounds=rounds,choices=choices,relocate_fragments=relocate_fragments,borrow_coast=borrow_coast,borrow_limit_cells=32 if borrow_coast else None,borrow_choices=64 if borrow_coast else None,borrow_maximum_depth=4 if borrow_coast else None,relocated_components=len(relocations),removed_land_cells=len(set(owners)-set(state.owners)),added_land_cells=len(set(state.owners)-set(owners)),fixed_components=len(fixed),elapsed_seconds=time.monotonic()-started,inputs=hashes,scripts=scripts,limit='Swaps leave the footprint unchanged and reduce cells outside the largest connected pieces without increasing region component counts. Optional relocation removes secondary pieces and grows the main piece into empty neighbour cells; it never connects to the discarded pieces. Relocation can change coasts and empty spaces. Optional coast borrowing replaces a blocked fragment through a bounded chain of adjacent donor-cell transfers; the final donor grows into empty space. It is limited to 32 fragment cells, 64 donor-cell choices per step, and four regions in a compensation chain. Some fragments can remain if growth is blocked. Occupied holes are allowed; borders and geographic positions are not guaranteed.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='repair-partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -165,5 +173,5 @@ if __name__=='__main__':
     for name in ['inputs','layout','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--rounds',type=int,default=2000);parser.add_argument('--choices',type=int,default=16)
     parser.add_argument('--relocate-fragments',action='store_true',help='Remove remaining secondary pieces and grow the main piece; changes the footprint')
-    parser.add_argument('--borrow-coast',action='store_true',help='For up to 32 blocked fragment cells, borrow adjacent land and let each donor grow into empty space; no connector paths')
+    parser.add_argument('--borrow-coast',action='store_true',help='For up to 32 blocked fragment cells, use bounded neighbour chains that end at empty space; no connector paths')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
