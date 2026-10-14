@@ -56,6 +56,12 @@ exported constraints. All three world trials fail upstream geometric preflight
 with crossing assertions. Do not use this route for the current world inputs.
 See the [NetworkX drawing source](https://networkx.org/documentation/stable/_modules/networkx/algorithms/planar_drawing.html).
 
+Use `planar_embedding.py --transform 0` through `--transform 7` to test fixed
+signed axis permutations of the initial drawing. Without this option, the
+initializer selects the best geographic fit. These transforms do not change
+contacts or pair distances, but can change the upstream grid initialization.
+Keep the later `-Dmosaic.orientInitial=true` setting the same for comparisons.
+
 ## Prepare population and shapes
 
 The population file must contain H3 resolution-8 `h3` and `population` columns.
