@@ -1,0 +1,475 @@
+Version 25.10
+Command: "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram" "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-10000-mainland-combined/input/geometry.geojson" "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-10000-mainland-combined/input/areas.csv" "--skip_projection" "--id" "component_id" "--area" "tiles" "--n_grid_rows_or_cols" "256" "--timeout" "600" "--export_preprocessed" "--export_time_report"
+Using geometry from file /home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-10000-mainland-combined/input/geometry.geojson
+Using visual variables from file /home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-10000-mainland-combined/input/areas.csv
+No `crs` field found.
+Default coordinate reference system assumed: +proj=longlat
+[■--------------------------------------------------------------------------] 0% [00m:00s] Mean density: 0.00308835
+Using Small target area threshold: 0.9037
+Rescaling to 256-by-256 grid with bounding box
+	(-2992.9, -3010.26, 3300.31, 3282.95)
+New bounding box: 42.6667 81.7214 213.333 174.279
+Start of initial simplification of C
+297537 points in inset. Target points: 10000
+Simplifying the inset. 
+10477 points after simplification.
+End of initial simplification of C
+Writing areas_input_processed.geojson
+
+Integrating inset C
+Max. area err: 106.34, GeoDiv: USA:13c14a072880aac5
+Current Area: 57.4492, Target Area: 0.535206
+Area drift: 0%
+
+Integration number 0
+Dimensions : 256 256
+Number of Points: 10477
+Filling density
+blur_width = 2
+Quadtree target leaf count (pre-grading): 256
+Number of unique quadtree corners: 490
+Number of quadtree leaf nodes: 394
+Quadtree nodes pre-grading: 256
+Quadtree nodes post-grading: 394
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.0046875
+iter 10: t = 0.0223133, delta_t = 0.00211176
+iter 20: t = 0.0615697, delta_t = 0.00380545
+iter 30: t = 0.110364, delta_t = 0.00685755
+iter 40: t = 0.17699, delta_t = 0.00617877
+iter 50: t = 0.26208, delta_t = 0.0111343
+iter 60: t = 0.350578, delta_t = 0.0100322
+iter 70: t = 0.455189, delta_t = 0.00903919
+iter 80: t = 0.589325, delta_t = 0.0162889
+iter 90: t = 0.747582, delta_t = 0.0146766
+iter 100: t = 0.91163, delta_t = 0.0132238
+Densifying
+Num points before densification: 10477
+Num points after densification: 12187
+12187 points in inset. Target points: 10000
+Simplifying the inset. 
+9922 points after simplification.
+Progress: 0.1
+[■■■■■■■■-------------------------------------------------------------------] 10% [00m:04s] 
+Max. area err: 67.5464, GeoDiv: USA:13c14a072880aac5
+Current Area: 38.1217, Target Area: 0.535206
+Area drift: 3.91224%
+
+Integration number 1
+Dimensions : 256 256
+Number of Points: 9922
+Filling density
+blur_width = 1.41421
+Quadtree target leaf count (pre-grading): 256
+Number of unique quadtree corners: 527
+Number of quadtree leaf nodes: 412
+Quadtree nodes pre-grading: 256
+Quadtree nodes post-grading: 412
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.0375
+iter 10: t = 0.421067, delta_t = 0.0675762
+Densifying
+Num points before densification: 9922
+Num points after densification: 12123
+12123 points in inset. Target points: 10000
+Simplifying the inset. 
+9899 points after simplification.
+Progress: 0.19
+[■■■■■■■■■■■■■■■------------------------------------------------------------] 19% [00m:04s] 
+Max. area err: 54.3114, GeoDiv: USA:13c14a072880aac5
+Current Area: 30.5085, Target Area: 0.535206
+Area drift: 3.05917%
+
+Integration number 2
+Dimensions : 256 256
+Number of Points: 9899
+Filling density
+blur_width = 1
+Quadtree target leaf count (pre-grading): 256
+Number of unique quadtree corners: 577
+Number of quadtree leaf nodes: 448
+Quadtree nodes pre-grading: 256
+Quadtree nodes post-grading: 448
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.009375
+iter 10: t = 0.14335, delta_t = 0.0168941
+iter 20: t = 0.546436, delta_t = 0.0608873
+Densifying
+Num points before densification: 9899
+Num points after densification: 12361
+12361 points in inset. Target points: 10000
+Simplifying the inset. 
+9930 points after simplification.
+Progress: 0.271
+[■■■■■■■■■■■■■■■■■■■■■------------------------------------------------------] 27% [00m:04s] 
+Max. area err: 22.0728, GeoDiv: USA:13c14a072880aac5
+Current Area: 12.4895, Target Area: 0.535206
+Area drift: 1.14053%
+
+Integration number 3
+Dimensions : 256 256
+Number of Points: 9930
+Filling density
+blur_width = 0.707107
+Quadtree target leaf count (pre-grading): 256
+Number of unique quadtree corners: 650
+Number of quadtree leaf nodes: 505
+Quadtree nodes pre-grading: 256
+Quadtree nodes post-grading: 505
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.0375
+iter 10: t = 0.633467, delta_t = 0.0675762
+Densifying
+Num points before densification: 9930
+Num points after densification: 12528
+12528 points in inset. Target points: 10000
+Simplifying the inset. 
+9858 points after simplification.
+Progress: 0.3439
+[■■■■■■■■■■■■■■■■■■■■■■■■■■-------------------------------------------------] 34% [00m:04s] 
+Max. area err: 19.7726, GeoDiv: USA:13c14a072880aac5
+Current Area: 11.2418, Target Area: 0.535206
+Area drift: 1.11718%
+
+Integration number 4
+Dimensions : 256 256
+Number of Points: 9858
+Filling density
+blur_width = 0.5
+Quadtree target leaf count (pre-grading): 256
+Number of unique quadtree corners: 708
+Number of quadtree leaf nodes: 550
+Quadtree nodes pre-grading: 256
+Quadtree nodes post-grading: 550
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.0375
+iter 10: t = 0.601524, delta_t = 0.0675762
+Densifying
+Num points before densification: 9858
+Num points after densification: 12468
+12468 points in inset. Target points: 10000
+Simplifying the inset. 
+9864 points after simplification.
+Adjusting grid size.
+New grid dimensions: 512 512 with bounding box
+	(92.0773, 169.279, 431.219, 360.634)
+Progress: 0.40951
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■--------------------------------------------] 41% [00m:04s] 
+Max. area err: 18.1998, GeoDiv: USA:13c14a072880aac5
+Current Area: 41.2146, Target Area: 2.14082
+Area drift: 0.270558%
+
+Integration number 5
+Dimensions : 512 512
+Number of Points: 9864
+Filling density
+blur_width = 0.707107
+Quadtree target leaf count (pre-grading): 1024
+Number of unique quadtree corners: 2249
+Number of quadtree leaf nodes: 1792
+Quadtree nodes pre-grading: 1024
+Quadtree nodes post-grading: 1792
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.009375
+iter 10: t = 0.171715, delta_t = 0.0337881
+iter 20: t = 0.524042, delta_t = 0.0304436
+Densifying
+Num points before densification: 9864
+Num points after densification: 16590
+16590 points in inset. Target points: 10000
+Simplifying the inset. 
+9700 points after simplification.
+Progress: 0.468559
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■---------------------------------------] 47% [00m:05s] 
+Max. area err: 4.22743, GeoDiv: USA:13c14a072880aac5
+Current Area: 11.1894, Target Area: 2.14082
+Area drift: -0.0141438%
+
+Integration number 6
+Dimensions : 512 512
+Number of Points: 9700
+Filling density
+blur_width = 0.5
+Quadtree target leaf count (pre-grading): 1024
+Number of unique quadtree corners: 2387
+Number of quadtree leaf nodes: 1900
+Quadtree nodes pre-grading: 1024
+Quadtree nodes post-grading: 1900
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.075
+Densifying
+Num points before densification: 9700
+Num points after densification: 16515
+16515 points in inset. Target points: 10000
+Simplifying the inset. 
+9790 points after simplification.
+Progress: 0.521703
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-----------------------------------] 52% [00m:05s] 
+Max. area err: 0.935159, GeoDiv: WSB:50ca0205ee67e049
+Current Area: 0.138511, Target Area: 2.14082
+Area drift: -0.21775%
+
+Integration number 7
+Dimensions : 512 512
+Number of Points: 9790
+Filling density
+blur_width = 0.353553
+Quadtree target leaf count (pre-grading): 1024
+Number of unique quadtree corners: 2403
+Number of quadtree leaf nodes: 1906
+Quadtree nodes pre-grading: 1024
+Quadtree nodes post-grading: 1906
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.15
+Densifying
+Num points before densification: 9790
+Num points after densification: 16749
+16749 points in inset. Target points: 10000
+Simplifying the inset. 
+9692 points after simplification.
+Adjusting grid size.
+New grid dimensions: 1024 1024 with bounding box
+	(188.771, 339.264, 861.236, 720.299)
+Progress: 0.569533
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■--------------------------------] 57% [00m:05s] 
+Max. area err: 1.14146, GeoDiv: CYP:0e9f924ff6746fe5
+Current Area: 18.3105, Target Area: 8.56329
+Area drift: -0.149254%
+
+Integration number 8
+Dimensions : 1024 1024
+Number of Points: 9692
+Filling density
+blur_width = 0.5
+Quadtree target leaf count (pre-grading): 4096
+Number of unique quadtree corners: 8027
+Number of quadtree leaf nodes: 6487
+Quadtree nodes pre-grading: 4096
+Quadtree nodes post-grading: 6487
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.15
+Densifying
+Num points before densification: 9692
+Num points after densification: 25881
+25881 points in inset. Target points: 10000
+Simplifying the inset. 
+9372 points after simplification.
+Progress: 0.61258
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-----------------------------] 61% [00m:06s] 
+Max. area err: 0.482575, GeoDiv: CYP:0e9f924ff6746fe5
+Current Area: 12.68, Target Area: 8.56329
+Area drift: -0.124025%
+
+Integration number 9
+Dimensions : 1024 1024
+Number of Points: 9372
+Filling density
+blur_width = 0.353553
+Quadtree target leaf count (pre-grading): 4096
+Number of unique quadtree corners: 8140
+Number of quadtree leaf nodes: 6562
+Quadtree nodes pre-grading: 4096
+Quadtree nodes post-grading: 6562
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.3
+Densifying
+Num points before densification: 9372
+Num points after densification: 25823
+25823 points in inset. Target points: 10000
+Simplifying the inset. 
+9419 points after simplification.
+Progress: 0.651322
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■--------------------------] 65% [00m:06s] 
+Max. area err: 0.278042, GeoDiv: CYP:0e9f924ff6746fe5
+Current Area: 10.9418, Target Area: 8.56329
+Area drift: -0.0221696%
+
+Integration number 10
+Dimensions : 1024 1024
+Number of Points: 9419
+Filling density
+blur_width = 0.25
+Quadtree target leaf count (pre-grading): 4096
+Number of unique quadtree corners: 8236
+Number of quadtree leaf nodes: 6631
+Quadtree nodes pre-grading: 4096
+Quadtree nodes post-grading: 6631
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.3
+Densifying
+Num points before densification: 9419
+Num points after densification: 26054
+26054 points in inset. Target points: 10000
+Simplifying the inset. 
+9383 points after simplification.
+Progress: 0.686189
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-----------------------] 69% [00m:07s] 
+Max. area err: 0.137466, GeoDiv: CNM:85db95ef4bf8489c
+Current Area: 7.38631, Target Area: 8.56329
+Area drift: 0.00246476%
+
+Integration number 11
+Dimensions : 1024 1024
+Number of Points: 9383
+Filling density
+blur_width = 0.176777
+Quadtree target leaf count (pre-grading): 4096
+Number of unique quadtree corners: 7794
+Number of quadtree leaf nodes: 6289
+Quadtree nodes pre-grading: 4096
+Quadtree nodes post-grading: 6289
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.3
+Densifying
+Num points before densification: 9383
+Num points after densification: 25130
+25130 points in inset. Target points: 10000
+Simplifying the inset. 
+9335 points after simplification.
+Progress: 0.71757
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■--------------------] 72% [00m:07s] 
+Max. area err: 0.101114, GeoDiv: BTN:fe4a4d07e153ef17
+Current Area: 7.69755, Target Area: 8.56329
+Area drift: 0.00160475%
+
+Integration number 12
+Dimensions : 1024 1024
+Number of Points: 9335
+Filling density
+blur_width = 0.125
+Quadtree target leaf count (pre-grading): 4096
+Number of unique quadtree corners: 8086
+Number of quadtree leaf nodes: 6520
+Quadtree nodes pre-grading: 4096
+Quadtree nodes post-grading: 6520
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.3
+Densifying
+Num points before densification: 9335
+Num points after densification: 25506
+25506 points in inset. Target points: 10000
+Simplifying the inset. 
+9264 points after simplification.
+Progress: 0.75
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■------------------] 75% [00m:08s] 
+Max. area err: 0.0297049, GeoDiv: CNM:85db95ef4bf8489c
+Current Area: 8.30922, Target Area: 8.56329
+Area drift: 0.00364392%
+
+Integration number 13
+Dimensions : 1024 1024
+Number of Points: 9264
+Filling density
+blur_width = 0.0883883
+Quadtree target leaf count (pre-grading): 4096
+Number of unique quadtree corners: 7820
+Number of quadtree leaf nodes: 6268
+Quadtree nodes pre-grading: 4096
+Quadtree nodes post-grading: 6268
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.3
+Densifying
+Num points before densification: 9264
+Num points after densification: 23393
+23393 points in inset. Target points: 10000
+Simplifying the inset. 
+9260 points after simplification.
+Adjusting grid size.
+New grid dimensions: 2048 2048 with bounding box
+	(378.479, 678.351, 1721.82, 1441.21)
+Progress: 0.775
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■----------------] 78% [00m:08s] 
+Max. area err: 0.0930045, GeoDiv: CYN:3fa61972653460ef
+Current Area: 37.4384, Target Area: 34.2532
+Area drift: -0.00124007%
+
+Integration number 14
+Dimensions : 2048 2048
+Number of Points: 9260
+Filling density
+blur_width = 0.125
+Quadtree target leaf count (pre-grading): 16384
+Number of unique quadtree corners: 29845
+Number of quadtree leaf nodes: 24043
+Quadtree nodes pre-grading: 16384
+Quadtree nodes post-grading: 24043
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.3
+Densifying
+Num points before densification: 9260
+Num points after densification: 45741
+45741 points in inset. Target points: 10000
+Simplifying the inset. 
+9303 points after simplification.
+Progress: 0.7975
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■--------------] 80% [00m:10s] 
+Max. area err: 0.0229879, GeoDiv: CNM:85db95ef4bf8489c
+Current Area: 33.466, Target Area: 34.2532
+Area drift: 0.000609912%
+
+Integration number 15
+Dimensions : 2048 2048
+Number of Points: 9303
+Filling density
+blur_width = 0.0883883
+Quadtree target leaf count (pre-grading): 16384
+Number of unique quadtree corners: 30199
+Number of quadtree leaf nodes: 24280
+Quadtree nodes pre-grading: 16384
+Quadtree nodes post-grading: 24280
+In flatten_density_on_node_vertices()
+iter 0: t = 0, delta_t = 0.3
+Densifying
+Num points before densification: 9303
+Num points after densification: 46144
+46144 points in inset. Target points: 10000
+Simplifying the inset. 
+9348 points after simplification.
+Progress: 0.81775
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-------------] 82% [00m:12s] 
+Max. area err: 0.00717839, GeoDiv: CNM:85db95ef4bf8489c
+Current Area: 34.499, Target Area: 34.2532
+Area drift: -0.000228263%
+Finished integrating inset C
+Progress: 1
+[■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■] 100% [00m:12s] 
+
+Writing areas_cartogram.geojson
+
+********** Time Report **********
+(areas)
+
+areas: 8137 ms
+Integration: 8121 ms
+Simplification: 6180 ms
+Preprocessing: 3870 ms
+Fill with Density: 2262 ms
+areas_14: 2145 ms
+areas_15: 1731 ms
+Flatten Density: 1395 ms
+Blur: 595 ms
+Densification: 592 ms
+areas_9: 525 ms
+areas_8: 504 ms
+areas_10: 493 ms
+areas_13: 491 ms
+areas_11: 475 ms
+areas_12: 452 ms
+areas_7: 304 ms
+areas_6: 292 ms
+Delaunay Triangulation: 219 ms
+areas_5: 189 ms
+Quadtree: 181 ms
+Project: 156 ms
+areas_1: 153 ms
+areas_0: 98 ms
+areas_4: 91 ms
+areas_3: 85 ms
+areas_2: 84 ms
+*********************************
+
+********** Time Report **********
+(areas)
+
+Total time: 13935 ms
+*********************************

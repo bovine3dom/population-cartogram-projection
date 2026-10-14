@@ -760,6 +760,24 @@ The separated layout has exact budgets but is not an acceptable replacement.
   still reported 79 split regions after 925 swaps. Neither cancelled run has a
   completed final result. Saved cancellation records in the job directory.
 
+## 20:25–20:35 UTC — validation and softer guide controls
+
+- All ten commands pass at checkpoint `99bb0c7`, with nine mesh tests and
+  21 partition tests. Saved logs and hashes in `validation-2027`.
+- Inspected the final corrected-barrier rotation-2 guide and the third stages of
+  the component-shape controls at weights 1 and 10. Rotation control reduces
+  large continent turns, but thin Russia and Central America remain. Shape
+  weights 1 and 10 do not correct the visual defects. Started weights 100 and
+  1000 to test a stronger component prior before rejecting that direction.
+- Started two overlapping source-shape guides with collision weights 0.1 and 1.
+  They omit the final rigid collision-separation pass that can reopen gaps.
+  Overlap is permitted only in these intermediate guides. The later capacity
+  assignment must still have exact counts and no overlap. These are spring
+  placement controls, not continuous cartograms or production maps.
+- Saved the new 10,000-tile result after world, Europe, and Indonesia checks.
+  The 110,000- and 500,000-tile partitions are still running. All three external
+  flow solves passed before their tile assignments started.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
