@@ -151,6 +151,25 @@
      private boolean execute(final boolean exact) {
  
          int[] flow = flowDigraph.solve();
+@@ -177,13 +191,16 @@
+             return false;
+         }
+ 
++        MosaicRegion[] destinations = new MosaicRegion[vertexToCoordinate.length];
++        for (int i = 0; i < destinations.length; i++) destinations[i] = grid.getRegion(vertexToCoordinate[i]);
+         boolean changed = false;
+         for (FlowDigraph.Edge e : watchEdges) {
+             if (flow[e.getId()] > 0) {
+                 Coordinate cSource = vertexToCoordinate[e.getSource().getId()];
+-                Coordinate cTarget = vertexToCoordinate[e.getTarget().getId()];
+                 MosaicRegion rSource = grid.getRegion(cSource);
+-                MosaicRegion rTarget = grid.getRegion(cTarget);
++                // Earlier moves can change the target cell's owner. The flow
++                // still refers to the owner at the time the network was built.
++                MosaicRegion rTarget = destinations[e.getTarget().getId()];
+ 
+                 if (rSource == rTarget) {//can't do a move if they are from the same one
+                     continue;
 --- a/common/mcf/SuccessiveShortestPathMininumCostFlow.java
 +++ b/common/mcf/SuccessiveShortestPathMininumCostFlow.java
 @@ -159,12 +159,16 @@

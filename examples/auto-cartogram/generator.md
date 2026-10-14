@@ -32,6 +32,8 @@ negative reduced costs cause an error. The tolerance is 16 floating-point units
 at the network cost scale. Inactive reverse edges keep their negative costs.
 Polishing now restores the previous tile ownership if a partly executable flow
 does not reduce count error. A synthetic forced-flow test checks the rollback.
+Each transfer uses its planned destination owner. An earlier transfer must not
+change that owner. A second test executes a transfer chain in reverse order.
 Topology mode can then report a residual count error instead of accepting a
 worse pass. Exact mode still fails if it cannot obtain the requested counts.
 
