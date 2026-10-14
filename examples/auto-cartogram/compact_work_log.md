@@ -227,6 +227,33 @@ The separated layout has exact budgets but is not an acceptable replacement.
   tests pass after this addition. These additions are later than the full
   validation checkpoint and have only these focused checks so far.
 
+## 16:40–16:50 UTC — global results and landmass scope
+
+- Waited five minutes for the running computations. This was compute time,
+  not continuous manual work. All three partition controls completed.
+- Inspected all three world images. The global partition removes many small
+  spaces and tangled outlines. The compact Tutte-footprint control gives a
+  much clearer Europe than the local exchanges. It still has poor large-scale
+  geography, a gap north of India, and cuts near misplaced small components.
+- None passes topology checks. The outline-cost result has 52 disconnected
+  regions and 1,837 cells outside their largest connected pieces. The compact
+  power control has 45 disconnected regions and 407 such cells. These are not
+  valid replacement layouts. Add visible topology warnings to their images.
+- Found a scope error in the global diagnostic: one common footprint quota
+  permits American country area to move into Europe. The outline trial puts
+  353 US cells outside its main piece. Added a separate optional partition for
+  each connected group of source land-border components. Each group gets its
+  own exact area; other groups and fixed islands reserve their starting cells.
+  Earlier target cells are also reserved. This does not guarantee connected
+  countries or preserve every border within a group.
+- The source graph has ten such land-border groups. They include Afro-Eurasia,
+  the Americas, and individual divided islands. This uses component borders,
+  not country membership, so overseas possessions do not create links.
+- All six partition tests and 40 shape tests pass after this change. The full
+  validation checkpoint precedes this change.
+- Both full-size fast-topology repeats completed. Their cell files match the
+  original interior fit and the 80-round geographic-guide fit byte for byte.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
