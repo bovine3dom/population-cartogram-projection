@@ -1,0 +1,12 @@
+Test Summary:  | Pass  Total   Time
+input contract |   25     25  15.6s
+Test Summary:       | Pass  Total   Time
+public distribution |   15     15  19.9s
+Test Summary:      | Pass  Total  Time
+matrix-free solver |    7      7  3.8s
+Test Summary:      | Pass  Total  Time
+automatic sparsity |   14     14  0.8s
+Test Summary:     | Pass  Total  Time
+truncation bounds |   43     43  2.1s
+Test Summary:       | Pass  Total  Time
+dependency boundary |    4      4  0.0s
