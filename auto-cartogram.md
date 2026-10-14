@@ -67,6 +67,26 @@ See the [gallery](examples/auto-cartogram/gallery.md),
 [transport evidence](examples/auto-cartogram/transport-results.md), and
 [work log](examples/auto-cartogram/work-log.md).
 
+### Recommended next milestone
+
+Review the gallery before more fitting work. Decide whether gaps between
+countries are acceptable. If they are, use the exact-count geographic method
+as the next candidate and improve its placement. If borders are mandatory,
+work on geographic initialization and constrained shape fitting. More polishing
+alone has not met the area requirement.
+
+Keep layout acceptance separate from transport acceptance:
+
+1. Set per-country and per-component limits, not only a global count error.
+2. Choose the small-island grouping and per-group capacity rules explicitly.
+3. Resolve the population year and unmatched coastal coverage. Do not assign
+   unmatched cells to the nearest country without an ownership rule.
+4. Repeat native tests on more archipelagos. Check sparse-support feasibility
+   before long correction runs, then inspect large position changes.
+5. Only then add a production exporter and optional group eligibility. Preserve
+   a rollback path to the existing CSV. Keep source entity IDs until their
+   conversion to the repository's numeric country codes is checked.
+
 ## 1. What must change
 
 ### Current workflow

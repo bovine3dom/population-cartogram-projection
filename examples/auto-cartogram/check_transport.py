@@ -66,12 +66,24 @@ def check(directory):
         for key,value in [("population",totals[p]),("expected_population",expected[p]),("relative_error",errors[p])]:
             close(float(r[key]),value)
     if seen != set(targets): raise ValueError("Missing target quality rows")
+    mean_rows=0
+    for r in rows(directory/"mapping.csv"):
+        if "weight_mean" not in r: continue
+        value=float(r["weight_mean"])
+        if not math.isfinite(value) or not 0 < value <= 1+1e-12:
+            raise ValueError("Invalid target-normalized weight")
+        p=(float(r["x"]),float(r["y"]))
+        expected_mean=sources[r["id"]][1]*float(r["weight"])/totals[p]
+        if not math.isclose(value,expected_mean,rel_tol=1e-9,abs_tol=1e-14):
+            raise ValueError("Target-normalized weight differs from its population share")
+        mean_rows+=1
     result=dict(source_population=population,retained_population=retained,retained_share=retained/population,
         cross_group_population=crossing,minimum_source_retained_share=min(weights.values()),
         maximum_source_retained_share=max(weights.values()),maximum_relative_target_error=max(map(abs,errors.values())),
         coarse_sources=len(sources),targets=len(targets),groups=len(group_mass))
     for key,value in result.items(): close(value,metadata[key])
-    result.update(mapping_rows=len(pairs),source_rows_below_99_5_percent=sum(w < .995-1e-12 for w in weights.values()),
+    result.update(mapping_rows=len(pairs),target_normalized_weights_checked=mean_rows,
+        source_rows_below_99_5_percent=sum(w < .995-1e-12 for w in weights.values()),
         checked=True,checker_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     result["files"]={p.name:digest(p) for p in
         [directory/name for name in ["manifest.json","sources.csv","targets.csv","mapping.csv","target-quality.csv"]]}
