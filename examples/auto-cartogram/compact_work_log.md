@@ -831,6 +831,22 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The 110,000-tile mainland pipeline finished at 20:39:55 UTC. Its images still
   need visual review. The 500,000-tile run is still in progress.
 
+## 21:01–21:04 UTC — Higher resolution and rejected guide controls
+
+- Visually checked the new 110,000-tile world map and saved its review bundle.
+  It has exact counts, no split regions, four region holes, and 58 missing plus
+  55 unsupported component contacts. Canada and Korea remain poor. Japan has
+  the same placement defect; a bounded island-group run is in progress.
+- Visually checked the packed-source control at spacing 0.8 and the overlapping
+  guide with smoothing 24. Reject both: Korea lies on the wrong part of China,
+  and false mainland contacts increase. Smoothing 24 also leaves a split region.
+- Visually checked final exact-second-moment mesh guides at weights 100 and 1000.
+  Both still have extreme thin features near China and West Africa. Weighted
+  area errors are 6.86% and 16.70%. The corrected integral does not make these
+  guides suitable. Do not replace the leading compact controls with them.
+- Updated pipeline instructions for the implemented options and the separate
+  bounded island-group command. Production files remain unchanged.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
