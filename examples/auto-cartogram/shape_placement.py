@@ -3,9 +3,13 @@ import numpy as np
 from scipy.signal import fftconvolve
 
 
-def place(cells,desired,blocked,maximum_radius=8192):
+def place(cells,desired,blocked,maximum_radius=8192,translation_bounds=None):
     cx=sum(x for x,y in cells)/len(cells);cy=sum(y for x,y in cells)/len(cells)
-    origin=(round(desired[0]-cx),round(desired[1]-cy))
+    lower,upper=np.asarray(translation_bounds if translation_bounds is not None else [[-np.inf,-np.inf],[np.inf,np.inf]],dtype=float)
+    if lower.shape!=(2,) or upper.shape!=(2,) or np.isnan([lower,upper]).any() or np.isposinf(lower).any() or np.isneginf(upper).any() or np.any(lower>upper):raise ValueError('Invalid translation bounds')
+    lower=np.ceil(lower);upper=np.floor(upper)
+    if np.any(lower>upper):raise ValueError('No integer translation within bounds')
+    origin=tuple(int(v) for v in np.clip([round(desired[0]-cx),round(desired[1]-cy)],lower,upper))
     moved={(x+origin[0],y+origin[1]) for x,y in cells}
     if not moved & blocked:return moved
     x0=min(x for x,y in cells);y0=min(y for x,y in cells)
@@ -20,6 +24,8 @@ def place(cells,desired,blocked,maximum_radius=8192):
             if 0<=x-left<grid.shape[1] and 0<=y-bottom<grid.shape[0]:grid[y-bottom,x-left]=1
         overlaps=fftconvolve(grid,kernel[::-1,::-1],mode='valid')
         yy,xx=np.nonzero(overlaps<.5)
+        shifts=np.column_stack((xx-radius+origin[0],yy-radius+origin[1]))
+        valid=np.all((shifts>=lower)&(shifts<=upper),axis=1);yy=yy[valid];xx=xx[valid]
         if len(xx):
             dx=xx-radius;dy=yy-radius
             index=np.lexsort((dy,dx,dx*dx+dy*dy,np.maximum(np.abs(dx),np.abs(dy))))[0]

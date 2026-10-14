@@ -275,6 +275,14 @@ class ShapeTests(unittest.TestCase):
         self.assertFalse(state.transfer([(next(iter(state.tiles['a'])),None),((18,18),'b')]))
         self.assertEqual(state.tiles,saved)
 
+    def test_bounded_translation(self):
+        cells={(0,0),(1,0)};blocked={(0,0),(1,0),(2,0)}
+        moved=shape_placement.place(cells,(0,0),blocked,translation_bounds=[[3,-2],[5,2]])
+        self.assertEqual(moved,{(3,0),(4,0)})
+        with self.assertRaises(ValueError):shape_placement.place(cells,(0,0),blocked,translation_bounds=[[2,0],[1,0]])
+        with self.assertRaises(ValueError):shape_placement.place(cells,(0,0),blocked,translation_bounds=[[.2,0],[.8,0]])
+        with self.assertRaises(ValueError):shape_placement.place(cells,(0,0),blocked,maximum_radius=8,translation_bounds=[[0,0],[0,0]])
+
     def test_fast_placement_matches_exhaustive_search(self):
         rng=np.random.default_rng(31)
         for _ in range(100):
