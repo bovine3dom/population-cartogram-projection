@@ -229,7 +229,8 @@ def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01
         if region_shape_weight:
             from mesh_shape_prior import RegionShapePrior
             objective.shape_prior=RegionShapePrior(vertices,triangles,pieces,targets);objective.region_shape_weight=region_shape_weight
-            record['shape_prior_script_sha256']=digest(Path(__file__).with_name('mesh_shape_prior.py'));save()
+            record['shape_prior_script_sha256']=digest(Path(__file__).with_name('mesh_shape_prior.py'))
+            record['shape_prior_quadrature']='Four samples per intersection with exact polygon mean and second moments';save()
         for weight in distortions:
             before=time.monotonic()
             result=bounded_lbfgs(objective,values,weight,iterations) if optimizer=='bounded-lbfgs' else minimize(objective.evaluate,values,args=(weight,),jac=True,method='L-BFGS-B',options=dict(maxiter=iterations,maxls=50,ftol=1e-12,gtol=1e-7))
