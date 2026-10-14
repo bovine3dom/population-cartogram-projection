@@ -192,4 +192,4 @@ if __name__=='__main__':
     for name,default in [('spacing',1.),('collision',100.),('spring',1.),('anchor',.01),('spatial',.03),('gap',.8),('ocean-scale',0.),('order-weight',0.),('local-order',0.)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--source-polygons',type=Path,help='Use concave collision pieces and anchors on actual source borders')
     for name in ['raster','no-false-contacts','start-from-templates','smooth-collision','coast-anchors','mass-weighted']:parser.add_argument('--'+name,action='store_true')
-    args=parser.parse_args();print(json.dumps(run(args.inputs,args.templates,args.output,args.spacing,args.iterations,args.collision,args.spring,args.anchor,args.spatial,args.gap,args.source_polygons,args.raster,args.no_false_contacts,args.start_from_templates,args.smooth_collision,args.ocean_scale,args.order_weight,args.coast_anchors,args.local_order,args.mass_weighted),indent=2))
+    print(json.dumps(run(**vars(parser.parse_args())),indent=2))
