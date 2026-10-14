@@ -90,6 +90,24 @@ class SupportTests(unittest.TestCase):
 
 
 class BalanceTests(unittest.TestCase):
+    def test_support_expansion_stays_local_and_within_groups(self):
+        sources=[dict(group_id="a"),dict(group_id="b")]
+        targets=[dict(group_id=g,x=x,y=0) for g,x in [("a",0),("a",1),("a",2),("b",-1)]]
+        row,column,mass,added=balance.expand_neighbours([0,1],[0,3],[9.,20.],[10.,20.],sources,targets,["a"])
+        self.assertEqual(added,1)
+        self.assertEqual(list(zip(row,column)),[(0,0),(1,3),(0,1)])
+        np.testing.assert_allclose(np.bincount(row,weights=mass),[9,20])
+        self.assertTrue(np.all(mass>0))
+        with self.assertRaisesRegex(ValueError,"Unknown"):
+            balance.expand_neighbours([0,1],[0,3],[9.,20.],[10.,20.],sources,targets,["c"])
+        # The connected two-target obstruction becomes feasible after one step.
+        row,column,initial,added=balance.expand_neighbours([0,1,1],[0,0,1],[3.,.5,.5],[3.,1.],
+            [dict(group_id="a")]*2,targets[:2],["a"])
+        corrected,_,error=balance.scale(row,column,initial,[3.,1.],[2.,2.])
+        self.assertLess(error,1e-8)
+        self.assertEqual(added,1)
+        np.testing.assert_allclose(np.bincount(row,weights=corrected),[3,1])
+
     def test_marginals_and_structural_zeros(self):
         row=np.array([0,0,1,1,2]); column=np.array([0,1,0,1,2])
         mass,iterations,error=balance.scale(row,column,[3,1,2,4,2],[6,4,2],[5,5,2])
