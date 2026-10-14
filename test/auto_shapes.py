@@ -633,6 +633,12 @@ class ShapeTests(unittest.TestCase):
         fixed,records=place_islands.place_islands(tiles,rows,source,{'m','far'},1.,10.,maximum_population=500)
         self.assertEqual(fixed,tiles)
         self.assertEqual(records,[])
+        rows['m']['group_population']=100
+        _,old=place_islands.place_islands(tiles,rows,source,{'m','far'},1.,10.)
+        result,new=place_islands.place_islands(tiles,rows,source,{'m','far'},1.,10.,fixed_land_anchors=True)
+        self.assertEqual(old[0]['anchor'],'far');self.assertEqual(new[0]['anchor'],'m')
+        self.assertEqual(result['m'],tiles['m']);self.assertEqual(result['far'],tiles['far'])
+        self.assertLess(next(iter(result['island']))[1],0)
 
     def test_cross_resolution_seed_scales_centres_and_checks_coverage(self):
         with tempfile.TemporaryDirectory() as tmp:

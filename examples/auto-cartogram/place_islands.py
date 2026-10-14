@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Place isolated components near the nearest larger source component's coast."""
+"""Place isolated components near an eligible source component's coast."""
 import argparse
 import csv
 import json
@@ -19,7 +19,7 @@ from save_review import digest
 from shape_placement import place
 
 
-def place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_population=None):
+def place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_population=None,fixed_land_anchors=False):
     population={c:float(rows[c]['group_population']) for c in tiles}
     if maximum_population is not None:land_components=land_components|{c for c in tiles if population[c]>=maximum_population}
     local={c:np.array(sorted(points),dtype=float) for c,points in tiles.items()}
@@ -32,7 +32,7 @@ def place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_p
     blocked=occupied|{(x+dx,y+dy) for x,y in occupied for dx,dy in [(1,0),(-1,0),(0,1),(0,-1)]}
     records=[]
     for c in sorted(set(tiles)-land_components,key=lambda c:(-population[c],c)):
-        larger=sorted(a for a in tiles if population[a]>population[c])
+        larger=sorted(a for a in tiles if population[a]>population[c] or (fixed_land_anchors and a in land_components))
         target=centres[c];anchor=None;source_gap=None;mapped_gap=None
         if larger:
             tree=STRtree([source[a] for a in larger])
@@ -58,7 +58,7 @@ def tile_contacts(owner):
     return {tuple(sorted((c,owner[q]))) for (x,y),c in owner.items() for q in [(x+1,y),(x,y+1)] if q in owner and owner[q]!=c}
 
 
-def run(inputs,layout,polygons,output,ocean_scale=.1,max_population_fraction=.01,allow_partial_counts=False,preserve_mainland_defects=False):
+def run(inputs,layout,polygons,output,ocean_scale=.1,max_population_fraction=.01,allow_partial_counts=False,preserve_mainland_defects=False,fixed_land_anchors=False):
     if output.exists() or not np.isfinite(ocean_scale) or ocean_scale<0 or not 0<max_population_fraction<=1:raise ValueError('Use a new output, a nonnegative ocean scale, and a population fraction in (0,1]')
     rows,tiles,owner=load(inputs,layout)
     error=sum(abs(len(tiles[c])-int(rows[c]['tiles'])) for c in rows)
@@ -87,12 +87,12 @@ def run(inputs,layout,polygons,output,ocean_scale=.1,max_population_fraction=.01
             parent_files.append(p);parent_records['initial-stress.json']=json.loads(p.read_text())
     hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]+parent_files}
     scripts={p.name:digest(p) for p in [Path(__file__)]+[Path(__file__).with_name(n) for n in ['coast_anchors.py','shape_placement.py','prepare_flow.py']]}
-    result,records=place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_population)
+    result,records=place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_population,fixed_land_anchors)
     new_owner={p:c for c,points in result.items() for p in points};after=tile_contacts(new_owner)
     if len(new_owner)!=total or any(len(result[c])!=len(tiles[c]) for c in tiles):raise AssertionError('Counts or overlap changed')
     if any(result[c]!=tiles[c] for c in fixed):raise AssertionError('Fixed mainland changed')
     if after-required-actual or after&required!=actual&required:raise AssertionError('Island placement changed source borders or added false contacts')
-    report=dict(method='Keep components with source land borders or population at or above the threshold fixed. Place smaller isolated components from largest population to smallest, near the nearest larger source component coast. No country-membership links.',
+    report=dict(method='Keep components with source land borders or population at or above the threshold fixed. Place smaller isolated components from largest population to smallest, near the nearest eligible source coast. Larger components are eligible; fixed components are also eligible when fixed_land_anchors is enabled. No country-membership links.',fixed_land_anchors=fixed_land_anchors,
         max_population_fraction=max_population_fraction,maximum_population=maximum_population,absolute_tile_error=error,allow_partial_counts=allow_partial_counts,preserve_mainland_defects=preserve_mainland_defects,unchanged_invalid_fixed_components=sorted(invalid&fixed),initial_false_contacts=len(actual-required),final_false_contacts=len(after-required),source_contacts_unchanged=True,eligible_isolated_components=len(records),moved_components=sum(result[c]!=tiles[c] for c in tiles),
         ocean_scale=ocean_scale,maximum_placement_shift=max((r['placement_shift'] for r in records),default=0.),
         inputs=hashes,scripts=scripts,parent_layout_records=parent_records,limit='A nearest-coast hierarchy is a position heuristic, not a proof of correct geography. Counts and tile shapes are unchanged. No native-resolution transport is approved.')
@@ -118,5 +118,6 @@ if __name__=='__main__':
     parser.add_argument('--ocean-scale',type=float,default=.1)
     parser.add_argument('--max-population-fraction',type=float,default=.01)
     parser.add_argument('--allow-partial-counts',action='store_true')
+    parser.add_argument('--fixed-land-anchors',action='store_true',help='Allow a nearer fixed coast to anchor an island even when its population is smaller')
     parser.add_argument('--preserve-mainland-defects',action='store_true',help='Allow existing defects in fixed mainlands; do not add false contacts')
     run(**vars(parser.parse_args()))
