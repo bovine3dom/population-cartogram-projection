@@ -1018,6 +1018,27 @@ The separated layout has exact budgets but is not an acceptable replacement.
   this tests whether footprint smoothing removes them without flattening China.
   No result is selected before visual review.
 
+## 22:07–22:13 UTC — Rejected mesh tiles and regional review
+
+- Waited for the running tile tests from 22:07 to 22:10 UTC. All four complete
+  with exact counts and no split regions. Visually checked all four world
+  images. India is taller, but China retains an eastern spike. West Africa also
+  has a spike in the weaker smoothing test. Stronger smoothing adds false
+  contacts and damages Korea. Reject these four controls. Saved their images,
+  metrics, and source records in a small review bundle without exact cells.
+- Rechecked all 30 complete layout archives. Every saved file hash and every
+  layout and gap metric matches. Script hashes are excluded from the numeric
+  comparisons. The 22:05 test run passes all ten commands, but code changed
+  during it. A clean repeat started at 22:10 UTC.
+- Started a complete recorded 55,000-tile pipeline with the new fixed-coast and
+  group-merge options. This tests the integrated path, not only the individual
+  placement stages.
+- Visually checked the 500,000-tile Indonesia, Philippines, Europe, and North
+  America details. Island shapes have more detail, but relative positions still
+  need work: Timor is above Sulawesi, and the Philippines is too far east.
+  Canada remains at the northeast edge of the USA. Italy is too broad and Spain
+  is rectangular. These defects rule out production use despite exact counts.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

@@ -1,0 +1,14 @@
+{
+  "method": "Piecewise affine interpolation through the saved mesh; no site refit",
+  "source_scale": 1000.0,
+  "components": 481,
+  "coordinate_system": "Normalized deformed mesh coordinates, as in geometry.geojson",
+  "inputs": {
+    "output/auto-cartogram/world-55000-population-sites/sites.csv": "5edba0bf6b81a4b20b6b5706e43aa74b0d14f9ff333ced87691c55007cc09ac7",
+    "output/auto-cartogram/world-55000-mesh-moments1000/mesh.npz": "23fa1674744598a74735318672a6c5654a0d8526c83eb980a53e6988b25c54ba",
+    "output/auto-cartogram/world-55000-mesh-moments1000/mesh-guide.json": "de3d10d8c4c79bd1417c04d9bad571f820db42e151df634b7a38a5607b946e2c"
+  },
+  "script_sha256": "463bc9bf04907265dc72f7ca380ddf83bec6504d4ee80529448a2160bbf6c339",
+  "limit": "A transformed mean is not the mean of all transformed population cells. Sites can be outside their component outline. Population and component labels do not change.",
+  "sites_sha256": "47fc51eeba74aec566cc87829a1e90c015e6cdeffa3573dd2c3d567a43dae6d2"
+}

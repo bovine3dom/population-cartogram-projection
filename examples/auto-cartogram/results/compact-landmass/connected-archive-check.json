@@ -1,6 +1,6 @@
 {
-  "checked_at_utc": "2026-10-14T21:38:49.509930+00:00",
-  "script_sha256": "5e483b030a9f6cacb0b127ef0e9357acea08b438036d4e95ceab9fa58ab84516",
+  "checked_at_utc": "2026-10-14T22:07:54.565470+00:00",
+  "script_sha256": "7e9b415b2ee045d217bd37378cdbb77fd7a464fae674861d31cd65fdb0f39979",
   "results": [
     {
       "layout": "flow-compact",
@@ -92,6 +92,34 @@
     },
     {
       "layout": "flow-grid512",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "world-500000-mainland",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "recorded-island-groups",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "angular-sites",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "fixed-coasts-10000",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "fixed-coasts-55000",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "fixed-coasts-110000",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "fixed-coasts-500000",
       "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
     }
   ]
