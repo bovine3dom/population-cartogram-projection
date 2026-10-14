@@ -13,6 +13,7 @@ import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from partition_land import dual, partition, round_capacities, contact_groups, run
 from review_layout import load, viewport
+from repair_partition import Repair, run as repair
 
 
 class CapacityPartitionTests(unittest.TestCase):
@@ -70,7 +71,39 @@ class CapacityPartitionTests(unittest.TestCase):
             _,flow_tiles,_=load(inputs,root/'flow-result')
             self.assertEqual({c:len(p) for c,p in flow_tiles.items()},{c:len(p) for c,p in tiles.items()})
             self.assertIn(str(geometry),flow['inputs'])
+            with contextlib.redirect_stdout(io.StringIO()):fixed=repair(inputs,root/'flow-result',root/'repaired',rounds=10)
+            self.assertLessEqual(fixed['after']['fragment_cells'],fixed['before']['fragment_cells'])
+            self.assertTrue((root/'repaired/parent-partition.json').exists())
             with self.assertRaisesRegex(ValueError,'either'):run(inputs,layout,root/'bad-flow',flow_geometry=geometry,guide_layout=layout)
+
+    def test_fragment_swap(self):
+        tiles={'a':{(0,0),(0,1),(3,0)},'b':{(1,0),(1,1),(2,0),(2,1),(3,1)},'island':{(9,9)}}
+        state=Repair(tiles,{'island'});before=set(state.owners)
+        self.assertEqual(state.report()['fragment_cells'],1)
+        self.assertIsNotNone(state.step());self.assertEqual(state.report()['disconnected_regions'],0)
+        self.assertEqual(set(state.owners),before)
+        self.assertEqual({c:len(p) for c,p in state.tiles.items()},{c:len(p) for c,p in tiles.items()})
+        self.assertEqual(state.tiles['island'],tiles['island']);self.assertIsNone(state.step())
+        blocked=Repair(tiles,{'a','b','island'});self.assertIsNone(blocked.step());self.assertEqual(blocked.tiles,tiles)
+
+    def test_random_fragment_swaps(self):
+        rng=np.random.default_rng(11)
+        for _ in range(20):
+            tiles={c:set() for c in 'abc'}
+            for x in range(9):
+                for y in range(5):tiles['abc'[x//3]].add((x,y))
+            for _ in range(5):
+                a,b=rng.choice(list(tiles),size=2,replace=False)
+                p=sorted(tiles[a])[int(rng.integers(len(tiles[a])))];q=sorted(tiles[b])[int(rng.integers(len(tiles[b])))]
+                tiles[a].remove(p);tiles[a].add(q);tiles[b].remove(q);tiles[b].add(p)
+            state=Repair(tiles);footprint=set(state.owners)
+            for _ in range(100):
+                before=state.report()['fragment_cells'];parts={c:len(p) for c,p in state.parts.items()}
+                if state.step() is None:break
+                self.assertLess(state.report()['fragment_cells'],before)
+                self.assertTrue(all(len(state.parts[c])<=parts[c] for c in tiles))
+                self.assertEqual(set(state.owners),footprint)
+                self.assertTrue(all(len(state.tiles[c])==15 for c in tiles))
 
     def test_review_viewport(self):
         owners={(0,0):'a',(1,100):'a'}

@@ -281,6 +281,26 @@ The separated layout has exact budgets but is not an acceptable replacement.
   tests pass, including a flow-mask pipeline with exact original budgets.
   No new flow-footprint result has completed visual review yet.
 
+## 16:58–17:06 UTC — flow review and a bounded repair test
+
+- Started two power-partition flow trials at scales 4 and 8, plus an outline-cost
+  control at scale 8. Inspected the completed scale-4 power image. The large
+  country arrangement improves, but North America and Africa remain too narrow.
+  There are 36 disconnected regions. The result is not approved.
+- Added a fragment repair that only swaps existing tile labels. Counts, fixed
+  islands, and the occupied footprint cannot change. Each accepted swap must
+  reduce cells outside the largest connected pieces and must not increase
+  either region's component count. No connector cells are added.
+- The repair can fail when a fragmented country has no suitable shared boundary
+  for a compensating swap. It reports remaining fragments. Occupied country
+  holes are allowed here; they are not empty cells in the land union. This is
+  a different, explicit topology policy from the earlier no-country-hole solver.
+- Nine partition tests and 40 shape tests pass, including random swap sequences
+  and a file-pipeline check. A full-world repair has not been reviewed yet.
+- Re-inspected OWID. Its compact internal land, geographic arrangement, and
+  recognizable broad coast shapes remain the target. Better local gap scores
+  do not compensate for narrow continents or displaced large countries.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
