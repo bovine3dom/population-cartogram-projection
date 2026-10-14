@@ -24,8 +24,9 @@ def edge_matrices(vertices,triangles):
 
 class MeshObjective:
     """Area error and rotation-invariant shape/scale costs from Sargent (2024)."""
-    def __init__(self,vertices,triangles,portions,targets,fixed,water_weight=.1,density_weight=.8):
-        if not np.isfinite([water_weight,density_weight]).all() or water_weight<0 or not 0<=density_weight<=1:raise ValueError('Invalid distortion weights')
+    def __init__(self,vertices,triangles,portions,targets,fixed,water_weight=.1,density_weight=.8,rotation_weight=0.):
+        if not np.isfinite([water_weight,density_weight,rotation_weight]).all() or min(water_weight,rotation_weight)<0 or not 0<=density_weight<=1:raise ValueError('Invalid distortion weights')
+        self.rotation_weight=rotation_weight
         self.vertices=np.asarray(vertices,dtype=float);self.triangles=np.asarray(triangles,dtype=int)
         self.portions=portions.tocsr();self.targets=np.asarray(targets,dtype=float)
         self.free=~np.asarray(fixed,dtype=bool)
@@ -67,6 +68,15 @@ class MeshObjective:
         shape_gradient=2*jacobian*reciprocal[:,None,None]+(squared*derivative)[:,None,None]*cofactor
         scale_gradient=(1/self.scale+self.scale*derivative)[:,None,None]*cofactor
         gradient+=distortion*self.weight[:,None,None]*(.5*shape_gradient+.2*scale_gradient)
+        if self.rotation_weight:
+            # Polar rotation in 2D: trace/norm is cos(theta). This optional
+            # orientation prior is not part of the cited paper objective.
+            trace=jacobian[:,0,0]+jacobian[:,1,1];skew=jacobian[:,1,0]-jacobian[:,0,1]
+            norm=np.sqrt(trace**2+skew**2+1e-24);weight=distortion*self.rotation_weight*self.weight
+            cost+=np.sum(weight*(1-trace/norm))/self.normalizer
+            diagonal=weight*(-1/norm+trace**2/norm**3);off_diagonal=weight*trace*skew/norm**3
+            gradient[:,0,0]+=diagonal;gradient[:,1,1]+=diagonal
+            gradient[:,1,0]+=off_diagonal;gradient[:,0,1]-=off_diagonal
         edges_gradient=gradient@self.inverse.transpose(0,2,1)/self.normalizer
         result=np.zeros_like(vertices)
         np.add.at(result,self.triangles[:,0],-edges_gradient.sum(axis=2))
@@ -197,20 +207,20 @@ def save_geometry(objective,values,pieces,source,labels,path):
     return dict(geometry_cleanup=cleanup,overlap_pairs=overlaps,changed_hole_counts=changed,geometry_sha256=digest(path))
 
 
-def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01),optimizer='bounded-lbfgs',stage_geometry=False,water_weight=.1,density_weight=.8):
+def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01),optimizer='bounded-lbfgs',stage_geometry=False,water_weight=.1,density_weight=.8,rotation_weight=0.):
     if output.exists():raise ValueError('Output already exists')
     if optimizer not in ('bounded-lbfgs','scipy'):raise ValueError('Unknown optimizer')
     if resolution<8 or iterations<1 or not distortions or any(not np.isfinite(w) or w<=0 for w in distortions):raise ValueError('Invalid solver settings')
     source=read_shapes(prepared/'geometry.geojson');rows=read_csv(prepared/'areas.csv');budgets={r['component_id']:float(r['tiles']) for r in rows};labels=sorted(source)
     if len(rows)!=len(budgets) or set(budgets)!=set(source) or any(not np.isfinite(v) or v<=0 for v in budgets.values()):raise ValueError('Invalid guide budgets')
     output.mkdir(parents=True);started=time.monotonic()
-    record=dict(method='Planar fixed-frame mesh with area error and Sargent shape/scale distortion costs',reference='https://arxiv.org/abs/2411.17129',inputs={str(p):digest(p) for p in [prepared/'geometry.geojson',prepared/'areas.csv']},script_sha256=digest(Path(__file__)),optimizer=optimizer,stage_geometry=stage_geometry,water_weight=water_weight,density_weight=density_weight,maximum_iterations_per_stage=iterations,reciprocal_extension_threshold=1e-5,minimum_accepted_determinant=1e-12,union_precision=1e-12,seam_cleanup_radius=1e-11,stages=[],limit='Independent planar experiment, not the paper sphere or hybrid implementation. Reference triangles use Equal Earth planar geometry, not spherical geometry. Fixed frame and nearest-land water scale differ from the paper. Small regions share mesh degrees of freedom. Guide areas can remain inaccurate. No final tile budgets change. Positive triangle areas are checked; output component validity and overlaps must also be checked. No connector paths are added.')
+    record=dict(method='Planar fixed-frame mesh with area error and Sargent shape/scale distortion costs',reference='https://arxiv.org/abs/2411.17129',inputs={str(p):digest(p) for p in [prepared/'geometry.geojson',prepared/'areas.csv']},script_sha256=digest(Path(__file__)),optimizer=optimizer,stage_geometry=stage_geometry,water_weight=water_weight,density_weight=density_weight,rotation_weight=rotation_weight,maximum_iterations_per_stage=iterations,reciprocal_extension_threshold=1e-5,minimum_accepted_determinant=1e-12,union_precision=1e-12,seam_cleanup_radius=1e-11,stages=[],limit='Independent planar experiment, not the paper sphere or hybrid implementation. Reference triangles use Equal Earth planar geometry, not spherical geometry. Fixed frame and nearest-land water scale differ from the paper. Small regions share mesh degrees of freedom. Guide areas can remain inaccurate. No final tile budgets change. Positive triangle areas are checked; output component validity and overlaps must also be checked. No connector paths are added.')
     def save():(output/'mesh-guide.json').write_text(json.dumps(record,indent=2)+'\n')
     save()
     try:
         vertices,triangles,portions,fixed,pieces,info=build_mesh([source[c] for c in labels],resolution)
         targets=np.array([budgets[c] for c in labels]);targets*=float(portions.sum())/targets.sum()
-        objective=MeshObjective(vertices,triangles,portions,targets,fixed,water_weight,density_weight);values=vertices[~fixed].ravel();record['mesh']=info;record['vertices']=len(vertices);record['triangles']=len(triangles);record['initial']=objective.report(values);save()
+        objective=MeshObjective(vertices,triangles,portions,targets,fixed,water_weight,density_weight,rotation_weight);values=vertices[~fixed].ravel();record['mesh']=info;record['vertices']=len(vertices);record['triangles']=len(triangles);record['initial']=objective.report(values);save()
         for weight in distortions:
             before=time.monotonic()
             result=bounded_lbfgs(objective,values,weight,iterations) if optimizer=='bounded-lbfgs' else minimize(objective.evaluate,values,args=(weight,),jac=True,method='L-BFGS-B',options=dict(maxiter=iterations,maxls=50,ftol=1e-12,gtol=1e-7))
@@ -237,6 +247,7 @@ if __name__=='__main__':
     parser.add_argument('--resolution',type=int,default=64);parser.add_argument('--iterations',type=int,default=1000)
     parser.add_argument('--optimizer',choices=['bounded-lbfgs','scipy'],default='bounded-lbfgs')
     parser.add_argument('--stage-geometry',action='store_true',help='Save checked geometry after each distortion-weight stage')
+    parser.add_argument('--rotation-weight',type=float,default=0.,help='Optional polar rotation penalty, not part of the cited paper objective')
     parser.add_argument('--water-weight',type=float,default=.1,help='Relative distortion weight of water triangles')
     parser.add_argument('--density-weight',type=float,default=.8,help='Mix of target density in distortion weights; zero uses source triangle area only')
     parser.add_argument('--distortions',type=float,nargs='+',default=[.3,.1,.03,.01])
