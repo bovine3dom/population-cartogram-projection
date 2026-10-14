@@ -14,7 +14,7 @@ import numpy as np
 import pyarrow as pa
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
-from partition_land import dual, partition, round_capacities, contact_groups, run
+from partition_land import dual, partition, round_capacities, hierarchical_partition, contact_groups, run
 from review_layout import load, viewport
 from repair_partition import Repair, run as repair
 from land_envelope import dock_parts
@@ -51,6 +51,16 @@ class CapacityPartitionTests(unittest.TestCase):
     def test_single_label(self):
         with contextlib.redirect_stdout(io.StringIO()):labels,_=partition(np.arange(5.)[:,None],[5])
         np.testing.assert_array_equal(labels,np.zeros(5,dtype=int))
+
+    def test_hierarchical_partition(self):
+        points=np.array([(x,y) for x in range(4) for y in range(2)])
+        sites=np.array([[0,0],[0,1],[3,0],[3,1]])
+        costs=((points[:,None,:]-sites[None,:,:])**2).sum(axis=2)
+        with contextlib.redirect_stdout(io.StringIO()):
+            assignment,report=hierarchical_partition(costs,points,sites,[1,3,2,2],['west','west','east','east'],30)
+        np.testing.assert_array_equal(np.bincount(assignment),[1,3,2,2])
+        self.assertTrue(np.all(points[np.isin(assignment,[0,1]),0]<2))
+        self.assertEqual({r['region']:r['tiles'] for r in report['regions']},{'east':4,'west':4})
 
     def test_relaxed_guide_areas(self):
         rows=[dict(component_id=c,tiles=n,source_area=a) for c,n,a in [('a',9,1),('b',1,9),('c',3,100)]]
@@ -130,6 +140,10 @@ class CapacityPartitionTests(unittest.TestCase):
                 run(inputs,layout,root/'outline-sites',sigma=1,iterations=20,sites=sites,by_landmass=True)
                 floating_sites=run(inputs,layout,root/'floating-sites',sigma=1,iterations=20,sites=sites,by_landmass=True,power=True,float_islands=True)
             self.assertEqual(len(load(inputs,root/'outline-sites')[2]),9)
+            regions=root/'regions.csv';regions.write_text('component_id,region\na,west\nb,east\nc,west\nd,east\ne,island\n')
+            with contextlib.redirect_stdout(io.StringIO()):regional=run(inputs,layout,root/'regional',sigma=1,iterations=20,power=True,by_landmass=True,regions=regions)
+            self.assertEqual(regional['regions'],str(regions));self.assertEqual(len(load(inputs,root/'regional')[2]),9)
+            self.assertEqual(len(regional['partitions'][0]['solver']['regions']),2)
             self.assertEqual(load(inputs,root/'floating-sites')[1]['e'],{(100000,100000)})
             self.assertEqual(floating_sites['translated_islands']['e'],[99990.,99990.])
             features=[]
