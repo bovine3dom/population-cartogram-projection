@@ -71,6 +71,29 @@ Local distortion remains an option, not the default. The bounded trials removed
 coast detail without a sufficient improvement in border retention. The current
 comparison therefore keeps the templates intact. It is not a production map.
 
+## Template cleanup
+
+The 500,000-tile Europe detail exposed narrow white cuts inside Great Britain.
+These cuts were already in the tile template. They were not source coast
+features or new border connectors.
+
+![Great Britain template cleanup](results/shape-first/template-cleanup/gbr-500000.png)
+
+A separate cleanup fills narrow cuts inside the source outline, then removes
+boundary cells to restore the exact count. It accepts a change only if the
+source intersection increases, the perimeter decreases, and the result remains
+connected with no tile holes. It never joins different components.
+
+The Great Britain example keeps 4,064 tiles. Its independently measured outline
+intersection over union increases from 0.9298 to 0.9457. The full-world weighted
+score at 500,000 tiles increases from 0.9718 to 0.9726. These small average changes
+can remove conspicuous local defects. See the [cleanup checks](results/shape-first/template-cleanup/summary.json).
+
+The current gallery still uses the earlier templates. New placement trials use
+the cleaned templates. The unchanged-shape proof for those trials will compare
+against the cleaned template, not against the earlier growth result. This
+cleanup does not correct island positions or restore omitted source holes.
+
 ## First comparison: release the border constraints
 
 [View the original Tutte fit](results/world-55000-tutte-partial-200/review.png).
@@ -170,7 +193,13 @@ python examples/auto-cartogram/publish_shape_review.py \
 python examples/auto-cartogram/build_shape_gallery.py INDEX.html BUNDLE
 ```
 
-`TEMPLATES` is the geographic baseline layout. `POLYGONS` is the dissolved
+For the new template-cleanup trials, first run:
+
+```sh
+python examples/auto-cartogram/clean_templates.py INPUT BASELINE TEMPLATES
+```
+
+`BASELINE` is the geographic baseline layout. `POLYGONS` is the dissolved
 source component GeoJSON. The publisher checks counts, connectivity, holes,
 false borders, and unchanged template shapes before it saves a bundle.
 It uses `rsvg-convert` to render images without a display. The bundle includes

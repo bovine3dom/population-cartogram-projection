@@ -25,6 +25,8 @@ import review_regions
 import check_shape_translation
 import coast_anchors
 import relax_shapes
+import clean_templates
+import review_template
 import publish_shape_review
 import build_shape_gallery
 import geographic_baseline
@@ -157,6 +159,15 @@ class ShapeTests(unittest.TestCase):
                 geographic_baseline.run(inputs,root/'slow-baseline')
                 geographic_baseline.run(inputs,root/'fast-baseline',fast_placement=True)
                 self.assertEqual((root/'slow-baseline/cells.csv').read_bytes(),(root/'fast-baseline/cells.csv').read_bytes())
+                clean_templates.run(inputs,root/'fast-baseline',root/'clean-baseline')
+                _,cleaned,_=compact.load(inputs,root/'clean-baseline')
+                self.assertEqual({c:len(p) for c,p in cleaned.items()},{'a':5,'b':3})
+                source=root/'template-source.json'
+                source.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(box(i,0,i+1,1))) for i,c in enumerate(['a','b'])])))
+                comparison=review_template.run(inputs,root/'fast-baseline',root/'clean-baseline',source,'A',root/'template-review')
+                self.assertEqual(comparison['after_tiles'],5)
+                clean_bundle=publish_shape_review.run(inputs,root/'clean-baseline',root/'clean-baseline',root/'clean-bundle',regions=False)
+                self.assertIn('template-cleanup.json',clean_bundle['files'])
             _,tiles,owners=compact.load(inputs,root/'placed')
             self.assertEqual(len(owners),8)
             self.assertEqual({c:len(p) for c,p in tiles.items()},{'a':5,'b':3})
@@ -385,6 +396,19 @@ class ShapeTests(unittest.TestCase):
             numeric.append((state.objective(positions+shift)[0]-state.objective(positions-shift)[0])/2e-6)
         np.testing.assert_allclose(gradient.ravel(),numeric,atol=1e-6)
         np.testing.assert_array_equal(gradient[2],[0.,0.])
+
+    def test_template_cleanup_closes_an_interior_cut_without_count_error(self):
+        cells={(x,y) for x in range(7) for y in range(7)}-{(3,y) for y in range(3,7)}|{(7,y) for y in range(4)}
+        result,report=clean_templates.clean(cells,box(-.5,-.5,6.5,6.5))
+        self.assertTrue(report['accepted'])
+        self.assertGreater(report['intersection_gain'],0)
+        self.assertGreater(report['perimeter_reduction'],0)
+        self.assertEqual(len(result),len(cells))
+        self.assertEqual(compact.connectivity(result),1)
+        self.assertEqual(compact.holes(result),0)
+        single,report=clean_templates.clean({(0,0)},box(-.5,-.5,.5,.5))
+        self.assertEqual(single,{(0,0)})
+        self.assertFalse(report['accepted'])
 
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))

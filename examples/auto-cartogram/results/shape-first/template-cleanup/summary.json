@@ -1,0 +1,54 @@
+{
+  "method": "Independent full-source outline audit before and after count-preserving template cleanup",
+  "resolutions": [
+    {
+      "tiles": 10000,
+      "dissolved-geographic_iou": 0.8880704072140507,
+      "clean-templates_iou": 0.8895759036356208,
+      "changed_components": 24
+    },
+    {
+      "tiles": 55000,
+      "dissolved-geographic_iou": 0.9325423682408475,
+      "clean-templates_iou": 0.9337970660158895,
+      "changed_components": 66
+    },
+    {
+      "tiles": 110000,
+      "dissolved-geographic_iou": 0.9487887641290758,
+      "clean-templates_iou": 0.9491542187245734,
+      "changed_components": 74
+    },
+    {
+      "tiles": 500000,
+      "dissolved-geographic_iou": 0.9717504493840443,
+      "clean-templates_iou": 0.9726306512447899,
+      "changed_components": 120
+    }
+  ],
+  "limit": "IoU is weighted by tile count for components with at least 25 tiles. Higher similarity does not prove correct positions or preservation of source holes.",
+  "files": {
+    "audit-clean-templates-10000/regions.csv": "1ad0e2dd5e9c30e4910533c9999e2e558db16b78d6334405d5ce9403a429842c",
+    "audit-clean-templates-10000/summary.json": "c8ca215348f5f99ca23c137a3d1c72a54a073da8d02859551dd33dbf7f66cff6",
+    "audit-clean-templates-110000/regions.csv": "1bc5be8d81c011677ad7c2b80c5da49b0525df5938292509ccfc67f0b59c4bcf",
+    "audit-clean-templates-110000/summary.json": "337467b79e56b59aa2afa8fd0b5fd7152aef07d586a7b9f953fbe28404558eeb",
+    "audit-clean-templates-500000/regions.csv": "83acc8db84947a17c632d6c9edd1b71b01a097295bb1e684587c0a3ed2c586e7",
+    "audit-clean-templates-500000/summary.json": "79e6257ee40429a3bd3dcfb9977302afb805ab7f263705e2ae604fbe1489d6f8",
+    "audit-clean-templates-55000/regions.csv": "073184ff8fb58661b9b49a88c1473c81f0c4a6e5a027a332d27aa360b0f4bc0d",
+    "audit-clean-templates-55000/summary.json": "507889bfad3abd8059261df5ea21eabc8b77880f3b7c59e8c8aba87c4b8f373b",
+    "audit-dissolved-geographic-10000/regions.csv": "91c77d14d580a79e2a4f39d1815d18a8a32e7f4be7566a48ac3e534d6591fd84",
+    "audit-dissolved-geographic-10000/summary.json": "23a767f44573c51d4113f56fa60c9216eb6681ae8766d0d67476e4768c98103b",
+    "audit-dissolved-geographic-110000/regions.csv": "20a1d4bba60b40d5b50c6f53722424d7db0083c4c41ed25c59d9785f9d5e8d11",
+    "audit-dissolved-geographic-110000/summary.json": "5c7347fc421b876542b2f891eec945e6948800f0ef06ec4ff66f0766ae996d28",
+    "audit-dissolved-geographic-500000/regions.csv": "53eec3d7c34805536cd7540a218caa12ad8a0d5d5e3bc8aad8244222f9144130",
+    "audit-dissolved-geographic-500000/summary.json": "c310eff88a5b3986c76d1daae0ed77ca01d60f41a1175bbde812b6a46bb3779a",
+    "audit-dissolved-geographic-55000/regions.csv": "256dd6ec56934a49f5edf4ebe6c8726ec042888464a56da2a288c30305fa3e44",
+    "audit-dissolved-geographic-55000/summary.json": "7208379a9a92e925cc0f0f3d1af0113942e83efb4ec41e713a356b8cecce147d",
+    "cleanup-10000.json": "e831bdbf6aa0550ee456e8d28117af24b8c4d12befb1749e7e1317badd3cfcfe",
+    "cleanup-110000.json": "00d6d17360e4bf9ba5e54e6ec722ecb6bba28af3e19c0cdd14e7e43fe9f8b86e",
+    "cleanup-500000.json": "53b6c83398a68866c9e33e6cad0c299208069c2e424ad60a3a2339f181fb4b60",
+    "cleanup-55000.json": "2493c38b5a47623154513746897dcd676809cc7a7c5b4e7071b6af6681e9914f",
+    "gbr-500000.json": "51332c833566d6401fbe9bb93c00233bf7fcfc3e578c9783a767704fa132fb3e",
+    "gbr-500000.png": "2ee74f1f3b279438e1d947229849e6428841bb30c853b6a7f711ca86674b87e2"
+  }
+}
