@@ -313,6 +313,13 @@ not proof of infeasibility. The script exports only if the target tolerance is
 met, then runs the independent CSV checker. Original solver exports remain
 unchanged. This correction changes transport weights and needs a separate
 spatial-quality review.
+`translate_transport.py TRANSPORT_DIR OLD_LAYOUT NEW_LAYOUT NEW_OUTPUT` moves
+an existing export to a translated island layout. It checks that each group
+has the same shape and count, with one integer shift. It rejects overlaps and
+mismatched targets. Source IDs and weight values stay unchanged; there is no
+new solve. It runs independent transport checks before publication. Review the
+new layout separately, and repeat native-source checks where applicable.
+
 `check_transport_shift.py RAW_DIR CORRECTED_DIR NEW_CHECKS.json` compares each
 source's expected target position after normalizing its retained weights. It
 checks input hashes and every ordered pair first. It reports population-weighted

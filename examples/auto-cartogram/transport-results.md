@@ -118,6 +118,26 @@ of the matched population. These are changes in expected position, not bounds
 on each person's movement. Opposite changes can cancel. This check does not
 prove absolute geographic accuracy.
 
+### Improved island positions
+
+The same balanced native mapping is now available on the improved island
+placement. Each island shape changes by one integer translation. The transfer
+stage verifies this relation, moves every target coordinate with its group,
+and keeps all source IDs and weight values unchanged. It does not solve again.
+Independent flow and native-source checks pass on the new export.
+
+![Native transport at improved island positions](results/indonesia-native-repositioned/review.png)
+
+[Flow checks](results/indonesia-native-repositioned/independent-checks.json) ·
+[Native source checks](results/indonesia-native-repositioned/native-source-checks.json) ·
+[Translation record](results/indonesia-native-repositioned/manifest.json).
+
+The layout has 5 island axis-order errors out of 2,323 comparisons, down from
+426. It retains all 1,894 tiles and 51 group shapes. Source retention remains
+100% to floating-point precision, cross-group mass remains zero, and maximum
+relative target error remains below 0.01%. This does not remove the small-island
+grouping or source-coverage limits.
+
 ### Coarse results
 
 - H3-5 grouped transport reaches full source retention, zero cross-group mass,

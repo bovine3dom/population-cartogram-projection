@@ -521,3 +521,18 @@ under ignored `output/auto-cartogram/`.
   there are no overlaps, contacts, disconnected shapes, or region holes. Saved
   all three images and their checks. Transport has not yet been translated to
   these new coordinates.
+
+## 02:06–02:08 UTC — native transport on the improved island layout
+
+- Added an explicit transport translation stage. It verifies the parent export
+  hashes, checks one integer translation per unchanged group shape, and moves
+  target coordinates without changing source IDs or weights. It does not solve
+  again. It checks the new export before atomic publication.
+- Tests reject changed shapes, overlaps, and existing output. All five
+  standard-library transport tests pass. The native export at spacing 1.2
+  also passes independent flow and native-source checks.
+- Saved a group-coloured image and checks. All 832,166 sources, 1,894 targets,
+  and 1,432,890 pairs remain. Source retention is 100% to floating-point
+  precision, cross-group population is zero, and maximum target error stays
+  below 0.01%. The five remaining island order errors are layout diagnostics,
+  not a claim of complete geographic accuracy.

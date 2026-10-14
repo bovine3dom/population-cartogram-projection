@@ -138,7 +138,10 @@ and no disconnected shapes or region holes. Larger spacing leaves more gaps.
 
 Other spacing settings: [1.0](results/indonesia-reposition-1.0/review.png) ·
 [1.6](results/indonesia-reposition-1.6/review.png).
-These are placement checks, separate from the transport checks below.
+These are placement checks. The balanced native mapping has also been moved
+to the spacing-1.2 layout through checked integer translations, without changing
+weights or solving again. Its independent flow and native-source checks pass:
+[improved-position transport image](results/indonesia-native-repositioned/review.png).
 
 The native H3-8 grouped transport test now covers all 832,166 matched source
 cells. Independent checks confirm their IDs, population, and group labels.

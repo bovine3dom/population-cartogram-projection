@@ -11,6 +11,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"examples"/"auto-carto
 import check_transport as audit
 import review_balance as picture
 import check_transport_shift as shift
+import translate_transport as translate
 
 
 class TransportTests(unittest.TestCase):
@@ -57,6 +58,29 @@ class TransportTests(unittest.TestCase):
                 picture.run(raw,corrected,root/"invalid")
             with self.assertRaisesRegex(ValueError,"support differs"):
                 shift.compare(raw,corrected)
+
+    def test_transport_translation_keeps_weights_and_rejects_shape_changes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); raw=root/"raw"; raw.mkdir(); self.fixture(raw)
+            (raw/"independent-checks.json").write_text(json.dumps(audit.check(raw)))
+            original=root/"original"; moved=root/"moved"
+            for d,text in [(original,"A,0,0\nB,1,0\n"),(moved,"A,5,8\nB,-2,-4\n")]:
+                d.mkdir(); (d/"complete.txt").write_text("mode=test\n")
+                (d/"cells.csv").write_text("component_id,x,y\n"+text)
+            result=translate.run(raw,original,moved,root/"out")
+            self.assertEqual(result["retained_population"],100)
+            self.assertEqual(result["cross_group_population"],0)
+            mapping=list(audit.rows(root/"out"/"mapping.csv"))
+            self.assertEqual([(r["id"],r["weight"]) for r in mapping],[("a","1"),("b","1")])
+            self.assertEqual([(r["x"],r["y"]) for r in mapping],[("5","8"),("-2","-4")])
+            with self.assertRaisesRegex(ValueError,"already exists"):
+                translate.run(raw,original,moved,root/"out")
+            with self.assertRaisesRegex(ValueError,"changed shape"):
+                translate.translations({"A":{(0,0),(1,0)}},{"A":{(0,0),(0,1)}})
+            (moved/"cells.csv").write_text("component_id,x,y\nA,0,0\nB,0,0\n")
+            with self.assertRaisesRegex(ValueError,"Overlapping"):
+                translate.run(raw,original,moved,root/"bad")
+            self.assertFalse((root/"bad").exists())
 
     def test_expected_position_change_normalizes_retained_weights(self):
         with tempfile.TemporaryDirectory() as tmp:
