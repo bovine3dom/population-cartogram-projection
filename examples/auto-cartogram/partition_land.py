@@ -76,12 +76,16 @@ def contact_groups(pairs):
     return groups
 
 
-def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False):
+def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([sigma,guide,anchor]).all() or sigma<=0 or min(guide,anchor)<0:raise ValueError('Invalid settings')
+    if flow_geometry and guide_layout:raise ValueError('Choose either flow geometry or guide layout')
     started=time.monotonic()
     source_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',layout/'cells.csv']+([guide_layout/'cells.csv',guide_layout/'complete.txt'] if guide_layout else [])}
     script_hashes={name:digest(Path(__file__).with_name(name)) for name in ['partition_land.py','compact_regions.py','land_envelope.py','review_layout.py']}
+    if flow_geometry:
+        source_hashes[str(flow_geometry)]=digest(flow_geometry)
+        for name in ['flow_footprint.py','review_flow.py','shape_placement.py']:script_hashes[name]=digest(Path(__file__).with_name(name))
     shapes,tiles,_=load(inputs,layout)
     budgets={c:int(row['tiles']) for c,row in shapes.items()}
     if any(len(points)!=budgets[c] for c,points in tiles.items()):raise ValueError('Exact starting budgets required')
@@ -90,17 +94,20 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     if not movable:raise ValueError('No movable components')
     groups=contact_groups(pairs) if by_landmass else [sorted(movable)]
     groups.sort(key=lambda group:(-sum(budgets[c] for c in group),group))
-    centres=alignment=None
+    centres=alignment=flow=None
+    if flow_geometry:
+        from flow_footprint import prepare
+        tiles,centres,flow=prepare(flow_geometry,tiles,fixed,budgets)
     if guide_layout:
         _,guides,_=load(inputs,guide_layout)
         centres,alignment=fit_guide_centres(tiles,guides,budgets)
-    costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=max(64,int(np.ceil(4*sigma))+2),centres=centres)
+    costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=max(64,int(np.ceil(4*sigma))+2),centres=centres,budgets=budgets)
     shape=next(iter(costs.values())).shape;target=np.zeros(shape,dtype=bool)
     result={c:set(tiles[c]) for c in fixed};assigned=set();records=[]
     for labels in groups:
         # Reserve other landmasses' starting cells and all earlier target cells.
         masks={**tiles,'__assigned__':assigned}
-        mask,envelope=build(masks,(set(tiles)-set(labels))|{'__assigned__'},origin,shape,sigma)
+        mask,envelope=build(masks,(set(tiles)-set(labels))|{'__assigned__'},origin,shape,sigma,count=sum(budgets[c] for c in labels))
         if np.any(mask&target):raise AssertionError('Landmass targets overlap')
         target|=mask;yy,xx=np.nonzero(mask)
         if power:
@@ -118,7 +125,7 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     if sum(map(len,result.values()))!=len(set().union(*result.values())):raise AssertionError('Overlapping cells')
     disconnected={c:n for c,points in result.items() if (n:=connectivity(points))!=1}
     holed={c:n for c,points in result.items() if (n:=holes(points))}
-    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,partitions=records,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
+    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,flow_geometry=str(flow_geometry) if flow_geometry else None,flow=flow,partitions=records,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -140,6 +147,7 @@ if __name__=='__main__':
     for name,default in [('sigma',8.),('guide',4.),('anchor',.05)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--iterations',type=int,default=300)
     parser.add_argument('--guide-layout',type=Path)
+    parser.add_argument('--flow-geometry',type=Path,help='Use continuous geometry for the footprint and sites, with original budgets')
     parser.add_argument('--power',action='store_true',help='Use uniform squared centre distance instead of outline costs')
     parser.add_argument('--by-landmass',action='store_true',help='Partition each connected source land-border group separately')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

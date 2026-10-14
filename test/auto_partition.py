@@ -2,6 +2,7 @@
 """Check the diagnostic capacity partition, not cartogram quality."""
 import contextlib
 import io
+import json
 from pathlib import Path
 import sys
 import tempfile
@@ -58,6 +59,18 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertEqual({c:len(points) for c,points in tiles.items()},{'a':2,'b':2,'c':2,'d':2,'e':1})
             self.assertTrue(all(x<10 for c in 'ab' for x,y in tiles[c]))
             self.assertTrue(all(x>10 for c in 'cd' for x,y in tiles[c]))
+            features=[]
+            for c,x in zip('abcde',[0,1,20,21,10]):
+                size=.01 if c=='a' else 1.;x+=.05;y=.05
+                features.append(dict(type='Feature',properties=dict(component_id=c),geometry=dict(type='Polygon',coordinates=[[[x,y],[x+size,y],[x+size,y+size],[x,y+size],[x,y]]])))
+            geometry=root/'flow.geojson';geometry.write_text(json.dumps(dict(type='FeatureCollection',features=features)))
+            with contextlib.redirect_stdout(io.StringIO()):flow=run(inputs,layout,root/'flow-result',sigma=1,iterations=20,power=True,by_landmass=True,flow_geometry=geometry)
+            self.assertIn('a',flow['flow']['subtile_fallback_components'])
+            self.assertEqual(sum(p['envelope']['target_cells'] for p in flow['partitions']),8)
+            _,flow_tiles,_=load(inputs,root/'flow-result')
+            self.assertEqual({c:len(p) for c,p in flow_tiles.items()},{c:len(p) for c,p in tiles.items()})
+            self.assertIn(str(geometry),flow['inputs'])
+            with self.assertRaisesRegex(ValueError,'either'):run(inputs,layout,root/'bad-flow',flow_geometry=geometry,guide_layout=layout)
 
     def test_review_viewport(self):
         owners={(0,0):'a',(1,100):'a'}

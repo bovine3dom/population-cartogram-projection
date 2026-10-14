@@ -254,6 +254,33 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - Both full-size fast-topology repeats completed. Their cell files match the
   original interior fit and the 80-round geographic-guide fit byte for byte.
 
+## 16:50–16:58 UTC — footprint quality remains a separate problem
+
+- Saved two global diagnostics with compressed cells and target masks, settings,
+  checksums, and world and regional images. The gallery now shows their
+  connectivity failures rather than presenting them as candidates.
+- Added a shared viewport calculation for world and regional images. New SVG
+  files record the map header height. Regional crops also support old files
+  that do not have this field. Inspected the updated Europe detail: the crop
+  and labels align, and the topology warning is visible.
+- The landmass power controls completed. Inspected the geographic-start image
+  at smoothing scale 16. It fills the large central African hole, but makes
+  rounded land blocks and separates China from the rest of Asia. The footprint
+  itself needs correction; exact partitioning cannot fix its outer shape.
+- Re-inspected the earlier continuous-flow world image. Its country outlines
+  are too thin, but its large-scale arrangement puts India west of China and
+  north of southern Africa. Test its footprint and sites without retaining its
+  thin internal country boundaries.
+- Added a flow-footprint adapter. It rasterizes validated component polygons,
+  translates intact isolated-island templates near the flow sites, and keeps
+  the original budgets. The raster mask is only a density sample: a landmass
+  target must use the requested area, not the sampled pixel count. This also
+  avoids adopting the upstream solver's raised minimum country areas.
+- The adapter reports components too small to rasterize, validates all labels,
+  and records geometry and code hashes. Seven partition tests and 40 shape
+  tests pass, including a flow-mask pipeline with exact original budgets.
+  No new flow-footprint result has completed visual review yet.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
