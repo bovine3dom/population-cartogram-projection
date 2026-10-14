@@ -138,9 +138,9 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None):
     return (costs,origin,allowed) if stretch is not None else (costs,origin)
 
 
-def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.):
+def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.,fit_attempts=1):
     if output.exists():raise ValueError('Output already exists')
-    if rounds<1 or choices<1 or fit_rounds<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty,sea_perimeter]):raise ValueError('Invalid optimization settings')
+    if rounds<1 or choices<1 or fit_rounds<0 or fit_attempts<1 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty,sea_perimeter]):raise ValueError('Invalid optimization settings')
     if (template_penalty or land_only) and not bounded:raise ValueError('Template penalty and land-only mode require bounded deformation')
     if bounded:regrow=True
     if regrow:atomic=True
@@ -178,7 +178,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     state=state_type(tiles,required,costs,origin,perimeter,false_contact,sea_perimeter=sea_perimeter,**options)
     history=[];initial=state.energy()
     for turn in range(1,fit_rounds+1):
-        moves=state.fit_step(requested,choices)
+        moves=state.fit_step(requested,choices,fit_attempts)
         error=sum(abs(len(state.tiles[c])-requested[c]) for c in requested)
         history.append(dict(phase='counts',round=turn,exchanges=moves,energy=state.energy(),count_error=error))
         print(f'Count round {turn}: {moves} transfers; count error {error}',flush=True)
@@ -196,7 +196,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     if bounded:state.check_contacts()
     metadata=dict(method='Count-preserving local boundary exchanges with perimeter and geographic-guide costs; no required-contact paths',
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
-        cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,absolute_tile_error=error,
+        cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,fit_attempts=fit_attempts,absolute_tile_error=error,
         bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,sea_perimeter=sea_perimeter,
         template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
@@ -223,7 +223,8 @@ if __name__=='__main__':
     parser.add_argument('--rounds',type=int,default=300);parser.add_argument('--choices',type=int,default=4)
     for name,default in [('perimeter',1.),('false-contact',4.),('guide',1.),('anchor',.05),('sea-perimeter',0.)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--cycles',action='store_true');parser.add_argument('--atomic',action='store_true')
-    parser.add_argument('--fit-rounds',type=int,default=0);parser.add_argument('--regrow',action='store_true')
+    parser.add_argument('--fit-rounds',type=int,default=0);parser.add_argument('--fit-attempts',type=int,default=1)
+    parser.add_argument('--regrow',action='store_true')
     parser.add_argument('--bounded',action='store_true');parser.add_argument('--stretch',type=float,default=.1)
     parser.add_argument('--contact-reward',type=float,default=.5)
     parser.add_argument('--template-penalty',type=float,default=0.)

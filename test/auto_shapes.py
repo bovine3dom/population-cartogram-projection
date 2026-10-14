@@ -71,6 +71,14 @@ class ShapeTests(unittest.TestCase):
             path.write_text('component_id,x,y\na,10,20\nb,10,20\n')
             with self.assertRaisesRegex(ValueError,'Overlapping'):review_gaps.read_cells(path)
 
+    def test_count_fit_tries_alternatives_after_a_topology_rejection(self):
+        costs=np.zeros((8,8));costs[2,3]=10.
+        state=AtomicDeformation({'a':{(2,2),(3,2),(4,2)}},set(),{'a':costs},(0,0))
+        self.assertEqual(state.fit_step({'a':2},choices=4,attempts=1),0)
+        self.assertEqual(state.fit_step({'a':2},choices=4,attempts=4),1)
+        self.assertEqual(len(state.tiles['a']),2)
+        self.assertEqual(compact.connectivity(state.tiles['a']),1)
+
     def test_sea_perimeter_delta_matches_complete_energy(self):
         tiles={'a':{(2,2),(2,3)},'b':{(3,2),(3,3)}}
         state=Regrowth(tiles,{('a','b')},{c:np.zeros((8,8)) for c in tiles},(0,0),sea_perimeter=8.)
