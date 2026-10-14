@@ -1,0 +1,107 @@
+{
+  "regions": [
+    {
+      "name": "north-america",
+      "source_bounds": [
+        -170,
+        -50,
+        5,
+        85
+      ],
+      "selected_components": 74,
+      "svg_view_box": [
+        92.75221953188054,
+        362.7623083131558,
+        394.2534301856336,
+        316.51331719128336
+      ]
+    },
+    {
+      "name": "south-america",
+      "source_bounds": [
+        -85,
+        -30,
+        -60,
+        15
+      ],
+      "selected_components": 40,
+      "svg_view_box": [
+        285.7142857142857,
+        564.0536723163842,
+        287.3607748184019,
+        255.43179983857954
+      ]
+    },
+    {
+      "name": "europe",
+      "source_bounds": [
+        -15,
+        45,
+        35,
+        72
+      ],
+      "selected_components": 99,
+      "svg_view_box": [
+        595.2865213882163,
+        311.3983050847458,
+        463.66424535916065,
+        188.79741727199354
+      ]
+    },
+    {
+      "name": "africa",
+      "source_bounds": [
+        -25,
+        55,
+        -38,
+        38
+      ],
+      "selected_components": 112,
+      "svg_view_box": [
+        642.4858757062148,
+        396.0794995964488,
+        304.01937046004844,
+        390.08878127522195
+      ]
+    },
+    {
+      "name": "south-asia",
+      "source_bounds": [
+        60,
+        105,
+        5,
+        40
+      ],
+      "selected_components": 40,
+      "svg_view_box": [
+        929.8466505246166,
+        315.5629539951574,
+        558.0629539951575,
+        374.818401937046
+      ]
+    },
+    {
+      "name": "indonesia",
+      "source_bounds": [
+        90,
+        145,
+        -12,
+        10
+      ],
+      "selected_components": 97,
+      "svg_view_box": [
+        1357.4172719935432,
+        609.8648103309121,
+        326.23083131557723,
+        237.3849878934625
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-110000-dissolved-input/groups.csv": "67e5f8a4c1b8b71ec71ea870d738aa76234d8cf3c92edbe155f0a58044092804",
+    "output/auto-cartogram/world-110000-shared-footprint-borrow-islands/cells.csv": "10cf9e5a68da1fd5ff2170dcb45402217add54ac035b22a8f454e168ccdf7f71",
+    "output/auto-cartogram/world-110000-shared-footprint-borrow-islands/review.svg": "0ad7268004df2ead71fb396cac3c912d12c2be6cc977aa6074c584e14459ccc2",
+    "output/auto-cartogram/world-110000-shared-footprint-borrow-islands/metrics.json": "a72c8a28f9e68ff11d51445154a5abab2874e1a3e4c860a6d96768d65e19f6c0"
+  },
+  "script_sha256": "c64e35dcdfcb476e6b5a88ddece60c95cc6a27475c3d6fa114006cafc90a3707"
+}

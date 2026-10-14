@@ -1,0 +1,107 @@
+{
+  "regions": [
+    {
+      "name": "north-america",
+      "source_bounds": [
+        -170,
+        -50,
+        5,
+        85
+      ],
+      "selected_components": 50,
+      "svg_view_box": [
+        86.73913043478261,
+        259.2934782608696,
+        612.2826086956521,
+        420.6521739130434
+      ]
+    },
+    {
+      "name": "south-america",
+      "source_bounds": [
+        -85,
+        -30,
+        -60,
+        15
+      ],
+      "selected_components": 28,
+      "svg_view_box": [
+        334.45652173913044,
+        525.7065217391305,
+        364.5652173913043,
+        364.56521739130426
+      ]
+    },
+    {
+      "name": "europe",
+      "source_bounds": [
+        -15,
+        45,
+        35,
+        72
+      ],
+      "selected_components": 65,
+      "svg_view_box": [
+        451.30434782608694,
+        240.59782608695656,
+        448.69565217391306,
+        205.65217391304344
+      ]
+    },
+    {
+      "name": "africa",
+      "source_bounds": [
+        -25,
+        55,
+        -38,
+        38
+      ],
+      "selected_components": 85,
+      "svg_view_box": [
+        675.6521739130435,
+        324.72826086956525,
+        359.891304347826,
+        532.8260869565217
+      ]
+    },
+    {
+      "name": "south-asia",
+      "source_bounds": [
+        60,
+        105,
+        5,
+        40
+      ],
+      "selected_components": 20,
+      "svg_view_box": [
+        843.9130434782609,
+        282.6630434782609,
+        649.6739130434781,
+        415.97826086956525
+      ]
+    },
+    {
+      "name": "indonesia",
+      "source_bounds": [
+        90,
+        145,
+        -12,
+        10
+      ],
+      "selected_components": 34,
+      "svg_view_box": [
+        1278.586956521739,
+        563.0978260869565,
+        397.28260869565224,
+        336.52173913043475
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-10000-dissolved-input/groups.csv": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+    "output/auto-cartogram/world-10000-shared-footprint-chain-islands/cells.csv": "46707209a856f1171d9dbdc69aa94930a00e9c1eee8ecc2bf7e89911c5b83eee",
+    "output/auto-cartogram/world-10000-shared-footprint-chain-islands/review.svg": "eaabeb533ab887b23ae6af113eac58fd509c29d256d2c45df4367bbdff2c8424",
+    "output/auto-cartogram/world-10000-shared-footprint-chain-islands/metrics.json": "4f581abd4473bfc50813020e6ba52749222a9c4c450e67b7e8b3b1859314b4bf"
+  },
+  "script_sha256": "c64e35dcdfcb476e6b5a88ddece60c95cc6a27475c3d6fa114006cafc90a3707"
+}

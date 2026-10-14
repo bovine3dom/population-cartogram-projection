@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-14T18:30:41.085921+00:00",
+  "checked_at_utc": "2026-10-14T18:54:37.584748+00:00",
   "method": "Headless local HTTP requests for every unique relative href and src on the gallery page",
   "resources": [
     {
@@ -259,6 +259,18 @@
       "status": 200
     },
     {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-10000-connected/bundle.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-10000-connected/regions/indonesia.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-10000-connected/review.png",
+      "status": 200
+    },
+    {
       "path": "examples/auto-cartogram/results/compact-landmass/world-10000/bundle.json",
       "status": 200
     },
@@ -272,6 +284,18 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/world-10000/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-110000-connected/bundle.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-110000-connected/regions/indonesia.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-110000-connected/review.png",
       "status": 200
     },
     {

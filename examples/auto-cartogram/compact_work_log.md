@@ -460,7 +460,7 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The current partition suite has 17 passing tests. Production code and target
   data remain unchanged. The work window has not ended.
 
-## 18:29–18:55 UTC — regional controls and multi-resolution repairs
+## 18:29–18:53 UTC — regional controls and multi-resolution repairs
 
 - All nine test commands passed at checkpoint `9dc336c`. Saved their logs in
   `validation-1831`. Later changes pass the 19-test partition suite; this is
