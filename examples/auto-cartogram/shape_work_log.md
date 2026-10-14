@@ -287,3 +287,22 @@ Inspect the resulting images at world and regional scales.
 - Stopped only the identified, unfinished 55,000-tile coast trial with the unit
   error. Started new trials in separate output directories. All 24 focused
   tests pass, including gap units and the one-cell anchor bound.
+
+## 12:16–12:23 UTC — exact-translation position refinement
+
+- Saved the 110,000-tile candidate and added it to the static gallery. It has
+  585 represented components, exact counts, no false borders, and 95 of 353
+  source contacts. Visual review still finds poor positions around Afghanistan
+  and Sri Lanka. More tiles alone do not solve these defects.
+- The corrected coarse coast-target trial does not fix the main position
+  errors. The continuous solver can stop with components in poor local positions.
+- Added a separate refinement that moves one intact component at a time. It
+  solves the conditional position cost, proposes a collision-free integer
+  translation, and accepts it only if total position energy decreases. It also
+  checks short moves. No false borders or connector paths are permitted.
+- All 25 focused tests pass. Tests compare conditional and full energy changes,
+  check exact translations and forbidden contacts, and run the file pipeline.
+- The first coarse refinement retains 117 of 341 source contacts, up from 70.
+  Visual review shows Sri Lanka farther south, but Vietnam and Cambodia still
+  have poor positions. Lower energy is not sufficient for map approval.
+- The 55,000-tile refinement and both 500,000-tile position trials continue.
