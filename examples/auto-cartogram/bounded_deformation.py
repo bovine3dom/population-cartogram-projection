@@ -17,7 +17,7 @@ class BoundedDeformation(Regrowth):
             if not self.contacts_allowed(c,p):raise ValueError('False contact in bounded layout')
 
     def contacts_allowed(self,c,p):
-        return all(other in (None,c) or tuple(sorted((c,other))) in self.required for other in (self.owners.get(q) for q in adjacent(p)))
+        return all(other in (None,c) or tuple(sorted((c,other))) in self.required for other in (self.owner_at(q) for q in adjacent(p)))
 
     def within_guide(self,c,p):
         return self.inside(p) and self.allowed_masks[c][p[1]-self.origin[1],p[0]-self.origin[0]]

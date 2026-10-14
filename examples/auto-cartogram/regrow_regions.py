@@ -8,20 +8,42 @@ from review_layout import connectivity, holes
 
 
 class Regrowth(AtomicDeformation):
+    def owner_at(self,p):
+        owner=self.owners.get(p)
+        reads=getattr(self,'_regrow_reads',None)
+        if reads is not None:reads[p]=owner
+        return owner
+
+    def regrow(self,c):
+        if not getattr(self,'cache_regrowth',False):return self._regrow(c)
+        if c in getattr(self,'fixed',()) or len(self.tiles[c])<3:return False
+        # Costs, masks, and penalties stay fixed during a run. Record all
+        # occupancy reads, including rejected frontier cells and coast neighbours.
+        cache=getattr(self,'_regrow_cache',{});self._regrow_cache=cache
+        points=frozenset(self.tiles[c]);previous=cache.get(c)
+        if previous is not None and previous[0]==points and all(self.owners.get(p)==owner for p,owner in previous[1].items()):return False
+        self._regrow_reads={}
+        try:
+            changed=self._regrow(c);reads=self._regrow_reads
+        finally:self._regrow_reads=None
+        if changed:cache.pop(c,None)
+        else:cache[c]=(points,reads)
+        return changed
+
     def region_energy(self,c,points):
         value=sum(self.cost(c,p) for p in points)
         for p in points:
             for q in adjacent(p):
                 if q in points:continue
-                other=self.owners.get(q)
+                other=self.owner_at(q)
                 if other==c:other=None
                 value+=self.edge_at(p,q,c,other)-self.edge_at(p,q,None,other)
         return value
 
     def allowed_growth(self,c,p):
-        return self.inside(p) and self.owners.get(p) in (None,c)
+        return self.inside(p) and self.owner_at(p) in (None,c)
 
-    def regrow(self,c):
+    def _regrow(self,c):
         if c in getattr(self,'fixed',()):return False
         current=self.tiles[c];count=len(current)
         if count<3:return False
@@ -32,7 +54,7 @@ class Regrowth(AtomicDeformation):
             version=versions.get(p,0)+1;versions[p]=version
             delta=self.cost(c,p)
             for q in adjacent(p):
-                other=c if q in grown else self.owners.get(q)
+                other=c if q in grown else self.owner_at(q)
                 if other==c and q not in grown:other=None
                 delta+=self.edge_at(p,q,c,other)-self.edge_at(p,q,None,other)
             heapq.heappush(frontier,(delta,p,version))

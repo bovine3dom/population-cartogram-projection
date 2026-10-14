@@ -96,6 +96,20 @@ class ShapeTests(unittest.TestCase):
             ambiguous=compare_country_contacts.run(inputs,root/'owid.csv',root/'iso.json',[layout],root/'ambiguous.json',components)
             self.assertEqual(ambiguous['excluded_owid_codes'],['3'])
 
+    def test_regrowth_cache_matches_uncached_moves_and_energy(self):
+        tiles={'a':{(x,y) for x in range(2,5) for y in range(2,5)},'b':{(x,y) for x in range(5,8) for y in range(2,5)},'c':{(5,6)}}
+        for kind in [Regrowth,BoundedDeformation]:
+            for seed in range(5):
+                rng=np.random.default_rng(seed);costs={c:rng.random((12,12))*10 for c in tiles}
+                options={'allowed_masks':{c:np.ones((12,12),dtype=bool) for c in tiles}} if kind is BoundedDeformation else {}
+                mask=rng.random((12,12))>.5
+                slow=kind(tiles,{('a','b')},costs,(0,0),sea_perimeter=3,sea_mask=mask,**options)
+                fast=kind(tiles,{('a','b')},costs,(0,0),sea_perimeter=3,sea_mask=mask,**options);fast.cache_regrowth=True
+                for _ in range(8):
+                    self.assertEqual(slow.step(),fast.step())
+                    self.assertEqual(slow.tiles,fast.tiles)
+                    self.assertAlmostEqual(slow.energy(),fast.energy())
+
     def test_guide_position_fit_keeps_axes_and_budget_weighting(self):
         guides={'a':{(0,0)},'b':{(2,0)},'c':{(0,2)}}
         tiles={c:{(2*x+5,2*y+7) for x,y in points} for c,points in guides.items()}
@@ -251,6 +265,8 @@ class ShapeTests(unittest.TestCase):
                 self.assertGreater(joint['guide_alignment']['scale'],0)
                 self.assertEqual(joint['absolute_tile_error'],0)
                 self.assertEqual(joint['guide_area'],'requested budget')
+                compact.run(inputs,layout,root/'joint-uncached',rounds=5,fit_rounds=10,strict_fit=True,regrow=True,land_only=True,sea_perimeter=8,interior_sea_radius=2,guide_layout=root/'deformed',cache_regrowth=False)
+                self.assertEqual((root/'joint/cells.csv').read_bytes(),(root/'joint-uncached/cells.csv').read_bytes())
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
                 stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True,order_weight=1,local_order=35,mass_weighted=True)
                 self.assertEqual(stress['collision_geometry'],'signed-distance raster')
