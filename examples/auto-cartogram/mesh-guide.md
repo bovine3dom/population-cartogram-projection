@@ -66,6 +66,19 @@ Those earlier failures remain recorded; they are not converged results.
 This is not part of Sargent's objective and is off by default. It tests large
 unwanted rotations in low-water controls. Analytic-gradient tests cover it.
 
+`--region-shape-weight` tests a second, component-wide prior. Each source
+triangle intersection supplies its area and centroid. Map those centroids through
+the mesh, then compare them with the uniformly scaled source centroids. Remove
+each component's mean displacement before measuring squared residuals. Thus each
+component can translate freely, but its preferred shape and orientation remain
+fixed. Source-area fractions weight the samples within each component.
+
+This prior is off by default and is not part of Sargent's objective. It can resist
+a long thin country even when each local triangle has moderate distortion.
+Centroid samples omit variation inside each triangle intersection. A coarse mesh
+can therefore miss shape errors. The local mesh costs, determinant bounds, and
+output checks still apply. No result from this control is assumed in advance.
+
 Other differences from the paper are important:
 
 - Reference triangles are planar, not spherical. Projection distortion remains.
