@@ -1,0 +1,1247 @@
+{
+  "ABW:0d999085fdb95914": [],
+  "ACA:cb08ec7461da4063": [],
+  "AFG:cda2af5bb6ea22f0": [
+    "PAK:447ed1858f7b7a5d",
+    "IRN:3c2b5bd7d999fbee",
+    "TKM:ef25c6485f2078c2",
+    "UZB:448c5653f0be3548",
+    "TJK:d6e62d7f585e085c",
+    "CHN:72cd37e37e634df7"
+  ],
+  "AGO:2b9c8d9b36ed1f1d": [
+    "COD:34b7cfda818ccf80",
+    "COG:c5650e58e144375b"
+  ],
+  "AGO:704113b148b7974b": [
+    "ZMB:583491139c8eb3b0",
+    "NAM:d67affdeafffe7f2",
+    "COD:34b7cfda818ccf80"
+  ],
+  "AIA:09a59ce4723b5dc9": [],
+  "ALB:c931cc5315aed954": [
+    "MKD:072da3322c97fa27",
+    "GRC:70edd41aef80d178",
+    "MNE:52f7987265ed3935",
+    "KOS:e68a710dbd926c28"
+  ],
+  "ALD:47f8615cf1330e71": [],
+  "AND:0923843c3687a75e": [
+    "ESP:ff9451038f1a27e4",
+    "FXX:f023db15990ca569"
+  ],
+  "ARE:6af70f4330c4f4bf": [
+    "OMN:21af2c17fe172531",
+    "SAU:11ac65250772b5d3"
+  ],
+  "ARG:7462ff4f8b49993a": [
+    "BOL:1a7254807c71e166",
+    "PRY:8be730e7955b0934",
+    "BRA:c9a395c2d321cd60",
+    "URY:a93a37d95dfce9bb",
+    "CHL:150a87c1995fb5ad",
+    "SPI:47f581a247f875ae"
+  ],
+  "ARM:433ac98029e5a761": [
+    "AZE:0510388634a9edd9",
+    "IRN:3c2b5bd7d999fbee",
+    "AZE:e5af19283650a3e3",
+    "TUR:3b553df250ebf332",
+    "GEG:2733dc7254c8730b"
+  ],
+  "ASM:7f40f5358bbd2440": [],
+  "ATA:a3f793773cb0a0b5": [],
+  "ATF:466bffce003497f7": [],
+  "AUS:6a36c6fd1db93bf9": [],
+  "AUS:adfd7567b2399535": [],
+  "AUT:709fdd785650b149": [
+    "SVK:1f440da2e10fbb82",
+    "HUN:9f803be1643ca956",
+    "SVN:e8f334b689926950",
+    "ITA:7d6868fd136c6c11",
+    "LIE:452f33c4300c02b9",
+    "CHE:b37ef58a1d6dee0a",
+    "DEU:0b0480fae55fd996",
+    "CZE:bf3969a8b4fbfc04"
+  ],
+  "AZE:0510388634a9edd9": [
+    "GEG:2733dc7254c8730b",
+    "RUS:b85c5bca1852870f",
+    "IRN:3c2b5bd7d999fbee",
+    "ARM:433ac98029e5a761"
+  ],
+  "AZE:e5af19283650a3e3": [
+    "IRN:3c2b5bd7d999fbee",
+    "TUR:3b553df250ebf332",
+    "ARM:433ac98029e5a761"
+  ],
+  "BCR:2195ace64986de66": [
+    "BFR:c594695de4accce5"
+  ],
+  "BDI:b3ecb03d79bf1cb5": [
+    "TZA:88eb4141b8ee7ab7",
+    "COD:34b7cfda818ccf80",
+    "RWA:11c3869510b66d95"
+  ],
+  "BEN:5911ab4fd3e84cb1": [
+    "NGA:edcdec1fdf6fb5c7",
+    "TGO:f7afd783bdbbc052",
+    "BFA:9c8f06c312ed722e",
+    "NER:225f284b6e95d815"
+  ],
+  "BFA:9c8f06c312ed722e": [
+    "BEN:5911ab4fd3e84cb1",
+    "TGO:f7afd783bdbbc052",
+    "GHA:1beea30af91e217d",
+    "CIV:1c18880d4492d85c",
+    "MLI:cfb1983a0687bf5c",
+    "NER:225f284b6e95d815"
+  ],
+  "BFR:c594695de4accce5": [
+    "NLX:8b9c3398a58bdb2a",
+    "BWR:099915a615cc5b27",
+    "FXX:f023db15990ca569",
+    "BCR:2195ace64986de66"
+  ],
+  "BGD:31f73d0e612038c5": [],
+  "BGD:938be7fc0dcd9e43": [],
+  "BGD:d6d0c7df0b40a187": [
+    "MMR:e9f27e99686071f9",
+    "IND:3f0bb94d859b2064"
+  ],
+  "BGD:ee4951d7c5e4344f": [],
+  "BGR:8a6e196d0e9089ee": [
+    "GRC:70edd41aef80d178",
+    "MKD:072da3322c97fa27",
+    "SRS:de445e773862803a",
+    "ROU:8bc181463815c013",
+    "TUR:6fce5e1d91133e37"
+  ],
+  "BHF:f0649ba9cbf2fc0d": [
+    "HRV:23be6296644271a5",
+    "BIS:ae873ebcc85c65b5"
+  ],
+  "BHR:7a146d25b735f173": [],
+  "BHS:d03207e09866ed23": [],
+  "BIS:ae873ebcc85c65b5": [
+    "BHF:f0649ba9cbf2fc0d",
+    "HRV:23be6296644271a5"
+  ],
+  "BLM:827ad9ed4c2f6184": [],
+  "BLR:216ea6b406f5bc6c": [
+    "POL:1980df7ed9d16d12",
+    "LTU:4c2a60810b4196cd",
+    "LVA:ff14565ea5d338a5",
+    "RUS:b85c5bca1852870f",
+    "UKR:52622876ebf1ecb8"
+  ],
+  "BLZ:4f146436bd0251b5": [
+    "MEX:aa67baf61acd20f3",
+    "GTM:304e3cb8ddf6bb44"
+  ],
+  "BMU:4a0d97b264a07eaa": [],
+  "BOL:1a7254807c71e166": [
+    "PER:d420f75fe20c6a02",
+    "BRA:c9a395c2d321cd60",
+    "PRY:8be730e7955b0934",
+    "ARG:7462ff4f8b49993a",
+    "CHL:150a87c1995fb5ad"
+  ],
+  "BRA:c9a395c2d321cd60": [
+    "ARG:7462ff4f8b49993a",
+    "PRY:8be730e7955b0934",
+    "BOL:1a7254807c71e166",
+    "PER:d420f75fe20c6a02",
+    "COL:08d1c79f212fc17e",
+    "VEN:301beeea27f4cccb",
+    "GUY:5aec9f8c07eb9159",
+    "SUR:1d7cda681e299b07",
+    "URY:a93a37d95dfce9bb"
+  ],
+  "BRA:f3313e497cca50c7": [],
+  "BRA:f5c11e45059562b8": [],
+  "BRB:18a3b038d121e1b6": [],
+  "BRN:72e2eec83e114e7f": [
+    "MYS:0abe504273f2e4bd"
+  ],
+  "BRT:fef0fc6bba22ada7": [
+    "EGY:f7cc24b776a75221",
+    "SDN:e4296cf2bfa47003"
+  ],
+  "BTN:fe4a4d07e153ef17": [
+    "IND:3f0bb94d859b2064",
+    "CHN:72cd37e37e634df7"
+  ],
+  "BWA:41766e3f9df3a4d1": [
+    "ZWE:241a07c809723778",
+    "ZAF:eb3d29c8e7d957f4",
+    "NAM:d67affdeafffe7f2"
+  ],
+  "BWR:099915a615cc5b27": [
+    "BFR:c594695de4accce5",
+    "NLX:8b9c3398a58bdb2a",
+    "DEU:0b0480fae55fd996",
+    "LUX:2287a57343a7d085",
+    "FXX:f023db15990ca569"
+  ],
+  "CAF:1f15d49e1132c1f3": [
+    "SDN:e4296cf2bfa47003",
+    "SDS:9ecb0b566ac02a31",
+    "COD:34b7cfda818ccf80",
+    "COG:c5650e58e144375b",
+    "CMR:35df8c314c8ef083",
+    "TCD:a34f6ca4b3bd052d"
+  ],
+  "CAN:2f9cda75c78586e5": [],
+  "CAN:614ec007a6324298": [
+    "USA:90107a05206832e4",
+    "USA:13c14a072880aac5"
+  ],
+  "CAN:9076c2432c64faec": [],
+  "CAN:95c7ebac82699331": [],
+  "CAN:c2f1e4e52d5cc0c3": [
+    "USA:90107a05206832e4"
+  ],
+  "CHE:b37ef58a1d6dee0a": [
+    "ITA:7d6868fd136c6c11",
+    "FXX:f023db15990ca569",
+    "DEU:0b0480fae55fd996",
+    "AUT:709fdd785650b149",
+    "LIE:452f33c4300c02b9"
+  ],
+  "CHL:150a87c1995fb5ad": [
+    "BOL:1a7254807c71e166",
+    "SPI:47f581a247f875ae",
+    "ARG:7462ff4f8b49993a",
+    "PER:d420f75fe20c6a02"
+  ],
+  "CHN:614315231acdc665": [],
+  "CHN:68d9459587b3e328": [],
+  "CHN:72cd37e37e634df7": [
+    "IND:3f0bb94d859b2064",
+    "KAS:b7c84d817c090062",
+    "PAK:447ed1858f7b7a5d",
+    "AFG:cda2af5bb6ea22f0",
+    "TJK:d6e62d7f585e085c",
+    "KGZ:401b8fcdc0eef69c",
+    "KAZ:5d6f63a9b9f3c9f9",
+    "RUS:b85c5bca1852870f",
+    "MNG:7ecd8e5b0a42fa66",
+    "PRK:b6e1ce40be9c73e7",
+    "HKG:a4b1c1ec313ba36c",
+    "VNM:749468814d903c2a",
+    "LAO:b4c511d27634a146",
+    "MMR:e9f27e99686071f9",
+    "BTN:fe4a4d07e153ef17",
+    "NPL:c1885306c87c4123"
+  ],
+  "CHN:7331c80e6a0aeaf6": [],
+  "CHN:b6f6968952ede1bd": [],
+  "CHN:bc6aa9717e94f769": [],
+  "CHN:da91019566ae5d0e": [],
+  "CHN:e959a445c659f4ad": [],
+  "CIV:1c18880d4492d85c": [
+    "MLI:cfb1983a0687bf5c",
+    "BFA:9c8f06c312ed722e",
+    "GHA:1beea30af91e217d",
+    "LBR:791c4a2bdad8b682",
+    "GIN:eb019150f12e3d47"
+  ],
+  "CMR:35df8c314c8ef083": [
+    "GNQ:703503e059bb9243",
+    "NGA:edcdec1fdf6fb5c7",
+    "TCD:a34f6ca4b3bd052d",
+    "CAF:1f15d49e1132c1f3",
+    "COG:c5650e58e144375b",
+    "GAB:9b0fa4569aef69bd"
+  ],
+  "CNM:85db95ef4bf8489c": [
+    "ESB:432b2cb88c6056bf",
+    "CYP:0e9f924ff6746fe5",
+    "CYN:3fa61972653460ef"
+  ],
+  "COD:34b7cfda818ccf80": [
+    "CAF:1f15d49e1132c1f3",
+    "SDS:9ecb0b566ac02a31",
+    "UGA:c937c439d1615753",
+    "RWA:11c3869510b66d95",
+    "BDI:b3ecb03d79bf1cb5",
+    "TZA:88eb4141b8ee7ab7",
+    "ZMB:583491139c8eb3b0",
+    "AGO:704113b148b7974b",
+    "AGO:2b9c8d9b36ed1f1d",
+    "COG:c5650e58e144375b"
+  ],
+  "COG:c5650e58e144375b": [
+    "COD:34b7cfda818ccf80",
+    "AGO:2b9c8d9b36ed1f1d",
+    "GAB:9b0fa4569aef69bd",
+    "CMR:35df8c314c8ef083",
+    "CAF:1f15d49e1132c1f3"
+  ],
+  "COK:59fe00fd93eed20c": [],
+  "COL:08d1c79f212fc17e": [
+    "PAN:04773d2112e86006",
+    "VEN:301beeea27f4cccb",
+    "BRA:c9a395c2d321cd60",
+    "PER:d420f75fe20c6a02",
+    "ECU:ef48f29c8aa10327"
+  ],
+  "COM:306e297809981428": [],
+  "CPV:ba70bc183d52ff1a": [],
+  "CRI:5a22dcdd3a44dc5b": [
+    "PAN:04773d2112e86006",
+    "NIC:99f10eccc73d03bc"
+  ],
+  "CUB:a203a2643a40db9f": [
+    "USG:4318b9af790790b9"
+  ],
+  "CUW:2dc808a8cf441409": [],
+  "CXR:810b3572fd4f37bc": [],
+  "CYM:98d679f5360c472c": [],
+  "CYN:3fa61972653460ef": [
+    "ESB:432b2cb88c6056bf",
+    "CNM:85db95ef4bf8489c"
+  ],
+  "CYP:0e9f924ff6746fe5": [
+    "ESB:432b2cb88c6056bf",
+    "WSB:50ca0205ee67e049",
+    "CNM:85db95ef4bf8489c"
+  ],
+  "CZE:bf3969a8b4fbfc04": [
+    "POL:1980df7ed9d16d12",
+    "SVK:1f440da2e10fbb82",
+    "AUT:709fdd785650b149",
+    "DEU:0b0480fae55fd996"
+  ],
+  "DEU:0b0480fae55fd996": [
+    "AUT:709fdd785650b149",
+    "CHE:b37ef58a1d6dee0a",
+    "FXX:f023db15990ca569",
+    "LUX:2287a57343a7d085",
+    "BWR:099915a615cc5b27",
+    "NLX:8b9c3398a58bdb2a",
+    "DNK:d4951f6fa8360f9a",
+    "POL:1980df7ed9d16d12",
+    "CZE:bf3969a8b4fbfc04"
+  ],
+  "DJI:8814228594ff16f1": [
+    "SOL:e03433706d8873bb",
+    "ETH:38a05216b358b154",
+    "ERI:b257cabcc1caab95"
+  ],
+  "DMA:5371714512bc2530": [],
+  "DNK:856510ae70f04d27": [],
+  "DNK:d3d12b2e248a600a": [],
+  "DNK:d4951f6fa8360f9a": [
+    "DEU:0b0480fae55fd996"
+  ],
+  "DOM:1493e296a532a3a2": [
+    "HTI:a3ce6059435c00f9"
+  ],
+  "DZA:704d2c59e6450910": [
+    "MRT:93e93b11bab4502c",
+    "SAH:c067a975f328d956",
+    "MAR:41e7d86fdd4b2365",
+    "TUN:9e23ed3c89bdb2f6",
+    "LBY:7ca6524733c4cc0b",
+    "NER:225f284b6e95d815",
+    "MLI:cfb1983a0687bf5c"
+  ],
+  "ECU:ef48f29c8aa10327": [
+    "COL:08d1c79f212fc17e",
+    "PER:d420f75fe20c6a02"
+  ],
+  "EGY:f7cc24b776a75221": [
+    "BRT:fef0fc6bba22ada7",
+    "SDN:e4296cf2bfa47003",
+    "LBY:7ca6524733c4cc0b",
+    "GAZ:0cd9171edc8ff269",
+    "ISR:7ab28b88983e2128"
+  ],
+  "ENG:164c7e9d5df6a7cb": [
+    "WLS:aac3731473205523",
+    "SCT:40eee4f7009925dd"
+  ],
+  "ERI:b257cabcc1caab95": [
+    "DJI:8814228594ff16f1",
+    "ETH:38a05216b358b154",
+    "SDN:e4296cf2bfa47003"
+  ],
+  "ESB:432b2cb88c6056bf": [
+    "CYP:0e9f924ff6746fe5",
+    "CNM:85db95ef4bf8489c",
+    "CYN:3fa61972653460ef"
+  ],
+  "ESP:1b9f595463c4150a": [],
+  "ESP:791b8810feaa4071": [],
+  "ESP:d0884f530f40b0fb": [],
+  "ESP:d5030a8f162b4ff0": [],
+  "ESP:ff9451038f1a27e4": [
+    "FXX:f023db15990ca569",
+    "AND:0923843c3687a75e",
+    "GIB:71de83b149a1d32c",
+    "PRX:31cd60a8869cd87c"
+  ],
+  "EST:50bd04ff06509a99": [
+    "RUS:b85c5bca1852870f",
+    "LVA:ff14565ea5d338a5"
+  ],
+  "ETH:38a05216b358b154": [
+    "SDN:e4296cf2bfa47003",
+    "ERI:b257cabcc1caab95",
+    "DJI:8814228594ff16f1",
+    "SOL:e03433706d8873bb",
+    "SOP:70591e0321d1bc6d",
+    "SOX:47d9b3dd7fb22c46",
+    "KEN:4b9b5a7ce90b0bb0",
+    "SDS:9ecb0b566ac02a31"
+  ],
+  "FIN:9332a3268ae7c503": [
+    "RUS:b85c5bca1852870f",
+    "SWE:1320ee42b8e1186c",
+    "NOW:a387a8ce67e0d957"
+  ],
+  "FJI:3dd1a1f7bfb548f8": [],
+  "FLK:881178e659639c79": [],
+  "FRO:0f77e91ccf10bf9d": [],
+  "FSM:446beaaeecdff78b": [],
+  "FXX:b04574696bff21bc": [],
+  "FXX:f023db15990ca569": [
+    "BFR:c594695de4accce5",
+    "BWR:099915a615cc5b27",
+    "LUX:2287a57343a7d085",
+    "DEU:0b0480fae55fd996",
+    "CHE:b37ef58a1d6dee0a",
+    "ITA:7d6868fd136c6c11",
+    "MCO:8f146e45080f16d1",
+    "AND:0923843c3687a75e",
+    "ESP:ff9451038f1a27e4"
+  ],
+  "GAB:9b0fa4569aef69bd": [
+    "COG:c5650e58e144375b",
+    "GNQ:703503e059bb9243",
+    "CMR:35df8c314c8ef083"
+  ],
+  "GAZ:0cd9171edc8ff269": [
+    "ISR:7ab28b88983e2128",
+    "EGY:f7cc24b776a75221"
+  ],
+  "GEG:2733dc7254c8730b": [
+    "RUS:b85c5bca1852870f",
+    "AZE:0510388634a9edd9",
+    "ARM:433ac98029e5a761",
+    "TUR:3b553df250ebf332"
+  ],
+  "GGY:a7d1dc6a309f18d0": [],
+  "GHA:1beea30af91e217d": [
+    "TGO:f7afd783bdbbc052",
+    "CIV:1c18880d4492d85c",
+    "BFA:9c8f06c312ed722e"
+  ],
+  "GIB:71de83b149a1d32c": [
+    "ESP:ff9451038f1a27e4"
+  ],
+  "GIN:eb019150f12e3d47": [
+    "GNB:06bb5bdc3716e8ff",
+    "SEN:fa5de3704b02f675",
+    "MLI:cfb1983a0687bf5c",
+    "CIV:1c18880d4492d85c",
+    "LBR:791c4a2bdad8b682",
+    "SLE:aeb8476c9a2c5e10"
+  ],
+  "GMB:e5cba77f98187ac4": [
+    "SEN:fa5de3704b02f675"
+  ],
+  "GNB:06bb5bdc3716e8ff": [
+    "GIN:eb019150f12e3d47",
+    "SEN:fa5de3704b02f675"
+  ],
+  "GNQ:703503e059bb9243": [
+    "CMR:35df8c314c8ef083",
+    "GAB:9b0fa4569aef69bd"
+  ],
+  "GNQ:c49e160563316bbb": [],
+  "GRC:70edd41aef80d178": [
+    "MKD:072da3322c97fa27",
+    "BGR:8a6e196d0e9089ee",
+    "TUR:6fce5e1d91133e37",
+    "ALB:c931cc5315aed954"
+  ],
+  "GRC:7f7de33444a506e9": [],
+  "GRD:5c44dc268d11bb57": [],
+  "GRL:2a53232ea84e3e84": [],
+  "GTM:304e3cb8ddf6bb44": [
+    "SLV:6884a91b71669fb2",
+    "MEX:aa67baf61acd20f3",
+    "BLZ:4f146436bd0251b5",
+    "HND:177f117072fa67d2"
+  ],
+  "GUM:97ae1edcd71bddbc": [],
+  "GUY:5aec9f8c07eb9159": [
+    "BRA:c9a395c2d321cd60",
+    "VEN:301beeea27f4cccb",
+    "SUR:1d7cda681e299b07"
+  ],
+  "HKG:0dbdf00bf060cdf0": [],
+  "HKG:a4b1c1ec313ba36c": [
+    "CHN:72cd37e37e634df7"
+  ],
+  "HMD:68b90fe1c7cf90ee": [],
+  "HND:177f117072fa67d2": [
+    "GTM:304e3cb8ddf6bb44",
+    "NIC:99f10eccc73d03bc",
+    "SLV:6884a91b71669fb2"
+  ],
+  "HRV:23be6296644271a5": [
+    "HUN:9f803be1643ca956",
+    "SRV:807608c3ef78cf26",
+    "BIS:ae873ebcc85c65b5",
+    "BHF:f0649ba9cbf2fc0d",
+    "SVN:e8f334b689926950"
+  ],
+  "HTI:a3ce6059435c00f9": [
+    "DOM:1493e296a532a3a2"
+  ],
+  "HUN:9f803be1643ca956": [
+    "ROU:8bc181463815c013",
+    "SRV:807608c3ef78cf26",
+    "HRV:23be6296644271a5",
+    "SVN:e8f334b689926950",
+    "AUT:709fdd785650b149",
+    "SVK:1f440da2e10fbb82",
+    "UKR:52622876ebf1ecb8"
+  ],
+  "IDN:022bfe9dad3f0890": [],
+  "IDN:1882fc741812bb99": [],
+  "IDN:2342a73d6e3d4204": [],
+  "IDN:323211ce84279d17": [],
+  "IDN:41ba51e85ddbb728": [
+    "TLS:e102fc60287c6426"
+  ],
+  "IDN:43eb860ae00ba2ae": [],
+  "IDN:461e2601656ce574": [],
+  "IDN:4d155ba9803cf6be": [],
+  "IDN:51a10640dee7162b": [
+    "MYS:0abe504273f2e4bd"
+  ],
+  "IDN:6f7a11314a3b7af3": [],
+  "IDN:746e7e525dfc90c5": [],
+  "IDN:7a59bb18e03f91d9": [],
+  "IDN:7c3797a36dd1a69b": [],
+  "IDN:7cb96e5a2c123f8f": [],
+  "IDN:7d68fcb39519952c": [],
+  "IDN:829c07ff03d97c10": [],
+  "IDN:8b7b64d2940fb8dc": [],
+  "IDN:91fa24efd9a13b2f": [
+    "PNX:cd0b182a6ff3f568"
+  ],
+  "IDN:a2e8d108d88be94f": [],
+  "IDN:fecb2bac3d81ef76": [],
+  "IMN:e2108479644de92c": [],
+  "IND:2b0aafcf1d6a984f": [],
+  "IND:3f0bb94d859b2064": [
+    "CHN:72cd37e37e634df7",
+    "NPL:c1885306c87c4123",
+    "BTN:fe4a4d07e153ef17",
+    "MMR:e9f27e99686071f9",
+    "BGD:d6d0c7df0b40a187",
+    "PAK:447ed1858f7b7a5d",
+    "KAS:b7c84d817c090062"
+  ],
+  "IOT:c99e174898a000d0": [],
+  "IRK:d4dcc5471d4f1195": [
+    "IRN:3c2b5bd7d999fbee",
+    "IRR:12a324a4e87e8f1f",
+    "SYX:324e9c172be11a24",
+    "TUR:3b553df250ebf332"
+  ],
+  "IRL:9661cba0fca9f89c": [
+    "NIR:69fa50e543fa7c66"
+  ],
+  "IRN:3c2b5bd7d999fbee": [
+    "AZE:e5af19283650a3e3",
+    "ARM:433ac98029e5a761",
+    "AZE:0510388634a9edd9",
+    "TKM:ef25c6485f2078c2",
+    "AFG:cda2af5bb6ea22f0",
+    "PAK:447ed1858f7b7a5d",
+    "IRR:12a324a4e87e8f1f",
+    "IRK:d4dcc5471d4f1195",
+    "TUR:3b553df250ebf332"
+  ],
+  "IRR:12a324a4e87e8f1f": [
+    "KWT:575b7c67b7a3657d",
+    "SAU:11ac65250772b5d3",
+    "JOR:97289b5947dc77c2",
+    "SYX:324e9c172be11a24",
+    "IRK:d4dcc5471d4f1195",
+    "IRN:3c2b5bd7d999fbee"
+  ],
+  "ISL:a7601b85cd746eec": [],
+  "ISR:7ab28b88983e2128": [
+    "GAZ:0cd9171edc8ff269",
+    "LBN:8d427f2407db4cf0",
+    "WEB:8660f88c9871d216",
+    "JOR:97289b5947dc77c2",
+    "EGY:f7cc24b776a75221"
+  ],
+  "ITA:7d6868fd136c6c11": [
+    "CHE:b37ef58a1d6dee0a",
+    "AUT:709fdd785650b149",
+    "SVN:e8f334b689926950",
+    "FXX:f023db15990ca569",
+    "SMR:65f777115cf6c77c"
+  ],
+  "ITA:e7ab63898f24eb00": [],
+  "ITA:ebecacbac755556c": [],
+  "JAM:64623d7d4c4ecdba": [],
+  "JEY:2e82dcf9ab1c8905": [],
+  "JOR:97289b5947dc77c2": [
+    "SYX:324e9c172be11a24",
+    "IRR:12a324a4e87e8f1f",
+    "SAU:11ac65250772b5d3",
+    "ISR:7ab28b88983e2128",
+    "WEB:8660f88c9871d216"
+  ],
+  "JPN:3876400cea5031e2": [],
+  "JPN:c1b6e25b62179c19": [],
+  "JPN:dd1f679d5c572195": [],
+  "JPN:ec0a7dcff3300192": [],
+  "JPN:f07fed45233efce3": [],
+  "KAB:13532639e9546e01": [
+    "KAZ:5d6f63a9b9f3c9f9"
+  ],
+  "KAS:b7c84d817c090062": [
+    "PAK:447ed1858f7b7a5d",
+    "CHN:72cd37e37e634df7",
+    "IND:3f0bb94d859b2064"
+  ],
+  "KAZ:5d6f63a9b9f3c9f9": [
+    "CHN:72cd37e37e634df7",
+    "KGZ:401b8fcdc0eef69c",
+    "UZB:448c5653f0be3548",
+    "TKM:ef25c6485f2078c2",
+    "RUS:b85c5bca1852870f",
+    "KAB:13532639e9546e01"
+  ],
+  "KEN:4b9b5a7ce90b0bb0": [
+    "ETH:38a05216b358b154",
+    "SOX:47d9b3dd7fb22c46",
+    "TZA:88eb4141b8ee7ab7",
+    "UGA:c937c439d1615753",
+    "SDS:9ecb0b566ac02a31"
+  ],
+  "KGZ:401b8fcdc0eef69c": [
+    "CHN:72cd37e37e634df7",
+    "TJK:d6e62d7f585e085c",
+    "UZB:448c5653f0be3548",
+    "KAZ:5d6f63a9b9f3c9f9"
+  ],
+  "KHM:299a58dab837de1b": [
+    "VNM:749468814d903c2a",
+    "THA:2d2e3dd6e4f6c675",
+    "LAO:b4c511d27634a146"
+  ],
+  "KIR:a4942b8cdd492ae9": [],
+  "KNA:ab73693bbdf69270": [],
+  "KOR:5138aca507ef583d": [],
+  "KOR:ee0f5a0f2f25a339": [],
+  "KOS:e68a710dbd926c28": [
+    "MNE:52f7987265ed3935",
+    "SRS:de445e773862803a",
+    "MKD:072da3322c97fa27",
+    "ALB:c931cc5315aed954"
+  ],
+  "KWT:575b7c67b7a3657d": [
+    "SAU:11ac65250772b5d3",
+    "IRR:12a324a4e87e8f1f"
+  ],
+  "LAO:b4c511d27634a146": [
+    "VNM:749468814d903c2a",
+    "KHM:299a58dab837de1b",
+    "THA:2d2e3dd6e4f6c675",
+    "MMR:e9f27e99686071f9",
+    "CHN:72cd37e37e634df7"
+  ],
+  "LBN:8d427f2407db4cf0": [
+    "SYX:324e9c172be11a24",
+    "ISR:7ab28b88983e2128"
+  ],
+  "LBR:791c4a2bdad8b682": [
+    "SLE:aeb8476c9a2c5e10",
+    "GIN:eb019150f12e3d47",
+    "CIV:1c18880d4492d85c"
+  ],
+  "LBY:7ca6524733c4cc0b": [
+    "EGY:f7cc24b776a75221",
+    "SDN:e4296cf2bfa47003",
+    "TCD:a34f6ca4b3bd052d",
+    "NER:225f284b6e95d815",
+    "DZA:704d2c59e6450910",
+    "TUN:9e23ed3c89bdb2f6"
+  ],
+  "LCA:5f3167c756c94e88": [],
+  "LIE:452f33c4300c02b9": [
+    "AUT:709fdd785650b149",
+    "CHE:b37ef58a1d6dee0a"
+  ],
+  "LKA:1e8de9d1844ab756": [],
+  "LSO:085148348451b82a": [
+    "ZAF:eb3d29c8e7d957f4"
+  ],
+  "LTU:4c2a60810b4196cd": [
+    "BLR:216ea6b406f5bc6c",
+    "POL:1980df7ed9d16d12",
+    "RUS:8afd88fb65e5e555",
+    "LVA:ff14565ea5d338a5"
+  ],
+  "LUX:2287a57343a7d085": [
+    "DEU:0b0480fae55fd996",
+    "FXX:f023db15990ca569",
+    "BWR:099915a615cc5b27"
+  ],
+  "LVA:ff14565ea5d338a5": [
+    "RUS:b85c5bca1852870f",
+    "BLR:216ea6b406f5bc6c",
+    "LTU:4c2a60810b4196cd",
+    "EST:50bd04ff06509a99"
+  ],
+  "MAC:59c43825d5da45fb": [],
+  "MAF:8903408c5624c48e": [
+    "SXM:09188f4114a598b9"
+  ],
+  "MAR:41e7d86fdd4b2365": [
+    "SAH:c067a975f328d956",
+    "DZA:704d2c59e6450910"
+  ],
+  "MCO:8f146e45080f16d1": [
+    "FXX:f023db15990ca569"
+  ],
+  "MDA:c11ef650966bdfca": [
+    "UKR:52622876ebf1ecb8",
+    "ROU:8bc181463815c013"
+  ],
+  "MDG:4bc42083f90d1ae9": [],
+  "MDV:71a3bda6017f731e": [],
+  "MEX:aa67baf61acd20f3": [
+    "BLZ:4f146436bd0251b5",
+    "GTM:304e3cb8ddf6bb44",
+    "USA:90107a05206832e4"
+  ],
+  "MHL:df7cdd8f2cbda575": [],
+  "MKD:072da3322c97fa27": [
+    "KOS:e68a710dbd926c28",
+    "SRS:de445e773862803a",
+    "BGR:8a6e196d0e9089ee",
+    "GRC:70edd41aef80d178",
+    "ALB:c931cc5315aed954"
+  ],
+  "MLI:cfb1983a0687bf5c": [
+    "MRT:93e93b11bab4502c",
+    "DZA:704d2c59e6450910",
+    "NER:225f284b6e95d815",
+    "BFA:9c8f06c312ed722e",
+    "CIV:1c18880d4492d85c",
+    "GIN:eb019150f12e3d47",
+    "SEN:fa5de3704b02f675"
+  ],
+  "MLT:1209f8ef697868f9": [],
+  "MMR:e9f27e99686071f9": [
+    "IND:3f0bb94d859b2064",
+    "CHN:72cd37e37e634df7",
+    "LAO:b4c511d27634a146",
+    "THA:2d2e3dd6e4f6c675",
+    "BGD:d6d0c7df0b40a187"
+  ],
+  "MNE:52f7987265ed3935": [
+    "SRS:de445e773862803a",
+    "KOS:e68a710dbd926c28",
+    "ALB:c931cc5315aed954"
+  ],
+  "MNG:7ecd8e5b0a42fa66": [
+    "CHN:72cd37e37e634df7",
+    "RUS:b85c5bca1852870f"
+  ],
+  "MNP:d5d7b61494f517b6": [],
+  "MOZ:0c9516b3b1958290": [
+    "SWZ:e315454282eb3136",
+    "ZAF:eb3d29c8e7d957f4",
+    "ZWE:241a07c809723778",
+    "ZMB:583491139c8eb3b0",
+    "MWI:7555dabddb4364d9",
+    "TZA:88eb4141b8ee7ab7"
+  ],
+  "MQI:3f3d9ac1758dd787": [],
+  "MRT:93e93b11bab4502c": [
+    "DZA:704d2c59e6450910",
+    "MLI:cfb1983a0687bf5c",
+    "SEN:fa5de3704b02f675",
+    "SAH:c067a975f328d956"
+  ],
+  "MSR:b4f63de1ac80f565": [],
+  "MTQ:b687db533c81cb97": [],
+  "MUS:241a4096fe3cf2e9": [],
+  "MWI:7555dabddb4364d9": [
+    "MOZ:0c9516b3b1958290",
+    "ZMB:583491139c8eb3b0",
+    "TZA:88eb4141b8ee7ab7"
+  ],
+  "MYS:0abe504273f2e4bd": [
+    "IDN:51a10640dee7162b",
+    "BRN:72e2eec83e114e7f"
+  ],
+  "MYS:38845839aa7557f7": [],
+  "MYS:4035fe8bf71b03f5": [
+    "THA:2d2e3dd6e4f6c675"
+  ],
+  "NAM:d67affdeafffe7f2": [
+    "AGO:704113b148b7974b",
+    "ZMB:583491139c8eb3b0",
+    "BWA:41766e3f9df3a4d1",
+    "ZAF:eb3d29c8e7d957f4"
+  ],
+  "NCL:9e9b31b5b9879e1e": [],
+  "NER:225f284b6e95d815": [
+    "BEN:5911ab4fd3e84cb1",
+    "BFA:9c8f06c312ed722e",
+    "MLI:cfb1983a0687bf5c",
+    "DZA:704d2c59e6450910",
+    "LBY:7ca6524733c4cc0b",
+    "TCD:a34f6ca4b3bd052d",
+    "NGA:edcdec1fdf6fb5c7"
+  ],
+  "NFK:8bd0b8fb2f7ee228": [],
+  "NGA:edcdec1fdf6fb5c7": [
+    "NER:225f284b6e95d815",
+    "TCD:a34f6ca4b3bd052d",
+    "CMR:35df8c314c8ef083",
+    "BEN:5911ab4fd3e84cb1"
+  ],
+  "NIC:99f10eccc73d03bc": [
+    "HND:177f117072fa67d2",
+    "CRI:5a22dcdd3a44dc5b"
+  ],
+  "NIR:69fa50e543fa7c66": [
+    "IRL:9661cba0fca9f89c"
+  ],
+  "NIU:833bfd21210ac56a": [],
+  "NLX:8b9c3398a58bdb2a": [
+    "DEU:0b0480fae55fd996",
+    "BWR:099915a615cc5b27",
+    "BFR:c594695de4accce5"
+  ],
+  "NOW:a387a8ce67e0d957": [
+    "SWE:1320ee42b8e1186c",
+    "RUS:b85c5bca1852870f",
+    "FIN:9332a3268ae7c503"
+  ],
+  "NPL:c1885306c87c4123": [
+    "IND:3f0bb94d859b2064",
+    "CHN:72cd37e37e634df7"
+  ],
+  "NRU:caeaede682b2e6af": [],
+  "NZL:8f99f1c50259113a": [],
+  "NZL:979ee6939c934325": [],
+  "OMN:21af2c17fe172531": [
+    "YEM:64d271dfdccb3847",
+    "SAU:11ac65250772b5d3",
+    "ARE:6af70f4330c4f4bf"
+  ],
+  "PAK:447ed1858f7b7a5d": [
+    "KAS:b7c84d817c090062",
+    "IND:3f0bb94d859b2064",
+    "IRN:3c2b5bd7d999fbee",
+    "AFG:cda2af5bb6ea22f0",
+    "CHN:72cd37e37e634df7"
+  ],
+  "PAN:04773d2112e86006": [
+    "COL:08d1c79f212fc17e",
+    "CRI:5a22dcdd3a44dc5b"
+  ],
+  "PCN:9f1762b21c5a6e6d": [],
+  "PER:d420f75fe20c6a02": [
+    "CHL:150a87c1995fb5ad",
+    "ECU:ef48f29c8aa10327",
+    "COL:08d1c79f212fc17e",
+    "BRA:c9a395c2d321cd60",
+    "BOL:1a7254807c71e166"
+  ],
+  "PGA:9843ae99694c2ecf": [],
+  "PHL:21362b5a399c84c0": [],
+  "PHL:2ce786cb39ab6f61": [],
+  "PHL:3dde36a3deef9e30": [],
+  "PHL:6db0873e452de6c9": [],
+  "PHL:6f9539ae2d2e4af7": [],
+  "PHL:726d0196a803e063": [],
+  "PHL:7516d4fddea7755b": [],
+  "PHL:8bf898d20852a1e2": [],
+  "PHL:90b293ce7c82f783": [],
+  "PHL:9f45a34a40c23d0d": [],
+  "PHL:d3c6f6bf47091a8d": [],
+  "PHL:d9dc6d8657118070": [],
+  "PHL:dab4eac01b067017": [],
+  "PHL:eb1fb8d27ecf0027": [],
+  "PHL:f6d8e393f979d3c4": [],
+  "PLW:c1d57327f74beca7": [],
+  "PNX:7cc333b69cac4996": [],
+  "PNX:cd0b182a6ff3f568": [
+    "IDN:91fa24efd9a13b2f"
+  ],
+  "POL:1980df7ed9d16d12": [
+    "CZE:bf3969a8b4fbfc04",
+    "DEU:0b0480fae55fd996",
+    "RUS:8afd88fb65e5e555",
+    "LTU:4c2a60810b4196cd",
+    "BLR:216ea6b406f5bc6c",
+    "UKR:52622876ebf1ecb8",
+    "SVK:1f440da2e10fbb82"
+  ],
+  "PRI:e9799df54353f02b": [],
+  "PRK:b6e1ce40be9c73e7": [
+    "RUS:b85c5bca1852870f",
+    "CHN:72cd37e37e634df7"
+  ],
+  "PRX:31cd60a8869cd87c": [
+    "ESP:ff9451038f1a27e4"
+  ],
+  "PRY:8be730e7955b0934": [
+    "BOL:1a7254807c71e166",
+    "BRA:c9a395c2d321cd60",
+    "ARG:7462ff4f8b49993a"
+  ],
+  "PYF:3da92f8d77dc4ec9": [],
+  "QAT:f6210114a7fc4646": [
+    "SAU:11ac65250772b5d3"
+  ],
+  "REU:50209727462df21b": [],
+  "ROU:8bc181463815c013": [
+    "UKR:52622876ebf1ecb8",
+    "MDA:c11ef650966bdfca",
+    "BGR:8a6e196d0e9089ee",
+    "SRS:de445e773862803a",
+    "SRV:807608c3ef78cf26",
+    "HUN:9f803be1643ca956"
+  ],
+  "RUS:7e6e84c769819aed": [
+    "UKR:52622876ebf1ecb8"
+  ],
+  "RUS:8afd88fb65e5e555": [
+    "POL:1980df7ed9d16d12",
+    "LTU:4c2a60810b4196cd"
+  ],
+  "RUS:b85c5bca1852870f": [
+    "CHN:72cd37e37e634df7",
+    "KAZ:5d6f63a9b9f3c9f9",
+    "AZE:0510388634a9edd9",
+    "GEG:2733dc7254c8730b",
+    "UKR:52622876ebf1ecb8",
+    "BLR:216ea6b406f5bc6c",
+    "LVA:ff14565ea5d338a5",
+    "EST:50bd04ff06509a99",
+    "FIN:9332a3268ae7c503",
+    "NOW:a387a8ce67e0d957",
+    "PRK:b6e1ce40be9c73e7",
+    "MNG:7ecd8e5b0a42fa66"
+  ],
+  "RWA:11c3869510b66d95": [
+    "COD:34b7cfda818ccf80",
+    "UGA:c937c439d1615753",
+    "TZA:88eb4141b8ee7ab7",
+    "BDI:b3ecb03d79bf1cb5"
+  ],
+  "SAH:c067a975f328d956": [
+    "DZA:704d2c59e6450910",
+    "MRT:93e93b11bab4502c",
+    "MAR:41e7d86fdd4b2365"
+  ],
+  "SAU:11ac65250772b5d3": [
+    "QAT:f6210114a7fc4646",
+    "ARE:6af70f4330c4f4bf",
+    "OMN:21af2c17fe172531",
+    "YEM:64d271dfdccb3847",
+    "JOR:97289b5947dc77c2",
+    "IRR:12a324a4e87e8f1f",
+    "KWT:575b7c67b7a3657d"
+  ],
+  "SCT:40eee4f7009925dd": [
+    "ENG:164c7e9d5df6a7cb"
+  ],
+  "SDN:e4296cf2bfa47003": [
+    "TCD:a34f6ca4b3bd052d",
+    "LBY:7ca6524733c4cc0b",
+    "EGY:f7cc24b776a75221",
+    "BRT:fef0fc6bba22ada7",
+    "ERI:b257cabcc1caab95",
+    "ETH:38a05216b358b154",
+    "SDS:9ecb0b566ac02a31",
+    "CAF:1f15d49e1132c1f3"
+  ],
+  "SDS:9ecb0b566ac02a31": [
+    "KEN:4b9b5a7ce90b0bb0",
+    "UGA:c937c439d1615753",
+    "COD:34b7cfda818ccf80",
+    "CAF:1f15d49e1132c1f3",
+    "SDN:e4296cf2bfa47003",
+    "ETH:38a05216b358b154"
+  ],
+  "SEN:fa5de3704b02f675": [
+    "MLI:cfb1983a0687bf5c",
+    "GIN:eb019150f12e3d47",
+    "GNB:06bb5bdc3716e8ff",
+    "GMB:e5cba77f98187ac4",
+    "MRT:93e93b11bab4502c"
+  ],
+  "SGP:860d04320dbb7b18": [],
+  "SGS:f72252273c93ccac": [],
+  "SHN:cea4236cc2d14354": [],
+  "SLB:c3b8559867bbf650": [],
+  "SLE:aeb8476c9a2c5e10": [
+    "LBR:791c4a2bdad8b682",
+    "GIN:eb019150f12e3d47"
+  ],
+  "SLV:6884a91b71669fb2": [
+    "GTM:304e3cb8ddf6bb44",
+    "HND:177f117072fa67d2"
+  ],
+  "SMR:65f777115cf6c77c": [
+    "ITA:7d6868fd136c6c11"
+  ],
+  "SOL:e03433706d8873bb": [
+    "SOP:70591e0321d1bc6d",
+    "ETH:38a05216b358b154",
+    "DJI:8814228594ff16f1"
+  ],
+  "SOP:70591e0321d1bc6d": [
+    "ETH:38a05216b358b154",
+    "SOL:e03433706d8873bb",
+    "SOX:47d9b3dd7fb22c46"
+  ],
+  "SOX:47d9b3dd7fb22c46": [
+    "SOP:70591e0321d1bc6d",
+    "KEN:4b9b5a7ce90b0bb0",
+    "ETH:38a05216b358b154"
+  ],
+  "SPI:47f581a247f875ae": [
+    "CHL:150a87c1995fb5ad",
+    "ARG:7462ff4f8b49993a"
+  ],
+  "SPM:82efd5ba4ffee3ed": [],
+  "SRS:de445e773862803a": [
+    "MKD:072da3322c97fa27",
+    "KOS:e68a710dbd926c28",
+    "MNE:52f7987265ed3935",
+    "SRV:807608c3ef78cf26",
+    "ROU:8bc181463815c013",
+    "BGR:8a6e196d0e9089ee"
+  ],
+  "SRV:807608c3ef78cf26": [
+    "ROU:8bc181463815c013",
+    "SRS:de445e773862803a",
+    "HRV:23be6296644271a5",
+    "HUN:9f803be1643ca956"
+  ],
+  "STP:6eeda55e5e762902": [],
+  "SUR:1d7cda681e299b07": [
+    "BRA:c9a395c2d321cd60",
+    "GUY:5aec9f8c07eb9159"
+  ],
+  "SVK:1f440da2e10fbb82": [
+    "UKR:52622876ebf1ecb8",
+    "HUN:9f803be1643ca956",
+    "AUT:709fdd785650b149",
+    "CZE:bf3969a8b4fbfc04",
+    "POL:1980df7ed9d16d12"
+  ],
+  "SVN:e8f334b689926950": [
+    "HRV:23be6296644271a5",
+    "ITA:7d6868fd136c6c11",
+    "AUT:709fdd785650b149",
+    "HUN:9f803be1643ca956"
+  ],
+  "SWE:1320ee42b8e1186c": [
+    "FIN:9332a3268ae7c503",
+    "NOW:a387a8ce67e0d957"
+  ],
+  "SWZ:e315454282eb3136": [
+    "MOZ:0c9516b3b1958290",
+    "ZAF:eb3d29c8e7d957f4"
+  ],
+  "SXM:09188f4114a598b9": [
+    "MAF:8903408c5624c48e"
+  ],
+  "SYC:06e7b337bf21f107": [],
+  "SYX:324e9c172be11a24": [
+    "TUR:3b553df250ebf332",
+    "IRK:d4dcc5471d4f1195",
+    "IRR:12a324a4e87e8f1f",
+    "JOR:97289b5947dc77c2",
+    "LBN:8d427f2407db4cf0"
+  ],
+  "TCA:8f132c5885c6ed3e": [],
+  "TCD:a34f6ca4b3bd052d": [
+    "NGA:edcdec1fdf6fb5c7",
+    "NER:225f284b6e95d815",
+    "LBY:7ca6524733c4cc0b",
+    "SDN:e4296cf2bfa47003",
+    "CAF:1f15d49e1132c1f3",
+    "CMR:35df8c314c8ef083"
+  ],
+  "TGO:f7afd783bdbbc052": [
+    "BFA:9c8f06c312ed722e",
+    "BEN:5911ab4fd3e84cb1",
+    "GHA:1beea30af91e217d"
+  ],
+  "THA:121007cc8c8eb751": [],
+  "THA:2d2e3dd6e4f6c675": [
+    "MYS:4035fe8bf71b03f5",
+    "MMR:e9f27e99686071f9",
+    "LAO:b4c511d27634a146",
+    "KHM:299a58dab837de1b"
+  ],
+  "TJK:d6e62d7f585e085c": [
+    "KGZ:401b8fcdc0eef69c",
+    "CHN:72cd37e37e634df7",
+    "AFG:cda2af5bb6ea22f0",
+    "UZB:448c5653f0be3548"
+  ],
+  "TKM:ef25c6485f2078c2": [
+    "IRN:3c2b5bd7d999fbee",
+    "KAZ:5d6f63a9b9f3c9f9",
+    "UZB:448c5653f0be3548",
+    "AFG:cda2af5bb6ea22f0"
+  ],
+  "TLS:e102fc60287c6426": [
+    "IDN:41ba51e85ddbb728"
+  ],
+  "TON:f2fc3e28996a68cf": [],
+  "TTO:c755d5dbf151e3d4": [],
+  "TUN:9e23ed3c89bdb2f6": [
+    "LBY:7ca6524733c4cc0b",
+    "DZA:704d2c59e6450910"
+  ],
+  "TUR:3b553df250ebf332": [
+    "ARM:433ac98029e5a761",
+    "AZE:e5af19283650a3e3",
+    "IRN:3c2b5bd7d999fbee",
+    "IRK:d4dcc5471d4f1195",
+    "SYX:324e9c172be11a24",
+    "GEG:2733dc7254c8730b"
+  ],
+  "TUR:6fce5e1d91133e37": [
+    "GRC:70edd41aef80d178",
+    "BGR:8a6e196d0e9089ee"
+  ],
+  "TUV:3dbb41c9aa575d81": [],
+  "TWN:0e5b45704eef8ddd": [],
+  "TZA:88eb4141b8ee7ab7": [
+    "ZMB:583491139c8eb3b0",
+    "COD:34b7cfda818ccf80",
+    "BDI:b3ecb03d79bf1cb5",
+    "RWA:11c3869510b66d95",
+    "UGA:c937c439d1615753",
+    "KEN:4b9b5a7ce90b0bb0",
+    "MOZ:0c9516b3b1958290",
+    "MWI:7555dabddb4364d9"
+  ],
+  "TZZ:50b84429088b02a6": [],
+  "TZZ:9185ad05dcf3419a": [],
+  "UGA:c937c439d1615753": [
+    "RWA:11c3869510b66d95",
+    "COD:34b7cfda818ccf80",
+    "SDS:9ecb0b566ac02a31",
+    "KEN:4b9b5a7ce90b0bb0",
+    "TZA:88eb4141b8ee7ab7"
+  ],
+  "UKR:52622876ebf1ecb8": [
+    "RUS:b85c5bca1852870f",
+    "RUS:7e6e84c769819aed",
+    "MDA:c11ef650966bdfca",
+    "ROU:8bc181463815c013",
+    "HUN:9f803be1643ca956",
+    "SVK:1f440da2e10fbb82",
+    "POL:1980df7ed9d16d12",
+    "BLR:216ea6b406f5bc6c"
+  ],
+  "URY:a93a37d95dfce9bb": [
+    "BRA:c9a395c2d321cd60",
+    "ARG:7462ff4f8b49993a"
+  ],
+  "USA:13c14a072880aac5": [
+    "CAN:614ec007a6324298"
+  ],
+  "USA:53281e0ad0b87aeb": [],
+  "USA:63257470544bea15": [],
+  "USA:90107a05206832e4": [
+    "CAN:614ec007a6324298",
+    "CAN:c2f1e4e52d5cc0c3",
+    "MEX:aa67baf61acd20f3"
+  ],
+  "USA:c78710e5bfb7f314": [],
+  "USA:cc58c4c14d03150e": [],
+  "USG:4318b9af790790b9": [
+    "CUB:a203a2643a40db9f"
+  ],
+  "UZB:448c5653f0be3548": [
+    "TJK:d6e62d7f585e085c",
+    "AFG:cda2af5bb6ea22f0",
+    "TKM:ef25c6485f2078c2",
+    "KAZ:5d6f63a9b9f3c9f9",
+    "KGZ:401b8fcdc0eef69c"
+  ],
+  "VCT:8a1bf16e1fe09fe4": [],
+  "VEN:301beeea27f4cccb": [
+    "GUY:5aec9f8c07eb9159",
+    "BRA:c9a395c2d321cd60",
+    "COL:08d1c79f212fc17e"
+  ],
+  "VEN:d01ddcc4bca41887": [],
+  "VGB:fbe0a46652f34473": [],
+  "VIR:08404301006acbb1": [],
+  "VNM:749468814d903c2a": [
+    "LAO:b4c511d27634a146",
+    "CHN:72cd37e37e634df7",
+    "KHM:299a58dab837de1b"
+  ],
+  "VNM:9e943f334983e219": [],
+  "VUT:cd29270f54664d5f": [],
+  "WEB:8660f88c9871d216": [
+    "JOR:97289b5947dc77c2",
+    "ISR:7ab28b88983e2128"
+  ],
+  "WLF:be1abc47bb646f80": [],
+  "WLS:aac3731473205523": [
+    "ENG:164c7e9d5df6a7cb"
+  ],
+  "WSB:50ca0205ee67e049": [
+    "CYP:0e9f924ff6746fe5"
+  ],
+  "WSM:13f12c032321342b": [],
+  "YEM:64d271dfdccb3847": [
+    "OMN:21af2c17fe172531",
+    "SAU:11ac65250772b5d3"
+  ],
+  "ZAF:eb3d29c8e7d957f4": [
+    "BWA:41766e3f9df3a4d1",
+    "ZWE:241a07c809723778",
+    "MOZ:0c9516b3b1958290",
+    "SWZ:e315454282eb3136",
+    "NAM:d67affdeafffe7f2",
+    "LSO:085148348451b82a"
+  ],
+  "ZMB:583491139c8eb3b0": [
+    "MWI:7555dabddb4364d9",
+    "MOZ:0c9516b3b1958290",
+    "ZWE:241a07c809723778",
+    "NAM:d67affdeafffe7f2",
+    "AGO:704113b148b7974b",
+    "COD:34b7cfda818ccf80",
+    "TZA:88eb4141b8ee7ab7"
+  ],
+  "ZWE:241a07c809723778": [
+    "ZMB:583491139c8eb3b0",
+    "MOZ:0c9516b3b1958290",
+    "ZAF:eb3d29c8e7d957f4",
+    "BWA:41766e3f9df3a4d1"
+  ]
+}

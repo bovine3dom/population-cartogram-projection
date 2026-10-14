@@ -248,6 +248,9 @@ not proof of infeasibility. The script exports only if the target tolerance is
 met, then runs the independent CSV checker. Original solver exports remain
 unchanged. This correction changes transport weights and needs a separate
 spatial-quality review.
+`review_balance.py RAW_DIR CORRECTED_DIR NEW_OUTPUT` draws native H3-8 target
+errors on one colour scale. It verifies file hashes, unchanged source/target
+tables, equal capacities, and every ordered nonzero pair before drawing.
 
 ## Tests
 

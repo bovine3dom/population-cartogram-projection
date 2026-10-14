@@ -127,6 +127,12 @@ It keeps all 368 represented borders, with no false contacts, disconnected
 regions, or region holes. Country axis-order errors remain high at 1,277.
 More tiles alone do not solve the fit.
 
+The [full-default 10,000-budget fit](results/world-10000-topology-default/review.png)
+finishes with 9,891 tiles and 1,013 tiles of absolute component count error.
+Country axis-order errors fall to 602. Longer fitting helps, but this result
+still fails the population-area requirement. Model assertions remained enabled;
+its early marker has the same recorded correction.
+
 The results show why a contact check alone is not an acceptance test. We need
 area, shape, position, island, and containment checks together.
 

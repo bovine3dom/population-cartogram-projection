@@ -383,3 +383,23 @@ under ignored `output/auto-cartogram/`.
 - All 11 Python/Java layout tests pass after the fix. The full-default original
   10,000-budget fit also finished: 1,013 tiles of absolute count error remain.
   Started full-default dissolved fits with the tested performance flag.
+
+## 01:11–01:17 UTC — native balance result and completed comparisons
+
+- Native sparse scaling did not reach 1e-8 within 50,000 iterations. Its
+  residual was 2.40e-5. A separate run with an explicit 1e-4 relative tolerance
+  finished after 26,348 iterations and 513 seconds of scaling. This tolerance
+  is 0.01%, not a production requirement chosen by the user.
+- The corrected native export retains all source mass to floating-point
+  precision, has zero cross-group mass, and passes independent source and
+  target checks. A streaming comparison verifies every one of the 1,432,890
+  original ordered pairs. Added a two-panel error image with one colour scale.
+- All nine translation/repair parameter tests finished. The 10,000-tile case
+  can retain more borders, but the larger tests trade better compactness for
+  worse contact or position scores. Saved the table and one example image.
+- Both 110,000-budget topology fits finished. The dissolved fit keeps all
+  represented contacts but has 39,310 tiles of absolute count error. Saved it
+  as evidence of failure, not as a replacement map.
+- Updated the main research report with implementation findings and the native
+  transport result. Three transport-check/figure tests pass, including file
+  tampering and changed pair order.
