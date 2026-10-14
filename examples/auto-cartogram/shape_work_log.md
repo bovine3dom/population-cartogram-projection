@@ -152,3 +152,24 @@ Inspect the resulting images at world and regional scales.
 - Sixteen focused tests pass, including a concave bay, finite-difference
   gradient checks, and rejection of an anchor without a shared source border.
   The next world runs will test this position model.
+
+## 11:05–11:13 UTC — collision and outline checks
+
+- The concave-piece trial still fails visually. Some small countries remain
+  inside large countries in the continuous fit. Integer placement then moves
+  them a long distance. Nepal moves about 75 tiles in this final step.
+  Internal edges between convex pieces give the collision cost local minima.
+- Added a collision cost for each complete tile silhouette. It uses signed
+  distances and cached raster correlations. Tests compare the cached cost with
+  direct distance samples and check its gradient. A coastal bay stays open.
+- Added optional placement with no false contacts. It adds a one-cell gap only
+  beside a component that has no source border with the new component. It
+  does not require a missing border and cannot add a connector path.
+- Added source-outline intersection-over-union checks after translation and
+  uniform scale. The area-weighted score is 0.562 for the original Tutte fit,
+  0.621 after cycle fitting, 0.660 for stronger regrowth, and 0.933 for intact
+  shapes. This exposes the loss of outline detail that a thin-strip score alone
+  can hide. The score includes raster and source-hole differences.
+- Nineteen focused tests pass, including file-based raster displacement.
+  Next: compare the new collision model from geographic centres and from an
+  existing non-overlapping geographic layout.

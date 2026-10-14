@@ -22,8 +22,10 @@ import place_shapes
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
+import shape_stress
 from shape_stress import Stress
 from concave_stress import ConcaveStress, convex_pieces
+from raster_stress import RasterStress, bilinear
 
 
 class ShapeTests(unittest.TestCase):
@@ -129,6 +131,8 @@ class ShapeTests(unittest.TestCase):
                 metadata=compact.run(inputs,layout,root/'deformed',rounds=5,fit_rounds=10,atomic=True)
                 self.assertEqual(metadata['absolute_tile_error'],0)
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
+                stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True)
+                self.assertEqual(stress['collision_geometry'],'signed-distance raster')
             _,tiles,owners=compact.load(inputs,root/'placed')
             self.assertEqual(len(owners),8)
             self.assertEqual({c:len(p) for c,p in tiles.items()},{'a':5,'b':3})
@@ -212,10 +216,47 @@ class ShapeTests(unittest.TestCase):
             path.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(p)) for c,p in source.items()])))
             with self.assertRaisesRegex(ValueError,'No source border'):state.border_targets(path,tiles,{('a','b')})
 
+    def test_placement_can_forbid_false_contacts_without_adding_paths(self):
+        tiles={'a':{(0,0),(1,0)},'b':{(0,0),(1,0)}};desired={'a':(.5,0),'b':(.5,1)}
+        separate=shape_placement.place_all(tiles,desired,required=set())
+        self.assertFalse(any(q in separate['b'] for p in separate['a'] for q in compact.adjacent(p)))
+        touching=shape_placement.place_all(tiles,desired,required={('a','b')})
+        self.assertTrue(any(q in touching['b'] for p in touching['a'] for q in compact.adjacent(p)))
+        for result in [separate,touching]:
+            self.assertEqual({c:len(p) for c,p in result.items()},{'a':2,'b':2})
+            self.assertFalse(result['a'] & result['b'])
+
+    def test_raster_collision_matches_direct_distance_samples(self):
+        tiles={'a':{(x,y) for x in range(3) for y in range(4)},'b':{(0,0),(1,0),(0,1)}}
+        state=RasterStress(tiles,{'a':(0.,0.),'b':(1.37,.22)},set(),gap=.3)
+        value,gradient=state.pair_energy_gradient(0,1,state.initial);direct=0.
+        for a,b in [(0,1),(1,0)]:
+            points=np.array(sorted(tiles[state.labels[a]]),dtype=float);points-=points.mean(axis=0)
+            _,penalty,origin=state.fields[b]
+            for point in points:
+                direct+=bilinear(penalty,*(point+state.initial[a]-state.initial[b]-origin))[0]
+        self.assertAlmostEqual(value,.5*state.collision*direct)
+        x=state.initial.ravel();numeric=[]
+        for i in range(2):
+            shift=np.zeros_like(x);shift[i]=1e-6
+            numeric.append((state.pair_energy_gradient(0,1,(x+shift).reshape(-1,2))[0]-state.pair_energy_gradient(0,1,(x-shift).reshape(-1,2))[0])/2e-6)
+        np.testing.assert_allclose(gradient,numeric,rtol=1e-6,atol=1e-6)
+        bay={(x,y) for x in range(7) for y in range(7) if x<2 or y<2 or y>4}
+        state=RasterStress({'a':bay,'b':{(0,0)}},{'a':np.mean(list(bay),axis=0),'b':(4.,3.)},set(),gap=0)
+        self.assertAlmostEqual(state.pair_energy_gradient(0,1,state.initial)[0],0)
+        state.initial[1]=[0.,3.]
+        self.assertGreater(state.pair_energy_gradient(0,1,state.initial)[0],0)
+
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))
         self.assertFalse(state.exchange((0,0),(1,0)))
         self.assertEqual(state.tiles['a'],{(0,0)})
+
+    def test_outline_score_is_translation_and_scale_invariant(self):
+        cells={(x,y) for x in range(4) for y in range(4)}
+        self.assertAlmostEqual(audit.outline_similarity(cells,box(-10,-10,10,10)),1)
+        self.assertAlmostEqual(audit.outline_similarity({(x+100,y-60) for x,y in cells},box(0,0,1,1)),1)
+        self.assertLess(audit.outline_similarity(cells,box(0,0,1,10)),.3)
 
     def test_equal_earth_symmetry_and_origin(self):
         points=flow.equal_earth(np.array([[0.,0.],[30.,50.],[-30.,50.],[30.,-50.]]))
