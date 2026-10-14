@@ -728,3 +728,13 @@ unchanged in every movement. Logs are in `browser-soak-reproducible/`.
 
 The public files have not changed. All long tests have stopped. The rest of
 the window is reserved for final hashes, repository checks, and cleanup.
+
+## 01:10 UTC: limited-bandwidth browser check
+
+An isolated test uses a 200,000-byte/s download limit, 150 ms latency,
+4× CPU throttling, and the same 64 MiB V8 heap limit. The selected files
+load and render in 171.7 seconds. All cells, labels, and navigation checks
+pass. This is a desktop browser simulation, not a phone measurement. The
+26 MB compressed download can still take minutes on a slow connection.
+The script and results are `browser_network.mjs` and `browser-network-final/`
+in `output/mobile-export/`. No normal service was started.

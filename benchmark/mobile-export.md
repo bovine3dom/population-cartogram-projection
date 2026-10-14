@@ -22,7 +22,9 @@ Production, UK, and Germany datasets are unchanged.
 
 MB means 1,000,000 bytes. The combined raw files are about 125 times smaller.
 The gzip measurement uses level 6 and includes both files. The headless
-browser confirms the encoded and decoded transfer sizes. The 80% profile
+browser confirms the encoded and decoded transfer sizes. A simulated
+200,000-byte/s connection with 150 ms latency takes 171.7 seconds to load
+and render, with 4× CPU throttling. The download can still take minutes. The 80% profile
 passed its audit but exceeded the 100 MB raw limit. It was not published.
 
 The full reference remains outside the web root in
@@ -112,10 +114,11 @@ These measurements exclude embedder and GPU memory. They are from headless
 desktop Chromium, not a phone. This is not a 100 MB browser-memory solution.
 
 The final 68 export, 70 moment, and 18 audit checks pass. Publication checks
-pass. A second full audit of the public files matches the original report. All 74 H3-MON
-unit tests, actual Arrow dictionary checks, and isolated desktop/mobile
-dictionary, viewport, and line-probe checks pass. The full rendering suite has a separate animation timeout that
-also occurs on the unchanged baseline. Do not report that suite as passing.
+pass. A second full audit of the public files matches the original report.
+All 74 H3-MON unit tests, actual Arrow dictionary checks, and isolated
+desktop/mobile dictionary, viewport, and line-probe checks pass. The full
+rendering suite has a separate animation timeout that also occurs on the
+unchanged baseline. Do not report that suite as passing.
 
 See [the work log](mobile-export-work-log.md) for trial details and commits.
 See [the export instructions](../examples/continuity/mobile/readme.md) to
