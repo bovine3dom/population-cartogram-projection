@@ -96,7 +96,6 @@ class SupportTests(unittest.TestCase):
             self.assertLessEqual(bound,strongest+1e-12)
             if strongest > 0: self.assertGreater(bound,0)
 
-
     def test_random_supports_with_exact_large_integer_oracle(self):
         from fractions import Fraction
         import random

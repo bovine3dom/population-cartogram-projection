@@ -731,3 +731,20 @@ under ignored `output/auto-cartogram/`.
   OWID target CSV are unchanged from the starting checkpoint.
 - All long-running experiment jobs have finished or reached recorded limits.
   No world layout has been approved for production.
+
+## 04:45 UTC — eight-hour checkpoint
+
+Work window: 2026-10-13 20:45 UTC to 2026-10-14 04:45 UTC.
+
+- Saved whole-world review images at 10,000, 55,000, and 110,000 tiles, plus
+  border, topology, island-placement, and transport comparisons.
+- Native Indonesia and the smaller GBR test pass the stated group, mass,
+  identity, and corrected target-balance checks. Coarse world tests give two
+  successful corrections and a documented support obstruction at 110,000 tiles.
+- The final complete test run passes at 04:40. Image reproduction, native
+  transport reproduction, archive hashes, and local documentation links pass.
+- All experiment jobs have ended. Changes are committed locally. The supplied
+  PDFs remain untracked, and production code and targets remain unchanged.
+- No automatic world layout is approved as an OWID replacement. Review the
+  gallery, choose the border and island-capacity policies, then address source
+  coverage, year, area error, and geographic quality before integration.
