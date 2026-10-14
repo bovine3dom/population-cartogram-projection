@@ -1,0 +1,34 @@
+{
+  "backend": "CPU",
+  "coarse_h3_resolution": 8,
+  "coarse_sources": 219045,
+  "cross_group_population": 0.0,
+  "elapsed_seconds": 240.59408593177795,
+  "groups": 2,
+  "inputs": [
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gbr-world-10000-native/sources.arrow",
+      "sha256": "90e00c60ef92b12645d800a1fd556ea31081cade78c988f4479908a8a7ffb35a"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gbr-world-10000-native/inputs/groups.csv",
+      "sha256": "e2f35c4bcb9fbd33ec2b776f2a6ce50f76d7a42badb6f9c4ac597b9894f75c7c"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gbr-world-10000-native/layout/cells.csv",
+      "sha256": "c4c24be821e5f1e342137d95d86fe72cc8f7fe066da82545fae586dd5874210f"
+    }
+  ],
+  "limit": "Native H3-8 centres. Grouped islands can exchange mass within their declared group. Each group has its own population per tile.",
+  "maximum_relative_target_error": 0.02516811153311571,
+  "maximum_source_retained_share": 1.0000000000000002,
+  "minimum_source_retained_share": 0.995000020571602,
+  "pooled": false,
+  "retained_population": 6.689035717978655e7,
+  "retained_share": 0.9989222953828449,
+  "script_sha256_at_load": "a25b508dfe5154e60e9fbeb92c8980dd54e2c0d1947b6d918dabf4e0750d9b57",
+  "source_coordinates": "population-weighted Equal Earth centres; aggregate by input component and H3 parent",
+  "source_population": 6.6962523e7,
+  "target_coordinates": "north-up grid; y negated for the screen-coordinate solver, then restored in export",
+  "targets": 84
+}

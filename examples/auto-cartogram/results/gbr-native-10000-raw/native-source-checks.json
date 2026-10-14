@@ -1,0 +1,13 @@
+{
+  "checked": true,
+  "native_sources": 219045,
+  "population": 66962523.0,
+  "check": "Every native ID occurs once with unchanged population and the declared component/group labels",
+  "limit": "This check does not assess projected coordinates or spatial transport quality",
+  "files": {
+    "output/auto-cartogram/gbr-world-10000-native/sources.arrow": "90e00c60ef92b12645d800a1fd556ea31081cade78c988f4479908a8a7ffb35a",
+    "output/auto-cartogram/gbr-world-10000-native/inputs/groups.csv": "e2f35c4bcb9fbd33ec2b776f2a6ce50f76d7a42badb6f9c4ac597b9894f75c7c",
+    "output/auto-cartogram/gbr-native-10000-transport/sources.csv": "fc5beafaede31331e7cdd4ba19463f3849944aa0ffb5aa7ad3fb2b3d0cff54f3"
+  },
+  "checker_sha256": "e0e1de3b5bb1ed5374e7c1ec4ec8d634f8b7e1b58c8653a09150035e43b7dfe0"
+}

@@ -1,8 +1,8 @@
-# Island transport results
+# Island and world transport results
 
-These tests use the automatic Indonesia layout, not the handmade OWID map.
-They test an optional wrapper around the existing CPU solver. Production code
-and targets are unchanged.
+These tests use automatic layouts, not the handmade OWID map. They cover native
+Indonesia and GBR sources, plus coarse world sources. They test an optional
+wrapper around the existing CPU solver. Production code and targets are unchanged.
 
 ## What was tested
 
@@ -265,6 +265,38 @@ A longer attempt was stopped after this proof. It has no accepted export.
 
 Thus, one-step expansion is a useful tested option, not a general solution.
 Support selection, geographic outliers, and source resolution still need work.
+
+## Second native test: GBR at 84 tiles
+
+A second native test uses the GBR entity from the 10,000-tile world layout.
+It has 219,045 matched source cells, 66,962,523 people, 84 targets, and two
+groups. It groups 358,920 people from zero-budget components. Other entity IDs,
+including the Channel Islands, are excluded. Country-specific missing coverage
+is unknown. This is not a reproduction of the Portsmouth report or the old map.
+
+The raw solve and in-memory checks take 241 seconds. It retains 99.892% of
+population, has zero cross-group mass, and has 2.517% maximum target error.
+Correction on the same 339,438 pairs takes 676 iterations and 2.55 seconds.
+It restores full source mass to floating-point precision and reduces maximum
+target error below 0.01%, without crossing groups or adding pairs. Independent
+checks confirm every native ID, population, and group label in both exports.
+
+![Native GBR balance at 84 tiles](results/gbr-native-10000-review/review.png)
+
+[Raw checks](results/gbr-native-10000-raw/independent-checks.json) ·
+[Corrected checks](results/gbr-native-10000-balanced/independent-checks.json) ·
+[Native identity checks](results/gbr-native-10000-balanced/native-source-checks.json) ·
+[Position changes](results/gbr-native-10000-balanced/source-shift.json).
+
+Mean expected-position change is 0.00372 tile sides; the maximum is 0.399.
+The original support admits exact marginals. These two groups do not preserve
+every British island, and 84 tiles are not a detailed geographic map.
+
+The earlier 463-tile GBR test from the 55,000-tile world layout used four groups
+and the same native sources. It reached its 20-minute timeout on the main
+island and produced no complete mapping. See the
+[timeout record](results/gbr-native-55000-timeout/status.json). The smaller run
+does not establish performance at the larger resolution.
 
 ## What this means for issue #17
 

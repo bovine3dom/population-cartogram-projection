@@ -1,0 +1,70 @@
+{
+  "groups": [
+    {
+      "exact_marginals_feasible": true,
+      "source_population": 64952685,
+      "sources": 201358,
+      "targets": 81,
+      "distinct_source_neighbourhoods": 602,
+      "capacity_multiplier": 81,
+      "required_integer_flow": 5261167485,
+      "maximum_integer_flow": 5261167485,
+      "necessary_maximum_relative_target_error": 0.0,
+      "witness_excess_error_bound": 0.0,
+      "witness_complement_shortage_bound": 0.0,
+      "witness_source_count": 0,
+      "witness_source_population": 0,
+      "witness_excess_scaled": 0,
+      "group_id": "GBR:241258080ec293c4",
+      "witness_targets": []
+    },
+    {
+      "exact_marginals_feasible": true,
+      "source_population": 2009838,
+      "sources": 17687,
+      "targets": 3,
+      "distinct_source_neighbourhoods": 5,
+      "capacity_multiplier": 3,
+      "required_integer_flow": 6029514,
+      "maximum_integer_flow": 6029514,
+      "necessary_maximum_relative_target_error": 0.0,
+      "witness_excess_error_bound": 0.0,
+      "witness_complement_shortage_bound": 0.0,
+      "witness_source_count": 0,
+      "witness_source_population": 0,
+      "witness_excess_scaled": 0,
+      "group_id": "NIR:69fa50e543fa7c66",
+      "witness_targets": []
+    }
+  ],
+  "infeasible_groups": 0,
+  "necessary_maximum_relative_target_error": 0.0,
+  "checked_inputs": {
+    "source_population": 66962523.0,
+    "retained_population": 66890357.17978488,
+    "retained_share": 0.9989222953828201,
+    "cross_group_population": 0.0,
+    "minimum_source_retained_share": 0.995000020571602,
+    "maximum_source_retained_share": 1.0000000000000002,
+    "maximum_relative_target_error": 0.02516811153311571,
+    "coarse_sources": 219045,
+    "targets": 84,
+    "groups": 2,
+    "mapping_rows": 339438,
+    "target_normalized_weights_checked": 339438,
+    "source_rows_below_99_5_percent": 0,
+    "checked": true,
+    "checker_sha256": "b1c6909f9d6316e223270ee9aaae5c207276ab990cb2fcc4448c1237b281ba17",
+    "files": {
+      "manifest.json": "830dee38edfcfa2fbdae5b737a204dad8115025761edf8671fed794d346754fa",
+      "sources.csv": "fc5beafaede31331e7cdd4ba19463f3849944aa0ffb5aa7ad3fb2b3d0cff54f3",
+      "targets.csv": "10e2ca600b92724ffe5e4a218e343e5426367b03d8a4e3d3d286552640c1da04",
+      "mapping.csv": "b790d1db4d6a46d7c3e19036ce837c50e27114ad890a56d489ea561378e0d814",
+      "target-quality.csv": "64ec34f18a9342f5bcd583adcddc1731641e402c9023205e989f60d194ed83e4"
+    }
+  },
+  "elapsed_seconds": 5.372090059798211,
+  "networkx_version": "3.6.1",
+  "script_sha256": "724b1174de0cd540f0095860a3cf515738adac134eee4a920d9a51392320aa42",
+  "limit": "Feasibility permits zero weight on saved pairs. It does not prove convergence of positive scaling or spatial quality. The cut error bound need not be the strongest bound."
+}
