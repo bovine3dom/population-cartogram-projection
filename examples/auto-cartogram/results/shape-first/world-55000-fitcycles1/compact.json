@@ -1,0 +1,23 @@
+{
+  "method": "Count-preserving local boundary exchanges with perimeter and geographic-guide costs; no required-contact paths",
+  "maximum_rounds": 1000,
+  "rounds": 340,
+  "perimeter": 1.0,
+  "false_contact": 4.0,
+  "guide": 1.0,
+  "anchor": 0.05,
+  "choices": 4,
+  "cycles": true,
+  "maximum_fit_rounds": 1000,
+  "absolute_tile_error": 0,
+  "initial_energy": 52793.585765153155,
+  "final_energy": 58079.8723235628,
+  "elapsed_seconds": 369.478823594749,
+  "input_cells_sha256": "1ee6c0f3a293dc9c3103d28aac1b3248b007cdd06b35e75296a694813403cc75",
+  "scripts": {
+    "compact_regions.py": "eca97c1abc8e92c72b306296c15f9b00e244630217d5731a93da4008e29fc458",
+    "cycle_deformation.py": "727887bbf08fc5eb505d85b370af04d122d99b7b8ba6f439999739643047d24a",
+    "fit_counts.py": "686fa8cd5a04da598da87a80b404d054b2f37241f99ed9553f46de63fffa43ec"
+  },
+  "limit": "Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Single-cell regions cannot move until they gain a cell."
+}

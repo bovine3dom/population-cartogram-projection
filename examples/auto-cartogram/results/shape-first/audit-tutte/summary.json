@@ -1,0 +1,16 @@
+{
+  "required_contacts": 348,
+  "same_country_contacts": 0,
+  "contacts_involving_secondary_components": 26,
+  "opening_loss_share_for_regions_at_least_25_tiles": 0.1197760833896342,
+  "one_cell_detail_share_for_regions_at_least_25_tiles": 0.08317729948846636,
+  "minimum_region_tiles_for_summary": 25,
+  "limit": "Opening loss includes natural coasts and narrow countries. It is a diagnostic, not a proof of artificial connectors. Secondary means not the largest population group of its country; it does not mean overseas.",
+  "inputs": {
+    "output/auto-cartogram/world-55000-tutte-initial-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-tutte-initial-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-55000-tutte-partial-200/cells.csv": "1ee6c0f3a293dc9c3103d28aac1b3248b007cdd06b35e75296a694813403cc75",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "script_sha256": "9c046f8fca475123398e9a5b6044ae6150f0eebb1799f27c979d0db4dcdb0554"
+}

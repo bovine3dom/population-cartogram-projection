@@ -1,0 +1,15 @@
+revision=9200b14b983581b78992dd6944cceedf384bb02c
+license=AGPL-3.0
+Conan version 2.33.0
+cmake version 3.30.0
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+c++ (GCC) 16.2.1 20260810
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+771ed2d9e4c38aeaff098c3d39d87c58338abfb724a68c585f989fe67d17c95c  /home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/bootstrap_flow.sh
+8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef  LICENSE
+947171a3211e20f6db7d65ce7ec852e8f551ed4e392e2673503b3277d7518741  conanfile.txt
+a7ee976eaf8a8efb774e26a9764644672bcb550d7ec523027f57aef3af39ccca  build/Release/cartogram

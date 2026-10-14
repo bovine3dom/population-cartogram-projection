@@ -68,3 +68,39 @@ Inspect the resulting images at world and regional scales.
   regions do not move. Seven focused shape tests pass.
 - Started five 55,000-budget trials with different shape, perimeter, and false
   contact costs. Images and contact losses still need review.
+
+## 06:26–06:54 UTC — count correction and shape exchanges
+
+- Pairwise exchanges reduce small edge detail but leave many long detours.
+  Added balanced exchanges around cycles of regions. These are transfers of
+  cell ownership, not paths drawn to preserve borders.
+- Added a separate budget fit. It corrects all 2,011 absolute component count
+  errors in the 55,000-budget Tutte fit after 133 transfer rounds. The resulting
+  map has exactly 55,000 tiles. Shape improvement then preserves these counts.
+- Visually reviewed the cycle result. Europe has fewer thin strips, but the map
+  still has poor country order and long detours near Vietnam and Nepal. It has
+  115 missing contacts and 166 false contacts. Do not approve it for production.
+- The opening-loss diagnostic falls from 11.98% to 3.73% for regions with at
+  least 25 tiles. Natural coast detail is part of this measure.
+- Found a local-move restriction: checking each temporary state can reject a
+  useful exchange whose final state has valid topology. Added atomic checks of
+  complete exchanges. A test covers removal of a long detour and rollback.
+- The first atomic 55,000-tile image still has the Vietnam detour. A wider
+  candidate search is running. Also started source-guided whole-region growth
+  within available space. This can replace a detour longer than one cell.
+  It never requests a new land border and accepts only an energy decrease.
+- Started 10,000- and 110,000-budget count-fit and atomic trials. The 10,000
+  trial has finished; its image still needs detailed review. The 110,000 trial
+  is still fitting counts.
+- Tested intact-shape placement at geographic, Tutte, and flow centres. Shapes
+  look better, but greedy placement can put countries in the wrong order.
+  An FFT collision search matches the original exhaustive search in 100 tests.
+- World-mode continuous flow failed during densification of a Norwegian
+  component. Disabling simplification let it finish, but the independent
+  geometry check rejected a Canadian component. Neither is accepted.
+- Added a reproducible optional C++ bootstrap. It rebuilt the pinned checkout
+  and passed all six upstream unit tests. The AGPL dependency stays separate.
+- Twelve focused Python tests pass. Another 100 randomized cycle and count-fit
+  cases passed count, connectivity, hole, and energy checks. Saved the first
+  diagnostic tables, rejected flow image, and boundary-cycle comparisons.
+  The new review guide is `shape-first.md`.
