@@ -16,6 +16,7 @@ from partition_land import dual, partition, round_capacities, contact_groups, ru
 from review_layout import load, viewport
 from repair_partition import Repair, run as repair
 import population_sites
+import place_islands
 
 
 class CapacityPartitionTests(unittest.TestCase):
@@ -117,6 +118,22 @@ class CapacityPartitionTests(unittest.TestCase):
                 self.assertTrue(all(len(state.parts[c])<=parts[c] for c in tiles))
                 self.assertEqual(set(state.owners),footprint)
                 self.assertTrue(all(len(state.tiles[c])==15 for c in tiles))
+
+    def test_islands_preserve_explicit_mainland_defects(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'input';layout=root/'layout';inputs.mkdir();layout.mkdir()
+            (inputs/'groups.csv').write_text('component_id,tiles,group_population\na,8,8\nb,1,1\n')
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\n')
+            (inputs/'validated.wkt').write_text('header\nheader\nOUT\ta\n0 0\t3 0\t3 3\t0 3\nend\nOUT\tb\n1 1\t2 1\t2 2\t1 2\nend\n')
+            (layout/'complete.txt').write_text('mode=test\n')
+            (layout/'cells.csv').write_text('component_id,x,y\n'+''.join(f'{"b" if (x,y)==(1,1) else "a"},{x},{y}\n' for x in range(3) for y in range(3)))
+            features=[dict(type='Feature',properties=dict(component_id=c),geometry=dict(type='Polygon',coordinates=[ring])) for c,ring in [('a',[[0,0],[3,0],[3,3],[0,3],[0,0]]),('b',[[1,1],[2,1],[2,2],[1,2],[1,1]])]]
+            source=root/'polygons.geojson';source.write_text(json.dumps(dict(type='FeatureCollection',features=features)))
+            with self.assertRaisesRegex(ValueError,'Invalid input shapes'):place_islands.run(inputs,layout,source,root/'rejected')
+            report=place_islands.run(inputs,layout,source,root/'preserved',preserve_mainland_defects=True)
+            self.assertEqual(report['unchanged_invalid_fixed_components'],['a'])
+            self.assertEqual(report['initial_false_contacts'],report['final_false_contacts'])
+            self.assertEqual(load(inputs,layout)[1],load(inputs,root/'preserved')[1])
 
     def test_population_sites(self):
         mass,sites=population_sites.spherical_sites([179,-179],[0,0],[1,2],[0,0],1)

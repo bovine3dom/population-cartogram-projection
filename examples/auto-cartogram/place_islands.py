@@ -54,23 +54,30 @@ def place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_p
     return result,records
 
 
-def run(inputs,layout,polygons,output,ocean_scale=.1,max_population_fraction=.01,allow_partial_counts=False):
+def tile_contacts(owner):
+    return {tuple(sorted((c,owner[q]))) for (x,y),c in owner.items() for q in [(x+1,y),(x,y+1)] if q in owner and owner[q]!=c}
+
+
+def run(inputs,layout,polygons,output,ocean_scale=.1,max_population_fraction=.01,allow_partial_counts=False,preserve_mainland_defects=False):
     if output.exists() or not np.isfinite(ocean_scale) or ocean_scale<0 or not 0<max_population_fraction<=1:raise ValueError('Use a new output, a nonnegative ocean scale, and a population fraction in (0,1]')
     rows,tiles,owner=load(inputs,layout)
-    if any(connectivity(tiles[c])!=1 or holes(tiles[c]) for c in rows):raise ValueError('Invalid input shapes')
     error=sum(abs(len(tiles[c])-int(rows[c]['tiles'])) for c in rows)
     if error and not allow_partial_counts:raise ValueError('Input counts are partial; enable explicitly')
     contacts=read_csv(inputs/'geographic-contacts.csv')
     required={tuple(sorted((r['a'],r['b']))) for r in contacts if r['both_represented']=='true'}
-    actual={tuple(sorted((c,owner[q]))) for (x,y),c in owner.items() for q in [(x+1,y),(x,y+1)] if q in owner and owner[q]!=c}
-    if actual-required:raise ValueError('Initial layout has false contacts')
+    actual=tile_contacts(owner)
     land_components={r[k] for r in contacts for k in ['a','b']}
+    maximum_population=max_population_fraction*sum(float(r['group_population']) for r in rows.values())
+    fixed=(land_components&set(tiles))|{c for c in tiles if float(rows[c]['group_population'])>=maximum_population}
+    invalid={c for c in rows if connectivity(tiles[c])!=1 or holes(tiles[c])}
+    if invalid-(fixed if preserve_mainland_defects else set()):raise ValueError('Invalid input shapes')
+    if actual-required and not preserve_mainland_defects:raise ValueError('Initial layout has false contacts')
     source={f['properties']['component_id']:shape(f['geometry']) for f in json.loads(polygons.read_text())['features'] if f['properties']['component_id'] in tiles}
     source={c:transform(Polygon(p.exterior),lambda points:equal_earth(points)/1000) for c,p in source.items()}
     lines=(inputs/'validated.wkt').read_text().splitlines()
     area=sum(Polygon([tuple(map(float,p.split())) for p in lines[i+1].split('\t')]).area for i in range(2,len(lines),3))
     total=sum(map(len,tiles.values()));scale=np.sqrt(total/area);ocean_length=ocean_scale*np.sqrt(total)
-    parent_files=[layout/name for name in ['stress.json','relax.json','placement.json','compact.json'] if (layout/name).exists()]
+    parent_files=[layout/name for name in ['stress.json','relax.json','placement.json','compact.json','partition.json','parent-partition.json','repair-partition.json'] if (layout/name).exists()]
     parent_records={p.name:json.loads(p.read_text()) for p in parent_files}
     for record in list(parent_records.values()):
         for name,expected in record.get('inputs',{}).items():
@@ -80,10 +87,13 @@ def run(inputs,layout,polygons,output,ocean_scale=.1,max_population_fraction=.01
             parent_files.append(p);parent_records['initial-stress.json']=json.loads(p.read_text())
     hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]+parent_files}
     scripts={p.name:digest(p) for p in [Path(__file__)]+[Path(__file__).with_name(n) for n in ['coast_anchors.py','shape_placement.py','prepare_flow.py']]}
-    maximum_population=max_population_fraction*sum(float(r['group_population']) for r in rows.values())
     result,records=place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_population)
+    new_owner={p:c for c,points in result.items() for p in points};after=tile_contacts(new_owner)
+    if len(new_owner)!=total or any(len(result[c])!=len(tiles[c]) for c in tiles):raise AssertionError('Counts or overlap changed')
+    if any(result[c]!=tiles[c] for c in fixed):raise AssertionError('Fixed mainland changed')
+    if after-required-actual or after&required!=actual&required:raise AssertionError('Island placement changed source borders or added false contacts')
     report=dict(method='Keep components with source land borders or population at or above the threshold fixed. Place smaller isolated components from largest population to smallest, near the nearest larger source component coast. No country-membership links.',
-        max_population_fraction=max_population_fraction,maximum_population=maximum_population,absolute_tile_error=error,allow_partial_counts=allow_partial_counts,eligible_isolated_components=len(records),moved_components=sum(result[c]!=tiles[c] for c in tiles),
+        max_population_fraction=max_population_fraction,maximum_population=maximum_population,absolute_tile_error=error,allow_partial_counts=allow_partial_counts,preserve_mainland_defects=preserve_mainland_defects,unchanged_invalid_fixed_components=sorted(invalid&fixed),initial_false_contacts=len(actual-required),final_false_contacts=len(after-required),source_contacts_unchanged=True,eligible_isolated_components=len(records),moved_components=sum(result[c]!=tiles[c] for c in tiles),
         ocean_scale=ocean_scale,maximum_placement_shift=max((r['placement_shift'] for r in records),default=0.),
         inputs=hashes,scripts=scripts,parent_layout_records=parent_records,limit='A nearest-coast hierarchy is a position heuristic, not a proof of correct geography. Counts and tile shapes are unchanged. No native-resolution transport is approved.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='islands-',dir=output.parent))
@@ -108,4 +118,5 @@ if __name__=='__main__':
     parser.add_argument('--ocean-scale',type=float,default=.1)
     parser.add_argument('--max-population-fraction',type=float,default=.01)
     parser.add_argument('--allow-partial-counts',action='store_true')
+    parser.add_argument('--preserve-mainland-defects',action='store_true',help='Allow existing defects in fixed mainlands; do not add false contacts')
     run(**vars(parser.parse_args()))
