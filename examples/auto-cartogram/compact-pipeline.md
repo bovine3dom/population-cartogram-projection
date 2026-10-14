@@ -141,6 +141,12 @@ island shapes, counts, and represented land contacts stay unchanged. Collision
 removal can still put an island in a poor position. This option is a separate
 control, not a new default.
 
+The recorded pipeline also accepts `--fixed-land-anchors`. It repeats island
+placement after shared-island correction, so it uses the corrected fixed coasts.
+Combine it with `--archipelagos --bridge-groups --archipelago-gap-fraction 0.35`
+to test the four-resolution island candidates. Group merging requires
+`--archipelagos`. Both new options remain off by default.
+
 ## Nearby island groups
 
 The separate `restore_archipelagos.py` control addresses islands placed on the
@@ -163,7 +169,7 @@ This tests cases where small islands lie between two large islands, but the
 population hierarchy divides them into different groups.
 
 The default source-gap threshold is 0.2 times the square root of the larger
-island's source area. Groups need at least 16 tiles. Definite source-axis
+island's source area, where larger means higher population. Groups need at least 16 tiles. Definite source-axis
 separations from land within approximately 500 km constrain group translation.
 These distances use Equal Earth planar coordinates, not geodesic distances.
 

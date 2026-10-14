@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-14T21:37:01.869649+00:00",
+  "checked_at_utc": "2026-10-14T22:05:37.677216+00:00",
   "method": "Headless local HTTP requests for every unique relative href and src on the gallery page",
   "resources": [
     {
@@ -8,6 +8,14 @@
     },
     {
       "path": "examples/auto-cartogram/mesh-guide.md",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/angular-sites/pipeline.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/angular-sites/review.png",
       "status": 200
     },
     {
@@ -108,6 +116,46 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/fixed-border16/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-10000/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-110000/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-500000/regions/japan-korea.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-500000/review-7200.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-500000/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-55000/archipelagos.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-55000/parent-island-placement.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-55000/regions/indonesia.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-55000/regions/philippines.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-coasts-55000/review.png",
       "status": 200
     },
     {
@@ -371,6 +419,14 @@
       "status": 200
     },
     {
+      "path": "examples/auto-cartogram/results/compact-landmass/recorded-island-groups/pipeline.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/recorded-island-groups/review.png",
+      "status": 200
+    },
+    {
       "path": "examples/auto-cartogram/results/compact-landmass/shape-islands/gaps.json",
       "status": 200
     },
@@ -536,6 +592,26 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/world-500000-guide-only/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-mainland/pipeline-run.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-mainland/regions/europe.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-mainland/regions/indonesia.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-mainland/review-7200.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-mainland/review.png",
       "status": 200
     }
   ]
