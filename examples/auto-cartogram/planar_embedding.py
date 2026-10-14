@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Make a biconnected planar initial dual, using removable sea regions for added edges."""
+"""Draw a planar initial dual, with optional sea regions for added edges."""
 import argparse
 import csv
 import hashlib
@@ -11,13 +11,13 @@ import networkx as nx
 import numpy as np
 
 
-def augment(graph, embedding=None):
+def augment(graph, embedding=None, *, sea_regions=True):
     if embedding is None:
         planar, embedding = nx.check_planarity(graph)
         if not planar:
             raise ValueError("Geographic contact graph is nonplanar")
     embedding.check_structure()
-    if len(graph) < 3:
+    if not sea_regions or len(graph) < 3:
         return graph.copy(), {}, embedding
     triangulated, _ = nx.algorithms.planar_drawing.triangulate_embedding(embedding, fully_triangulate=False)
     result = graph.copy()
@@ -67,7 +67,15 @@ def integer_positions(graph, geography, embedding=None):
     return dict(zip(labels,coordinates.tolist()))
 
 
-def run(inputs, rotations_path=None):
+def degree_conflicts(edges, weights):
+    graph=nx.Graph(edges)
+    # A connected n-cell square shape has at most 2n+2 boundary edges.
+    return [{"component_id":v,"tiles":weight,"degree":graph.degree[v],
+             "minimum_tiles":(graph.degree[v]-1)//2}
+            for v,weight in sorted(weights.items()) if v in graph and graph.degree[v]>2*weight+2]
+
+
+def run(inputs, rotations_path=None, *, sea_regions=True):
     output_names = ["embedding.tsv", "embedding-edges.tsv", "embedding.json", "augmented.wkt", "augmented-weights.tsv"]
     if any((inputs/name).exists() for name in output_names):
         raise ValueError("Embedding files already exist")
@@ -103,7 +111,7 @@ def run(inputs, rotations_path=None):
             local_embedding = nx.PlanarEmbedding()
             local_embedding.add_nodes_from(sorted(members))
             local_embedding.set_data({v:prescribed[v] for v in sorted(members)})
-        augmented, local_sea, drawing_embedding = augment(subgraph, local_embedding)
+        augmented, local_sea, drawing_embedding = augment(subgraph, local_embedding, sea_regions=sea_regions)
         for label,(a,b) in local_sea.items():
             geography[label] = [(x+y)/2 for x,y in zip(geography[a],geography[b])]
         poses.update(integer_positions(augmented,geography,drawing_embedding))
@@ -134,14 +142,20 @@ def run(inputs, rotations_path=None):
                 weight=int(shapes[label]["tiles"])
             stream.write("\t".join(header)+"\n"+ring+"\nSITECOUNT 0\n")
             weights.write(f"{label}\t{weight}\n")
-    metadata={"method":"Biconnected planar dual with temporary sea vertices; Chrobak-Payne integer drawing",
+    metadata={"method":"Biconnected planar dual with temporary sea vertices; Chrobak-Payne integer drawing" if sea_regions else
+                        "Original planar dual; Chrobak-Payne integer drawing",
+              "sea_regions":sea_regions,
               "rotation_source":"geographic border portals" if prescribed is not None else "NetworkX planarity algorithm",
               "rotation_sha256":hashlib.sha256(rotations_path.read_bytes()).hexdigest() if rotations_path else None,
               "networkx_version":nx.__version__,"python_hash_seed":os.environ.get("PYTHONHASHSEED", "random"),
               "land_vertices":len(graph),"land_edges":graph.number_of_edges(),
               "sea_vertices":len(sea),"augmented_edges":len(edges),
+              "land_degree_conflicts":degree_conflicts(graph.edges,{v:int(r["tiles"]) for v,r in shapes.items()}),
+              "augmented_degree_conflicts":degree_conflicts(edges,{v:int(r["tiles"]) for v,r in shapes.items()}),
+              "degree_bound":"A connected n-cell square shape has at most 2n+2 boundary edges; this is necessary, not sufficient",
               "connected_component_sizes":sorted(sizes,reverse=True),
-              "sea_policy":"One temporary tile per added-edge subdivision; these are not population targets and are removed at export",
+              "sea_policy":"One temporary tile per added-edge subdivision; these are not population targets and are removed at export" if sea_regions else
+                           "No added regions or contacts; the drawing algorithm adds edges only to its private copy",
               "limit":"Only one portal per border pair is retained. Outer-face choice and enclave containment are not guaranteed. Count and contact checks remain required.",
               "script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     (inputs/"embedding.json").write_text(json.dumps(metadata,indent=2)+"\n")
@@ -155,5 +169,6 @@ if __name__ == "__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("inputs",type=Path)
     parser.add_argument("--rotations",type=Path)
+    parser.add_argument("--no-sea",action="store_true",help="Export only original land vertices and contacts")
     args=parser.parse_args()
-    run(args.inputs,args.rotations)
+    run(args.inputs,args.rotations,sea_regions=not args.no_sea)

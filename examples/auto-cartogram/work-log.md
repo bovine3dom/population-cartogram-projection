@@ -416,3 +416,22 @@ under ignored `output/auto-cartogram/`.
 - Started new full-default world fits from a frozen build. The previous
   full-default dissolved fits have 637 and 7,176 tiles of absolute count
   error at budgets of 10,000 and 55,000. The 110,000 case is still running.
+
+## 01:29–01:34 UTC — remove artificial sea constraints
+
+- Tested an initializer with no added sea vertices. NetworkX can draw the
+  original dual, but all three world inputs fail upstream geometric preflight.
+  Kept the option and tests as a recorded experiment, not the default.
+- Found a necessary count conflict in the augmented dual. One square tile can
+  touch at most four regions. The added sea vertices require five contacts for
+  Alaska at 10,000 tiles and Dhekelia at 110,000. The original land graph has
+  no degree-bound conflict at these three budgets.
+- Added a separate option that removes sea regions after grid initialization,
+  before population fitting. It copies all land cells and contacts into a new
+  dual and recalculates the placement weight. All 12 Python/Java layout tests
+  and 19 geometry tests pass, including an end-to-end four-region example.
+- The first 10,000-budget result improves absolute count error from 631 to 313
+  tiles and country axis-order errors from 672 to 497. All represented borders
+  remain, with no false contacts, disconnected shapes, or region holes. This
+  is still not an acceptable population map. Larger and exact-mode trials run
+  from the same frozen build.

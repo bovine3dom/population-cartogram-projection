@@ -59,11 +59,12 @@ mapfile -d '' sources < <(fd -0 --extension java "${exclusions[@]}" . \
     "${sources[@]}" "${patched_sources[@]}" \
     "$ROOT/examples/auto-cartogram/MosaicAdapter.java" \
     "$ROOT/examples/auto-cartogram/DirectionalPlacement.java" \
-    "$ROOT/examples/auto-cartogram/GeographicOrientation.java"
+    "$ROOT/examples/auto-cartogram/GeographicOrientation.java" \
+    "$ROOT/examples/auto-cartogram/InitialSeaRemoval.java"
 {
     printf 'gridmap_revision=%s\n' "$(git -C "$VENDOR/GridMapPipeline" rev-parse HEAD)"
     printf 'geometry_revision=%s\n' "$(git -C "$VENDOR/GeometryCore" rev-parse HEAD)"
-    for path in bootstrap.sh upstream-fixes.patch MosaicAdapter.java DirectionalPlacement.java GeographicOrientation.java; do
+    for path in bootstrap.sh upstream-fixes.patch MosaicAdapter.java DirectionalPlacement.java GeographicOrientation.java InitialSeaRemoval.java; do
         read -r hash _ < <(sha256sum "$ROOT/examples/auto-cartogram/$path")
         printf 'sha256.%s=%s\n' "$path" "$hash"
     done

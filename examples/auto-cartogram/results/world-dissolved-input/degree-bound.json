@@ -1,0 +1,49 @@
+{
+  "bound": "A connected n-cell square shape has at most 2n+2 boundary edges. Necessary, not sufficient.",
+  "cases": [
+    {
+      "tile_budget": 10000,
+      "land_conflicts": [],
+      "augmented_conflicts": [
+        {
+          "component_id": "USA:13c14a072880aac5",
+          "tiles": 1,
+          "degree": 5,
+          "minimum_tiles": 2
+        }
+      ],
+      "sha256": {
+        "groups.csv": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+        "geographic-contacts.csv": "c2b31c4287fe7fabaf7404429dd1c543c22c34dd06f4f280ac93cbcb56f8b18f",
+        "embedding-edges.tsv": "0ae56c97cffb08a69190e232ab223ee19ae48424f64636e240c0e8276995666d"
+      }
+    },
+    {
+      "tile_budget": 55000,
+      "land_conflicts": [],
+      "augmented_conflicts": [],
+      "sha256": {
+        "groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+        "geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+        "embedding-edges.tsv": "8abeb0669c91b5765413a51f0b6ac71777fc7493eac610f5bde2188223054bdb"
+      }
+    },
+    {
+      "tile_budget": 110000,
+      "land_conflicts": [],
+      "augmented_conflicts": [
+        {
+          "component_id": "ESB:432b2cb88c6056bf",
+          "tiles": 1,
+          "degree": 5,
+          "minimum_tiles": 2
+        }
+      ],
+      "sha256": {
+        "groups.csv": "67e5f8a4c1b8b71ec71ea870d738aa76234d8cf3c92edbe155f0a58044092804",
+        "geographic-contacts.csv": "8926012508a5cc86729fe6a5fc337aa69c0c9e250097106fb35182a0fee52079",
+        "embedding-edges.tsv": "5fcdba8e253d8b8f3fa0f20419e764c6648fd6741c9edcee946316d9375f7e1a"
+      }
+    }
+  ]
+}

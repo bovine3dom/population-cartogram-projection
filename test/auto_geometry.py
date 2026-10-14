@@ -112,6 +112,25 @@ class EmbeddingTests(unittest.TestCase):
             self.assertEqual(len({tuple(p) for p in positions.values()}),len(graph))
             self.assertEqual(positions,embedding.integer_positions(graph,geography,drawing))
 
+    def test_degree_budget_bound_is_necessary_not_sufficient(self):
+        self.assertFalse(embedding.degree_conflicts([("a",str(i)) for i in range(4)],{"a":1}))
+        self.assertEqual(embedding.degree_conflicts([("a",str(i)) for i in range(5)],{"a":1}),
+                         [{"component_id":"a","tiles":1,"degree":5,"minimum_tiles":2}])
+        self.assertFalse(embedding.degree_conflicts([("a",str(i)) for i in range(6)],{"a":2}))
+        self.assertFalse(embedding.degree_conflicts([],{"a":1}))
+
+    def test_original_dual_drawing_does_not_add_constraints(self):
+        for original in [nx.path_graph(5),nx.star_graph(6),nx.cycle_graph(5),nx.complete_graph(4)]:
+            original=nx.relabel_nodes(original,lambda n:f"land:{n}")
+            _, prescribed=nx.check_planarity(original)
+            graph,sea,drawing=embedding.augment(original,prescribed,sea_regions=False)
+            before=drawing.get_data()
+            positions=embedding.integer_positions(graph,{v:(i,i%3) for i,v in enumerate(graph)},drawing)
+            self.assertEqual(set(graph.edges),set(original.edges))
+            self.assertEqual(drawing.get_data(),before)
+            self.assertFalse(sea)
+            self.assertEqual(len({tuple(p) for p in positions.values()}),len(graph))
+
     def test_two_vertex_drawings_are_not_axis_aligned(self):
         graph=nx.Graph([("a","b")])
         for point in [(0,10),(10,0),(0,-10),(-10,0)]:
