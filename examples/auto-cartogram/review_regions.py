@@ -6,6 +6,9 @@ from pathlib import Path
 import subprocess
 import xml.etree.ElementTree as ET
 
+import numpy as np
+from scipy.ndimage import distance_transform_edt
+
 from review_layout import load
 from save_review import digest
 
@@ -20,6 +23,15 @@ REGIONS={
 }
 NS='http://www.w3.org/2000/svg'
 ET.register_namespace('',NS)
+
+
+def label_point(points):
+    x0=min(x for x,y in points)-1;y0=min(y for x,y in points)-1
+    grid=np.zeros((max(y for x,y in points)-y0+2,max(x for x,y in points)-x0+2),dtype=bool)
+    for x,y in points:grid[y-y0,x-x0]=True
+    distance=distance_transform_edt(grid)
+    cx=sum(x for x,y in points)/len(points);cy=sum(y for x,y in points)/len(points)
+    return min(points,key=lambda p:(-distance[p[1]-y0,p[0]-x0],(p[0]-cx)**2+(p[1]-cy)**2,p))
 
 
 def run(inputs,layout,output,render=True):
@@ -59,8 +71,7 @@ def run(inputs,layout,output,render=True):
             boxes=[]
             for country,points in sorted(biggest.items(),key=lambda item:(-len(item[1]),item[0])):
                 if len(points)*(scale*zoom)**2<300:continue
-                cx=sum(x for x,y in points)/len(points);cy=sum(y for x,y in points)/len(points)
-                x,y=min(points,key=lambda p:((p[0]-cx)**2+(p[1]-cy)**2,p));px=left+(x-xmin)*scale;py=top+(ymax-y)*scale
+                x,y=label_point(points);px=left+(x-xmin)*scale;py=top+(ymax-y)*scale
                 bounds=(px-19/zoom,py-10/zoom,px+19/zoom,py+6/zoom)
                 if any(not(bounds[2]<b[0] or b[2]<bounds[0] or bounds[3]<b[1] or b[3]<bounds[1]) for b in boxes):continue
                 boxes.append(bounds)
