@@ -1,0 +1,42 @@
+{
+  "method": "Count-preserving local boundary exchanges with perimeter and geographic-guide costs; no required-contact paths",
+  "maximum_rounds": 200,
+  "rounds": 99,
+  "perimeter": 1.0,
+  "false_contact": 40.0,
+  "guide": 1.0,
+  "anchor": 0.05,
+  "choices": 4,
+  "cycles": true,
+  "atomic": true,
+  "regrow": true,
+  "maximum_fit_rounds": 1000,
+  "absolute_tile_error": 1585,
+  "bounded": false,
+  "stretch": null,
+  "contact_reward": null,
+  "sea_perimeter": 8.0,
+  "template_penalty": 0.0,
+  "land_only": false,
+  "fixed_components": 0,
+  "initial_energy": 126025.58576515316,
+  "final_energy": 93490.97852089911,
+  "elapsed_seconds": 992.2067607548088,
+  "input_cells_sha256": "1ee6c0f3a293dc9c3103d28aac1b3248b007cdd06b35e75296a694813403cc75",
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-55000-tutte-partial-200/cells.csv": "1ee6c0f3a293dc9c3103d28aac1b3248b007cdd06b35e75296a694813403cc75"
+  },
+  "scripts": {
+    "compact_regions.py": "d5fad649b4784e1ac8e6ab5dcdb5e63e9c7878acfb6f636d5cb2db4645995d5c",
+    "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+    "review_layout.py": "88c281bf37a1bd6f512d412d4babe3ecb797ba62b6479cfbc8453f78aae565fd",
+    "cycle_deformation.py": "727887bbf08fc5eb505d85b370af04d122d99b7b8ba6f439999739643047d24a",
+    "fit_counts.py": "686fa8cd5a04da598da87a80b404d054b2f37241f99ed9553f46de63fffa43ec",
+    "atomic_deformation.py": "9734e6892278eea70efcd788b11c55d6bbb6b2d492b91810b2727898fba2b896",
+    "regrow_regions.py": "96f67787d7e08f9e343132ba505c75fd60057a470fba8d4449fe52f2a50e6c06"
+  },
+  "limit": "Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders."
+}
