@@ -49,6 +49,22 @@ from geographic_order import GeographicOrder
 
 
 class ShapeTests(unittest.TestCase):
+    def test_fixed_footprint_preserves_existing_hole(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'input';layout=root/'layout';inputs.mkdir();layout.mkdir()
+            tiles={'a':{(x,y) for x in range(3) for y in range(3)}-{(1,1)},'b':{(1,1)},'c':{(3,0),(3,1),(3,2)}}
+            (inputs/'groups.csv').write_text('component_id,tiles\na,8\nb,1\nc,3\n')
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\na,c,true\n')
+            (inputs/'validated.wkt').write_text('header\nheader\n'+''.join(f'OUT\t{c}\n0 0\t1 0\t1 1\t0 1\nend\n' for c in tiles))
+            (layout/'cells.csv').write_text('component_id,x,y\n'+''.join(f'{c},{x},{y}\n' for c,points in tiles.items() for x,y in sorted(points)))
+            (layout/'complete.txt').write_text('mode=test\n')
+            with contextlib.redirect_stdout(io.StringIO()):record=compact.run(inputs,layout,root/'fixed',rounds=10,fixed_footprint=True)
+            _,result,owners=compact.load(inputs,root/'fixed')
+            self.assertEqual(record['preserved_holes'],1)
+            self.assertEqual({c:compact.holes(p) for c,p in result.items()},{'a':1,'b':0,'c':0})
+            self.assertEqual(set(owners),set().union(*tiles.values()))
+            with self.assertRaisesRegex(ValueError,'no holes'):compact.run(inputs,layout,root/'not-fixed',rounds=1)
+
     def test_gap_svg_uses_bounded_paths(self):
         import xml.etree.ElementTree as ET
         with tempfile.TemporaryDirectory() as tmp:

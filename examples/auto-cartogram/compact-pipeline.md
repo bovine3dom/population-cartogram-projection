@@ -85,9 +85,11 @@ expose this option. Initial tests still have poor shapes and positions.
 
 `compact_regions.py --fixed-footprint` tests basic country-to-country boundary
 exchanges after partition repair. It keeps all occupied cells and empty spaces
-fixed. It requires exact starting counts and the existing connected, hole-free
-region checks. It cannot be combined with count fitting or regrowth. Border
-errors can still remain. Use `--land-only` to freeze isolated island templates.
+fixed. It requires exact starting counts and connected regions. Existing region
+holes are permitted only in this mode; each region's hole count must stay fixed.
+Such holes can contain other countries or existing water. This mode cannot fix
+an existing empty land hole. It cannot be combined with count fitting or regrowth.
+Border errors can remain. Use `--land-only` to freeze isolated island templates.
 
 ## Mainland-only flow control
 
