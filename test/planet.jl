@@ -50,7 +50,10 @@ if get(ENV,"CONTINUITY_GPU_TEST","")=="1"
                 withenv("CONTINUITY_OUTER_STEPS"=>"1") do
                     fit(out;compact)
                 end
+                eta_file=joinpath(out,"fit","country-etas.csv")
+                compact && CSV.write(eta_file,DataFrame(code=[276,616],eta=[.002,.002]))
                 publish(out,dest)
+                compact && @test read(joinpath(dest,"country-etas.csv"))==read(eta_file)
                 @test isfile(joinpath(dest,"population_density_hilo.arrow"))
                 @test isfile(joinpath(dest,"cartogram_weights_planet_h3_5_factor1_continuity_hilo.arrow"))
                 @test isfile(joinpath(out,"published.txt"))

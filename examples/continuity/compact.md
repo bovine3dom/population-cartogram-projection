@@ -204,6 +204,8 @@ saved objective. It reports support at equal retained mass, source spatial
 spread, border errors, and reversed triangle area. It also saves source and
 orientation CSV files. Compare `connections995`, not all positive implicit
 entries, with an exported mapping. The original export can already omit tails.
+Planet publication uses the checked compact moments for its orientation audit
+and includes `country-etas.csv` when present.
 The audit does not change a fit or publish data. Use `pass-N.jls`, not a
 candidate file that an active fit can replace.
 

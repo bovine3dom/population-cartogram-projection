@@ -124,7 +124,8 @@ function publish(out,destination)
         totals=vec(sum(p;dims=1))
         sum(abs.(totals.-c.b))<=1e-4 && maximum(abs.(totals./c.b.-1))<=.001 || error("target mass check failed")
     end
-    orientation=ContinuityDiagnostics.orientations(countries,plans)
+    orientation=ContinuityDiagnostics.orientations(countries,plans;
+        moments=(c,p)->p isa CE.CompactPlan ? p.stats.moment : c.xyz*p)
     CSV.write(joinpath(out,"candidate-orientation.csv"),orientation)
     rawpath=joinpath(out,"candidate.arrow")
     CE.export_mapping(rawpath,countries,plans;retained=.99999)
@@ -141,6 +142,8 @@ function publish(out,destination)
     for name in ("metrics.csv","settings.csv","baseline-seams.csv","candidate-seams.csv")
         cp(joinpath(out,"fit",name),joinpath(staging,name))
     end
+    eta_file=joinpath(out,"fit","country-etas.csv")
+    isfile(eta_file) && cp(eta_file,joinpath(staging,"country-etas.csv"))
     cp(joinpath(@__DIR__,"planet.md"),joinpath(staging,"README.md"))
     cp(joinpath(@__DIR__,"compact.md"),joinpath(staging,"compact.md"))
     isfile(joinpath(out,"fit-config.csv")) && cp(joinpath(out,"fit-config.csv"),joinpath(staging,"fit-config.csv"))

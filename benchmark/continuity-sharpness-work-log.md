@@ -252,3 +252,18 @@ Border RMS falls from 695.2 to 663.6 km, but reversed triangle area increases
 from 0.509 to 2.598 million km². This is not a complete pass or a publication
 candidate. Its independent audit is `planet-partial-v2-audit.toml`. Resume
 from this checked checkpoint rather than repeat completed country updates.
+
+## 11:16 UTC: publication metadata checks and second difficult country
+
+The factor-64 continuation passes Russia and the US at the requested final
+eta. India still fails at the first hot stage after 10,000 iterations, with
+scaled residual 10.54. The partial checkpoint remains valid; the fit has not
+completed its first pass. The next continuation will start hotter, at 256,
+without changing final eta or accepting an unchecked hot-stage plan.
+
+Planet publication now uses recomputed compact moments for orientation checks
+instead of generic implicit matrix multiplication. It also copies the selected
+country eta table into the output. The dense and compact oneAPI publication
+fixtures pass, including eta-table preservation. No real dataset is published
+by this test. The full planet regression has 12 workflow checks, plus the
+assembly and shared-target checks.
