@@ -1,0 +1,2067 @@
+{
+  "method": "Nearby island groups placed together with source-axis separation from nearby land; no country-identity links",
+  "gap_fraction": 0.35,
+  "land_radius_km": 500.0,
+  "minimum_tiles": 16,
+  "maximum_shift_scale": 2.0,
+  "cluster_edges": [
+    {
+      "component": "AUS:6a36c6fd1db93bf9",
+      "anchor": "AUS:adfd7567b2399535",
+      "source_gap": 0.027930964840901115
+    },
+    {
+      "component": "BGD:19954db53276f45c",
+      "anchor": "BGD:ee4951d7c5e4344f",
+      "source_gap": 0.0002451865005129452
+    },
+    {
+      "component": "BHR:d53271f1e46354e7",
+      "anchor": "BHR:7a146d25b735f173",
+      "source_gap": 0.00025426688517038383
+    },
+    {
+      "component": "DNK:6ca9994f5cea019a",
+      "anchor": "DNK:d3d12b2e248a600a",
+      "source_gap": 0.00012851006192027094
+    },
+    {
+      "component": "DNK:daf481ed6e2f79e2",
+      "anchor": "DNK:d3d12b2e248a600a",
+      "source_gap": 5.4973287998793e-05
+    },
+    {
+      "component": "ENG:bf2fff53240de3db",
+      "anchor": "GBR:241258080ec293c4",
+      "source_gap": 0.0004167389215623545
+    },
+    {
+      "component": "FXX:b04574696bff21bc",
+      "anchor": "ITA:ebecacbac755556c",
+      "source_gap": 0.0018316020350367416
+    },
+    {
+      "component": "GLP:6d7ccc1850ff782c",
+      "anchor": "GLP:53697300cc251789",
+      "source_gap": 5.269037318398291e-05
+    },
+    {
+      "component": "IDN:1675c019d412853f",
+      "anchor": "IDN:7d68fcb39519952c",
+      "source_gap": 0.002332112482712436
+    },
+    {
+      "component": "IDN:1882fc741812bb99",
+      "anchor": "IDN:6f7a11314a3b7af3",
+      "source_gap": 0.0016553293521984975
+    },
+    {
+      "component": "IDN:2f668109d000a646",
+      "anchor": "IDN:7d68fcb39519952c",
+      "source_gap": 0.0020849581410934794
+    },
+    {
+      "component": "IDN:3f7b064a42d6c495",
+      "anchor": "IDN:7c3797a36dd1a69b",
+      "source_gap": 0.0023850812626966377
+    },
+    {
+      "component": "IDN:43eb860ae00ba2ae",
+      "anchor": "IDN:fecb2bac3d81ef76",
+      "source_gap": 0.0004169714610943644
+    },
+    {
+      "component": "IDN:461e2601656ce574",
+      "anchor": "IDN:829c07ff03d97c10",
+      "source_gap": 0.014784093805581029
+    },
+    {
+      "component": "IDN:49b2a8a33d2211b5",
+      "anchor": "IDN:bbe17f60e9fb07dc",
+      "source_gap": 0.00042233232475029814
+    },
+    {
+      "component": "IDN:4d155ba9803cf6be",
+      "anchor": "IDN:fecb2bac3d81ef76",
+      "source_gap": 0.0004026674282437768
+    },
+    {
+      "component": "IDN:563e4c39826b9ed6",
+      "anchor": "IDN:4d155ba9803cf6be",
+      "source_gap": 0.002810529982250742
+    },
+    {
+      "component": "IDN:746e7e525dfc90c5",
+      "anchor": "IDN:7c3797a36dd1a69b",
+      "source_gap": 0.0025924986950241692
+    },
+    {
+      "component": "IDN:829c07ff03d97c10",
+      "anchor": "IDN:fecb2bac3d81ef76",
+      "source_gap": 0.0035838018317331717
+    },
+    {
+      "component": "IDN:88a8321cb31b5225",
+      "anchor": "IDN:829c07ff03d97c10",
+      "source_gap": 0.0024626785257054304
+    },
+    {
+      "component": "IDN:8b7b64d2940fb8dc",
+      "anchor": "IDN:829c07ff03d97c10",
+      "source_gap": 0.001908460699319703
+    },
+    {
+      "component": "IDN:902a51c01c39bc1e",
+      "anchor": "IDN:7cb96e5a2c123f8f",
+      "source_gap": 0.000818200072110047
+    },
+    {
+      "component": "IDN:9736be9cd3e2b4ff",
+      "anchor": "IDN:829c07ff03d97c10",
+      "source_gap": 0.0005560091823372589
+    },
+    {
+      "component": "IDN:a2e8d108d88be94f",
+      "anchor": "IDN:7a59bb18e03f91d9",
+      "source_gap": 0.0015618148667066682
+    },
+    {
+      "component": "IDN:a6a2a921eb1e80b9",
+      "anchor": "IDN:829c07ff03d97c10",
+      "source_gap": 0.0012537290510574864
+    },
+    {
+      "component": "IDN:b212698e7fc50989",
+      "anchor": "IDN:746e7e525dfc90c5",
+      "source_gap": 0.0002542864758565761
+    },
+    {
+      "component": "IDN:bbe17f60e9fb07dc",
+      "anchor": "IDN:2342a73d6e3d4204",
+      "source_gap": 0.00021784295099342766
+    },
+    {
+      "component": "IDN:cae0ccf851b4aa17",
+      "anchor": "IDN:7c3797a36dd1a69b",
+      "source_gap": 0.0027916165843025155
+    },
+    {
+      "component": "IDN:e0b729a0e374c21c",
+      "anchor": "IDN:829c07ff03d97c10",
+      "source_gap": 0.01688772275571406
+    },
+    {
+      "component": "IDN:fd97b33af0678261",
+      "anchor": "IDN:7d68fcb39519952c",
+      "source_gap": 0.002543804497594099
+    },
+    {
+      "component": "IDN:ffd26863a64545a3",
+      "anchor": "IDN:9736be9cd3e2b4ff",
+      "source_gap": 0.0001713870257067961
+    },
+    {
+      "component": "IMN:e2108479644de92c",
+      "anchor": "GBR:241258080ec293c4",
+      "source_gap": 0.003866846072683166
+    },
+    {
+      "component": "JPN:3876400cea5031e2",
+      "anchor": "JPN:f07fed45233efce3",
+      "source_gap": 0.00023321915802023828
+    },
+    {
+      "component": "JPN:6703a8f8d1682ec9",
+      "anchor": "JPN:3876400cea5031e2",
+      "source_gap": 0.0008331860366066186
+    },
+    {
+      "component": "JPN:c1b6e25b62179c19",
+      "anchor": "JPN:f07fed45233efce3",
+      "source_gap": 0.0029607562351385962
+    },
+    {
+      "component": "JPN:ccbb1b73257464db",
+      "anchor": "JPN:ec0a7dcff3300192",
+      "source_gap": 0.0003868686238725585
+    },
+    {
+      "component": "JPN:e121bcc962504d09",
+      "anchor": "JPN:f07fed45233efce3",
+      "source_gap": 0.005827161528780392
+    },
+    {
+      "component": "JPN:ec0a7dcff3300192",
+      "anchor": "JPN:f07fed45233efce3",
+      "source_gap": 0.0015660995812855636
+    },
+    {
+      "component": "LKA:9bc04c56a9e8bd7a",
+      "anchor": "LKA:1e8de9d1844ab756",
+      "source_gap": 0.00018327616757850957
+    },
+    {
+      "component": "MDG:d395cac872ab71a8",
+      "anchor": "MDG:4bc42083f90d1ae9",
+      "source_gap": 0.0016763010315643686
+    },
+    {
+      "component": "NGA:fdfbab60e4bd69a7",
+      "anchor": "NGA:3c88882c2e580374",
+      "source_gap": 0.00033533161728969117
+    },
+    {
+      "component": "NZL:979ee6939c934325",
+      "anchor": "NZL:8f99f1c50259113a",
+      "source_gap": 0.0029285117222864593
+    },
+    {
+      "component": "PHL:09326678e2013608",
+      "anchor": "PHL:90b293ce7c82f783",
+      "source_gap": 0.0011102079850378954
+    },
+    {
+      "component": "PHL:124f53ed2a9a90b2",
+      "anchor": "PHL:d9dc6d8657118070",
+      "source_gap": 0.0004560383114159896
+    },
+    {
+      "component": "PHL:13c5d331c2b85fff",
+      "anchor": "PHL:eb1fb8d27ecf0027",
+      "source_gap": 0.002194515416939701
+    },
+    {
+      "component": "PHL:1657f9a811dfa613",
+      "anchor": "PHL:6db0873e452de6c9",
+      "source_gap": 0.0005916646728153698
+    },
+    {
+      "component": "PHL:21362b5a399c84c0",
+      "anchor": "PHL:3dde36a3deef9e30",
+      "source_gap": 0.00017151112637216897
+    },
+    {
+      "component": "PHL:27694b49fed5e295",
+      "anchor": "PHL:eb1fb8d27ecf0027",
+      "source_gap": 0.002874151428877505
+    },
+    {
+      "component": "PHL:2ce786cb39ab6f61",
+      "anchor": "PHL:7516d4fddea7755b",
+      "source_gap": 0.003166058883322777
+    },
+    {
+      "component": "PHL:3dde36a3deef9e30",
+      "anchor": "PHL:6f9539ae2d2e4af7",
+      "source_gap": 0.0008020039599178023
+    },
+    {
+      "component": "PHL:4c8567135848a850",
+      "anchor": "PHL:7516d4fddea7755b",
+      "source_gap": 0.00045245133408911497
+    },
+    {
+      "component": "PHL:55f4748ebb0e9d7b",
+      "anchor": "PHL:d9dc6d8657118070",
+      "source_gap": 0.003421734813231922
+    },
+    {
+      "component": "PHL:565bea380f2a8f38",
+      "anchor": "PHL:7516d4fddea7755b",
+      "source_gap": 0.0005618241360050771
+    },
+    {
+      "component": "PHL:6f9539ae2d2e4af7",
+      "anchor": "PHL:d9dc6d8657118070",
+      "source_gap": 0.002418105987546951
+    },
+    {
+      "component": "PHL:726d0196a803e063",
+      "anchor": "PHL:3dde36a3deef9e30",
+      "source_gap": 0.0032209715373986746
+    },
+    {
+      "component": "PHL:9f45a34a40c23d0d",
+      "anchor": "PHL:eb1fb8d27ecf0027",
+      "source_gap": 0.0020552278242018107
+    },
+    {
+      "component": "PHL:a054fd0f49fb86bb",
+      "anchor": "PHL:726d0196a803e063",
+      "source_gap": 0.00031614233946385367
+    },
+    {
+      "component": "PHL:b8fbb9d4a0a4d4fc",
+      "anchor": "PHL:7516d4fddea7755b",
+      "source_gap": 0.002667737301891257
+    },
+    {
+      "component": "PHL:d37f189e16094fe0",
+      "anchor": "PHL:6f9539ae2d2e4af7",
+      "source_gap": 0.002691337245487639
+    },
+    {
+      "component": "PHL:d3c6f6bf47091a8d",
+      "anchor": "PHL:6db0873e452de6c9",
+      "source_gap": 0.00020318846455416798
+    },
+    {
+      "component": "PHL:e9207a07dbe16607",
+      "anchor": "PHL:3dde36a3deef9e30",
+      "source_gap": 0.001989186640746996
+    },
+    {
+      "component": "PHL:f6d8e393f979d3c4",
+      "anchor": "PHL:eb1fb8d27ecf0027",
+      "source_gap": 0.0013503478126640925
+    },
+    {
+      "component": "PNB:aad6c9a8a176c962",
+      "anchor": "PNB:965650135f10f84e",
+      "source_gap": 0.0001817901241322367
+    },
+    {
+      "component": "PNX:ac8508505c0cde6d",
+      "anchor": "PNX:7cc333b69cac4996",
+      "source_gap": 0.0041260572999343706
+    },
+    {
+      "component": "SPM:82efd5ba4ffee3ed",
+      "anchor": "CAN:95c7ebac82699331",
+      "source_gap": 0.0033808415630004036
+    },
+    {
+      "component": "TWN:7e4004ddd1829f26",
+      "anchor": "TWN:0e5b45704eef8ddd",
+      "source_gap": 0.006526153719412872
+    },
+    {
+      "component": "WLS:71b2d76ca054b400",
+      "anchor": "GBR:241258080ec293c4",
+      "source_gap": 6.418323727629268e-05
+    }
+  ],
+  "groups": [
+    {
+      "root": "IDN:fecb2bac3d81ef76",
+      "components": [
+        "IDN:43eb860ae00ba2ae",
+        "IDN:461e2601656ce574",
+        "IDN:4d155ba9803cf6be",
+        "IDN:563e4c39826b9ed6",
+        "IDN:829c07ff03d97c10",
+        "IDN:88a8321cb31b5225",
+        "IDN:8b7b64d2940fb8dc",
+        "IDN:9736be9cd3e2b4ff",
+        "IDN:a6a2a921eb1e80b9",
+        "IDN:e0b729a0e374c21c",
+        "IDN:fecb2bac3d81ef76",
+        "IDN:ffd26863a64545a3"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "IDN:829c07ff03d97c10",
+          "anchor": "IDN:fecb2bac3d81ef76",
+          "source_gap_tiles": 0.4658034632593147,
+          "mapped_gap_tiles": 0.4657728424183707,
+          "desired_x": 653.7930013443915,
+          "desired_y": 334.46288649475,
+          "actual_x": 654.1056910569106,
+          "actual_y": 334.7750677506775,
+          "placement_shift": 0.44185064543091207
+        },
+        {
+          "component_id": "IDN:4d155ba9803cf6be",
+          "anchor": "IDN:fecb2bac3d81ef76",
+          "source_gap_tiles": 0.05233656642419995,
+          "mapped_gap_tiles": 0.052336522983104525,
+          "desired_x": 726.0917017903693,
+          "desired_y": 301.0129364572575,
+          "actual_x": 727.04,
+          "actual_y": 301.04,
+          "placement_shift": 0.9486843151093936
+        },
+        {
+          "component_id": "IDN:43eb860ae00ba2ae",
+          "anchor": "IDN:fecb2bac3d81ef76",
+          "source_gap_tiles": 0.054195728384936526,
+          "mapped_gap_tiles": 0.05419568014794774,
+          "desired_x": 739.0971218980974,
+          "desired_y": 286.7207028076002,
+          "actual_x": 740.0454545454545,
+          "actual_y": 287.04545454545456,
+          "placement_shift": 1.0023963793244557
+        },
+        {
+          "component_id": "IDN:8b7b64d2940fb8dc",
+          "anchor": "IDN:829c07ff03d97c10",
+          "source_gap_tiles": 0.2480515511114472,
+          "mapped_gap_tiles": 0.24804692634251496,
+          "desired_x": 666.4860454327447,
+          "desired_y": 327.77185469616467,
+          "actual_x": 666.625,
+          "actual_y": 328.625,
+          "placement_shift": 0.8643872287449545
+        },
+        {
+          "component_id": "IDN:461e2601656ce574",
+          "anchor": "IDN:829c07ff03d97c10",
+          "source_gap_tiles": 1.921557725322076,
+          "mapped_gap_tiles": 1.9194141556972677,
+          "desired_x": 643.8059467886616,
+          "desired_y": 340.95997987223393,
+          "actual_x": 644.0,
+          "actual_y": 341.0,
+          "placement_shift": 0.1981369714545196
+        },
+        {
+          "component_id": "IDN:a6a2a921eb1e80b9",
+          "anchor": "IDN:829c07ff03d97c10",
+          "source_gap_tiles": 0.1629530206721726,
+          "mapped_gap_tiles": 0.16295170948747767,
+          "desired_x": 656.0941310565624,
+          "desired_y": 341.99429001433873,
+          "actual_x": 656.0,
+          "actual_y": 343.0,
+          "placement_shift": 1.0101055544191178
+        },
+        {
+          "component_id": "IDN:88a8321cb31b5225",
+          "anchor": "IDN:829c07ff03d97c10",
+          "source_gap_tiles": 0.3200858306423652,
+          "mapped_gap_tiles": 0.32007589378615164,
+          "desired_x": 659.4994572799227,
+          "desired_y": 339.2877963658401,
+          "actual_x": 659.0,
+          "actual_y": 340.0,
+          "placement_shift": 0.8698802164541583
+        },
+        {
+          "component_id": "IDN:9736be9cd3e2b4ff",
+          "anchor": "IDN:829c07ff03d97c10",
+          "source_gap_tiles": 0.0722671104309941,
+          "mapped_gap_tiles": 0.0722669960625338,
+          "desired_x": 657.0593923937088,
+          "desired_y": 339.8448838783337,
+          "actual_x": 658.0,
+          "actual_y": 341.0,
+          "placement_shift": 1.489642884568756
+        },
+        {
+          "component_id": "IDN:e0b729a0e374c21c",
+          "anchor": "IDN:829c07ff03d97c10",
+          "source_gap_tiles": 2.19497620558182,
+          "mapped_gap_tiles": 2.191784160068221,
+          "desired_x": 640.2189601130312,
+          "desired_y": 346.89296278815544,
+          "actual_x": 640.0,
+          "actual_y": 347.0,
+          "placement_shift": 0.24372216932013288
+        },
+        {
+          "component_id": "IDN:563e4c39826b9ed6",
+          "anchor": "IDN:4d155ba9803cf6be",
+          "source_gap_tiles": 0.36529770919098575,
+          "mapped_gap_tiles": 0.36528293922503197,
+          "desired_x": 733.1897772505868,
+          "desired_y": 300.824925965375,
+          "actual_x": 733.0,
+          "actual_y": 301.0,
+          "placement_shift": 0.25819822315452556
+        },
+        {
+          "component_id": "IDN:ffd26863a64545a3",
+          "anchor": "IDN:9736be9cd3e2b4ff",
+          "source_gap_tiles": 0.022275972244067528,
+          "mapped_gap_tiles": 0.022275968894444848,
+          "desired_x": 658.3035869732902,
+          "desired_y": 341.38878081099335,
+          "actual_x": 657.0,
+          "actual_y": 342.0,
+          "placement_shift": 1.4397666109275475
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "IDN:43eb860ae00ba2ae",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": 11,
+          "approximate_source_distance_km": 498.20375649426336
+        },
+        {
+          "component": "IDN:461e2601656ce574",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 62,
+          "approximate_source_distance_km": 395.01321706961437
+        },
+        {
+          "component": "IDN:4d155ba9803cf6be",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -2,
+          "approximate_source_distance_km": 357.4185340431227
+        },
+        {
+          "component": "IDN:563e4c39826b9ed6",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -1,
+          "approximate_source_distance_km": 373.5165186558305
+        },
+        {
+          "component": "IDN:829c07ff03d97c10",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 78,
+          "approximate_source_distance_km": 398.4450315400303
+        },
+        {
+          "component": "IDN:88a8321cb31b5225",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -32,
+          "approximate_source_distance_km": 50.672314773931134
+        },
+        {
+          "component": "IDN:8b7b64d2940fb8dc",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 76,
+          "approximate_source_distance_km": 311.5185016355658
+        },
+        {
+          "component": "IDN:8b7b64d2940fb8dc",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 64,
+          "approximate_source_distance_km": 393.0656054670503
+        },
+        {
+          "component": "IDN:8b7b64d2940fb8dc",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -22,
+          "approximate_source_distance_km": 393.0656054670503
+        },
+        {
+          "component": "IDN:9736be9cd3e2b4ff",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -33,
+          "approximate_source_distance_km": 71.9091739794176
+        },
+        {
+          "component": "IDN:e0b729a0e374c21c",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 67,
+          "approximate_source_distance_km": 440.48442024025655
+        },
+        {
+          "component": "IDN:fecb2bac3d81ef76",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -14,
+          "approximate_source_distance_km": 382.14763955550916
+        },
+        {
+          "component": "IDN:ffd26863a64545a3",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -34,
+          "approximate_source_distance_km": 53.93396142148303
+        }
+      ],
+      "translation_bounds": [
+        [
+          64.0,
+          null
+        ],
+        [
+          62.0,
+          -34.0
+        ]
+      ],
+      "not_moved": "Inconsistent geographic separation bounds"
+    },
+    {
+      "root": "JPN:f07fed45233efce3",
+      "components": [
+        "JPN:3876400cea5031e2",
+        "JPN:6703a8f8d1682ec9",
+        "JPN:c1b6e25b62179c19",
+        "JPN:ccbb1b73257464db",
+        "JPN:e121bcc962504d09",
+        "JPN:ec0a7dcff3300192",
+        "JPN:f07fed45233efce3"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "JPN:3876400cea5031e2",
+          "anchor": "JPN:f07fed45233efce3",
+          "source_gap_tiles": 0.030312583285809484,
+          "mapped_gap_tiles": 0.03031257484557366,
+          "desired_x": 751.4793353535082,
+          "desired_y": 440.47030449784427,
+          "actual_x": 750.0246913580247,
+          "actual_y": 440.1975308641975,
+          "placement_shift": 1.479998178650566
+        },
+        {
+          "component_id": "JPN:c1b6e25b62179c19",
+          "anchor": "JPN:f07fed45233efce3",
+          "source_gap_tiles": 0.3848233169542254,
+          "mapped_gap_tiles": 0.3848060499267303,
+          "desired_x": 767.2282634480317,
+          "desired_y": 496.6301382170562,
+          "actual_x": 766.1176470588235,
+          "actual_y": 496.7352941176471,
+          "placement_shift": 1.115583491903191
+        },
+        {
+          "component_id": "JPN:ec0a7dcff3300192",
+          "anchor": "JPN:f07fed45233efce3",
+          "source_gap_tiles": 0.20355327750334787,
+          "mapped_gap_tiles": 0.20355072182827896,
+          "desired_x": 760.7041289060909,
+          "desired_y": 447.29437246570404,
+          "actual_x": 761.0833333333334,
+          "actual_y": 447.0,
+          "placement_shift": 0.4800532743404413
+        },
+        {
+          "component_id": "JPN:6703a8f8d1682ec9",
+          "anchor": "JPN:3876400cea5031e2",
+          "source_gap_tiles": 0.10829308081552087,
+          "mapped_gap_tiles": 0.10829269597214093,
+          "desired_x": 746.7007190346004,
+          "desired_y": 439.8918565478965,
+          "actual_x": 747.0,
+          "actual_y": 440.0,
+          "placement_shift": 0.31822021067708767
+        },
+        {
+          "component_id": "JPN:ccbb1b73257464db",
+          "anchor": "JPN:ec0a7dcff3300192",
+          "source_gap_tiles": 0.050283122027161696,
+          "mapped_gap_tiles": 0.050283083501343924,
+          "desired_x": 763.8408366535572,
+          "desired_y": 450.0055638316493,
+          "actual_x": 764.0,
+          "actual_y": 450.0,
+          "placement_shift": 0.15926056345969652
+        },
+        {
+          "component_id": "JPN:e121bcc962504d09",
+          "anchor": "JPN:f07fed45233efce3",
+          "source_gap_tiles": 0.7573834013485932,
+          "mapped_gap_tiles": 0.7572518092966976,
+          "desired_x": 771.2573465448211,
+          "desired_y": 472.05188182611596,
+          "actual_x": 771.0,
+          "actual_y": 472.0,
+          "placement_shift": 0.262524223667974
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "JPN:3876400cea5031e2",
+          "land_component": "KOR:1a1881fe9e034788",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -25,
+          "approximate_source_distance_km": 238.77501361115944
+        },
+        {
+          "component": "JPN:6703a8f8d1682ec9",
+          "land_component": "KOR:1a1881fe9e034788",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 27,
+          "approximate_source_distance_km": 376.79373224016877
+        },
+        {
+          "component": "JPN:6703a8f8d1682ec9",
+          "land_component": "KOR:1a1881fe9e034788",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -18,
+          "approximate_source_distance_km": 376.79373224016877
+        },
+        {
+          "component": "JPN:ec0a7dcff3300192",
+          "land_component": "KOR:1a1881fe9e034788",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 15,
+          "approximate_source_distance_km": 405.5296180560585
+        },
+        {
+          "component": "JPN:f07fed45233efce3",
+          "land_component": "KOR:1a1881fe9e034788",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 26,
+          "approximate_source_distance_km": 215.8968564407173
+        }
+      ],
+      "translation_bounds": [
+        [
+          27.0,
+          null
+        ],
+        [
+          null,
+          -25.0
+        ]
+      ],
+      "proposed_translation": [
+        27,
+        -25
+      ],
+      "maximum_translation": 57.654141221598294,
+      "group_translation": [
+        27,
+        -25
+      ]
+    },
+    {
+      "root": "GBR:241258080ec293c4",
+      "components": [
+        "ENG:bf2fff53240de3db",
+        "GBR:241258080ec293c4",
+        "IMN:e2108479644de92c",
+        "WLS:71b2d76ca054b400"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "ENG:bf2fff53240de3db",
+          "anchor": "GBR:241258080ec293c4",
+          "source_gap_tiles": 0.05416550413581538,
+          "mapped_gap_tiles": 0.05416545597948487,
+          "desired_x": 441.03543527669194,
+          "desired_y": 441.45928091102485,
+          "actual_x": 441.0,
+          "actual_y": 440.0,
+          "placement_shift": 1.4597110796715032
+        },
+        {
+          "component_id": "IMN:e2108479644de92c",
+          "anchor": "GBR:241258080ec293c4",
+          "source_gap_tiles": 0.5025920452960554,
+          "mapped_gap_tiles": 0.5025535822964257,
+          "desired_x": 430.07442157583574,
+          "desired_y": 458.4974912192766,
+          "actual_x": 430.0,
+          "actual_y": 458.0,
+          "placement_shift": 0.5030269219506807
+        },
+        {
+          "component_id": "WLS:71b2d76ca054b400",
+          "anchor": "GBR:241258080ec293c4",
+          "source_gap_tiles": 0.008342195135278096,
+          "mapped_gap_tiles": 0.008342194959353295,
+          "desired_x": 430.5379472746107,
+          "desired_y": 452.88931678333836,
+          "actual_x": 430.0,
+          "actual_y": 453.0,
+          "placement_shift": 0.5492158452845739
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "ENG:bf2fff53240de3db",
+          "land_component": "BEL:b124863414a6dcdb",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 3,
+          "approximate_source_distance_km": 283.7025506218178
+        },
+        {
+          "component": "ENG:bf2fff53240de3db",
+          "land_component": "IRL:9661cba0fca9f89c",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -15,
+          "approximate_source_distance_km": 398.56215703547304
+        },
+        {
+          "component": "ENG:bf2fff53240de3db",
+          "land_component": "IRL:9661cba0fca9f89c",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -3,
+          "approximate_source_distance_km": 398.56215703547304
+        },
+        {
+          "component": "ENG:bf2fff53240de3db",
+          "land_component": "NIR:69fa50e543fa7c66",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -14,
+          "approximate_source_distance_km": 462.73211334359576
+        },
+        {
+          "component": "ENG:bf2fff53240de3db",
+          "land_component": "NIR:69fa50e543fa7c66",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": 2,
+          "approximate_source_distance_km": 462.73211334359576
+        },
+        {
+          "component": "ENG:bf2fff53240de3db",
+          "land_component": "NLX:5daa52b59ba80d17",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 4,
+          "approximate_source_distance_km": 350.6741773699127
+        },
+        {
+          "component": "ENG:bf2fff53240de3db",
+          "land_component": "NLX:5daa52b59ba80d17",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -2,
+          "approximate_source_distance_km": 350.6741773699127
+        },
+        {
+          "component": "ENG:bf2fff53240de3db",
+          "land_component": "NLX:8b9c3398a58bdb2a",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 8,
+          "approximate_source_distance_km": 362.37497703376175
+        },
+        {
+          "component": "GBR:241258080ec293c4",
+          "land_component": "BEL:b124863414a6dcdb",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -7,
+          "approximate_source_distance_km": 87.96627237804428
+        },
+        {
+          "component": "GBR:241258080ec293c4",
+          "land_component": "DEU:0b0480fae55fd996",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 6,
+          "approximate_source_distance_km": 331.11625647233797
+        },
+        {
+          "component": "GBR:241258080ec293c4",
+          "land_component": "LUX:2287a57343a7d085",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 4,
+          "approximate_source_distance_km": 365.9105636075307
+        },
+        {
+          "component": "GBR:241258080ec293c4",
+          "land_component": "NLX:5daa52b59ba80d17",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -6,
+          "approximate_source_distance_km": 148.54652644410305
+        },
+        {
+          "component": "GBR:241258080ec293c4",
+          "land_component": "NLX:8b9c3398a58bdb2a",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -2,
+          "approximate_source_distance_km": 155.0240265351801
+        },
+        {
+          "component": "IMN:e2108479644de92c",
+          "land_component": "FXX:f023db15990ca569",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -17,
+          "approximate_source_distance_km": 469.1027719393114
+        },
+        {
+          "component": "IMN:e2108479644de92c",
+          "land_component": "IRL:9661cba0fca9f89c",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -4,
+          "approximate_source_distance_km": 100.86247119667975
+        },
+        {
+          "component": "IMN:e2108479644de92c",
+          "land_component": "NIR:69fa50e543fa7c66",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -3,
+          "approximate_source_distance_km": 57.992442539151845
+        },
+        {
+          "component": "WLS:71b2d76ca054b400",
+          "land_component": "FXX:f023db15990ca569",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -12,
+          "approximate_source_distance_km": 381.6064455641402
+        },
+        {
+          "component": "WLS:71b2d76ca054b400",
+          "land_component": "IRL:9661cba0fca9f89c",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -4,
+          "approximate_source_distance_km": 113.66375061532052
+        },
+        {
+          "component": "WLS:71b2d76ca054b400",
+          "land_component": "NIR:69fa50e543fa7c66",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -3,
+          "approximate_source_distance_km": 112.1785987788589
+        },
+        {
+          "component": "WLS:71b2d76ca054b400",
+          "land_component": "NIR:69fa50e543fa7c66",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -11,
+          "approximate_source_distance_km": 112.1785987788589
+        }
+      ],
+      "translation_bounds": [
+        [
+          -3.0,
+          -12.0
+        ],
+        [
+          -7.0,
+          -11.0
+        ]
+      ],
+      "not_moved": "Inconsistent geographic separation bounds"
+    },
+    {
+      "root": "PHL:eb1fb8d27ecf0027",
+      "components": [
+        "PHL:13c5d331c2b85fff",
+        "PHL:27694b49fed5e295",
+        "PHL:9f45a34a40c23d0d",
+        "PHL:eb1fb8d27ecf0027",
+        "PHL:f6d8e393f979d3c4"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "PHL:9f45a34a40c23d0d",
+          "anchor": "PHL:eb1fb8d27ecf0027",
+          "source_gap_tiles": 0.2671275598509154,
+          "mapped_gap_tiles": 0.2671217839890678,
+          "desired_x": 776.2658486515134,
+          "desired_y": 328.1813564222087,
+          "actual_x": 775.9,
+          "actual_y": 328.0,
+          "placement_shift": 0.40833244751120695
+        },
+        {
+          "component_id": "PHL:f6d8e393f979d3c4",
+          "anchor": "PHL:eb1fb8d27ecf0027",
+          "source_gap_tiles": 0.17551101240421904,
+          "mapped_gap_tiles": 0.17550937412384426,
+          "desired_x": 793.1519702080559,
+          "desired_y": 331.85001163164765,
+          "actual_x": 793.0,
+          "actual_y": 332.5,
+          "placement_shift": 0.6675176575416626
+        },
+        {
+          "component_id": "PHL:27694b49fed5e295",
+          "anchor": "PHL:eb1fb8d27ecf0027",
+          "source_gap_tiles": 0.3735668857715309,
+          "mapped_gap_tiles": 0.373551089972731,
+          "desired_x": 782.1287733729662,
+          "desired_y": 329.98155426504326,
+          "actual_x": 782.0,
+          "actual_y": 330.0,
+          "placement_shift": 0.13008776546309483
+        },
+        {
+          "component_id": "PHL:13c5d331c2b85fff",
+          "anchor": "PHL:eb1fb8d27ecf0027",
+          "source_gap_tiles": 0.2852314188622788,
+          "mapped_gap_tiles": 0.28522438734189837,
+          "desired_x": 789.9243887928094,
+          "desired_y": 326.01478148339555,
+          "actual_x": 789.0,
+          "actual_y": 326.0,
+          "placement_shift": 0.9245069672657877
+        }
+      ],
+      "separation_constraints": [],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        19,
+        -1
+      ],
+      "maximum_translation": 41.376321731154405,
+      "group_translation": [
+        19,
+        -1
+      ]
+    },
+    {
+      "root": "MDG:4bc42083f90d1ae9",
+      "components": [
+        "MDG:4bc42083f90d1ae9",
+        "MDG:d395cac872ab71a8"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "MDG:d395cac872ab71a8",
+          "anchor": "MDG:4bc42083f90d1ae9",
+          "source_gap_tiles": 0.2178766747240146,
+          "mapped_gap_tiles": 0.21787354070658047,
+          "desired_x": 529.5321821917297,
+          "desired_y": 292.00253430510827,
+          "actual_x": 529.0,
+          "actual_y": 292.0,
+          "placement_shift": 0.5321882260033682
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "MDG:4bc42083f90d1ae9",
+          "land_component": "MOZ:0c9516b3b1958290",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 1,
+          "approximate_source_distance_km": 365.14228669917765
+        }
+      ],
+      "translation_bounds": [
+        [
+          1.0,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        1,
+        0
+      ],
+      "maximum_translation": 28.77498913987632,
+      "group_translation": [
+        1,
+        0
+      ]
+    },
+    {
+      "root": "AUS:adfd7567b2399535",
+      "components": [
+        "AUS:6a36c6fd1db93bf9",
+        "AUS:adfd7567b2399535"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "AUS:6a36c6fd1db93bf9",
+          "anchor": "AUS:adfd7567b2399535",
+          "source_gap_tiles": 3.6303179600681537,
+          "mapped_gap_tiles": 3.615973702845281,
+          "desired_x": 750.8660151651546,
+          "desired_y": 246.89062474499357,
+          "actual_x": 751.0,
+          "actual_y": 246.5,
+          "placement_shift": 0.4129644383840257
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "AUS:adfd7567b2399535",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": 28,
+          "approximate_source_distance_km": 470.43153478755914
+        },
+        {
+          "component": "AUS:adfd7567b2399535",
+          "land_component": "IDN:91fa24efd9a13b2f",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": 33,
+          "approximate_source_distance_km": 232.8172100467135
+        }
+      ],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          28.0
+        ]
+      ],
+      "proposed_translation": [
+        0,
+        0
+      ],
+      "maximum_translation": 26.758176320519304,
+      "group_translation": [
+        0,
+        0
+      ]
+    },
+    {
+      "root": "PHL:7516d4fddea7755b",
+      "components": [
+        "PHL:2ce786cb39ab6f61",
+        "PHL:4c8567135848a850",
+        "PHL:565bea380f2a8f38",
+        "PHL:7516d4fddea7755b",
+        "PHL:b8fbb9d4a0a4d4fc"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "PHL:2ce786cb39ab6f61",
+          "anchor": "PHL:7516d4fddea7755b",
+          "source_gap_tiles": 0.41150746106446184,
+          "mapped_gap_tiles": 0.4114863476225777,
+          "desired_x": 783.4968693716136,
+          "desired_y": 303.58918076493615,
+          "actual_x": 783.5,
+          "actual_y": 303.0,
+          "placement_shift": 0.5891890822179543
+        },
+        {
+          "component_id": "PHL:b8fbb9d4a0a4d4fc",
+          "anchor": "PHL:7516d4fddea7755b",
+          "source_gap_tiles": 0.3467382775699036,
+          "mapped_gap_tiles": 0.34672564625084085,
+          "desired_x": 795.5731594869599,
+          "desired_y": 319.32127031188156,
+          "actual_x": 795.0,
+          "actual_y": 319.0,
+          "placement_shift": 0.6570589096790135
+        },
+        {
+          "component_id": "PHL:4c8567135848a850",
+          "anchor": "PHL:7516d4fddea7755b",
+          "source_gap_tiles": 0.05880721319713378,
+          "mapped_gap_tiles": 0.05880715156933882,
+          "desired_x": 798.0242236658132,
+          "desired_y": 304.55120151801736,
+          "actual_x": 798.0,
+          "actual_y": 303.0,
+          "placement_shift": 1.5513906456740056
+        },
+        {
+          "component_id": "PHL:565bea380f2a8f38",
+          "anchor": "PHL:7516d4fddea7755b",
+          "source_gap_tiles": 0.07302290711963838,
+          "mapped_gap_tiles": 0.07302278912520437,
+          "desired_x": 786.525499375092,
+          "desired_y": 306.2288421503706,
+          "actual_x": 787.0,
+          "actual_y": 306.0,
+          "placement_shift": 0.5268012650178161
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "PHL:2ce786cb39ab6f61",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -22,
+          "approximate_source_distance_km": 493.6485169918592
+        },
+        {
+          "component": "PHL:2ce786cb39ab6f61",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 14,
+          "approximate_source_distance_km": 493.6485169918592
+        },
+        {
+          "component": "PHL:2ce786cb39ab6f61",
+          "land_component": "MYS:0abe504273f2e4bd",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -22,
+          "approximate_source_distance_km": 279.37740274539726
+        },
+        {
+          "component": "PHL:565bea380f2a8f38",
+          "land_component": "MYS:0abe504273f2e4bd",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -26,
+          "approximate_source_distance_km": 402.9529334382056
+        },
+        {
+          "component": "PHL:565bea380f2a8f38",
+          "land_component": "MYS:0abe504273f2e4bd",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 18,
+          "approximate_source_distance_km": 402.9529334382056
+        },
+        {
+          "component": "PHL:7516d4fddea7755b",
+          "land_component": "MYS:0abe504273f2e4bd",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -22,
+          "approximate_source_distance_km": 314.7288551476303
+        }
+      ],
+      "translation_bounds": [
+        [
+          -22.0,
+          18.0
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        -16,
+        33
+      ],
+      "maximum_translation": 26.38181191654584,
+      "not_moved": "Group translation exceeds displacement limit"
+    },
+    {
+      "root": "TWN:0e5b45704eef8ddd",
+      "components": [
+        "TWN:0e5b45704eef8ddd",
+        "TWN:7e4004ddd1829f26"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "TWN:7e4004ddd1829f26",
+          "anchor": "TWN:0e5b45704eef8ddd",
+          "source_gap_tiles": 0.8482346812114556,
+          "mapped_gap_tiles": 0.848049848600913,
+          "desired_x": 774.1754034717408,
+          "desired_y": 373.4123549290977,
+          "actual_x": 774.0,
+          "actual_y": 373.0,
+          "placement_shift": 0.44811043889860036
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "TWN:7e4004ddd1829f26",
+          "land_component": "HKG:a4b1c1ec313ba36c",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -9,
+          "approximate_source_distance_km": 452.68587988698306
+        },
+        {
+          "component": "TWN:7e4004ddd1829f26",
+          "land_component": "HKG:a4b1c1ec313ba36c",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 5,
+          "approximate_source_distance_km": 452.68587988698306
+        }
+      ],
+      "translation_bounds": [
+        [
+          -9.0,
+          5.0
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        1,
+        5
+      ],
+      "maximum_translation": 25.45584412271571,
+      "group_translation": [
+        1,
+        5
+      ]
+    },
+    {
+      "root": "LKA:1e8de9d1844ab756",
+      "components": [
+        "LKA:1e8de9d1844ab756",
+        "LKA:9bc04c56a9e8bd7a"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "LKA:9bc04c56a9e8bd7a",
+          "anchor": "LKA:1e8de9d1844ab756",
+          "source_gap_tiles": 0.023821259544837367,
+          "mapped_gap_tiles": 0.023821255448648042,
+          "desired_x": 633.6243959259176,
+          "desired_y": 306.62890509075635,
+          "actual_x": 635.0,
+          "actual_y": 307.0,
+          "placement_shift": 1.4247799831197172
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "LKA:9bc04c56a9e8bd7a",
+          "land_component": "IND:3f0bb94d859b2064",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": 9,
+          "approximate_source_distance_km": 293.29600735755105
+        }
+      ],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          9.0
+        ]
+      ],
+      "proposed_translation": [
+        0,
+        0
+      ],
+      "maximum_translation": 24.413111231467404,
+      "group_translation": [
+        0,
+        0
+      ]
+    },
+    {
+      "root": "IDN:7c3797a36dd1a69b",
+      "components": [
+        "IDN:3f7b064a42d6c495",
+        "IDN:746e7e525dfc90c5",
+        "IDN:7c3797a36dd1a69b",
+        "IDN:b212698e7fc50989",
+        "IDN:cae0ccf851b4aa17"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "IDN:746e7e525dfc90c5",
+          "anchor": "IDN:7c3797a36dd1a69b",
+          "source_gap_tiles": 0.33695916441158835,
+          "mapped_gap_tiles": 0.33694757190007374,
+          "desired_x": 792.99428813935,
+          "desired_y": 269.1637225657425,
+          "actual_x": 793.0,
+          "actual_y": 268.5,
+          "placement_shift": 0.6637471428397094
+        },
+        {
+          "component_id": "IDN:b212698e7fc50989",
+          "anchor": "IDN:746e7e525dfc90c5",
+          "source_gap_tiles": 0.033050800986045056,
+          "mapped_gap_tiles": 0.0330507900456844,
+          "desired_x": 793.7717960798709,
+          "desired_y": 268.1774410001503,
+          "actual_x": 795.0,
+          "actual_y": 268.5,
+          "placement_shift": 1.2698539986173665
+        },
+        {
+          "component_id": "IDN:3f7b064a42d6c495",
+          "anchor": "IDN:7c3797a36dd1a69b",
+          "source_gap_tiles": 0.31000015192852304,
+          "mapped_gap_tiles": 0.309991125049234,
+          "desired_x": 794.2448648789382,
+          "desired_y": 281.7366810108104,
+          "actual_x": 795.0,
+          "actual_y": 282.0,
+          "placement_shift": 0.799728667192111
+        },
+        {
+          "component_id": "IDN:cae0ccf851b4aa17",
+          "anchor": "IDN:7c3797a36dd1a69b",
+          "source_gap_tiles": 0.3628394465191191,
+          "mapped_gap_tiles": 0.36282497271231656,
+          "desired_x": 787.4357441271629,
+          "desired_y": 266.6375392634931,
+          "actual_x": 786.0,
+          "actual_y": 267.0,
+          "placement_shift": 1.4807899865247476
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "IDN:3f7b064a42d6c495",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -34,
+          "approximate_source_distance_km": 464.20274124329444
+        },
+        {
+          "component": "IDN:746e7e525dfc90c5",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -26,
+          "approximate_source_distance_km": 488.63112548201923
+        },
+        {
+          "component": "IDN:746e7e525dfc90c5",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 35,
+          "approximate_source_distance_km": 488.63112548201923
+        },
+        {
+          "component": "IDN:746e7e525dfc90c5",
+          "land_component": "TLS:e102fc60287c6426",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -21,
+          "approximate_source_distance_km": 460.4976639224477
+        },
+        {
+          "component": "IDN:746e7e525dfc90c5",
+          "land_component": "TLS:e102fc60287c6426",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 37,
+          "approximate_source_distance_km": 460.4976639224477
+        },
+        {
+          "component": "IDN:b212698e7fc50989",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -28,
+          "approximate_source_distance_km": 449.9795969753622
+        },
+        {
+          "component": "IDN:b212698e7fc50989",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 35,
+          "approximate_source_distance_km": 449.9795969753622
+        },
+        {
+          "component": "IDN:b212698e7fc50989",
+          "land_component": "TLS:e102fc60287c6426",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -23,
+          "approximate_source_distance_km": 421.60364726961575
+        },
+        {
+          "component": "IDN:b212698e7fc50989",
+          "land_component": "TLS:e102fc60287c6426",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 37,
+          "approximate_source_distance_km": 421.60364726961575
+        },
+        {
+          "component": "IDN:cae0ccf851b4aa17",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -19,
+          "approximate_source_distance_km": 472.8069070406639
+        },
+        {
+          "component": "IDN:cae0ccf851b4aa17",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 36,
+          "approximate_source_distance_km": 472.8069070406639
+        },
+        {
+          "component": "IDN:cae0ccf851b4aa17",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -25,
+          "approximate_source_distance_km": 498.65613870109564
+        },
+        {
+          "component": "IDN:cae0ccf851b4aa17",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": 33,
+          "approximate_source_distance_km": 498.65613870109564
+        },
+        {
+          "component": "IDN:cae0ccf851b4aa17",
+          "land_component": "TLS:e102fc60287c6426",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -14,
+          "approximate_source_distance_km": 499.6596286376614
+        },
+        {
+          "component": "IDN:cae0ccf851b4aa17",
+          "land_component": "TLS:e102fc60287c6426",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 38,
+          "approximate_source_distance_km": 499.6596286376614
+        }
+      ],
+      "translation_bounds": [
+        [
+          -25.0,
+          38.0
+        ],
+        [
+          -28.0,
+          33.0
+        ]
+      ],
+      "not_moved": "Inconsistent geographic separation bounds"
+    },
+    {
+      "root": "PHL:d9dc6d8657118070",
+      "components": [
+        "PHL:124f53ed2a9a90b2",
+        "PHL:21362b5a399c84c0",
+        "PHL:3dde36a3deef9e30",
+        "PHL:55f4748ebb0e9d7b",
+        "PHL:6f9539ae2d2e4af7",
+        "PHL:726d0196a803e063",
+        "PHL:a054fd0f49fb86bb",
+        "PHL:d37f189e16094fe0",
+        "PHL:d9dc6d8657118070",
+        "PHL:e9207a07dbe16607"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "PHL:6f9539ae2d2e4af7",
+          "anchor": "PHL:d9dc6d8657118070",
+          "source_gap_tiles": 0.3142925296689151,
+          "mapped_gap_tiles": 0.31428312262571606,
+          "desired_x": 790.3715860612448,
+          "desired_y": 314.43643073447765,
+          "actual_x": 790.9655172413793,
+          "actual_y": 314.1034482758621,
+          "placement_shift": 0.6809049599478958
+        },
+        {
+          "component_id": "PHL:3dde36a3deef9e30",
+          "anchor": "PHL:6f9539ae2d2e4af7",
+          "source_gap_tiles": 0.10424020066330782,
+          "mapped_gap_tiles": 0.10423985743119375,
+          "desired_x": 794.3053971227323,
+          "desired_y": 318.6542793784288,
+          "actual_x": 795.2307692307693,
+          "actual_y": 318.88461538461536,
+          "placement_shift": 0.9536079981201864
+        },
+        {
+          "component_id": "PHL:726d0196a803e063",
+          "anchor": "PHL:3dde36a3deef9e30",
+          "source_gap_tiles": 0.41864471520022745,
+          "mapped_gap_tiles": 0.41862248411669767,
+          "desired_x": 796.4052433637728,
+          "desired_y": 314.71881525193254,
+          "actual_x": 797.0,
+          "actual_y": 315.0,
+          "placement_shift": 0.6578756104933958
+        },
+        {
+          "component_id": "PHL:21362b5a399c84c0",
+          "anchor": "PHL:3dde36a3deef9e30",
+          "source_gap_tiles": 0.02229210218720374,
+          "mapped_gap_tiles": 0.02229209883029945,
+          "desired_x": 797.4891595000049,
+          "desired_y": 318.38067446480017,
+          "actual_x": 798.6666666666666,
+          "actual_y": 317.6666666666667,
+          "placement_shift": 1.3770730784294323
+        },
+        {
+          "component_id": "PHL:55f4748ebb0e9d7b",
+          "anchor": "PHL:d9dc6d8657118070",
+          "source_gap_tiles": 0.44473885588355977,
+          "mapped_gap_tiles": 0.44471220380952986,
+          "desired_x": 783.8043590214501,
+          "desired_y": 326.4441207044754,
+          "actual_x": 783.0,
+          "actual_y": 326.0,
+          "placement_shift": 0.9188235061924678
+        },
+        {
+          "component_id": "PHL:124f53ed2a9a90b2",
+          "anchor": "PHL:d9dc6d8657118070",
+          "source_gap_tiles": 0.059273429394328385,
+          "mapped_gap_tiles": 0.05927336628915319,
+          "desired_x": 788.4133597700111,
+          "desired_y": 317.6311060494437,
+          "actual_x": 788.0,
+          "actual_y": 316.0,
+          "placement_shift": 1.6826684890362258
+        },
+        {
+          "component_id": "PHL:e9207a07dbe16607",
+          "anchor": "PHL:3dde36a3deef9e30",
+          "source_gap_tiles": 0.2585438787727348,
+          "mapped_gap_tiles": 0.25853864198357507,
+          "desired_x": 794.9050442013126,
+          "desired_y": 327.61206686750177,
+          "actual_x": 795.0,
+          "actual_y": 328.0,
+          "placement_shift": 0.3993854266172522
+        },
+        {
+          "component_id": "PHL:a054fd0f49fb86bb",
+          "anchor": "PHL:726d0196a803e063",
+          "source_gap_tiles": 0.04109049649488067,
+          "mapped_gap_tiles": 0.04109047547115762,
+          "desired_x": 795.1887365554971,
+          "desired_y": 313.31793675936524,
+          "actual_x": 796.0,
+          "actual_y": 312.0,
+          "placement_shift": 1.5476128967131237
+        },
+        {
+          "component_id": "PHL:d37f189e16094fe0",
+          "anchor": "PHL:6f9539ae2d2e4af7",
+          "source_gap_tiles": 0.3498056724695249,
+          "mapped_gap_tiles": 0.34979270297270176,
+          "desired_x": 793.3420312470255,
+          "desired_y": 309.0929359759674,
+          "actual_x": 794.0,
+          "actual_y": 309.0,
+          "placement_shift": 0.6644997934686272
+        }
+      ],
+      "separation_constraints": [],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        -8,
+        5
+      ],
+      "maximum_translation": 20.09975124224178,
+      "group_translation": [
+        -8,
+        5
+      ]
+    },
+    {
+      "root": "NZL:8f99f1c50259113a",
+      "components": [
+        "NZL:8f99f1c50259113a",
+        "NZL:979ee6939c934325"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "NZL:979ee6939c934325",
+          "anchor": "NZL:8f99f1c50259113a",
+          "source_gap_tiles": 0.3806323470114561,
+          "mapped_gap_tiles": 0.38061563796513814,
+          "desired_x": 772.6596498482505,
+          "desired_y": 234.67038203563666,
+          "actual_x": 773.0,
+          "actual_y": 234.5,
+          "placement_shift": 0.38061563796510595
+        }
+      ],
+      "separation_constraints": [],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        0,
+        0
+      ],
+      "maximum_translation": 11.313708498984761,
+      "group_translation": [
+        0,
+        0
+      ]
+    },
+    {
+      "root": "IDN:6f7a11314a3b7af3",
+      "components": [
+        "IDN:1882fc741812bb99",
+        "IDN:6f7a11314a3b7af3"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "IDN:1882fc741812bb99",
+          "anchor": "IDN:6f7a11314a3b7af3",
+          "source_gap_tiles": 0.21515088760249146,
+          "mapped_gap_tiles": 0.21514786974283973,
+          "desired_x": 750.3257985968083,
+          "desired_y": 285.90804996537366,
+          "actual_x": 750.375,
+          "actual_y": 284.75,
+          "placement_shift": 1.1590946899964525
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "IDN:1882fc741812bb99",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 15,
+          "approximate_source_distance_km": 429.3980181734935
+        }
+      ],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          15.0,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        0,
+        0
+      ],
+      "maximum_translation": 10.583005244258363,
+      "group_translation": [
+        0,
+        0
+      ]
+    },
+    {
+      "root": "PHL:6db0873e452de6c9",
+      "components": [
+        "PHL:1657f9a811dfa613",
+        "PHL:6db0873e452de6c9",
+        "PHL:d3c6f6bf47091a8d"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "PHL:d3c6f6bf47091a8d",
+          "anchor": "PHL:6db0873e452de6c9",
+          "source_gap_tiles": 0.02640935378893744,
+          "mapped_gap_tiles": 0.026409348207331967,
+          "desired_x": 774.1053049337207,
+          "desired_y": 331.7886582629249,
+          "actual_x": 775.0,
+          "actual_y": 332.3636363636364,
+          "placement_shift": 1.063522015720514
+        },
+        {
+          "component_id": "PHL:1657f9a811dfa613",
+          "anchor": "PHL:6db0873e452de6c9",
+          "source_gap_tiles": 0.07690142106777842,
+          "mapped_gap_tiles": 0.07690128325577239,
+          "desired_x": 771.8026167868292,
+          "desired_y": 331.04833316410486,
+          "actual_x": 771.0,
+          "actual_y": 331.0,
+          "placement_shift": 0.8040707688085398
+        }
+      ],
+      "separation_constraints": [],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        -2,
+        -3
+      ],
+      "maximum_translation": 10.392304845413264,
+      "group_translation": [
+        -2,
+        -3
+      ]
+    },
+    {
+      "root": "DNK:d3d12b2e248a600a",
+      "components": [
+        "DNK:6ca9994f5cea019a",
+        "DNK:d3d12b2e248a600a",
+        "DNK:daf481ed6e2f79e2"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "DNK:6ca9994f5cea019a",
+          "anchor": "DNK:d3d12b2e248a600a",
+          "source_gap_tiles": 0.016703052991401374,
+          "mapped_gap_tiles": 0.016703051579275086,
+          "desired_x": 472.8283238059511,
+          "desired_y": 462.31889865647645,
+          "actual_x": 473.0,
+          "actual_y": 461.5,
+          "placement_shift": 0.8367004990927509
+        },
+        {
+          "component_id": "DNK:daf481ed6e2f79e2",
+          "anchor": "DNK:d3d12b2e248a600a",
+          "source_gap_tiles": 0.007145135009937073,
+          "mapped_gap_tiles": 0.007145134899397608,
+          "desired_x": 469.995892000986,
+          "desired_y": 459.50382549062317,
+          "actual_x": 470.0,
+          "actual_y": 459.0,
+          "placement_shift": 0.5038422378657615
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "DNK:6ca9994f5cea019a",
+          "land_component": "CZE:bf3969a8b4fbfc04",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -11,
+          "approximate_source_distance_km": 467.09275540097343
+        },
+        {
+          "component": "DNK:6ca9994f5cea019a",
+          "land_component": "DEU:0b0480fae55fd996",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -1,
+          "approximate_source_distance_km": 99.76870325116867
+        },
+        {
+          "component": "DNK:6ca9994f5cea019a",
+          "land_component": "DNK:d4951f6fa8360f9a",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 4,
+          "approximate_source_distance_km": 142.63757205282812
+        },
+        {
+          "component": "DNK:6ca9994f5cea019a",
+          "land_component": "NLX:8b9c3398a58bdb2a",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -8,
+          "approximate_source_distance_km": 448.27514163177875
+        },
+        {
+          "component": "DNK:6ca9994f5cea019a",
+          "land_component": "NLX:8b9c3398a58bdb2a",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -7,
+          "approximate_source_distance_km": 448.27514163177875
+        },
+        {
+          "component": "DNK:6ca9994f5cea019a",
+          "land_component": "NOW:a387a8ce67e0d957",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -6,
+          "approximate_source_distance_km": 304.94932598822027
+        },
+        {
+          "component": "DNK:6ca9994f5cea019a",
+          "land_component": "POL:1980df7ed9d16d12",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 11,
+          "approximate_source_distance_km": 204.454920660525
+        },
+        {
+          "component": "DNK:6ca9994f5cea019a",
+          "land_component": "POL:1980df7ed9d16d12",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 3,
+          "approximate_source_distance_km": 204.454920660525
+        },
+        {
+          "component": "DNK:d3d12b2e248a600a",
+          "land_component": "CZE:bf3969a8b4fbfc04",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -10,
+          "approximate_source_distance_km": 401.35996815249604
+        },
+        {
+          "component": "DNK:d3d12b2e248a600a",
+          "land_component": "NLX:8b9c3398a58bdb2a",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -3,
+          "approximate_source_distance_km": 346.7513956928353
+        },
+        {
+          "component": "DNK:d3d12b2e248a600a",
+          "land_component": "NLX:8b9c3398a58bdb2a",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -6,
+          "approximate_source_distance_km": 346.7513956928353
+        },
+        {
+          "component": "DNK:d3d12b2e248a600a",
+          "land_component": "NOW:a387a8ce67e0d957",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -8,
+          "approximate_source_distance_km": 257.9509193448789
+        },
+        {
+          "component": "DNK:d3d12b2e248a600a",
+          "land_component": "POL:1980df7ed9d16d12",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 12,
+          "approximate_source_distance_km": 183.56963198883258
+        },
+        {
+          "component": "DNK:daf481ed6e2f79e2",
+          "land_component": "CZE:bf3969a8b4fbfc04",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 13,
+          "approximate_source_distance_km": 414.9204931623989
+        },
+        {
+          "component": "DNK:daf481ed6e2f79e2",
+          "land_component": "CZE:bf3969a8b4fbfc04",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -9,
+          "approximate_source_distance_km": 414.9204931623989
+        },
+        {
+          "component": "DNK:daf481ed6e2f79e2",
+          "land_component": "DNK:d4951f6fa8360f9a",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 7,
+          "approximate_source_distance_km": 95.10076965796956
+        },
+        {
+          "component": "DNK:daf481ed6e2f79e2",
+          "land_component": "NLX:8b9c3398a58bdb2a",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -5,
+          "approximate_source_distance_km": 316.97181963412874
+        },
+        {
+          "component": "DNK:daf481ed6e2f79e2",
+          "land_component": "NLX:8b9c3398a58bdb2a",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -5,
+          "approximate_source_distance_km": 316.97181963412874
+        },
+        {
+          "component": "DNK:daf481ed6e2f79e2",
+          "land_component": "NOW:a387a8ce67e0d957",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -3,
+          "approximate_source_distance_km": 356.0251178012603
+        },
+        {
+          "component": "DNK:daf481ed6e2f79e2",
+          "land_component": "POL:1980df7ed9d16d12",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 14,
+          "approximate_source_distance_km": 198.41024892487283
+        },
+        {
+          "component": "DNK:daf481ed6e2f79e2",
+          "land_component": "SWE:1320ee42b8e1186c",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -5,
+          "approximate_source_distance_km": 89.71655066465908
+        }
+      ],
+      "translation_bounds": [
+        [
+          7.0,
+          3.0
+        ],
+        [
+          11.0,
+          -8.0
+        ]
+      ],
+      "not_moved": "Inconsistent geographic separation bounds"
+    }
+  ],
+  "moved_components": 29,
+  "failed_groups": 5,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509",
+    "output/auto-cartogram/world-55000-recorded-island-groups/shared/cells.csv": "8af6c825bbba03d0bec6403db8c50c274dd4afb92af64496b3afdc154543ba38",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "scripts": {
+    "restore_archipelagos.py": "7b92be8f09be319d64c751e8a6c31b5d9b6fe6faedd9cd24a23a0fe7aec9c2b3",
+    "place_islands.py": "c5fa5399d336afd83646ed18c9344350b8ffce2e976d99251edef4e3eec265f9",
+    "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3",
+    "prepare_flow.py": "b794cd56bfcce5910034d405d600deb257dd01829425a0301c79a0b432678fc2"
+  },
+  "limit": "Proximity groups can cross country IDs. No cells join separate islands. Nearby-land distances use Equal Earth planar distance times Earth radius, not geodesic distance. Inconsistent or blocked groups remain unchanged and are reported. Preserving axis separation does not prove good geographic placement.",
+  "cells_sha256": "4bf540b13e9f456f279b9b30d8339dca136282bc6b51d9c2fa0d879670c6ada8"
+}

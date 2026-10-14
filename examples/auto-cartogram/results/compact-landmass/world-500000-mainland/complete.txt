@@ -1,0 +1,3 @@
+mode=shared-island-templates
+counts=exact
+contacts=unconstrained

@@ -9,9 +9,11 @@ reject them. Fixed Tutte positions leave tangled countries. Geographic starts
 leave too much empty space. A land-sea boundary cost alone also damages coasts.
 The latest tests use a shared, area-matched land footprint. A global capacity
 partition followed by fragment repair reaches exact counts and connected regions
-at 10,000, 55,000, 110,000, and 500,000 tiles. The 500,000-tile diagnostic uses
-an approximate guide from a failed external flow solve; it is not an accepted
-continuous cartogram. Some 55,000-tile gap measurements are close to OWID.
+at 10,000, 55,000, 110,000, and 500,000 tiles. An earlier 500,000-tile diagnostic
+used a failed external flow guide. The new mainland-only 500,000-tile solve passes
+its convergence and overlap checks. Its final layout has exact counts, no split
+regions, and three region holes. It is still not an accepted replacement.
+Some 55,000-tile gap measurements are close to OWID.
 
 The latest control excludes isolated islands from the upstream flow, not only
 from later boundary changes. It retains every final population budget. At

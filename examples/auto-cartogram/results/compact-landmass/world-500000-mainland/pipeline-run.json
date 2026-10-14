@@ -1,0 +1,62 @@
+{
+  "started_at": "2026-10-14T20:19:06.602308+00:00",
+  "snapshot_commit": "b185c9c",
+  "runner_sha256": "ba5936fbe5133119c228e706db9d1e4ec6cf31fa7888957b774b1614fe53487e",
+  "stages": [
+    {
+      "name": "population-sites",
+      "elapsed_seconds": 71.0396640310064
+    },
+    {
+      "name": "prepare-mainland",
+      "elapsed_seconds": 3.2306747096590698
+    },
+    {
+      "name": "external-flow",
+      "elapsed_seconds": 44.027207486797124
+    },
+    {
+      "name": "partition",
+      "elapsed_seconds": 4246.132830623072
+    },
+    {
+      "name": "repair",
+      "elapsed_seconds": 130.68476334121078
+    },
+    {
+      "name": "place-islands",
+      "elapsed_seconds": 156.4561699666083
+    },
+    {
+      "name": "fixed-border",
+      "elapsed_seconds": 864.1482518557459
+    },
+    {
+      "name": "shared-islands",
+      "elapsed_seconds": 7.404750808607787
+    }
+  ],
+  "flow_command": [
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-500000-mainland-combined/input/geometry.geojson",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-500000-mainland-combined/input/areas.csv",
+    "--skip_projection",
+    "--id",
+    "component_id",
+    "--area",
+    "tiles",
+    "--n_grid_rows_or_cols",
+    "256",
+    "--timeout",
+    "600",
+    "--export_preprocessed",
+    "--export_time_report"
+  ],
+  "flow_exit_code": 0,
+  "geometry_check": {
+    "components": 202,
+    "overlap_pairs": [],
+    "sha256": "c0c0e8b62fb6d3f61a91c20fc5055e8c74ece2a117fffd809c918f3ae65b67d0"
+  },
+  "finished_at": "2026-10-14T21:51:40.681325+00:00"
+}

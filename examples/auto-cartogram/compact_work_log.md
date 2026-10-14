@@ -962,6 +962,27 @@ The separated layout has exact budgets but is not an acceptable replacement.
   checks that a land-attached root stays separate. All 24 partition tests pass.
   Combined world controls are next; their quality is not yet known.
 
+## 21:52–21:55 UTC — Completed 500,000-tile world and recorded pipelines
+
+- The mainland-only 500,000-tile run finished at 21:51:40 UTC. Its external flow
+  passes and has no detected overlaps. Partitioning took about 71 minutes; the
+  complete run took about 93 minutes. Counts are exact, all components are
+  connected, and three region holes remain. Component contacts are 59 missing
+  and 59 unsupported. This is not the earlier failed full-flow guide.
+- Visually checked its world, Europe, and Indonesia images. Fine detail improves,
+  but Canada, Korea, and island positions remain poor. Saved the full review
+  bundle and a 7,200-pixel-wide rendering of the same world SVG for closer review.
+  The separate Japan correction is now running at this resolution.
+- The native-site and angular-site recorded 55,000-tile pipelines both complete.
+  Visually checked both world images and saved separate review bundles. The
+  native-site result retains 59 missing and 55 unsupported component contacts.
+  The angular-site result has 70 and 59. Canada moves farther north and west in
+  the latter, but becomes rectangular after border refinement. Keep the native
+  control ahead of it; neither is approved.
+- Also visually checked the 110,000-tile fixed-coast world. Sulawesi and Australia
+  have better relative positions, but the separate Philippine groups still need
+  work. The group-merge controls are running at three resolutions.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
