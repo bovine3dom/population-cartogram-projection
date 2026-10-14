@@ -89,6 +89,12 @@ class ShapeTests(unittest.TestCase):
             self.assertEqual(report['excluded_owid_codes'],['3'])
             self.assertEqual([c['retained'] for c in report['cases']],[1,1])
             self.assertEqual([c['unsupported'] for c in report['cases']],[0,0])
+            components=root/'components.csv';components.write_text('raw_country_code,country_id\n3,A\n')
+            aliased=compare_country_contacts.run(inputs,root/'owid.csv',root/'iso.json',[layout],root/'aliases.json',components)
+            self.assertEqual(aliased['source_aliases'],{'3':'A'});self.assertEqual(aliased['excluded_owid_codes'],[])
+            components.write_text('raw_country_code,country_id\n3,A\n3,B\n')
+            ambiguous=compare_country_contacts.run(inputs,root/'owid.csv',root/'iso.json',[layout],root/'ambiguous.json',components)
+            self.assertEqual(ambiguous['excluded_owid_codes'],['3'])
 
     def test_guide_position_fit_keeps_axes_and_budget_weighting(self):
         guides={'a':{(0,0)},'b':{(2,0)},'c':{(0,2)}}
