@@ -91,6 +91,29 @@ positions. Its TOML report gives hashes for the inputs and the query CSV.
 It writes its report only after all checks pass. Use the floor of the weakest
 country in a mixed manifest. Never report a stronger guarantee.
 
+## Pack an already sparse fit
+
+A sharp fit can be small enough without moment reduction. Use:
+
+```sh
+julia --project=examples/continuity/mobile examples/continuity/mobile/pack_mapping.jl \
+  original-input.arrow sparse-fit.arrow density.arrow new-output
+```
+
+This path uses the same column types, dictionaries, and row ordering as the
+mobile writer. It does not run a moment solver or remove low-importance rows.
+It can drop unlabelled roundoff tails below the writer's threshold. It splits
+existing contributions when needed to preserve the original shared-cell
+country owner. This does not move mass or add a new source-target connection.
+
+The packer reads back the Arrow output. It checks masses, source and target
+means, city anchors, density coverage, and total variation against the supplied
+sparse fit. The maximum target total variation must be at most 1e-6. It checks
+country ownership against the original input, not against changed row counts
+in the sparse fit. The report records all dropped and split rows. These checks
+certify packing error only, not the quality of the fitted map. The output is
+renamed from a staging directory only after the checks pass.
+
 ## File and browser checks
 
 The writer uses Int16 positions, UInt16 country codes, Float32 weights,

@@ -301,3 +301,25 @@ bytes: 81,779,156 bytes combined, without mobile moment reduction or new
 transport compression. After export, fitted-country target L1 is at most
 9.57e-5 and maximum relative error is 0.0009862; source sums pass as well.
 Files are under `preview-pass-1/`, not H3-MON. No public file has changed.
+
+## 14:30 UTC: direct mobile packing without moment reduction
+
+An independent Arrow check confirms source coverage, UInt32 H3 halves, positive
+density values, city names, and physical target weights. It also finds that
+raw sparse row counts would change the displayed country owner of four shared
+Lesotho cells. This is a row-count rule in the consumer, not a mass change.
+
+Added `mobile/pack_mapping.jl` for an already sparse fitted mapping. It reuses
+the existing mobile writer, with no moment solver. It keeps the original
+shared-cell owners by splitting existing rows and then checks the actual Arrow
+output against the supplied sparse fit. Eight tests pass, including a changed
+shared-cell owner, city anchors, output overwrite rejection, and bad density.
+
+The first-pass packed preview is 28,322,066 bytes for transport and 5,035,946
+bytes for density: 33,358,012 bytes combined. It has 1,104,099 rows. Packing
+adds 52 ownership rows and removes 3,109 unlabelled roundoff tails below the
+existing 1e-20 thresholds. Maximum target total variation from the new sparse
+fit is 2.62e-8. Maximum target mass relative change is 5.94e-8, and geographic
+mean movement is 1.32e-5 km. All 1,715 city anchors remain. These are packing
+checks, not claims about continuity quality. Files are `packed-pass-1-v2/`.
+No gzip or application compression was added; production zstd is unchanged.
