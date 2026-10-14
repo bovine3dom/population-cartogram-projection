@@ -38,10 +38,8 @@ def run(inputs,templates,output,anchors=None,spacing=1.,gap=False,geometry_ancho
         polygons={lines[i].split('\t')[1]:Polygon([tuple(map(float,p.split())) for p in lines[i+1].split('\t')]) for i in range(2,len(lines),3)}
         scale=spacing*math.sqrt(sum(map(len,tiles.values()))/sum(p.area for p in polygons.values()))
         if sites:
-            from review_layout import read_csv
-            site_rows=read_csv(sites);positions={r['component_id']:(float(r['x']),float(r['y'])) for r in site_rows}
-            if len(positions)!=len(site_rows) or set(positions)!=set(tiles):raise ValueError('Site labels differ or repeat')
-            if any(not math.isfinite(v) for point in positions.values() for v in point):raise ValueError('Invalid site coordinates')
+            from population_sites import read_sites
+            positions=read_sites(sites,tiles)
             desired={c:(x*scale,y*scale) for c,(x,y) in positions.items()}
         else:desired={c:(p.centroid.x*scale,p.centroid.y*scale) for c,p in polygons.items()}
     blocked=set();result={}
@@ -52,7 +50,7 @@ def run(inputs,templates,output,anchors=None,spacing=1.,gap=False,geometry_ancho
     metadata=dict(method='Integer translations of intact source-shaped templates; no border paths',
         spacing=spacing,gap=gap,anchors='continuous geometry' if geometry_anchors else 'layout' if anchors else 'projected sites' if sites else 'source geographic centres',elapsed_seconds=time.monotonic()-started,
         inputs={str(p):digest(p) for p in [templates/'cells.csv',inputs/'validated.wkt',inputs/'groups.csv']+([anchors/'cells.csv'] if anchors else [geometry_anchors] if geometry_anchors else [sites] if sites else [])},
-        scripts={p.name:digest(p) for p in [Path(__file__),Path(__file__).with_name('shape_placement.py')] },
+        scripts={p.name:digest(p) for p in [Path(__file__),Path(__file__).with_name('shape_placement.py')]+([Path(__file__).with_name('population_sites.py')] if sites else []) },
         limit='Greedy placement can change geographic order and contacts. Templates omit source holes. Counts and individual tile shapes do not change.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='placed-',dir=output.parent))
     try:

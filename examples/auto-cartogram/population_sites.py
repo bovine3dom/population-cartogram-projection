@@ -8,12 +8,17 @@ import shutil
 import tempfile
 
 import numpy as np
-import pyarrow as pa
-import pyarrow.compute as pc
 
 from prepare_flow import equal_earth
 from review_layout import read_csv
 from save_review import digest
+
+
+def read_sites(path,labels):
+    rows=read_csv(path);sites={r['component_id']:(float(r['x']),float(r['y'])) for r in rows}
+    if len(sites)!=len(rows) or set(sites)!=set(labels):raise ValueError('Site labels differ or repeat')
+    if any(not np.isfinite(point).all() for point in sites.values()):raise ValueError('Invalid site coordinates')
+    return sites
 
 
 def spherical_sites(longitude,latitude,weights,labels,count):
@@ -32,6 +37,8 @@ def spherical_sites(longitude,latitude,weights,labels,count):
 
 
 def run(inputs,sources,centres,output):
+    import pyarrow as pa
+    import pyarrow.compute as pc
     if output.exists():raise ValueError('Output already exists')
     hashes={str(p):digest(p) for p in [inputs/'groups.csv',sources,centres]}
     scripts={name:digest(Path(__file__).with_name(name)) for name in ['population_sites.py','prepare_flow.py']}
