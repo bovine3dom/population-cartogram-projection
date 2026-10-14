@@ -192,6 +192,7 @@ def draw(path, shapes, tiles, owners, metrics, title):
              "mode=shape-placement":"Intact source shapes; translated without border paths",
              "mode=island-placement":"Islands translated; mainland shapes unchanged in this stage",
              "mode=shared-island-templates":"Shared-island templates; unselected components unchanged",
+             "mode=archipelago-placement":"Nearby island groups translated; mainland unchanged",
              "mode=shape-stress":"Intact source shapes; geographic springs and collision repulsion"}
     method = methods.get(metrics["generation"][0],"GridMapPipeline")
     parts.append('<text x="40" y="1094" font-size="13">Sources: Kontur population; Natural Earth map units. '

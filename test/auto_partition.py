@@ -123,6 +123,30 @@ class CapacityPartitionTests(unittest.TestCase):
         single=np.zeros((3,3),dtype=bool);single[1,1]=True
         np.testing.assert_array_equal(dock_parts(single,np.zeros_like(single))[0],single)
 
+    def test_archipelago_separation(self):
+        from restore_archipelagos import run as restore
+        from shapely.geometry import box,mapping
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'input';layout=root/'layout';inputs.mkdir();layout.mkdir()
+            geometry={'a':box(0,0,4,4),'b':box(-1,0,0,1),'r':box(6,0,8,6),'c':box(5,-2,6,-.1)}
+            tiles={'a':{(x,y) for x in range(5) for y in range(5)},'b':{(-1,0)},'r':{(x,y) for x in range(6,9) for y in range(6,9)},'c':{(x,y) for x in [-2,-1] for y in [1,2]}}
+            (inputs/'groups.csv').write_text('component_id,tiles,group_population,country_id,west,south,east,north\n'+''.join(f'{c},{len(tiles[c])},{len(tiles[c])},{c},'+','.join(map(str,g.bounds))+'\n' for c,g in geometry.items()))
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\n')
+            (inputs/'validated.wkt').write_text('header\nheader\n'+''.join(f'OUT\t{c}\n0 0\t1 0\t1 1\t0 1\nend\n' for c in tiles))
+            (layout/'cells.csv').write_text('component_id,x,y\n'+''.join(f'{c},{x},{y}\n' for c,points in tiles.items() for x,y in sorted(points)))
+            (layout/'complete.txt').write_text('mode=test\n')
+            path=root/'source.geojson';path.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(g)) for c,g in geometry.items()])))
+            report=restore(inputs,layout,path,root/'result',minimum_tiles=2)
+            result=load(inputs,root/'result')[1]
+            self.assertEqual(report['failed_groups'],0);self.assertEqual(report['groups'][0]['components'],['c','r'])
+            self.assertEqual(result['a'],tiles['a']);self.assertEqual(result['b'],tiles['b'])
+            self.assertGreater(min(x for x,y in result['c']),max(x for x,y in result['a']))
+            self.assertLess(max(y for x,y in result['c']),min(y for x,y in result['a']))
+            for c in tiles:
+                offset=np.asarray(min(result[c]))-np.asarray(min(tiles[c]))
+                self.assertEqual(result[c],{(x+offset[0],y+offset[1]) for x,y in tiles[c]})
+            self.assertEqual(sum(map(len,result.values())),len(set().union(*result.values())))
+
     def test_shared_island_template(self):
         from restore_shared_islands import template,run as restore
         from review_layout import connectivity

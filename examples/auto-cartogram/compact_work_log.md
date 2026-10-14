@@ -778,6 +778,33 @@ The separated layout has exact budgets but is not an acceptable replacement.
   The 110,000- and 500,000-tile partitions are still running. All three external
   flow solves passed before their tile assignments started.
 
+## 20:35–20:51 UTC — Japan feedback and a joint island-placement test
+
+- The user identified a missed defect: South Korea separates parts of Japan in
+  the leading 55,000- and 10,000-tile layouts. Keep those layouts as leading
+  controls, but do not treat their island placement as correct.
+- Traced the 55,000-tile defect to Kyushu. Its 81 tiles are anchored to Honshu,
+  but independent collision removal shifts them about nine tiles from the desired
+  coast position, to the west of South Korea. Honshu stays fixed under the old
+  large-island population threshold. Counts and connectivity checks miss this.
+- Added a separate nearby-archipelago control. It uses nearest larger source
+  components and a source-gap threshold, not country identity. Rebuild nearby
+  island positions without foreign obstacles, then translate the whole group.
+  Separate islands remain separate; no connector cells are added.
+- The group placement retains definite source longitude and latitude box
+  separations from nearby land. This prevents a local collision search from
+  choosing the wrong side of South Korea. Conflicting or blocked groups remain
+  unchanged and are reported. Mainland cells and every tile shape stay fixed.
+- Added bounded integer translations and a synthetic case with an island on the
+  wrong side of a mainland. The 43-test shape suite and 22-test partition suite
+  pass. World images are the next check; no visual improvement is assumed yet.
+- Completed the recorded-pipeline integration for mainland-only flow, optional
+  fixed-footprint border changes, and shared-island templates. Its headless tests
+  also check partial-guide labels and reject missing mainland components.
+- Strong centroid-only mesh priors show thin features between samples. Replaced
+  those samples with exact polygon means and second moments, including holes.
+  Ten mesh tests pass. New weight-100 and weight-1000 controls are running.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
