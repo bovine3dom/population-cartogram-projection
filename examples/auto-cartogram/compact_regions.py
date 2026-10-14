@@ -141,12 +141,21 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     if output.exists():raise ValueError('Output already exists')
     if rounds<1 or choices<1 or fit_rounds<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty]):raise ValueError('Invalid optimization settings')
     if (template_penalty or land_only) and not bounded:raise ValueError('Template penalty and land-only mode require bounded deformation')
+    if bounded:regrow=True
+    if regrow:atomic=True
+    scripts=[Path(__file__)]+[Path(__file__).with_name(name) for name in ['geographic_baseline.py','review_layout.py']]
+    if cycles or fit_rounds or atomic:scripts.append(Path(__file__).with_name('cycle_deformation.py'))
+    if fit_rounds or atomic:scripts.append(Path(__file__).with_name('fit_counts.py'))
+    if atomic:scripts.append(Path(__file__).with_name('atomic_deformation.py'))
+    if regrow:scripts.append(Path(__file__).with_name('regrow_regions.py'))
+    if bounded:scripts.append(Path(__file__).with_name('bounded_deformation.py'))
+    hashes={p.name:digest(p) for p in scripts}
+    input_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',layout/'cells.csv']}
     shapes,tiles,_=load(inputs,layout)
     requested={c:int(row['tiles']) for c,row in shapes.items()}
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
     started=time.monotonic();guided=guide_costs(inputs,tiles,anchor,guide,stretch=stretch if bounded else None)
     costs,origin=guided[:2]
-    if bounded:regrow=True
     state_type=Deformation
     if cycles:
         from cycle_deformation import CycleDeformation
@@ -154,7 +163,6 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     if fit_rounds:
         from fit_counts import CountFit
         state_type=CountFit
-    if regrow:atomic=True
     if atomic:
         from atomic_deformation import AtomicDeformation
         state_type=AtomicDeformation
@@ -167,13 +175,6 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     fixed=set(tiles)-{c for pair in required for c in pair} if land_only else set()
     options=dict(allowed_masks=guided[2],contact_reward=contact_reward,template_penalty=template_penalty,fixed=fixed) if bounded else {}
     state=state_type(tiles,required,costs,origin,perimeter,false_contact,**options)
-    scripts=[Path(__file__)]
-    if cycles or fit_rounds or atomic:scripts.append(Path(__file__).with_name('cycle_deformation.py'))
-    if fit_rounds or atomic:scripts.append(Path(__file__).with_name('fit_counts.py'))
-    if atomic:scripts.append(Path(__file__).with_name('atomic_deformation.py'))
-    if regrow:scripts.append(Path(__file__).with_name('regrow_regions.py'))
-    if bounded:scripts.append(Path(__file__).with_name('bounded_deformation.py'))
-    hashes={p.name:digest(p) for p in scripts}
     history=[];initial=state.energy()
     for turn in range(1,fit_rounds+1):
         moves=state.fit_step(requested,choices)
@@ -198,7 +199,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,
         template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
-        input_cells_sha256=digest(layout/'cells.csv'),scripts=hashes,
+        input_cells_sha256=input_hashes[str(layout/'cells.csv')],inputs=input_hashes,scripts=hashes,
         limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='compact-',dir=output.parent))
     try:

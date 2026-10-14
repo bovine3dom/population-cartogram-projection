@@ -160,6 +160,7 @@ class ShapeTests(unittest.TestCase):
                 bounded=compact.run(inputs,root/'stress',root/'bounded',rounds=5,bounded=True,guide=8,template_penalty=2,land_only=True)
                 self.assertEqual(bounded['absolute_tile_error'],0)
                 self.assertTrue(bounded['bounded'])
+                self.assertIn(str(inputs/'validated.wkt'),bounded['inputs'])
                 geographic_baseline.run(inputs,root/'slow-baseline')
                 geographic_baseline.run(inputs,root/'fast-baseline',fast_placement=True)
                 self.assertEqual((root/'slow-baseline/cells.csv').read_bytes(),(root/'fast-baseline/cells.csv').read_bytes())
