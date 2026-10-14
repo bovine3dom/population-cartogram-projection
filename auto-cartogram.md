@@ -26,6 +26,14 @@ documentation and selected source files, this repository, and issue #17.
 I also checked the local target CSV. No new layout generator was run for that
 initial research.
 
+## Shape-first follow-up
+
+A new [shape-first trial](examples/auto-cartogram/shape-first.md) removes hard
+border constraints and tests deformation without connector paths. The audit
+finds no artificial mainland-to-island contact edges. The first new fit reaches
+exact 55,000-tile component budgets, but its shape and position errors are still
+unacceptable. See the [active work log](examples/auto-cartogram/shape_work_log.md).
+
 ## Implementation update
 
 The prototype now has automatic world images at 10,000, 55,000, and 110,000

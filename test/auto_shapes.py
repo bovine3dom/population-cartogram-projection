@@ -1,5 +1,7 @@
 """Shape-first experiments. Run with the geometry Python environment."""
 import json
+import contextlib
+import io
 from pathlib import Path
 import sys
 import tempfile
@@ -13,6 +15,13 @@ import audit_shapes as audit
 import prepare_flow as flow
 import compact_regions as compact
 import review_flow
+from cycle_deformation import CycleDeformation
+from fit_counts import CountFit
+import shape_placement
+import place_shapes
+import geographic_baseline
+from atomic_deformation import AtomicDeformation
+from regrow_regions import Regrowth
 
 
 class ShapeTests(unittest.TestCase):
@@ -57,6 +66,85 @@ class ShapeTests(unittest.TestCase):
                 self.assertEqual(len(points),len(tiles[c]))
                 self.assertEqual(compact.connectivity(points),1)
                 self.assertEqual(compact.holes(points),0)
+
+    def test_cycle_and_budget_fit(self):
+        tiles={'a':{(x,y) for x in range(4) for y in range(5)},'b':{(x,y) for x in range(4,8) for y in range(5)}}
+        rng=np.random.default_rng(19)
+        costs={c:rng.random((20,20))*10 for c in tiles}
+        state=CycleDeformation(tiles,{('a','b')},costs,(-5,-5))
+        for _ in range(5):
+            energy=state.energy();state.step()
+            self.assertLessEqual(state.energy(),energy+1e-8)
+            self.assertEqual({c:len(p) for c,p in state.tiles.items()},{'a':20,'b':20})
+        state=CountFit(tiles,{('a','b')},costs,(-5,-5))
+        targets={'a':16,'b':26}
+        for _ in range(20):
+            old=sum(abs(len(state.tiles[c])-targets[c]) for c in targets)
+            if not state.fit_step(targets):break
+            self.assertLess(sum(abs(len(state.tiles[c])-targets[c]) for c in targets),old)
+        self.assertEqual({c:len(p) for c,p in state.tiles.items()},targets)
+        for points in state.tiles.values():
+            self.assertEqual(compact.connectivity(points),1)
+            self.assertEqual(compact.holes(points),0)
+        saved={c:set(p) for c,p in state.tiles.items()}
+        self.assertFalse(state.transfer([(next(iter(state.tiles['a'])),None),((18,18),'b')]))
+        self.assertEqual(state.tiles,saved)
+
+    def test_fast_placement_matches_exhaustive_search(self):
+        rng=np.random.default_rng(31)
+        for _ in range(100):
+            cells={(int(x),int(y)) for x,y in rng.integers(-3,4,size=(8,2))}
+            blocked={(int(x),int(y)) for x,y in rng.integers(-8,9,size=(100,2))}
+            desired=tuple(rng.random(2)*10-5)
+            self.assertEqual(shape_placement.place(cells,desired,blocked),geographic_baseline.place(cells,desired,blocked))
+
+    def test_atomic_exchange_can_remove_a_long_detour(self):
+        points={(x,y) for x in range(6) for y in [0,2]}|{(0,1)}
+        costs={'a':np.zeros((20,20))};costs['a'][6,5]=10.
+        sequential=compact.Deformation({'a':points},set(),costs,(-5,-5))
+        self.assertFalse(sequential.exchange((0,1),(5,1)))
+        self.assertFalse(sequential.exchange((5,1),(0,1)))
+        state=AtomicDeformation({'a':points},set(),costs,(-5,-5))
+        before=state.energy()
+        self.assertTrue(state.exchange((0,1),(5,1)))
+        self.assertLess(state.energy(),before)
+        self.assertEqual(len(state.tiles['a']),len(points))
+        self.assertEqual(compact.connectivity(state.tiles['a']),1)
+        self.assertEqual(compact.holes(state.tiles['a']),0)
+        saved=set(state.tiles['a'])
+        self.assertFalse(state.exchange((2,0),(10,10)))
+        self.assertEqual(state.tiles['a'],saved)
+
+    def test_deformation_and_placement_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'input';layout=root/'layout';inputs.mkdir();layout.mkdir()
+            (inputs/'groups.csv').write_text('component_id,tiles\na,5\nb,3\n')
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\n')
+            (inputs/'validated.wkt').write_text('STAGE 1\nOUTLINES 2\nOUT 0\ta\n0 0\t2 0\t2 2\t0 2\nSITECOUNT 0\nOUT 1\tb\n2 0\t4 0\t4 2\t2 2\nSITECOUNT 0\n')
+            (layout/'cells.csv').write_text('component_id,x,y\na,0,0\na,1,0\na,0,1\na,1,1\nb,2,0\nb,3,0\nb,2,1\nb,3,1\n')
+            (layout/'complete.txt').write_text('mode=test\n')
+            with contextlib.redirect_stdout(io.StringIO()):
+                metadata=compact.run(inputs,layout,root/'deformed',rounds=5,fit_rounds=10,atomic=True)
+                self.assertEqual(metadata['absolute_tile_error'],0)
+                place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
+            _,tiles,owners=compact.load(inputs,root/'placed')
+            self.assertEqual(len(owners),8)
+            self.assertEqual({c:len(p) for c,p in tiles.items()},{'a':5,'b':3})
+            with self.assertRaisesRegex(ValueError,'already exists'):compact.run(inputs,layout,root/'deformed')
+            with self.assertRaisesRegex(ValueError,'Invalid'):compact.run(inputs,layout,root/'bad',rounds=0)
+
+    def test_regrowth_removes_detours_without_changing_counts(self):
+        points={(x,y) for x in range(8) for y in [0,4]}|{(0,y) for y in range(1,4)}
+        state=Regrowth({'a':points,'b':{(4,2)}},set(),{c:np.zeros((30,30)) for c in ['a','b']},(-10,-10))
+        energy=state.energy();local=state.region_energy('a',points)
+        self.assertTrue(state.regrow('a'))
+        self.assertAlmostEqual(state.energy()-energy,state.region_energy('a',state.tiles['a'])-local)
+        self.assertLess(state.energy(),energy)
+        self.assertEqual(len(state.tiles['a']),len(points))
+        self.assertEqual(state.tiles['b'],{(4,2)})
+        self.assertEqual(compact.connectivity(state.tiles['a']),1)
+        self.assertEqual(compact.holes(state.tiles['a']),0)
+        self.assertFalse(state.tiles['a'] & state.tiles['b'])
 
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))

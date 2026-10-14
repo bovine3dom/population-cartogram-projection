@@ -1,0 +1,22 @@
+{
+  "components": 481,
+  "tile_budget": 55000,
+  "maximum_relative_area_error": 4.501247536234482,
+  "sum_absolute_equivalent_tile_error": 144.8847167438856,
+  "overlap_pairs": 0,
+  "overlap_share": 0.0,
+  "holes": 19,
+  "changed_hole_counts": 0,
+  "required_contacts": 348,
+  "missing_contacts": 0,
+  "false_contacts": 0,
+  "matched_population": 7954677990.0,
+  "unmatched_population": 77246034.0,
+  "limit": "Exact boundary intersection checks can report a missing contact after independent simplification or numeric rounding. Continuous areas are not integer tile counts.",
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/manifest.json": "d76f10635405b2425a10e0bbd39f811d4f174841c0b7077ee6d313283de80556",
+    "output/auto-cartogram/world-55000-flow256/areas_cartogram.geojson": "c49f87bcd4f9f186b68c325e5c8fdd8fee3219c562dbf6bfc7ec0ba341d6b7f8"
+  },
+  "script_sha256": "946adffe3c0e2516c84ef25add60c1bbec405faeb88caa9a38e48be0fe1dbef2"
+}

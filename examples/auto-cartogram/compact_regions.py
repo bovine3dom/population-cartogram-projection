@@ -134,26 +134,57 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64):
     return costs,origin
 
 
-def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4):
+def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False):
     if output.exists():raise ValueError('Output already exists')
-    if rounds<1 or choices<1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor]):raise ValueError('Invalid optimization settings')
+    if rounds<1 or choices<1 or fit_rounds<0 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor]):raise ValueError('Invalid optimization settings')
     shapes,tiles,_=load(inputs,layout)
+    requested={c:int(row['tiles']) for c,row in shapes.items()}
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
     started=time.monotonic();costs,origin=guide_costs(inputs,tiles,anchor,guide)
-    state=Deformation(tiles,required,costs,origin,perimeter,false_contact)
-    history=[];initial=state.energy();previous=initial
+    state_type=Deformation
+    if cycles:
+        from cycle_deformation import CycleDeformation
+        state_type=CycleDeformation
+    if fit_rounds:
+        from fit_counts import CountFit
+        state_type=CountFit
+    if regrow:atomic=True
+    if atomic:
+        from atomic_deformation import AtomicDeformation
+        state_type=AtomicDeformation
+    if regrow:
+        from regrow_regions import Regrowth
+        state_type=Regrowth
+    state=state_type(tiles,required,costs,origin,perimeter,false_contact)
+    scripts=[Path(__file__)]
+    if cycles or fit_rounds or atomic:scripts.append(Path(__file__).with_name('cycle_deformation.py'))
+    if fit_rounds or atomic:scripts.append(Path(__file__).with_name('fit_counts.py'))
+    if atomic:scripts.append(Path(__file__).with_name('atomic_deformation.py'))
+    if regrow:scripts.append(Path(__file__).with_name('regrow_regions.py'))
+    hashes={p.name:digest(p) for p in scripts}
+    history=[];initial=state.energy()
+    for turn in range(1,fit_rounds+1):
+        moves=state.fit_step(requested,choices)
+        error=sum(abs(len(state.tiles[c])-requested[c]) for c in requested)
+        history.append(dict(phase='counts',round=turn,exchanges=moves,energy=state.energy(),count_error=error))
+        print(f'Count round {turn}: {moves} transfers; count error {error}',flush=True)
+        if not moves or not error:break
+    counts={c:len(points) for c,points in state.tiles.items()}
+    error=sum(abs(counts[c]-requested[c]) for c in requested)
+    previous=state.energy()
     for turn in range(1,rounds+1):
         moves=state.step(choices);energy=state.energy()
         if energy>previous+1e-6:raise AssertionError('Energy increased')
-        history.append(dict(round=turn,exchanges=moves,energy=energy));previous=energy
+        history.append(dict(phase='shape',round=turn,exchanges=moves,energy=energy,count_error=error));previous=energy
         print(f'Round {turn}: {moves} exchanges; energy {energy:.6f}',flush=True)
         if not moves:break
-    if any(len(state.tiles[c])!=len(tiles[c]) or connectivity(state.tiles[c])!=1 or holes(state.tiles[c]) for c in tiles):raise AssertionError('Count or topology changed')
+    if any(len(state.tiles[c])!=counts[c] or connectivity(state.tiles[c])!=1 or holes(state.tiles[c]) for c in tiles):raise AssertionError('Count or topology changed')
     metadata=dict(method='Count-preserving local boundary exchanges with perimeter and geographic-guide costs; no required-contact paths',
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
+        cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,absolute_tile_error=error,
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
-        input_cells_sha256=digest(layout/'cells.csv'),script_sha256=digest(Path(__file__)),
-        limit='Preserves initial component counts, not requested counts. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes.')
+        input_cells_sha256=digest(layout/'cells.csv'),scripts=hashes,
+        limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='compact-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -162,7 +193,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         with (temp/'history.csv').open('w',newline='') as stream:
             writer=csv.DictWriter(stream,fieldnames=list(history[0]));writer.writeheader();writer.writerows(history)
         (temp/'compact.json').write_text(json.dumps(metadata,indent=2)+'\n')
-        (temp/'complete.txt').write_text('mode=compact-deformation\ncounts=initial\ncontacts=soft\n')
+        (temp/'complete.txt').write_text(f'mode=compact-deformation\ncounts={"exact" if not error else "partial"}\ncontacts=soft\n')
         temp.rename(output)
     finally:
         if temp.exists():shutil.rmtree(temp)
@@ -174,4 +205,6 @@ if __name__=='__main__':
     for name in ['inputs','layout','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--rounds',type=int,default=300);parser.add_argument('--choices',type=int,default=4)
     for name,default in [('perimeter',1.),('false-contact',4.),('guide',1.),('anchor',.05)]:parser.add_argument('--'+name,type=float,default=default)
-    args=parser.parse_args();print(json.dumps(run(args.inputs,args.layout,args.output,args.rounds,args.perimeter,args.false_contact,args.guide,args.anchor,args.choices),indent=2))
+    parser.add_argument('--cycles',action='store_true');parser.add_argument('--atomic',action='store_true')
+    parser.add_argument('--fit-rounds',type=int,default=0);parser.add_argument('--regrow',action='store_true')
+    args=parser.parse_args();print(json.dumps(run(args.inputs,args.layout,args.output,args.rounds,args.perimeter,args.false_contact,args.guide,args.anchor,args.choices,args.cycles,args.fit_rounds,args.atomic,args.regrow),indent=2))

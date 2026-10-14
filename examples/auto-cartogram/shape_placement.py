@@ -1,0 +1,31 @@
+"""Find the nearest integer translation with no occupied-cell collision."""
+import numpy as np
+from scipy.signal import fftconvolve
+
+
+def place(cells,desired,blocked,maximum_radius=8192):
+    cx=sum(x for x,y in cells)/len(cells);cy=sum(y for x,y in cells)/len(cells)
+    origin=(round(desired[0]-cx),round(desired[1]-cy))
+    moved={(x+origin[0],y+origin[1]) for x,y in cells}
+    if not moved & blocked:return moved
+    x0=min(x for x,y in cells);y0=min(y for x,y in cells)
+    width=max(x for x,y in cells)-x0+1;height=max(y for x,y in cells)-y0+1
+    kernel=np.zeros((height,width),dtype=np.float32)
+    for x,y in cells:kernel[y-y0,x-x0]=1
+    radius=8
+    while radius<=maximum_radius:
+        left=origin[0]+x0-radius;bottom=origin[1]+y0-radius
+        grid=np.zeros((height+2*radius,width+2*radius),dtype=np.float32)
+        for x,y in blocked:
+            if 0<=x-left<grid.shape[1] and 0<=y-bottom<grid.shape[0]:grid[y-bottom,x-left]=1
+        overlaps=fftconvolve(grid,kernel[::-1,::-1],mode='valid')
+        yy,xx=np.nonzero(overlaps<.5)
+        if len(xx):
+            dx=xx-radius;dy=yy-radius
+            index=np.lexsort((dy,dx,dx*dx+dy*dy,np.maximum(np.abs(dx),np.abs(dy))))[0]
+            shift=(origin[0]+int(dx[index]),origin[1]+int(dy[index]))
+            moved={(x+shift[0],y+shift[1]) for x,y in cells}
+            if moved & blocked:raise AssertionError('Convolution missed a cell collision')
+            return moved
+        radius*=2
+    raise ValueError('Placement search exhausted')
