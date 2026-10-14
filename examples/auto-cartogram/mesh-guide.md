@@ -45,7 +45,14 @@ For a triangle transformation `J`, the shape cost is
 The area cost is the sum of squared component errors divided by target area.
 The code has an analytic gradient. Tests compare it with finite differences.
 
-The solver uses a quadratic extension of the reciprocal determinant below
+The default solver is a small limited-memory BFGS implementation with an Armijo
+line search. Before each search, it bounds the step from the quadratic triangle
+determinants. A trial cannot pass through a collapsed triangle, even if its end
+position would have positive area again. Tests cover that case. This is a local
+optimizer, not a proof of a global minimum. `--optimizer scipy` retains the
+original L-BFGS-B control.
+
+The objective uses a quadratic extension of the reciprocal determinant below
 `1e-5` for line-search probes. This gives invalid trial steps a finite recovery
 gradient. No stage with determinant at or below `1e-12` can be accepted or
 exported. This differs from the paper's infinite barrier. A finite extension
@@ -71,8 +78,10 @@ Other differences from the paper are important:
 The first country-box sampling trials stopped with about 97% weighted area
 error. The optimizer reported a relative-change stopping condition, not a useful
 cartogram. Their world images remain close to the geographic input. They are
-rejected. Midpoint refinement now replaces those box samples; it still requires
-independent tests and visual review.
+rejected. Midpoint refinement improves mesh support but still leaves 89–96%
+weighted area error with the original solver. A determinant-bounded line search
+now tests whether invalid trial steps caused premature stopping. It still
+requires independent tests and visual review.
 
 ## Run
 

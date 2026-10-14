@@ -49,6 +49,17 @@ class MeshTests(unittest.TestCase):
         np.testing.assert_allclose(gradient,estimates,rtol=1e-6,atol=1e6)
         self.assertEqual(objective.report(flipped.ravel())['folded_triangles'],2)
 
+    def test_determinant_step_bound(self):
+        objective=self.fixture();values=objective.vertices.ravel()
+        rng=np.random.default_rng(9)
+        for direction in [rng.normal(size=len(values)) for _ in range(50)]+[-2*values]:
+            step=objective.step_bound(values,direction)
+            self.assertGreater(step,0);self.assertLessEqual(step,1)
+            for fraction in [.25,.5,1]:
+                report=objective.report(values+fraction*step*direction)
+                self.assertGreaterEqual(report['minimum_determinant'],.05)
+        self.assertLess(objective.step_bound(values,-2*values),.5)
+
     def test_identity_mesh_and_small_region(self):
         geometries=[box(0,0,1,1),box(1,0,2,1),box(2.1,.1,2.1001,.1001)]
         vertices,triangles,portions,fixed,pieces,info=build_mesh(geometries,8)

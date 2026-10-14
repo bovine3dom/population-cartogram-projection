@@ -6,7 +6,7 @@ from pathlib import Path
 import time
 
 import numpy as np
-from scipy.optimize import minimize
+from scipy.optimize import OptimizeResult, minimize
 from scipy.sparse import coo_matrix
 from scipy.spatial import Delaunay, cKDTree
 from shapely import STRtree, affinity, union_all
@@ -73,10 +73,56 @@ class MeshObjective:
         np.add.at(result,self.triangles[:,2],edges_gradient[:,:,1])
         return float(cost),result[self.free].ravel()
 
+    def step_bound(self,values,direction):
+        current=edge_matrices(self.unpack(values),self.triangles)@self.inverse
+        delta=np.zeros_like(self.vertices);delta[self.free]=direction.reshape((-1,2))
+        change=edge_matrices(delta,self.triangles)@self.inverse
+        a=np.linalg.det(change)
+        b=current[:,0,0]*change[:,1,1]+change[:,0,0]*current[:,1,1]-current[:,0,1]*change[:,1,0]-change[:,0,1]*current[:,1,0]
+        determinant=np.linalg.det(current);c=determinant-np.maximum(1e-10,.05*determinant)
+        if np.any(c<=0):return 0.
+        roots=[];linear=np.abs(a)<1e-20
+        valid=linear&(b<0);roots.extend((-c[valid]/b[valid]).tolist())
+        discriminant=b*b-4*a*c;valid=(~linear)&(discriminant>=0)
+        q=-.5*(b[valid]+np.copysign(np.sqrt(discriminant[valid]),b[valid]))
+        for candidates in [q/a[valid],np.divide(c[valid],q,out=np.full_like(q,np.inf),where=q!=0)]:
+            roots.extend(candidates[candidates>0].tolist())
+        return min(1.,.99*min(roots)) if roots else 1.
+
     def report(self,values):
         determinant=np.linalg.det(edge_matrices(self.unpack(values),self.triangles)@self.inverse)
         relative=(self.portions@determinant)/self.targets-1
         return dict(minimum_determinant=float(determinant.min()),folded_triangles=int(np.sum(determinant<=0)),maximum_relative_area_error=float(np.abs(relative).max()),weighted_absolute_area_error=float(np.sum(self.targets*np.abs(relative))/self.normalizer))
+
+
+def bounded_lbfgs(objective,values,distortion,iterations):
+    """Limited-memory BFGS with a determinant-bounded Armijo line search."""
+    values=values.copy();cost,gradient=objective.evaluate(values,distortion);history=[]
+    for turn in range(iterations):
+        if np.linalg.norm(gradient,np.inf)<1e-7:
+            return OptimizeResult(x=values,fun=cost,nit=turn,success=True,message='Gradient tolerance reached')
+        direction=gradient.copy();alphas=[]
+        for s,y,rho in reversed(history):
+            alpha=rho*np.dot(s,direction);alphas.append(alpha);direction-=alpha*y
+        if history:
+            s,y,_=history[-1];direction*=np.dot(s,y)/np.dot(y,y)
+        for (s,y,rho),alpha in zip(history,reversed(alphas)):
+            direction+=s*(alpha-rho*np.dot(y,direction))
+        direction=-direction;slope=float(gradient@direction)
+        if slope>=0:history=[];direction=-gradient;slope=-float(gradient@gradient)
+        step=objective.step_bound(values,direction)
+        for _ in range(50):
+            candidate=values+step*direction
+            if np.array_equal(candidate,values):return OptimizeResult(x=values,fun=cost,nit=turn,success=False,message='No representable step remains')
+            next_cost,next_gradient=objective.evaluate(candidate,distortion)
+            if step>0 and next_cost<=cost+1e-4*step*slope:break
+            step*=.5
+        else:return OptimizeResult(x=values,fun=cost,nit=turn,success=False,message='Bounded line search stopped')
+        s=candidate-values;y=next_gradient-gradient;curvature=float(s@y)
+        if curvature>1e-12*np.linalg.norm(s)*np.linalg.norm(y):
+            history.append((s,y,1/curvature));history=history[-10:]
+        values=candidate;cost=next_cost;gradient=next_gradient
+    return OptimizeResult(x=values,fun=cost,nit=iterations,success=False,message='Iteration limit reached')
 
 
 def build_mesh(geometries,resolution=64):
@@ -140,13 +186,14 @@ def transform_pieces(objective,values,pieces,cleanup=None):
     return result
 
 
-def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01)):
+def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01),optimizer='bounded-lbfgs'):
     if output.exists():raise ValueError('Output already exists')
+    if optimizer not in ('bounded-lbfgs','scipy'):raise ValueError('Unknown optimizer')
     if resolution<8 or iterations<1 or not distortions or any(not np.isfinite(w) or w<=0 for w in distortions):raise ValueError('Invalid solver settings')
     source=read_shapes(prepared/'geometry.geojson');rows=read_csv(prepared/'areas.csv');budgets={r['component_id']:float(r['tiles']) for r in rows};labels=sorted(source)
     if len(rows)!=len(budgets) or set(budgets)!=set(source) or any(not np.isfinite(v) or v<=0 for v in budgets.values()):raise ValueError('Invalid guide budgets')
     output.mkdir(parents=True);started=time.monotonic()
-    record=dict(method='Planar fixed-frame mesh with area error and Sargent shape/scale distortion costs',reference='https://arxiv.org/abs/2411.17129',inputs={str(p):digest(p) for p in [prepared/'geometry.geojson',prepared/'areas.csv']},script_sha256=digest(Path(__file__)),maximum_iterations_per_stage=iterations,reciprocal_extension_threshold=1e-5,minimum_accepted_determinant=1e-12,union_precision=1e-12,seam_cleanup_radius=1e-11,stages=[],limit='Independent planar experiment, not the paper sphere or hybrid implementation. Reference triangles use Equal Earth planar geometry, not spherical geometry. Fixed frame and nearest-land water scale differ from the paper. Small regions share mesh degrees of freedom. Guide areas can remain inaccurate. No final tile budgets change. Positive triangle areas are checked; output component validity and overlaps must also be checked. No connector paths are added.')
+    record=dict(method='Planar fixed-frame mesh with area error and Sargent shape/scale distortion costs',reference='https://arxiv.org/abs/2411.17129',inputs={str(p):digest(p) for p in [prepared/'geometry.geojson',prepared/'areas.csv']},script_sha256=digest(Path(__file__)),optimizer=optimizer,maximum_iterations_per_stage=iterations,reciprocal_extension_threshold=1e-5,minimum_accepted_determinant=1e-12,union_precision=1e-12,seam_cleanup_radius=1e-11,stages=[],limit='Independent planar experiment, not the paper sphere or hybrid implementation. Reference triangles use Equal Earth planar geometry, not spherical geometry. Fixed frame and nearest-land water scale differ from the paper. Small regions share mesh degrees of freedom. Guide areas can remain inaccurate. No final tile budgets change. Positive triangle areas are checked; output component validity and overlaps must also be checked. No connector paths are added.')
     def save():(output/'mesh-guide.json').write_text(json.dumps(record,indent=2)+'\n')
     save()
     try:
@@ -154,7 +201,8 @@ def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01
         targets=np.array([budgets[c] for c in labels]);targets*=float(portions.sum())/targets.sum()
         objective=MeshObjective(vertices,triangles,portions,targets,fixed);values=vertices[~fixed].ravel();record['mesh']=info;record['vertices']=len(vertices);record['triangles']=len(triangles);record['initial']=objective.report(values);save()
         for weight in distortions:
-            before=time.monotonic();result=minimize(objective.evaluate,values,args=(weight,),jac=True,method='L-BFGS-B',options=dict(maxiter=iterations,maxls=50,ftol=1e-12,gtol=1e-7))
+            before=time.monotonic()
+            result=bounded_lbfgs(objective,values,weight,iterations) if optimizer=='bounded-lbfgs' else minimize(objective.evaluate,values,args=(weight,),jac=True,method='L-BFGS-B',options=dict(maxiter=iterations,maxls=50,ftol=1e-12,gtol=1e-7))
             if not np.isfinite(result.fun):raise ValueError('Non-finite mesh objective')
             values=result.x;stage=dict(distortion_weight=weight,iterations=int(result.nit),converged=bool(result.success),message=str(result.message),cost=float(result.fun),elapsed_seconds=time.monotonic()-before,**objective.report(values))
             record['stages'].append(stage);save();print(json.dumps(stage),flush=True)
@@ -178,5 +226,6 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ['prepared','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--resolution',type=int,default=64);parser.add_argument('--iterations',type=int,default=1000)
+    parser.add_argument('--optimizer',choices=['bounded-lbfgs','scipy'],default='bounded-lbfgs')
     parser.add_argument('--distortions',type=float,nargs='+',default=[.3,.1,.03,.01])
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
