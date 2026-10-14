@@ -3,7 +3,9 @@
 For the later compact solver, see [compact plans](compact.md),
 [measured performance](../../benchmark/continuity-performance.md), and
 [planet instructions](planet.md). For smaller browser files, see
-[mobile exports](mobile/readme.md). The sections below record the initial trials.
+[mobile exports](mobile/readme.md). For the restored eta tuning and matched
+support measurements, see [sharpness findings](../../benchmark/continuity-sharpness.md).
+The sections below record the initial trials.
 
 This experiment keeps every OWID target cell in place. It does not identify
 islands, assign island populations, or change target capacities. It does not

@@ -404,3 +404,29 @@ are `packed-pass-3-tight/`; the rejected lower-retention diagnostic is retained
 separately. The preferred first-pass files pass at the original 99.999% setting.
 A complete local first-pass bundle, with verified full update history and JSON,
 is `planet-h3-5-factor1-continuity-sharp-pass1/`. Nothing is published to H3-MON.
+
+## 18:08 UTC: final checks and handoff
+
+All jobs from this task are stopped, before the 18:50 UTC limit. The main fit
+stopped at 17:30:54 UTC. A few small fourth-pass updates had started before the
+signal; that mutable candidate is not used. Only immutable complete-pass
+snapshots are reported. `planet-refit-v4/budget-stop.txt` records this distinction.
+Other geometry research jobs remain untouched.
+
+The final compact regression passes 114 checks on CPU and 114 on oneAPI.
+The final continuity CPU/oneAPI regression also passes. The updated planet
+publication tests pass, including 14 workflow checks and the new post-extraction
+mass rejection. The actual first-pass bundle and its shipped density JSON pass
+a second isolated headless browser check, again with no page errors. Its load
+time is 23.0 seconds under four-times CPU throttling; post-collection heap and
+backing storage remain about 39.6 MB and 120.1 MB. This is not a total mobile
+memory guarantee.
+
+SHA256 checks confirm that production transport and both published continuity
+Arrow files are unchanged. The H3-MON working tree is clean, port 1985 is not
+listening, and no application or compression code was changed. No core `src/`
+file changed during this task. The first-pass bundle includes the two Arrow
+files, density JSON, full verified metric prefix, hashes, and quality reports.
+The third-pass tighter export remains a separate comparison, not the preferred
+sharpness result. Summary and reproduction notes are in
+`benchmark/continuity-sharpness.md`.
