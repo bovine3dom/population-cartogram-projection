@@ -41,5 +41,11 @@ using .ContinuitySharpness
     @test [r.n995 for r in planned]==[2,1]
     @test [r.source_mass for r in planned]==[1,1]
     @test planned[1].spread==1
+    support=ContinuitySharpness.retained_support(p,(p,r)->p[r,:];block_pairs=2)
+    @test support.counts==[r.n995 for r in planned]
+    @test support.rows==3
+    @test ContinuitySharpness.retained_support([1. 0.;.2 .8],(p,r)->p[r,:];retained=1.).counts==[1,2]
+    @test_throws ErrorException ContinuitySharpness.retained_support(p,(p,r)->p[r,:];retained=0.)
+    @test_throws ErrorException ContinuitySharpness.retained_support(zeros(1,2),(p,r)->p[r,:])
     @test_throws ErrorException ContinuitySharpness.plan_rows(c,p,(p,r)->p[r,:];block_pairs=0)
 end

@@ -45,6 +45,30 @@ function source_rows(data)
     end
 end
 
+# Targets must be distinct. Count complete rows without a dense whole plan.
+function retained_support(p,readblock;retained=.995,block_pairs=1_000_000)
+    0<retained<=1 && block_pairs>0 || error("invalid support limits")
+    n,m=size(p);n>0 && m>0 || error("empty plan")
+    counts=zeros(Int,n);block=max(1,fld(block_pairs,m))
+    for first in 1:block:n
+        selected=first:min(first+block-1,n)
+        mass=readblock(p,selected)
+        size(mass)==(length(selected),m) || error("wrong block shape")
+        for (i,s) in enumerate(selected)
+            weights=sort!(collect(view(mass,i,:));rev=true)
+            all(w->isfinite(w)&&w>=0,weights) || error("invalid mass")
+            total=sum(weights);total>0 || error("zero source mass")
+            cumulative=0.
+            for w in weights
+                counts[s]>0 && cumulative>=retained*total && break
+                w>0 || break
+                counts[s]+=1;cumulative+=w
+            end
+        end
+    end
+    return (;counts,rows=sum(counts))
+end
+
 # readblock returns joint masses for a bounded set of complete source rows.
 function plan_rows(c,p,readblock;block_pairs=1_000_000)
     block_pairs>0 || error("invalid block size")

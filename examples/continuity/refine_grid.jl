@@ -20,6 +20,7 @@ end
 relative=sqrt(length(first(countries).b)/length(first(coarse).b))
 all(length(d.b)≈relative^2*length(c.b) for (c,d) in zip(coarse,countries)) || error("grid scales differ")
 settings[:eta]/=relative^2
+haskey(settings,:country_etas) && (settings[:country_etas]=Dict(k=>v/relative^2 for (k,v) in settings[:country_etas]))
 settings[:internal_scale]=get(settings,:internal_scale,1.)*relative^2
 settings[:border_scale]=get(settings,:border_scale,1.)*relative
 settings[:fold_strength]=get(settings,:fold_strength,0.)*relative^2

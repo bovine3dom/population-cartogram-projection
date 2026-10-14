@@ -21,6 +21,21 @@ for backend in backends
     @testset "Compact plans: $backend" begin
         c=fixture();eta=.02
         force=zeros(3,length(c.b))
+        observed=NamedTuple[]
+        tuned=CE.compact_tune(c,backend;etas=[.02,.005,.001],target_rows=8,tolerance=1e-6,
+            stage_callback=(record,result)->push!(observed,record))
+        @test tuned.stages==observed
+        @test tuned.eta in [.02,.005,.001]
+        @test tuned.support.rows==minimum(t.rows for t in tuned.stages if t.eta==tuned.eta)
+        @test abs(tuned.support.rows-8)==minimum(abs(t.rows-8) for t in tuned.stages)
+        @test tuned.result.marginal_error<=1e-6
+        @test tuned.target_met==(tuned.support.rows<=8)
+        for invalid in (Float64[],[0.],[NaN],[Inf])
+            @test_throws ErrorException CE.compact_tune(c,backend;etas=invalid)
+        end
+        @test_throws ErrorException CE.compact_tune(c,backend;target_rows=0)
+        @test_throws ErrorException CE.compact_tune(c,backend;retained=1.01)
+        @test_throws ErrorException CE.compact_tune(c,backend;etas=[.005],maxiters=1,retry_after=1)
         @test_throws ErrorException CE.compact_sinkhorn(c,force,nothing,backend;eta=0.)
         @test_throws ErrorException CE.compact_sinkhorn(c,force,nothing,backend;proximal=.1)
         @test_throws ErrorException CE.compact_sinkhorn(c,zeros(3,1),nothing,backend)
@@ -149,12 +164,18 @@ for backend in backends
             @test resumed[2].iteration==1 && resumed[2].updated_country==2
             resumed_plans=deserialize(joinpath(dir,"resumed","candidate.jls"))
             @test all(isapprox(Matrix(a),Matrix(b);atol=2e-5) for (a,b) in zip(resumed_plans,compact_plans))
-            full_kwargs=merge(kwargs,(;max_damping=1.))
+            full_kwargs=merge(kwargs,(;max_damping=1.,country_etas=Dict(2=>.01)))
             full_dense=CE.run_case(countries,backend,joinpath(dir,"full-dense");full_kwargs...)
             full_compact=CE.run_case(countries,backend,joinpath(dir,"full-compact");compact=true,full_kwargs...)
             @test last(full_compact).objective ≈ last(full_dense).objective atol=2e-5
             @test all(diff(getproperty.(full_compact,:objective)).<=1e-10)
-            @test CE.saved_case(joinpath(dir,"full-compact"),countries).settings[:max_damping]==1.
+            saved=CE.saved_case(joinpath(dir,"full-compact"),countries).settings
+            @test saved[:max_damping]==1.
+            @test saved[:country_etas]==Dict(1=>.02,2=>.01)
+            for invalid in (Dict(3=>.01),Dict(1=>0.),Dict(1=>NaN),Dict(1=>Inf))
+                @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"bad-eta");country_etas=invalid)
+            end
+            @test_throws ErrorException CE.objective(countries,compact_plans,[],0.,[.02])
             for invalid in (0.,-1.,1.01,Inf,NaN)
                 @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"bad-damping");max_damping=invalid)
             end

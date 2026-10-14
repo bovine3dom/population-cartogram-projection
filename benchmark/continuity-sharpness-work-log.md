@@ -90,3 +90,46 @@ All 86 compact checks pass on CPU and oneAPI. The saved settings retain the
 new value. This is a controlled trial option, not a claim of better border
 quality. The next tests compare sharp and broad initial plans with both step
 limits and two proximal weights.
+
+## 07:40 UTC: small border trials and reusable eta tuning
+
+Four Mali–Burkina Faso trials use the saved planet pose angles and the same
+border weights. All use strict mass checks, the existing spread and interior
+limits, and 20 passes. These are factor-1 regional trials, not planet results.
+
+| Eta | Proximal | Maximum step | 99.5% connections/source | Border RMS, km | Reversed area, km² |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0.002 | 0.1 | 0.5 | 6.259 | 125.8 | 423 |
+| 0.0001 | 0.1 | 0.5 | 1.487 | 171.4 | 2,467 |
+| 0.0001 | 0.1 | 1 | 1.332 | 164.2 | 1,218 |
+| 0.0001 | 0.01 | 1 | 1.885 | 123.5 | 5,206 |
+
+Lower eta can retain a sharp mapping during border fitting. But these tests
+also show a geometric tradeoff: fewer connections do not guarantee fewer
+folds. The lower-proximal trial improves border RMS while its source spatial
+spread increases and its reversed area remains high. Do not publish it as a
+solved map. Logs and stage audits are in `mali-*-v2/`. The first script attempt
+stopped on a Julia global-scope error before outer fitting; its seed checks
+remain saved as `mali-sharp-full-v1/`.
+
+Added `compact_tune` for checked baseline eta selection, plus per-country eta
+values in `run_case`. Each country uses the same selected eta in its solve and
+objective. The values are saved in `country-etas.csv`, loaded on restart, and
+scaled by grid refinement. The scalar-eta path is unchanged. The tuner reports
+its stage outcomes and whether its selected plan meets the row target; it does
+not label a failed sharp stage as a success. All 105 compact checks pass on CPU
+and oneAPI, and all 34 source-diagnostic checks pass. The large-country process
+was paused during the oneAPI regression run, then resumed.
+
+The US, India, and China baseline sweep started at 07:25 UTC with a two-hour
+process limit and a 2 GiB device cache limit. Its files are `tuned-large-v1/`.
+At 07:35, the US passes at eta 1e-5 with 4.04 connections/source at 99.5%; the
+next stage is still running. No whole-planet sharpness result exists yet.
+
+The old production file is not an exact mass-feasible reference. An independent
+audit finds source sums and target populations outside the new strict limits.
+For example, US source sums range from 0.954 to 1.073. China's maximum target
+relative deviation from a uniform quota is 96.69. The old 0.02 aggregate mass
+tolerance could conceal large individual errors. Keep the new strict checks;
+use old support counts as a sharpness goal, not as permission to copy these
+mass errors. See `production-mass.csv` for the full audit.

@@ -327,6 +327,12 @@ function saved_case(path,countries;root=dirname(path))
     end
     ismissing(settings[:border_share]) && (settings[:border_share]=nothing)
     get!(settings,:start_step,1)
+    eta_file=joinpath(path,"country-etas.csv")
+    if isfile(eta_file)
+        etas=CSV.read(eta_file,DataFrame)
+        allunique(etas.code) || error("duplicate country eta")
+        settings[:country_etas]=Dict(r.code=>r.eta for r in eachrow(etas))
+    end
     return (;settings,borders,border_factors)
 end
 
@@ -457,7 +463,9 @@ function transport_score(c,p,eta,cache)
 end
 
 function objective(countries, plans, edges, strength, eta; base_cache=nothing,kwargs...)
-    base = sum(transport_score(c,p,eta,base_cache) for (c,p) in zip(countries,plans))
+    eta isa Real || length(eta)==length(countries) || error("eta country count differs")
+    base = sum(transport_score(c,p,eta isa Real ? eta : eta[k],base_cache)
+               for (k,(c,p)) in enumerate(zip(countries,plans)))
     penalty, _ = penalty_gradient(countries, plans, edges; forces_only=true,kwargs...)
     return base + strength * penalty
 end
@@ -525,7 +533,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   fold_strength=0.0, fold_smoothing=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
                   border_scale=1.0,coordinate=false,border_factors=Dict(),checkpoint_interval=1,compact=false,
-                  compact_cache_bytes=512*1024^2,start_step::Int=1,initial_duals=nothing,max_damping=.5)
+                  compact_cache_bytes=512*1024^2,start_step::Int=1,initial_duals=nothing,max_damping=.5,
+                  country_etas=Dict())
     groups=coordinate ? length(countries) : 1
     1<=start_step<=outer_steps*groups+1 || error("invalid starting step")
     start_step>1 && isnothing(starting_plans) && error("a later starting step requires seed plans")
@@ -535,6 +544,9 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             for (c,d) in zip(countries,initial_duals)) || error("invalid initial dual vector")
     end
     compact && (matrix_free || anneal) && error("compact mode has its own matrix-free solver; annealing is not enabled")
+    isfinite(eta) && eta>0 || error("invalid eta")
+    all(code in getproperty.(countries,:code) && isfinite(value) && value>0 for (code,value) in country_etas) || error("invalid country eta")
+    temperatures=[get(country_etas,c.code,eta) for c in countries]
     isfinite(max_damping) && 0<max_damping<=1 || error("invalid maximum damping")
     checkpoint_interval>=1 || error("checkpoint interval must be positive")
     proximal>=0 || error("proximal weight must be nonnegative")
@@ -543,6 +555,8 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     matrix_free && proximal>0 && error("proximal costs require the dense experimental path")
     ispath(outdir) && error("refusing to overwrite $outdir")
     mkpath(outdir)
+    isempty(country_etas) || CSV.write(joinpath(outdir,"country-etas.csv"),
+        DataFrame(code=getproperty.(countries,:code),eta=temperatures))
     edges = graph(countries; borders)
     weights = edge_weights(edges, border_share)
     weights .*= [k==l ? internal_scale : border_scale*get(border_factors,minmax(countries[k].code,countries[l].code),1.)
@@ -565,11 +579,11 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     flush(stdout)
     plans = isnothing(initial_plans) ? (compact ? CompactPlan[] : Matrix{Float64}[]) : copy(initial_plans)
     if isnothing(initial_plans)
-        for c in countries
+        for (k,c) in enumerate(countries)
             elapsed = @elapsed result = compact ?
-                compact_solve(c,zeros(3,length(c.b)),nothing,backend;eta,tolerance=inner_tolerance,accelerate,cache_bytes=compact_cache_bytes) : matrix_free ?
-                feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta,tolerance=inner_tolerance,anneal,accelerate) :
-                sinkhorn(c.cost,c.a,c.b,backend;eta,tolerance=inner_tolerance,anneal,accelerate)
+                compact_solve(c,zeros(3,length(c.b)),nothing,backend;eta=temperatures[k],tolerance=inner_tolerance,accelerate,cache_bytes=compact_cache_bytes) : matrix_free ?
+                feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta=temperatures[k],tolerance=inner_tolerance,anneal,accelerate) :
+                sinkhorn(c.cost,c.a,c.b,backend;eta=temperatures[k],tolerance=inner_tolerance,anneal,accelerate)
             println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) dual + $(result.refinement_iterations) primal iterations, residual=$(result.marginal_error)")
             flush(stdout)
             push!(plans, result.plan)
@@ -578,7 +592,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     end
     reference = preserve_displacements ? [means(c,p) for (c,p) in zip(countries,plans)] : nothing
     base_cache=Dict()
-    score_plan(p) = objective(countries,p,edges,strength,eta; base_cache,weights,scale_km,form,internal_form,saturating,reference) +
+    score_plan(p) = objective(countries,p,edges,strength,temperatures; base_cache,weights,scale_km,form,internal_form,saturating,reference) +
                     (fold_strength==0 ? 0.0 : fold_strength*first(fold_penalty_gradient(countries,p,faces;smoothing_area=fold_smoothing,forces_only=true)))
     baseline = metrics(countries, plans, edges)
     export_arrow && export_mapping(joinpath(outdir,"baseline.arrow"), countries, plans)
@@ -626,11 +640,11 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                 g=transpose(c.xyz)*g .- sum(means(c,plans[k]).*g;dims=1)
             end
             save_stage=(factor,result)->checkpoint(joinpath(outdir,"inner-stage.jls"),(;step,country=c.code,factor,result))
-            compact ? compact_solve(c,g,plans[k],backend;eta,proximal,initial_beta=duals[k],tolerance=inner_tolerance,accelerate,
+            compact ? compact_solve(c,g,plans[k],backend;eta=temperatures[k],proximal,initial_beta=duals[k],tolerance=inner_tolerance,accelerate,
                 cache_bytes=compact_cache_bytes,stage_callback=save_stage) :
-            matrix_free ? feature_sinkhorn(c,g,backend;eta,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate) :
+            matrix_free ? feature_sinkhorn(c,g,backend;eta=temperatures[k],initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate) :
                 sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
-                         eta=eta+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)
+                         eta=temperatures[k]+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)
         end
         compact && GC.gc()
         println("Inner $iteration/$updated_country: ",[(countries[k].code,s.iterations,s.refinement_iterations,s.marginal_error)
@@ -680,5 +694,6 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
 end
 
 include("compact.jl")
+include("eta_tuning.jl")
 
 end

@@ -34,6 +34,30 @@ Stored arrays grow with `(sources + targets) × accepted updates`, not with
 `sources × targets`. History evaluation becomes more expensive as its depth
 grows. This is a memory improvement, not a guarantee of faster inner solves.
 
+## Eta selection
+
+`compact_tune(country, backend)` searches the production eta candidates for
+an unforced baseline. It counts the connections needed to retain 99.5% of
+each source distribution. The default row target is twice the sum of source
+and target counts. It keeps the checked candidate nearest that target and
+stops after a candidate reaches it. It uses the compact solver's strict mass
+checks, not the older production tolerance of 0.02.
+
+The result contains `eta`, `result`, `support`, `stages`, and `target_met`.
+A convergence failure stops the search. If an earlier stage passed, it is
+still available; otherwise the function raises an error. Inspect `target_met`
+and the stage records. A returned plan does not imply that the requested
+support was reached. `stage_callback(record, result)` can save each stage;
+`result` is `nothing` for a failed solve. Support counts do not certify spatial
+concentration or border quality.
+
+Pass `country_etas=Dict(code => eta, ...)` to `run_case` to use fixed per-country
+temperatures in both solves and objective scores. Other countries use the scalar
+`eta`. The runner writes the complete table to `country-etas.csv`; checkpoint
+loading and grid refinement preserve it. Do not change eta during a fit while
+comparing objective values as if they belonged to the same objective. The
+planet runner still uses its existing fixed eta unless explicitly adapted.
+
 ## Reductions and checks
 
 KernelAbstractions evaluates costs and history entries directly on the backend.
