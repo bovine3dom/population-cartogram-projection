@@ -1,0 +1,47 @@
+{
+  "tiles": 10000,
+  "enclosed_empty_regions": 12,
+  "enclosed_empty_cells": 49,
+  "largest_enclosed_empty_region": 35,
+  "land_sea_edges": 2776,
+  "land_sea_edges_over_sqrt_land": 27.76,
+  "closing": [
+    {
+      "radius_tiles": 1,
+      "radius_over_sqrt_land": 0.01,
+      "added_empty_cells": 251,
+      "added_over_land": 0.0251,
+      "open_empty_cells": 235
+    },
+    {
+      "radius_tiles": 2,
+      "radius_over_sqrt_land": 0.02,
+      "added_empty_cells": 540,
+      "added_over_land": 0.054,
+      "open_empty_cells": 522
+    },
+    {
+      "radius_tiles": 4,
+      "radius_over_sqrt_land": 0.04,
+      "added_empty_cells": 1409,
+      "added_over_land": 0.1409,
+      "open_empty_cells": 1360
+    },
+    {
+      "radius_tiles": 8,
+      "radius_over_sqrt_land": 0.08,
+      "added_empty_cells": 4174,
+      "added_over_land": 0.4174,
+      "open_empty_cells": 4125
+    }
+  ],
+  "limit": "Empty-space proxies, not a classification of phantom holes. Real lakes, straits, bays, and ocean gaps can be counted. Compare the masks visually. No country labels or source coast geometry enter these measurements.",
+  "cells_sha256": "25cabc0664a77a8110d4e40f7f4a16b964fe51d9e4bc467b639448b6a293cc04",
+  "script_sha256": "e58b31a287d8ee41e76967b1d9a1bd91862d25871c75c42cbc6686be9e73ebe1",
+  "groups_sha256": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+  "input_grid_step": 1,
+  "input_rows": 10000,
+  "duplicate_coordinates": 0,
+  "conflicting_coordinates": 0,
+  "owid": false
+}
