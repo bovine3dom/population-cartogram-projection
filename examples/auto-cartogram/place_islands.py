@@ -68,14 +68,22 @@ def run(inputs,layout,polygons,output,ocean_scale=.1,max_population_fraction=.01
     lines=(inputs/'validated.wkt').read_text().splitlines()
     area=sum(Polygon([tuple(map(float,p.split())) for p in lines[i+1].split('\t')]).area for i in range(2,len(lines),3))
     total=sum(map(len,tiles.values()));scale=np.sqrt(total/area);ocean_length=ocean_scale*np.sqrt(total)
-    hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]}
+    parent_files=[layout/name for name in ['stress.json','relax.json','placement.json'] if (layout/name).exists()]
+    parent_records={p.name:json.loads(p.read_text()) for p in parent_files}
+    for record in list(parent_records.values()):
+        for name,expected in record.get('inputs',{}).items():
+            p=Path(name)
+            if p.name!='stress.json':continue
+            if digest(p)!=expected:raise ValueError('Parent position record changed')
+            parent_files.append(p);parent_records['initial-stress.json']=json.loads(p.read_text())
+    hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]+parent_files}
     scripts={p.name:digest(p) for p in [Path(__file__)]+[Path(__file__).with_name(n) for n in ['coast_anchors.py','shape_placement.py','prepare_flow.py']]}
     maximum_population=max_population_fraction*sum(float(r['group_population']) for r in rows.values())
     result,records=place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_population)
-    report=dict(method='Keep components with source land borders or population above the threshold fixed. Place smaller isolated components from largest population to smallest, near the nearest larger source component coast. No country-membership links.',
+    report=dict(method='Keep components with source land borders or population at or above the threshold fixed. Place smaller isolated components from largest population to smallest, near the nearest larger source component coast. No country-membership links.',
         max_population_fraction=max_population_fraction,maximum_population=maximum_population,eligible_isolated_components=len(records),moved_components=sum(result[c]!=tiles[c] for c in tiles),
         ocean_scale=ocean_scale,maximum_placement_shift=max((r['placement_shift'] for r in records),default=0.),
-        inputs=hashes,scripts=scripts,limit='A nearest-coast hierarchy is a position heuristic, not a proof of correct geography. Counts and tile shapes are unchanged. No native-resolution transport is approved.')
+        inputs=hashes,scripts=scripts,parent_layout_records=parent_records,limit='A nearest-coast hierarchy is a position heuristic, not a proof of correct geography. Counts and tile shapes are unchanged. No native-resolution transport is approved.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='islands-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
