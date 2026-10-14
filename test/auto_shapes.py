@@ -79,7 +79,7 @@ class ShapeTests(unittest.TestCase):
     def test_country_contact_comparison_excludes_unmatched_codes(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);inputs=root/'inputs';inputs.mkdir();layout=root/'layout';layout.mkdir()
-            (inputs/'groups.csv').write_text('component_id,country_id\na,A\nb,B\n')
+            (inputs/'groups.csv').write_text('component_id,country_id,group_population,west,east,south,north\na,A,20000000,0,1,0,1\nb,B,20000000,10,11,0,1\n')
             (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\n')
             (layout/'cells.csv').write_text('component_id,x,y\na,0,0\nb,1,0\n')
             (root/'owid.csv').write_text('0,0,1\n2,0,2\n4,0,3\n')
@@ -89,6 +89,8 @@ class ShapeTests(unittest.TestCase):
             self.assertEqual(report['excluded_owid_codes'],['3'])
             self.assertEqual([c['retained'] for c in report['cases']],[1,1])
             self.assertEqual([c['unsupported'] for c in report['cases']],[0,0])
+            self.assertEqual([c['axis_order_errors'] for c in report['cases']],[0,0])
+            self.assertEqual(compare_country_contacts.main_components({(0,0):'A',(1,0):'A',(9,9):'A'})['A'],{(0,0),(1,0)})
             components=root/'components.csv';components.write_text('raw_country_code,country_id\n3,A\n')
             aliased=compare_country_contacts.run(inputs,root/'owid.csv',root/'iso.json',[layout],root/'aliases.json',components)
             self.assertEqual(aliased['source_aliases'],{'3':'A'});self.assertEqual(aliased['excluded_owid_codes'],[])
