@@ -430,3 +430,14 @@ files, density JSON, full verified metric prefix, hashes, and quality reports.
 The third-pass tighter export remains a separate comparison, not the preferred
 sharpness result. Summary and reproduction notes are in
 `benchmark/continuity-sharpness.md`.
+
+## 18:48 UTC: requested H3-MON copy
+
+At the user's request, copied the preferred first-pass bundle into
+`/home/olie/projects/H3-MON/www/data/planet-h3-5-factor1-continuity-sharp-pass1/`.
+The copy includes both Arrow files, `population_density_hilo.json`, and all
+quality reports. Verified every staged file against the local bundle and
+checked both Arrow SHA256 values against provenance before the atomic rename.
+Updated only the copied README and publication record. Existing datasets,
+application code, and compression settings are unchanged. H3-MON stays stopped;
+port 1985 is not listening. Its working tree remains clean because data is ignored.
