@@ -36,7 +36,7 @@ def run(inputs, layout, output, refresh=False):
     for name in input_names:
         if (inputs/name).exists():
             shutil.copyfile(inputs/name,output/("input-"+name))
-    for name in ["baseline.json","relax.json","repair.json","compact.json","partition.json","parent-partition.json","repair-partition.json","swaps.json","relocations.json","placement.json","island-placement.json","shared-islands.json","archipelagos.json","island-anchors.csv","stress.json","centres.csv","history.csv","attempts.csv","build-info.properties","assertion-status-correction.json"]:
+    for name in ["baseline.json","relax.json","repair.json","compact.json","partition.json","parent-partition.json","repair-partition.json","swaps.json","relocations.json","placement.json","island-placement.json","shared-islands.json","archipelagos.json","island-separation.json","island-anchors.csv","stress.json","centres.csv","history.csv","attempts.csv","build-info.properties","assertion-status-correction.json"]:
         if (layout/name).exists():
             shutil.copyfile(layout/name,output/name)
     hashes={str(p):digest(p) for directory in [inputs,layout] for p in sorted(directory.iterdir()) if p.is_file()}

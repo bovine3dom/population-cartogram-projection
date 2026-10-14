@@ -123,8 +123,20 @@ class CapacityPartitionTests(unittest.TestCase):
         single=np.zeros((3,3),dtype=bool);single[1,1]=True
         np.testing.assert_array_equal(dock_parts(single,np.zeros_like(single))[0],single)
 
+    def test_island_segment_cells(self):
+        from review_island_separation import segment_cells,crossings
+        self.assertEqual(segment_cells((0,0),(0,0)),{(0,0)})
+        self.assertEqual(segment_cells((0,0),(2,2)),{(0,0),(1,1),(2,2)})
+        self.assertEqual(segment_cells((2,0),(-2,0)),{(x,0) for x in range(-2,3)})
+        self.assertEqual(segment_cells((0,0),(3,1)),segment_cells((3,1),(0,0)))
+        tiles={'a':{(0,0)},'b':{(2,-1),(2,1)},'land':{(1,0)}}
+        owner={p:c for c,points in tiles.items() for p in points}
+        report=crossings(tiles,owner,[dict(component='a',anchor='b')],{'land'})
+        self.assertEqual(report[0]['end'],[2,-1]);self.assertEqual(report[0]['blocking_components'],['land'])
+
     def test_archipelago_separation(self):
         from restore_archipelagos import run as restore
+        from review_island_separation import run as audit
         from shapely.geometry import box,mapping
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);inputs=root/'input';layout=root/'layout';inputs.mkdir();layout.mkdir()
@@ -150,6 +162,9 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertEqual(rejected['failed_groups'],1)
             self.assertIn('displacement limit',rejected['groups'][0]['not_moved'])
             self.assertEqual(load(inputs,root/'limited')[1],tiles)
+            before=audit(inputs,layout,path,root/'before.json')
+            after=audit(inputs,root/'result',path,root/'after.json')
+            self.assertEqual(before['blocked_segments'],1);self.assertEqual(after['blocked_segments'],0)
 
     def test_shared_island_template(self):
         from restore_shared_islands import template,run as restore

@@ -153,6 +153,13 @@ limit prevents some extreme moves; it does not prove good positions. Review
 Japan, Indonesia, the Philippines, and other affected groups before selection.
 The pipeline does not enable this control automatically.
 
+The pipeline does run `review_island_separation.py` as a diagnostic. For each
+nearby-island parent pair, it checks the shortest tile-centre segment for land
+in between. It adds no lines or cells to the map. This check detects the Kyushu
+placement defect that aggregate border counts missed. It checks only nearby
+pairs and blockers with source land borders. A warning needs visual review;
+zero warnings do not prove correct island placement.
+
 ## Stages
 
 1. Prepare component geometry and run continuous flow, unless geometry was
@@ -176,6 +183,7 @@ The pipeline does not enable this control automatically.
 - `pipeline.json`: stage status, settings, hashes, checks, and limits.
 - `layout/review.png`: world image, including topology warnings.
 - `layout/metrics.json`: counts, connectivity, borders, and position checks.
+- `layout/island-separation.json`: nearby island pairs with land in between.
 - `review/gaps.png`: an empty-space diagnostic, not a classification of water.
 - `review/regions/`: regional images at unchanged world positions.
 - `repaired/relocations.json`: cells removed and added during fragment relocation.
