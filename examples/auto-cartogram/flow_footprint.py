@@ -9,11 +9,12 @@ from review_layout import NEIGHBOURS
 from shape_placement import place
 
 
-def prepare(path,templates,fixed,budgets):
+def prepare(path,templates,fixed,budgets,stretch=1.):
+    if not math.isfinite(stretch) or stretch<=0:raise ValueError('Use a positive flow stretch')
     geometries=read_shapes(path)
     if set(geometries)!=set(templates):raise ValueError('Flow geometry component labels differ')
     scale=math.sqrt(sum(budgets.values())/sum(g.area for g in geometries.values()))
-    geometries={c:affinity.scale(g,scale,scale,origin=(0,0)) for c,g in geometries.items()}
+    geometries={c:affinity.scale(g,scale*stretch,scale/stretch,origin=(0,0)) for c,g in geometries.items()}
     centres={c:(g.centroid.x,g.centroid.y) for c,g in geometries.items()}
     tiles={};fallback=[]
     for c in sorted(set(templates)-fixed):
@@ -28,7 +29,7 @@ def prepare(path,templates,fixed,budgets):
     for c in sorted(fixed,key=lambda c:(-budgets[c],c)):
         tiles[c]=place(templates[c],centres[c],blocked)
         blocked.update(q for x,y in tiles[c] for q in [(x,y)]+[(x+dx,y+dy) for dx,dy in NEIGHBOURS])
-    return tiles,centres,dict(scale=scale,subtile_fallback_components=fallback,
+    return tiles,centres,dict(scale=scale,area_preserving_stretch=stretch,x_scale=scale*stretch,y_scale=scale/stretch,subtile_fallback_components=fallback,
         movable_raster_cells=sum(len(tiles[c]) for c in set(tiles)-fixed),
         requested_movable_cells=sum(budgets[c] for c in set(tiles)-fixed),
         limit='Flow supplies sites and a raster footprint, not final country boundaries or quotas. Empty raster components use one representative sample. Raster samples may overlap. Each target landmass receives the original requested budget. Isolated source-shaped templates are translated away from the raw mainland footprint before partitioning.')
