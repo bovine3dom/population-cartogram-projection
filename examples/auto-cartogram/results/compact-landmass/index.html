@@ -23,6 +23,17 @@
 <p>The first unmasked sea-edge cost closes some gaps but turns Japan, Great Britain, and much of Indonesia into rectangular blocks. Thin paths remain in Europe. It also leaves a budget error of 1,585 tiles. Do not use this result.</p>
 <a href="joint-sea8/review.png"><img src="joint-sea8/review.png" alt="Rejected joint deformation with damaged coast shapes" loading="lazy"></a>
 <p><a href="joint-sea8/regions/europe.png">Europe detail</a> · <a href="joint-sea8/regions/indonesia.png">Indonesia detail</a> · <a href="joint-sea8/gaps.png">Gap mask</a> · <a href="joint-sea8/metrics.json">Metrics</a> · <a href="joint-sea0/review.png">Zero extra sea-edge cost control</a></p>
-<p>Further trials correct the count-fit proposal filter, use requested areas for shape guides, preserve isolated island shapes, and restrict extra sea-edge costs to a fixed initial land envelope. A separate trial uses better automatic geographic centres as deformation targets while retaining Tutte as its starting cells. These trials are still running.</p></article>
+</article>
+<article><h2>Exact counts: still not sufficient</h2>
+<p>The corrected trials reach all 55,000 requested cells and preserve isolated island shapes. They still fail the visual target.</p>
+<h3>Tutte start with geographic guide centres</h3>
+<p>Reject this result. Germany surrounds Belgium; Portugal is in the Balkan group. Large cuts remain in China. There are 158 missing and 144 false component contacts.</p>
+<a href="joint-geographic-guides/review.png"><img src="joint-geographic-guides/review.png" alt="Rejected exact fit with tangled countries and cuts through Asia" loading="lazy"></a>
+<p><a href="joint-geographic-guides/regions/europe.png">Europe detail</a> · <a href="joint-geographic-guides/gaps.png">Gap mask</a> · <a href="joint-geographic-guides/bundle.json">Saved file hashes</a> · <a href="joint-interior4-guide16-sea8/review.png">Fixed Tutte centres: also rejected</a></p>
+<h3>Geographic start with joint boundary changes</h3>
+<p>Reject this control too. Country positions are better, but gaps remain and some mainland shapes become rectangular. There are 209 missing and five false component contacts. Only 311 empty cells are enclosed, yet the radius-4 closing measure adds 7,993 cells. Most gaps remain open to the sea.</p>
+<a href="joint-geographic-start/review.png"><img src="joint-geographic-start/review.png" alt="Rejected geographic start with large spaces between countries" loading="lazy"></a>
+<p><a href="joint-geographic-start/gaps.png">Gap mask</a> · <a href="joint-geographic-start/bundle.json">Saved file hashes</a></p>
+<p>Next test: a shared target land footprint with exactly the movable land area. Filling internal gaps must replace land at the outer edge. Fixed island shapes remain outside this exchange. Two trials are running; the target footprint is not an approved coastline.</p></article>
 <p>See the <a href="../../compact_work_log.md">work log</a>. The new deadline is 06:00 UTC on 15 October 2026. Production code and targets remain unchanged.</p>
 </html>

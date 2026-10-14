@@ -135,6 +135,46 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The corrected full-size deformation trials continue. No exact-budget joint
   layout has completed visual review yet. Production code remains unchanged.
 
+## 15:54–16:24 UTC — reject exact fits and test a shared footprint
+
+- Inspected the exact Tutte fit with an interior sea-edge cost. Island outlines
+  survive, but Europe still has thin paths and poor positions. Reject it.
+- Inspected the geographic-guide world image and Europe detail. Some positions
+  improve, but Germany surrounds Belgium, Portugal is inside the Balkan group,
+  and cuts remain through China. Exact counts do not correct these faults.
+- Inspected the geographic-start control. It has exact counts, but large gaps
+  remain and several mainland countries become rectangular. Reject it too.
+  It has 311 enclosed empty cells but 7,993 radius-4 closing additions. This
+  shows why enclosed holes alone are not a sufficient measure.
+- Saved these three results, with compressed cells, input records, checksums,
+  world images, and regional images. No result is approved.
+- Moved isolated islands before a further Tutte trial. This explicit partial
+  mode preserves the 2,011-cell budget error and all 348 borders. It puts Sri
+  Lanka beside India rather than inside a mainland cut. The default island
+  stage still rejects incomplete budgets.
+- Audited source holes. Only three holes contain a complete represented
+  component: San Marino, Baikonur, and Lesotho. The current no-hole rule also
+  rejects these occupied holes. A safe enclave rule needs checks when either
+  the host or the enclosed component changes. It is not implemented yet.
+- Added local topology checks with complete checks for non-simple changes.
+  Exhaustive local tests and random comparisons agree with full validation.
+  The focused suite now has 40 passing tests, including the footprint tests.
+  These latest changes have not yet passed another complete eight-command run.
+- The full-size failed-regrowth cache repeat completed. Its cell file is
+  byte-identical to the uncached interior trial (SHA-256 starts `f4709c6f`).
+  The separate fast-topology repeat is still running.
+- Stopped the older global sea-edge trial before completion. Better controlled
+  exact-count trials had completed; the stopped trial has no final layout.
+- A perimeter cost can close a gap entrance without filling the gap. Added an
+  optional area-matched target footprint: select as many target cells as there
+  are movable land cells, then charge for land outside that footprint. A target
+  that contains all starting land would give a constant area cost instead.
+- The footprint uses a smoothed land mask. It excludes fixed islands and their
+  immediate neighbours. The inspected scale-8 preview has 49,894 target cells
+  in five pieces and 8,005 initially empty target cells. It is not a verified
+  coastline: some small countries and Chile lie outside it. The cost is finite,
+  so shape guides can oppose it. Two weight trials started at 16:18 UTC.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

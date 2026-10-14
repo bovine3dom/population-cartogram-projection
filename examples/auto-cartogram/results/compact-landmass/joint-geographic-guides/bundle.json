@@ -1,0 +1,25 @@
+{
+  "files": {
+    "cells.csv.gz": "241cb2e27cab94ebc1307c40d8e24495c94f93f96609a1fd84bcf6ba5a3114c8",
+    "checksums.json": "5873d85c2cee19e847ecd7bf1967d862fc80d1ebed45a1097daa9ae7e5eaf5ab",
+    "compact.json": "76988c0c3e1004feb1b566922cb9044ccf163a4110b01241c4e4caf07e5864f8",
+    "complete.txt": "eb4b011f3cff31a2e0d3992580a26ca39cf9234ebc0168d97240abf0574b1a37",
+    "contact-errors.csv": "4f253e8daa3c9324033f4bb991fdb47ced7888b6dd066d7cfdabb998d70746a1",
+    "country-counts.csv": "71bcdc216c6b0e30cdb830aa44f69df1753ce21818279bfce2bf4431c92be8d0",
+    "country-order-errors.csv": "ee0fb654ac007dc04078c499c505d82b3df071df9e6297c539327a7f2759246d",
+    "gaps.json": "1bdec11f6a64249a5133f9d7283f6429ee7d658b97652e8aa3cca106bc87a14a",
+    "gaps.png": "2b0db2c17c075bec3416fb8d4cc58f2ef90e5a03de8032fb0ba1ca6e05147af5",
+    "group-capacities.csv": "074fe14219050c796649d7abe713bd1accf68d7655af3267862339c455a1c86d",
+    "history.csv": "28d452e827e43f1f8b38cd96b7abb38e874ef04257a4622dc052d78f5ca85107",
+    "input-geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "input-groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "input-manifest.json": "d76f10635405b2425a10e0bbd39f811d4f174841c0b7077ee6d313283de80556",
+    "input-outline-checks.json": "abd2e41c8462c612f9eec46399f5e9bdd471e5fd1de1db01881436260e25b5b6",
+    "island-order-errors.csv": "3f028ece1b64b763f40384ec66c4feea7bb90269342bf9387f45b653059bba71",
+    "metrics.json": "3e76b38de596a17b17434e5c4fa3576b0df94fb66c9a9a007e5c2f3a1b6a63e2",
+    "region-quality.csv": "527a50db86230914e1d290643096c6ad73c971624afdf5e49c0934cd361d712c",
+    "regions/europe.png": "eabb882c454b9258d44ee74b6a949fdd7cd19642f4e1c330e943b33d17c4f453",
+    "regions/indonesia.png": "37e781e5f8f9020293982a5bba345c97ea728227d9c6db2ed72e2d5b9841a22f",
+    "review.png": "af619164711e2048b0223263d62ed61af100bb4c1f8819894d0a37b7c93490e3"
+  }
+}
