@@ -14,6 +14,7 @@ sys.path.insert(0,str(ROOT/"examples"/"auto-cartogram"))
 import assign_population as population
 import balance_transport as balance
 import check_native_sources as native_check
+import check_support as support
 import dissolve_map_units as dissolve
 import geographic_baseline as baseline
 import geographic_embedding as geographic
@@ -57,6 +58,35 @@ class NativeSourceTests(unittest.TestCase):
             for old,new in [("new:a,30","new:b,30"),("new:a,70","new:a,71"),("new:b:456","new:b:123")]:
                 (root/"sources.csv").write_text(original.replace(old,new))
                 with self.assertRaises(ValueError): native_check.check(source,groups,root)
+
+
+class SupportTests(unittest.TestCase):
+    def test_connected_bottleneck_and_equal_neighbourhoods(self):
+        result=support.equal_target_cut([3,1],[[0],[0,1]],2)
+        self.assertFalse(result["exact_marginals_feasible"])
+        self.assertEqual(result["necessary_maximum_relative_target_error"],.5)
+        self.assertEqual(result["witness_target_indices"],[0])
+        result=support.equal_target_cut([1,2,1],[[0,1],[0,1],[0,1]],2)
+        self.assertTrue(result["exact_marginals_feasible"])
+        self.assertEqual(result["distinct_source_neighbourhoods"],1)
+        for supply,neighbours,n in [([1.5],[[0]],1),([1],[[]],1),([1],[[1]],1),([],[],1)]:
+            with self.assertRaises(ValueError): support.equal_target_cut(supply,neighbours,n)
+
+    def test_all_three_source_supports_against_subset_oracle(self):
+        import itertools
+        choices=[[j for j in range(3) if mask & (1 << j)] for mask in range(1,8)]
+        supply=[1,2,3]
+        for neighbours in itertools.product(choices,repeat=3):
+            strongest=0.0
+            for mask in range(1,8):
+                selected=[i for i in range(3) if mask & (1 << i)]
+                targets=set().union(*(set(neighbours[i]) for i in selected))
+                strongest=max(strongest,sum(supply[i] for i in selected)/(2*len(targets))-1)
+            result=support.equal_target_cut(supply,neighbours,3)
+            bound=result["necessary_maximum_relative_target_error"]
+            self.assertEqual(result["exact_marginals_feasible"],strongest == 0)
+            self.assertLessEqual(bound,strongest+1e-12)
+            if strongest > 0: self.assertGreater(bound,0)
 
 
 class BalanceTests(unittest.TestCase):

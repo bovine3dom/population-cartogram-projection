@@ -110,7 +110,8 @@ not add pairs or cross declared group boundaries. Groups can still contain
 multiple islands.
 
 A separate [position-change check](results/indonesia-native-balance/source-shift.json)
-compares each source's expected target position. It first normalizes that
+compares each source's expected target position on the original layout, before
+island translation. It first normalizes that
 source's retained weights, so lost raw mass does not bias the comparison.
 The population-weighted mean change is 0.0102 tile sides; the largest change
 is 5.482 tile sides. Sources with a change above one tile side contain 0.00552%
@@ -187,7 +188,35 @@ would not, by itself, prove feasibility.
 Solves and in-memory checks take 123, 913, and 1,772 seconds, excluding source
 preparation and export. The native Indonesia success must not be treated as
 whole-world validation. More source detail may change the support, but does
-not guarantee balance. An H3-5 world comparison is still running.
+not guarantee balance.
+
+### More source detail at 10,000 tiles
+
+The H3-5 world run uses 400,545 source aggregates and 758,914 saved pairs. It
+retains 99.831% of population, keeps cross-group population at zero, and reduces
+the largest target error to 2.471%. Solves and checks take 4,203 seconds.
+[Independent checks](results/world-10000-transport-r5-grouped/independent-checks.json).
+
+However, sparse scaling stops after 50,000 iterations with 1.161% target error.
+It writes no corrected export. The disconnected-support bound is near zero,
+so that simple bound does not explain the failure. The iteration limit alone
+does not prove infeasibility. See the
+[bounded attempt](results/world-10000-transport-r5-grouped/balance-attempt.json).
+
+A stronger [minimum-cut check](results/world-10000-transport-r5-grouped/cut-checks.json)
+now proves that four groups cannot meet exact marginals on the saved pairs.
+It uses integer capacities and combines sources with identical target sets.
+The groups are in Brazil, Kosovo, the Philippines, and Slovenia. In the Kosovo
+group, sources with 839,588 people can reach only one of two targets. Each
+target should hold 829,949.5 people. This forces at least 1.161% maximum target
+error when all source mass is retained. It explains the scaling residual.
+
+The check tests all source subsets through a
+[maximum-flow/minimum-cut calculation](https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.flow.minimum_cut.html).
+A feasible result permits zero weights on saved pairs. It does not prove that
+positive scaling will converge or that the positions are good. A failed result
+requires new eligible pairs, different capacities, or a relaxed balance limit;
+more iterations alone cannot fix it.
 
 ## What this means for issue #17
 

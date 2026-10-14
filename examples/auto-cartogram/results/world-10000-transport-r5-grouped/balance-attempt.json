@@ -1,0 +1,9 @@
+{
+  "iterations": 50000,
+  "tolerance": 0.0001,
+  "exit_code": 1,
+  "maximum_relative_target_error": 0.0116133572,
+  "accepted_export": false,
+  "log_sha256": "c8087f24b9bbf2d921c65cc3e9c4a7a852d8492cd19e052cf4e6545a4cd7f46e",
+  "limit": "The iteration limit does not prove infeasibility. No corrected export was written."
+}

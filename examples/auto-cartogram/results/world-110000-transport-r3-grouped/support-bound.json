@@ -1,7 +1,7 @@
 {
   "necessary_maximum_relative_target_error": 0.09339298061929781,
   "tolerance_tested": 0.0001,
-  "can_meet_tolerance_on_current_support": false,
+  "disconnected_support_bound_excludes_tolerance": true,
   "limit": "This disconnected-support bound is necessary, not sufficient. A zero bound would not prove feasibility.",
   "function": "balance_transport.support_error_bound",
   "function_file_sha256": "c549e7d01163ff799ac404e84e51644acd94c1e382b704a41b48a582f0bf2385",

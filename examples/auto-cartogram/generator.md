@@ -334,6 +334,15 @@ mismatched targets. Source IDs and weight values stay unchanged; there is no
 new solve. It runs independent transport checks before publication. Review the
 new layout separately, and repeat native-source checks where applicable.
 
+`check_support.py TRANSPORT_DIR NEW_CHECKS.json` checks exact marginal
+feasibility for grouped exports with integer source populations. Run it in the
+geometry environment. It combines identical source neighbourhoods, then uses
+integer maximum flow for each group. A failed cut records a source subset whose
+population exceeds the capacity of all its eligible targets. This detects
+obstructions inside connected support, unlike the simple disconnected-support
+bound. A feasible result permits zero weights and does not prove convergence
+of positive scaling. No mapping weights change.
+
 `check_transport_shift.py RAW_DIR CORRECTED_DIR NEW_CHECKS.json` compares each
 source's expected target position after normalizing its retained weights. It
 checks input hashes and every ordered pair first. It reports population-weighted
