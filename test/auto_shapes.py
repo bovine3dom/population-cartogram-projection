@@ -34,6 +34,7 @@ import recheck_shape_bundle
 import build_shape_gallery
 import review_gaps
 import compare_country_contacts
+import land_envelope
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
@@ -97,6 +98,15 @@ class ShapeTests(unittest.TestCase):
             components.write_text('raw_country_code,country_id\n3,A\n3,B\n')
             ambiguous=compare_country_contacts.run(inputs,root/'owid.csv',root/'iso.json',[layout],root/'ambiguous.json',components)
             self.assertEqual(ambiguous['excluded_owid_codes'],['3'])
+
+    def test_land_envelope_keeps_area_and_excludes_fixed_islands(self):
+        tiles={'a':{(x,y) for x in range(1,6) for y in range(1,6)},'b':{(x,y) for x in range(7,12) for y in range(1,6)},'island':{(6,8)}}
+        target,report=land_envelope.build(tiles,{'island'},(0,0),(20,20),2.)
+        self.assertEqual(int(target.sum()),50);self.assertEqual(report['target_cells'],50)
+        self.assertGreater(report['initial_empty_target_cells'],0)
+        for x,y in [(6,8),(5,8),(7,8),(6,7),(6,9)]:self.assertFalse(target[y,x])
+        np.testing.assert_array_equal(target,land_envelope.build(tiles,{'island'},(0,0),(20,20),2.)[0])
+        with self.assertRaisesRegex(ValueError,'No movable'):land_envelope.build(tiles,set(tiles),(0,0),(20,20),2.)
 
     def test_simple_toggle_is_sufficient_for_local_topology(self):
         ring=[(1,0),(1,1),(0,1),(-1,1),(-1,0),(-1,-1),(0,-1),(1,-1)]
@@ -280,6 +290,11 @@ class ShapeTests(unittest.TestCase):
                 self.assertEqual(joint['guide_area'],'requested budget')
                 compact.run(inputs,layout,root/'joint-uncached',rounds=5,fit_rounds=10,strict_fit=True,regrow=True,land_only=True,sea_perimeter=8,interior_sea_radius=2,guide_layout=root/'deformed',cache_regrowth=False,full_topology_checks=True)
                 self.assertEqual((root/'joint/cells.csv').read_bytes(),(root/'joint-uncached/cells.csv').read_bytes())
+                envelope=compact.run(inputs,root/'deformed',root/'envelope',rounds=3,regrow=True,land_only=True,envelope_weight=2,envelope_sigma=1)
+                self.assertEqual(envelope['envelope']['target_cells'],8)
+                self.assertLessEqual(envelope['final_energy'],envelope['initial_energy']+1e-8)
+                self.assertEqual(envelope['envelope']['cells_sha256'],compact.digest(root/'envelope/envelope.csv'))
+                with self.assertRaisesRegex(ValueError,'exact starting'):compact.run(inputs,layout,root/'partial-envelope',regrow=True,land_only=True,envelope_weight=2)
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
                 stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True,order_weight=1,local_order=35,mass_weighted=True)
                 self.assertEqual(stress['collision_geometry'],'signed-distance raster')
