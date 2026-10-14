@@ -290,6 +290,29 @@ class RepairTests(unittest.TestCase):
 
 
 class BaselineTests(unittest.TestCase):
+    def test_reposition_keeps_shapes_and_rejects_land_contacts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); inputs=root/"inputs"; layout=root/"layout"; inputs.mkdir(); layout.mkdir()
+            (inputs/"groups.csv").write_text("component_id,tiles\na,3\nb,1\n")
+            (inputs/"validated.wkt").write_text("STAGE 1\nOUTLINES 2\nOUT 0\ta\t0 0\t0 0 0\n0 0\t1 0\t1 1\t0 1\nSITECOUNT 0\n"
+                "OUT 1\tb\t4 4\t0 0 0\n4 4\t5 4\t5 5\t4 5\nSITECOUNT 0\n")
+            contacts=inputs/"geographic-contacts.csv"; contacts.write_text("a,b,both_represented\n")
+            (layout/"complete.txt").write_text("mode=test\n")
+            (layout/"cells.csv").write_text("component_id,x,y\na,0,0\na,1,0\na,0,1\nb,-3,-3\n")
+            baseline.run(inputs,root/"placed",reuse_layout=layout)
+            _,before,_=review.load(inputs,layout); _,after,_=review.load(inputs,root/"placed")
+            def relative(cells):
+                anchor=min(cells); return {(x-anchor[0],y-anchor[1]) for x,y in cells}
+            self.assertEqual({c:relative(p) for c,p in before.items()},{c:relative(p) for c,p in after.items()})
+            self.assertGreater(min(after["b"])[0],min(after["a"])[0])
+            contacts.write_text("a,b,both_represented\na,b,true\n")
+            with self.assertRaisesRegex(ValueError,"without land contacts"):
+                baseline.run(inputs,root/"bad",reuse_layout=layout)
+            contacts.write_text("a,b,both_represented\n")
+            (layout/"cells.csv").write_text((layout/"cells.csv").read_text().replace("b,-3,-3","b,2,0"))
+            with self.assertRaisesRegex(ValueError,"without land contacts"):
+                baseline.run(inputs,root/"bad",reuse_layout=layout)
+
     def test_growth_and_placement(self):
         shapes=[box(0,0,1,1),box(0,0,20,1),Polygon([(0,0),(4,0),(4,1),(1,1),(1,4),(0,4)])]
         for shape in shapes:

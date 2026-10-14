@@ -170,6 +170,7 @@ def draw(path, shapes, tiles, owners, metrics, title):
         parts.append(f'<text x="{fmt(px)}" y="{fmt(py)}" text-anchor="middle" font-size="12" '
                      f'paint-order="stroke" stroke="#faf9f6" stroke-width="2" stroke-linejoin="round">{html.escape(label)}</text>')
     methods={"mode=geographic-baseline":"Separate geographic baseline",
+             "mode=geographic-reposition":"Geographic placement of existing island shapes",
              "mode=geographic-border-repair":"Geographic baseline with border repair",
              "mode=relaxed-geographic":"Whole-shape geographic relaxation"}
     method = methods.get(metrics["generation"][0],"GridMapPipeline")

@@ -1,0 +1,13 @@
+{
+  "fallbacks": [
+    {
+      "component_id": "IDN:51a10640dee7162b",
+      "reason": "Self-intersection[1.74547321722385 -0.0654343980719585]",
+      "simplified_vertices": 431,
+      "original_vertices": 1837
+    }
+  ],
+  "method": "Invalid simplified guides use original projected outer rings",
+  "source_sha256": "f967994fd0271ca775f0e2af843d6448d58740bd9e3556716e01de7e8cd0411e",
+  "script_sha256": "77370f1e53b86aa62516fec5d7a57bd02680f6bc11833c7245a03a98ffb84ac8"
+}

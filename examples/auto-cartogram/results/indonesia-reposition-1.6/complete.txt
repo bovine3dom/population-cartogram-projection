@@ -1,0 +1,2 @@
+mode=geographic-reposition
+contacts=none-required

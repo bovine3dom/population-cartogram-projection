@@ -14,7 +14,7 @@ from pathlib import Path
 from shapely import affinity
 from shapely.geometry import Point, Polygon
 
-from review_layout import NEIGHBOURS, read_csv
+from review_layout import NEIGHBOURS, read_csv, load, connectivity, holes
 
 
 def simple_toggle(cells, p):
@@ -75,7 +75,7 @@ def place(cells, desired, blocked):
     raise ValueError("Placement search exhausted")
 
 
-def run(inputs, output, spacing=1.6):
+def run(inputs, output, spacing=1.6, reuse_layout=None):
     if output.exists():
         raise ValueError("Output already exists")
     if not math.isfinite(spacing) or spacing <= 0:
@@ -88,9 +88,24 @@ def run(inputs, output, spacing=1.6):
     if set(polygons) != set(rows):
         raise ValueError("Outline labels differ from groups")
     scale = spacing*math.sqrt(sum(int(r["tiles"]) for r in rows.values())/sum(p.area for p in polygons.values()))
+    templates=None; parent={}
+    if reuse_layout is not None:
+        parent={"template_cells_sha256":hashlib.sha256((reuse_layout/"cells.csv").read_bytes()).hexdigest(),
+                "template_generation":(reuse_layout/"complete.txt").read_text().splitlines()}
+        _,templates,owners=load(inputs,reuse_layout)
+        if any(r["both_represented"]=="true" for r in read_csv(inputs/"geographic-contacts.csv")) or any(
+                owners.get((x+dx,y+dy),owner)!=owner for (x,y),owner in owners.items() for dx,dy in NEIGHBOURS):
+            raise ValueError("Repositioning requires islands without land contacts")
+        if any(len(cells)!=int(rows[label]["tiles"]) or connectivity(cells)!=1 or holes(cells)
+               for label,cells in templates.items()):
+            raise ValueError("Invalid island template counts or topology")
     blocked, result = set(), {}
     for label in sorted(rows,key=lambda c:(-int(rows[c]["tiles"]),c)):
-        cells,centre = grow(polygons[label],int(rows[label]["tiles"]))
+        if templates is None:
+            cells,centre = grow(polygons[label],int(rows[label]["tiles"]))
+        else:
+            cells=templates[label]
+            centre=polygons[label].centroid.coords[0]
         moved = place(cells,(centre[0]*scale,centre[1]*scale),blocked)
         result[label] = moved
         blocked.update(moved)
@@ -103,12 +118,15 @@ def run(inputs, output, spacing=1.6):
             writer=csv.writer(stream); writer.writerow(["component_id","x","y"])
             for label,cells in sorted(result.items()):
                 writer.writerows((label,x,y) for x,y in sorted(cells))
-        metadata = {"method":"Separate outline-guided growth with geographic placement",
-                    "limit":"No land borders retained. Islands with zero budgets remain grouped.",
+        metadata = {"method":"Separate outline-guided growth with geographic placement" if templates is None else "Geographic placement of existing island shapes",
+                    **parent,
+                    "limit":"No land borders retained. Islands with zero budgets remain grouped." if templates is None else
+                            "Requires no represented land borders; keeps each island shape and count. Zero-budget islands remain grouped.",
                     "spacing":spacing,"elapsed_seconds":time.monotonic()-started,
                     "script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
         (temp/"baseline.json").write_text(json.dumps(metadata,indent=2)+"\n")
-        (temp/"complete.txt").write_text("mode=geographic-baseline\ncontacts=not-preserved\n")
+        (temp/"complete.txt").write_text("mode=geographic-baseline\ncontacts=not-preserved\n" if templates is None else
+                                        "mode=geographic-reposition\ncontacts=none-required\n")
         temp.rename(output)
     finally:
         if temp.exists():
@@ -121,5 +139,6 @@ if __name__ == "__main__":
     parser.add_argument("inputs",type=Path)
     parser.add_argument("output",type=Path)
     parser.add_argument("--spacing",type=float,default=1.6)
+    parser.add_argument("--reuse-layout",type=Path,help="Reposition existing shapes; require no land contacts")
     args=parser.parse_args()
-    print(json.dumps(run(args.inputs,args.output,args.spacing),indent=2))
+    print(json.dumps(run(args.inputs,args.output,args.spacing,args.reuse_layout),indent=2))
