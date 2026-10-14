@@ -108,6 +108,10 @@ Calculate target moments, transport cost, and entropy in bounded host blocks.
 Reuse moments and masses for unchanged countries. A damped mixture has linear
 moments, masses, and base cost; its entropy is calculated from the actual mixture.
 No full dense plan is needed for the continuity objective or its force gradient.
+For orientation audits, pass `moments=(c,p)->p.stats.moment` to
+`ContinuityDiagnostics.orientations`. It copies the cached moments before
+normalization. This avoids generic multiplication through every implicit plan
+entry. Use this only with checked, current plan statistics.
 
 Strong forces can cause a Float32 device result to fail the Float64 mass check.
 After 1,000 iterations, with a nonzero cache budget, try sparse refinement when

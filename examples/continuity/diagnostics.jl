@@ -89,10 +89,10 @@ function nearest_supply(countries, edges)
     return DataFrame(rows)
 end
 
-function orientations(countries, plans)
+function orientations(countries, plans;moments=(c,p)->c.xyz*p)
     rows=NamedTuple[]
     for (c,p) in zip(countries,plans)
-        q=c.xyz*p
+        q=copy(moments(c,p))
         q ./= sqrt.(sum(abs2,q;dims=1))
         lookup=Dict((r.x,r.y)=>i for (i,r) in enumerate(eachrow(c.target)))
         step=2

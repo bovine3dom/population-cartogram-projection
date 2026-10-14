@@ -151,3 +151,36 @@ its completed-country restart, and rejection checks pass. The next calibration
 will cover the other 149 fitted countries after the large-country GPU job.
 The selected pose angles remain the earlier checked angles; this work does
 not claim to find new globally optimal orientations.
+
+## 08:22 UTC: baseline progress and retained broad mixtures
+
+India passes at eta 1e-6 with 2.005 connections/source at 99.5%, versus 1.931
+in the old export. Target L1 is 7.99e-5 and maximum target relative error is
+0.000228. China is still running. The queued 149-country calibration will not
+start while the large-country GPU process is active. Its own process limit
+is four hours. All jobs must finish before the overall 18:50 UTC deadline.
+
+The saved four-pass planet plans explicitly retain 30.76% of China's broad
+pose seed, 19.14% for the US, and 9.375% for India. The minimum and median seed
+weights across nontrivial fitted countries are both 6.25%. This confirms that
+short, damped runs preserve broad tails; this is not only an Arrow threshold
+problem. The old candidate has border RMS 613.45 km and about 8.02 million km²
+of reversed triangle area, versus 60,126 km² in its pose seed. These are cached
+moment diagnostics, not a new independent full-plan reconstruction.
+
+Added a cached-moment callback to the orientation audit. It copies the supplied
+moments before normalization and avoids expensive generic multiplication of a
+compact plan. Existing continuity tests and two cache-equivalence/immutability
+checks pass on CPU. See `old-plan-metrics.csv` and `old-candidate-history.csv`.
+
+A separate CPU diagnostic removes the mobile export's source-position moment
+constraints, but keeps source mass, target mass, geographic target means, mean
+density, and city anchors. Without the 70% contribution floors, Mali reduces to
+1.218 connections/source at 99.5%, and Burkina Faso to 1.597. This shows that
+preserving the border objective's target moments does not itself require all
+of the old source connections. However, a source mean can move by up to 19.18
+coordinate units, and target total variation reaches 0.827. These candidates
+do not retain the published mobile quality guarantee and are not published.
+The DRC full-block trial returns a nonoptimal solver status and is rejected.
+Logs and valid small-country snapshots are `inverse-only*`. Eta tuning and
+border refitting remain the main approach.

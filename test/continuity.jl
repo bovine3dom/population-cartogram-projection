@@ -110,6 +110,9 @@ end
     p=Matrix{Float64}(CE.I,4,4)/4
     @test CD.orientations([c],[p]).positive == [0]
     @test CD.orientations([c],[p]).negative == [2]
+    cached=c.xyz*p;before=copy(cached)
+    @test CD.orientations([c],[p];moments=(c,p)->cached)==CD.orientations([c],[p])
+    @test cached==before
     tiny=(code=1,xyz=xyz[:,1:1],target=CE.DataFrame(x=[0],y=[0]))
     @test CD.orientations([tiny],[ones(1,1)]).positive==[0]
     separated=merge(c,(target=CE.DataFrame(x=[0,4,0,4],y=[0,0,4,4]),))
