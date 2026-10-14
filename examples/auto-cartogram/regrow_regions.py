@@ -14,7 +14,8 @@ class Regrowth(AtomicDeformation):
             for q in adjacent(p):
                 if q in points:continue
                 other=self.owners.get(q)
-                value+=self.edge(c,None if other==c else other)
+                if other==c:other=None
+                value+=self.edge(c,other)-self.edge(None,other)
         return value
 
     def regrow(self,c):

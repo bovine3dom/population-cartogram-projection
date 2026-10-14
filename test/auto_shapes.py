@@ -146,6 +146,21 @@ class ShapeTests(unittest.TestCase):
         self.assertEqual(compact.holes(state.tiles['a']),0)
         self.assertFalse(state.tiles['a'] & state.tiles['b'])
 
+    def test_region_energy_includes_the_other_regions_coast(self):
+        costs={c:np.zeros((20,20)) for c in ['a','b']}
+        state=Regrowth({'a':{(0,0),(1,0)},'b':{(2,0),(2,1)}},set(),costs,(-5,-5))
+        old=state.energy();local=state.region_energy('a',state.tiles['a'])
+        state.change((1,0),None);state.change((0,1),'a')
+        self.assertAlmostEqual(state.energy()-old,state.region_energy('a',state.tiles['a'])-local)
+        rng=np.random.default_rng(43)
+        for _ in range(30):
+            tiles={str(i):{(x,y) for x in range(3*i,3*i+3) for y in range(4)} for i in range(3)}
+            state=Regrowth(tiles,set(),{c:rng.random((25,25)) for c in tiles},(-5,-5))
+            for c in tiles:
+                old=state.energy();local=state.region_energy(c,state.tiles[c]);state.regrow(c)
+                self.assertAlmostEqual(state.energy()-old,state.region_energy(c,state.tiles[c])-local)
+                self.assertLessEqual(state.energy(),old+1e-8)
+
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))
         self.assertFalse(state.exchange((0,0),(1,0)))
