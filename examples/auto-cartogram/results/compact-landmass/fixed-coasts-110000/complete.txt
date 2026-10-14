@@ -1,0 +1,3 @@
+mode=archipelago-placement
+counts=exact
+contacts=land-unchanged
