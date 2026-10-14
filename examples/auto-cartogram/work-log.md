@@ -445,3 +445,13 @@ under ignored `output/auto-cartogram/`.
 - Added tests for all eight transforms and invalid values. All 20 geometry
   tests pass. The first land-only exact-mode run still fails its final count
   check. It exports no completed layout.
+
+## 01:38 UTC — exact-flow supply limit
+
+- Found that exact polishing can supply one unit from each surplus region,
+  not one unit in total as its comment requires. Added a two-surplus-region
+  regression. It fails on the previous frozen build for this specific reason.
+- Changed exact-mode setup to select one nonzero region supply and balance it
+  against the sea. The topology-mode setup is unchanged. All 12 Python/Java
+  layout tests pass. Started new exact-mode fits with one-hour limits and the
+  overall 04:20 UTC compute deadline. Counts are not accepted until reviewed.
