@@ -297,6 +297,12 @@ class ShapeTests(unittest.TestCase):
             with contextlib.redirect_stdout(io.StringIO()):
                 metadata=compact.run(inputs,layout,root/'deformed',rounds=5,fit_rounds=10,atomic=True)
                 self.assertEqual(metadata['absolute_tile_error'],0)
+                fixed=compact.run(inputs,root/'deformed',root/'fixed-footprint',rounds=5,fixed_footprint=True,land_only=True)
+                self.assertTrue(fixed['fixed_footprint'])
+                self.assertEqual(set(compact.load(inputs,root/'deformed')[2]),set(compact.load(inputs,root/'fixed-footprint')[2]))
+                self.assertEqual(fixed['absolute_tile_error'],0)
+                with self.assertRaisesRegex(ValueError,'basic exact-count'):compact.run(inputs,root/'deformed',root/'invalid-fixed',fixed_footprint=True,regrow=True)
+                with self.assertRaisesRegex(ValueError,'exact starting'):compact.run(inputs,layout,root/'partial-fixed',fixed_footprint=True)
                 joint=compact.run(inputs,layout,root/'joint',rounds=5,fit_rounds=10,strict_fit=True,regrow=True,land_only=True,sea_perimeter=8,interior_sea_radius=2,guide_layout=root/'deformed')
                 self.assertGreater(joint['guide_alignment']['scale'],0)
                 self.assertEqual(joint['absolute_tile_error'],0)

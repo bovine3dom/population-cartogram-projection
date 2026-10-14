@@ -83,6 +83,12 @@ inside that region. This keeps all original component budgets. It does not
 preserve borders or guarantee useful shapes. The pipeline wrapper does not yet
 expose this option. Initial tests still have poor shapes and positions.
 
+`compact_regions.py --fixed-footprint` tests basic country-to-country boundary
+exchanges after partition repair. It keeps all occupied cells and empty spaces
+fixed. It requires exact starting counts and the existing connected, hole-free
+region checks. It cannot be combined with count fitting or regrowth. Border
+errors can still remain. Use `--land-only` to freeze isolated island templates.
+
 ## Mainland-only flow control
 
 `prepare_flow.py --mainland-only` excludes components with no represented source
