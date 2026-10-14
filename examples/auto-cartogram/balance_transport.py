@@ -96,8 +96,9 @@ def expand_neighbours(row, column, mass, supply, sources, targets, groups):
     return row,column,initial,len(extra)
 
 
-def run(directory, output, iterations=5000, tolerance=1e-8, expand_groups=()):
+def run(directory, output, iterations=5000, tolerance=1e-8, expand_groups=(), expansion_steps=1):
     if output.exists(): raise ValueError("Output already exists")
+    if not isinstance(expansion_steps,int) or expansion_steps<1: raise ValueError("Invalid expansion steps")
     original_checks=check(directory)
     metadata=json.loads((directory/"manifest.json").read_text())
     sources=list(rows(directory/"sources.csv")); targets=list(rows(directory/"targets.csv"))
@@ -118,7 +119,9 @@ def run(directory, output, iterations=5000, tolerance=1e-8, expand_groups=()):
     added=0
     if expand_groups:
         if metadata["pooled"]: raise ValueError("Support expansion requires grouped transport")
-        row,column,initial,added=expand_neighbours(row,column,original,supply,sources,targets,expand_groups)
+        for _ in range(expansion_steps):
+            row,column,initial,extra=expand_neighbours(row,column,initial,supply,sources,targets,expand_groups)
+            added+=extra
         original=np.r_[original,np.zeros(added)]
     started=time.monotonic()
     mass,turn,error=scale(row,column,initial,supply,demand,iterations,tolerance)
@@ -134,7 +137,8 @@ def run(directory, output, iterations=5000, tolerance=1e-8, expand_groups=()):
         iterations=turn,maximum_iterations=iterations,tolerance=tolerance,elapsed_seconds=time.monotonic()-started,
         absolute_mass_change=float(np.abs(mass-original).sum()),script_sha256_at_load=SCRIPT_SHA256,
         original_checks=original_checks,added_pairs=added,expanded_groups=sorted(set(expand_groups)),
-        support_rule="One rook step within selected groups; seed 0.001 of source mass across new pairs, then restore original source retention." if expand_groups else "Unchanged sparse support",
+        expansion_steps=expansion_steps if expand_groups else 0,
+        support_rule="Repeated rook steps within selected groups; seed 0.001 of source mass across new pairs, then restore original source retention." if expand_groups else "Unchanged sparse support",
         limit="Does not prove spatial quality or a minimum-cost allocation.")
     output.parent.mkdir(parents=True,exist_ok=True)
     temp=Path(tempfile.mkdtemp(prefix="balanced-transport-",dir=output.parent))
@@ -163,5 +167,6 @@ if __name__ == "__main__":
     parser.add_argument("directory",type=Path); parser.add_argument("output",type=Path)
     parser.add_argument("--iterations",type=int,default=5000); parser.add_argument("--tolerance",type=float,default=1e-8)
     parser.add_argument("--expand-group",action="append",default=[],help="Add one rook step of support within this group; can be repeated")
+    parser.add_argument("--expansion-steps",type=int,default=1)
     args=parser.parse_args()
-    print(json.dumps(run(args.directory,args.output,args.iterations,args.tolerance,args.expand_group),indent=2))
+    print(json.dumps(run(args.directory,args.output,args.iterations,args.tolerance,args.expand_group,args.expansion_steps),indent=2))
