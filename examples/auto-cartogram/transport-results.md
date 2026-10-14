@@ -51,8 +51,8 @@ The raw export omits about 316,791 people in total. Its largest target error,
 
 This is native-cell validation for the matched input and this automatic layout.
 It is not a native pooled comparison, a test of the handmade map, or proof of
-complete Indonesian coverage. Sparse balance correction is still running on
-this native export.
+complete Indonesian coverage. The separate sparse correction below restores
+source totals and reduces the target error on this same export.
 
 ## H3-5 grouped transport
 
@@ -79,6 +79,37 @@ The images alone cannot prove that transport stays within a group.
 A second experiment scales the saved nonzero weights to match source and target
 marginals. It does not add source-target pairs. This is separate from the solver
 and does not change the original results above.
+
+### Native result
+
+At the strict `1e-8` target tolerance, the native test stops after 50,000
+iterations with a relative residual of `2.40e-5`. It does not export an accepted
+correction at that tolerance. A new run uses an explicit `1e-4` relative
+tolerance, or **0.01%**. This is an experimental limit, not an approved
+production requirement.
+
+That run finishes after 26,348 iterations and 513 seconds of scaling:
+
+- Source retention is 100% to floating-point precision.
+- Cross-group population remains zero.
+- Maximum relative target error is below 0.01%.
+- Every native source ID, population, and group label still matches the input.
+- An independent comparison confirms that all 1,432,890 ordered source-target
+  pairs are unchanged. Only weights change.
+
+![Native target balance comparison](results/indonesia-native-balance/review.png)
+
+[Corrected flow checks](results/indonesia-transport-r8-balanced-grouped/independent-checks.json) ·
+[Native source checks](results/indonesia-transport-r8-balanced-grouped/native-source-checks.json) ·
+[Support comparison](results/indonesia-native-balance/checks.json) ·
+[Corrected target errors](results/indonesia-transport-r8-balanced-grouped/target-quality.csv).
+
+The sum of absolute changes to pair population is 5,105,706. This includes
+restored mass and changed distribution within the existing support. It does
+not add pairs or cross declared group boundaries. Groups can still contain
+multiple islands. Spatial quality needs a separate review.
+
+### Coarse results
 
 - H3-5 grouped transport reaches full source retention, zero cross-group mass,
   and maximum relative target error below `1e-8` after 34,470 iterations.
@@ -121,7 +152,8 @@ Before production use:
 
 1. Choose and document the capacity rule.
 2. Review which islands can share a group and which need an inset or separate tile.
-3. Set limits for source retention and target error, then test native cells.
+3. Set production limits for source retention and target error; repeat native
+   tests for other countries.
 4. Resolve unmatched coastal coverage and the missing population year.
 5. Integrate group eligibility only after the layout and transport checks pass.
 

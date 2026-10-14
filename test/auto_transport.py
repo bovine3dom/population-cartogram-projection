@@ -1,6 +1,7 @@
 """Independent transport export checks. Run with Python's standard library."""
 import csv
 import json
+import shutil
 import sys
 import tempfile
 import unittest
@@ -8,6 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"examples"/"auto-cartogram"))
 import check_transport as audit
+import review_balance as picture
 
 
 class TransportTests(unittest.TestCase):
@@ -20,7 +22,7 @@ class TransportTests(unittest.TestCase):
                                    [0,0,"A",30,30,0],[1,0,"B",70,70,0]]}
         for name,table in tables.items():
             with (root/name).open("w") as stream: csv.writer(stream).writerows(table)
-        metadata=dict(pooled=False,source_population=100,retained_population=100,retained_share=1,
+        metadata=dict(coarse_h3_resolution=8,pooled=False,source_population=100,retained_population=100,retained_share=1,
             cross_group_population=0,minimum_source_retained_share=1,maximum_source_retained_share=1,
             maximum_relative_target_error=0,coarse_sources=2,targets=2,groups=2)
         (root/"manifest.json").write_text(json.dumps(metadata))
@@ -32,6 +34,23 @@ class TransportTests(unittest.TestCase):
             self.assertTrue(result["checked"])
             self.assertEqual(result["mapping_rows"],2)
             self.assertEqual(result["source_rows_below_99_5_percent"],0)
+
+    def test_balance_figure_checks_files_and_support(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); raw=root/"raw"; raw.mkdir(); self.fixture(raw)
+            corrected=root/"corrected"; shutil.copytree(raw,corrected)
+            for d in [raw,corrected]: (d/"independent-checks.json").write_text(json.dumps(audit.check(d)))
+            picture.run(raw,corrected,root/"picture")
+            self.assertTrue(json.loads((root/"picture/checks.json").read_text())["ordered_support_unchanged"])
+            self.assertEqual(picture.color(0,.075),"#fafafa")
+            self.assertEqual(picture.color(1,.075),picture.color(.075,.075))
+            path=corrected/"mapping.csv"; lines=path.read_text().splitlines()
+            path.write_text("\n".join([lines[0],lines[2],lines[1]])+"\n")
+            with self.assertRaisesRegex(ValueError,"Files differ"):
+                picture.run(raw,corrected,root/"invalid")
+            (corrected/"independent-checks.json").write_text(json.dumps(audit.check(corrected)))
+            with self.assertRaisesRegex(ValueError,"support differs"):
+                picture.run(raw,corrected,root/"invalid")
 
     def test_reject_corrupt_exports(self):
         for name,old,new in [

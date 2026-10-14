@@ -1,0 +1,12 @@
+mode=topology
+seed=1
+placement=directional
+embedding=planar
+forceIterations=2147483647
+scaledPatience=500
+finalPatience=3000
+maxRounds=2147483647
+polishIterations=40
+javaVersion=21.0.12.1
+orientInitial=true
+regionAssertions=false

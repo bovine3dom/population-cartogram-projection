@@ -76,6 +76,20 @@ borders but create long thin connectors. This is not an accepted visual result.
 Other resolutions: [10,000](results/world-10000-dissolved-geographic-repair/review.png) ·
 [110,000](results/world-110000-dissolved-geographic-repair/review.png).
 
+### Translation before repair
+
+Moving whole shapes toward required neighbours can reduce later connector
+lengths. It also changes geographic order. At 10,000 tiles, stiffness 0.05
+reduces missing borders from 60 to 32 and raises weighted compactness from
+0.175 to 0.193. Country axis-order errors rise from 58 to 105. At the larger
+resolutions, the tested settings do not improve the number of retained borders.
+See the [nine-run comparison](results/relaxation-comparison.csv).
+
+![Translation and repair at 10,000 tiles](results/world-10000-relaxed-repair/review.png)
+
+This keeps exact counts and has no false contacts, disconnected regions, or
+region holes. It still has thin connectors and is not a production layout.
+
 ## Topology-first fit: retained borders, wrong areas and positions
 
 GridMapPipeline preserves the represented contacts in the completed fits below.
@@ -86,6 +100,7 @@ However, the area and position errors are too large for a population map.
 | ---: | ---: | ---: | ---: |
 | 10,000 | 9,895 | 1,931 | 811 / 7,500 |
 | 55,000 | 43,588 | 14,078 | 2,270 / 7,500 |
+| 110,000 | 71,350 | 39,310 | 1,038 / 7,500 |
 
 ![Topology-first fit at a 55,000-tile budget](results/world-55000-dissolved-topology/review.png)
 
@@ -95,7 +110,10 @@ These bounded runs kept model and region assertions enabled. An early status
 field reported the wrong nested-class setting; each affected result has an
 `assertion-status-correction.json` record. Their independent final checks do
 not approve their tile counts or geography.
-The 110,000-budget fit and longer 10,000-budget tests are still in progress.
+[110,000-budget image](results/world-110000-dissolved-topology/review.png).
+A full-default run on the earlier map-unit input reduces the 10,000-budget
+absolute count error to 1,013, but still fails the area requirement. Longer
+fits on the dissolved inputs are being tested separately.
 
 Original WKT outlines omit 19 holes. A successful contact check does not prove
 correct enclave containment or full geographic topology. The exact-mode runs
@@ -112,9 +130,11 @@ positions still need work. Country-specific unmatched coverage is not assessed.
 The native H3-8 grouped transport test now covers all 832,166 matched source
 cells. Independent checks confirm their IDs, population, and group labels.
 Cross-group transport is zero. The raw export retains 99.883% of population,
-and its largest relative target error is 7.350%. See
-[transport results](transport-results.md) for the capacity choice, sparse balance
-experiment, flow tables, and limits. A good layout image alone does not prove
+and its largest relative target error is 7.350%. A separate sparse correction
+restores all source mass to floating-point precision, keeps cross-group mass
+at zero, and reduces maximum relative target error below 0.01%. It does not
+add source-target pairs. See [transport results](transport-results.md) for the
+capacity choice, flow tables, and limits. A good layout image alone does not prove
 that population stays on its island.
 
 ## Decisions for review

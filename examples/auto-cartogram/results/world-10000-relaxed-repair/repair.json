@@ -1,0 +1,31 @@
+{
+  "method": "Greedy geographic border repair with exact counts",
+  "max_search": 30000,
+  "passes": 2,
+  "required_contacts": 341,
+  "retained_contacts": 309,
+  "elapsed_seconds": 8.78741239476949,
+  "limit": "Some borders can remain missing. Position and shape can worsen. This is not the published mosaic algorithm.",
+  "baseline_cells_sha256": "0471610f734f16c4d728aa631c0c304ef1eab131efedff891939eaf053d5fcc5",
+  "baseline_generation": [
+    "mode=relaxed-geographic",
+    "counts=exact"
+  ],
+  "baseline_metadata": {
+    "relax.json": {
+      "rounds": 40,
+      "moves": 1261,
+      "initial_energy": 42646.0,
+      "final_energy": 14666.731997051875,
+      "maximum_translation": 39.05124837953327,
+      "stiffness": 0.05,
+      "method": "Greedy whole-shape translation with border-distance and geographic-anchor costs",
+      "maximum_rounds": 200,
+      "elapsed_seconds": 5.506866783834994,
+      "script_sha256_at_load": "efa0a23df2a3a97c387483f74121a0ba9d5bdef1cf1f6609ec0d10425b2097b7",
+      "input_cells_sha256": "df60240393d98124f718a044d9fa66486b0f1e0fa77ed8e0f91a2c90f7c44cdf",
+      "limit": "Borders can remain missing. Position can worsen. No global optimum or correct island order is guaranteed."
+    }
+  },
+  "script_sha256": "6ec1c1456a377effe0841724fe41ab88352039580c70c42e0fa557fa3edf9715"
+}

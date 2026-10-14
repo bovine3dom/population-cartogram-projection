@@ -26,6 +26,29 @@ documentation and selected source files, this repository, and issue #17.
 I also checked the local target CSV. No new layout generator was run for that
 initial research.
 
+## Implementation update
+
+The prototype now has automatic world images at 10,000, 55,000, and 110,000
+tiles. Geographic layouts keep exact budgets but lose borders. Topology-first
+fits retain represented borders but still have unacceptable area and position
+errors. Border repair provides a middle case, with missing borders and thin
+connectors. **Do not replace the production CSV with these layouts yet.**
+
+The native Indonesia experiment uses all 832,166 matched source cells and
+explicit target groups. Separate solves prevent cross-group transport. The raw
+export retains 99.883% of population and has up to 7.350% target error. A separate
+sparse balance correction restores source totals to floating-point precision
+and reduces maximum relative target error below 0.01%, without adding pairs.
+This does not preserve every island: zero-budget islands can share a group.
+It also permits population per tile to vary between groups.
+
+These results support component-aware inputs and explicit group eligibility.
+They do not establish a production-ready world layout. Source year, unmatched
+coastal population, small-island policy, and geographic quality remain open.
+See the [gallery](examples/auto-cartogram/gallery.md),
+[transport evidence](examples/auto-cartogram/transport-results.md), and
+[work log](examples/auto-cartogram/work-log.md).
+
 ## 1. What must change
 
 ### Current workflow

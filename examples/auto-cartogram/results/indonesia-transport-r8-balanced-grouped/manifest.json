@@ -1,0 +1,67 @@
+{
+  "backend": "CPU",
+  "coarse_h3_resolution": 8,
+  "coarse_sources": 832166,
+  "cross_group_population": 0.0,
+  "elapsed_seconds": 8997.044300079346,
+  "groups": 51,
+  "inputs": [
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-reviewed/source-components.arrow",
+      "sha256": "db6449eb1f4a59cc1c25bd8891950ea7298aecca72ceb91d13cada4fb25891f6"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-1894-v2-input/groups.csv",
+      "sha256": "3f38998797c74f2c4d8386608075897a5a5e3de3e37acd2f80b3c1b09a6b1123"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-1894-v2-layout/cells.csv",
+      "sha256": "109656c22606c4bea3b4625539e683d1b82e43f97891e2f863025fc2b352cdbe"
+    }
+  ],
+  "limit": "Native H3-8 centres. Grouped islands can exchange mass within their declared group. Each group has its own population per tile.",
+  "maximum_relative_target_error": 9.999445747754798e-05,
+  "maximum_source_retained_share": 1.0000000000000004,
+  "minimum_source_retained_share": 0.9999999999999994,
+  "pooled": false,
+  "retained_population": 270120945.0,
+  "retained_share": 1.0,
+  "script_sha256_at_load": "7f0079d61ed7b0d90b22debe4e05555250a12f6fdf7ba0e49cecaf52a9142977",
+  "source_coordinates": "population-weighted Equal Earth centres; aggregate by ORIGINAL component and H3 parent",
+  "source_population": 270120945.0,
+  "target_coordinates": "north-up grid; y negated for the screen-coordinate solver, then restored in export",
+  "targets": 1894,
+  "sparse_balance": {
+    "method": "Alternating target and source scaling on unchanged sparse support",
+    "iterations": 26348,
+    "maximum_iterations": 50000,
+    "tolerance": 0.0001,
+    "elapsed_seconds": 513.0512072579004,
+    "absolute_mass_change": 5105705.616083512,
+    "script_sha256_at_load": "c549e7d01163ff799ac404e84e51644acd94c1e382b704a41b48a582f0bf2385",
+    "original_checks": {
+      "source_population": 270120945.0,
+      "retained_population": 269804154.3313739,
+      "retained_share": 0.9988272265646556,
+      "cross_group_population": 0.0,
+      "minimum_source_retained_share": 0.99500001434688,
+      "maximum_source_retained_share": 1.0000000000000002,
+      "maximum_relative_target_error": 0.07349786607062536,
+      "coarse_sources": 832166,
+      "targets": 1894,
+      "groups": 51,
+      "mapping_rows": 1432890,
+      "source_rows_below_99_5_percent": 0,
+      "checked": true,
+      "checker_sha256": "303e1a2fedb19b85e84b6ad2eb947f84ad7d713bcb2673781dd5786df47cbd40",
+      "files": {
+        "manifest.json": "c10c346f641225c0aedcaad3d2e45a0f4b8f688c7c8a15f4edffb68d5df2a3fb",
+        "sources.csv": "b447d8c201b56711a71e2c31d88b40e81cdf3e91768ab7eecb336ce1c524af2a",
+        "targets.csv": "38b91aa0d1010cb1acce15106da8f8aeb2bed7363821e8fbfc9188d108ed0ca9",
+        "mapping.csv": "cfa358f92d5358d56f8bb6f17523b3ed7d7733c415f28d477e18d79925f4fff1",
+        "target-quality.csv": "ad249b42915ac8d49121a36e332c48600fd47c455ebc956658e8aaa2eb503314"
+      }
+    },
+    "limit": "No new source-target pairs. Does not prove spatial quality or general feasibility."
+  }
+}
