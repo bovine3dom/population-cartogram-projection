@@ -30,7 +30,11 @@ p=output/auto-cartogram
   --stretch 1.5
 ```
 
-Use a new output directory for each run. The default smoothing scale is four
+Use a new output directory for each run. Run from a fixed checkout or a saved
+copy of all experiment Python files. Do not edit that code while a run is active.
+The pipeline records code hashes but does not lock source files.
+
+The default smoothing scale is four
 cells at 55,000 tiles. It changes with the square root of the tile budget.
 `--flow-guide-weight` adds a soft cost for leaving each continuous-flow region.
 The default is zero. No step requests a path to preserve a border. A poor
