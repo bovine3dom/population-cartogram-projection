@@ -30,6 +30,7 @@ import clean_templates
 import review_template
 import place_islands
 import publish_shape_review
+import recheck_shape_bundle
 import build_shape_gallery
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
@@ -185,10 +186,16 @@ class ShapeTests(unittest.TestCase):
             lines=(root/'placed/cells.csv').read_text().splitlines();row=lines[1].split(',');row[1]=str(int(row[1])+100);lines[1]=','.join(row)
             (broken/'cells.csv').write_text('\n'.join(lines)+'\n')
             with self.assertRaisesRegex(ValueError,'Changed template'):check_shape_translation.run(inputs,root/'deformed',broken,root/'bad-check')
+            with self.assertRaisesRegex(ValueError,'Protected component moved'):recheck_shape_bundle.check_island_moves(inputs,root/'relaxed',broken,islands)
             with contextlib.redirect_stdout(io.StringIO()):
                 bundle=publish_shape_review.run(inputs,root/'deformed',root/'placed',root/'bundle',regions=False)
             self.assertEqual(gzip.decompress((root/'bundle/cells.csv.gz').read_bytes()),(root/'placed/cells.csv').read_bytes())
             self.assertIn('translation-check/translation-check.json',bundle['files'])
+            self.assertTrue(recheck_shape_bundle.run(root/'bundle')['metrics_match'])
+            with contextlib.redirect_stdout(io.StringIO()):
+                island_bundle=publish_shape_review.run(inputs,root/'deformed',root/'island-baseline',root/'island-bundle',regions=False)
+            self.assertIn('pre-island-cells.csv.gz',island_bundle['files'])
+            self.assertTrue(recheck_shape_bundle.run(root/'island-bundle')['island_move_check']['all_protected_components_unchanged'])
             build_shape_gallery.run(root/'index.html',[root/'bundle'])
             self.assertIn('40,000,000 matched people',(root/'index.html').read_text())
             with self.assertRaisesRegex(ValueError,'already exists'):build_shape_gallery.run(root/'index.html',[root/'bundle'])
