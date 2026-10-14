@@ -142,14 +142,22 @@ failed and stopped trials.
 
 The corrected 55,000-tile fit with a convex-boundary initializer and 200
 polishing passes has 53,017 tiles and 2,011 tiles of absolute component error.
-Its 40-pass version has 2,317 tiles of error. The 110,000-tile fit with the
-integer initializer has 100,957 tiles and 9,069 tiles of absolute error.
-Both retain all represented contacts, but neither has acceptable area or
-geographic accuracy. Europe has many narrow strips in the 55,000-tile image.
+Its 40-pass version has 2,317 tiles of error. At 110,000 tiles, increasing the
+integer-initialized fit from 40 to 200 passes reduces absolute error from 9,069
+to 6,140 tiles. It finishes with 103,884 tiles. All represented contacts remain,
+but neither layout has acceptable area or geographic accuracy. Europe has many
+narrow strips in the 55,000-tile image.
+
+| Budget | Selected corrected fit | Actual tiles | Absolute component error | Country order errors |
+| ---: | --- | ---: | ---: | ---: |
+| 10,000 | Integer initialization, 40 passes | 9,933 | 241 | 500 |
+| 55,000 | Convex-boundary initialization, 200 passes | 53,017 | 2,011 | 1,368 |
+| 110,000 | Integer initialization, 200 passes | 103,884 | 6,140 | 670 |
 
 ![Corrected convex-boundary fit at 55,000 tiles](results/world-55000-tutte-partial-200/review.png)
 
-[Corrected integer-initialized fit at 110,000 tiles](results/world-110000-partial-polish/review.png).
+[Corrected 200-pass fit at 110,000 tiles](results/world-110000-partial-200/review.png) ·
+[Earlier 40-pass fit](results/world-110000-partial-polish/review.png).
 
 Original WKT outlines omit 19 holes. A successful contact check does not prove
 correct enclave containment or full geographic topology. The exact-mode runs

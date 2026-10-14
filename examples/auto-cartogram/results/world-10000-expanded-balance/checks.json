@@ -1,0 +1,64 @@
+{
+  "ordered_support_unchanged": false,
+  "mapping_pairs": 864839,
+  "appended_pairs": 105925,
+  "source_resolution": 5,
+  "position_change": {
+    "source_cells": 400545,
+    "population": 7954677990.0,
+    "maximum_shift": 16.546817754254942,
+    "population_weighted_mean_shift": 0.007027286627467705,
+    "population_weighted_rms_shift": 0.024981595413476436,
+    "population_share_shift_above_one": 4.160331825072406e-05
+  },
+  "colour_limit": 0.005,
+  "inputs": {
+    "output/auto-cartogram/world-10000-transport-r5-grouped": {
+      "source_population": 7954677990.0,
+      "retained_population": 7941263397.915724,
+      "retained_share": 0.9983136222357285,
+      "cross_group_population": 0.0,
+      "minimum_source_retained_share": 0.9950000759239517,
+      "maximum_source_retained_share": 1.0000000000000002,
+      "maximum_relative_target_error": 0.024714124864250175,
+      "coarse_sources": 400545,
+      "targets": 10000,
+      "groups": 341,
+      "mapping_rows": 758914,
+      "source_rows_below_99_5_percent": 0,
+      "checked": true,
+      "checker_sha256": "303e1a2fedb19b85e84b6ad2eb947f84ad7d713bcb2673781dd5786df47cbd40",
+      "files": {
+        "manifest.json": "4ab633d48b1f0c76614b36709171ef97d877fb5700dba404235a30aac8adb70e",
+        "sources.csv": "ccaf1c76e6d2257026ff04df307e83298f0b483175e65130d08acebcbdea47cd",
+        "targets.csv": "d812ecb9eeb845eb4a3a184ab9a6f81c4e1432eedab0f8fa2f26277ca5ff8399",
+        "mapping.csv": "c0545ed5ab61b27a877bdc7b99e78465c54f2253879c6e20331b50a365fa7c9c",
+        "target-quality.csv": "e3a4e0901ddfdbb9ed0019e2bf8f9a16f91a383d8a52a6f902cfba19e40e1025"
+      }
+    },
+    "output/auto-cartogram/world-10000-transport-r5-expanded-balanced": {
+      "source_population": 7954677990.0,
+      "retained_population": 7954677990.0,
+      "retained_share": 1.0,
+      "cross_group_population": 0.0,
+      "minimum_source_retained_share": 0.9999999999999993,
+      "maximum_source_retained_share": 1.0000000000000009,
+      "maximum_relative_target_error": 9.999889659217942e-05,
+      "coarse_sources": 400545,
+      "targets": 10000,
+      "groups": 341,
+      "mapping_rows": 864839,
+      "source_rows_below_99_5_percent": 0,
+      "checked": true,
+      "checker_sha256": "303e1a2fedb19b85e84b6ad2eb947f84ad7d713bcb2673781dd5786df47cbd40",
+      "files": {
+        "manifest.json": "3c5607aca29853758b9b737facab441c6f8f68f5b1b120205ab4f54e0f62e4f4",
+        "sources.csv": "ccaf1c76e6d2257026ff04df307e83298f0b483175e65130d08acebcbdea47cd",
+        "targets.csv": "d812ecb9eeb845eb4a3a184ab9a6f81c4e1432eedab0f8fa2f26277ca5ff8399",
+        "mapping.csv": "65ca9de8a7d57335ad7a18ef2a06c55926619c27282866396c1d515b77b4bb0a",
+        "target-quality.csv": "9c05ff14741064d23fb83bf892094088ccd02321d6f163310da16d4c1778ef0c"
+      }
+    }
+  },
+  "script_sha256": "0d80da6fd1527383303774f54383ef5409ff2a7d940faa1ccb8c32306cb73e3f"
+}

@@ -1,0 +1,7 @@
+{
+  "status": "stopped",
+  "reason": "The complementary target subset proves error above the requested tolerance. More scaling iterations cannot fix this support.",
+  "requested_tolerance": 0.0001,
+  "necessary_error_bound": 0.0002492958672379982,
+  "support_check_sha256": "dd6931220fecafa955643b6e6b632bdf730f4213dd992cfee58de7ec543e43fd"
+}

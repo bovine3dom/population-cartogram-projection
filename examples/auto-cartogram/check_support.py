@@ -40,14 +40,17 @@ def equal_target_cut(supply, neighbours, target_count):
     if flow < required:
         if not selected or excess != required-flow:
             raise AssertionError("Invalid minimum-cut witness")
-        bound=excess/(len(selected)*population)
+        excess_bound=excess/(len(selected)*population)
+        shortage_bound=excess/((target_count-len(selected))*population)
     else:
         if flow != required: raise AssertionError("Flow exceeds source supply")
-        bound=0.0
+        excess_bound=shortage_bound=0.0
     return dict(exact_marginals_feasible=flow == required,source_population=population,
         sources=len(supply),targets=target_count,distinct_source_neighbourhoods=len(bins),
         capacity_multiplier=target_count,required_integer_flow=required,maximum_integer_flow=flow,
-        necessary_maximum_relative_target_error=bound,witness_target_indices=selected,
+        necessary_maximum_relative_target_error=max(excess_bound,shortage_bound),
+        witness_excess_error_bound=excess_bound,witness_complement_shortage_bound=shortage_bound,
+        witness_target_indices=selected,
         witness_source_count=len(witness),witness_source_population=mass,
         witness_excess_scaled=excess)
 

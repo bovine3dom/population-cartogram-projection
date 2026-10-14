@@ -1,0 +1,23 @@
+{
+  "source_population": 7954677990.0,
+  "retained_population": 7954677990.0,
+  "retained_share": 1.0,
+  "cross_group_population": 0.0,
+  "minimum_source_retained_share": 0.9999999999999993,
+  "maximum_source_retained_share": 1.0000000000000009,
+  "maximum_relative_target_error": 9.999889659217942e-05,
+  "coarse_sources": 400545,
+  "targets": 10000,
+  "groups": 341,
+  "mapping_rows": 864839,
+  "source_rows_below_99_5_percent": 0,
+  "checked": true,
+  "checker_sha256": "303e1a2fedb19b85e84b6ad2eb947f84ad7d713bcb2673781dd5786df47cbd40",
+  "files": {
+    "manifest.json": "3c5607aca29853758b9b737facab441c6f8f68f5b1b120205ab4f54e0f62e4f4",
+    "sources.csv": "ccaf1c76e6d2257026ff04df307e83298f0b483175e65130d08acebcbdea47cd",
+    "targets.csv": "d812ecb9eeb845eb4a3a184ab9a6f81c4e1432eedab0f8fa2f26277ca5ff8399",
+    "mapping.csv": "65ca9de8a7d57335ad7a18ef2a06c55926619c27282866396c1d515b77b4bb0a",
+    "target-quality.csv": "9c05ff14741064d23fb83bf892094088ccd02321d6f163310da16d4c1778ef0c"
+  }
+}
