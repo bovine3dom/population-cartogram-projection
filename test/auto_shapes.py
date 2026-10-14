@@ -250,6 +250,8 @@ class ShapeTests(unittest.TestCase):
                 islands=place_islands.run(inputs,root/'relaxed',source,root/'island-baseline')
                 self.assertEqual(islands['moved_components'],0)
                 self.assertIn('initial-stress.json',islands['parent_layout_records'])
+                deformed_islands=place_islands.run(inputs,root/'bounded',source,root/'bounded-islands')
+                self.assertIn('compact.json',deformed_islands['parent_layout_records'])
                 clean_bundle=publish_shape_review.run(inputs,root/'clean-baseline',root/'clean-baseline',root/'clean-bundle',regions=False)
                 self.assertIn('template-cleanup.json',clean_bundle['files'])
             _,tiles,owners=compact.load(inputs,root/'placed')
