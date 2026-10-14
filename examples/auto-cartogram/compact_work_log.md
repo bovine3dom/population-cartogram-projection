@@ -914,6 +914,25 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - Added an independent geometry check for grid traversal: 25 generated segments
   match positive-length intersections with tile boxes. The test suite passes.
 
+## 21:38–21:44 UTC — Angular sites and smaller fixed coast anchors
+
+- Visually checked all four angular-site world maps. Canada moves across the
+  north of the USA, but becomes a thin strip. Geographic-centroid sites move
+  Russia too far east. Neither coordinate choice is sufficient for a good world
+  map. A population-site control with border refinement and island correction
+  is running separately from the leading native-site pipeline.
+- Traced another island hierarchy issue. In the leading 55,000-tile placement,
+  Australia anchors to Java and Sulawesi anchors to Mindanao. Their recorded
+  collision shifts are small; the anchor choice itself needs review.
+- The hierarchy permits only larger-population anchors, even when a nearer
+  smaller component is fixed and already placed. Added the optional
+  `place_islands.py --fixed-land-anchors` control. It permits such fixed coasts
+  without country-ID links or changes to fixed cells.
+- Added a synthetic regression where the nearest fixed coast has less population
+  than the island. The old rule chooses the distant larger component; the new
+  option chooses the nearby fixed coast. All 43 shape and 23 partition tests
+  pass. World controls are next; no visual improvement is assumed yet.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

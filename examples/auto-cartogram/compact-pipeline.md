@@ -127,6 +127,20 @@ For a transformed mesh guide, `--sites-in-flow` uses supplied sites in the guide
 coordinate system. It requires `--sites` and `--flow-geometry`. Do not use native
 population coordinates with this flag. See [the mesh experiment](mesh-guide.md).
 
+## Fixed-coast anchor control
+
+`place_islands.py --fixed-land-anchors` permits an island to use a nearer fixed
+coast even if that coast's component has less population. The default hierarchy
+uses only larger populations to ensure that an anchor is already placed. Fixed
+components are already placed, so that restriction is not needed for them.
+
+This tests errors such as Sulawesi being anchored to Mindanao instead of nearer
+Borneo, or Australia being anchored to Java instead of nearer New Guinea.
+The choice uses source coast distance, not country identity. All fixed cells,
+island shapes, counts, and represented land contacts stay unchanged. Collision
+removal can still put an island in a poor position. This option is a separate
+control, not a new default.
+
 ## Nearby island groups
 
 The separate `restore_archipelagos.py` control addresses islands placed on the
