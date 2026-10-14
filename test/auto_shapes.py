@@ -82,6 +82,8 @@ class ShapeTests(unittest.TestCase):
         self.assertEqual(state.fit_step({'a':2},choices=4,attempts=4),1)
         self.assertEqual(len(state.tiles['a']),2)
         self.assertEqual(compact.connectivity(state.tiles['a']),1)
+        state=AtomicDeformation({'a':{(2,2),(3,2),(4,2)}},set(),{'a':costs},(0,0))
+        self.assertEqual(state.fit_step({'a':2},choices=1,strict=True),1)
 
     def test_sea_perimeter_delta_matches_complete_energy(self):
         tiles={'a':{(2,2),(2,3)},'b':{(3,2),(3,3)}}
