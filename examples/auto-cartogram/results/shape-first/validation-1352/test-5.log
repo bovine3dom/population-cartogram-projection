@@ -1,0 +1,10 @@
+Test Summary:                       | Pass  Total  Time
+Equal Earth and constrained budgets |    7      7  2.2s
+Test Summary:                                            | Pass  Total  Time
+Small-island groups conserve population within countries |   10     10  1.7s
+Test Summary:                                         | Pass  Total  Time
+Coastline simplification keeps shared border vertices |    5      5  1.8s
+Wrote /tmp/jl_SvdEkO/out: 1 shapes, 10 tiles, 0.0 grouped people
+Dissolved identities: 2 original polygons, 1 output polygons
+Test Summary:                                  | Pass  Total   Time
+Input writer and reproducible group accounting |   12     12  23.7s
