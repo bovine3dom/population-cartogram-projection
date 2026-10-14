@@ -33,15 +33,14 @@ end
 function check_labels(parts,guides)
     for part in parts
         code=only(unique(part.meta.codes));guide=deserialize(joinpath(guides,"country-$code.jls"))
-        expected=Dict{Int32,String}()
+        expected=Dict{Int32,String}();largest=Dict{UInt64,Int}()
+        for (i,id) in enumerate(part.meta.ids)
+            parent=H3.API.cellToParent(id,5);old=get(largest,parent,0)
+            (old==0||part.meta.population[i]>part.meta.population[old])&&(largest[parent]=i)
+        end
         for (old,name) in guide.meta.labels
-            parent=guide.meta.ids[old]
-            children=findall(id->H3.API.cellToParent(id,5)==parent,part.meta.ids)
-            i=if isempty(children)
-                argmin(vec(sum(abs2,part.meta.xyz.-guide.meta.xyz[:,old];dims=1)))
-            else
-                children[argmax(part.meta.population[children])]
-            end
+            parent=guide.meta.ids[old];i=get(largest,parent,0)
+            i==0&&(i=argmin(vec(sum(abs2,part.meta.xyz.-guide.meta.xyz[:,old];dims=1))))
             expected[i]=haskey(expected,i) ? expected[i]*", "*name : name
         end
         expected==part.meta.labels||error("city labels differ for $code")
@@ -86,7 +85,9 @@ function export_native(root,native_dir,guides,out;factor=1)
         key=(table.x[i],table.y[i]);key in seen&&continue;push!(seen,key);push!(anchors,i)
     end
     anchor_set=Set(anchors)
-    order=sortperm(eachindex(table.weight);by=i->(table.index_upper[i],table.index_lower[i],table.x[i],table.y[i]))
+    order=let upper=table.index_upper,lower=table.index_lower,x=table.x,y=table.y
+        sortperm(eachindex(upper);by=i->(upper[i],lower[i],x[i],y[i]))
+    end
     filter!(i->i∉anchor_set,order);order=vcat(anchors,order)
     table=map(col->col[order],table)
     transport=joinpath(pending,"cartogram_weights_hilo.arrow")

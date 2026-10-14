@@ -251,3 +251,36 @@ it is not a replacement GPU fitting method. Conditional source variables avoid
 loss of low-population rows at the LP feasibility floor. On Angola, factors 2
 and 3 retain all masses without fallback. Their 99.5% ratios are 2.515 and
 2.769. Fine geometry, factor 5, and whole-planet cost still need checks.
+
+
+## 23:58 UTC: native planet complete; separate factor runs next
+
+All 206 native-source countries finish without proportional-inheritance
+fallback. There are 1,992,902 sources and 6,187,416 stored rows. The global
+99.5% support ratio is 2.132, versus 2.026 in the sharp H3-5 export.
+On the same 3,292 border edges, mean-position RMS changes from 649.672 to
+650.178 km. Internal RMS changes from 97.655 to 97.075 km. Positive triangle
+area changes from 3.337 to 3.350 million square km. These are small changes
+to the reference, not evidence that its existing defects are solved.
+
+The independent binary audit passes all sources, masses, and 1,715 labels.
+The first native export is 156,027,314 transport bytes plus 17,937,338 density
+bytes. It exceeds the earlier 100 MB file goal and is not yet published.
+A GPU row-selection and mass-projection test reduces US rows by 34%, but its
+maximum target shift and density error are too large. The less aggressive
+test reduces rows by 21%, with a 0.815 km maximum shift and 0.295% density
+error. Neither diagnostic has replaced the accepted native fit.
+
+Stopped an export that spent minutes sorting with a boxed table capture.
+Its log records 4.4 billion allocations. Bound the sort arrays separately and
+built the city-parent lookup once. The revised full export completes. All nine
+binary tests pass again. The earlier Angola browser check used low-precision
+geographic rendering: the supplied value 6 was parsed as false, not as an H3
+resolution. A default-precision planet browser check remains necessary.
+
+Added a separate, resumable moment-subdivision runner. All 15 unit checks pass.
+It preserves coarse flows and constrains fine XYZ and density means. On Angola,
+factors 2 and 3 have ratios 2.444 and 2.760 with no fallback. Factor 5 has one
+20-second timeout, so its uniform fallback raises the ratio to 5.788. The
+factor-5 runner will allow 120 seconds per cell. These outputs are diagnostics,
+not published replacements. CPU LP projection follows the native KA/oneAPI fit.
