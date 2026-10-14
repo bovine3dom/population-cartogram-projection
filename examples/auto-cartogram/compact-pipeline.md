@@ -147,6 +147,28 @@ Combine it with `--archipelagos --bridge-groups --archipelago-gap-fraction 0.35`
 to test the four-resolution island candidates. Group merging requires
 `--archipelagos`. Both new options remain off by default.
 
+## Shared-island position experiment
+
+`place_shared_islands.py` is a separate experiment, not a pipeline default.
+It selects small source land-border groups with at least 16 tiles and less than
+1% of represented source area. It translates each selected group as one rigid
+body. Internal borders and all component shapes stay unchanged. All other
+components stay fixed.
+
+A linear program supplies position targets. It penalizes movement and violations
+of source-box separation. Exact-shape packing then prevents overlap and new
+contacts. Nearby source-centroid order is a hard packing constraint. The default
+radius is approximately 1,000 km, and the minimum source-axis difference is
+3 degrees. Each translation axis is limited to six times the square root of the
+body's tile count. Distances use Equal Earth planar coordinates.
+
+The linear program is not a valid-layout certificate. Conflicting bounds or a
+failed placement stop the run without a completed layout. The first prototypes
+complete at 55,000 and 110,000 tiles, but fail at 10,000 and 500,000 tiles. Do not
+use this experiment as a general island fix. Review images before selection.
+The [SciPy linear-program documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.optimize.linprog.html)
+defines the inequality bounds and solver status used here.
+
 ## Nearby island groups
 
 The separate `restore_archipelagos.py` control addresses islands placed on the
