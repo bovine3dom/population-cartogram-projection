@@ -1,12 +1,18 @@
 # Automatic cartogram experiments
 
-Start with the [world image gallery](gallery.md). It compares layouts at
-10,000, 55,000, and 110,000 tiles. These are not production replacements.
+Start with the [static image gallery](results/shape-first/index.html). It has
+world layouts at 10,000, 55,000, 110,000, and 500,000 tiles, plus regional details.
+A plain file server can display it. These are not production replacements.
+
+See the [shape-first notes](shape-first.md) for connector-free placement and
+remaining position errors. The [earlier gallery](gallery.md) compares the
+geographic baselines, border repair, and Tutte fits.
 
 - [Research and recommendation](../../auto-cartogram.md)
 - [Generator and transport commands](generator.md)
 - [Island and world transport checks](transport-results.md)
-- [Eight-hour work log](work-log.md)
+- [Initial work log](work-log.md)
+- [Active shape-first work log](shape_work_log.md)
 
 Production data and the core solver are unchanged. Experiments use headless CPU
 code. Large inputs, mappings, and downloaded tools stay in ignored `output/`.
