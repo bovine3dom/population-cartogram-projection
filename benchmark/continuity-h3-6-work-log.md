@@ -146,3 +146,25 @@ target using the resulting fixed source contributions. Both steps use the
 existing checked two-way KA solver. This avoids the extra three-way solver and
 keeps the coarse target means fixed during target subdivision. Fine-grid folds
 and sharpness still need independent checks. No whole-planet fit has started.
+
+## 22:19 UTC: checkpoint; higher-resolution publication blocked
+
+The sequential source split passes strict mass checks at eta `1e-6` and has a
+99.5% support ratio of 1.657. Further cooling is not needed for that step. The
+factor-3 target split passes mass checks but again increases positive triangle
+area: 130,585 square km at eta `1e-6`, versus 10,846 in the interpolated guide.
+Its support ratio is 3.015. Stopped the colder target trial after it exceeded
+1,000 iterations. No unfinished stage is accepted.
+
+These trials show that correct masses, coarse flow constraints, and a small
+support count do not establish good fine-grid geometry. Do not publish these
+candidates. A fine-grid continuity fit is still needed; simple subdivision is
+not an adequate replacement. Factor selection remains open. No H3-6 planet
+fit or publication has completed, and no full-planet fitting job is running.
+All jobs from this work session have stopped. Input files and diagnostics remain
+available for the next fit. No production Arrow file changed.
+
+H3-MON remains at rebased head `bfbd50e`, with a clean tracked tree and no
+`viewportGeometry` introduction in the current `src/app.js` history. The user
+service was not stopped or restarted by this work. This repository's changes
+are committed in small steps; no core `src/` file changed.
