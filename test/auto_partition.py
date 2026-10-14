@@ -17,6 +17,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogr
 from partition_land import dual, partition, round_capacities, contact_groups, run
 from review_layout import load, viewport
 from repair_partition import Repair, run as repair
+from land_envelope import dock_parts
 import population_sites
 import place_islands
 import run_compact_pipeline
@@ -49,6 +50,21 @@ class CapacityPartitionTests(unittest.TestCase):
     def test_single_label(self):
         with contextlib.redirect_stdout(io.StringIO()):labels,_=partition(np.arange(5.)[:,None],[5])
         np.testing.assert_array_equal(labels,np.zeros(5,dtype=int))
+
+    def test_dock_parts(self):
+        target=np.zeros((20,30),dtype=bool);target[2:6,2:6]=True;target[10:13,20:23]=True;target[16,26]=True
+        blocked=np.zeros_like(target);blocked[6:10,6:10]=True
+        result,moves=dock_parts(target,blocked)
+        self.assertEqual(int(result.sum()),26);self.assertFalse(np.any(result&blocked))
+        self.assertEqual(moves[0]['dx'],0);self.assertEqual(moves[0]['dy'],0)
+        from scipy.ndimage import label
+        parts,_=label(target);expected=np.zeros_like(target)
+        for move in moves:
+            yy,xx=np.nonzero(parts==move['part']);expected[yy+move['dy'],xx+move['dx']]=True
+        np.testing.assert_array_equal(expected,result);self.assertEqual(label(result)[1],1)
+        repeated,second=dock_parts(target,blocked);np.testing.assert_array_equal(result,repeated);self.assertEqual(moves,second)
+        single=np.zeros((3,3),dtype=bool);single[1,1]=True
+        np.testing.assert_array_equal(dock_parts(single,np.zeros_like(single))[0],single)
 
     def test_landmass_groups(self):
         self.assertEqual(contact_groups([('b','a'),('c','d'),('b','e')]),[['a','b','e'],['c','d']])
@@ -88,8 +104,9 @@ class CapacityPartitionTests(unittest.TestCase):
                 size=.01 if c=='a' else 1.;x+=.05;y=.05
                 features.append(dict(type='Feature',properties=dict(component_id=c),geometry=dict(type='Polygon',coordinates=[[[x,y],[x+size,y],[x+size,y+size],[x,y+size],[x,y]]])))
             geometry=root/'flow.geojson';geometry.write_text(json.dumps(dict(type='FeatureCollection',features=features)))
-            with contextlib.redirect_stdout(io.StringIO()):flow=run(inputs,layout,root/'flow-result',sigma=1,iterations=20,power=True,by_landmass=True,flow_geometry=geometry,flow_stretch=1.5,flow_guide_weight=.5,sites=sites)
+            with contextlib.redirect_stdout(io.StringIO()):flow=run(inputs,layout,root/'flow-result',sigma=1,iterations=20,power=True,by_landmass=True,flow_geometry=geometry,flow_stretch=1.5,flow_guide_weight=.5,sites=sites,dock_landmasses=True)
             self.assertEqual(flow['sites'],str(sites));self.assertGreater(flow['guide_alignment']['scale'],0)
+            self.assertTrue(all(p['envelope']['target_connected_parts']==1 for p in flow['partitions']))
             self.assertEqual(flow['flow_guide_weight'],.5)
             self.assertIn('a',flow['flow']['subtile_fallback_components'])
             self.assertAlmostEqual(flow['flow']['x_scale']*flow['flow']['y_scale'],flow['flow']['scale']**2)
