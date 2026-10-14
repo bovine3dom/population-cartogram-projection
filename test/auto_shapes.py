@@ -397,6 +397,9 @@ class ShapeTests(unittest.TestCase):
         self.assertEqual(len(result['island']),1)
         self.assertLess(next(iter(result['island']))[1],0)
         self.assertFalse(any(q in result['m'] for p in result['island'] for q in compact.adjacent(p)))
+        fixed,records=place_islands.place_islands(tiles,rows,source,{'m','far'},1.,10.,maximum_population=500)
+        self.assertEqual(fixed,tiles)
+        self.assertEqual(records,[])
 
     def test_population_weights_reduce_tiny_island_forces(self):
         tiles={c:{(i,0)} for i,c in enumerate(['a','b','c'])};centres={'a':(0.,0.),'b':(2.,0.),'c':(1.,1.)}

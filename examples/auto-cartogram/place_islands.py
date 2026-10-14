@@ -19,8 +19,9 @@ from save_review import digest
 from shape_placement import place
 
 
-def place_islands(tiles,rows,source,land_components,scale,ocean_length):
+def place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_population=None):
     population={c:float(rows[c]['group_population']) for c in tiles}
+    if maximum_population is not None:land_components=land_components|{c for c in tiles if population[c]>=maximum_population}
     local={c:np.array(sorted(points),dtype=float) for c,points in tiles.items()}
     centres={c:points.mean(axis=0) for c,points in local.items()}
     local={c:points-centres[c] for c,points in local.items()}
@@ -53,8 +54,8 @@ def place_islands(tiles,rows,source,land_components,scale,ocean_length):
     return result,records
 
 
-def run(inputs,layout,polygons,output,ocean_scale=.1):
-    if output.exists() or not np.isfinite(ocean_scale) or ocean_scale<0:raise ValueError('Use a new output and a nonnegative ocean scale')
+def run(inputs,layout,polygons,output,ocean_scale=.1,max_population_fraction=.01):
+    if output.exists() or not np.isfinite(ocean_scale) or ocean_scale<0 or not 0<max_population_fraction<=1:raise ValueError('Use a new output, a nonnegative ocean scale, and a population fraction in (0,1]')
     rows,tiles,owner=load(inputs,layout)
     if any(len(tiles[c])!=int(rows[c]['tiles']) or connectivity(tiles[c])!=1 or holes(tiles[c]) for c in rows):raise ValueError('Invalid input shapes')
     contacts=read_csv(inputs/'geographic-contacts.csv')
@@ -69,9 +70,10 @@ def run(inputs,layout,polygons,output,ocean_scale=.1):
     total=sum(map(len,tiles.values()));scale=np.sqrt(total/area);ocean_length=ocean_scale*np.sqrt(total)
     hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]}
     scripts={p.name:digest(p) for p in [Path(__file__)]+[Path(__file__).with_name(n) for n in ['coast_anchors.py','shape_placement.py','prepare_flow.py']]}
-    result,records=place_islands(tiles,rows,source,land_components,scale,ocean_length)
-    report=dict(method='Keep components with source land borders fixed. Place other components from largest population to smallest, near the nearest larger source component coast. No country-membership links.',
-        isolated_components=len(records),moved_components=sum(result[c]!=tiles[c] for c in tiles),
+    maximum_population=max_population_fraction*sum(float(r['group_population']) for r in rows.values())
+    result,records=place_islands(tiles,rows,source,land_components,scale,ocean_length,maximum_population)
+    report=dict(method='Keep components with source land borders or population above the threshold fixed. Place smaller isolated components from largest population to smallest, near the nearest larger source component coast. No country-membership links.',
+        max_population_fraction=max_population_fraction,maximum_population=maximum_population,eligible_isolated_components=len(records),moved_components=sum(result[c]!=tiles[c] for c in tiles),
         ocean_scale=ocean_scale,maximum_placement_shift=max((r['placement_shift'] for r in records),default=0.),
         inputs=hashes,scripts=scripts,limit='A nearest-coast hierarchy is a position heuristic, not a proof of correct geography. Counts and tile shapes are unchanged. No native-resolution transport is approved.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='islands-',dir=output.parent))
@@ -94,4 +96,5 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ['inputs','layout','polygons','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--ocean-scale',type=float,default=.1)
+    parser.add_argument('--max-population-fraction',type=float,default=.01)
     run(**vars(parser.parse_args()))
