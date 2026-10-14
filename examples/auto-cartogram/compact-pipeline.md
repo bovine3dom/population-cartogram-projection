@@ -83,6 +83,26 @@ inside that region. This keeps all original component budgets. It does not
 preserve borders or guarantee useful shapes. The pipeline wrapper does not yet
 expose this option. Initial tests still have poor shapes and positions.
 
+## Mainland-only flow control
+
+`prepare_flow.py --mainland-only` excludes components with no represented source
+land-border neighbours from the continuous solve. It does not remove their
+population or tiles from the final layout. Some small islands have land borders;
+those components remain in the solve. No country-ID link joins overseas parts.
+
+This tests an upstream effect: the external solver raises some small guide area
+targets. Keeping islands separate only after that solve does not remove their
+influence on its deformation. This is a hypothesis, not a confirmed cause of
+the poor continent shapes.
+
+Pass the resulting partial geometry to `partition_land.py` with `--sites FILE`.
+Only isolated components may be absent. Their intact templates are placed near
+population sites aligned to the represented flow centres. The scale uses only
+the budgets of components present in the flow. Final partition budgets still
+include all components. The pipeline wrapper's full-geometry check does not
+accept this control; use the separate experiment stages and check geometry
+validity and overlaps before assignment.
+
 ## Stages
 
 1. Prepare component geometry and run continuous flow, unless geometry was
