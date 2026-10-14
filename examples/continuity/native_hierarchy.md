@@ -7,9 +7,11 @@ The reference map supplies the coarse flows, target centres, and city names.
 ## Method
 
 1. Group native source population by H3-5 parent within each country.
-2. Project the reference flows onto the new parent masses and uniform target
-   masses. Use a sparse graph with nearby target cells. Add links between
-   disconnected components when their source and target mass totals differ.
+2. Adjust the reference flows to the new parent masses and uniform target
+   masses. Transfer excess mass along target-grid paths. Each intermediate
+   cell transfers its own source mixture before it receives mass. This limits
+   long-distance changes. Connect separate grid components at their nearest
+   geographic means. This deterministic preparation is not an entropy optimum.
 3. Split each parent flow between its native children. The parent-to-target
    flow is a fixed marginal in this solve. Use KA and oneAPI. Stop cooling when
    the 99.5% support ratio reaches the reference country's ratio, or keep the
@@ -21,7 +23,7 @@ The reference map supplies the coarse flows, target centres, and city names.
 If the source split fails, the runner can distribute each parent flow in
 proportion to native child population. It marks that country `inherited`, not
 `optimized`. This fallback has correct masses but can be broad. A failure of
-the parent projection leaves the country incomplete.
+the parent mass correction leaves the country incomplete.
 
 The accepted country limits are source relative error at most `1e-10`, target
 L1 error at most `1e-4`, and target maximum relative error at most `0.001`.

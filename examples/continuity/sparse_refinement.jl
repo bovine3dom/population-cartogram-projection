@@ -56,6 +56,34 @@ end
     if lane==1;out[row]=eta*(log(mass[row])-maxima[1]-log(totals[1]));end
 end
 
+@kernel function small_log_reduce!(out,layout,dual,mass,eta,offset,limit)
+    index=@index(Global,Linear)
+    row=offset+index
+    if row<=limit
+        hi=-Inf32
+        for e in layout.ptr[row]:layout.ptr[row+1]-1
+            hi=max(hi,(dual[layout.indices[e]]-layout.values[e])/eta)
+        end
+        total=0.0f0
+        for e in layout.ptr[row]:layout.ptr[row+1]-1
+            total+=exp((dual[layout.indices[e]]-layout.values[e])/eta-hi)
+        end
+        out[row]=eta*(log(mass[row])-hi-log(total))
+    end
+end
+
+@kernel function small_scale_reduce!(out,layout,scale,mass,offset,limit)
+    index=@index(Global,Linear)
+    row=offset+index
+    if row<=limit
+        total=0.0f0
+        for e in layout.ptr[row]:layout.ptr[row+1]-1
+            total+=layout.values[e]*scale[layout.indices[e]]
+        end
+        out[row]=mass[row]/total
+    end
+end
+
 function weights(g,a,beta,eta)
     w=similar(g.cost)
     for i in 1:g.n
@@ -83,9 +111,12 @@ function polish(g,w,a,b,backend;tolerance,maxrelative,maxiters=10000,deadline=In
     u=PCP._copy_to_backend(backend,ones(Float32,g.n));v=PCP._copy_to_backend(backend,ones(Float32,g.m))
     da=PCP._copy_to_backend(backend,Float32.(a));db=PCP._copy_to_backend(backend,Float32.(b))
     probe=similar(v);reduce! = CE.sparse_scale_reduce!(backend,32)
+    small! = small_scale_reduce!(backend,256)
     function update!(out,layout,scale,mass)
+        short=length(layout.values)<=16length(out)
         CE.compact_launches(backend,length(out),max(1,div(8_000_000,layout.max_count)),commands) do offset,count
-            reduce!(out,layout,scale,mass,offset;ndrange=32count)
+            if short;small!(out,layout,scale,mass,offset,offset+count;ndrange=count)
+            else;reduce!(out,layout,scale,mass,offset;ndrange=32count);end
         end
     end
     for iteration in 1:maxiters
@@ -120,9 +151,12 @@ function solve(g,a,b,backend;eta,initial_beta=nothing,tolerance=1e-6,maxrelative
     alpha=KA.zeros(backend,Float32,g.n);probe=KA.zeros(backend,Float32,g.m)
     beta=PCP._copy_to_backend(backend,isnothing(initial_beta) ? zeros(Float32,g.m) : Float32.(initial_beta.-g.coloffset))
     update_kernel! = log_reduce!(backend,32)
+    small! = small_log_reduce!(backend,256)
     function update!(out,layout,dual,mass)
+        short=length(layout.values)<=16length(out)
         CE.compact_launches(backend,length(out),max(1,div(8_000_000,layout.max_count)),commands) do offset,count
-            update_kernel!(out,layout,dual,mass,Float32(eta),offset;ndrange=32count)
+            if short;small!(out,layout,dual,mass,Float32(eta),offset,offset+count;ndrange=count)
+            else;update_kernel!(out,layout,dual,mass,Float32(eta),offset;ndrange=32count);end
         end
     end
     function check!()

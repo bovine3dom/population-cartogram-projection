@@ -3,12 +3,23 @@ include("../examples/continuity/experiment.jl")
 include("../examples/continuity/sparse_refinement.jl")
 include("../examples/continuity/mobile_export.jl")
 include("../examples/continuity/native_hierarchy.jl")
+include("../examples/continuity/local_balance.jl")
 const NH=NativeHierarchy
 const ME=MobileExport
 backends=Any[ContinuityExperiment.KA.CPU()]
 if get(ENV,"CONTINUITY_GPU_TEST","")=="1"
     using oneAPI
     push!(backends,oneAPI.oneAPIBackend())
+end
+@testset "Local mass correction" begin
+    q=[1. 1. 1.; 0. .01 .02; 0. 0. 0.]
+    guide=(;meta=(;ids=[1,2,3]),index=(;source_rows=[1,2,3],source_ptr=[1,2,3,4],target=[1,2,3]),weight=ones(3))
+    state=(;guide,d=(;b=fill(1/3,3),target=DataFrame(x=[0,2,4],y=zeros(Int,3))),ids=[1,2,3],a=[.5,1/3,1/6],xyz=q,q)
+    result=LocalBalance.balance(state)
+    @test result.check.l1<1e-8
+    @test result.check.source<1e-12
+    @test sum(result.weights[(result.source.==1).&(result.target.==3)])<.05
+    @test result.virtual_links==0
 end
 for backend in backends
 @testset "Native hierarchy: $backend" begin
@@ -28,6 +39,12 @@ for backend in backends
         Arrow.write(path,(;id=children,population=[15.,15.,35.,35.],country_code=fill(24,4)))
         state=NH.prepare(guide,path)
         @test state.a≈[.3,.7]
+        local_projection=LocalBalance.balance(state)
+        @test local_projection.check.l1<1e-8
+        @test local_projection.check.source<1e-12
+        @test local_projection.virtual_links==0
+        disconnected=merge(state,(;d=merge(state.d,(;target=DataFrame(x=[0,8],y=[0,0])))))
+        @test LocalBalance.balance(disconnected).virtual_links==1
         projection=NH.project(state,backend)
         @test projection.check.l1<=1e-5
         fit=NH.split_sources(state,projection,backend;etas=(.01,))

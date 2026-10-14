@@ -204,3 +204,26 @@ All 12 hierarchy checks pass on CPU and oneAPI. All 18 sparse-solver checks
 pass on both backends, including deadline checks. Added internal time limits
 so a difficult country cannot consume the whole six-hour window. The native
 planet baseline will run before further target-grid experiments.
+
+
+## 23:37 UTC: local mass correction and short-row kernels
+
+Stopped the first planet job during the US coarse projection. Both nearby-cell
+KL projections stalled. No country from that run was published. A direct
+minimum-mass transfer passes mass checks but shifts US target centres by
+72.4 km RMS. A local path transfer reduces this to 23.9 km RMS. It transfers
+each intermediate cell's own mixture, rather than sending the original source
+across the full path. This preparation is not an entropy optimum.
+
+Added serial-per-row KA kernels for sparse layouts with at most 16 edges per
+row on average. Long layouts retain the existing parallel reduction. All 21
+sparse checks pass on CPU and oneAPI, including mixed layouts and launch bounds.
+The US native split now completes its first valid stage in 20.4 seconds and
+its second in 12.5 seconds. The colder third stage fails; the second remains
+the accepted result. Total split time is 155.5 seconds, including that failed
+stage. Its 99.5% ratio is 2.011. Packed output has 699,178 rows, target L1
+1.35e-6, maximum relative error 8.34e-6, and all 68 city labels.
+
+Four local-transfer checks and 16 hierarchy checks on each backend pass.
+These cover conservation, separate grid components, and reduced long-distance
+transfer on a three-cell path. The revised planet run uses a new output root.

@@ -38,5 +38,22 @@ for backend in backends
         exact=SR.solve(diagonal,[.25,.75],[.25,.75],backend;eta=.01)
         @test exact.weights≈[.25,.75]
         @test_throws ErrorException SR.solve(diagonal,[.25,.75],[.5,.5],backend;eta=.01,maxiters=100)
+        for (n,m) in ((17,19),(2,33))
+            costs=[(i/n-j/m)^2 for i in 1:n,j in 1:m]
+            s=[i for i in 1:n for j in 1:m];t=[j for i in 1:n for j in 1:m]
+            graph=SR.graph(n,m,s,t,[costs[i,j] for (i,j) in zip(s,t)])
+            mass_a=fill(1/n,n);mass_b=fill(1/m,m)
+            sparse=SR.solve(graph,mass_a,mass_b,backend;eta=.1)
+            full=CE.sinkhorn(costs,mass_a,mass_b,backend;eta=.1,tolerance=1e-6,accelerate=true)
+            @test sparse.weights≈[full.plan[i,j] for (i,j) in zip(graph.source,graph.target)] atol=2e-6
+        end
+        layout=CE.compact_device(backend,(ptr=Int32.(1:21),indices=Int32.(1:20),values=ones(Float32,20)))
+        out=CE.PCP._copy_to_backend(backend,fill(-1f0,20))
+        scale=CE.PCP._copy_to_backend(backend,ones(Float32,20))
+        mass=CE.PCP._copy_to_backend(backend,fill(2f0,20))
+        SR.small_scale_reduce!(backend,256)(out,layout,scale,mass,3,10;ndrange=8)
+        CE.KA.synchronize(backend)
+        expected=fill(-1f0,20);expected[4:10].=2
+        @test Array(out)==expected
     end
 end

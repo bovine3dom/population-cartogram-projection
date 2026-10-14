@@ -3,6 +3,7 @@ include("experiment.jl")
 include("sparse_refinement.jl")
 include("mobile_export.jl")
 include("native_hierarchy.jl")
+include("local_balance.jl")
 const NH=NativeHierarchy
 function checkpoint(path,value)
     serialize(path*".tmp",value);mv(path*".tmp",path;force=true)
@@ -41,15 +42,8 @@ function main()
             if isfile(joinpath(dir,"projection.jls"))
                 projection=deserialize(joinpath(dir,"projection.jls"))
             else
-                for radius in (1,2)
-                    try
-                        projection=NH.project(state,backend;radius,deadline)
-                        checkpoint(joinpath(dir,"projection.jls"),projection);break
-                    catch err
-                        radius==2 && rethrow()
-                        println("Projection retry: ",sprint(showerror,err));flush(stdout)
-                    end
-                end
+                projection=LocalBalance.balance(state)
+                checkpoint(joinpath(dir,"projection.jls"),projection)
             end
             fit=nothing;status="optimized";reason=""
             try
@@ -73,7 +67,8 @@ function main()
                 population=sum(state.d.source.value),rows=length(packed.part.weights),eta=fit.eta,
                 ratio995=packed.ratio995,retained=packed.retained,max_centre_shift_km=packed.max_centre_shift_km,
                 labels=length(packed.part.labels),label_fallbacks=packed.label_fallbacks,
-                coarse_edges=length(projection.weights),components=projection.components,packed.stats...)
+                coarse_edges=length(projection.weights),components=projection.components,
+                projection_method=projection.method,moved_mass=projection.moved_mass,packed.stats...)
             CSV.write(joinpath(dir,"summary.csv"),DataFrame([report]))
             checkpoint(joinpath(dir,"part.jls"),packed.part)
             println(report);flush(stdout)
