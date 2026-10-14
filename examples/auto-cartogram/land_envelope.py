@@ -14,7 +14,7 @@ from review_gaps import draw
 from save_review import digest
 
 
-def build(tiles,fixed,origin,shape,sigma):
+def build(tiles,fixed,origin,shape,sigma,count=None):
     if not math.isfinite(sigma) or sigma<=0:raise ValueError('Use a positive envelope scale')
     land=np.zeros(shape,dtype=bool);blocked=np.zeros(shape,dtype=bool)
     for c,points in tiles.items():
@@ -24,13 +24,15 @@ def build(tiles,fixed,origin,shape,sigma):
                 for dx,dy in [(0,0),(1,0),(-1,0),(0,1),(0,-1)]:
                     ix=x+dx-origin[0];iy=y+dy-origin[1]
                     if 0<=iy<shape[0] and 0<=ix<shape[1]:blocked[iy,ix]=True
-    count=int(land.sum())
-    if not count:raise ValueError('No movable land cells')
+    sampled=int(land.sum())
+    if not sampled:raise ValueError('No movable land cells')
+    if count is None:count=sampled
+    if not isinstance(count,(int,np.integer)) or count<1 or count>land.size:raise ValueError('Invalid target area')
     score=gaussian_filter(land.astype(float),sigma=sigma,mode='constant');score[blocked]=-np.inf
     order=np.lexsort((np.arange(score.size),-score.ravel()))[:count]
     if not np.isfinite(score.ravel()[order]).all():raise ValueError('Insufficient unblocked target cells')
     target=np.zeros(shape,dtype=bool);target.ravel()[order]=True
-    return target,dict(target_cells=count,initial_empty_target_cells=int((target&~land).sum()),
+    return target,dict(target_cells=count,sampled_land_cells=sampled,initial_empty_target_cells=int((target&~land).sum()),
         target_connected_parts=int(label(target)[1]),sigma_tiles=sigma,
         limit='A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver.')
 
