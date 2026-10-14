@@ -1,0 +1,11 @@
+{
+  "method": "Greedy geographic border repair with exact counts",
+  "max_search": 30000,
+  "passes": 2,
+  "required_contacts": 348,
+  "retained_contacts": 304,
+  "elapsed_seconds": 24.262838202062994,
+  "limit": "Some borders can remain missing. Position and shape can worsen. This is not the published mosaic algorithm.",
+  "baseline_cells_sha256": "9fbe009ef5b1b6de9f31935e4167fc1f0b5df6b9cbe94aa7b0e7cfbcec4dcb89",
+  "script_sha256": "8bf7942531a5f3fb945dcf9bd421c482c30aa5d1ea64f1501441ad19b7da1c3e"
+}

@@ -328,3 +328,24 @@ under ignored `output/auto-cartogram/`.
   test dictionary type before the successful runs.
 - Started three-resolution topology and geography comparisons with dissolved
   country outlines. Earlier map-unit results remain available as comparisons.
+
+## 23:43–00:49 UTC — completed native transport and new world previews
+
+- Long native and Java runs continued during this interval. At 00:43, inspected
+  the completed native Indonesia export. It has 832,166 source rows and
+  1,432,890 mapping pairs. Both independent flow checks and original-source
+  identity checks pass. Cross-group mass is zero; retained mass is 99.883%.
+  The largest target error is 7.350%, in the Java group. Native sparse balance
+  correction is now running with a one-hour limit.
+- Both 10,000 and 55,000 exact-mode fits failed the same upstream assertion: a
+  changed exact-polish pass did not reduce total tile error. Stopped the pending
+  110,000 exact-mode test instead of repeating the known failure. Did not remove
+  the assertion or publish an incomplete result as a valid map.
+- The dissolved-outline topology fits at 10,000 and 55,000 finish and retain
+  all represented borders, but still have large area and position errors.
+  The 10,000-budget count error falls to 1,931 tiles; this is still too large.
+- Saved geography-first and border-repair images at all three resolutions with
+  the dissolved inputs. The main gallery now starts with these cleaner inputs.
+  Earlier map-unit images and checks remain in `early-layouts.md`.
+- Started a longer dissolved 10,000-budget fit. Large-resolution and default
+  fits remain bounded by their recorded timeouts. No production files changed.
