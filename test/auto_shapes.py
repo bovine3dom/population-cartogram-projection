@@ -35,6 +35,7 @@ import build_shape_gallery
 import review_gaps
 import compare_country_contacts
 import land_envelope
+import partition_land
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
@@ -294,6 +295,11 @@ class ShapeTests(unittest.TestCase):
                 self.assertEqual(envelope['envelope']['target_cells'],8)
                 self.assertLessEqual(envelope['final_energy'],envelope['initial_energy']+1e-8)
                 self.assertEqual(envelope['envelope']['cells_sha256'],compact.digest(root/'envelope/envelope.csv'))
+                partition=partition_land.run(inputs,root/'deformed',root/'partition',sigma=1,iterations=20)
+                self.assertEqual(partition['cells_sha256'],compact.digest(root/'partition/cells.csv'))
+                _,partition_tiles,_=compact.load(inputs,root/'partition')
+                self.assertEqual({c:len(p) for c,p in partition_tiles.items()},{'a':5,'b':3})
+                with self.assertRaisesRegex(ValueError,'Exact starting'):partition_land.run(inputs,layout,root/'bad-partition')
                 with self.assertRaisesRegex(ValueError,'exact starting'):compact.run(inputs,layout,root/'partial-envelope',regrow=True,land_only=True,envelope_weight=2)
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
                 stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True,order_weight=1,local_order=35,mass_weighted=True)
