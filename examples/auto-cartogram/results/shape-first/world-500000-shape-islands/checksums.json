@@ -1,0 +1,23 @@
+{
+  "output/auto-cartogram/world-500000-dissolved-input/geographic-contacts.csv": "de308b8e39759ba7e2f6f4313f2512e6d7abf2292e9623dd78950efe866cc722",
+  "output/auto-cartogram/world-500000-dissolved-input/groups.csv": "6a9de0a7294d00416ee6288714e97bd3216a09c7870d40e64b5108b00f735d15",
+  "output/auto-cartogram/world-500000-dissolved-input/input.wkt": "ec731515febb04bca65c097c0f30cd26ef9d1f42ff3f067b5c0b03b44ecad509",
+  "output/auto-cartogram/world-500000-dissolved-input/manifest.json": "3857df812558696f916d3ef8818bea822eb919b7167a2b45a5506a2d79ecdc8f",
+  "output/auto-cartogram/world-500000-dissolved-input/original-outlines.json": "a80a857639f084b5a334b293c9822d3e70a6b1fc79021de44ca6a8e779d5b67f",
+  "output/auto-cartogram/world-500000-dissolved-input/outline-checks.json": "0af68a4ab36603ca9d3bcd04f8915359a2288f63daba2b16b15e4caaaf1df711",
+  "output/auto-cartogram/world-500000-dissolved-input/validated.wkt": "78296821be9239c321932a0e56a8cc58e54e819de74926b620edb77449557ef1",
+  "output/auto-cartogram/world-500000-dissolved-input/weights.tsv": "e0b5f13f9af6d0b06df0ffb0aa95fa54fccdcc110b57b0be5d885dfd4429c781",
+  "output/auto-cartogram/world-500000-shape-islands/cells.csv": "2cf56c4259a8e8bd88bc80efca77755cb61df2dd474f85da093f80e09318d754",
+  "output/auto-cartogram/world-500000-shape-islands/complete.txt": "eaabfa50280f1712b9ec9755d87383b89577595fb8e6217c1c5f8b9028baa8f4",
+  "output/auto-cartogram/world-500000-shape-islands/contact-errors.csv": "c6e1f3ce758dfe88cecd4d380d88bbbbded9bdbd32f4933f43af50564b51b78a",
+  "output/auto-cartogram/world-500000-shape-islands/country-counts.csv": "8cbeb9c270c58cd38f5a7bacff147787bcda1f30e8b9e795ef6014f0b320bb91",
+  "output/auto-cartogram/world-500000-shape-islands/country-order-errors.csv": "01d40575629231ad85007ba78cff9ac8fde12b474122893d625c05fa2126f53e",
+  "output/auto-cartogram/world-500000-shape-islands/group-capacities.csv": "d8424912beafbb40d0d232c2753b4b3347efdc814e630709494ce04c3677d9c2",
+  "output/auto-cartogram/world-500000-shape-islands/island-anchors.csv": "e83855402b4c5e33d37c2d143754dd9cb4b5b305db518fd8cfb981159a520e54",
+  "output/auto-cartogram/world-500000-shape-islands/island-order-errors.csv": "0d50db1f7c28d6e9eaaf216832fb0e79b8462aae68abbfcfc735507159ada6fa",
+  "output/auto-cartogram/world-500000-shape-islands/island-placement.json": "f1d4d89c6ccd02e067cf844f5313b189c6e7dfeb8e192cef6ac7d75797f3aa99",
+  "output/auto-cartogram/world-500000-shape-islands/metrics.json": "94f10bd4e2e029a72094df84203a2203bc1d782c67a4485c4518a7c05bcfc8fc",
+  "output/auto-cartogram/world-500000-shape-islands/region-quality.csv": "db80c11bdb3164568be0b939c2f3343517b33fe28f4fb44066247ff74b89a916",
+  "output/auto-cartogram/world-500000-shape-islands/review.png": "f2dca7c4350adb040689cb8f501e394c1d02b8b88914a3568bbb45f01d70e4ba",
+  "output/auto-cartogram/world-500000-shape-islands/review.svg": "1ff62e58bcade2338bc4d2579fbf91310ecc27034e36a9d182ecfe2f25fa1a5b"
+}

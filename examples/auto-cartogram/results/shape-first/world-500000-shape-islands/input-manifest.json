@@ -1,0 +1,34 @@
+{
+  "country": "world",
+  "country_identity": "Natural Earth ADM0_A3; no synthetic ISO numeric codes",
+  "geometry_limit": "WKT supports outer rings only; hole-border contacts are audited separately",
+  "group_policy": "country minimum 1 tile, then zero-budget components join nearest represented component of same country; reallocate within country",
+  "grouped_population": 1.865414e6,
+  "holes_not_encoded_in_wkt": 20,
+  "input_components": 2621,
+  "inputs": [
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-dissolved/components.csv",
+      "sha256": "b98e9c3fd09804fbf78a1686e682005c598a869f77c6127e6d3301aa0913cb05"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-dissolved/boundaries.geojson",
+      "sha256": "092f4b24ec5f2e062c8c0b4ee4f2757bb928405b75b6f89e05f6fe812e2d0a3d"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/prepare_layout.jl",
+      "sha256": "365d8688c0cf8709c8baf0d822ea26908bf143218638909e54d44d8d417cc4c6"
+    }
+  ],
+  "omitted_population": 0.0,
+  "policy": "group",
+  "population_total": 7.95467799e9,
+  "projection": "Equal Earth (EPSG method 1078)",
+  "represented_countries": 250,
+  "represented_population": 7.95467799e9,
+  "represented_shapes": 888,
+  "simplification_tolerance": 0.0003,
+  "source_manifest_sha256": "cc897633ed0f00bf7acf4ba88ebfc7f32bc9e9da7ee27d0c358f177946097b99",
+  "tile_budget": 500000,
+  "unmatched_source_population": 7.7246034e7
+}

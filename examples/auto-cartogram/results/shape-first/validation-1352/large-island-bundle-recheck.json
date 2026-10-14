@@ -1,0 +1,22 @@
+[
+  {
+    "bundle": "examples/auto-cartogram/results/shape-first/world-500000-shape-islands",
+    "verified_files": 31,
+    "metric_fields_checked": 31,
+    "metrics_match": true,
+    "translations_match": true,
+    "island_move_check": {
+      "fixed_components": 204,
+      "eligible_components": 684,
+      "moved_components": 679,
+      "all_protected_components_unchanged": true,
+      "all_moved_shapes_are_translations": true,
+      "land_contacts_unchanged": true,
+      "parent_cells_sha256": "61698de657d4fc45dbccb7b70614157b5130c33dd1a3a002da54f557bc6b26e0",
+      "final_cells_sha256": "2cf56c4259a8e8bd88bc80efca77755cb61df2dd474f85da093f80e09318d754"
+    },
+    "bundle_sha256": "a443742c3af8cd257f2ba0150d6c46c000f0d7e37b9aca11cc8951c6a037f532",
+    "script_sha256": "9a3e2b6961ae1d2e8eef3963f9b53e2370c51b63719c28bb43a456cb2bf19ea9",
+    "limit": "These checks validate the saved cells and accounting. They do not approve geographic quality or native-resolution population transport."
+  }
+]

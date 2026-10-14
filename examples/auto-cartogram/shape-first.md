@@ -6,7 +6,7 @@ Production code and `data/cartogram.csv` have not changed.
 
 Open the [first image gallery](results/shape-first/index.html) for all four
 resolutions. The newer [cleaned-shape island gallery](results/shape-first/cleaned-islands.html)
-currently has three resolutions. Both are static HTML pages. A plain file server
+now has all four resolutions. Both are static HTML pages. A plain file server
 can display them. See the [work log](shape_work_log.md) for times and failures.
 
 ## Latest checked results: cleaned shapes and separate islands
@@ -23,12 +23,21 @@ shapes from a large displacement. It is a heuristic, not a geographic proof.
 | 10,000 | 152 / 341 | 0 | 0 |
 | 55,000 | 124 / 348 | 0 | 0 |
 | 110,000 | 128 / 353 | 0 | 0 |
+| 500,000 | 123 / 359 | 0 | 0 |
 
 Sri Lanka is now beside the Indian tip in the 55,000-tile result. But mainland
 positions remain incorrect: Switzerland is south of northern Italy, and Norway
 is east of Sweden. The other resolutions have further errors in South Asia.
-No result is approved. The 500,000-tile refinement and position-seed trials
-are still running.
+No result is approved. The 500,000-tile result removes the artificial cuts in
+Great Britain and places Sri Lanka beside India. But it puts peninsular Malaysia
+south of Java and Papua New Guinea west of Sulawesi. Rwanda is north of Uganda.
+The island step cannot correct shared-island components that it keeps fixed.
+
+The [position-seed trials](results/shape-first/seed-comparisons/README.md) are
+also complete. They do not reliably correct the layout. In the Tutte-seeded
+trial, Sudan moves into Europe. More tests of initial positions alone are not
+the next priority. The next method should allow controlled mainland deformation
+and preserve local positions on shared islands without adding border paths.
 
 Each saved bundle contains compressed cells, templates, pre-island cells, and
 independent checks. Recheck a bundle without the generator inputs:

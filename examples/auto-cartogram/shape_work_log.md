@@ -480,3 +480,21 @@ Inspect the resulting images at world and regional scales.
   resolve to files. Production code and targets remain unchanged.
 - The 110,000-tile seed trial, Tutte-seeded trial, and 500,000-tile trial are
   now in integer refinement. Their final island-stage images are not ready.
+
+## 13:59–14:04 UTC — final seed reviews and the large cleaned layout
+
+- Reviewed the completed Tutte-seeded image. Sudan is in Europe, so reject it.
+  The 110,000-tile seed improves Afghanistan's position but still reverses
+  Thailand and Myanmar. Saved all three seed images and metrics as rejected
+  comparisons. Do not run more resolution seeds without a different objective.
+- The 500,000-tile integer refinement stopped after 17 rounds with no further
+  move. Published its checked island-stage bundle and reviewed the world image
+  plus all six regional images. It retains 123 of 359 borders, with exact counts
+  and no false borders. Great Britain's artificial cuts are gone.
+- The large image still has serious errors. Peninsular Malaysia is south of
+  Java, Papua New Guinea is west of Sulawesi, and Rwanda is north of Uganda.
+  Shared-island components stay fixed in the current island step. This protects
+  contacts but also leaves bad parent positions unchanged.
+- Add the large result to the cleaned-shape gallery for comparison, not approval.
+  The next priority is controlled shape deformation and local shared-island
+  placement, not more detail or further changes to initial positions alone.
