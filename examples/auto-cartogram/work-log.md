@@ -435,3 +435,13 @@ under ignored `output/auto-cartogram/`.
   remain, with no false contacts, disconnected shapes, or region holes. This
   is still not an acceptable population map. Larger and exact-mode trials run
   from the same frozen build.
+
+## 01:36 UTC — initialization sensitivity
+
+- Started eight 10,000-budget fits with fixed rotations and reflections of
+  the planar drawing. These preserve the contact graph and all pair distances.
+  The later grid orientation and all fitting settings stay fixed. Each run
+  has a 30-minute limit; the matrix has a 03:40 UTC deadline.
+- Added tests for all eight transforms and invalid values. All 20 geometry
+  tests pass. The first land-only exact-mode run still fails its final count
+  check. It exports no completed layout.

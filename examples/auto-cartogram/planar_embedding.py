@@ -40,7 +40,9 @@ def augment(graph, embedding=None, *, sea_regions=True):
     return result, sea, augmented_embedding
 
 
-def integer_positions(graph, geography, embedding=None):
+def integer_positions(graph, geography, embedding=None, transform=None):
+    if transform is not None and transform not in range(8):
+        raise ValueError("Drawing transform must be between 0 and 7")
     if embedding is None:
         planar, embedding = nx.check_planarity(graph)
         if not planar:
@@ -63,7 +65,7 @@ def integer_positions(graph, geography, embedding=None):
         denominator = np.square(centred).sum()
         scale = max(float((centred*target).sum()/denominator),0) if denominator else 1
         return float(np.square(scale*centred-target).sum())
-    coordinates = min(candidates,key=error)*10
+    coordinates = (min(candidates,key=error) if transform is None else candidates[transform])*10
     return dict(zip(labels,coordinates.tolist()))
 
 
@@ -75,7 +77,7 @@ def degree_conflicts(edges, weights):
             for v,weight in sorted(weights.items()) if v in graph and graph.degree[v]>2*weight+2]
 
 
-def run(inputs, rotations_path=None, *, sea_regions=True):
+def run(inputs, rotations_path=None, *, sea_regions=True, transform=None):
     output_names = ["embedding.tsv", "embedding-edges.tsv", "embedding.json", "augmented.wkt", "augmented-weights.tsv"]
     if any((inputs/name).exists() for name in output_names):
         raise ValueError("Embedding files already exist")
@@ -114,7 +116,7 @@ def run(inputs, rotations_path=None, *, sea_regions=True):
         augmented, local_sea, drawing_embedding = augment(subgraph, local_embedding, sea_regions=sea_regions)
         for label,(a,b) in local_sea.items():
             geography[label] = [(x+y)/2 for x,y in zip(geography[a],geography[b])]
-        poses.update(integer_positions(augmented,geography,drawing_embedding))
+        poses.update(integer_positions(augmented,geography,drawing_embedding,transform))
         sea.update(local_sea)
         edges.update(tuple(sorted(e)) for e in augmented.edges)
         sizes.append(len(subgraph))
@@ -144,7 +146,7 @@ def run(inputs, rotations_path=None, *, sea_regions=True):
             weights.write(f"{label}\t{weight}\n")
     metadata={"method":"Biconnected planar dual with temporary sea vertices; Chrobak-Payne integer drawing" if sea_regions else
                         "Original planar dual; Chrobak-Payne integer drawing",
-              "sea_regions":sea_regions,
+              "sea_regions":sea_regions,"drawing_transform":transform,
               "rotation_source":"geographic border portals" if prescribed is not None else "NetworkX planarity algorithm",
               "rotation_sha256":hashlib.sha256(rotations_path.read_bytes()).hexdigest() if rotations_path else None,
               "networkx_version":nx.__version__,"python_hash_seed":os.environ.get("PYTHONHASHSEED", "random"),
@@ -170,5 +172,6 @@ if __name__ == "__main__":
     parser.add_argument("inputs",type=Path)
     parser.add_argument("--rotations",type=Path)
     parser.add_argument("--no-sea",action="store_true",help="Export only original land vertices and contacts")
+    parser.add_argument("--transform",type=int,choices=range(8),help="Use one fixed signed axis permutation instead of the geographic fit")
     args=parser.parse_args()
-    run(args.inputs,args.rotations,sea_regions=not args.no_sea)
+    run(args.inputs,args.rotations,sea_regions=not args.no_sea,transform=args.transform)

@@ -138,6 +138,17 @@ class EmbeddingTests(unittest.TestCase):
             self.assertNotEqual(positions["a"][0],positions["b"][0])
             self.assertNotEqual(positions["a"][1],positions["b"][1])
 
+    def test_fixed_drawing_transforms_are_rigid(self):
+        graph=nx.Graph([("a","b"),("b","c"),("c","a")])
+        geography={"a":(0,0),"b":(2,0),"c":(1,1)}
+        distances=[]
+        for transform in range(8):
+            positions=embedding.integer_positions(graph,geography,transform=transform)
+            distances.append([sum((a-b)**2 for a,b in zip(positions[u],positions[v])) for u,v in graph.edges])
+        self.assertTrue(all(d==distances[0] for d in distances))
+        with self.assertRaises(ValueError):
+            embedding.integer_positions(graph,geography,transform=8)
+
     def test_shared_border_portal_is_consistent_on_both_sides(self):
         rings={
             "a":[(0,0),(1,0),(1,1),(1,2),(1,3),(0,3),(0,0)],
