@@ -84,6 +84,21 @@ The label and export commands refuse to overwrite existing output. The fit
 resumes complete raw shards only when input hashes match. Keep the original
 source, target, and script files for a restart.
 
+## 23:14 UTC: label and format checks
+
+The city preflight matches 12,154 of 12,341 places to a component/H3 source.
+There are 186 points outside the source polygons and one point with no source
+fragment. Do not move these labels to a different island. Jakarta and Surabaya
+match Java; Denpasar matches Bali; Makassar matches Sulawesi. Tokyo and Osaka
+match Honshu; Sapporo matches Hokkaido; Naha matches Okinawa.
+
+H3-MON expects a two-unit tile step. Apply `x = 2 * layout_x` and
+`y = -2 * layout_y` in the export. This avoids overlapping cells and incorrect
+border detection. The source layout and transport coordinates stay unchanged.
+The H3-MON colour scale is `quantile`; the app has no `log` scale option.
+
+The 28 geometry tests also pass. The fit is still running on China.
+
 ## Tests before the first commit
 
 - `test/auto_transport.py`: six tests pass.

@@ -42,7 +42,7 @@ class IslandExportTests(unittest.TestCase):
             with pa.memory_map(str(root/'export/cartogram_weights_auto_55000_h3_5_hilo.arrow'),'r') as stream:table=pa.ipc.open_file(stream).read_all()
             data=table.to_pydict()
             self.assertEqual(data['weight'],[.3,.7]);self.assertEqual(data['weight_mean'],[1,1])
-            self.assertEqual(data['population'],[100,100]);self.assertEqual(data['y'],[-2,-2])
+            self.assertEqual(data['population'],[100,100]);self.assertEqual(data['y'],[-4,-4]);self.assertEqual(data['x'],[0,2])
             self.assertEqual(data['label'],['City 0','City 1']);self.assertEqual(data['code'],[1,1000])
             self.assertTrue(pa.types.is_string(table.schema.field('label').type))
             with pa.memory_map(str(root/'export/population_density_hilo.arrow'),'r') as stream:self.assertEqual(pa.ipc.open_file(stream).read_all()['value'].to_pylist(),[10])

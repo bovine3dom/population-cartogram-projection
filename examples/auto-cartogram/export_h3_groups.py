@@ -69,7 +69,7 @@ def export(directory, polygons_path, iso_path, output):
         key=f"{component}:{city['h3']}";group=groups[component]['group_id'] if component else ''
         reason='placed' if key in best else 'no_component_source' if component else 'ambiguous_polygon' if hits else 'outside_polygons'
         position=best[key][1] if reason=='placed' else None
-        row=dict(city,component_id=component,group_id=group,grouped=groups[component]['grouped'] if component else '',x=position[0] if position else '',y=-position[1] if position else '',status=reason)
+        row=dict(city,component_id=component,group_id=group,grouped=groups[component]['grouped'] if component else '',x=2*position[0] if position else '',y=-2*position[1] if position else '',status=reason)
         city_audit.append(row)
         if position:labels[int(city['h3']),*position].append((int(city['population']),city['name']))
     iso=json.loads(iso_path.read_text())['3166-1']
@@ -82,7 +82,7 @@ def export(directory, polygons_path, iso_path, output):
     retained=defaultdict(float);means=defaultdict(float)
     for (parent,x,y),mass in sorted(masses.items()):
         city=sorted(set(labels.get((parent,x,y),[])),reverse=True)
-        values=[parent&0xffffffff,parent>>32,x,-y,mass/parents[parent],mass/totals[x,y],parents[parent],codes[groups[targets[x,y]]['country_id']],'; '.join(dict.fromkeys(name for _,name in city)) if city else None,city[0][0] if city else None]
+        values=[parent&0xffffffff,parent>>32,2*x,-2*y,mass/parents[parent],mass/totals[x,y],parents[parent],codes[groups[targets[x,y]]['country_id']],'; '.join(dict.fromkeys(name for _,name in city)) if city else None,city[0][0] if city else None]
         for key,value in zip(data,values):data[key].append(value)
         retained[parent]+=values[4];means[x,y]+=values[5]
     for value in [*retained.values(),*means.values()]:close(value,1.)
@@ -130,7 +130,8 @@ City labels use GeoNames places with more than 50,000 people. A city point must
 intersect one source component and have a component/H3 source row. Its label
 goes to the tile with the largest contribution from that row. There is no
 country-wide label fallback. `cities.csv` includes unmatched places and reasons.
-Coordinates in this export use screen y (positive down).
+Coordinates use screen y (positive down) and a two-unit tile step for H3-MON.
+The export applies x = 2 * layout_x and y = -2 * layout_y.
 
 Special Natural Earth regions have distinct border codes of 1000 or more.
 These codes are not ISO codes. See `country-codes.csv`.
