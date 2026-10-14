@@ -1,0 +1,77 @@
+{
+  "bundles": [
+    {
+      "case": "owid",
+      "hashes_match": true,
+      "measurements_match": true
+    },
+    {
+      "case": "tutte-partial-200",
+      "hashes_match": true,
+      "measurements_match": true
+    },
+    {
+      "case": "shape-islands",
+      "hashes_match": true,
+      "measurements_match": true
+    }
+  ],
+  "http_checks": [
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/index.html",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/owid/layout.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/owid/layout.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/owid/gaps.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/owid/gaps.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/tutte-partial-200/layout.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/tutte-partial-200/layout.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/tutte-partial-200/gaps.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/tutte-partial-200/gaps.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/shape-islands/layout.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/shape-islands/layout.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/shape-islands/gaps.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/shape-islands/gaps.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/compact_work_log.md",
+      "status": 200
+    }
+  ]
+}

@@ -60,6 +60,50 @@ The Tutte fit still has an absolute budget error of 2,011 cells. These values
 are not a controlled comparison with identical population and country scopes.
 The separated layout has exact budgets but is not an acceptable replacement.
 
+## 14:56–15:26 UTC — first visual rejection and stronger checks
+
+- All eight test commands passed at checkpoint `dc09224`. Full source hashes
+  are in `results/compact-landmass/validation-1456/validation.json`.
+  That run had 34 focused shape tests. The current focused suite has 37 passing
+  tests after the later changes below.
+- Recomputed all three saved gap benchmarks from their compressed cells and
+  checked their hashes. All measurements match. A local HTTP server returned
+  status 200 for the page and its 13 linked resources.
+- Reviewed both initial joint world images. Also inspected the strong sea-edge
+  trial's Europe and Indonesia images. Reject both trials. Japan and Great
+  Britain become rectangular, Indonesian coast detail is lost, and long paths
+  remain in Europe. The stronger cost has only 3,809 radius-4 closing additions,
+  below OWID's 4,549, but its map is clearly worse. Do not optimize this proxy
+  alone. Both initial trials also retain budget errors.
+- Saved these failures with cells, metrics, settings, source hashes, and images.
+  Repeated their saved numeric checks without the generator input directory.
+- The strict count-fit proposal filter reached exact budgets in 139 rounds.
+  The corresponding deformation continues. Stopped the two superseded
+  alternative-only count-fit trials; both still had large budget errors.
+- Found another guide issue: the area guide used the incomplete starting count
+  even when count fitting requested a much larger region. It now uses the
+  requested budget in count-fit runs. Added a test for this distinction.
+- Isolated components can now remain fixed during unbounded shape optimization.
+  This protects island silhouettes after count fitting. Added checks that a
+  fixed component cannot gain or lose cells, including through whole-region
+  regrowth. Downstream island records now include parent deformation settings.
+- Added an optional fixed land envelope for the extra sea-edge cost. It includes
+  initial land and a radius-4 closing mask. It does not tax every outer coast.
+  Tests compare both individual and whole-region energy changes with a complete
+  recomputation. This mask can still contain real water, so visual checks remain
+  necessary.
+- The Tutte centres themselves preserve poor country positions. A further trial
+  keeps Tutte starting cells but takes guide centres from the automatic
+  geographic layout. A positive uniform scale and translation align the guide
+  centres; no rotation, country template copy, or OWID position is used.
+- Added a country-level OWID border comparison. After explicit source code
+  mappings, all OWID codes map to 203 source country IDs. OWID retains 248 of
+  311 source country pairs and has 48 contacts absent from this source. The
+  separated layout retains 114 pairs with zero unsupported contacts. These
+  measurements do not compare component topology or prove correct positions.
+- The new comparison test exposed a single-row grid-step bug. Fixed the missing
+  axis handling. Tests also reject ambiguous source code mappings.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
