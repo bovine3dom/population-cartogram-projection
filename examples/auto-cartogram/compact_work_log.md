@@ -418,6 +418,48 @@ The separated layout has exact budgets but is not an acceptable replacement.
   checks. Tile partitioning is still running. Saved all three failed external
   flow logs and their status separately; no failed solve is marked successful.
 
+## 18:12–18:29 UTC — reject local corrections and test a different guide
+
+- Inspected the two completed docking world images. The zero-guide control puts
+  the Koreas together and connects the Americas, but leaves one stray Zimbabwe
+  tile inside East Africa. Its main Zimbabwe piece is enclosed by other labels,
+  so direct growth into empty space cannot replace that tile.
+- Added an explicit coastal-compensation fallback. A neighbour gives one cell
+  to the blocked region, then grows one cell into empty space. The old fragment
+  cell becomes empty. The exchange is transactional, keeps all country counts,
+  preserves connectivity, and leaves fixed islands unchanged. It has strict
+  search limits and can still fail. It does not draw a path to the old fragment.
+- This removes Zimbabwe's stray tile in the docking control. Inspected the new
+  world image and its Africa and South Asia details. There are no split regions,
+  but three region holes remain. The Americas and Koreas are better arranged;
+  an odd narrow feature remains on China's north coast. Reject production use.
+- Inspected both local source-outline corrections from the better flow start.
+  They reopen gaps and damage borders. Also inspected global coast penalties
+  16 and 64 with isolated islands fixed. The stronger cost has just 34 enclosed
+  empty cells, but turns the USA and China into blocks. Reject all four local
+  controls. The isolated-island fix alone cannot solve mainland shape quality.
+- Saved the population-site control, the repaired docking control, and two
+  representative local failures with world and regional images and cell data.
+  The gallery states their defects and does not select a production replacement.
+- Re-read section 6 of the 2015 paper. It identifies rigid guiding shapes and
+  large final area corrections as causes of thin extensions. It proposes
+  non-uniform scaling as future work. A global horizontal stretch is not an
+  implementation of that adaptive per-region proposal.
+- Added a guide-area relaxation control. It preserves each source-border and
+  continent group's total guide area, but reduces within-group density extremes.
+  The final tile budgets remain the original population budgets. These relaxed
+  areas must never be presented as population targets.
+- The first regional preparation stopped on dissolved map-unit codes such as
+  BIH. Added a source-based fallback only when all map units of the country have
+  one continent label. Seven current fallbacks are unambiguous. Tests reject
+  mixed-continent fallback records. The failed runs remain separate.
+- Started fresh regional-guide trials at blend weights 0.25 and 0.5, using an
+  immutable copy of commit `9bf5f8f`. Their output has not been visually reviewed.
+  The 500,000-tile guide-only partition is still running. Its first two smoothed
+  dual stages reached their iteration limits; final counts are not yet available.
+- The current partition suite has 17 passing tests. Production code and target
+  data remain unchanged. The work window has not ended.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

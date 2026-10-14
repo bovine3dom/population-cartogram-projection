@@ -62,6 +62,19 @@ original population budgets. Any failed external run stops the pipeline.
 
 These controls are off by default. They are experiments, not acceptance rules.
 
+`relax_flow_areas.py` tests a different continuous guide. Within each source
+land-border group and source continent label, it blends requested guide areas
+with geometric-area shares. A blend of zero keeps the requested areas; a blend
+of one gives that group uniform density. Isolated components keep their areas.
+The output records every changed guide area and any unambiguous country-code
+fallback needed for dissolved map units. It does not change source geometry,
+adjacency, population groups, or final tile budgets.
+
+These relaxed areas are **not population targets**. Use them only for the
+external flow guide. Then supply that geometry to the tile pipeline with the
+original component inputs. Transcontinental source labels can affect the result.
+Inspect it before selection; the guide is not an approved population map.
+
 ## Stages
 
 1. Prepare component geometry and run continuous flow, unless geometry was

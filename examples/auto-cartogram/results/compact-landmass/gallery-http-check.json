@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-14T18:02:25.993900+00:00",
+  "checked_at_utc": "2026-10-14T18:30:41.085921+00:00",
   "method": "Headless local HTTP requests for every unique relative href and src on the gallery page",
   "resources": [
     {
@@ -19,6 +19,22 @@
       "status": 200
     },
     {
+      "path": "examples/auto-cartogram/results/compact-landmass/docked-flow/bundle.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/docked-flow/regions/africa.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/docked-flow/regions/south-asia.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/docked-flow/review.png",
+      "status": 200
+    },
+    {
       "path": "examples/auto-cartogram/results/compact-landmass/flow-compact/bundle.json",
       "status": 200
     },
@@ -28,6 +44,10 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/flow-compact/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/flow-failures/failures.json",
       "status": 200
     },
     {
@@ -68,6 +88,10 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/geographic-comparison.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/global-coast-rejected/review.png",
       "status": 200
     },
     {
@@ -127,6 +151,14 @@
       "status": 200
     },
     {
+      "path": "examples/auto-cartogram/results/compact-landmass/local-shape-rejected/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/native-country-comparison.json",
+      "status": 200
+    },
+    {
       "path": "examples/auto-cartogram/results/compact-landmass/owid/gaps.json",
       "status": 200
     },
@@ -180,6 +212,26 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/partition-tutte-power/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/population-flow/bundle.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/population-flow/regions/europe.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/population-flow/regions/indonesia.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/population-flow/regions/south-asia.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/population-flow/review.png",
       "status": 200
     },
     {

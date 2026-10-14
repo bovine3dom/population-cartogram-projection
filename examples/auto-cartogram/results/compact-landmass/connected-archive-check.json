@@ -1,6 +1,6 @@
 {
-  "checked_at_utc": "2026-10-14T18:02:25.182928+00:00",
-  "script_sha256": "2f4772c6553beef605c86e900083c1f615bb50c8e8e61822e8aefe189ced2e2e",
+  "checked_at_utc": "2026-10-14T18:30:40.390714+00:00",
+  "script_sha256": "ac61c21fc096acc326f3ab03519497f7ca62bf245ae732ec09fc78f8e0688a68",
   "results": [
     {
       "layout": "flow-compact",
@@ -16,6 +16,22 @@
     },
     {
       "layout": "world-110000",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "population-flow",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "docked-flow",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "local-shape-rejected",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "global-coast-rejected",
       "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
     }
   ]
