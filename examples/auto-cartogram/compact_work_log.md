@@ -933,6 +933,17 @@ The separated layout has exact budgets but is not an acceptable replacement.
   option chooses the nearby fixed coast. All 43 shape and 23 partition tests
   pass. World controls are next; no visual improvement is assumed yet.
 
+## 21:45 UTC — Validation checkpoint
+
+- Saved the 21:37 checkpoint: all ten test commands pass. It records the code
+  before the later fixed-coast option; that option has separate passing shape
+  and partition tests above. Production code and targets are unchanged.
+- Rechecked 23 complete layout archives. All bundle hashes and recomputed layout
+  and gap metrics match. The gallery serves all 134 linked resources checked at
+  21:37 UTC. The incomplete 128-grid run is not counted as a completed archive.
+- The 500,000-tile run has reached fixed-border refinement. The three fixed-coast
+  controls and two recorded 55,000-tile pipelines remain active.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
