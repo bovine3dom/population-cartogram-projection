@@ -1,5 +1,19 @@
 # Automatic population mosaic cartograms
 
+## Current experiment: compact landmasses
+
+The separated-shape trials are not an acceptable replacement for OWID. They
+remove connector paths but leave large artificial spaces between countries.
+The current experiment returns to the Tutte partial fit and tests joint shape
+deformation with a separate land-sea boundary cost. It measures empty spaces
+between countries, not only holes inside each component.
+
+Open the [compactness comparison](examples/auto-cartogram/results/compact-landmass/index.html)
+for OWID, Tutte, and the rejected separated layout. See the
+[new work log](examples/auto-cartogram/compact_work_log.md) for completed checks.
+The new work deadline is 06:00 UTC on 15 October 2026. No replacement is approved.
+Production code and targets remain unchanged.
+
 ## Recommendation
 
 Replace the fixed OWID layout with an offline generator. Give each geographic

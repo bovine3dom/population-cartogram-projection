@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compact world cartograms: comparison</title>
+<style>body{font:17px/1.5 system-ui,sans-serif;max-width:1500px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#242424}img{width:100%;height:auto}article{border-top:1px solid #aaa;margin-top:2rem}td,th{text-align:left;padding:.4rem 1rem .4rem 0}a{color:#21577c}.warning{border-left:4px solid #973b28;padding:1rem}</style>
+<h1>Compact world cartograms</h1>
+<p class="warning">OWID is the compactness benchmark. The separated-shape layout is rejected. Joint-deformation trials are running. No automatic replacement is approved.</p>
+<p>The images show both country shapes and empty-space masks. Red marks enclosed empty space. Orange marks a disk-closing proxy at radius 8 tiles, including gaps open to the ocean. Real lakes, straits, bays, and island seas can also be marked. These are diagnostic masks, not a map of confirmed artificial holes.</p>
+<p>Population scopes, country colours, and actual tile counts differ. Do not read this as a controlled population comparison. The original OWID file is unchanged. Its 54,978 rows occupy 54,967 distinct coordinates; eleven coordinates have both South Africa and Lesotho labels. The masks use occupied coordinates once.</p>
+<table><tr><th>Layout</th><th>Occupied cells</th><th>Enclosed empty cells</th><th>Land-sea edges</th><th>Closing additions, radius 4</th></tr>
+<tr><td>OWID</td><td>54,967</td><td>172</td><td>7,364</td><td>4,549</td></tr>
+<tr><td>Tutte partial fit</td><td>53,017</td><td>1,020</td><td>9,154</td><td>5,045</td></tr>
+<tr><td>Separated shapes</td><td>55,000</td><td>2,371</td><td>16,702</td><td>11,283</td></tr></table>
+<article><h2>OWID benchmark</h2><a href="owid/layout.png"><img src="owid/layout.png" alt="OWID world cartogram"></a><details><summary>Empty-space mask</summary><img src="owid/gaps.png" alt="OWID empty-space diagnostic"></details><p><a href="owid/gaps.json">Measurements and source hashes</a></p></article>
+<article><h2>Tutte partial fit: starting point</h2><p>All 348 represented source borders are retained. Absolute component budget error: 2,011 tiles. Thin paths and poor country positions still need correction.</p><a href="tutte-partial-200/layout.png"><img src="tutte-partial-200/layout.png" alt="Tutte partial fit"></a><details><summary>Empty-space mask</summary><img src="tutte-partial-200/gaps.png" alt="Tutte empty-space diagnostic"></details><p><a href="tutte-partial-200/gaps.json">Measurements and source hashes</a></p></article>
+<article><h2>Separated shapes: rejected direction</h2><p>Exact component counts and no added connector paths do not compensate for the large artificial spaces between countries.</p><a href="shape-islands/layout.png"><img src="shape-islands/layout.png" alt="Separated country shapes with large gaps"></a><details><summary>Empty-space mask</summary><img src="shape-islands/gaps.png" alt="Separated-shape empty-space diagnostic"></details><p><a href="shape-islands/gaps.json">Measurements and source hashes</a></p></article>
+<p>See the <a href="../../compact_work_log.md">work log</a>. The new deadline is 06:00 UTC on 15 October 2026. Production code and targets remain unchanged.</p>
+</html>
