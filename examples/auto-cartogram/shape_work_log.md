@@ -465,3 +465,18 @@ Inspect the resulting images at world and regional scales.
   55,000-tile parent. Also started a 55,000-tile trial from Tutte centres.
   Each trial will run integer refinement and small-island placement. No result
   from these new trials is approved yet. The 500,000-tile refinement continues.
+
+## 13:48–13:56 UTC — seed review and full test check
+
+- The 10,000-tile seed trial completed. Its world image still puts Thailand
+  north of Myanmar. It retains 138 of 341 borders, compared with 152 in the
+  earlier cleaned-shape case. Exact counts and no false contacts are not
+  sufficient reasons to select it. Keep it as a rejected comparison.
+- All eight Python, Julia, and production CPU test commands pass. The focused
+  shape suite has 31 tests. Saved commands, source hashes, and logs in
+  `results/shape-first/validation-1352/`.
+- Rechecked all seven published bundles without generator inputs. All saved
+  metrics and shape checks match. All 96 local links in the two HTML galleries
+  resolve to files. Production code and targets remain unchanged.
+- The 110,000-tile seed trial, Tutte-seeded trial, and 500,000-tile trial are
+  now in integer refinement. Their final island-stage images are not ready.
