@@ -196,6 +196,7 @@ python examples/auto-cartogram/shape_stress.py INPUT TEMPLATES PLACED \
 python examples/auto-cartogram/publish_shape_review.py \
   INPUT TEMPLATES PLACED BUNDLE
 python examples/auto-cartogram/build_shape_gallery.py INDEX.html BUNDLE
+python3 examples/auto-cartogram/recheck_shape_bundle.py BUNDLE --output RECHECK.json
 ```
 
 For the new template-cleanup trials, first run:
@@ -210,6 +211,13 @@ false borders, and unchanged template shapes before it saves a bundle.
 It uses `rsvg-convert` to render images without a display. The bundle includes
 compressed output cells and templates. It does not include the full source
 population data needed to generate new budgets.
+
+The bundle recheck uses only Python 3.11 or later and its standard library. It
+restores the compressed cells, repeats the metrics and template checks, and
+compares them with the saved records. It does not need the ignored generator
+outputs. For the new small-island layouts, it also checks that protected
+components and land contacts did not move. These checks do not prove that the
+islands have correct geographic positions.
 
 The optional continuous-flow build is separate:
 

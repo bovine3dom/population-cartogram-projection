@@ -428,3 +428,21 @@ Inspect the resulting images at world and regional scales.
   contact. False contacts remain forbidden.
 - All 30 focused tests pass. Added checks for the template cost and fixed
   components, and exercised the new mode through the file pipeline.
+
+## 13:23–13:33 UTC — archive rechecks and distortion results
+
+- The template-cost-2 deformation changes 399 cells across 130 components but
+  retains only two more land borders. Visual review still finds loss of coast
+  detail. The cost-8 trial changes five cells across four components and retains
+  one more border. Neither gives a substantial improvement over intact placement.
+- Deformation now captures input and source hashes before setup. Repeated the
+  cost-8 trial after this bookkeeping change; its cells are byte-identical.
+- Added a standalone bundle recheck. It restores compressed cells and templates,
+  repeats all saved numeric metrics, and compares translation records. It needs
+  no ignored generator outputs or external Python packages.
+- For small-island layouts, bundles will also include pre-island cells and a
+  check that protected components and all land contacts are unchanged. Parent
+  input hashes are checked before these claims are recorded.
+- All 30 focused tests pass. The file test checks both archive types and rejects
+  a moved protected component. Rechecked all four current gallery bundles with
+  plain Python; their metrics and translation records match.

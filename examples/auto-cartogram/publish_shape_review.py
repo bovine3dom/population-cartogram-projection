@@ -11,11 +11,13 @@ import tempfile
 import check_shape_translation
 import review_layout
 import review_regions
+from recheck_shape_bundle import check_island_moves
 import save_review
 
 
 def run(inputs,templates,layout,output,title='World: automatic shape-first population layout',regions=True):
     if output.exists():raise ValueError('Output already exists')
+    script_hash=save_review.digest(Path(__file__))
     metrics=review_layout.run(inputs,layout,title)
     if any(metrics[name] for name in ['absolute_tile_error','disconnected_regions','regions_with_holes','false_contacts']):
         raise ValueError('Review bundle requires exact counts, connected regions, no tile holes, and no false contacts')
@@ -31,6 +33,14 @@ def run(inputs,templates,layout,output,title='World: automatic shape-first popul
         if metrics['tiles']>=110000:
             subprocess.run(['rsvg-convert',str(layout/'review.svg'),'-w','3600','-o',str(bundle/'review-large.png')],check=True)
         check_shape_translation.run(inputs,templates,layout,bundle/'translation-check')
+        island_record=layout/'island-placement.json'
+        if island_record.exists():
+            metadata=json.loads(island_record.read_text())
+            parents=[Path(p) for p in metadata['inputs'] if Path(p).name=='cells.csv']
+            if len(parents)!=1:raise ValueError('Island layout needs one parent cell file')
+            checked=check_island_moves(inputs,parents[0].parent,layout,metadata)
+            (bundle/'island-move-check.json').write_text(json.dumps(checked,indent=2)+'\n')
+            (bundle/'pre-island-cells.csv.gz').write_bytes(gzip.compress(parents[0].read_bytes(),mtime=0))
         shutil.copyfile(inputs/'geographic-contacts.csv',bundle/'input-geographic-contacts.csv')
         for source,name in [(layout/'cells.csv','cells.csv.gz'),(templates/'cells.csv','template-cells.csv.gz')]:
             (bundle/name).write_bytes(gzip.compress(source.read_bytes(),mtime=0))
@@ -42,7 +52,7 @@ def run(inputs,templates,layout,output,title='World: automatic shape-first popul
         report=dict(method='Independent tile review, unchanged-template check, and headless rendering',
             limit='Requested counts are exact, not exact population ratios. Missing source contacts and omitted source holes remain in metrics.json. This bundle is not production approval.',
             files={str(p.relative_to(bundle)):save_review.digest(p) for p in sorted(bundle.rglob('*')) if p.is_file()},
-            script_sha256=save_review.digest(Path(__file__)))
+            script_sha256=script_hash)
         (bundle/'bundle.json').write_text(json.dumps(report,indent=2)+'\n')
         bundle.rename(output)
     finally:
