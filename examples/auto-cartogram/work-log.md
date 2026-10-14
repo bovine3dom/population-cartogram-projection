@@ -713,3 +713,21 @@ under ignored `output/auto-cartogram/`.
 - Rechecked all 17 published transport exports, including both new GBR exports.
   Started a bounded one-thread repeat of the successful two-thread native run
   to test reproducibility. No further layout algorithms are being added.
+
+## 04:28–04:38 UTC — reproducibility and final verification
+
+- The one-thread native GBR repeat finishes. Source, target, mapping, and
+  target-quality CSV files match the two-thread run byte for byte. Solves and
+  checks take 478 seconds versus 241. Saved the hashes and independent check.
+- Rendered all nine main world SVGs again. Their PNG files match the committed
+  images byte for byte. Saved the renderer version and image hashes.
+- Added 1,000 random support tests with exact rational subset oracles, including
+  integer capacities above Float64's exact integer range. All pass. The final
+  complete suite passes at 04:35: 12 layout, six CSV transport, and 28 geometry
+  test methods; 34 layout, 22 transport, 215 audit, and 108 production Julia checks.
+  Java move and flow oracles also pass inside the layout suite.
+- The validation record checks 496 archived file hashes and all local links.
+  It records test commands and code hashes. Production source files and the
+  OWID target CSV are unchanged from the starting checkpoint.
+- All long-running experiment jobs have finished or reached recorded limits.
+  No world layout has been approved for production.

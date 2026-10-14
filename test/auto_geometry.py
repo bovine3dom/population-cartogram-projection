@@ -97,6 +97,28 @@ class SupportTests(unittest.TestCase):
             if strongest > 0: self.assertGreater(bound,0)
 
 
+    def test_random_supports_with_exact_large_integer_oracle(self):
+        from fractions import Fraction
+        import random
+        rng=random.Random(17)
+        for _ in range(1000):
+            ns,nt=rng.randint(1,7),rng.randint(1,7)
+            supply=[rng.randint(1,100)*rng.choice([1,10**15]) for _ in range(ns)]
+            neighbours=[rng.sample(range(nt),rng.randint(1,nt)) for _ in supply]
+            population=sum(supply); strongest=Fraction(0)
+            for mask in range(1,1 << ns):
+                selected=[i for i in range(ns) if mask & (1 << i)]
+                targets=set().union(*(set(neighbours[i]) for i in selected))
+                excess=sum(supply[i] for i in selected)*nt-population*len(targets)
+                strongest=max(strongest,Fraction(excess,population*len(targets)))
+                if len(targets)<nt:
+                    strongest=max(strongest,Fraction(excess,population*(nt-len(targets))))
+            result=support.equal_target_cut(supply,neighbours,nt)
+            self.assertEqual(result["exact_marginals_feasible"],strongest == 0)
+            self.assertLessEqual(result["necessary_maximum_relative_target_error"],float(strongest)+1e-12)
+            if strongest > 0: self.assertGreater(result["necessary_maximum_relative_target_error"],0)
+
+
 class BalanceTests(unittest.TestCase):
     def test_support_expansion_stays_local_and_within_groups(self):
         sources=[dict(group_id="a"),dict(group_id="b")]

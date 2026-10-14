@@ -142,8 +142,8 @@ failed and stopped trials. A [failure table](results/generator-failures.csv)
 records 14 selected failures, stops, and timeouts with log hashes. Those trials
 used different inputs and builds; they are not completed layouts.
 
-The corrected 55,000-tile fit with a convex-boundary initializer and 200
-polishing passes has 53,017 tiles and 2,011 tiles of absolute component error.
+The corrected 55,000-tile fit uses a convex-boundary initializer and a 200-pass
+polishing limit. It has 53,017 tiles and 2,011 tiles of absolute component error.
 Its 40-pass version has 2,317 tiles of error. At 110,000 tiles, increasing the
 integer-initialized fit from 40 to 200 passes reduces absolute error from 9,069
 to 6,140 tiles. It finishes with 103,884 tiles. All represented contacts remain,
@@ -152,9 +152,9 @@ narrow strips in the 55,000-tile image.
 
 | Budget | Selected corrected fit | Actual tiles | Absolute component error | Country order errors |
 | ---: | --- | ---: | ---: | ---: |
-| 10,000 | Integer initialization, 40 passes | 9,933 | 241 | 500 |
-| 55,000 | Convex-boundary initialization, 200 passes | 53,017 | 2,011 | 1,368 |
-| 110,000 | Integer initialization, 200 passes | 103,884 | 6,140 | 670 |
+| 10,000 | Integer initialization, limit 40 | 9,933 | 241 | 500 |
+| 55,000 | Convex-boundary initialization, limit 200 | 53,017 | 2,011 | 1,368 |
+| 110,000 | Integer initialization, limit 200 | 103,884 | 6,140 | 670 |
 
 ![Corrected convex-boundary fit at 55,000 tiles](results/world-55000-tutte-partial-200/review.png)
 
@@ -217,6 +217,10 @@ source coverage and year, and obtain a layout that passes the chosen checks.
 See [generator instructions](generator.md), [work log](work-log.md), and
 [earlier map-unit trials](early-layouts.md). Saved result directories contain
 PNGs, metrics, group tables, count errors, contact errors, and input hashes.
+All nine main world images also pass a
+[byte-identical rendering check](results/world-image-reproduction.json).
+The [validation record](results/validation.json) lists test commands, code
+hashes, archive checks, and the unchanged production files.
 Large cell exports, SVG files, source membership, and downloaded tools remain
 under ignored `output/auto-cartogram/` in the working environment.
 
