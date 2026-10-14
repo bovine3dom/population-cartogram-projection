@@ -127,6 +127,19 @@ has 1,894 tiles in 51 groups. It keeps all 270,120,945 matched people in its
 budgets, but groups 1,564,232 people from zero-budget components. Its small-island
 positions still need work. Country-specific unmatched coverage is not assessed.
 
+A new placement test keeps those exact island shapes and counts, but places
+them near projected source centroids. It requires no land contacts, so it is
+not a method for moving adjacent countries independently. Island axis-order
+errors fall from 426 to 18, 5, and 3 out of 2,323 comparisons at spacing settings
+1.0, 1.2, and 1.6. All three have exact counts, no overlaps, no false contacts,
+and no disconnected shapes or region holes. Larger spacing leaves more gaps.
+
+![Indonesia with improved island positions](results/indonesia-reposition-1.2/review.png)
+
+Other spacing settings: [1.0](results/indonesia-reposition-1.0/review.png) ·
+[1.6](results/indonesia-reposition-1.6/review.png).
+These are placement checks, separate from the transport checks below.
+
 The native H3-8 grouped transport test now covers all 832,166 matched source
 cells. Independent checks confirm their IDs, population, and group labels.
 Cross-group transport is zero. The raw export retains 99.883% of population,

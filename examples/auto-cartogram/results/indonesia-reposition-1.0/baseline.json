@@ -1,0 +1,17 @@
+{
+  "method": "Geographic placement of existing island shapes",
+  "template_cells_sha256": "109656c22606c4bea3b4625539e683d1b82e43f97891e2f863025fc2b352cdbe",
+  "template_generation": [
+    "mode=topology",
+    "seed=1",
+    "placement=directional",
+    "embedding=native",
+    "forceIterations=2147483647",
+    "scaledPatience=500",
+    "finalPatience=3000"
+  ],
+  "limit": "Requires no represented land borders; keeps each island shape and count. Zero-budget islands remain grouped.",
+  "spacing": 1.0,
+  "elapsed_seconds": 0.1434786170721054,
+  "script_sha256": "5ae7bba493e19272ddd3b8068c5b0418f993112737d8c7f3509a548a18587af8"
+}

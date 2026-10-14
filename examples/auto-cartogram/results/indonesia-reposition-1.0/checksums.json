@@ -1,0 +1,22 @@
+{
+  "output/auto-cartogram/indonesia-1894-v2-input/geographic-contacts.csv": "2aa84004572e5a38468ab1ac968f83888314ee328a8c7ea2b83f81ed34c7f56f",
+  "output/auto-cartogram/indonesia-1894-v2-input/groups.csv": "3f38998797c74f2c4d8386608075897a5a5e3de3e37acd2f80b3c1b09a6b1123",
+  "output/auto-cartogram/indonesia-1894-v2-input/input.wkt": "f967994fd0271ca775f0e2af843d6448d58740bd9e3556716e01de7e8cd0411e",
+  "output/auto-cartogram/indonesia-1894-v2-input/manifest.json": "4ea868fb8d3ee2732d96061af1350b6a01f27ac99374165348a342b6d9f5c285",
+  "output/auto-cartogram/indonesia-1894-v2-input/original-outlines.json": "b45adf2179d9a6869c1a9bac7e385095b1dd396130379b24ebad95ca28db8b89",
+  "output/auto-cartogram/indonesia-1894-v2-input/outline-checks.json": "2e2074afde0ddd544796c4b098bb008539b81bba2242be01e746794b14df26bb",
+  "output/auto-cartogram/indonesia-1894-v2-input/validated.wkt": "b4d578cec76769b01eb0b74d569dc68c5ff7270bf524cb4c825ad569abe93639",
+  "output/auto-cartogram/indonesia-1894-v2-input/weights.tsv": "6e6471d61774b4dea71cb8c4e9bcb63a3c843c6c6254c827e6ce7f68b973ce8e",
+  "output/auto-cartogram/indonesia-reposition-1.0/baseline.json": "dff8b7c30796a322c0d47a221431cafa76a9d647923834c59e993530de349027",
+  "output/auto-cartogram/indonesia-reposition-1.0/cells.csv": "ea4d5e275982b0fb4aa3908140ddc948375325fde338643e5b4d45b98a9eaef2",
+  "output/auto-cartogram/indonesia-reposition-1.0/complete.txt": "fd8707bfde814a3d265c0ac15082364347e07b951c00d73f067e9e76e94a0be6",
+  "output/auto-cartogram/indonesia-reposition-1.0/contact-errors.csv": "ad296a373ba2bc99f8df65ea9079a64b0eb7a3a3ec182704b8dfa6a6ba203ee0",
+  "output/auto-cartogram/indonesia-reposition-1.0/country-counts.csv": "0338e275f945567730a5c31ba8b830c08bb346562b17bb518a983ca01cf262f4",
+  "output/auto-cartogram/indonesia-reposition-1.0/country-order-errors.csv": "75714906e7cad788b50d8cdac4bb632c20b13eb9c3d3d11c908745d2798827ef",
+  "output/auto-cartogram/indonesia-reposition-1.0/group-capacities.csv": "a4841bb2810325bed17851b2d2faf605903b3d8f5ae0d5dd62a2a359ce5d9fac",
+  "output/auto-cartogram/indonesia-reposition-1.0/island-order-errors.csv": "f8d55ba8adb18d58be5d5e0dfe95dae860131f013e3fc192120bc235f166df66",
+  "output/auto-cartogram/indonesia-reposition-1.0/metrics.json": "38c1a9fe1564f9ce43ad18bd2211c117771c9c24d2c3e12e8564b920e9dd4e63",
+  "output/auto-cartogram/indonesia-reposition-1.0/region-quality.csv": "d6976d8ad1c0571dc58503a2d0025854190be7d3af905f42ead9c63ae9dac994",
+  "output/auto-cartogram/indonesia-reposition-1.0/review.png": "ad5daaebc5a35e303d674b466db412ec122c5ad4ae5f210bfa07d6d59bb46462",
+  "output/auto-cartogram/indonesia-reposition-1.0/review.svg": "8ec09e4f703a9a68329f8cbd04a13869df060f564f2a9e042b6a008d96204ee1"
+}

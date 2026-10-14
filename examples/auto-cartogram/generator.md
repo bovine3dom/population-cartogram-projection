@@ -215,6 +215,12 @@ For a fast geography-first comparison, run:
 python3 examples/auto-cartogram/review_layout.py "$INPUT" "$LAYOUT"
 ```
 
+To keep existing island shapes, add `--reuse-layout EXISTING_LAYOUT` and an
+optional `--spacing 1.2`. This route rejects required or actual land contacts.
+It also requires exact counts, connected templates, and no holes. It translates
+whole shapes without changing their cells relative to each other. The output
+records the parent cell hash. This improves island placement, not eligibility.
+
 This baseline grows separate, connected shapes to exact tile counts. It keeps
 a gap between shapes and therefore removes all land borders. The review report
 records these missing contacts. It is not a topology-preserving substitute.

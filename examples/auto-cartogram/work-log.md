@@ -504,3 +504,20 @@ under ignored `output/auto-cartogram/`.
   person's movement; opposite changes can cancel.
 - All four standard-library transport tests pass. A synthetic case checks the
   normalization explicitly. Tampered files and reordered pairs are rejected.
+
+## 02:01–02:04 UTC — island placement without shape changes
+
+- All eight small-world initialization tests finished. Transform 5 has the
+  lowest absolute count error, 241 tiles, but 876 country order errors. Transform
+  2 has 493 country order errors but 594 tiles of count error. Started both at
+  the larger resolutions. Neither small result is ready for production.
+- Stopped the obsolete 110,000-budget exact fit after both smaller cases failed.
+  The corrected one-unit version remains the current exact-mode comparison.
+- Added geographic placement of existing island shapes. It refuses required
+  or actual land contacts and invalid template counts or topology. Tests verify
+  that every shape changes only by translation. All 23 geometry tests pass.
+- On Indonesia, island order errors fall from 426 to 18, 5, and 3 out of 2,323
+  comparisons at spacing 1.0, 1.2, and 1.6. All 1,894 tiles and 51 shapes remain;
+  there are no overlaps, contacts, disconnected shapes, or region holes. Saved
+  all three images and their checks. Transport has not yet been translated to
+  these new coordinates.
