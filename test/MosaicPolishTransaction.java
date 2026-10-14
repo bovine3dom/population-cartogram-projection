@@ -41,6 +41,21 @@ public class MosaicPolishTransaction {
         }
     }
 
+    private static void checkPartialSupply() throws Exception {
+        FlowDigraph flow=new FlowDigraph();
+        var source=flow.addVertex(); var cell=flow.addVertex(); var sea=flow.addVertex();
+        source.setSupply(2); sea.setSupply(-2); cell.setCapacity(1);
+        var entry=flow.addEdge(source,cell); entry.setWeight(1);
+        var move=flow.addEdge(cell,sea); move.setWeight(1);
+        if (flow.solve()!=null) throw new AssertionError("Cell capacity must make full supply infeasible");
+        Polisher polisher=new Polisher(null,null); set(polisher,"flowDigraph",flow);
+        var slack=Polisher.class.getDeclaredMethod("addSupplySlack",FlowDigraph.Vertex.class); slack.setAccessible(true);
+        slack.invoke(polisher,sea);
+        int[] result=flow.solve();
+        if (result==null || result[entry.getId()]!=1 || result[move.getId()]!=1
+                || result[flow.numberOfEdges()-1]!=1) throw new AssertionError("Slack must keep one real move and one unmet unit");
+    }
+
     public static void main(String[] args) throws Exception {
         GridMath math=new GridMath(new SquareGeometry());
         Dual dual=new Dual();
@@ -74,6 +89,7 @@ public class MosaicPolishTransaction {
             throw new AssertionError("Polishing did not restore cells, counts, and contacts");
         }
         checkPlannedDestinations();
+        checkPartialSupply();
         // Empty guides make both regions surplus. Exact mode must still send
         // only one unit, not one unit from each region.
         for (var v : dual.getVertices()) {

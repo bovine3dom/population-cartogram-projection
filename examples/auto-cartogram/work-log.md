@@ -536,3 +536,28 @@ under ignored `output/auto-cartogram/`.
   precision, cross-group population is zero, and maximum target error stays
   below 0.01%. The five remaining island order errors are layout diagnostics,
   not a claim of complete geographic accuracy.
+
+## 02:09–02:24 UTC — full tests and flow-feasibility correction
+
+- Re-ran the complete test sequence. The combined command reached its
+  three-minute timeout after the Julia transport tests passed. Ran the remaining
+  audit suite separately; all 215 audit tests pass. The other totals are 12
+  Python/Java layout tests, 5 transport checks, 23 geometry tests, 34 Julia layout
+  tests, and 22 Julia transport tests.
+- A pending 110,000-budget fit spent a long time in minimum-cost flow. Inspection
+  exposed a separate correctness fault: artificial connectivity edges could
+  carry flow while the solver still reported the original graph as feasible.
+  A two-vertex graph with no edge reproduced the false success.
+- Corrected artificial-edge costs and feasibility reporting. Added high-cost
+  and empty-graph cases, and 1,000 mixed random cases to the existing 1,000
+  feasible cases. Exhaustive search agrees on all 2,000 cases, including 523
+  infeasible cases. All 12 Python/Java layout tests pass.
+- Added an optional partial-polish model with explicit unmet-demand edges only
+  at region supply nodes. It cannot bypass cell capacities, and those edges
+  never move tiles. A test checks one allowed move and one unmet unit. The
+  existing rollback still prevents a worse count error.
+- Started corrected fits at all three budgets. Stopped two obsolete pending
+  110,000-budget fits and recorded their status. Their failures are not completed
+  layouts. Earlier exported layouts retain their independent geometric checks,
+  but those checks do not approve their count errors. The native Julia transport
+  results do not use this Java flow solver and are unchanged.
