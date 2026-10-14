@@ -170,6 +170,30 @@
  
                  if (rSource == rTarget) {//can't do a move if they are from the same one
                      continue;
+@@ -403,20 +420,14 @@
+      */
+     private int initializeRegionSupply(ElementList<ArrayList<FlowDigraph.Vertex>> regionVertices, final boolean exact) {
+         int seaSupply = 0;
++        boolean chosen = false;
+ 
+         for (MosaicRegion region : grid.regions()) {
+             //initialize the supply vertex
+             int supply = -region.getTileError();
+             if (exact) {//allow only 1 unit of supply in total.
+-                if (supply > 1) {
+-                    supply = 1;
+-                }
+-                if (supply < -1) {
+-                    supply = -1;
+-                }
+-                if (seaSupply > 0) {
+-                    supply = 0;
+-                }
++                supply = chosen ? 0 : Integer.signum(supply);
++                chosen |= supply != 0;
+             }
+ 
+             FlowDigraph.Vertex u = flowDigraph.addVertex();
 --- a/common/mcf/SuccessiveShortestPathMininumCostFlow.java
 +++ b/common/mcf/SuccessiveShortestPathMininumCostFlow.java
 @@ -159,12 +159,16 @@

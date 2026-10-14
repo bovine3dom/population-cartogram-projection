@@ -35,7 +35,10 @@ does not reduce count error. A synthetic forced-flow test checks the rollback.
 Each transfer uses its planned destination owner. An earlier transfer must not
 change that owner. A second test executes a transfer chain in reverse order.
 Topology mode can then report a residual count error instead of accepting a
-worse pass. Exact mode still fails if it cannot obtain the requested counts.
+worse pass. Exact mode now selects one nonzero region supply per flow pass.
+The previous code could select several surplus regions despite its one-unit
+limit. A regression test checks the total supply. Exact mode still fails if it
+cannot obtain the requested counts.
 
 The optional `-Dmosaic.initialSeaOnly=true` setting removes temporary sea
 regions immediately after grid initialization. It retains every land cell

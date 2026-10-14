@@ -74,6 +74,18 @@ public class MosaicPolishTransaction {
             throw new AssertionError("Polishing did not restore cells, counts, and contacts");
         }
         checkPlannedDestinations();
+        // Empty guides make both regions surplus. Exact mode must still send
+        // only one unit, not one unit from each region.
+        for (var v : dual.getVertices()) {
+            var part=new common.Partition(); part.label="test:"+v.getGraphIndex(); v.setPartition(part);
+        }
+        var supplyFlow=new FlowDigraph(); set(polisher,"flowDigraph",supplyFlow);
+        var regionVertices=Polisher.class.getDeclaredMethod("getRegionVertices"); regionVertices.setAccessible(true);
+        var initialize=Polisher.class.getDeclaredMethod("initializeRegionSupply",arrange.util.ElementList.class,boolean.class);
+        initialize.setAccessible(true);
+        int seaSupply=(Integer)initialize.invoke(polisher,regionVertices.invoke(polisher),true);
+        int supply=0; for (var v : supplyFlow.vertices()) supply+=Math.abs(v.getSupply());
+        if (supply!=1 || seaSupply!=-1) throw new AssertionError("Exact polishing supplied more than one unit");
         Class<?> region=Class.forName("arrange.model.MosaicCartogram$MosaicRegion");
         Field disabled=region.getDeclaredField("$assertionsDisabled"); disabled.setAccessible(true);
         boolean effective=!disabled.getBoolean(null);
