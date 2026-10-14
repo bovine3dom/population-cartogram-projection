@@ -227,3 +227,27 @@ stage. Its 99.5% ratio is 2.011. Packed output has 699,178 rows, target L1
 Four local-transfer checks and 16 hierarchy checks on each backend pass.
 These cover conservation, separate grid components, and reduced long-distance
 transfer on a three-cell path. The revised planet run uses a new output root.
+
+
+## 23:46 UTC: binary checks and higher-factor diagnostics
+
+Added an independent native export path and geometry reports. Nine binary
+checks and eight geometry checks pass. The real Angola export has 18,842 native
+sources, 254 targets, and all 11 city labels. Its transport uses 1,301,370 bytes;
+density uses 138,682 bytes. Dictionary encoding is lossless. Density alone uses
+Float32, with maximum relative error 5.92e-8. Source populations remain Float64.
+No HTTP compression setting or H3-MON code changed.
+
+The headless Chromium check loads this export in 5.2 seconds without errors.
+It reads all native source cells and all labels. This small-country check does
+not establish the memory cost of the full planet. The initial browser attempt
+could not find the Playwright browser; the repeat uses installed Chromium.
+
+The planet run has completed the US, China, Brazil, Australia, and Argentina.
+No planet export is complete yet. Higher-factor diagnostics now constrain fine
+target moments instead of accepting geographic OT output with large folds.
+This diagnostic uses CPU linear programming after the KA/oneAPI native split;
+it is not a replacement GPU fitting method. Conditional source variables avoid
+loss of low-population rows at the LP feasibility floor. On Angola, factors 2
+and 3 retain all masses without fallback. Their 99.5% ratios are 2.515 and
+2.769. Fine geometry, factor 5, and whole-planet cost still need checks.

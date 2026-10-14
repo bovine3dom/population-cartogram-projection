@@ -58,5 +58,27 @@ skips completed countries. The completion marker covers the requested country
 list only. A planet publisher must separately check coverage of all native
 sources and all countries. This runner does not publish files or alter H3-MON.
 
+## Binary export and geometry checks
+
+`native_export.jl FIT NATIVE_SOURCE_DIRECTORY GUIDES NEW_OUTPUT [FACTOR]`
+checks all native sources and countries before it writes files. It checks city
+names against the guides, target coverage, shared-cell owners, country masses,
+and physical target weights. It compares every transport column before and
+after Arrow serialization. It does not publish to H3-MON.
+
+The exporter uses dictionaries where they reduce the column size. Population
+remains Float64. Density uses Float32, with measured relative error at most
+`6e-8`. The H3 halves remain UInt32. Use a dictionary-capable Arrow reader.
+This changes storage, not the fitted transport. There is no HTTP compression
+setting in this exporter. The server keeps its existing compression policy.
+
+`native_quality.jl FIT GUIDES FACTOR BORDER_CSV NEW_OUTPUT` measures support,
+source spread, target-mean changes, triangle orientation, and edge separation.
+It excludes shared target positions and false country contacts from the edge
+graph. Compare these results before publication. A mass check alone does not
+establish good geometry. File size alone does not establish a phone memory
+limit.
+
 Run `test/native_hierarchy.jl` with the example Julia project. Set
-`CONTINUITY_GPU_TEST=1` to also run the oneAPI checks.
+`CONTINUITY_GPU_TEST=1` to also run the oneAPI checks. The binary export and
+geometry tests are `test/native_export.jl` and `test/native_quality.jl`.
