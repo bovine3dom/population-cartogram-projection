@@ -3,13 +3,14 @@ import numpy as np
 
 
 class GeographicOrder:
-    def __init__(self,labels,rows,margin=1.,local_degrees=0.):
+    def __init__(self,labels,rows,margin=1.,local_degrees=0.,mass_weighted=False):
         primary={};population={}
         for c in labels:
             country=rows[c]['country_id'];mass=float(rows[c]['group_population'])
             population[country]=population.get(country,0.)+mass
             if country not in primary or (mass,c)>(float(rows[primary[country]]['group_population']),primary[country]):primary[country]=c
         major={c for country,c in primary.items() if population[country]>=10_000_000}
+        mean_population=sum(population.values())/len(population)
         eligible=set(primary.values()) if local_degrees else major
         constraints=[]
         for a,ca in enumerate(labels):
@@ -17,6 +18,8 @@ class GeographicOrder:
                 cb=labels[b];same=rows[ca]['country_id']==rows[cb]['country_id']
                 if not same and not(ca in eligible and cb in eligible):continue
                 weight=.1 if same else 1.
+                if same and mass_weighted:
+                    weight*=np.clip(np.sqrt(min(float(rows[c]['group_population']) for c in [ca,cb])/mean_population),.02,1.)
                 if local_degrees and not same:
                     lon,lat=[(float(rows[cb][lo])+float(rows[cb][hi])-float(rows[ca][lo])-float(rows[ca][hi]))/2 for lo,hi in [('west','east'),('south','north')]]
                     mean_lat=sum(float(rows[c][key]) for c in [ca,cb] for key in ['south','north'])/4

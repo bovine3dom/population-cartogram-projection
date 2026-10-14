@@ -86,7 +86,16 @@ class Stress:
         return float(value),gradient.ravel()
 
 
-def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8,source_polygons=None,raster=False,no_false_contacts=False,start_from_templates=False,smooth_collision=False,ocean_scale=0.,order_weight=0.,coast_anchors=False,local_order=0.):
+def weight_springs(state,rows):
+    masses=np.array([float(rows[c]['group_population']) for c in state.labels])
+    mean=masses.sum()/len({rows[c]['country_id'] for c in state.labels})
+    if mean<=0:raise ValueError('Population weights require positive total population')
+    if len(state.edges):
+        a,b=state.edges.T
+        state.weights*=np.clip(np.sqrt(np.minimum(masses[a],masses[b])/mean),.02,5.)
+
+
+def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8,source_polygons=None,raster=False,no_false_contacts=False,start_from_templates=False,smooth_collision=False,ocean_scale=0.,order_weight=0.,coast_anchors=False,local_order=0.,mass_weighted=False):
     if output.exists():raise ValueError('Output already exists')
     if iterations<1 or spacing<=0 or any(not math.isfinite(v) or v<0 for v in [spacing,collision,spring,anchor,spatial,gap,ocean_scale,order_weight,local_order]):raise ValueError('Invalid stress settings')
     scripts=[Path(__file__),Path(__file__).with_name('shape_placement.py')]
@@ -122,7 +131,7 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
     if source_polygons:state.border_targets(source_polygons,tiles,required)
     if order_weight:
         from geographic_order import GeographicOrder
-        state.order=GeographicOrder(state.labels,rows,margin=.01*math.sqrt(sum(map(len,tiles.values()))),local_degrees=local_order);state.order_weight=order_weight
+        state.order=GeographicOrder(state.labels,rows,margin=.01*math.sqrt(sum(map(len,tiles.values()))),local_degrees=local_order,mass_weighted=mass_weighted);state.order_weight=order_weight
     ocean_length=ocean_scale*math.sqrt(sum(map(len,tiles.values())))
     if ocean_length:
         for index,(a,b) in enumerate(state.edges):
@@ -133,6 +142,7 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
     if coast_anchors:
         from coast_anchors import apply
         coast_count=apply(state,source_polygons,tiles,required,scale,ocean_length)
+    if mass_weighted:weight_springs(state,rows)
     history=[]
     def callback(x):
         energy,_=state.objective(x);history.append(dict(iteration=len(history)+1,energy=energy))
@@ -150,7 +160,7 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
         no_false_contacts=no_false_contacts,start_from_templates=start_from_templates,smooth_collision=smooth_collision,
         ocean_scale_fraction=ocean_scale,ocean_scale_tiles=ocean_length,
         order_weight=order_weight,local_order_degrees=local_order,order_constraints=state.order.count if state.order else 0,
-        coast_anchors=coast_anchors,coast_anchor_pairs=coast_count,
+        coast_anchors=coast_anchors,coast_anchor_pairs=coast_count,mass_weighted=mass_weighted,
         maximum_integer_placement_shift=max(displacements),integer_placement_shifts_over_two_tiles=sum(d>2 for d in displacements),
         spacing=spacing,maximum_iterations=iterations,iterations=int(result.nit),success=bool(result.success),message=str(result.message),
         collision=collision,spring=spring,anchor=anchor,spatial=spatial,gap=gap,initial_energy=initial,final_energy=float(result.fun),
@@ -181,5 +191,5 @@ if __name__=='__main__':
     parser.add_argument('--iterations',type=int,default=3000)
     for name,default in [('spacing',1.),('collision',100.),('spring',1.),('anchor',.01),('spatial',.03),('gap',.8),('ocean-scale',0.),('order-weight',0.),('local-order',0.)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--source-polygons',type=Path,help='Use concave collision pieces and anchors on actual source borders')
-    for name in ['raster','no-false-contacts','start-from-templates','smooth-collision','coast-anchors']:parser.add_argument('--'+name,action='store_true')
-    args=parser.parse_args();print(json.dumps(run(args.inputs,args.templates,args.output,args.spacing,args.iterations,args.collision,args.spring,args.anchor,args.spatial,args.gap,args.source_polygons,args.raster,args.no_false_contacts,args.start_from_templates,args.smooth_collision,args.ocean_scale,args.order_weight,args.coast_anchors,args.local_order),indent=2))
+    for name in ['raster','no-false-contacts','start-from-templates','smooth-collision','coast-anchors','mass-weighted']:parser.add_argument('--'+name,action='store_true')
+    args=parser.parse_args();print(json.dumps(run(args.inputs,args.templates,args.output,args.spacing,args.iterations,args.collision,args.spring,args.anchor,args.spatial,args.gap,args.source_polygons,args.raster,args.no_false_contacts,args.start_from_templates,args.smooth_collision,args.ocean_scale,args.order_weight,args.coast_anchors,args.local_order,args.mass_weighted),indent=2))

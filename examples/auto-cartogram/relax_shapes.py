@@ -15,7 +15,7 @@ from geographic_order import GeographicOrder
 from review_layout import load, read_csv, connectivity, holes
 from save_review import digest
 from shape_placement import place
-from shape_stress import Stress
+from shape_stress import Stress, weight_springs
 
 
 def conditional(state,index,positions):
@@ -116,7 +116,8 @@ def run(inputs,layout,output,polygons,rounds=30):
         hashes[str(inputs/'validated.wkt')]=digest(inputs/'validated.wkt')
         apply(state,polygons,tiles,required,scale,ocean_length)
     if metadata['order_weight']:
-        state.order=GeographicOrder(state.labels,rows,margin=.01*np.sqrt(sum(map(len,tiles.values()))),local_degrees=metadata.get('local_order_degrees',0.));state.order_weight=metadata['order_weight']
+        state.order=GeographicOrder(state.labels,rows,margin=.01*np.sqrt(sum(map(len,tiles.values()))),local_degrees=metadata.get('local_order_degrees',0.),mass_weighted=metadata.get('mass_weighted',False));state.order_weight=metadata['order_weight']
+    if metadata.get('mass_weighted'):weight_springs(state,rows)
     state.pairs=np.empty((0,2),dtype=int)
     initial=state.objective(np.array([np.mean(list(tiles[c]),axis=0) for c in state.labels]).ravel())[0]
     result,history=relax(state,tiles,required,rounds)
