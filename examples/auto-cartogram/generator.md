@@ -356,6 +356,9 @@ source's expected target position after normalizing its retained weights. It
 checks input hashes and every ordered pair first. It reports population-weighted
 mean and RMS changes, the maximum change, and per-group results. This is not a
 bound on individual movement or a measure of absolute geographic accuracy.
+For the expansion experiment, add `--allow-appended`. The original pairs must
+remain an unchanged ordered prefix. Each appended pair must be one rook step
+from that source's original support. Independent flow checks still apply.
 
 `review_balance.py RAW_DIR CORRECTED_DIR NEW_OUTPUT` draws native H3-8 target
 errors on one colour scale. It verifies file hashes, unchanged source/target

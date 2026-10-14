@@ -631,3 +631,16 @@ under ignored `output/auto-cartogram/`.
 - Started a 30-minute-bounded correction for the four infeasible world H3-5
   groups. No accepted result is available yet. This is not a new cost-optimal
   transport solve and will need independent balance and position checks.
+
+## 03:29 UTC — expansion export checks
+
+- Added an end-to-end small export test for support expansion. Unchanged support
+  fails, one-step expansion balances the example, and independent integer flow
+  and position checks pass. Failed correction leaves no output directory.
+- Position comparison can now check appended one-step pairs explicitly. Its
+  default still requires unchanged ordered support. All 27 geometry tests and
+  five standard-library transport tests pass.
+- Saved minimum-cut checks for native Indonesia and all three H3-3 world runs.
+  The world runs have 5, 13, and 12 infeasible groups. A returned cut need not
+  give the strongest relative-error bound; retain the earlier disconnected
+  bounds as well. Native Indonesia has no infeasible groups.
