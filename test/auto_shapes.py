@@ -62,10 +62,14 @@ class ShapeTests(unittest.TestCase):
         self.assertEqual(review_gaps.measure(shifted,(1,2))[0],report)
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'owid.csv';path.write_text('10,20,a\n12,20,b\n10,22,a\n')
-            owners,step=review_gaps.read_cells(path,True)
-            self.assertEqual(step,2);self.assertEqual(len(owners),3)
+            owners,source=review_gaps.read_cells(path,True)
+            self.assertEqual(source['input_grid_step'],2);self.assertEqual(len(owners),3)
+            self.assertIn((0,-1),owners)
             path.write_text('10,20,a\n10,20,b\n')
-            with self.assertRaisesRegex(ValueError,'Overlapping'):review_gaps.read_cells(path,True)
+            owners,source=review_gaps.read_cells(path,True)
+            self.assertEqual(source['conflicting_coordinates'],1);self.assertEqual(len(owners),1)
+            path.write_text('component_id,x,y\na,10,20\nb,10,20\n')
+            with self.assertRaisesRegex(ValueError,'Overlapping'):review_gaps.read_cells(path)
 
     def test_sea_perimeter_delta_matches_complete_energy(self):
         tiles={'a':{(2,2),(2,3)},'b':{(3,2),(3,3)}}
