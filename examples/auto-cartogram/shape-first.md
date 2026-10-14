@@ -4,9 +4,42 @@ This is an active experiment. The work window ends at 19:50 UTC on
 2026-10-14. These are intermediate results, not an approved replacement.
 Production code and `data/cartogram.csv` have not changed.
 
-Open the [image gallery](results/shape-first/index.html) for the current review
-candidate. It is a static HTML page. A plain file server can display it.
-See the [work log](shape_work_log.md) for times and failures.
+Open the [first image gallery](results/shape-first/index.html) for all four
+resolutions. The newer [cleaned-shape island gallery](results/shape-first/cleaned-islands.html)
+currently has three resolutions. Both are static HTML pages. A plain file server
+can display them. See the [work log](shape_work_log.md) for times and failures.
+
+## Latest checked results: cleaned shapes and separate islands
+
+The newer gallery uses cleaned templates and a separate small-island placement
+step. That step moves isolated components towards the nearest larger source
+component's coast. It does not prefer a distant component of the same country.
+Components with source land borders stay fixed. Components with at least 1% of
+the matched world population also stay fixed. This limit protects large island
+shapes from a large displacement. It is a heuristic, not a geographic proof.
+
+| Tiles | Retained source borders | False borders | Tile count error |
+| ---: | ---: | ---: | ---: |
+| 10,000 | 152 / 341 | 0 | 0 |
+| 55,000 | 124 / 348 | 0 | 0 |
+| 110,000 | 128 / 353 | 0 | 0 |
+
+Sri Lanka is now beside the Indian tip in the 55,000-tile result. But mainland
+positions remain incorrect: Switzerland is south of northern Italy, and Norway
+is east of Sweden. The other resolutions have further errors in South Asia.
+No result is approved. The 500,000-tile refinement and position-seed trials
+are still running.
+
+Each saved bundle contains compressed cells, templates, pre-island cells, and
+independent checks. Recheck a bundle without the generator inputs:
+
+```sh
+python3 examples/auto-cartogram/recheck_shape_bundle.py \
+  examples/auto-cartogram/results/shape-first/world-55000-shape-islands \
+  --output /tmp/shape-bundle-recheck.json
+```
+
+The following sections describe the earlier gallery and the method.
 
 ## What causes the thin strips?
 
