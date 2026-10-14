@@ -9,6 +9,7 @@ from pathlib import Path
 
 import networkx as nx
 import numpy as np
+from shapely import LineString, Point, STRtree
 
 
 def augment(graph, embedding=None, *, sea_regions=True):
@@ -40,7 +41,46 @@ def augment(graph, embedding=None, *, sea_regions=True):
     return result, sea, augmented_embedding
 
 
-def integer_positions(graph, geography, embedding=None, transform=None):
+def check_drawing(graph, positions):
+    if len({tuple(p) for p in positions.values()})!=len(graph):
+        raise ValueError("Drawing has coincident vertices")
+    edges=list(graph.edges)
+    lines=[LineString([positions[a],positions[b]]) for a,b in edges]
+    if not lines: return
+    left,right=STRtree(lines).query(lines,predicate="intersects")
+    for i,j in zip(left,right):
+        if i>=j: continue
+        shared=set(edges[i]) & set(edges[j])
+        if not shared or not lines[i].intersection(lines[j]).equals(Point(positions[next(iter(shared))])):
+            raise ValueError("Drawing has overlapping or crossing edges")
+
+
+def tutte_positions(graph, embedding):
+    triangulated,boundary=nx.algorithms.planar_drawing.triangulate_embedding(embedding,fully_triangulate=False)
+    angles=np.arange(len(boundary))*2*np.pi/len(boundary)
+    positions=dict(zip(boundary,np.column_stack((np.cos(angles),np.sin(angles)))))
+    interior=sorted(set(graph)-set(boundary))
+    index={v:i for i,v in enumerate(interior)}
+    matrix=np.zeros((len(interior),len(interior)))
+    rhs=np.zeros((len(interior),2))
+    for v,i in index.items():
+        neighbours=list(triangulated.neighbors_cw_order(v))
+        matrix[i,i]=len(neighbours)
+        for n in neighbours:
+            if n in index: matrix[i,index[n]]-=1
+            else: rhs[i]+=positions[n]
+    if interior:
+        positions.update(zip(interior,np.linalg.solve(matrix,rhs)))
+    # Round only after solving. A convex drawing can have very small features.
+    for scale in (1e6,1e9,1e12):
+        rounded={v:np.rint(p*scale).tolist() for v,p in positions.items()}
+        try: check_drawing(graph,rounded)
+        except ValueError: continue
+        return rounded
+    raise ValueError("Cannot round the barycentric drawing without intersections")
+
+
+def integer_positions(graph, geography, embedding=None, transform=None, drawing="chrobak-payne"):
     if transform is not None and transform not in range(8):
         raise ValueError("Drawing transform must be between 0 and 7")
     if embedding is None:
@@ -48,7 +88,9 @@ def integer_positions(graph, geography, embedding=None, transform=None):
         if not planar:
             raise ValueError("Augmented graph is nonplanar")
     embedding.check_structure()
-    positions = nx.combinatorial_embedding_to_pos(embedding)
+    if drawing not in ("chrobak-payne","tutte"):
+        raise ValueError("Unknown planar drawing method")
+    positions = tutte_positions(graph,embedding) if drawing=="tutte" and len(graph)>3 else nx.combinatorial_embedding_to_pos(embedding)
     labels = sorted(graph)
     coordinates = np.array([positions[label] for label in labels], dtype=float)
     if len(labels) == 2:
@@ -77,7 +119,7 @@ def degree_conflicts(edges, weights):
             for v,weight in sorted(weights.items()) if v in graph and graph.degree[v]>2*weight+2]
 
 
-def run(inputs, rotations_path=None, *, sea_regions=True, transform=None):
+def run(inputs, rotations_path=None, *, sea_regions=True, transform=None, drawing="chrobak-payne"):
     output_names = ["embedding.tsv", "embedding-edges.tsv", "embedding.json", "augmented.wkt", "augmented-weights.tsv"]
     if any((inputs/name).exists() for name in output_names):
         raise ValueError("Embedding files already exist")
@@ -116,7 +158,7 @@ def run(inputs, rotations_path=None, *, sea_regions=True, transform=None):
         augmented, local_sea, drawing_embedding = augment(subgraph, local_embedding, sea_regions=sea_regions)
         for label,(a,b) in local_sea.items():
             geography[label] = [(x+y)/2 for x,y in zip(geography[a],geography[b])]
-        poses.update(integer_positions(augmented,geography,drawing_embedding,transform))
+        poses.update(integer_positions(augmented,geography,drawing_embedding,transform,drawing))
         sea.update(local_sea)
         edges.update(tuple(sorted(e)) for e in augmented.edges)
         sizes.append(len(subgraph))
@@ -144,9 +186,8 @@ def run(inputs, rotations_path=None, *, sea_regions=True, transform=None):
                 weight=int(shapes[label]["tiles"])
             stream.write("\t".join(header)+"\n"+ring+"\nSITECOUNT 0\n")
             weights.write(f"{label}\t{weight}\n")
-    metadata={"method":"Biconnected planar dual with temporary sea vertices; Chrobak-Payne integer drawing" if sea_regions else
-                        "Original planar dual; Chrobak-Payne integer drawing",
-              "sea_regions":sea_regions,"drawing_transform":transform,
+    metadata={"method":("Biconnected planar dual with temporary sea vertices" if sea_regions else "Original planar dual")+"; "+drawing+" drawing",
+              "drawing":drawing,"sea_regions":sea_regions,"drawing_transform":transform,
               "rotation_source":"geographic border portals" if prescribed is not None else "NetworkX planarity algorithm",
               "rotation_sha256":hashlib.sha256(rotations_path.read_bytes()).hexdigest() if rotations_path else None,
               "networkx_version":nx.__version__,"python_hash_seed":os.environ.get("PYTHONHASHSEED", "random"),
@@ -173,5 +214,6 @@ if __name__ == "__main__":
     parser.add_argument("--rotations",type=Path)
     parser.add_argument("--no-sea",action="store_true",help="Export only original land vertices and contacts")
     parser.add_argument("--transform",type=int,choices=range(8),help="Use one fixed signed axis permutation instead of the geographic fit")
+    parser.add_argument("--drawing",choices=("chrobak-payne","tutte"),default="chrobak-payne")
     args=parser.parse_args()
-    run(args.inputs,args.rotations,sea_regions=not args.no_sea,transform=args.transform)
+    run(args.inputs,args.rotations,sea_regions=not args.no_sea,transform=args.transform,drawing=args.drawing)
