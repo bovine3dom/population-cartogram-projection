@@ -8,6 +8,7 @@ import sys
 import shutil
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 import pyarrow as pa
@@ -66,7 +67,8 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertTrue(all(x<10 for c in 'ab' for x,y in tiles[c]))
             self.assertTrue(all(x>10 for c in 'cd' for x,y in tiles[c]))
             sites=root/'sites.csv';sites.write_text('component_id,x,y\n'+''.join(f'{c},{x},0\n' for c,x in zip('abcde',[0,1,20,21,10])))
-            with contextlib.redirect_stdout(io.StringIO()):site_record=run(inputs,layout,root/'site-result',sigma=1,iterations=20,power=True,by_landmass=True,sites=sites)
+            with patch('partition_land.guide_costs',side_effect=AssertionError('Power costs must not build outline grids')),contextlib.redirect_stdout(io.StringIO()):
+                site_record=run(inputs,layout,root/'site-result',sigma=1,iterations=20,power=True,by_landmass=True,sites=sites)
             self.assertEqual(site_record['sites'],str(sites));self.assertGreater(site_record['guide_alignment']['scale'],0)
             self.assertIn(str(sites),site_record['inputs'])
             self.assertEqual({c:len(p) for c,p in load(inputs,root/'site-result')[1].items()},{c:len(p) for c,p in tiles.items()})

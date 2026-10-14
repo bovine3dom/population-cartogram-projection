@@ -110,8 +110,16 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
             guides={c:{point} for c,point in read_sites(sites,tiles).items()}
         else:_,guides,_=load(inputs,guide_layout)
         centres,alignment=fit_guide_centres(tiles,guides,budgets)
-    costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=max(64,int(np.ceil(4*sigma))+2),centres=centres,budgets=budgets)
-    shape=next(iter(costs.values())).shape;target=np.zeros(shape,dtype=bool)
+    margin=max(64,int(np.ceil(4*sigma))+2)
+    if power:
+        # Power costs need sites, not dense per-country outline grids.
+        points=np.array(sorted(set().union(*tiles.values())))
+        lower=points.min(axis=0)-margin;upper=points.max(axis=0)+margin
+        origin=tuple(lower.tolist());shape=tuple((upper-lower+1)[::-1].tolist());costs=None
+    else:
+        costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=margin,centres=centres,budgets=budgets)
+        shape=next(iter(costs.values())).shape
+    target=np.zeros(shape,dtype=bool)
     result={c:set(tiles[c]) for c in fixed};assigned=set();records=[]
     for labels in groups:
         # Reserve other landmasses' starting cells and all earlier target cells.
