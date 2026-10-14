@@ -23,7 +23,17 @@ Visual checks still reject these layouts:
 Pakistan is stretched, Korea is misplaced, and Southeast Asia is poor. A higher
 retained-border count alone is not sufficient. A separate
 [mesh experiment](examples/auto-cartogram/mesh-guide.md) now tests an explicit
-shape-distortion objective. This is not a replacement generator.
+shape-distortion objective. Its current guides still have extreme thin features.
+This is not a replacement generator.
+
+The user found an island-placement defect: South Korea separates Kyushu from
+other main Japanese islands. A separate control now places nearby islands as a
+group, with source-direction constraints and a displacement limit. It adds no
+connector cells and leaves mainland cells unchanged. Visual checks show improved
+Japan placement at 10,000, 55,000, and 110,000 tiles. Wider grouping also moves
+other islands; this is not yet an accepted world layout. See the Japan details
+in the compactness comparison below. The two user-preferred controls remain
+unchanged.
 
 Open the [compactness comparison](examples/auto-cartogram/results/compact-landmass/index.html)
 for the latest shared-footprint images, OWID, Tutte, and the rejected separated

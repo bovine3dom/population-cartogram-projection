@@ -36,12 +36,15 @@ def clusters(tiles,rows,source,land,gap_fraction):
 def separation_bounds(local,tiles,rows,source,land,radius_km):
     """Retain definite source box separations from nearby land components."""
     lower=np.full(2,-np.inf);upper=np.full(2,np.inf);constraints=[]
+    land_bounds={}
+    for other in land:
+        points=np.asarray(list(tiles[other]));land_bounds[other]=(points.min(axis=0),points.max(axis=0))
     for c,points in sorted(local.items()):
         points=np.asarray(list(points));lo=points.min(axis=0);hi=points.max(axis=0)
         for other in sorted(land):
             distance=6371*source[c].distance(source[other])
             if distance>radius_km:continue
-            fixed=np.asarray(list(tiles[other]));fixed_lo=fixed.min(axis=0);fixed_hi=fixed.max(axis=0)
+            fixed_lo,fixed_hi=land_bounds[other]
             for axis,(low,high) in enumerate([('west','east'),('south','north')]):
                 a0,a1=float(rows[c][low]),float(rows[c][high]);b0,b1=float(rows[other][low]),float(rows[other][high])
                 if axis==0 and abs((a0+a1-b0-b1)/2)>180:continue
