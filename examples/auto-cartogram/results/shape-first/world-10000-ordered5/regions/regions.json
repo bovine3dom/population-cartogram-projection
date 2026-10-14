@@ -1,0 +1,107 @@
+{
+  "regions": [
+    {
+      "name": "north-america",
+      "source_bounds": [
+        -170,
+        -50,
+        5,
+        85
+      ],
+      "selected_components": 50,
+      "svg_view_box": [
+        173.81666666666666,
+        158.7,
+        386.46666666666664,
+        666.9666666666667
+      ]
+    },
+    {
+      "name": "south-america",
+      "source_bounds": [
+        -85,
+        -30,
+        -60,
+        15
+      ],
+      "selected_components": 28,
+      "svg_view_box": [
+        367.04999999999995,
+        613.7333333333333,
+        405.16666666666674,
+        461.26666666666665
+      ]
+    },
+    {
+      "name": "europe",
+      "source_bounds": [
+        -15,
+        45,
+        35,
+        72
+      ],
+      "selected_components": 65,
+      "svg_view_box": [
+        572.75,
+        140,
+        473.73333333333335,
+        311.6666666666667
+      ]
+    },
+    {
+      "name": "africa",
+      "source_bounds": [
+        -25,
+        55,
+        -38,
+        38
+      ],
+      "selected_components": 85,
+      "svg_view_box": [
+        522.8833333333333,
+        264.6666666666667,
+        504.9,
+        785.3999999999999
+      ]
+    },
+    {
+      "name": "south-asia",
+      "source_bounds": [
+        60,
+        105,
+        5,
+        40
+      ],
+      "selected_components": 20,
+      "svg_view_box": [
+        903.1166666666667,
+        140,
+        585.9333333333335,
+        860.2
+      ]
+    },
+    {
+      "name": "indonesia",
+      "source_bounds": [
+        90,
+        145,
+        -12,
+        10
+      ],
+      "selected_components": 34,
+      "svg_view_box": [
+        1139.9833333333333,
+        520.2333333333333,
+        398.93333333333317,
+        411.4
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-10000-dissolved-input/groups.csv": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+    "output/auto-cartogram/world-10000-ordered5/cells.csv": "ef551c26f01fc6185637894b31f7ce5e5c01c7904198494aed3c5c6fd6e07695",
+    "output/auto-cartogram/world-10000-ordered5/review.svg": "b0e2f4f0e159aeb5fa323356042ccb2ba826667131deb35fc045ab4160476b13",
+    "output/auto-cartogram/world-10000-ordered5/metrics.json": "cc03650b3f061e11ad33605e7bc044605c623b10e85d791dc3c54b60e601d9f4"
+  },
+  "script_sha256": "898371fc21b08d4b1dd08c906709a54708934e11cbf4d95e133f327f2144d2db"
+}

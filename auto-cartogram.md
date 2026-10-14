@@ -32,7 +32,10 @@ A new [shape-first trial](examples/auto-cartogram/shape-first.md) removes hard
 border constraints and tests deformation without connector paths. The audit
 finds no artificial mainland-to-island contact edges. The first new fit reaches
 exact 55,000-tile component budgets, but its shape and position errors are still
-unacceptable. See the [active work log](examples/auto-cartogram/shape_work_log.md).
+unacceptable. A later intact-shape candidate has exact counts and no false
+borders or added connector paths, but most real borders are separated and some
+islands have poor positions. Open the [static image gallery](examples/auto-cartogram/results/shape-first/index.html)
+for review images. See the [active work log](examples/auto-cartogram/shape_work_log.md).
 
 ## Implementation update
 

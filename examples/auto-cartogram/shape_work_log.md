@@ -270,3 +270,20 @@ Inspect the resulting images at world and regional scales.
   mainland and verifies that required border targets remain unchanged.
 - Started 10,000- and 55,000-tile coast-target trials. Their visual quality is
   not yet assessed. The other resolution trials continue.
+
+## 12:09–12:16 UTC — coarse review and coast-target correction
+
+- Saved and visually reviewed the 10,000-tile direction-cost candidate. It has
+  exact counts and no false borders, but Southeast Asia has worse position
+  errors than the 55,000-tile candidate. It is a resolution comparison, not an
+  improvement over that candidate.
+- The first coast-target image had excessive empty space. Investigation found
+  a unit mismatch: the flow projection helper uses a radius of 1000, while the
+  layout initializer uses a radius of 1. Corrected the gap units and added a
+  regression check. The rejected image remains in ignored output.
+- Source anchors can also fall beyond a very small raster template. Anchors
+  now use the nearest point on the actual template cells. This changes the
+  position target, not the tile shape.
+- Stopped only the identified, unfinished 55,000-tile coast trial with the unit
+  error. Started new trials in separate output directories. All 24 focused
+  tests pass, including gap units and the one-cell anchor bound.

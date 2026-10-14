@@ -265,6 +265,13 @@ class ShapeTests(unittest.TestCase):
             saved=state.targets.copy()
             self.assertEqual(coast_anchors.apply(state,path,tiles,{('a','b')},.00001,1.),0)
             np.testing.assert_array_equal(state.targets,saved)
+            coast_anchors.apply(state,path,tiles,set(),0.)
+            touching=state.targets.copy()
+            coast_anchors.apply(state,path,tiles,set(),100.)
+            gap=np.linalg.norm(state.targets-touching)
+            self.assertGreater(gap,1.)
+            self.assertLess(gap,3.)
+            np.testing.assert_array_equal(coast_anchors.template_point(np.zeros((1,2)),np.array([100.,0.])),[.5,0.])
 
     def test_placement_can_forbid_false_contacts_without_adding_paths(self):
         tiles={'a':{(0,0),(1,0)},'b':{(0,0),(1,0)}};desired={'a':(.5,0),'b':(.5,1)}
