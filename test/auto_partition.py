@@ -68,7 +68,8 @@ class CapacityPartitionTests(unittest.TestCase):
                 size=.01 if c=='a' else 1.;x+=.05;y=.05
                 features.append(dict(type='Feature',properties=dict(component_id=c),geometry=dict(type='Polygon',coordinates=[[[x,y],[x+size,y],[x+size,y+size],[x,y+size],[x,y]]])))
             geometry=root/'flow.geojson';geometry.write_text(json.dumps(dict(type='FeatureCollection',features=features)))
-            with contextlib.redirect_stdout(io.StringIO()):flow=run(inputs,layout,root/'flow-result',sigma=1,iterations=20,power=True,by_landmass=True,flow_geometry=geometry,flow_stretch=1.5)
+            with contextlib.redirect_stdout(io.StringIO()):flow=run(inputs,layout,root/'flow-result',sigma=1,iterations=20,power=True,by_landmass=True,flow_geometry=geometry,flow_stretch=1.5,flow_guide_weight=.5)
+            self.assertEqual(flow['flow_guide_weight'],.5)
             self.assertIn('a',flow['flow']['subtile_fallback_components'])
             self.assertAlmostEqual(flow['flow']['x_scale']*flow['flow']['y_scale'],flow['flow']['scale']**2)
             self.assertEqual(sum(p['envelope']['target_cells'] for p in flow['partitions']),8)

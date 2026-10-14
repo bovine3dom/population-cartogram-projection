@@ -10,6 +10,7 @@ import time
 
 import numpy as np
 from scipy.optimize import minimize
+from scipy.ndimage import distance_transform_edt
 from scipy.special import logsumexp
 
 from compact_regions import guide_costs, fit_guide_centres
@@ -76,11 +77,12 @@ def contact_groups(pairs):
     return groups
 
 
-def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.):
+def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([sigma,guide,anchor]).all() or sigma<=0 or min(guide,anchor)<0:raise ValueError('Invalid settings')
     if flow_geometry and guide_layout:raise ValueError('Choose either flow geometry or guide layout')
     if flow_stretch!=1 and not flow_geometry:raise ValueError('Flow stretch requires flow geometry')
+    if not np.isfinite(flow_guide_weight) or flow_guide_weight<0 or (flow_guide_weight and not (flow_geometry and power)):raise ValueError('Flow guide cost requires flow geometry and power distance')
     started=time.monotonic()
     source_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',layout/'cells.csv']+([guide_layout/'cells.csv',guide_layout/'complete.txt'] if guide_layout else [])}
     script_hashes={name:digest(Path(__file__).with_name(name)) for name in ['partition_land.py','compact_regions.py','land_envelope.py','review_layout.py']}
@@ -115,6 +117,12 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
             sites=np.array([centres[c] if centres is not None else np.mean(list(tiles[c]),axis=0) for c in labels])
             points=np.column_stack((xx+origin[0],yy+origin[1]))
             matrix=((points[:,None,:]-sites[None,:,:])**2).sum(axis=2)
+            if flow_guide_weight:
+                for i,c in enumerate(labels):
+                    guide_mask=np.zeros(shape,dtype=bool)
+                    for x,y in tiles[c]:guide_mask[y-origin[1],x-origin[0]]=True
+                    distance=distance_transform_edt(~guide_mask)
+                    matrix[:,i]+=flow_guide_weight*distance[yy,xx]**2
         else:matrix=np.column_stack([costs[c][yy,xx] for c in labels])
         assignment,solver=partition(matrix,[budgets[c] for c in labels],iterations)
         for index,c in enumerate(labels):
@@ -126,7 +134,7 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     if sum(map(len,result.values()))!=len(set().union(*result.values())):raise AssertionError('Overlapping cells')
     disconnected={c:n for c,points in result.items() if (n:=connectivity(points))!=1}
     holed={c:n for c,points in result.items() if (n:=holes(points))}
-    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,flow_geometry=str(flow_geometry) if flow_geometry else None,flow=flow,partitions=records,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
+    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,flow_geometry=str(flow_geometry) if flow_geometry else None,flow=flow,flow_guide_weight=flow_guide_weight,flow_guide_cost='Weighted squared distance from the raw flow-region raster, added to uniform squared site distance' if flow_guide_weight else None,partitions=records,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -149,6 +157,7 @@ if __name__=='__main__':
     parser.add_argument('--iterations',type=int,default=300)
     parser.add_argument('--guide-layout',type=Path)
     parser.add_argument('--flow-geometry',type=Path,help='Use continuous geometry for the footprint and sites, with original budgets')
+    parser.add_argument('--flow-guide-weight',type=float,default=0.,help='Add squared distance from each raw flow region to the power cost')
     parser.add_argument('--flow-stretch',type=float,default=1.,help='Area-preserving horizontal stretch of the flow footprint and sites')
     parser.add_argument('--power',action='store_true',help='Use uniform squared centre distance instead of outline costs')
     parser.add_argument('--by-landmass',action='store_true',help='Partition each connected source land-border group separately')
