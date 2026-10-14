@@ -175,6 +175,25 @@ The separated layout has exact budgets but is not an acceptable replacement.
   coastline: some small countries and Chile lie outside it. The cost is finite,
   so shape guides can oppose it. Two weight trials started at 16:18 UTC.
 
+## 16:24–16:28 UTC — a global partition diagnostic
+
+- Added a separate capacity partition of the same target footprint. It assigns
+  every movable target cell, so internal gaps cannot remain inside the mask.
+  Isolated islands stay fixed. This tests the limit imposed by local exchanges.
+- The solver uses a smoothed transport dual, with four decreasing smoothing
+  scales. A final greedy correction makes counts exact. It does not enforce
+  connectivity, holes, borders, or optimality after correction. These limits
+  are in the output metadata and image caption. This is a diagnostic, not a
+  replacement generator.
+- Read the [transport dual notes](https://www.gpeyre.com/ot4ml/slides/3-dual-semidiscrete/index.html)
+  and [SciPy optimizer documentation](https://docs.scipy.org/doc/scipy/reference/optimize.minimize-lbfgsb.html)
+  directly. The notes give the cell-mass gradient for a weighted partition.
+  Here the source is a finite set of tiles, not a continuous measure. Smoothing
+  avoids claiming that the unsmoothed discrete objective is differentiable.
+- Five new tests pass: gradient, residual correction, exact counts with ties,
+  one label, and invalid inputs. The 40-test shape suite also passes, including
+  a new file-pipeline check. Full-world results have not yet been inspected.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
