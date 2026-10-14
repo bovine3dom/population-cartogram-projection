@@ -91,8 +91,10 @@ However, the area and position errors are too large for a population map.
 
 [10,000-budget image](results/world-10000-dissolved-topology/review.png).
 The small net count error in that run hides much larger local errors.
-These bounded performance runs disable only per-move region assertions.
-Their independent final checks do not approve their tile counts or geography.
+These bounded runs kept model and region assertions enabled. An early status
+field reported the wrong nested-class setting; each affected result has an
+`assertion-status-correction.json` record. Their independent final checks do
+not approve their tile counts or geography.
 The 110,000-budget fit and longer 10,000-budget tests are still in progress.
 
 Original WKT outlines omit 19 holes. A successful contact check does not prove

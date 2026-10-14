@@ -164,9 +164,10 @@ class AdapterTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             directory=Path(tmp)
             inputs,weights=self.fixture(directory,adjacent=True)
-            for value in [0,1]:
-                output=directory/f"rounds-{value}"
+            for value,disabled in [(0,None),(1,None),(1,"arrange.model.MosaicCartogram$MosaicRegion"),(1,"arrange.model.MosaicCartogram")]:
+                output=directory/f"rounds-{value}-{disabled}"
                 command=self.command(inputs,weights,output)
+                if disabled: command.insert(1,f"-da:{disabled}")
                 command.insert(1,f"-Dmosaic.maxRounds={value}")
                 command.insert(1,"-Dmosaic.polishIterations=0")
                 result=subprocess.run(command,capture_output=True,timeout=60)
@@ -177,17 +178,22 @@ class AdapterTests(unittest.TestCase):
                     self.assertEqual(result.returncode,0,result.stderr)
                     self.assertIn("maxRounds=1",(output/"complete.txt").read_text())
                     self.assertIn("polishIterations=0",(output/"complete.txt").read_text())
-                    self.assertIn("regionAssertions=true",(output/"complete.txt").read_text())
+                    enabled=disabled != "arrange.model.MosaicCartogram"
+                    self.assertIn(f"regionAssertions={str(enabled).lower()}",(output/"complete.txt").read_text())
 
     def test_upstream_algorithms_against_independent_oracles(self):
         java = Path((VENDOR/"java-path.txt").read_text().strip())
-        classes=["MosaicConnectivity","MosaicMinCostFlow"]
+        classes=["MosaicConnectivity","MosaicMinCostFlow","MosaicPolishTransaction"]
         with tempfile.TemporaryDirectory() as tmp:
             subprocess.run([str(java.with_name("javac")), "-cp", str(VENDOR/"classes"),
                             "-d", tmp, *[str(ROOT/"test"/(name+".java")) for name in classes]], check=True, timeout=30)
             for name in classes:
                 subprocess.run([str(java), "-ea", "-cp", f"{VENDOR/'classes'}:{tmp}",
                                 name], check=True, timeout=30)
+            for disabled,expected in [("arrange.model.MosaicCartogram$MosaicRegion",True),("arrange.model.MosaicCartogram",False)]:
+                result=subprocess.run([str(java),"-ea",f"-da:{disabled}","-cp",f"{VENDOR/'classes'}:{tmp}","MosaicPolishTransaction"],
+                                      check=True,capture_output=True,text=True,timeout=30)
+                self.assertIn(f"Effective region assertions={str(expected).lower()}",result.stdout)
 
     def test_native_graph_layout_retains_a_shared_border(self):
         with tempfile.TemporaryDirectory() as tmp:

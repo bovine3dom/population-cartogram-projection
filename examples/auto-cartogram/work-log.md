@@ -362,3 +362,24 @@ under ignored `output/auto-cartogram/`.
 - All 17 geometry tests pass, including repeatability, shape preservation,
   contact checks, and decreasing translation cost. Added parent settings to
   repair provenance before the larger parameter comparison.
+
+## 00:57–01:10 UTC — polishing rollback and assertion-status correction
+
+- The longer dissolved fit exposed a non-improving topology-polish pass.
+  Added transactional tile rollback: if a partly executable flow does not
+  reduce count error, restore all previous owners and stop that polishing
+  stage. A forced-flow Java test checks cells, counts, and contacts after
+  rollback. Exact mode still rejects unresolved counts.
+- Found a mistake in the performance flag and status marker. Java assertions
+  in a nested class use the enclosing top-level class status (JLS 14.10).
+  Disabling only the nested `MosaicRegion` request did not disable its costly
+  checks. Earlier claims that those checks were off are withdrawn.
+- Confirmed the rule in the pinned bytecode and with a reflective runtime test.
+  Corrected the adapter, commands, and documentation. Saved correction records
+  beside affected archives without changing the raw completion markers.
+- The correct performance flag disables model-class assertions, not only region
+  assertions. Independent final checks remain mandatory. The first paired
+  10,000-budget run has byte-identical cells with and without those assertions.
+- All 11 Python/Java layout tests pass after the fix. The full-default original
+  10,000-budget fit also finished: 1,013 tiles of absolute count error remain.
+  Started full-default dissolved fits with the tested performance flag.
