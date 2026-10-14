@@ -1,0 +1,9 @@
+{
+  "recorded_regionAssertions": false,
+  "effective_region_assertions": true,
+  "reason": "These recorded runs used -ea and disabled only the nested MosaicRegion class request. JLS 14.10 enables its assertions from the enclosing top-level MosaicCartogram class, which remained enabled.",
+  "affected_adapter_sha256": "e709aa4ce12caf4df9a833c242a14ddf7102a736f794b9be839bc193b9415243",
+  "reference": "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.10",
+  "correction": "The adapter now records the enclosing class status. Raw completion records are preserved.",
+  "verified": "Bytecode inspection and MosaicPolishTransaction test with both JVM flags"
+}

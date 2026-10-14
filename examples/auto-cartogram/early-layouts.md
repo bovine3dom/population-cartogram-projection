@@ -116,9 +116,10 @@ The country axis-order check finds 3,217 errors in 7,500 comparisons.
 This reference used all Java assertions. An optional initial rotation/reflection
 improves global order but does not solve the problem: the
 [oriented fit](results/world-10000-topology-oriented/review.png) has 4,640 tiles
-of absolute count error and 1,098 country axis-order errors. That performance
-run disabled only per-move region assertions; independent final checks passed
-for connectivity, holes, and represented borders, not for tile counts.
+of absolute count error and 1,098 country axis-order errors. Its early assertion
+status marker was wrong: model and region assertions actually remained enabled.
+See its `assertion-status-correction.json` record. Independent final checks
+passed for connectivity, holes, and represented borders, not for tile counts.
 
 The [55,000-budget oriented fit](results/world-55000-topology-oriented/review.png)
 finishes with 44,616 tiles and 14,808 tiles of absolute component count error.

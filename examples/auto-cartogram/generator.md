@@ -30,6 +30,10 @@ unpatched flow solver stalls on this test. The patch updates each reduced cost
 once and removes only tiny negative roundoff terms on usable edges. Larger
 negative reduced costs cause an error. The tolerance is 16 floating-point units
 at the network cost scale. Inactive reverse edges keep their negative costs.
+Polishing now restores the previous tile ownership if a partly executable flow
+does not reduce count error. A synthetic forced-flow test checks the rollback.
+Topology mode can then report a residual count error instead of accepting a
+worse pass. Exact mode still fails if it cannot obtain the requested counts.
 
 ## Prepare population and shapes
 
@@ -122,11 +126,17 @@ Use this only to inspect an unfinished preview. The marker records the setting.
 These limit force iterations and rounds without improvement. They do not impose
 a wall-clock limit; keep the external timeout. The completion marker records them.
 
-A separate performance experiment disables only the expensive per-move region
-assertions with `'-da:arrange.model.MosaicCartogram$MosaicRegion'`. Other Java
-assertions stay enabled. The completion marker records `regionAssertions=false`.
-This is not equivalent to an all-assertions run. Independent final count,
-connectivity, hole, and contact checks remain required.
+For a separate performance experiment, use `-da:arrange.model.MosaicCartogram`
+after `-ea`. This disables assertions in the model and its nested region class;
+other Java assertions stay enabled. It is not an all-assertions run. Independent
+final count, connectivity, hole, and contact checks remain required.
+
+An earlier flag targeted only `MosaicCartogram$MosaicRegion`. It did not disable
+the region assertions: JLS 14.10 uses the enclosing top-level class status.
+The old adapter recorded the requested nested-class status, not the effective
+status. Affected saved runs have `assertion-status-correction.json`; their raw
+completion records are preserved. Those runs actually kept model assertions
+enabled. The adapter and a bytecode-backed test now check the correct status.
 
 The review tool also reports country and island axis-order errors, shape
 compactness, and a country-uniform-tile cross-group capacity lower bound.
@@ -260,6 +270,7 @@ Julia package. Review distribution terms before shipping a combined product.
 
 ## Method references
 
+- [Java assertion status, JLS 14.10](https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.10)
 - [GridMapPipeline](https://github.com/tue-alga/GridMapPipeline)
 - [GeometryCore](https://github.com/tue-alga/GeometryCore)
 - [Equal Earth projection, EPSG method 1078](https://epsg.io/1078-method)

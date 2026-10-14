@@ -97,7 +97,7 @@
  
 --- a/arrange/algorithms/sub/Polisher.java
 +++ b/arrange/algorithms/sub/Polisher.java
-@@ -33,7 +33,7 @@
+@@ -34,7 +34,7 @@
      public void polish() {
  
          int tileError = grid.totalTileError();
@@ -106,7 +106,13 @@
  
          boolean changed = true;
          while (tileError > 0 && changed && it > 0) {
-@@ -49,7 +49,7 @@
+@@ -44,12 +44,12 @@
+             }
+ 
+             setupFlow(false);
+-            changed = execute(false);
++            changed = executeImproving(false);
+ 
              // grid.export("Finalizing: polish " + (MosaicConstants.POLISHER_MAX_ITERATIONS - it), 2);
              int err = grid.totalTileError();
  
@@ -115,6 +121,36 @@
  
              tileError = err;
              it--;
+@@ -68,7 +68,7 @@
+                 }
+ 
+                 setupFlow(true);
+-                boolean change = execute(true);
++                boolean change = executeImproving(true);
+ 
+                 // grid.export("Finalizing: exact polish " + (MosaicConstants.POLISHER_MAX_ITERATIONS - it), 2);
+                 if (!change) {
+@@ -170,6 +170,20 @@
+      * adjacencies.
+      * @return
+      */
++    private boolean executeImproving(final boolean exact) {
++        MosaicCartogram before = new MosaicCartogram(grid);
++        boolean changed = execute(exact);
++        if (changed && grid.totalTileError() >= before.totalTileError()) {
++            // A planned flow can be only partly executable after earlier moves.
++            // Keep the previous tiles instead of accepting a non-improving pass.
++            for (Coordinate c : grid.getCoordinateArray()) grid.removeCell(c);
++            for (Coordinate c : before.getCoordinateArray()) grid.setVertex(c, before.getVertex(c));
++            System.err.println("Rejected non-improving polishing pass; previous tiles restored.");
++            return false;
++        }
++        return changed;
++    }
++
+     private boolean execute(final boolean exact) {
+ 
+         int[] flow = flowDigraph.solve();
 --- a/common/mcf/SuccessiveShortestPathMininumCostFlow.java
 +++ b/common/mcf/SuccessiveShortestPathMininumCostFlow.java
 @@ -159,12 +159,16 @@

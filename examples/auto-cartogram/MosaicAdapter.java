@@ -4,6 +4,7 @@
 import arrange.DeformAlgorithm;
 import arrange.MosaicConstants;
 import arrange.algorithms.GridEmbedder;
+import arrange.model.MosaicCartogram;
 import arrange.util.Random;
 import combine.CombineAlgorithm;
 import combine.combinations.AgnosticCombination;
@@ -110,7 +111,8 @@ public class MosaicAdapter {
             + "polishIterations=" + polishIterations + "\n"
             + "javaVersion=" + System.getProperty("java.version") + "\n"
             + "orientInitial=" + Boolean.getBoolean("mosaic.orientInitial") + "\n"
-            + "regionAssertions=" + Class.forName("arrange.model.MosaicCartogram$MosaicRegion").desiredAssertionStatus() + "\n");
+            // JLS 14.10: nested assertions use their enclosing top-level class status.
+            + "regionAssertions=" + MosaicCartogram.class.desiredAssertionStatus() + "\n");
     }
 
     private static int setting(String name, int fallback) {
