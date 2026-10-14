@@ -107,9 +107,51 @@ Pass the resulting partial geometry to `partition_land.py` with `--sites FILE`.
 Only isolated components may be absent. Their intact templates are placed near
 population sites aligned to the represented flow centres. The scale uses only
 the budgets of components present in the flow. Final partition budgets still
-include all components. The pipeline wrapper's full-geometry check does not
-accept this control; use the separate experiment stages and check geometry
-validity and overlaps before assignment.
+include all components. The pipeline wrapper accepts this control with
+`--mainland-only --sites FILE`. Its geometry check rejects missing components
+that have represented land borders.
+
+For the current compact control, add these options to the pipeline command:
+
+```sh
+--mainland-only --sites output/auto-cartogram/world-55000-population-sites/sites.csv \
+  --stretch 1.2 --flow-guide-weight 8 --float-islands --dock-landmasses \
+  --borrow-coast --fixed-border-rounds 100 --shared-islands
+```
+
+`--fixed-border-rounds` changes internal borders without changing occupied cells.
+`--shared-islands` restores source-shaped templates for small shared landmasses.
+It preserves each component budget. Neither option guarantees good geography.
+
+For a transformed mesh guide, `--sites-in-flow` uses supplied sites in the guide's
+coordinate system. It requires `--sites` and `--flow-geometry`. Do not use native
+population coordinates with this flag. See [the mesh experiment](mesh-guide.md).
+
+## Nearby island groups
+
+The separate `restore_archipelagos.py` control addresses islands placed on the
+wrong side of a nearby mainland. It groups nearby source components, not country
+IDs. It places each group together without connector cells. Mainland cells and
+island shapes do not change.
+
+```sh
+p=output/auto-cartogram
+"$p/geometry-env/bin/python" examples/auto-cartogram/restore_archipelagos.py \
+  "$p/world-55000-dissolved-input" "$p/world-55000-guide8-border16" \
+  "$p/world-dissolved/polygons.geojson" "$p/world-55000-island-group-test"
+```
+
+The default source-gap threshold is 0.2 times the square root of the larger
+island's source area. Groups need at least 16 tiles. Definite source-axis
+separations from land within approximately 500 km constrain group translation.
+These distances use Equal Earth planar coordinates, not geodesic distances.
+
+The maximum group translation is twice the square root of its tile count.
+Conflicting bounds, blocked placements, and excessive translations leave the
+whole group unchanged. `archipelagos.json` records these failures. This safety
+limit prevents some extreme moves; it does not prove good positions. Review
+Japan, Indonesia, the Philippines, and other affected groups before selection.
+The pipeline does not enable this control automatically.
 
 ## Stages
 
