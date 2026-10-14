@@ -1,0 +1,136 @@
+{
+  "method": "Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction",
+  "sigma": 4.0,
+  "guide": null,
+  "anchor": null,
+  "cost": "uniform squared centre distance",
+  "guide_layout": "output/auto-cartogram/world-55000-shape-islands",
+  "guide_alignment": {
+    "scale": 0.8179249078932275,
+    "translation": [
+      48.464019675678315,
+      -104.1309034002648
+    ],
+    "rotation_degrees": 0
+  },
+  "maximum_iterations_per_stage": 300,
+  "solver": {
+    "stages": [
+      {
+        "temperature": 1.0,
+        "iterations": 186,
+        "converged": true,
+        "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "discrete_count_error": 7386
+      },
+      {
+        "temperature": 0.2,
+        "iterations": 138,
+        "converged": true,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "discrete_count_error": 1172
+      },
+      {
+        "temperature": 0.04,
+        "iterations": 92,
+        "converged": true,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "discrete_count_error": 232
+      },
+      {
+        "temperature": 0.008,
+        "iterations": 97,
+        "converged": true,
+        "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "discrete_count_error": 112
+      }
+    ],
+    "residual_tiles_reassigned": 56,
+    "cost_scale": 134.98795358166515,
+    "assignment_cost": 45463097.35613023
+  },
+  "envelope": {
+    "target_cells": 49894,
+    "initial_empty_target_cells": 1807,
+    "target_connected_parts": 7,
+    "sigma_tiles": 4.0,
+    "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+  },
+  "fixed_components": 292,
+  "disconnected_components": {
+    "AGO:2b9c8d9b36ed1f1d": 2,
+    "AGO:704113b148b7974b": 2,
+    "AZE:e5af19283650a3e3": 2,
+    "BLR:216ea6b406f5bc6c": 2,
+    "BLZ:4f146436bd0251b5": 2,
+    "BTN:fe4a4d07e153ef17": 3,
+    "CAN:c2f1e4e52d5cc0c3": 3,
+    "CHN:72cd37e37e634df7": 2,
+    "COD:34b7cfda818ccf80": 4,
+    "COG:c5650e58e144375b": 2,
+    "CUB:a203a2643a40db9f": 5,
+    "CYP:0e9f924ff6746fe5": 2,
+    "DJI:8814228594ff16f1": 4,
+    "DOM:1493e296a532a3a2": 2,
+    "ESP:ff9451038f1a27e4": 3,
+    "GIN:eb019150f12e3d47": 2,
+    "GMB:e5cba77f98187ac4": 2,
+    "GUY:5aec9f8c07eb9159": 2,
+    "HTI:a3ce6059435c00f9": 4,
+    "IND:3f0bb94d859b2064": 3,
+    "IRL:9661cba0fca9f89c": 2,
+    "KOR:1a1881fe9e034788": 2,
+    "KOS:e68a710dbd926c28": 2,
+    "LBR:791c4a2bdad8b682": 3,
+    "LUX:2287a57343a7d085": 4,
+    "MNE:52f7987265ed3935": 2,
+    "MNG:7ecd8e5b0a42fa66": 5,
+    "MOZ:0c9516b3b1958290": 2,
+    "NIR:69fa50e543fa7c66": 5,
+    "PAK:447ed1858f7b7a5d": 2,
+    "PAN:04773d2112e86006": 2,
+    "PNX:cd0b182a6ff3f568": 3,
+    "PRX:31cd60a8869cd87c": 2,
+    "RUS:7e6e84c769819aed": 4,
+    "RWA:11c3869510b66d95": 2,
+    "SOL:e03433706d8873bb": 2,
+    "SUR:1d7cda681e299b07": 2,
+    "SVN:e8f334b689926950": 2,
+    "SWZ:e315454282eb3136": 2,
+    "TLS:e102fc60287c6426": 2,
+    "TUN:9e23ed3c89bdb2f6": 2,
+    "UGA:c937c439d1615753": 3,
+    "UKR:52622876ebf1ecb8": 3,
+    "UZB:448c5653f0be3548": 5,
+    "VNM:749468814d903c2a": 2
+  },
+  "components_with_holes": {
+    "CHN:72cd37e37e634df7": 2,
+    "COL:08d1c79f212fc17e": 1,
+    "ECU:ef48f29c8aa10327": 1,
+    "MOZ:0c9516b3b1958290": 1,
+    "MWI:7555dabddb4364d9": 1,
+    "NGA:edcdec1fdf6fb5c7": 3,
+    "POL:1980df7ed9d16d12": 1,
+    "UGA:c937c439d1615753": 4,
+    "USA:90107a05206832e4": 1
+  },
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-55000-joint-islands-first-geographic80/cells.csv": "fc5f5d21f62d31bdd3cff6a9b2fcdc177ad48d27c03f436aad7ccb8b390ee159",
+    "output/auto-cartogram/world-55000-shape-islands/cells.csv": "3005fca220af87ec54339c7a35660b8f77358fbbe17545f80ed3fc6d546afc85",
+    "output/auto-cartogram/world-55000-shape-islands/complete.txt": "eaabfa50280f1712b9ec9755d87383b89577595fb8e6217c1c5f8b9028baa8f4"
+  },
+  "scripts": {
+    "partition_land.py": "5d319658749692095d49c9f8b5b50568cac3e6fd02a8b2a7dca42fce6eb27ee0",
+    "compact_regions.py": "d25522178f9a97f48b7b30951d511e711c8224b5f2dddde892dbe9881dcd6f66",
+    "land_envelope.py": "28c963ea88e64908c92a9d808554027260126e1ae93c7897d38f0016cda1aed1",
+    "review_layout.py": "7824f08cdd67920ce23946fdd96e128a140cc4eddc98994f157369d1608f6948"
+  },
+  "elapsed_seconds": 316.3221892910078,
+  "limit": "Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.",
+  "cells_sha256": "93e28b21e7ee9bd5a616e842d2c668cb32291e82a7cb8606bb0ff3c3d73d1ffe",
+  "envelope_sha256": "dc7fa5f34dce8bff108f49dd67f6e037ea07dde7cac537755fc75c4e806913c4"
+}

@@ -1,0 +1,4 @@
+mode=capacity-partition
+counts=exact
+contacts=unconstrained
+topology=unchecked-by-solver

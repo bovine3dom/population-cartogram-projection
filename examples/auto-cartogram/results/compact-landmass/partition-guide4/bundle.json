@@ -1,0 +1,27 @@
+{
+  "files": {
+    "cells.csv.gz": "877810f8a172bf0c0ffb258161f32e62f41847b0eacd8a1e44a9929a28b9deca",
+    "checksums.json": "dbdd62f9119b878aaeaef1446543be9bb0ae638038c8090af1aae5ea2f74d4e1",
+    "complete.txt": "57428a77259d81eeeade7b42334f10a30bb4d8f6cac72eb97f01e8fdb0179185",
+    "contact-errors.csv": "d56d98b6165c980106180c32e5229be302c572cf62b2dc4e017be0e9903094f1",
+    "country-counts.csv": "71bcdc216c6b0e30cdb830aa44f69df1753ce21818279bfce2bf4431c92be8d0",
+    "country-order-errors.csv": "1d2438e42c06eaea924b4907ff301c4be7b43b8343358a0431679f53cc695c70",
+    "envelope.csv.gz": "7a4febb579675bf78cc115956b32f4704598fd34736eaeca658764ce7dc445e1",
+    "gaps.json": "593fd26563a461898eeaa5610a5841c4eb40ff7d67dfa12a562d1bb6bcd84961",
+    "gaps.png": "2dfeeade1b4d1cd5fa5a7a256a3ed296088ce8c3ac15a6a08b910f654b2697ce",
+    "group-capacities.csv": "074fe14219050c796649d7abe713bd1accf68d7655af3267862339c455a1c86d",
+    "input-geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "input-groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "input-manifest.json": "d76f10635405b2425a10e0bbd39f811d4f174841c0b7077ee6d313283de80556",
+    "input-outline-checks.json": "abd2e41c8462c612f9eec46399f5e9bdd471e5fd1de1db01881436260e25b5b6",
+    "island-order-errors.csv": "ecd108b6a543bff03b6757328e68f26961b5377abb83d1ecf48b0065557bc039",
+    "metrics.json": "8aba35c433f8d0d679e6b30906ee265b04a66a50a71fb4de357d6c9edd6137d1",
+    "partition.json": "baa386fbfd5377322cea51e919fb28ad28a7dbab56d08d51850d6bf851059ff7",
+    "region-quality.csv": "2e8df46ffdbecd394e03704d6d0ee599308a56211e96c6bb1130169c3287ae3b",
+    "regions/africa.png": "39382ecbcea9be0148905964478104c907d95c45f2f66b2be650bbfb6b05aa15",
+    "regions/europe.png": "844118e769ba29944b8cc1f453f20fd4d14909e9ca7d3e60dde0017bbb3d021a",
+    "regions/indonesia.png": "4de76101bb21ce9491408a377c03db146597bf2da55f8e8984cca37f70d8c1cc",
+    "regions/south-asia.png": "c0b617793e282191b4120a66e1520c0becba048e77507719ce4d0eb9e606c2c8",
+    "review.png": "b0e239446e57eb6b7b9fc1bc80f72990c16999748e56a1fcd5b8dfe8edf7054d"
+  }
+}
