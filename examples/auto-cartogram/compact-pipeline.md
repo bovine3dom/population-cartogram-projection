@@ -56,9 +56,10 @@ original population budgets. Any failed external run stops the pipeline.
   acts within each source land-border group. It adds no connector cells, but
   can change coasts and positions. Country sites do not move with the pieces.
 - `--borrow-coast`: if an interior region cannot grow into empty space, try a
-  donor-cell exchange. A neighbour gives one cell to that region and grows one
-  cell into empty space. Each country keeps its budget. The search has limits
-  of 32 fragment cells and 64 donor-cell choices per step. It can still fail.
+  donor-cell exchange. Adjacent regions can pass cells through a chain until
+  the last donor grows into empty space. Each country keeps its budget. The
+  search has limits of 32 fragment cells, 64 donor-cell choices per step, and
+  four regions per chain. A failed exchange changes nothing. It can still fail.
 
 These controls are off by default. They are experiments, not acceptance rules.
 
@@ -74,6 +75,13 @@ These relaxed areas are **not population targets**. Use them only for the
 external flow guide. Then supply that geometry to the tile pipeline with the
 original component inputs. Transcontinental source labels can affect the result.
 Inspect it before selection; the guide is not an approved population map.
+
+`partition_land.py --regions FILE` tests a two-level assignment. The CSV must
+contain one `component_id,region` entry per component. First assign each region
+its total budget within its source land-border group. Then assign countries
+inside that region. This keeps all original component budgets. It does not
+preserve borders or guarantee useful shapes. The pipeline wrapper does not yet
+expose this option. Initial tests still have poor shapes and positions.
 
 ## Stages
 

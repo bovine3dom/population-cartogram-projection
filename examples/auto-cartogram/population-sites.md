@@ -51,7 +51,9 @@ rotation or reflection. The output records the alignment and file hashes.
 
 `--float-islands` prevents isolated island cells from reserving holes inside the
 mainland target. After country assignment, it translates intact islands to free
-space with a one-cell side-neighbour gap. A later island-placement stage can
+space near their fitted guide sites, with a one-cell side-neighbour gap. If no
+guide sites exist, it uses the starting centres. Earlier trials used starting
+centres even when fitted sites existed. A later island-placement stage can
 refine their positions. This does not guarantee correct island order.
 
 ## Results and limits
