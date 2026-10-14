@@ -74,6 +74,27 @@ Set `CONTINUITY_COMPACT_CACHE_BYTES` for the device cache limit and
 `CONTINUITY_TUNE_MULTIPLIER` for the row target multiplier. The defaults are
 512 MiB and 2. Use a process timeout for long trials.
 
+To refit borders after a complete calibration, run:
+
+```sh
+julia --threads=8 --project=examples/uk-h3 examples/continuity/refit_tuned.jl \
+  PARENT_ROOT CALIBRATION_ROOT NEW_OUTPUT
+```
+
+The runner checks every baseline again, including geometry, masses, and support.
+It rejects support above 1.25 times the old row budget. If the nearest-budget
+selection exceeds that limit, it first tries a sharper saved calibration stage.
+It preserves the parent's border weights and distortion limits. Its defaults
+are four passes, proximal weight 0.01, maximum step 1, and retry factor 256.
+Set `CONTINUITY_OUTER_STEPS`, `CONTINUITY_PROXIMAL`, or `CONTINUITY_RETRY_FACTOR`
+to change these trial settings. Each complete pass has an atomic snapshot.
+
+This is an opt-in research path. The ordinary planet fit command is unchanged.
+A completed refit has `research-fit-complete.txt`, not a publication marker.
+Audit its sharpness, mass errors, borders, and folds before use. More passes
+can improve borders while increasing source spatial spread. The runner does
+not copy the full planet input metadata or publish an Arrow dataset.
+
 ## Reductions and checks
 
 KernelAbstractions evaluates costs and history entries directly on the backend.

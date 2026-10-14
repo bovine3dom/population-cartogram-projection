@@ -361,3 +361,16 @@ writing. Its incomplete staging directory is retained. A repeat with two Julia
 threads and a longer bound passes as `packed-pass-2-v2/`. Other geometry research
 jobs are now using CPU time; they were left unchanged. The third fit pass is
 running, with the same 17:45 UTC hard stop. No public dataset has changed.
+
+## 16:42 UTC: reproducible opt-in refit command
+
+Added `refit_tuned.jl` so that a complete `tune_baselines.jl` calibration can
+feed a border refit without the local trial scripts. It checks source geometry,
+eta, masses, and support again. It can select an already checked sharper stage
+when the nearest-budget choice exceeds the trial limit. It preserves parent
+border weights, saves every complete pass, and writes only a research completion
+marker. The ordinary planet command retains its old defaults; the new path is
+explicit because the geometry tradeoffs are not yet suitable for an automatic
+production change. Twelve CPU checks pass, including incomplete calibration,
+incorrect eta, overwrite rejection, saved settings, and the sharper-stage path.
+The numerical oneAPI solver path is unchanged from the running global trial.
