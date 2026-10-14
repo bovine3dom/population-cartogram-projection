@@ -90,6 +90,15 @@ class ShapeTests(unittest.TestCase):
             self.assertEqual([c['retained'] for c in report['cases']],[1,1])
             self.assertEqual([c['unsupported'] for c in report['cases']],[0,0])
 
+    def test_guide_position_fit_keeps_axes_and_budget_weighting(self):
+        guides={'a':{(0,0)},'b':{(2,0)},'c':{(0,2)}}
+        tiles={c:{(2*x+5,2*y+7) for x,y in points} for c,points in guides.items()}
+        centres,fit=compact.fit_guide_centres(tiles,guides,{'a':1,'b':2,'c':3})
+        self.assertAlmostEqual(fit['scale'],2.)
+        np.testing.assert_allclose(fit['translation'],[5,7])
+        for c,points in tiles.items():np.testing.assert_allclose(centres[c],list(points)[0])
+        with self.assertRaisesRegex(ValueError,'labels'):compact.fit_guide_centres(tiles,{'a':{(0,0)}},{'a':1,'b':2,'c':3})
+
     def test_requested_guide_area_and_fixed_regrowth(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);(root/'validated.wkt').write_text('header\nheader\nregion\ta\n0 0\t1 0\t1 1\t0 1\nend\n')
@@ -232,7 +241,8 @@ class ShapeTests(unittest.TestCase):
             with contextlib.redirect_stdout(io.StringIO()):
                 metadata=compact.run(inputs,layout,root/'deformed',rounds=5,fit_rounds=10,atomic=True)
                 self.assertEqual(metadata['absolute_tile_error'],0)
-                joint=compact.run(inputs,layout,root/'joint',rounds=5,fit_rounds=10,strict_fit=True,regrow=True,land_only=True,sea_perimeter=8,interior_sea_radius=2)
+                joint=compact.run(inputs,layout,root/'joint',rounds=5,fit_rounds=10,strict_fit=True,regrow=True,land_only=True,sea_perimeter=8,interior_sea_radius=2,guide_layout=root/'deformed')
+                self.assertGreater(joint['guide_alignment']['scale'],0)
                 self.assertEqual(joint['absolute_tile_error'],0)
                 self.assertEqual(joint['guide_area'],'requested budget')
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
