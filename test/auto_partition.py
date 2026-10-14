@@ -9,11 +9,13 @@ import tempfile
 import unittest
 
 import numpy as np
+import pyarrow as pa
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from partition_land import dual, partition, round_capacities, contact_groups, run
 from review_layout import load, viewport
 from repair_partition import Repair, run as repair
+import population_sites
 
 
 class CapacityPartitionTests(unittest.TestCase):
@@ -104,6 +106,22 @@ class CapacityPartitionTests(unittest.TestCase):
                 self.assertTrue(all(len(state.parts[c])<=parts[c] for c in tiles))
                 self.assertEqual(set(state.owners),footprint)
                 self.assertTrue(all(len(state.tiles[c])==15 for c in tiles))
+
+    def test_population_sites(self):
+        mass,sites=population_sites.spherical_sites([179,-179],[0,0],[1,2],[0,0],1)
+        self.assertEqual(mass.tolist(),[3.]);self.assertGreater(abs(sites[0,0]),179)
+        with self.assertRaisesRegex(ValueError,'Undefined'):population_sites.spherical_sites([0,180],[0,0],[1,1],[0,0],1)
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'input';inputs.mkdir()
+            (inputs/'groups.csv').write_text('component_id,tiles,group_id,group_population\na,1,a,3\nb,0,a,0\n')
+            tables={'sources':pa.table(dict(id=pa.array([1,2],type=pa.uint64()),value=[2.,1.],component_id=pa.DictionaryArray.from_arrays(pa.array([0,1]),pa.array(['a','b','unused'])))),
+                    'centres':pa.table(dict(id=pa.array([2,1,3],type=pa.uint64()),value=[1.,2.,9.],longitude=[179.,-179.,45.],latitude=[0.,0.,0.]))}
+            for name,table in tables.items():
+                with pa.OSFile(str(root/(name+'.arrow')),'wb') as stream:
+                    with pa.ipc.new_file(stream,table.schema) as writer:writer.write_table(table)
+            report=population_sites.run(inputs,root/'sources.arrow',root/'centres.arrow',root/'sites')
+            self.assertEqual(report['source_cells'],2);self.assertEqual(report['population'],3.)
+            self.assertTrue((root/'sites/sites.csv').exists())
 
     def test_review_viewport(self):
         owners={(0,0):'a',(1,100):'a'}
