@@ -77,15 +77,18 @@ def contact_groups(pairs):
     return groups
 
 
-def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.):
+def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.,sites=None):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([sigma,guide,anchor]).all() or sigma<=0 or min(guide,anchor)<0:raise ValueError('Invalid settings')
-    if flow_geometry and guide_layout:raise ValueError('Choose either flow geometry or guide layout')
+    if sum(value is not None for value in [flow_geometry,guide_layout,sites])>1:raise ValueError('Choose either flow geometry, guide layout, or sites')
     if flow_stretch!=1 and not flow_geometry:raise ValueError('Flow stretch requires flow geometry')
     if not np.isfinite(flow_guide_weight) or flow_guide_weight<0 or (flow_guide_weight and not (flow_geometry and power)):raise ValueError('Flow guide cost requires flow geometry and power distance')
     started=time.monotonic()
     source_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',layout/'cells.csv']+([guide_layout/'cells.csv',guide_layout/'complete.txt'] if guide_layout else [])}
     script_hashes={name:digest(Path(__file__).with_name(name)) for name in ['partition_land.py','compact_regions.py','land_envelope.py','review_layout.py']}
+    if sites:
+        source_hashes[str(sites)]=digest(sites)
+        script_hashes['population_sites.py']=digest(Path(__file__).with_name('population_sites.py'))
     if flow_geometry:
         source_hashes[str(flow_geometry)]=digest(flow_geometry)
         for name in ['flow_footprint.py','review_flow.py','shape_placement.py']:script_hashes[name]=digest(Path(__file__).with_name(name))
@@ -101,8 +104,11 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     if flow_geometry:
         from flow_footprint import prepare
         tiles,centres,flow=prepare(flow_geometry,tiles,fixed,budgets,flow_stretch)
-    if guide_layout:
-        _,guides,_=load(inputs,guide_layout)
+    if guide_layout or sites:
+        if sites:
+            from population_sites import read_sites
+            guides={c:{point} for c,point in read_sites(sites,tiles).items()}
+        else:_,guides,_=load(inputs,guide_layout)
         centres,alignment=fit_guide_centres(tiles,guides,budgets)
     costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=max(64,int(np.ceil(4*sigma))+2),centres=centres,budgets=budgets)
     shape=next(iter(costs.values())).shape;target=np.zeros(shape,dtype=bool)
@@ -114,9 +120,9 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
         if np.any(mask&target):raise AssertionError('Landmass targets overlap')
         target|=mask;yy,xx=np.nonzero(mask)
         if power:
-            sites=np.array([centres[c] if centres is not None else np.mean(list(tiles[c]),axis=0) for c in labels])
+            positions=np.array([centres[c] if centres is not None else np.mean(list(tiles[c]),axis=0) for c in labels])
             points=np.column_stack((xx+origin[0],yy+origin[1]))
-            matrix=((points[:,None,:]-sites[None,:,:])**2).sum(axis=2)
+            matrix=((points[:,None,:]-positions[None,:,:])**2).sum(axis=2)
             if flow_guide_weight:
                 for i,c in enumerate(labels):
                     guide_mask=np.zeros(shape,dtype=bool)
@@ -134,7 +140,7 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     if sum(map(len,result.values()))!=len(set().union(*result.values())):raise AssertionError('Overlapping cells')
     disconnected={c:n for c,points in result.items() if (n:=connectivity(points))!=1}
     holed={c:n for c,points in result.items() if (n:=holes(points))}
-    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,flow_geometry=str(flow_geometry) if flow_geometry else None,flow=flow,flow_guide_weight=flow_guide_weight,flow_guide_cost='Weighted squared distance from the raw flow-region raster, added to uniform squared site distance' if flow_guide_weight else None,partitions=records,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
+    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,sites=str(sites) if sites else None,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,flow_geometry=str(flow_geometry) if flow_geometry else None,flow=flow,flow_guide_weight=flow_guide_weight,flow_guide_cost='Weighted squared distance from the raw flow-region raster, added to uniform squared site distance' if flow_guide_weight else None,partitions=records,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -156,6 +162,7 @@ if __name__=='__main__':
     for name,default in [('sigma',8.),('guide',4.),('anchor',.05)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--iterations',type=int,default=300)
     parser.add_argument('--guide-layout',type=Path)
+    parser.add_argument('--sites',type=Path,help='CSV of projected component sites; align by translation and positive uniform scale')
     parser.add_argument('--flow-geometry',type=Path,help='Use continuous geometry for the footprint and sites, with original budgets')
     parser.add_argument('--flow-guide-weight',type=float,default=0.,help='Add squared distance from each raw flow region to the power cost')
     parser.add_argument('--flow-stretch',type=float,default=1.,help='Area-preserving horizontal stretch of the flow footprint and sites')

@@ -65,6 +65,12 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertEqual({c:len(points) for c,points in tiles.items()},{'a':2,'b':2,'c':2,'d':2,'e':1})
             self.assertTrue(all(x<10 for c in 'ab' for x,y in tiles[c]))
             self.assertTrue(all(x>10 for c in 'cd' for x,y in tiles[c]))
+            sites=root/'sites.csv';sites.write_text('component_id,x,y\n'+''.join(f'{c},{x},0\n' for c,x in zip('abcde',[0,1,20,21,10])))
+            with contextlib.redirect_stdout(io.StringIO()):site_record=run(inputs,layout,root/'site-result',sigma=1,iterations=20,power=True,by_landmass=True,sites=sites)
+            self.assertEqual(site_record['sites'],str(sites));self.assertGreater(site_record['guide_alignment']['scale'],0)
+            self.assertIn(str(sites),site_record['inputs'])
+            self.assertEqual({c:len(p) for c,p in load(inputs,root/'site-result')[1].items()},{c:len(p) for c,p in tiles.items()})
+            with self.assertRaisesRegex(ValueError,'either'):run(inputs,layout,root/'bad-sites',sites=sites,guide_layout=layout)
             features=[]
             for c,x in zip('abcde',[0,1,20,21,10]):
                 size=.01 if c=='a' else 1.;x+=.05;y=.05
@@ -137,6 +143,15 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertEqual(report['unchanged_invalid_fixed_components'],['a'])
             self.assertEqual(report['initial_false_contacts'],report['final_false_contacts'])
             self.assertEqual(load(inputs,layout)[1],load(inputs,root/'preserved')[1])
+
+    def test_read_sites(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'sites.csv'
+            path.write_text('component_id,x,y\na,1,2\n')
+            self.assertEqual(population_sites.read_sites(path,['a']),{'a':(1.,2.)})
+            for rows in ['a,1,2\na,3,4\n','b,1,2\n','a,nan,2\n','a,1,inf\n']:
+                path.write_text('component_id,x,y\n'+rows)
+                with self.assertRaises(ValueError):population_sites.read_sites(path,['a'])
 
     def test_population_sites(self):
         mass,sites=population_sites.spherical_sites([179,-179],[0,0],[1,2],[0,0],1)
