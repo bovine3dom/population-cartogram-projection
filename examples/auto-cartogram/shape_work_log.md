@@ -131,3 +131,24 @@ Inspect the resulting images at world and regional scales.
 - The 55,000-tile count-fit reproduction has finished. Its exported cells match
   the earlier run byte for byte. The corrected regrowth trials with guide costs
   1 and 4 have also finished; their images still need review.
+
+## 10:52–11:05 UTC — review resumed
+
+- Reviewed completed background runs after the user asked to continue. The
+  110,000-tile count fit took 36 minutes; its atomic stage took 49 minutes.
+  The wider 55,000-tile candidate search took 64 minutes. These are measured
+  compute times, not a claim of continuous manual review during the interval.
+- All three resolutions now have an exact-count deformation result. The
+  110,000-tile image still has bad country order in Asia and block-like large
+  countries. Exact counts alone do not make this a usable world map.
+- Source-guided regrowth removes the long Vietnam detour at 55,000 tiles.
+  However, weak outline costs turn some countries into blocks. The stronger
+  outline trial retains more of Japan's and Australia's shapes. Neither fixes
+  the starting country positions.
+- The intact-shape displacement trials preserve outlines, but a convex hull
+  fills coastal bays. This can push Bangladesh out of the space beside India.
+  Added collision tests on convex pieces instead. Added soft anchors at real
+  source border points instead of hull support points. Neither adds map paths.
+- Sixteen focused tests pass, including a concave bay, finite-difference
+  gradient checks, and rejection of an anchor without a shared source border.
+  The next world runs will test this position model.
