@@ -66,18 +66,24 @@ Those earlier failures remain recorded; they are not converged results.
 This is not part of Sargent's objective and is off by default. It tests large
 unwanted rotations in low-water controls. Analytic-gradient tests cover it.
 
-`--region-shape-weight` tests a second, component-wide prior. Each source
-triangle intersection supplies its area and centroid. Map those centroids through
-the mesh, then compare them with the uniformly scaled source centroids. Remove
-each component's mean displacement before measuring squared residuals. Thus each
-component can translate freely, but its preferred shape and orientation remain
-fixed. Source-area fractions weight the samples within each component.
+`--region-shape-weight` tests a second, component-wide prior. Compare the
+transformed source with a uniformly scaled source shape. Remove each component's
+mean displacement before measuring squared residuals. Thus each component can
+translate freely, but its preferred shape and orientation remain fixed.
+Source-area fractions weight the samples within each component.
 
-This prior is off by default and is not part of Sargent's objective. It can resist
-a long thin country even when each local triangle has moderate distortion.
-Centroid samples omit variation inside each triangle intersection. A coarse mesh
-can therefore miss shape errors. The local mesh costs, determinant bounds, and
-output checks still apply. No result from this control is assumed in advance.
+Each triangle intersection now supplies its polygon mean and second moments,
+including holes and separate pieces. Four equal-weight samples reproduce those
+moments. Some samples can be outside the intersection, but the same triangle's
+affine map applies to all four. This integrates the quadratic shape cost without
+a centroid-only approximation. Tests check rectangles, holes, separate polygons,
+rotation, translation, and the objective gradient.
+
+The first controls used only intersection centroids. Strong weights exposed
+thin features between samples. Those runs remain recorded as an earlier
+approximation. This prior is off by default and is not part of Sargent's
+objective. The local mesh costs, determinant bounds, and output checks still
+apply. No visual improvement from the exact-moment control is assumed.
 
 Other differences from the paper are important:
 

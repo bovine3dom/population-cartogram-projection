@@ -86,6 +86,17 @@ class MeshTests(unittest.TestCase):
         # The reciprocal barrier must remain active above the accepted floor.
         self.assertGreater(objective.evaluate((objective.vertices*1e-4).ravel())[0],1e6)
 
+    def test_polygon_second_moments(self):
+        from mesh_shape_prior import moment_samples
+        from shapely import affinity
+        from shapely.geometry import Polygon,MultiPolygon
+        for geometry,variance in [(box(3,4,5,8),[1/3,4/3]),(Polygon([(0,0),(2,0),(2,2),(0,2)],holes=[[(.5,.5),(1.5,.5),(1.5,1.5),(.5,1.5)]]),[5/12,5/12]),(MultiPolygon([box(0,0,1,1),box(2,0,3,1)]),[13/12,1/12])]:
+            points=moment_samples(geometry);centre=np.asarray(geometry.centroid.coords[0])
+            np.testing.assert_allclose(points.mean(axis=0),centre)
+            np.testing.assert_allclose((points-centre).T@(points-centre)/4,np.diag(variance),atol=1e-12)
+            rotated=affinity.rotate(geometry,37,origin=(0,0));sample=moment_samples(rotated)
+            self.assertAlmostEqual(np.sum((sample-sample.mean(axis=0))**2)/4,sum(variance))
+
     def test_component_shape_prior(self):
         from mesh_shape_prior import RegionShapePrior
         vertices,triangles,portions,fixed,pieces,_=build_mesh([box(0,0,1,1),box(1,0,2,1)],8)
