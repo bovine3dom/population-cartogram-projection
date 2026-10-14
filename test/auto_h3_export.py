@@ -32,12 +32,14 @@ class IslandExportTests(unittest.TestCase):
                 x=i*2
                 features.append(dict(type='Feature',properties=dict(component_id=component),geometry=dict(type='Polygon',coordinates=[[[x,0],[x+1,0],[x+1,1],[x,1],[x,0]]])))
                 cities.append(dict(name=f'City {i}',longitude=x+.5,latitude=.5,h3=123,population=100000))
+            cities.append(dict(name='Smaller city',longitude=.5,latitude=.5,h3=123,population=90000))
             cities.append(dict(name='No fallback',longitude=10,latitude=10,h3=123,population=200000))
             for name,records in [('groups',groups),('sources',sources),('targets',targets),('labels/cities',cities),('labels/areas',[dict(h3=123,area_km2=10)])]:csv_file(root/(name+'.csv'),records)
             polygon=root/'polygons.json';polygon.write_text(json.dumps(dict(type='FeatureCollection',features=features)))
             iso=root/'iso.json';iso.write_text(json.dumps({'3166-1':[dict(alpha_3='AAA',numeric='001')]}))
             result=export(root,polygon,iso,root/'export')
-            self.assertEqual(result['placed_cities'],2)
+            self.assertEqual(result['placed_cities'],3)
+            self.assertEqual(result['labelled_tiles'],2)
             self.assertEqual(result['cross_group_population'],0)
             with pa.memory_map(str(root/'export/cartogram_weights_auto_55000_h3_5_hilo.arrow'),'r') as stream:table=pa.ipc.open_file(stream).read_all()
             data=table.to_pydict()
@@ -50,6 +52,8 @@ class IslandExportTests(unittest.TestCase):
             (root/'balanced/BBB:island/sources.csv').write_text('id,component_id,group_id,value\nBBB:island:123,BBB:island,BBB:island,71\n')
             with self.assertRaises(ValueError):export(root,polygon,iso,root/'bad')
             self.assertFalse((root/'bad').exists())
+            groups[1]['group_id']=groups[0]['group_id'];csv_file(root/'groups.csv',groups)
+            with self.assertRaisesRegex(ValueError,'crosses countries'):export(root,polygon,iso,root/'bad')
 
     def test_repeated_expansion_stays_in_group(self):
         sources=[dict(group_id='A')]

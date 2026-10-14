@@ -1,0 +1,79 @@
+{
+  "tiles": 55000,
+  "groups": 481,
+  "component_h3_sources": 400545,
+  "h3_parents": 388513,
+  "mapping_rows": 1022504,
+  "population": 7954677990.0,
+  "cross_group_population": 0,
+  "maximum_relative_target_error": 9.99997668879038e-05,
+  "cities": 12341,
+  "placed_cities": 12154,
+  "labelled_tiles": 9202,
+  "grouped_population": 10133200.0,
+  "inputs": {
+    "output/auto-cartogram/world-55000-h3-5-density/sources.csv": "63e91c75919b75a9397ae0dc8032164b6c2d3ebc91dbe82a2b52d4cddf04b960",
+    "output/auto-cartogram/world-55000-h3-5-density/targets.csv": "e4609904888d3df9593608cb36972d330713876f7e462f1063435079b998d2ad",
+    "output/auto-cartogram/world-55000-h3-5-density/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-h3-5-density/labels/cities.csv": "094c032c2691036ed8b2336d44047716d891ddd30add6e737f2b79218bd2c656",
+    "output/auto-cartogram/world-55000-h3-5-density/labels/areas.csv": "ffa03e8c259b3668879a8c76bfe76bfa99b63aae242457adbaabc64de951083a",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "/usr/share/iso-codes/json/iso_3166-1.json": "f01b812b57fba9f31ff621bf33e7c7570a01964dbeb5be2167e94decf538c89f",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/export_h3_groups.py": "fbf136557a528f68098f1356e590f96a6e9f9d29bd27715e99bfa3d6aa5da261"
+  },
+  "files": {
+    "cartogram_weights_auto_55000_h3_5_hilo.arrow": "eacd12f2eced4b8c2b815d36f8519f7fdf01071a7c1497c97dfdec6f498a51b0",
+    "population_density_hilo.arrow": "e959f3bffb50b42d8fc7d772ce50e0e7c8c80449d913935b464be20dcf3b9119",
+    "population_density_hilo.json": "d3b43a9857991ff36d3f57faf7e4440198ac218aeecc71f4c4fd758d60217d95",
+    "cities.csv": "d9295572aee08f9d92a30cfd6286b1ed107a088adcc537e92bd5f193e7e2fbe1",
+    "country-codes.csv": "0fdf036343dae05404e1ed433b2edf071347f161f01393478d3904e8441798ea",
+    "groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca"
+  },
+  "export_directory": "/home/olie/projects/H3-MON/www/data/planet-auto-55000-h3-5-islands",
+  "expansion_steps": {
+    "0": 475,
+    "1": 6
+  },
+  "expanded_groups": [
+    {
+      "group": "CHN:72cd37e37e634df7",
+      "steps": 1,
+      "added_pairs": 145733
+    },
+    {
+      "group": "MAR:41e7d86fdd4b2365",
+      "steps": 1,
+      "added_pairs": 8947
+    },
+    {
+      "group": "NZL:8f99f1c50259113a",
+      "steps": 1,
+      "added_pairs": 1949
+    },
+    {
+      "group": "BRN:72e2eec83e114e7f",
+      "steps": 1,
+      "added_pairs": 54
+    },
+    {
+      "group": "FXX:b04574696bff21bc",
+      "steps": 1,
+      "added_pairs": 54
+    },
+    {
+      "group": "MYS:38845839aa7557f7",
+      "steps": 1,
+      "added_pairs": 8
+    }
+  ],
+  "fit_seconds": 1825.6648075580597,
+  "review_files": {
+    "h3-mon-world.png": "9fa7e341d83fea6d0fb99c2d5f92fdd90eab07a464db7c59c748076c5648a391",
+    "h3-mon-japan.png": "06bcc08c79d4d116ec08ce17cf5124bc2d8627ef55e0c296cc06106114a2d007",
+    "h3-mon-indonesia.png": "ec68d0f6a6534c628a0eff89bfc477693a7d49b308eb32084a0cff435f258059",
+    "h3-mon-europe.png": "ba322fe70ecb60c1046e0fcce13218f062f77a0075c84558a48c7d7e6eedc332",
+    "arrow-checks.json": "f3e260f1fb0cad5d9ff747b70b36f6c1a3cf144a9cc58eb273b6ef633f951c9e",
+    "browser-checks.json": "5dcae84fd6e39424f67d54ebb337f91aa3cfffb29c6a305b6260ddc8dbc9e218",
+    "runtime-inputs.json": "6dc07697f2bd0c13180e19270da1824ccdd6b48be3435a6c555939ea9e0eb7b1"
+  }
+}

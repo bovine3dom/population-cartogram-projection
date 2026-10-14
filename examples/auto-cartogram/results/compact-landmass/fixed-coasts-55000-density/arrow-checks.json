@@ -1,0 +1,15 @@
+{
+  "tiles": 55000,
+  "parents": 388513,
+  "mapping_rows": 1022504,
+  "source_weight_max_error": 1.1102230246251565e-15,
+  "target_weight_max_error": 1.9761969838327786e-14,
+  "labelled_tiles": 9202,
+  "layout_coordinates_exact": true,
+  "density_values_checked": true,
+  "city_groups_checked": true,
+  "files": {
+    "cartogram_weights_auto_55000_h3_5_hilo.arrow": "eacd12f2eced4b8c2b815d36f8519f7fdf01071a7c1497c97dfdec6f498a51b0",
+    "population_density_hilo.arrow": "e959f3bffb50b42d8fc7d772ce50e0e7c8c80449d913935b464be20dcf3b9119"
+  }
+}
