@@ -24,6 +24,23 @@ checks do not prove agreement with an all-pair solve. They do not prove good
 border alignment, low blur, or a mobile memory budget. Check these properties
 on real data before publication. No new border penalty is in this solver.
 
+## Native-resolution pilot
+
+`pilot_native6.jl` takes six arguments: the coarse countries file, a complete
+pass checkpoint, a native H3-6 country Arrow file, the country code, the target
+factor, and a new output directory. It reads coarse plan blocks, not a full
+coarse matrix. It retains 99.999% of each coarse source's mass to choose support,
+adds nearby target cells, and splits those targets. New source parents use the
+100 nearest fine target centres. This support rule is not a feasibility proof.
+
+`PILOT_ETAS` is a comma-separated list of temperatures. Each saved stage passes
+the existing planet mass limits: target L1 at most `1e-4`, maximum relative
+error at most `0.001`, and source relative error at most `1e-10`. The summary
+records support, spatial spread, and triangle fold area. The interpolated guide
+has a separate orientation report. These are diagnostics, not publication
+approval. In particular, the first factor-3 Angola trial increased fold area
+substantially. Do not use its mass checks as evidence of preserved borders.
+
 Run the small dense-reference and failure checks with:
 
 ```sh

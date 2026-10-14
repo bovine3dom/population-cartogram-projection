@@ -72,3 +72,26 @@ A direct jump to `1e-5` converges too slowly; stopped that trial after 5,000
 iterations without accepting its unfinished stage. Saved valid stages remain.
 A smaller temperature step is under test. This is not evidence that the full
 planet can yet use the restricted geographic model without a quality loss.
+
+## 21:15 UTC: factor comparison rejects the simple geographic model
+
+All 15 fixed-graph tests now pass on both CPU and oneAPI. The factor-2 Angola
+stage at eta `5e-5` passes the tighter L1 `1e-5` check. Its support ratio is 2.264,
+compared with 2.451 for the coarse result. Spatial RMS in coarse grid units is
+2.118 versus 1.832. The next, colder stage fails the tighter limit after 5,000
+iterations; it is not accepted. The general pilot uses the existing planet
+L1 limit `1e-4`, with the unchanged maximum relative limit `0.001`.
+
+Factor 3 has 2,286 targets and 5,254,540 graph edges. At eta `5e-5`, its support
+ratio is 3.971. More importantly, positive triangle area is 142,057 square km,
+versus 10,846 for the interpolated guide. Mass checks pass, but geometry does
+not. Reject this simple geographic refinement for publication. A diagnostic
+now tests the existing fold gradient with a penalty on guide displacement and
+a proximal update. Its first aggressive step failed to converge; it did not
+change any accepted dataset. This diagnostic is not a shipped fitting method.
+
+The whole-planet polygon extraction is still running. Large coast polygons
+are slow. The H3 experimental centre-containment fill gives exactly the same
+cells on all three Angola polygons; the main polygon takes 9.1 seconds versus
+18.6 seconds for the old fill. An Australia speed check is running separately.
+No installed package has changed. API reference: https://h3geo.org/docs/api/regions/.
