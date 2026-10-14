@@ -89,6 +89,16 @@ class CapacityPartitionTests(unittest.TestCase):
         self.assertEqual(state.tiles['island'],tiles['island']);self.assertIsNone(state.step())
         blocked=Repair(tiles,{'a','b','island'});self.assertIsNone(blocked.step());self.assertEqual(blocked.tiles,tiles)
 
+    def test_fragment_relocation(self):
+        tiles={'a':{(0,0),(100,0)},'island':{(20,20)}}
+        state=Repair(tiles,{'island'});moved=state.relocate('a')
+        self.assertEqual(moved['removed'],[(100,0)])
+        self.assertEqual(state.report()['disconnected_regions'],0)
+        self.assertEqual(len(state.tiles['a']),2);self.assertEqual(state.tiles['island'],tiles['island'])
+        self.assertTrue(all(abs(x)+abs(y)<=1 for x,y in state.tiles['a']))
+        blocked={'a':{(0,0),(100,0)},'b':{(-1,0),(1,0),(0,1),(0,-1)}}
+        state=Repair(blocked,{'b'});self.assertIsNone(state.relocate('a'));self.assertEqual(state.tiles,blocked)
+
     def test_random_fragment_swaps(self):
         rng=np.random.default_rng(11)
         for _ in range(20):

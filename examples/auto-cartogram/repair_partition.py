@@ -2,6 +2,7 @@
 """Reduce partition fragments by swaps; keep counts and occupied cells fixed."""
 import argparse
 import csv
+import heapq
 import json
 from pathlib import Path
 import shutil
@@ -64,8 +65,34 @@ class Repair:
                         return dict(component=c,other=d,fragment_cell=list(p),replacement_cell=list(q),fragment_reduction=before-after)
         return None
 
+    def relocate(self,c):
+        if c in self.fixed or len(self.parts[c])==1:return None
+        grown=set(self.parts[c][0]);removed=self.tiles[c]-grown;count=len(self.tiles[c])
+        cx=sum(x for x,y in grown)/len(grown);cy=sum(y for x,y in grown)/len(grown)
+        blocked={p for p,owner in self.owners.items() if owner!=c}|removed
+        blocked.update(q for owner in self.fixed for p in self.tiles[owner] for q in [p]+adjacent(p))
+        frontier=[]
+        def score(p):return 4-2*sum(q in grown for q in adjacent(p))+((p[0]-cx)**2+(p[1]-cy)**2)/count
+        def offer(p):
+            if p not in grown and p not in blocked:heapq.heappush(frontier,(score(p),p))
+        for p in sorted(grown):
+            for q in adjacent(p):offer(q)
+        while len(grown)<count and frontier:
+            cost,p=heapq.heappop(frontier)
+            if p in grown:continue
+            current=score(p)
+            if abs(current-cost)>1e-10:heapq.heappush(frontier,(current,p));continue
+            grown.add(p)
+            for q in adjacent(p):offer(q)
+        if len(grown)!=count:return None
+        added=grown-self.tiles[c]
+        for p in removed:del self.owners[p]
+        for p in added:self.owners[p]=c
+        self.tiles[c]=grown;self.parts[c]=[grown]
+        return dict(component=c,removed=sorted(removed),added=sorted(added))
 
-def run(inputs,layout,output,rounds=2000,choices=16):
+
+def run(inputs,layout,output,rounds=2000,choices=16,relocate_fragments=False):
     if output.exists():raise ValueError('Output already exists')
     if rounds<1 or choices<1:raise ValueError('Use positive search limits')
     hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',layout/'cells.csv',layout/'complete.txt']}
@@ -79,9 +106,15 @@ def run(inputs,layout,output,rounds=2000,choices=16):
         if move is None:break
         history.append(move)
         if len(history)%25==0:print(len(history),state.report(),flush=True)
-    if set(state.owners)!=set(owners) or any(len(state.tiles[c])!=len(tiles[c]) for c in tiles):raise AssertionError('Footprint or budgets changed')
+    relocations=[]
+    if relocate_fragments:
+        for c in sorted(tiles,key=lambda c:(-state.fragments(c),c)):
+            moved=state.relocate(c)
+            if moved is not None:relocations.append(moved)
+    if not relocate_fragments and set(state.owners)!=set(owners):raise AssertionError('Footprint changed')
+    if any(len(state.tiles[c])!=len(tiles[c]) for c in tiles):raise AssertionError('Budgets changed')
     if any(state.tiles[c]!=tiles[c] for c in fixed):raise AssertionError('Fixed island changed')
-    record=dict(method='Count-preserving fragment swaps on an unchanged footprint',before=before,after=state.report(),swaps=len(history),maximum_rounds=rounds,choices=choices,fixed_components=len(fixed),elapsed_seconds=time.monotonic()-started,inputs=hashes,scripts=scripts,limit='No connector cells are added. Each swap reduces cells outside the largest connected pieces and does not increase either region component count. Some fragments can remain. Occupied holes are allowed; borders and geographic positions are not guaranteed. All empty spaces are unchanged, including artificial gaps in the input footprint.')
+    record=dict(method='Count-preserving fragment swaps, with optional compact relocation of secondary pieces',before=before,after=state.report(),swaps=len(history),maximum_rounds=rounds,choices=choices,relocate_fragments=relocate_fragments,relocated_components=len(relocations),removed_land_cells=len(set(owners)-set(state.owners)),added_land_cells=len(set(state.owners)-set(owners)),fixed_components=len(fixed),elapsed_seconds=time.monotonic()-started,inputs=hashes,scripts=scripts,limit='Swaps leave the footprint unchanged and reduce cells outside the largest connected pieces without increasing region component counts. Optional relocation removes secondary pieces and grows the main piece into empty neighbour cells; it never connects to the discarded pieces. Relocation can change coasts and empty spaces. Some fragments can remain if growth is blocked. Occupied holes are allowed; borders and geographic positions are not guaranteed.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='repair-partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -90,9 +123,10 @@ def run(inputs,layout,output,rounds=2000,choices=16):
         record['cells_sha256']=digest(temp/'cells.csv')
         (temp/'repair-partition.json').write_text(json.dumps(record,indent=2)+'\n')
         (temp/'swaps.json').write_text(json.dumps(history,indent=2)+'\n')
+        (temp/'relocations.json').write_text(json.dumps(relocations,indent=2)+'\n')
         for name in ['partition.json','envelope.csv']:
             if (layout/name).exists():shutil.copyfile(layout/name,temp/('parent-partition.json' if name=='partition.json' else name))
-        (temp/'complete.txt').write_text('mode=partition-repair\ncounts=exact\ncontacts=unconstrained\nfootprint=unchanged\n')
+        (temp/'complete.txt').write_text(f'mode={"partition-relocation" if relocations else "partition-repair"}\ncounts=exact\ncontacts=unconstrained\nfootprint={"modified" if relocations else "unchanged"}\n')
         temp.rename(output)
     finally:
         if temp.exists():shutil.rmtree(temp)
@@ -103,4 +137,5 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ['inputs','layout','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--rounds',type=int,default=2000);parser.add_argument('--choices',type=int,default=16)
+    parser.add_argument('--relocate-fragments',action='store_true',help='Remove remaining secondary pieces and grow the main piece; changes the footprint')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
