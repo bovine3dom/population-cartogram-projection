@@ -53,10 +53,18 @@ optimizer, not a proof of a global minimum. `--optimizer scipy` retains the
 original L-BFGS-B control.
 
 The objective uses a quadratic extension of the reciprocal determinant below
-`1e-5` for line-search probes. This gives invalid trial steps a finite recovery
+`1e-12` for line-search probes. This gives invalid trial steps a finite recovery
 gradient. No stage with determinant at or below `1e-12` can be accepted or
 exported. This differs from the paper's infinite barrier. A finite extension
 alone is not proof of valid output; the explicit geometry checks are required.
+The first implementation extended the reciprocal below `1e-5`. Low-water
+rotation controls then reached the determinant step floor without a useful area
+fit. The new threshold keeps the reciprocal barrier active above that floor.
+Those earlier failures remain recorded; they are not converged results.
+
+`--rotation-weight` adds an optional polar-rotation cost, `1 - cos(theta)`.
+This is not part of Sargent's objective and is off by default. It tests large
+unwanted rotations in low-water controls. Analytic-gradient tests cover it.
 
 Other differences from the paper are important:
 

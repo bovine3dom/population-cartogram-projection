@@ -83,6 +83,8 @@ class MeshTests(unittest.TestCase):
             estimates.append((objective.evaluate(values+step)[0]-objective.evaluate(values-step)[0])/2e-6)
         np.testing.assert_allclose(gradient,estimates,rtol=1e-6,atol=1e6)
         self.assertEqual(objective.report(flipped.ravel())['folded_triangles'],2)
+        # The reciprocal barrier must remain active above the accepted floor.
+        self.assertGreater(objective.evaluate((objective.vertices*1e-4).ravel())[0],1e6)
 
     def test_orientation_prior(self):
         objective=self.fixture();objective.rotation_weight=2
