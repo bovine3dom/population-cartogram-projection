@@ -525,7 +525,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   fold_strength=0.0, fold_smoothing=0.0, matrix_free=false, internal_scale=1.0, inner_tolerance=1e-5,
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
                   border_scale=1.0,coordinate=false,border_factors=Dict(),checkpoint_interval=1,compact=false,
-                  compact_cache_bytes=512*1024^2,start_step::Int=1,initial_duals=nothing)
+                  compact_cache_bytes=512*1024^2,start_step::Int=1,initial_duals=nothing,max_damping=.5)
     groups=coordinate ? length(countries) : 1
     1<=start_step<=outer_steps*groups+1 || error("invalid starting step")
     start_step>1 && isnothing(starting_plans) && error("a later starting step requires seed plans")
@@ -535,6 +535,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             for (c,d) in zip(countries,initial_duals)) || error("invalid initial dual vector")
     end
     compact && (matrix_free || anneal) && error("compact mode has its own matrix-free solver; annealing is not enabled")
+    isfinite(max_damping) && 0<max_damping<=1 || error("invalid maximum damping")
     checkpoint_interval>=1 || error("checkpoint interval must be positive")
     proximal>=0 || error("proximal weight must be nonnegative")
     all(x->isfinite(x)&&x>=0,(internal_scale,border_scale)) || error("invalid edge scale")
@@ -557,7 +558,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         interior_limit=[interior_limit],spread_limit=[spread_limit],form=[string(form)],internal_form=[string(internal_form)],
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],fold_smoothing=[fold_smoothing],
         matrix_free=[matrix_free],internal_scale=[internal_scale],border_scale=[border_scale],inner_tolerance=[inner_tolerance],
-        proximal=[proximal],anneal=[anneal],accelerate=[accelerate],coordinate=[coordinate],outer_steps=[outer_steps],
+        proximal=[proximal],max_damping=[max_damping],anneal=[anneal],accelerate=[accelerate],coordinate=[coordinate],outer_steps=[outer_steps],
         checkpoint_interval=[checkpoint_interval],compact=[compact],compact_cache_bytes=[compact_cache_bytes],start_step=[start_step],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
@@ -642,7 +643,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         end
         before = score_plan(plans)
         accepted = false
-        for damping in (2.0^-k for k in 1:10)
+        for damping in (max_damping*2.0^-k for k in 0:9)
             trial=copy(plans)
             for k in selected
                 trial[k]=mix_plans(plans[k],candidate[k],damping)

@@ -112,6 +112,9 @@ for backend in backends
                 implicit=CE.compact_sinkhorn(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,cache_bytes=0,max_pairs=10).plan
                 @test Matrix(implicit) ≈ Matrix(candidate) atol=2e-6
             end
+            full=CE.mix_plans(p,candidate,1.)
+            @test Matrix(full) ≈ Matrix(candidate) atol=1e-12
+            @test full.stats.target ≈ candidate.stats.target atol=1e-12
             mixed=CE.mix_plans(p,candidate,.25)
             CE.compact_stats!(mixed,c;block_pairs=12)
             @test Matrix(mixed) ≈ .75prior+.25Matrix(candidate) atol=1e-12
@@ -146,6 +149,15 @@ for backend in backends
             @test resumed[2].iteration==1 && resumed[2].updated_country==2
             resumed_plans=deserialize(joinpath(dir,"resumed","candidate.jls"))
             @test all(isapprox(Matrix(a),Matrix(b);atol=2e-5) for (a,b) in zip(resumed_plans,compact_plans))
+            full_kwargs=merge(kwargs,(;max_damping=1.))
+            full_dense=CE.run_case(countries,backend,joinpath(dir,"full-dense");full_kwargs...)
+            full_compact=CE.run_case(countries,backend,joinpath(dir,"full-compact");compact=true,full_kwargs...)
+            @test last(full_compact).objective ≈ last(full_dense).objective atol=2e-5
+            @test all(diff(getproperty.(full_compact,:objective)).<=1e-10)
+            @test CE.saved_case(joinpath(dir,"full-compact"),countries).settings[:max_damping]==1.
+            for invalid in (0.,-1.,1.01,Inf,NaN)
+                @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"bad-damping");max_damping=invalid)
+            end
             @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"invalid-start");start_step=0)
             @test_throws ErrorException CE.run_case(countries,backend,joinpath(dir,"no-seed");start_step=2)
             for invalid in ([],[nothing,zeros(1)],[nothing,fill(NaN,length(other.b))])

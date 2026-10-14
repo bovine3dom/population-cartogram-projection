@@ -23,6 +23,13 @@ this recurrence in log space. Keep each accepted damping value in the history.
 This represents the same proximal term and mixture as the dense method. It does
 not replace a mixture with an averaged dual vector or prune transport entries.
 
+`run_case` uses `max_damping=0.5` by default. Set `max_damping=1` to test a
+full proposal before smaller steps. Every accepted step must still lower the
+objective and pass the mass and distortion checks. The saved settings record
+this limit. Half steps preserve at least half of the previous plan explicitly;
+a short run from a broad initial plan can therefore retain broad tails even
+when later proposals are sharp. Full steps do not remove the proximal prior.
+
 Stored arrays grow with `(sources + targets) × accepted updates`, not with
 `sources × targets`. History evaluation becomes more expensive as its depth
 grows. This is a memory improvement, not a guarantee of faster inner solves.

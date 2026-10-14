@@ -80,3 +80,13 @@ initial plan remains through explicit mixtures, even if proposals are sharp.
 The proximal prior can preserve more. This makes a sharp initial plan and a
 checked full-step trial important. It does not justify removing mass checks,
 objective descent, or spatial distortion checks.
+
+## 07:10 UTC: optional full outer steps
+
+Added `max_damping` to the research runner. The default remains 0.5, so old
+runs keep their step sequence. The optional value 1 tests a full step first;
+all acceptance checks remain. Dense and compact full-step comparisons pass.
+All 86 compact checks pass on CPU and oneAPI. The saved settings retain the
+new value. This is a controlled trial option, not a claim of better border
+quality. The next tests compare sharp and broad initial plans with both step
+limits and two proximal weights.
