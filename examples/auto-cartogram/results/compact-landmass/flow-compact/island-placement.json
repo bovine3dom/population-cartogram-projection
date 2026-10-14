@@ -1,0 +1,828 @@
+{
+  "method": "Keep components with source land borders or population at or above the threshold fixed. Place smaller isolated components from largest population to smallest, near the nearest larger source component coast. No country-membership links.",
+  "max_population_fraction": 0.01,
+  "maximum_population": 79546779.9,
+  "absolute_tile_error": 0,
+  "allow_partial_counts": false,
+  "preserve_mainland_defects": true,
+  "unchanged_invalid_fixed_components": [
+    "CHN:72cd37e37e634df7",
+    "KOR:1a1881fe9e034788",
+    "MYS:4035fe8bf71b03f5"
+  ],
+  "initial_false_contacts": 133,
+  "final_false_contacts": 133,
+  "source_contacts_unchanged": true,
+  "eligible_isolated_components": 289,
+  "moved_components": 283,
+  "ocean_scale": 0.1,
+  "maximum_placement_shift": 32.31954884354582,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509",
+    "output/auto-cartogram/world-55000-flow-stretch1.5-connected/cells.csv": "fd3a087cc53218fb32084886ebc9b6485d6eef366fe6a5bcb22af860e6135dcb",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "output/auto-cartogram/world-55000-flow-stretch1.5-connected/parent-partition.json": "58ccee73170859b8cfb59f0c50a24e215c302902fcdb5613188e86993b993d1b",
+    "output/auto-cartogram/world-55000-flow-stretch1.5-connected/repair-partition.json": "d8a917e7ac8c42438a2d6029c4dfbe85fd9ede4b882f3dcfb256ed2df2dda4c3"
+  },
+  "scripts": {
+    "place_islands.py": "c5fa5399d336afd83646ed18c9344350b8ffce2e976d99251edef4e3eec265f9",
+    "coast_anchors.py": "ec7dc2230a88cef5a41cc7cf733ef192b5c3478d2f36dcbea0bc712917d148b7",
+    "shape_placement.py": "20ed59825d0b0fde5893db3a267218e5c46846a9c0edd766f31b7ec41ef8dfd0",
+    "prepare_flow.py": "74fae58dc179b144b0373c796c66d6614e012b33eb345706a5daf0913a7914bf"
+  },
+  "parent_layout_records": {
+    "parent-partition.json": {
+      "method": "Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction",
+      "sigma": 4.0,
+      "guide": null,
+      "anchor": null,
+      "cost": "uniform squared centre distance",
+      "guide_layout": null,
+      "guide_alignment": null,
+      "maximum_iterations_per_stage": 300,
+      "by_landmass": true,
+      "flow_geometry": "output/auto-cartogram/world-55000-flow256/areas_cartogram.geojson",
+      "flow": {
+        "scale": 1.0079319728007388,
+        "area_preserving_stretch": 1.5,
+        "x_scale": 1.5118979592011081,
+        "y_scale": 0.6719546485338258,
+        "subtile_fallback_components": [
+          "BRT:fef0fc6bba22ada7",
+          "CNM:85db95ef4bf8489c",
+          "HRV:2a6ba7505aec5af9",
+          "MCO:8f146e45080f16d1",
+          "NLX:5daa52b59ba80d17",
+          "SXM:09188f4114a598b9"
+        ],
+        "movable_raster_cells": 49857,
+        "requested_movable_cells": 49894,
+        "limit": "Flow supplies sites and a raster footprint, not final country boundaries or quotas. Empty raster components use one representative sample. Raster samples may overlap. Each target landmass receives the original requested budget. Isolated source-shaped templates are translated away from the raw mainland footprint before partitioning."
+      },
+      "partitions": [
+        {
+          "components": [
+            "AFG:cda2af5bb6ea22f0",
+            "AGO:2b9c8d9b36ed1f1d",
+            "AGO:704113b148b7974b",
+            "ALB:c931cc5315aed954",
+            "AND:0923843c3687a75e",
+            "ARE:6af70f4330c4f4bf",
+            "ARM:433ac98029e5a761",
+            "AUT:709fdd785650b149",
+            "AZE:0510388634a9edd9",
+            "AZE:e5af19283650a3e3",
+            "BDI:b3ecb03d79bf1cb5",
+            "BEL:b124863414a6dcdb",
+            "BEN:5911ab4fd3e84cb1",
+            "BFA:9c8f06c312ed722e",
+            "BGD:d6d0c7df0b40a187",
+            "BGR:8a6e196d0e9089ee",
+            "BIH:76753bb1c9d6c52b",
+            "BLR:216ea6b406f5bc6c",
+            "BRT:fef0fc6bba22ada7",
+            "BTN:fe4a4d07e153ef17",
+            "BWA:41766e3f9df3a4d1",
+            "CAF:1f15d49e1132c1f3",
+            "CHE:b37ef58a1d6dee0a",
+            "CHN:72cd37e37e634df7",
+            "CIV:1c18880d4492d85c",
+            "CMR:35df8c314c8ef083",
+            "COD:34b7cfda818ccf80",
+            "COG:c5650e58e144375b",
+            "CZE:bf3969a8b4fbfc04",
+            "DEU:0b0480fae55fd996",
+            "DJI:8814228594ff16f1",
+            "DNK:d4951f6fa8360f9a",
+            "DZA:704d2c59e6450910",
+            "EGY:f7cc24b776a75221",
+            "ERI:b257cabcc1caab95",
+            "ESP:7dc2b5da1e2aaae9",
+            "ESP:94551cac3165236f",
+            "ESP:ff9451038f1a27e4",
+            "EST:50bd04ff06509a99",
+            "ETH:38a05216b358b154",
+            "FIN:9332a3268ae7c503",
+            "FXX:f023db15990ca569",
+            "GAB:9b0fa4569aef69bd",
+            "GAZ:0cd9171edc8ff269",
+            "GEO:d709e483cc2819fe",
+            "GHA:1beea30af91e217d",
+            "GIB:71de83b149a1d32c",
+            "GIN:eb019150f12e3d47",
+            "GMB:e5cba77f98187ac4",
+            "GNB:06bb5bdc3716e8ff",
+            "GNQ:703503e059bb9243",
+            "GRC:70edd41aef80d178",
+            "HKG:a4b1c1ec313ba36c",
+            "HRV:23be6296644271a5",
+            "HRV:2a6ba7505aec5af9",
+            "HUN:9f803be1643ca956",
+            "IND:3f0bb94d859b2064",
+            "IRN:3c2b5bd7d999fbee",
+            "IRQ:741e7a31e643a8a8",
+            "ISR:7ab28b88983e2128",
+            "ITA:7d6868fd136c6c11",
+            "JOR:97289b5947dc77c2",
+            "KAB:13532639e9546e01",
+            "KAS:b7c84d817c090062",
+            "KAZ:5d6f63a9b9f3c9f9",
+            "KEN:4b9b5a7ce90b0bb0",
+            "KGZ:401b8fcdc0eef69c",
+            "KHM:299a58dab837de1b",
+            "KOR:1a1881fe9e034788",
+            "KOS:e68a710dbd926c28",
+            "KWT:575b7c67b7a3657d",
+            "LAO:b4c511d27634a146",
+            "LBN:8d427f2407db4cf0",
+            "LBR:791c4a2bdad8b682",
+            "LBY:7ca6524733c4cc0b",
+            "LIE:452f33c4300c02b9",
+            "LSO:085148348451b82a",
+            "LTU:4c2a60810b4196cd",
+            "LUX:2287a57343a7d085",
+            "LVA:ff14565ea5d338a5",
+            "MAR:41e7d86fdd4b2365",
+            "MCO:8f146e45080f16d1",
+            "MDA:c11ef650966bdfca",
+            "MKD:072da3322c97fa27",
+            "MLI:cfb1983a0687bf5c",
+            "MMR:e9f27e99686071f9",
+            "MNE:52f7987265ed3935",
+            "MNG:7ecd8e5b0a42fa66",
+            "MOZ:0c9516b3b1958290",
+            "MRT:93e93b11bab4502c",
+            "MWI:7555dabddb4364d9",
+            "MYS:4035fe8bf71b03f5",
+            "NAM:d67affdeafffe7f2",
+            "NER:225f284b6e95d815",
+            "NGA:edcdec1fdf6fb5c7",
+            "NLX:5daa52b59ba80d17",
+            "NLX:8b9c3398a58bdb2a",
+            "NOW:a387a8ce67e0d957",
+            "NPL:c1885306c87c4123",
+            "OMN:21af2c17fe172531",
+            "PAK:447ed1858f7b7a5d",
+            "POL:1980df7ed9d16d12",
+            "PRK:443ac4e48c09b5a9",
+            "PRX:31cd60a8869cd87c",
+            "QAT:f6210114a7fc4646",
+            "ROU:8bc181463815c013",
+            "RUS:7e6e84c769819aed",
+            "RUS:8afd88fb65e5e555",
+            "RUS:b85c5bca1852870f",
+            "RWA:11c3869510b66d95",
+            "SAH:c067a975f328d956",
+            "SAU:11ac65250772b5d3",
+            "SDN:e4296cf2bfa47003",
+            "SDS:9ecb0b566ac02a31",
+            "SEN:fa5de3704b02f675",
+            "SLE:aeb8476c9a2c5e10",
+            "SMR:65f777115cf6c77c",
+            "SOL:e03433706d8873bb",
+            "SOM:b94bcf137ecd6275",
+            "SRB:334f04d632601018",
+            "SVK:1f440da2e10fbb82",
+            "SVN:e8f334b689926950",
+            "SWE:1320ee42b8e1186c",
+            "SWZ:e315454282eb3136",
+            "SYR:bb46c77ee43515e0",
+            "TCD:a34f6ca4b3bd052d",
+            "TGO:f7afd783bdbbc052",
+            "THA:2d2e3dd6e4f6c675",
+            "TJK:d6e62d7f585e085c",
+            "TKM:ef25c6485f2078c2",
+            "TUN:9e23ed3c89bdb2f6",
+            "TUR:3b553df250ebf332",
+            "TUR:6fce5e1d91133e37",
+            "TZA:88eb4141b8ee7ab7",
+            "UGA:c937c439d1615753",
+            "UKR:52622876ebf1ecb8",
+            "UZB:448c5653f0be3548",
+            "VNM:749468814d903c2a",
+            "WEB:8660f88c9871d216",
+            "YEM:64d271dfdccb3847",
+            "ZAF:eb3d29c8e7d957f4",
+            "ZMB:583491139c8eb3b0",
+            "ZWE:241a07c809723778"
+          ],
+          "envelope": {
+            "target_cells": 42637,
+            "sampled_land_cells": 42584,
+            "initial_empty_target_cells": 1689,
+            "target_connected_parts": 4,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 185,
+                "converged": true,
+                "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+                "discrete_count_error": 7988
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 180,
+                "converged": true,
+                "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+                "discrete_count_error": 1506
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 135,
+                "converged": true,
+                "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+                "discrete_count_error": 250
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 119,
+                "converged": true,
+                "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+                "discrete_count_error": 86
+              }
+            ],
+            "residual_tiles_reassigned": 43,
+            "cost_scale": 189.0504479735863,
+            "assignment_cost": 48149648.042362645
+          }
+        },
+        {
+          "components": [
+            "ARG:7462ff4f8b49993a",
+            "BLZ:4f146436bd0251b5",
+            "BOL:1a7254807c71e166",
+            "BRA:c9a395c2d321cd60",
+            "CAN:614ec007a6324298",
+            "CAN:c2f1e4e52d5cc0c3",
+            "CHL:150a87c1995fb5ad",
+            "COL:08d1c79f212fc17e",
+            "CRI:5a22dcdd3a44dc5b",
+            "ECU:ef48f29c8aa10327",
+            "GTM:304e3cb8ddf6bb44",
+            "GUF:4acf8ebf720d2a5f",
+            "GUY:5aec9f8c07eb9159",
+            "HND:177f117072fa67d2",
+            "MEX:aa67baf61acd20f3",
+            "NIC:99f10eccc73d03bc",
+            "PAN:04773d2112e86006",
+            "PER:d420f75fe20c6a02",
+            "PRY:8be730e7955b0934",
+            "SLV:6884a91b71669fb2",
+            "SPI:47f581a247f875ae",
+            "SUR:1d7cda681e299b07",
+            "URY:a93a37d95dfce9bb",
+            "USA:13c14a072880aac5",
+            "USA:90107a05206832e4",
+            "VEN:301beeea27f4cccb"
+          ],
+          "envelope": {
+            "target_cells": 6680,
+            "sampled_land_cells": 6688,
+            "initial_empty_target_cells": 456,
+            "target_connected_parts": 3,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 101,
+                "converged": true,
+                "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+                "discrete_count_error": 1054
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 99,
+                "converged": true,
+                "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+                "discrete_count_error": 178
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 64,
+                "converged": true,
+                "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+                "discrete_count_error": 28
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 74,
+                "converged": true,
+                "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+                "discrete_count_error": 14
+              }
+            ],
+            "residual_tiles_reassigned": 7,
+            "cost_scale": 165.47250977813565,
+            "assignment_cost": 1734540.4104598246
+          }
+        },
+        {
+          "components": [
+            "BRN:72e2eec83e114e7f",
+            "IDN:51a10640dee7162b",
+            "MYS:0abe504273f2e4bd"
+          ],
+          "envelope": {
+            "target_cells": 161,
+            "sampled_land_cells": 162,
+            "initial_empty_target_cells": 46,
+            "target_connected_parts": 2,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 9,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 48
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 12,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 6
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 10,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 6
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 8,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              }
+            ],
+            "residual_tiles_reassigned": 0,
+            "cost_scale": 154.78545521373488,
+            "assignment_cost": 6284.640279374373
+          }
+        },
+        {
+          "components": [
+            "DOM:1493e296a532a3a2",
+            "HTI:a3ce6059435c00f9"
+          ],
+          "envelope": {
+            "target_cells": 151,
+            "sampled_land_cells": 151,
+            "initial_empty_target_cells": 32,
+            "target_connected_parts": 1,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 3,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 3,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 3,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 0,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              }
+            ],
+            "residual_tiles_reassigned": 0,
+            "cost_scale": 37.62527796007414,
+            "assignment_cost": 2747.836289404988
+          }
+        },
+        {
+          "components": [
+            "IDN:91fa24efd9a13b2f",
+            "PNX:cd0b182a6ff3f568"
+          ],
+          "envelope": {
+            "target_cells": 107,
+            "sampled_land_cells": 108,
+            "initial_empty_target_cells": 27,
+            "target_connected_parts": 1,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 3,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 4
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 2,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 2
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 3,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 2
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 4,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              }
+            ],
+            "residual_tiles_reassigned": 0,
+            "cost_scale": 18.79915163579463,
+            "assignment_cost": 1504.4593150043736
+          }
+        },
+        {
+          "components": [
+            "CUB:a203a2643a40db9f",
+            "USG:4318b9af790790b9"
+          ],
+          "envelope": {
+            "target_cells": 76,
+            "sampled_land_cells": 75,
+            "initial_empty_target_cells": 35,
+            "target_connected_parts": 1,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 10,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 2
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 7,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 2
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 5,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 3,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              }
+            ],
+            "residual_tiles_reassigned": 0,
+            "cost_scale": 67.62065575809578,
+            "assignment_cost": 4445.657853441335
+          }
+        },
+        {
+          "components": [
+            "IRL:9661cba0fca9f89c",
+            "NIR:69fa50e543fa7c66"
+          ],
+          "envelope": {
+            "target_cells": 48,
+            "sampled_land_cells": 50,
+            "initial_empty_target_cells": 8,
+            "target_connected_parts": 1,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 6,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 10
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 4,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 3,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 2,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              }
+            ],
+            "residual_tiles_reassigned": 0,
+            "cost_scale": 11.94422695683181,
+            "assignment_cost": 261.75255360821876
+          }
+        },
+        {
+          "components": [
+            "IDN:41ba51e85ddbb728",
+            "TLS:e102fc60287c6426"
+          ],
+          "envelope": {
+            "target_cells": 22,
+            "sampled_land_cells": 22,
+            "initial_empty_target_cells": 12,
+            "target_connected_parts": 1,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 3,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 2
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 3,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 1,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 1,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              }
+            ],
+            "residual_tiles_reassigned": 0,
+            "cost_scale": 16.5706416217121,
+            "assignment_cost": 127.18842569057051
+          }
+        },
+        {
+          "components": [
+            "CNM:85db95ef4bf8489c",
+            "CYN:3fa61972653460ef",
+            "CYP:0e9f924ff6746fe5",
+            "ESB:432b2cb88c6056bf",
+            "WSB:50ca0205ee67e049"
+          ],
+          "envelope": {
+            "target_cells": 10,
+            "sampled_land_cells": 10,
+            "initial_empty_target_cells": 4,
+            "target_connected_parts": 1,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 11,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 6
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 11,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 15,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 0,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              }
+            ],
+            "residual_tiles_reassigned": 0,
+            "cost_scale": 1.8002155399004003,
+            "assignment_cost": 17.024868750891915
+          }
+        },
+        {
+          "components": [
+            "MAF:8903408c5624c48e",
+            "SXM:09188f4114a598b9"
+          ],
+          "envelope": {
+            "target_cells": 2,
+            "sampled_land_cells": 3,
+            "initial_empty_target_cells": 0,
+            "target_connected_parts": 1,
+            "sigma_tiles": 4.0,
+            "limit": "A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver."
+          },
+          "solver": {
+            "stages": [
+              {
+                "temperature": 1.0,
+                "iterations": 4,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.2,
+                "iterations": 0,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.04,
+                "iterations": 0,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              },
+              {
+                "temperature": 0.008,
+                "iterations": 0,
+                "converged": true,
+                "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+                "discrete_count_error": 0
+              }
+            ],
+            "residual_tiles_reassigned": 0,
+            "cost_scale": 1.464635454386094,
+            "assignment_cost": 0.818530832784057
+          }
+        }
+      ],
+      "fixed_components": 292,
+      "disconnected_components": {
+        "ARE:6af70f4330c4f4bf": 2,
+        "AZE:e5af19283650a3e3": 2,
+        "CHN:72cd37e37e634df7": 3,
+        "CMR:35df8c314c8ef083": 2,
+        "COG:c5650e58e144375b": 2,
+        "DNK:d4951f6fa8360f9a": 4,
+        "EST:50bd04ff06509a99": 2,
+        "GAZ:0cd9171edc8ff269": 2,
+        "GEO:d709e483cc2819fe": 3,
+        "GMB:e5cba77f98187ac4": 2,
+        "GNB:06bb5bdc3716e8ff": 2,
+        "GNQ:703503e059bb9243": 2,
+        "IND:3f0bb94d859b2064": 2,
+        "IRQ:741e7a31e643a8a8": 2,
+        "ITA:7d6868fd136c6c11": 2,
+        "KHM:299a58dab837de1b": 3,
+        "KOR:1a1881fe9e034788": 2,
+        "KWT:575b7c67b7a3657d": 2,
+        "LAO:b4c511d27634a146": 11,
+        "LUX:2287a57343a7d085": 3,
+        "LVA:ff14565ea5d338a5": 2,
+        "MMR:e9f27e99686071f9": 2,
+        "MYS:4035fe8bf71b03f5": 3,
+        "NOW:a387a8ce67e0d957": 2,
+        "PRX:31cd60a8869cd87c": 2,
+        "QAT:f6210114a7fc4646": 2,
+        "RWA:11c3869510b66d95": 2,
+        "THA:2d2e3dd6e4f6c675": 2,
+        "TUN:9e23ed3c89bdb2f6": 2,
+        "TUR:3b553df250ebf332": 2,
+        "VNM:749468814d903c2a": 2,
+        "ZMB:583491139c8eb3b0": 2,
+        "BLZ:4f146436bd0251b5": 2,
+        "BOL:1a7254807c71e166": 2,
+        "BRA:c9a395c2d321cd60": 2,
+        "CRI:5a22dcdd3a44dc5b": 2,
+        "GUF:4acf8ebf720d2a5f": 2,
+        "SUR:1d7cda681e299b07": 2,
+        "URY:a93a37d95dfce9bb": 2,
+        "USA:13c14a072880aac5": 4,
+        "MYS:0abe504273f2e4bd": 2,
+        "CYN:3fa61972653460ef": 2
+      },
+      "components_with_holes": {
+        "CHN:72cd37e37e634df7": 4
+      },
+      "inputs": {
+        "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+        "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509",
+        "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+        "output/auto-cartogram/world-55000-shape-islands/cells.csv": "3005fca220af87ec54339c7a35660b8f77358fbbe17545f80ed3fc6d546afc85",
+        "output/auto-cartogram/world-55000-flow256/areas_cartogram.geojson": "c49f87bcd4f9f186b68c325e5c8fdd8fee3219c562dbf6bfc7ec0ba341d6b7f8"
+      },
+      "scripts": {
+        "partition_land.py": "81e01236d5e37729d7a39362c178a1726b175f270e045a27b870f831bd93cde3",
+        "compact_regions.py": "d25522178f9a97f48b7b30951d511e711c8224b5f2dddde892dbe9881dcd6f66",
+        "land_envelope.py": "0642bc5e7076b71e85ad6a23cb813f5c0e66c231424fae2005dbd7cf77b23063",
+        "review_layout.py": "e7ccdcf2dc6ff11ae572d1772c61b357057d9974d78962414463ff0d110bfd9a",
+        "flow_footprint.py": "5f0faa559a72bc45f3b95a117710c50ab59289468cb4613358f9b7d52c484d19",
+        "review_flow.py": "946adffe3c0e2516c84ef25add60c1bbec405faeb88caa9a38e48be0fe1dbef2",
+        "shape_placement.py": "20ed59825d0b0fde5893db3a267218e5c46846a9c0edd766f31b7ec41ef8dfd0"
+      },
+      "elapsed_seconds": 233.30227147974074,
+      "limit": "Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.",
+      "cells_sha256": "25e88607509ca08ce1e588df2e38b1af7f0ea662333631351416a6025ff34f73",
+      "envelope_sha256": "09f939e9edf38a312436585ddeee38286acffe1e656ac5aecb16a154a938b616"
+    },
+    "repair-partition.json": {
+      "method": "Count-preserving fragment swaps, with optional compact relocation of secondary pieces",
+      "before": {
+        "disconnected_regions": 42,
+        "fragment_cells": 924
+      },
+      "after": {
+        "disconnected_regions": 0,
+        "fragment_cells": 0
+      },
+      "swaps": 58,
+      "maximum_rounds": 2000,
+      "choices": 16,
+      "relocate_fragments": true,
+      "relocated_components": 13,
+      "removed_land_cells": 848,
+      "added_land_cells": 848,
+      "fixed_components": 292,
+      "elapsed_seconds": 9.913675458636135,
+      "inputs": {
+        "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+        "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+        "output/auto-cartogram/world-55000-flow-stretch1.5/cells.csv": "25e88607509ca08ce1e588df2e38b1af7f0ea662333631351416a6025ff34f73",
+        "output/auto-cartogram/world-55000-flow-stretch1.5/complete.txt": "57428a77259d81eeeade7b42334f10a30bb4d8f6cac72eb97f01e8fdb0179185"
+      },
+      "scripts": {
+        "repair_partition.py": "8070264e83f6641ca762e8904f69024d30b4ef118444cad78ff01aa538f29f76",
+        "review_layout.py": "f990df01f1c31e20d09a3d6136c4e21bb28d2fcdd4d7f2041f0a77b84f7ceeff"
+      },
+      "limit": "Swaps leave the footprint unchanged and reduce cells outside the largest connected pieces without increasing region component counts. Optional relocation removes secondary pieces and grows the main piece into empty neighbour cells; it never connects to the discarded pieces. Relocation can change coasts and empty spaces. Some fragments can remain if growth is blocked. Occupied holes are allowed; borders and geographic positions are not guaranteed.",
+      "cells_sha256": "fd3a087cc53218fb32084886ebc9b6485d6eef366fe6a5bcb22af860e6135dcb"
+    }
+  },
+  "limit": "A nearest-coast hierarchy is a position heuristic, not a proof of correct geography. Counts and tile shapes are unchanged. No native-resolution transport is approved."
+}
