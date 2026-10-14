@@ -188,6 +188,7 @@ def draw(path, shapes, tiles, owners, metrics, title):
              "mode=compact-deformation":"Local shape deformation; borders are not required",
              "mode=capacity-partition":"Shared footprint partition; connectivity and borders are not constrained",
              "mode=partition-repair":"Fragment swaps on an unchanged footprint; see topology checks",
+             "mode=partition-relocation":"Fragment swaps and compact relocation; coasts can change",
              "mode=shape-placement":"Intact source shapes; translated without border paths",
              "mode=island-placement":"Islands translated; mainland shapes unchanged in this stage",
              "mode=shape-stress":"Intact source shapes; geographic springs and collision repulsion"}
