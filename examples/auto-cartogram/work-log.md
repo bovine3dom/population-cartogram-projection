@@ -561,3 +561,17 @@ under ignored `output/auto-cartogram/`.
   layouts. Earlier exported layouts retain their independent geometric checks,
   but those checks do not approve their count errors. The native Julia transport
   results do not use this Java flow solver and are unchanged.
+
+## 02:25–02:31 UTC — corrected polishing comparisons
+
+- The corrected 10,000-budget fit finishes with 241 tiles of absolute count
+  error, down from 313 for the earlier land-only fit. All represented contacts
+  remain, with no false contacts, disconnected regions, or region holes. Country
+  axis-order errors are 500. This is still not an accepted population layout.
+- Added a log of topology-polish pass counts and remaining tile error. All 12
+  Python/Java layout tests pass. Started a 200-pass comparison at the small
+  budget; larger 40-pass fits continue from the prior frozen build.
+- Collected independent reviews for 21 completed topology fits. The H3-3 world
+  transport test at 55,000 tiles also finished and passed independent CSV checks.
+  It retains 99.597% of source mass and has 34.802% maximum target error. The
+  larger transport and higher source-resolution tests are still running.
