@@ -1,0 +1,33 @@
+{
+  "tile_budget": 500000,
+  "runs": [
+    {
+      "name": "grid256",
+      "grid": 256,
+      "area_tolerance": 0.01,
+      "exit_code": 1,
+      "final_maximum_adjusted_area_error": 0.785077,
+      "log": "grid256.log.gz",
+      "log_sha256": "c6412448c98f5a97f93bd7dc025741f4d670fef38ed8adb2caa19522437917db"
+    },
+    {
+      "name": "grid512",
+      "grid": 512,
+      "area_tolerance": 0.01,
+      "exit_code": 1,
+      "final_maximum_adjusted_area_error": 0.0843155,
+      "log": "grid512.log.gz",
+      "log_sha256": "54729523a9086ad7504f9ebdf97b8aebbc5e15be53376334d7e5963d80f2e97f"
+    },
+    {
+      "name": "grid512-relaxed",
+      "grid": 512,
+      "area_tolerance": 0.1,
+      "exit_code": 1,
+      "final_maximum_adjusted_area_error": 0.171491,
+      "log": "grid512-relaxed.log.gz",
+      "log_sha256": "6ef136e008b3bd5948910359ba775d3880e2883477240f4406a427f7947f9c17"
+    }
+  ],
+  "limit": "All three external area solves failed. The guide-only diagnostic is separate and cannot change their status."
+}

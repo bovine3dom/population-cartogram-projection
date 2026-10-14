@@ -386,6 +386,38 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The 14 partition tests pass after these changes. Saved population sites and
   documented their limits. No production code or target file has changed.
 
+## 18:02–18:12 UTC — separate position, footprint, and shape tests
+
+- All nine full test commands passed at checkpoint `b0ff8a2`. This check took
+  about three minutes of foreground compute time. It preceded the docking
+  change below. The current focused suites pass 15 partition and 40 shape tests.
+- Inspected the three new world controls. Moving isolated islands removes some
+  small holes but does not repair the poor geographic-start footprint. The
+  population-site flow control with guide weight 0.5 has exact counts, no split
+  regions, and no region holes. It loses 83 component contacts and adds 95.
+  A separate matched-country check retains 241 of 311 required border pairs,
+  with 71 unsupported pairs. OWID retains 248, with 48 unsupported pairs.
+  The matched large-country axis check has 218 reversals, compared with OWID's
+  210. Country shapes are still poor. North Korea
+  occupies a separate land piece. These results are not approved.
+- The shared target itself has four parts in the Afro-Eurasian source-border
+  group and two in the Americas. Added an explicit docking control: translate
+  whole target pieces until they touch, without adding path cells. It preserves
+  their total area and each piece's shape. It does not join separate source
+  land-border groups or overseas territories by country ID. The method can
+  still change coasts and country positions, and a contact can be narrow.
+- Started two docking controls from the flow footprint and population sites.
+  Their country sites do not move with the target pieces. This is a limitation
+  to check in the resulting country assignment, not a hidden constraint.
+- Started two local joint-deformation controls from the connected population-site
+  flow layout, rather than from the poor Tutte arrangement. They use source
+  outline guide weights 4 and 16, an interior sea-edge cost, and fixed isolated
+  island shapes. Both have a 100-round limit and use a saved code snapshot.
+  They test whether a better starting arrangement permits useful shape changes.
+- The 500,000-tile guide-only run passed its separate geometry and overlap
+  checks. Tile partitioning is still running. Saved all three failed external
+  flow logs and their status separately; no failed solve is marked successful.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
