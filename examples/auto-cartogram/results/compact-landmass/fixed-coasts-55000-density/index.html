@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>55,000 tiles: H3-5 population density</title>
+<style>body{font:17px/1.5 system-ui,sans-serif;max-width:1500px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#242424}img{width:100%;height:auto}a{color:#21577c}</style>
+<h1>55,000 tiles: H3-5 population density</h1>
+<p><a href="http://localhost:1983/?data=planet-auto-55000-h3-5-islands/population_density_hilo.arrow&amp;cartogram=planet-auto-55000-h3-5-islands/cartogram_weights_auto_55000_h3_5_hilo.arrow#x=0&amp;y=15&amp;z=0">Open in local H3-MON</a> · <a href="../index.html">Layout gallery</a> · <a href="summary.json">Run summary</a> · <a href="arrow-checks.json">Arrow checks</a> · <a href="browser-checks.json">Browser checks</a></p>
+<p>The fit uses 481 island groups, not whole countries. All 7,954,677,990 matched people remain in their recorded group. Small components with no tile retain their explicit group assignment; they contain 10,133,200 people. Six groups needed one step of additional transport support within their own boundary. Maximum relative tile-population error within a group is below 0.01%.</p>
+<p>Density is matched H3-5 population divided by actual cell area in square kilometres. The display uses population-weighted mean density. Colours show quantiles of cartogram density and can change with the visible extent. The population year is not verified.</p>
+<p>City points match source polygons before transport. Of 12,341 places above 50,000 people, 12,154 have a matching component/H3 source. The other 187 are omitted, not moved to another island. Each of 9,202 labelled tiles shows its largest city. Labels appear as space permits.</p>
+<p>These are screenshots from the real H3-MON app in headless Chromium. The geographic pane uses a neutral background without external base-map tiles. All four images were visually reviewed. The checks found no browser errors or failed requests.</p>
+<h2>World</h2>
+<p>The export keeps the selected layout unchanged. Internal density patterns show substantial distortion, especially in India. Canada and Korea still need shape work. This remains an experiment, not an approved replacement for OWID.</p>
+<a href="h3-mon-world.png"><img src="h3-mon-world.png" alt="World population density on the automatic 55,000-tile layout"></a>
+<h2>Japan</h2>
+<p>Tokyo and Osaka remain on Honshu. Sapporo remains on Hokkaido. Naha remains on Okinawa. Korea does not divide the main Japanese islands.</p>
+<a href="h3-mon-japan.png"><img src="h3-mon-japan.png" alt="Japan density and city labels beside the geographic map" loading="lazy"></a>
+<h2>Indonesia</h2>
+<p>Jakarta is on Java, Denpasar is on Bali, and Makassar is on Sulawesi. Population does not move from Java to the other represented islands. The view covers western and central Indonesia.</p>
+<a href="h3-mon-indonesia.png"><img src="h3-mon-indonesia.png" alt="Separate Indonesian island populations and city labels" loading="lazy"></a>
+<h2>Europe</h2>
+<p>London, Paris, Madrid, and Rome have distinct density peaks. Ireland remains separate from Great Britain. The northern country outlines remain strongly compressed.</p>
+<a href="h3-mon-europe.png"><img src="h3-mon-europe.png" alt="European population density and city labels" loading="lazy"></a>
+</html>

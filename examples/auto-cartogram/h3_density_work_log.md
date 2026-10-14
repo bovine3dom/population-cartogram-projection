@@ -99,6 +99,62 @@ The H3-MON colour scale is `quantile`; the app has no `log` scale option.
 
 The 28 geometry tests also pass. The fit is still running on China.
 
+## 23:42 UTC: export and visual review complete
+
+All 481 fits and balance checks passed. Total solver time was 1,825.7 seconds.
+475 groups kept their original sparse support. Six groups needed one rook step:
+mainland China, Morocco, New Zealand's North Island, one Brunei component,
+Corsica, and one Malaysian component. No group needed two or more steps.
+No population crosses a group boundary. The exporter also rejects group
+assignments that cross countries.
+
+Published files are in:
+`/home/olie/projects/H3-MON/www/data/planet-auto-55000-h3-5-islands/`.
+The H3-MON app and its default data remain unchanged. The local server listens
+on port 1983. Open:
+
+<http://localhost:1983/?data=planet-auto-55000-h3-5-islands/population_density_hilo.arrow&cartogram=planet-auto-55000-h3-5-islands/cartogram_weights_auto_55000_h3_5_hilo.arrow#x=0&y=15&z=0>
+
+The export has 388,513 unique H3 parents and 1,022,504 transport rows.
+Independent Arrow read-back confirms exactly 55,000 occupied tiles, with only
+the recorded coordinate conversion. Maximum parent weight-sum error is
+1.12e-15; maximum tile weight-sum error is 1.98e-14. All density values match
+population divided by actual H3 area. Every placed city remains in its group.
+Maximum relative target-population error within a group is below 0.0001.
+
+The first visual review found excessive city-name lists and nearly all-yellow
+cartogram colours. Keep only the largest city label per tile, but retain all
+city candidates in the audit. Use the cartogram distribution for colour
+quantiles. There are now 9,202 labelled tiles from 12,154 matched city points.
+The other 187 points have explicit unmatched reasons.
+
+Reviewed the world, Japan, western and central Indonesia, and Europe in the
+real H3-MON app. Jakarta, Denpasar, and Makassar remain on their own islands.
+Tokyo, Osaka, Sapporo, and Naha remain on their own islands. The Japan correction
+is retained. London, Paris, Madrid, and Rome show distinct density peaks.
+India still has strong internal distortion. Northern European outlines and
+Korea remain compressed. This mapping does not approve the layout for production.
+
+Headless Chromium reports no page errors or failed requests. The geographic
+pane uses a neutral local style; external base-map tiles are not part of this
+test. The screenshot runner uses normal pane controls, zoom, and drag gestures.
+
+Review page and saved checks:
+`results/compact-landmass/fixed-coasts-55000-density/index.html`.
+Full fragment-level checks remain in the output directory and in the export's
+`export-checks.json`. The source groups and city audit are included with the
+Arrow files. The original layout, production source, and OWID CSV are unchanged.
+
+To repeat the browser check with the local H3-MON server running:
+
+```sh
+node examples/auto-cartogram/review_h3_mon.mjs \
+  /home/olie/projects/H3-MON \
+  output/auto-cartogram/world-55000-h3-5-density
+```
+
+All two export tests, six transport tests, and 28 geometry tests pass.
+
 ## Tests before the first commit
 
 - `test/auto_transport.py`: six tests pass.

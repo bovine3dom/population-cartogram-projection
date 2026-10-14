@@ -1,0 +1,13 @@
+{
+  "commit": "f3c09f95af5c44c25dfbbe53adc97aac1d2a0470",
+  "files": {
+    "src/PopulationCartogramProjection.jl": "0cab7e9ac831851ea90c741e9d93084ac8150188f38286df95faa8bbb399efe1",
+    "src/automatic_eta.jl": "770066387ddcb8e25153c976ae824cebf71456a4b7fd9eb0b551e644691d3bbf",
+    "src/kernel_abstractions.jl": "b169abf2b71142752b708fa6a8cc8da49853046c7918448c43992125c36a2171",
+    "src/spatial.jl": "8bd81f34d026601ff07e29cb550fd71cc81e8014316416483119024cb02254cc",
+    "src/truncation.jl": "79b0aa4e5838990c65e9fab3a775b0ff7cf77e64645e5c3e039dd8c4f42bfba5",
+    "/home/olie/projects/population-cartogram-projection/examples/uk-h3/Project.toml": "a39744043e9c7971722603e6bdec6c78ea10a0f173e66606e88f04b5880c038d",
+    "/home/olie/projects/population-cartogram-projection/examples/uk-h3/Manifest.toml": "f8ffade2ca4cea5d869f3588ecabfcfb80431eeb6811b442b814f70b5bfd1899",
+    "/home/olie/projects/population-cartogram-projection/output/germany-h3-res7/cities15000.tsv": "a80fca58b74b9e1c3b17cbb979d603d0aaa47d8c7155c6af56782376fbb809d1"
+  }
+}
