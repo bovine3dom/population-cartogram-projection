@@ -195,3 +195,19 @@ agreement between the final pass snapshot and candidate. The earlier oneAPI
 checks cover the unchanged numerical path. The next global trial will use
 sharp pose seeds, per-country eta, full-step trials, and a proximal weight of
 0.01. It will not replace a public dataset automatically.
+
+## 08:44 UTC: independent checkpoint audit
+
+Added `audit_sharpness.jl`. It reconstructs full compact-plan statistics and
+checks masses, source identities, populations, and the saved objective. Its
+report separates source spatial spread from inverse geographic spread and
+includes border errors and reversed triangle area. Input hashes detect a
+checkpoint or reference change during the audit. Nine CPU checks pass,
+including rejection of changed populations and incorrect objective records.
+A real two-country oneAPI refit and its complete-pass audit also pass.
+
+China passes eta 1e-5 with 4.846 connections/source at 99.5%; the next eta
+is 1e-6. US and India already have sharp, checked baselines. The remaining
+149-country calibration and global refit are queued in that order. The refit
+will reject broad or mass-invalid seeds. Its hard stop is 17:45 UTC, leaving
+time to audit the last complete pass before the overall deadline.

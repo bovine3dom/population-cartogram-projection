@@ -185,6 +185,24 @@ checkpoint. Before reusing its dual, check the index, prior, force, and
 temperature against the intended solve. Never publish this proposal as a fitted
 country. `compact_solve` exposes a `stage_callback` for other research runners.
 
+## Audit sharpness
+
+Audit an immutable complete-pass snapshot with:
+
+```sh
+julia --threads=4 --project=examples/uk-h3 examples/continuity/audit_sharpness.jl \
+  FIT_ROOT CHECKPOINT ORIGINAL_SOURCE_CSV NEW_REPORT_TOML
+```
+
+The reference CSV must contain source diagnostics from `sharpness.jl`.
+The audit checks source identities, populations, full-plan masses, and the
+saved objective. It reports support at equal retained mass, source spatial
+spread, border errors, and reversed triangle area. It also saves source and
+orientation CSV files. Compare `connections995`, not all positive implicit
+entries, with an exported mapping. The original export can already omit tails.
+The audit does not change a fit or publish data. Use `pass-N.jls`, not a
+candidate file that an active fit can replace.
+
 ## Tests
 
 ```sh
