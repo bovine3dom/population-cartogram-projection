@@ -596,3 +596,25 @@ under ignored `output/auto-cartogram/`.
 - Added a six-panel overview of exact-count geographic and repaired layouts
   at all three resolutions. The overview changes no cell coordinates or colours.
   It records hashes of the published source images and their metrics.
+
+## 03:01–03:24 UTC — larger previews and support obstruction
+
+- Saved corrected 55,000- and 110,000-budget topology images. The former uses
+  convex-boundary initialization and 200 polishing passes. It has 53,017 tiles
+  and 2,011 tiles of absolute component error. The latter has 100,957 tiles and
+  9,069 tiles of error. Both keep all represented borders but fail area and
+  geographic requirements. Europe remains a set of narrow strips in the former.
+- The all-assertions 10,000-tile reference matches the performance run's cells
+  byte for byte. Saved the hashes and effective flags. Both use an earlier flow
+  build; this comparison does not approve their population allocation.
+- The H3-5 world transport run finishes with 400,545 source rows, 99.831% mass
+  retention, zero cross-group mass, and 2.471% maximum target error. Sparse
+  correction stops after 50,000 iterations at 1.161% error, with no export.
+- Added an integer minimum-cut check. It finds four infeasible groups despite
+  a near-zero disconnected-support bound. Kosovo's two-tile group requires at
+  least 1.161% target error on the saved pairs. More iterations cannot fix this.
+- The new check passes 343 exhaustive three-source support cases against a
+  source-subset oracle. All 25 geometry tests pass. The earlier complete suite
+  also passed at 03:12, before these two added tests.
+- Started a bounded 200-pass comparison at 110,000 tiles. The remaining
+  convex-boundary fit and native-support checks are kept separate.

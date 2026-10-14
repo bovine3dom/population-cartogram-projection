@@ -1,0 +1,16 @@
+{
+  "byte_identical": true,
+  "runs": {
+    "output/auto-cartogram/world-10000-initial-sea-reference": {
+      "cells_sha256": "5c2e463c879acee5851e631fc53a00892e50cb749508b81f668cea256e81a97f",
+      "completion": "mode=topology\nseed=1\nplacement=directional\nembedding=planar\nforceIterations=2147483647\nscaledPatience=500\nfinalPatience=3000\nmaxRounds=2147483647\npolishIterations=40\njavaVersion=21.0.12.1\norientInitial=true\ninitialSeaOnly=true\nregionAssertions=true\n",
+      "build_info_sha256": "5ce8e4c735084a306b8800de2c266f84f811f657b6393359777fc5ffc953cbfe"
+    },
+    "output/auto-cartogram/world-10000-initial-sea-default": {
+      "cells_sha256": "5c2e463c879acee5851e631fc53a00892e50cb749508b81f668cea256e81a97f",
+      "completion": "mode=topology\nseed=1\nplacement=directional\nembedding=planar\nforceIterations=2147483647\nscaledPatience=500\nfinalPatience=3000\nmaxRounds=2147483647\npolishIterations=40\njavaVersion=21.0.12.1\norientInitial=true\ninitialSeaOnly=true\nregionAssertions=false\n",
+      "build_info_sha256": "6f20807485aaffe3ed146513d93806f7983a16db63608a7124415c0b34b5d245"
+    }
+  },
+  "limit": "This paired run predates the artificial-flow feasibility correction. Equal cells validate this assertion-setting comparison, not tile budgets or flow feasibility."
+}

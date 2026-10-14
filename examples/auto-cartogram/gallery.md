@@ -118,7 +118,7 @@ not approve their tile counts or geography.
 [110,000-budget image](results/world-110000-dissolved-topology/review.png).
 A full-default run on the earlier map-unit input reduces the 10,000-budget
 absolute count error to 1,013, but still fails the area requirement. Longer
-fits on the dissolved inputs are being tested separately.
+fits on the dissolved inputs are reported below.
 
 ### Longer fits and corrected flow
 
@@ -138,7 +138,18 @@ error can hide a large error for one country.
 Earlier rows in the table predate the flow-feasibility correction. Their final
 geometric checks remain valid, but their internal flow results are not a proof
 of feasible population allocation. Read the [work log](work-log.md) for the
-failed and stopped trials. Larger corrected fits are still being reviewed.
+failed and stopped trials.
+
+The corrected 55,000-tile fit with a convex-boundary initializer and 200
+polishing passes has 53,017 tiles and 2,011 tiles of absolute component error.
+Its 40-pass version has 2,317 tiles of error. The 110,000-tile fit with the
+integer initializer has 100,957 tiles and 9,069 tiles of absolute error.
+Both retain all represented contacts, but neither has acceptable area or
+geographic accuracy. Europe has many narrow strips in the 55,000-tile image.
+
+![Corrected convex-boundary fit at 55,000 tiles](results/world-55000-tutte-partial-200/review.png)
+
+[Corrected integer-initialized fit at 110,000 tiles](results/world-110000-partial-polish/review.png).
 
 Original WKT outlines omit 19 holes. A successful contact check does not prove
 correct enclave containment or full geographic topology. The exact-mode runs

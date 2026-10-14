@@ -50,7 +50,10 @@ weights change, and the new export passes flow and native-source checks.
 Whole-world H3-3 tests also keep cross-group mass at zero, but have target errors
 up to 36.090%. Their saved sparse support cannot reach the 0.01% correction
 limit. Thus, successful grouping and a good layout image do not prove balanced
-transport. The gallery now includes a six-image resolution and border-policy
+transport. At 10,000 tiles, H3-5 source detail reduces the raw target error to
+2.471%. A minimum-cut check still proves that the saved pairs require at least
+1.161% error in one group. More scaling iterations cannot fix that obstruction.
+The gallery now includes a six-image resolution and border-policy
 overview, plus a table of initialization and fitting experiments.
 
 These results support component-aware inputs and explicit group eligibility.
