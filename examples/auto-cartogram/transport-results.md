@@ -119,6 +119,12 @@ of the matched population. These are changes in expected position, not bounds
 on each person's movement. Opposite changes can cancel. This check does not
 prove absolute geographic accuracy.
 
+An [integer support check](results/indonesia-transport-r8-grouped/cut-checks.json)
+finds feasible exact marginals for all 51 native groups. Thus, unlike the world
+case below, no saved-support capacity obstruction explains the slow strict
+scaling run. Feasibility can require some weights to be zero and does not
+establish a convergence rate.
+
 ### Improved island positions
 
 The same balanced native mapping is now available on the improved island

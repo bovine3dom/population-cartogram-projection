@@ -15,6 +15,7 @@ import assign_population as population
 import balance_transport as balance
 import check_native_sources as native_check
 import check_support as support
+import check_transport_shift as shift
 import dissolve_map_units as dissolve
 import geographic_baseline as baseline
 import geographic_embedding as geographic
@@ -107,6 +108,31 @@ class BalanceTests(unittest.TestCase):
         self.assertLess(error,1e-8)
         self.assertEqual(added,1)
         np.testing.assert_allclose(np.bincount(row,weights=corrected),[3,1])
+
+    def test_expanded_export_and_position_checks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); raw=root/"raw"; raw.mkdir(); corrected=root/"corrected"
+            (raw/"sources.csv").write_text("id,group_id,value\na,A,3\nb,A,1\n")
+            (raw/"targets.csv").write_text("x,y,group_id\n0,0,A\n1,0,A\n")
+            (raw/"mapping.csv").write_text("id,x,y,weight\na,0,0,1\nb,0,0,.5\nb,1,0,.5\n")
+            (raw/"target-quality.csv").write_text("x,y,group_id,population,expected_population,relative_error\n0,0,A,3.5,2,.75\n1,0,A,.5,2,-.75\n")
+            metadata=dict(pooled=False,source_population=4,retained_population=4,retained_share=1,
+                cross_group_population=0,minimum_source_retained_share=1,maximum_source_retained_share=1,
+                maximum_relative_target_error=.75,coarse_sources=2,targets=2,groups=1)
+            (raw/"manifest.json").write_text(json.dumps(metadata))
+            (raw/"independent-checks.json").write_text(json.dumps(balance.check(raw)))
+            with self.assertRaisesRegex(ValueError,"did not converge"):
+                balance.run(raw,corrected,iterations=3)
+            self.assertFalse(corrected.exists())
+            result=balance.run(raw,corrected,expand_groups=["A"])
+            self.assertEqual(result["added_pairs"],1)
+            self.assertTrue(support.run(corrected)["groups"][0]["exact_marginals_feasible"])
+            with self.assertRaisesRegex(ValueError,"support differs"): shift.compare(raw,corrected)
+            comparison=shift.compare(raw,corrected,allow_appended=True)
+            self.assertEqual(comparison["appended_pairs"],1)
+            self.assertFalse(comparison["ordered_support_unchanged"])
+            self.assertGreater(comparison["summary"]["population_weighted_mean_shift"],0)
+            with self.assertRaisesRegex(ValueError,"already exists"): balance.run(raw,corrected)
 
     def test_marginals_and_structural_zeros(self):
         row=np.array([0,0,1,1,2]); column=np.array([0,1,0,1,2])
