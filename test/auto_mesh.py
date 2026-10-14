@@ -51,6 +51,7 @@ class MeshTests(unittest.TestCase):
     def test_gradient(self):
         objective=self.fixture();values=objective.vertices.ravel()+np.random.default_rng(5).normal(0,.03,8)
         for weight in [.01,.3]:
+            objective.rotation_weight=0 if weight==.01 else 3
             cost,gradient=objective.evaluate(values,weight)
             for i in range(len(values)):
                 step=np.zeros_like(values);step[i]=1e-6
@@ -82,6 +83,15 @@ class MeshTests(unittest.TestCase):
             estimates.append((objective.evaluate(values+step)[0]-objective.evaluate(values-step)[0])/2e-6)
         np.testing.assert_allclose(gradient,estimates,rtol=1e-6,atol=1e6)
         self.assertEqual(objective.report(flipped.ravel())['folded_triangles'],2)
+
+    def test_orientation_prior(self):
+        objective=self.fixture();objective.rotation_weight=2
+        values=objective.vertices.ravel();rotation=np.array([[0.,-1],[1,0]])
+        turned=(objective.vertices@rotation.T).ravel()
+        self.assertGreater(objective.evaluate(turned)[0],objective.evaluate(values)[0])
+        self.assertAlmostEqual(objective.evaluate((objective.vertices+[4,5]).ravel())[0],objective.evaluate(values)[0])
+        objective.rotation_weight=0
+        self.assertAlmostEqual(objective.evaluate(turned)[0],objective.evaluate(values)[0])
 
     def test_determinant_step_bound(self):
         objective=self.fixture();values=objective.vertices.ravel()
