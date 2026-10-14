@@ -29,3 +29,14 @@ def place(cells,desired,blocked,maximum_radius=8192):
             return moved
         radius*=2
     raise ValueError('Placement search exhausted')
+
+
+def place_all(tiles,desired,required=None,gap=False):
+    occupied=set();halos={};result={}
+    for c in sorted(tiles,key=lambda c:(-len(tiles[c]),c)):
+        blocked=set(occupied)
+        for other,halo in halos.items():
+            if gap or (required is not None and tuple(sorted((c,other))) not in required):blocked.update(halo)
+        moved=place(tiles[c],desired[c],blocked);result[c]=moved;occupied.update(moved)
+        halos[c]={(x+dx,y+dy) for x,y in moved for dx,dy in [(1,0),(-1,0),(0,1),(0,-1)]}-moved
+    return result

@@ -7,7 +7,9 @@ from pathlib import Path
 
 import numpy as np
 from scipy.ndimage import binary_opening, label
-from shapely.geometry import shape
+from shapely import affinity, transform, union_all
+from shapely.geometry import shape, box
+from prepare_flow import equal_earth
 
 from review_layout import load, read_csv, quality
 from save_review import digest
@@ -30,7 +32,17 @@ def thin_shape(cells):
         cells_outside_two_by_two=len(cells-blocks))
 
 
-def run(inputs, layout, polygons, output):
+def outline_similarity(cells,polygon):
+    centre=polygon.centroid;n=len(cells)
+    target=(sum(x for x,y in cells)/n,sum(y for x,y in cells)/n)
+    scale=(n/polygon.area)**.5
+    guide=affinity.translate(affinity.scale(affinity.translate(polygon,-centre.x,-centre.y),scale,scale,origin=(0,0)),*target)
+    actual=union_all([box(x-.5,y-.5,x+.5,y+.5) for x,y in cells])
+    intersection=actual.intersection(guide).area
+    return intersection/(actual.area+guide.area-intersection)
+
+
+def run(inputs, layout, polygons, output, outlines=False):
     if output.exists(): raise ValueError("Output already exists")
     shapes,tiles,_=load(inputs,layout)
     geo={f['properties']['component_id']:shape(f['geometry']) for f in json.loads(polygons.read_text())['features']}
@@ -48,6 +60,9 @@ def run(inputs, layout, polygons, output):
             shared_source_border=True,secondary_component=any(primary[shapes[c]['country_id']]!=c for c in [a,b])))
     regions=[dict(component_id=c,country_id=shapes[c]['country_id'],primary_component=primary[shapes[c]['country_id']]==c,
         requested=int(shapes[c]['tiles']),actual=len(tiles[c]),**thin_shape(tiles[c])) for c in sorted(tiles)]
+    if outlines:
+        for row in regions:
+            c=row['component_id'];row['source_outline_iou']=outline_similarity(tiles[c],transform(geo[c],equal_earth))
     large=[r for r in regions if r['actual']>=25]
     total=sum(r['actual'] for r in large)
     summary=dict(required_contacts=len(edges),same_country_contacts=sum(r['country_a']==r['country_b'] for r in edges),
@@ -58,6 +73,9 @@ def run(inputs, layout, polygons, output):
         limit='Opening loss includes natural coasts and narrow countries. It is a diagnostic, not a proof of artificial connectors. Secondary means not the largest population group of its country; it does not mean overseas.',
         inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',layout/'cells.csv',polygons]},
         script_sha256=digest(Path(__file__)))
+    if outlines:
+        summary['tile_weighted_outline_iou_for_regions_at_least_25_tiles']=sum(r['actual']*r['source_outline_iou'] for r in large)/total if total else None
+        summary['outline_rule']='Equal Earth source geometry with holes; isotropic scale to actual cell area and translation to cell centroid. No rotation fit. IoU includes raster and source-hole differences.'
     output.mkdir(parents=True)
     for name,data in [('regions.csv',regions),('contacts.csv',edges)]:
         with (output/name).open('w',newline='') as stream:
@@ -71,4 +89,5 @@ def run(inputs, layout, polygons, output):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ['inputs','layout','polygons','output']:parser.add_argument(name,type=Path)
-    args=parser.parse_args();run(args.inputs,args.layout,args.polygons,args.output)
+    parser.add_argument('--outlines',action='store_true')
+    args=parser.parse_args();run(args.inputs,args.layout,args.polygons,args.output,args.outlines)

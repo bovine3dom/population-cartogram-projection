@@ -14,8 +14,8 @@ from scipy.optimize import minimize
 from scipy.spatial import ConvexHull, Delaunay
 from shapely.geometry import Polygon
 
-from review_layout import load, read_csv, connectivity, holes, NEIGHBOURS
-from shape_placement import place
+from review_layout import load, read_csv, connectivity, holes
+from shape_placement import place_all
 from save_review import digest
 
 
@@ -82,7 +82,7 @@ class Stress:
         return float(value),gradient.ravel()
 
 
-def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8,source_polygons=None):
+def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8,source_polygons=None,raster=False,no_false_contacts=False,start_from_templates=False):
     if output.exists():raise ValueError('Output already exists')
     if iterations<1 or spacing<=0 or any(not math.isfinite(v) or v<0 for v in [spacing,collision,spring,anchor,spatial,gap]):raise ValueError('Invalid stress settings')
     rows,tiles,_=load(inputs,templates)
@@ -97,30 +97,36 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
     if source_polygons:
         from concave_stress import ConcaveStress
         state_type=ConcaveStress
+    if raster:
+        from raster_stress import RasterStress
+        state_type=RasterStress
     state=state_type(tiles,centres,required,collision,spring,anchor,spatial,gap)
     if source_polygons:state.border_targets(source_polygons,tiles,required)
     history=[]
     def callback(x):
         energy,_=state.objective(x);history.append(dict(iteration=len(history)+1,energy=energy))
         if len(history)%25==0:print(f'Stress iteration {len(history)}: {energy:.6f}',flush=True)
-    initial=state.objective(state.initial.ravel())[0]
-    result=minimize(state.objective,state.initial.ravel(),jac=True,method='L-BFGS-B',callback=callback,
+    start=np.array([np.mean(list(tiles[c]),axis=0) for c in state.labels]) if start_from_templates else state.initial
+    initial=state.objective(start.ravel())[0]
+    result=minimize(state.objective,start.ravel(),jac=True,method='L-BFGS-B',callback=callback,
         options=dict(maxiter=iterations,maxfun=iterations*30,maxls=40,ftol=1e-11,gtol=1e-5,maxcor=20))
     if not np.isfinite(result.x).all() or result.fun>initial+1e-6:raise ValueError('Invalid stress result')
-    positions=result.x.reshape(-1,2);blocked=set();placed={}
-    for c in sorted(tiles,key=lambda c:(-len(tiles[c]),c)):
-        moved=place(tiles[c],positions[state.ids[c]],blocked);placed[c]=moved;blocked.update(moved)
-        if gap>=1:blocked.update((x+dx,y+dy) for x,y in moved for dx,dy in NEIGHBOURS)
+    positions=result.x.reshape(-1,2)
+    placed=place_all(tiles,{c:positions[state.ids[c]] for c in tiles},required if no_false_contacts else None,gap>=1)
+    displacements=[float(np.linalg.norm(np.mean(list(placed[c]),axis=0)-positions[state.ids[c]])) for c in tiles]
     scripts=[Path(__file__),Path(__file__).with_name('shape_placement.py')]
-    if source_polygons:scripts.extend(Path(__file__).with_name(name) for name in ['concave_stress.py','prepare_flow.py'])
+    if source_polygons or raster:scripts.extend(Path(__file__).with_name(name) for name in ['concave_stress.py','prepare_flow.py'])
+    if raster:scripts.append(Path(__file__).with_name('raster_stress.py'))
     metadata=dict(method='Geographic spring displacement with collision penalties, followed by exact integer translation; no border paths',
-        collision_geometry='convex pieces' if source_polygons else 'convex hulls',border_anchors=bool(source_polygons),
+        collision_geometry='signed-distance raster' if raster else 'convex pieces' if source_polygons else 'convex hulls',border_anchors=bool(source_polygons),
+        no_false_contacts=no_false_contacts,start_from_templates=start_from_templates,
+        maximum_integer_placement_shift=max(displacements),integer_placement_shifts_over_two_tiles=sum(d>2 for d in displacements),
         spacing=spacing,maximum_iterations=iterations,iterations=int(result.nit),success=bool(result.success),message=str(result.message),
         collision=collision,spring=spring,anchor=anchor,spatial=spatial,gap=gap,initial_energy=initial,final_energy=float(result.fun),
         elapsed_seconds=time.monotonic()-started,
         inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv']+([source_polygons] if source_polygons else [])},
         scripts={p.name:digest(p) for p in scripts},
-        limit='Collision geometry is approximate; convex pieces use outlines simplified by 0.75 tile. Soft penalties do not prove that continuous shapes are disjoint. Final integer placement prevents overlap but can change order and contacts. No tile shape is distorted; input holes remain omitted.')
+        limit='Collision geometry is approximate. Convex pieces use outlines simplified by 0.75 tile; raster penalties use bilinear interpolation. Soft penalties do not prove that continuous shapes are disjoint. Final integer placement prevents overlap but can change order and contacts. No tile shape is distorted; input holes remain omitted.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='stress-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -145,4 +151,5 @@ if __name__=='__main__':
     parser.add_argument('--iterations',type=int,default=3000)
     for name,default in [('spacing',1.),('collision',100.),('spring',1.),('anchor',.01),('spatial',.03),('gap',.8)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--source-polygons',type=Path,help='Use concave collision pieces and anchors on actual source borders')
-    args=parser.parse_args();print(json.dumps(run(args.inputs,args.templates,args.output,args.spacing,args.iterations,args.collision,args.spring,args.anchor,args.spatial,args.gap,args.source_polygons),indent=2))
+    for name in ['raster','no-false-contacts','start-from-templates']:parser.add_argument('--'+name,action='store_true')
+    args=parser.parse_args();print(json.dumps(run(args.inputs,args.templates,args.output,args.spacing,args.iterations,args.collision,args.spring,args.anchor,args.spatial,args.gap,args.source_polygons,args.raster,args.no_false_contacts,args.start_from_templates),indent=2))
