@@ -1,9 +1,17 @@
 {
-  "checked_at_utc": "2026-10-14T19:26:11.631217+00:00",
+  "checked_at_utc": "2026-10-14T19:51:41.672030+00:00",
   "method": "Headless local HTTP requests for every unique relative href and src on the gallery page",
   "resources": [
     {
       "path": "examples/auto-cartogram/compact_work_log.md",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/mesh-guide.md",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/border-refinement-country-comparison.json",
       "status": 200
     },
     {
@@ -28,6 +36,14 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/docked-flow/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-border16/bundle.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/fixed-border16/review.png",
       "status": 200
     },
     {
@@ -176,6 +192,14 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/mainland-flow1.5/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mainland-guide8/bundle.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mainland-guide8/review.png",
       "status": 200
     },
     {

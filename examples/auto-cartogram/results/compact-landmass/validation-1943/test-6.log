@@ -1,0 +1,12 @@
+Solving a: 1 sources, 2 targets
+Solving b: 2 sources, 1 targets
+Solving ALL: 3 sources, 3 targets
+Test Summary:                             | Pass  Total  Time
+Declared island groups restrict transport |   12     12  8.4s
+Solving ALL: 3 sources, 3 targets
+Test Summary:                                                  | Pass  Total  Time
+North-up mosaic coordinates match the solver screen convention |    2      2  0.1s
+Solving new:abc: 1 sources, 1 targets
+{"backend":"CPU","coarse_h3_resolution":3,"coarse_sources":1,"cross_group_population":0.0,"elapsed_seconds":1.2480950355529785,"groups":1,"inputs":[{"path":"/tmp/jl_SvqLi7/sources.arrow","sha256":"63a9dcdc5a18b7056229e7da9d8f353295cdbcb19c8121f2d80196f91009e052"},{"path":"/tmp/jl_SvqLi7/input/groups.csv","sha256":"a97d03522580859cdd285624bc3fb63c92bc7a700c6bc2fd89b6a540ff4c24e7"},{"path":"/tmp/jl_SvqLi7/layout/cells.csv","sha256":"3655aa618c09c135d1f5fec15791be9825e5fc136117da4703b8739f54da917b"}],"limit":"Coarse transport experiment, not native H3-8 validation. Grouped islands can exchange mass within their declared group. Each group has its own population per tile.","maximum_relative_target_error":0.0,"maximum_source_retained_share":1.0,"minimum_source_retained_share":1.0,"pooled":false,"retained_population":10.0,"retained_share":1.0,"script_sha256_at_load":"a25b508dfe5154e60e9fbeb92c8980dd54e2c0d1947b6d918dabf4e0750d9b57","source_coordinates":"population-weighted Equal Earth centres; aggregate by input component and H3 parent","source_population":10.0,"target_coordinates":"north-up grid; y negated for the screen-coordinate solver, then restored in export","targets":1}
+Test Summary:                              | Pass  Total   Time
+Coarse source accounting and atomic export |    8      8  25.9s

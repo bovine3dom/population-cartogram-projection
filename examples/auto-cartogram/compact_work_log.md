@@ -623,6 +623,33 @@ The separated layout has exact budgets but is not an acceptable replacement.
   supported components. This is a mesh-conditioning test, not a successful
   cartogram result. Existing frozen runs remain unchanged.
 
+## 19:42–19:50 UTC — bounded mesh steps and combined border control
+
+- Saved guide weight 8 and fixed-footprint border cost 16 with their matched
+  country comparison. All ten test commands passed at checkpoint `23a95d8`,
+  including the new four-test mesh suite. Logs are in `validation-1943`.
+- Midpoint meshes give every component at least four supporting triangles, but
+  the original optimizer still stops with 89–96% weighted area error. Mesh
+  support alone does not solve the line-search problem.
+- Added limited-memory BFGS with an Armijo search and a determinant-based step
+  bound. The bound also rejects a direction that passes through a collapsed
+  triangle and later returns to positive area. Five mesh tests pass.
+- The 32-grid bounded solve finishes its four 2,000-iteration stages with 1.13%
+  weighted area error, but a maximum component error of 97.7%. Every stage
+  reaches its iteration limit. Geometry checks find no overlaps or changed
+  hole counts. This is a useful guide experiment, not a converged cartogram.
+- Inspected that continuous world image. China and India have less flat forms,
+  but Russia, Central America, and parts of Southeast Asia have thin features.
+  Started two exact-budget tile assignments from this guide. Also started longer
+  32- and 64-grid solves with stronger initial distortion weights.
+- Permitted existing region holes only in fixed-footprint boundary exchange
+  mode. The occupied mask and each region's hole count must remain unchanged.
+  This permits enclaves without claiming to fix existing empty holes. The
+  42-test shape suite passes. Started a combined guide-8 and border-cost-16
+  control from the better-shaped stretch-1.2 layout.
+- The original 500,000-tile pipeline and old outline-cost control still run
+  separately with their original code. No result is assumed from their runtime.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
