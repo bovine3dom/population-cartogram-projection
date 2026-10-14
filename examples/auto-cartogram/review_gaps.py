@@ -25,9 +25,15 @@ def read_cells(path,owid=False):
     # OWID uses a two-unit square lattice. Generator cells already use unit steps.
     step=math.gcd(*steps) if owid else 1
     x0=min(x for x,y,c in rows);y0=min(y for x,y,c in rows)
-    owners={((x-x0)//step,(y-y0)//step):c for x,y,c in rows}
-    if len(owners)!=len(rows):raise ValueError('Overlapping cells')
-    return owners,step
+    owners={};conflicts=set();duplicates=set()
+    for x,y,c in rows:
+        p=((x-x0)//step,(-1 if owid else 1)*(y-y0)//step)
+        if p in owners:
+            duplicates.add(p)
+            if owners[p]!=c:conflicts.add(p)
+        owners[p]=c
+    if duplicates and not owid:raise ValueError('Overlapping cells')
+    return owners,dict(input_grid_step=step,input_rows=len(rows),duplicate_coordinates=len(duplicates),conflicting_coordinates=len(conflicts))
 
 
 def measure(owners,radii=(1,2,4,8)):
@@ -70,8 +76,8 @@ def draw(path,land,enclosed,masks,title):
 def run(cells,output,owid=False,title='Empty-space review',radii=(1,2,4,8)):
     if output.exists():raise ValueError('Output already exists')
     hashes=dict(cells_sha256=digest(cells),script_sha256=digest(Path(__file__)))
-    owners,step=read_cells(cells,owid);report,land,enclosed,masks,origin=measure(owners,radii)
-    report.update(**hashes,input_grid_step=step,owid=owid)
+    owners,source=read_cells(cells,owid);report,land,enclosed,masks,origin=measure(owners,radii)
+    report.update(**hashes,**source,owid=owid)
     output.mkdir(parents=True)
     (output/'gaps.json').write_text(json.dumps(report,indent=2)+'\n')
     draw(output/'gaps.svg',land,enclosed,masks,title)
