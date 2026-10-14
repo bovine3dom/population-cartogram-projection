@@ -5,6 +5,7 @@ import io
 import json
 from pathlib import Path
 import sys
+import shutil
 import tempfile
 import unittest
 
@@ -17,6 +18,7 @@ from review_layout import load, viewport
 from repair_partition import Repair, run as repair
 import population_sites
 import place_islands
+import run_compact_pipeline
 
 
 class CapacityPartitionTests(unittest.TestCase):
@@ -151,6 +153,24 @@ class CapacityPartitionTests(unittest.TestCase):
             report=population_sites.run(inputs,root/'sources.arrow',root/'centres.arrow',root/'sites')
             self.assertEqual(report['source_cells'],2);self.assertEqual(report['population'],3.)
             self.assertTrue((root/'sites/sites.csv').exists())
+
+    @unittest.skipUnless(shutil.which('rsvg-convert'),'Install rsvg-convert for the headless pipeline test')
+    def test_compact_pipeline(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'input';layout=root/'templates';inputs.mkdir();layout.mkdir()
+            (inputs/'groups.csv').write_text('component_id,tiles,west,east,south,north,country_id,group_population,name,holes\na,5,0,2,40,42,A,50000000,A,0\nb,3,2,4,40,42,B,30000000,B,0\n')
+            (inputs/'manifest.json').write_text(json.dumps(dict(tile_budget=8,population_total=80000000,represented_population=80000000,grouped_population=0,omitted_population=0,holes_not_encoded_in_wkt=0,policy='group')))
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\n')
+            (inputs/'validated.wkt').write_text('header\nheader\nOUT\ta\n0 0\t2 0\t2 2\t0 2\nend\nOUT\tb\n2 0\t4 0\t4 2\t2 2\nend\n')
+            (layout/'complete.txt').write_text('mode=test\n')
+            (layout/'cells.csv').write_text('component_id,x,y\na,0,0\na,0,1\na,1,0\na,1,1\na,2,0\nb,2,1\nb,3,0\nb,3,1\n')
+            features=[dict(type='Feature',properties=dict(component_id=c),geometry=dict(type='Polygon',coordinates=[[[x,0],[x+2,0],[x+2,2],[x,2],[x,0]]])) for c,x in [('a',0),('b',2)]]
+            geometry=root/'geometry.geojson';geometry.write_text(json.dumps(dict(type='FeatureCollection',features=features)))
+            report=run_compact_pipeline.run(inputs,layout,geometry,root/'pipeline',flow_geometry=geometry,sigma=1,iterations=20)
+            self.assertTrue(report['complete']);self.assertFalse(report['approved_for_production'])
+            self.assertEqual(report['metrics']['absolute_tile_error'],0)
+            self.assertTrue(all(step['complete'] for step in report['steps']))
+            self.assertTrue((root/'pipeline/layout/review.png').is_file())
 
     def test_review_viewport(self):
         owners={(0,0):'a',(1,100):'a'}
