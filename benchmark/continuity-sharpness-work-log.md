@@ -211,3 +211,26 @@ is 1e-6. US and India already have sharp, checked baselines. The remaining
 149-country calibration and global refit are queued in that order. The refit
 will reject broad or mass-invalid seeds. Its hard stop is 17:45 UTC, leaving
 time to audit the last complete pass before the overall deadline.
+
+## 09:36 UTC: all fitted-country sharp baselines checked
+
+China passes eta 1e-6 with 1.506 connections/source at 99.5%, target L1
+7.18e-5, and maximum target relative error 0.000800. The other 149 countries
+finish calibration at 09:20 UTC. The first refit attempt rejects Syria before
+fitting: its nearest-budget selection has 1,865 rows against a 1,486-row
+budget, just above the trial's 1.25-times limit. The next attempt uses Syria's
+already checked sharper stage, with 1,092 rows. Calibration files are unchanged.
+The new fit is `planet-refit-v2/`; the rejected attempt remains available.
+
+An independent full-plan baseline audit passes for all 152 fitted countries.
+These have 353,480 sources and 51,891 country target cells. At 99.5%, they need
+1.906 connections/source, versus 1.837 for the same sources in production.
+Mean source spatial RMS is 0.426 coordinate units, versus 0.412 before.
+Mean effective support is 1.309, versus 1.325 before. Thus the new seeds reach
+the earlier sharpness range without the old mass errors. The other 54 countries
+are outside this fit and are not included in these matched figures.
+
+The sharp seeds have border RMS 695.2 km and reversed triangle area 508,559 km².
+Sharpness does not remove geometric defects. The border refit is now running
+with per-country eta, proximal weight 0.01, and checked full-step trials. The
+baseline report is `planet-baseline-audit.toml`; no public file has changed.
