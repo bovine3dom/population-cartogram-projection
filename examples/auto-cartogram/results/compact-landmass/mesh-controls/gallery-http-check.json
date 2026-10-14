@@ -1,0 +1,82 @@
+{
+  "checked_at_utc": "2026-10-14T20:09:12.055038+00:00",
+  "method": "Headless local HTTP requests for every unique relative href and src on the gallery page",
+  "resources": [
+    {
+      "path": "examples/auto-cartogram/mesh-guide.md",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/index.html",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/bounded64/geometry.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/bundle.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/long32/geometry.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/long64/geometry.geojson.gz",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/long64/geometry.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/long64/mesh-guide.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/long64/mesh.npz",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/stages32/mesh-guide.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/stages32/stage-1.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/stages32/stage-2.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/stages32/stage-3.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/stages32/stage-4.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/warped-guide0.5/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/warped-guide8/cells.csv.gz",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/warped-guide8/island-placement.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/warped-guide8/metrics.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/warped-guide8/review.png",
+      "status": 200
+    }
+  ]
+}

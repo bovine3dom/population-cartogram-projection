@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mesh guide controls</title>
+<style>body{font:17px/1.5 system-ui,sans-serif;max-width:1500px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#242424}img{width:100%;height:auto}article{border-top:1px solid #aaa;margin-top:2rem}a{color:#21577c}</style>
+<h1>Mesh guide controls: not approved</h1>
+<p><a href="../index.html">Return to the world comparison</a> · <a href="../../../mesh-guide.md">Method and limits</a> · <a href="bundle.json">Saved file hashes</a></p>
+<p>The continuous guides omit isolated components. The final tile layouts restore them with their full budgets. A low weighted area error can hide a large error in a small component. Neither area accuracy nor solver convergence proves good shapes.</p>
+<article><h2>Long 64-grid solve</h2>
+<p>All four stages pass the gradient stopping test. The last stage has 2.20% weighted area error and 136% maximum component error. Russia, Central America, and Southeast Asia still have thin features. Canada is too narrow. This is not an acceptable footprint.</p>
+<img src="long64/geometry.png" alt="Long mesh solve with thin Russia and Central America">
+<p><a href="long64/mesh-guide.json">Solver record</a> · <a href="long64/geometry.geojson.gz">Compressed geometry</a> · <a href="long64/mesh.npz">Numeric mesh arrays</a></p>
+<p>The <a href="long32/geometry.png">long 32-grid solve</a> has similar defects. The shorter <a href="bounded64/geometry.png">64-grid solve</a> has 1.05% weighted error but reaches every iteration limit. Its lower error does not establish better convergence or shape quality.</p></article>
+<article><h2>Shape and area trade-off</h2>
+<p>These four 32-grid stages use distortion weights 1, 0.3, 0.1, and 0.03. Their weighted area errors are 25.33%, 13.32%, 6.27%, and 2.54%. Earlier stages retain some shapes better but have larger budget errors. All four retain thin features.</p>
+<img src="stages32/stage-1.png" alt="First mesh stage with larger area errors">
+<p><a href="stages32/stage-2.png">Stage 2</a> · <a href="stages32/stage-3.png">Stage 3</a> · <a href="stages32/stage-4.png">Stage 4</a> · <a href="stages32/mesh-guide.json">Stage records</a></p></article>
+<article><h2>Population sites carried through the mesh</h2>
+<p>These exact 55,000-tile layouts use the shorter 32-grid guide. Sites follow its triangle transformations, rather than a global fit. This is a coordinate correction, not a visual improvement. Both worlds have connected components, but Korea remains misplaced and Taiwan has a poor position. Thin coasts remain. Reject both layouts.</p>
+<img src="warped-guide8/review.png" alt="Rejected exact-budget layout with transformed sites and strong outline costs">
+<p>Guide cost 8: 61 missing and 78 unsupported component contacts, four region holes, and 319 direction reversals. These are component contact counts, not the matched country counts in the main gallery.</p>
+<p><a href="warped-guide8/metrics.json">Metrics</a> · <a href="warped-guide8/island-placement.json">Parent records</a> · <a href="warped-guide8/cells.csv.gz">Compressed cells</a></p>
+<p><a href="warped-guide0.5/review.png">Guide cost 0.5</a>: 83 missing and 115 unsupported component contacts, two region holes, and 336 direction reversals. Exact counts do not resolve these defects.</p></article>
+</html>
