@@ -4,6 +4,8 @@ This is an active experiment. The work window ends at 19:50 UTC on
 2026-10-14. These are intermediate results, not an approved replacement.
 Production code and `data/cartogram.csv` have not changed.
 
+Open the [image gallery](results/shape-first/index.html) for the current review
+candidate. It is a static HTML page. A plain file server can display it.
 See the [work log](shape_work_log.md) for times and failures.
 
 ## What causes the thin strips?
@@ -20,6 +22,42 @@ must not all be classified as overseas errors.
 The worst thin regions also include mainland countries. Hard border
 constraints and the initial layout cause problems that island grouping cannot
 solve. Removing a required border must not remove the component's population.
+
+## Current direction: move intact component shapes
+
+![Intact component shapes](results/shape-first/world-55000-ordered5/review.png)
+
+Each component gets a connected tile template from its source outline and
+population budget. The solver moves these templates. It does not add cells to
+reach a border. Separate islands remain separate components when they have a
+tile budget. Shared country membership does not require a connection.
+
+The position solver uses soft preferences for real borders, nearby source
+components, and geographic direction. A collision cost discourages overlap.
+Final integer placement prevents overlap and false borders. An independent
+check compares every output shape with its template. Each must be an exact
+integer translation.
+
+The current 55,000-tile candidate has:
+
+- Exact component tile budgets, with 481 represented components.
+- No false borders, disconnected components, or tile holes.
+- 89 retained source borders out of 348. Missing borders are permitted.
+- No added connector paths. Natural narrow coast features remain.
+
+Visual review finds substantial position errors. Singapore is north of
+peninsular Malaysia. Sri Lanka is too far north. North America has large gaps.
+The direction cost does not prove correct geographic positions. Further trials
+will use nearest source coast points to position separated components, rather
+than only their centres. These position preferences do not create border paths.
+
+Trials at 10,000, 110,000, and 500,000 tiles are running. The largest input has
+888 represented components. Its grouped island population is 1,865,414 people,
+compared with 10,133,200 at 55,000 tiles. It still does not represent every island.
+
+Local distortion remains an option, not the default. The bounded trials removed
+coast detail without a sufficient improvement in border retention. The current
+comparison therefore keeps the templates intact. It is not a production map.
 
 ## First comparison: release the border constraints
 
@@ -106,6 +144,25 @@ rsvg-convert NEXT/review.svg -o NEXT/review.png
 contains a complete tile layout. Use a new path for each output directory.
 The count fit can stop before it reaches the requested counts. Check
 `absolute_tile_error` in `compact.json` and the independent `metrics.json`.
+
+For intact-shape placement and the checked image gallery:
+
+```sh
+python examples/auto-cartogram/shape_stress.py INPUT TEMPLATES PLACED \
+  --iterations 10000 --collision 100 --gap .1 --anchor .001 \
+  --ocean-scale .1 --order-weight 5 --source-polygons POLYGONS \
+  --smooth-collision --no-false-contacts
+python examples/auto-cartogram/publish_shape_review.py \
+  INPUT TEMPLATES PLACED BUNDLE
+python examples/auto-cartogram/build_shape_gallery.py INDEX.html BUNDLE
+```
+
+`TEMPLATES` is the geographic baseline layout. `POLYGONS` is the dissolved
+source component GeoJSON. The publisher checks counts, connectivity, holes,
+false borders, and unchanged template shapes before it saves a bundle.
+It uses `rsvg-convert` to render images without a display. The bundle includes
+compressed output cells and templates. It does not include the full source
+population data needed to generate new budgets.
 
 The optional continuous-flow build is separate:
 

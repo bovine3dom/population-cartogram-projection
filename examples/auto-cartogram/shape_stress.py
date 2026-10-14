@@ -86,7 +86,7 @@ class Stress:
         return float(value),gradient.ravel()
 
 
-def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8,source_polygons=None,raster=False,no_false_contacts=False,start_from_templates=False,smooth_collision=False,ocean_scale=0.,order_weight=0.):
+def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8,source_polygons=None,raster=False,no_false_contacts=False,start_from_templates=False,smooth_collision=False,ocean_scale=0.,order_weight=0.,coast_anchors=False):
     if output.exists():raise ValueError('Output already exists')
     if iterations<1 or spacing<=0 or any(not math.isfinite(v) or v<0 for v in [spacing,collision,spring,anchor,spatial,gap,ocean_scale,order_weight]):raise ValueError('Invalid stress settings')
     scripts=[Path(__file__),Path(__file__).with_name('shape_placement.py')]
@@ -94,6 +94,9 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
     if raster or smooth_collision:scripts.append(Path(__file__).with_name('raster_stress.py'))
     if smooth_collision:scripts.append(Path(__file__).with_name('smooth_raster_stress.py'))
     if order_weight:scripts.append(Path(__file__).with_name('geographic_order.py'))
+    if coast_anchors:
+        if not source_polygons:raise ValueError('Coast anchors require source polygons')
+        scripts.append(Path(__file__).with_name('coast_anchors.py'))
     script_hashes={p.name:digest(p) for p in scripts}
     input_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv']+([source_polygons] if source_polygons else [])}
     rows,tiles,_=load(inputs,templates)
@@ -126,6 +129,10 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
             if (state.labels[a],state.labels[b]) in required:continue
             distance=np.linalg.norm(state.targets[index])
             if distance:state.targets[index]*=ocean_length*np.arcsinh(distance/ocean_length)/distance
+    coast_count=0
+    if coast_anchors:
+        from coast_anchors import apply
+        coast_count=apply(state,source_polygons,tiles,required,scale,ocean_length)
     history=[]
     def callback(x):
         energy,_=state.objective(x);history.append(dict(iteration=len(history)+1,energy=energy))
@@ -143,6 +150,7 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
         no_false_contacts=no_false_contacts,start_from_templates=start_from_templates,smooth_collision=smooth_collision,
         ocean_scale_fraction=ocean_scale,ocean_scale_tiles=ocean_length,
         order_weight=order_weight,order_constraints=state.order.count if state.order else 0,
+        coast_anchors=coast_anchors,coast_anchor_pairs=coast_count,
         maximum_integer_placement_shift=max(displacements),integer_placement_shifts_over_two_tiles=sum(d>2 for d in displacements),
         spacing=spacing,maximum_iterations=iterations,iterations=int(result.nit),success=bool(result.success),message=str(result.message),
         collision=collision,spring=spring,anchor=anchor,spatial=spatial,gap=gap,initial_energy=initial,final_energy=float(result.fun),
@@ -173,5 +181,5 @@ if __name__=='__main__':
     parser.add_argument('--iterations',type=int,default=3000)
     for name,default in [('spacing',1.),('collision',100.),('spring',1.),('anchor',.01),('spatial',.03),('gap',.8),('ocean-scale',0.),('order-weight',0.)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--source-polygons',type=Path,help='Use concave collision pieces and anchors on actual source borders')
-    for name in ['raster','no-false-contacts','start-from-templates','smooth-collision']:parser.add_argument('--'+name,action='store_true')
-    args=parser.parse_args();print(json.dumps(run(args.inputs,args.templates,args.output,args.spacing,args.iterations,args.collision,args.spring,args.anchor,args.spatial,args.gap,args.source_polygons,args.raster,args.no_false_contacts,args.start_from_templates,args.smooth_collision,args.ocean_scale,args.order_weight),indent=2))
+    for name in ['raster','no-false-contacts','start-from-templates','smooth-collision','coast-anchors']:parser.add_argument('--'+name,action='store_true')
+    args=parser.parse_args();print(json.dumps(run(args.inputs,args.templates,args.output,args.spacing,args.iterations,args.collision,args.spring,args.anchor,args.spatial,args.gap,args.source_polygons,args.raster,args.no_false_contacts,args.start_from_templates,args.smooth_collision,args.ocean_scale,args.order_weight,args.coast_anchors),indent=2))
