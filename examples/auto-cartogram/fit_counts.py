@@ -18,10 +18,10 @@ class CountFit(CycleDeformation):
         for p,owner in reversed(undo):self.change(p,owner)
         return False
 
-    def fit_step(self,requested,choices=4,attempts=1):
+    def fit_step(self,requested,choices=4,attempts=1,strict=False):
         labels=[None]+sorted(self.tiles);ids={c:i for i,c in enumerate(labels)}
         need={c:requested[c]-len(self.tiles[c]) for c in self.tiles};need[None]=-sum(need.values())
-        candidates=self.candidates(choices)
+        candidates=self.candidates(choices,strict=strict)
         graph=nx.DiGraph();source=len(labels);sink=source+1
         graph.add_nodes_from(range(sink+1))
         # A common offset makes all arc costs positive. This favours short
