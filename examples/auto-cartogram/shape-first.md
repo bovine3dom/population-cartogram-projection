@@ -27,6 +27,11 @@ solve. Removing a required border must not remove the component's population.
 
 ![Intact component shapes](results/shape-first/world-55000-ordered5/review.png)
 
+This is a non-contiguous tile cartogram. It gives up some shared borders to
+keep recognizable shapes. The [Axis Maps guide](https://www.axismaps.com/guide/cartograms)
+describes this general tradeoff. The position heuristics below are experiments;
+that guide does not validate them.
+
 Each component gets a connected tile template from its source outline and
 population budget. The solver moves these templates. It does not add cells to
 reach a border. Separate islands remain separate components when they have a

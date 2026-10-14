@@ -373,3 +373,26 @@ Inspect the resulting images at world and regional scales.
 - Started two weighted 55,000-tile trials. The smaller local-neighbourhood trials
   are complete; refinement is running. Their first images still place Sri Lanka
   too far north, so neither is selected yet.
+
+## 12:55–13:09 UTC — a separate island-placement test
+
+- Simplified CLI argument forwarding and checked that the CLI and Python API
+  produce identical cells for the file-based fixture. Updated the experiment
+  guide to open the static gallery first.
+- Finished visual review of all six regional images for the saved 500,000-tile
+  trial. The Americas have recognizable shapes. South Asia still has serious
+  position errors. Regional views must retain misplaced small components rather
+  than crop them away to make the result look better.
+- Read the Axis Maps guide on non-contiguous cartograms and the Shapely 2.1.2
+  nearest-geometry documentation. The guide supports the general shape versus
+  topology tradeoff, not the new position heuristic.
+- Tested a separate coast hierarchy. Components with source land borders stay
+  fixed. Other components move near the nearest source component with a larger
+  population, without a same-country preference. All moves keep the tile shape
+  and reject overlap or false contact.
+- All 29 focused tests pass. A test verifies that a small island follows a nearby
+  foreign mainland rather than a distant component of its own country.
+- Visual review rejects the unrestricted hierarchy. It puts Sri Lanka near the
+  Indian tip, but moves Japan north of China and pulls Java too far south. The
+  hierarchy must not move every large isolated land mass. The rejected cells
+  remain in ignored output for comparison.

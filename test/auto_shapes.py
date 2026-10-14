@@ -28,6 +28,7 @@ import coast_anchors
 import relax_shapes
 import clean_templates
 import review_template
+import place_islands
 import publish_shape_review
 import build_shape_gallery
 import geographic_baseline
@@ -169,6 +170,8 @@ class ShapeTests(unittest.TestCase):
                 source.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(box(i,0,i+1,1))) for i,c in enumerate(['a','b'])])))
                 comparison=review_template.run(inputs,root/'fast-baseline',root/'clean-baseline',source,'A',root/'template-review')
                 self.assertEqual(comparison['after_tiles'],5)
+                islands=place_islands.run(inputs,root/'clean-baseline',source,root/'island-baseline')
+                self.assertEqual(islands['moved_components'],0)
                 clean_bundle=publish_shape_review.run(inputs,root/'clean-baseline',root/'clean-baseline',root/'clean-bundle',regions=False)
                 self.assertIn('template-cleanup.json',clean_bundle['files'])
             _,tiles,owners=compact.load(inputs,root/'placed')
@@ -383,6 +386,17 @@ class ShapeTests(unittest.TestCase):
         self.assertEqual(state.objective(positions[::-1])[0],0)
         rows['a'].update(west=-179,east=-177);rows['b'].update(west=177,east=179)
         self.assertEqual(GeographicOrder(['a','b'],rows).count,1)
+
+    def test_islands_follow_nearby_larger_coasts_not_country_membership(self):
+        tiles={'m':{(x,y) for x in range(20) for y in range(20)},'far':{(x+50,y+50) for x in range(4) for y in range(4)},'island':{(30,30)}}
+        rows={'m':dict(country_id='B',group_population=1e6),'far':dict(country_id='A',group_population=2e6),'island':dict(country_id='A',group_population=1000)}
+        source={'m':box(0,1,2,3),'far':box(20,20,22,22),'island':box(.8,0,1.2,.4)}
+        result,records=place_islands.place_islands(tiles,rows,source,{'m','far'},1.,10.)
+        self.assertEqual(records[0]['anchor'],'m')
+        self.assertEqual(result['m'],tiles['m']);self.assertEqual(result['far'],tiles['far'])
+        self.assertEqual(len(result['island']),1)
+        self.assertLess(next(iter(result['island']))[1],0)
+        self.assertFalse(any(q in result['m'] for p in result['island'] for q in compact.adjacent(p)))
 
     def test_population_weights_reduce_tiny_island_forces(self):
         tiles={c:{(i,0)} for i,c in enumerate(['a','b','c'])};centres={'a':(0.,0.),'b':(2.,0.),'c':(1.,1.)}
