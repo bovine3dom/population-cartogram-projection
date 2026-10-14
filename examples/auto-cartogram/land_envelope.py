@@ -7,14 +7,37 @@ import math
 from pathlib import Path
 
 import numpy as np
-from scipy.ndimage import gaussian_filter, label
+from scipy.ndimage import binary_dilation, gaussian_filter, label
+from scipy.signal import fftconvolve
 
 from review_layout import load, read_csv
 from review_gaps import draw
 from save_review import digest
 
 
-def build(tiles,fixed,origin,shape,sigma,count=None):
+def dock_parts(target,blocked):
+    """Translate separate target pieces until they touch; add no path cells."""
+    parts,count=label(target);sizes=np.bincount(parts.ravel());result=np.zeros_like(target);moves=[]
+    for index in sorted(range(1,count+1),key=lambda i:(-sizes[i],i)):
+        yy,xx=np.nonzero(parts==index);left=int(xx.min());bottom=int(yy.min())
+        if not result.any():
+            result[yy,xx]=True;moves.append(dict(part=index,cells=len(xx),dx=0,dy=0));continue
+        kernel=np.zeros((int(yy.max())-bottom+1,int(xx.max())-left+1),dtype=float)
+        kernel[yy-bottom,xx-left]=1
+        collisions=fftconvolve((result|blocked).astype(float),kernel[::-1,::-1],mode='valid')
+        shore=binary_dilation(result)&~result
+        contacts=fftconvolve(shore.astype(float),kernel[::-1,::-1],mode='valid')
+        ys,xs=np.nonzero((collisions<.5)&(contacts>.5))
+        if not len(xs):raise ValueError('No space to dock target piece')
+        distance=(xs-left)**2+(ys-bottom)**2
+        choice=np.lexsort((xs,ys,-np.rint(contacts[ys,xs]),distance))[0]
+        dx=int(xs[choice])-left;dy=int(ys[choice])-bottom
+        result[yy+dy,xx+dx]=True;moves.append(dict(part=index,cells=len(xx),dx=dx,dy=dy))
+    if result.sum()!=target.sum() or label(result)[1]!=1 or np.any(result&blocked):raise AssertionError('Invalid docked target')
+    return result,moves
+
+
+def build(tiles,fixed,origin,shape,sigma,count=None,dock=False):
     if not math.isfinite(sigma) or sigma<=0:raise ValueError('Use a positive envelope scale')
     land=np.zeros(shape,dtype=bool);blocked=np.zeros(shape,dtype=bool)
     for c,points in tiles.items():
@@ -32,7 +55,9 @@ def build(tiles,fixed,origin,shape,sigma,count=None):
     order=np.lexsort((np.arange(score.size),-score.ravel()))[:count]
     if not np.isfinite(score.ravel()[order]).all():raise ValueError('Insufficient unblocked target cells')
     target=np.zeros(shape,dtype=bool);target.ravel()[order]=True
-    return target,dict(target_cells=count,sampled_land_cells=sampled,initial_empty_target_cells=int((target&~land).sum()),
+    original_parts=int(label(target)[1]);moves=[]
+    if dock:target,moves=dock_parts(target,blocked)
+    return target,dict(dock_parts=dock,original_connected_parts=original_parts,part_translations=moves,target_cells=count,sampled_land_cells=sampled,initial_empty_target_cells=int((target&~land).sum()),
         target_connected_parts=int(label(target)[1]),sigma_tiles=sigma,
         limit='A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver.')
 

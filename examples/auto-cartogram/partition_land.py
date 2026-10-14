@@ -77,10 +77,11 @@ def contact_groups(pairs):
     return groups
 
 
-def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.,sites=None,float_islands=False):
+def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.,sites=None,float_islands=False,dock_landmasses=False):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([sigma,guide,anchor]).all() or sigma<=0 or min(guide,anchor)<0:raise ValueError('Invalid settings')
     if guide_layout and (flow_geometry or sites):raise ValueError('Choose either a guide layout or flow geometry/projected sites')
+    if dock_landmasses and not by_landmass:raise ValueError('Docking requires separate source land-border groups')
     if flow_stretch!=1 and not flow_geometry:raise ValueError('Flow stretch requires flow geometry')
     if not np.isfinite(flow_guide_weight) or flow_guide_weight<0 or (flow_guide_weight and not (flow_geometry and power)):raise ValueError('Flow guide cost requires flow geometry and power distance')
     started=time.monotonic()
@@ -126,7 +127,7 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
         # Reserve other landmasses' starting cells and all earlier target cells.
         masks={c:points for c,points in tiles.items() if not (float_islands and c in fixed)}
         masks['__assigned__']=assigned
-        mask,envelope=build(masks,set(masks)-set(labels),origin,shape,sigma,count=sum(budgets[c] for c in labels))
+        mask,envelope=build(masks,set(masks)-set(labels),origin,shape,sigma,count=sum(budgets[c] for c in labels),dock=dock_landmasses)
         if np.any(mask&target):raise AssertionError('Landmass targets overlap')
         target|=mask;yy,xx=np.nonzero(mask)
         if power:
@@ -159,7 +160,7 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     if sum(map(len,result.values()))!=len(set().union(*result.values())):raise AssertionError('Overlapping cells')
     disconnected={c:n for c,points in result.items() if (n:=connectivity(points))!=1}
     holed={c:n for c,points in result.items() if (n:=holes(points))}
-    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,sites=str(sites) if sites else None,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,flow_geometry=str(flow_geometry) if flow_geometry else None,flow=flow,flow_guide_weight=flow_guide_weight,flow_guide_cost='Weighted squared distance from the raw flow-region raster, added to uniform squared site distance' if flow_guide_weight else None,partitions=records,fixed_components=0 if float_islands else len(fixed),translated_islands=island_shifts,float_islands=float_islands,disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
+    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,sites=str(sites) if sites else None,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,dock_landmasses=dock_landmasses,flow_geometry=str(flow_geometry) if flow_geometry else None,flow=flow,flow_guide_weight=flow_guide_weight,flow_guide_cost='Weighted squared distance from the raw flow-region raster, added to uniform squared site distance' if flow_guide_weight else None,partitions=records,fixed_components=0 if float_islands else len(fixed),translated_islands=island_shifts,float_islands=float_islands,disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -186,6 +187,7 @@ if __name__=='__main__':
     parser.add_argument('--flow-guide-weight',type=float,default=0.,help='Add squared distance from each raw flow region to the power cost')
     parser.add_argument('--flow-stretch',type=float,default=1.,help='Area-preserving horizontal stretch of the flow footprint and sites')
     parser.add_argument('--power',action='store_true',help='Use uniform squared centre distance instead of outline costs')
+    parser.add_argument('--dock-landmasses',action='store_true',help='Translate disconnected target pieces within each source land-border group until they touch; add no connector cells')
     parser.add_argument('--float-islands',action='store_true',help='Do not reserve isolated island cells inside the target; translate intact islands outside the completed mainland')
     parser.add_argument('--by-landmass',action='store_true',help='Partition each connected source land-border group separately')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
