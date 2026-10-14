@@ -12,7 +12,7 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.special import logsumexp
 
-from compact_regions import guide_costs
+from compact_regions import guide_costs, fit_guide_centres
 from land_envelope import build, write_cells
 from review_layout import load, read_csv, connectivity, holes
 from save_review import digest
@@ -63,11 +63,11 @@ def partition(costs,budgets,iterations=300):
     return labels,dict(stages=history,residual_tiles_reassigned=error//2,cost_scale=scale,assignment_cost=float(costs[np.arange(len(costs)),labels].sum()))
 
 
-def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300):
+def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([sigma,guide,anchor]).all() or sigma<=0 or min(guide,anchor)<0:raise ValueError('Invalid settings')
     started=time.monotonic()
-    source_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',layout/'cells.csv']}
+    source_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',layout/'cells.csv']+([guide_layout/'cells.csv',guide_layout/'complete.txt'] if guide_layout else [])}
     script_hashes={name:digest(Path(__file__).with_name(name)) for name in ['partition_land.py','compact_regions.py','land_envelope.py','review_layout.py']}
     shapes,tiles,_=load(inputs,layout)
     budgets={c:int(row['tiles']) for c,row in shapes.items()}
@@ -75,10 +75,19 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300):
     movable={c for row in read_csv(inputs/'geographic-contacts.csv') if row['both_represented']=='true' for c in [row['a'],row['b']]}
     fixed=set(tiles)-movable;labels=sorted(movable)
     if not labels:raise ValueError('No movable components')
-    costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=max(64,int(np.ceil(4*sigma))+2))
+    centres=alignment=None
+    if guide_layout:
+        _,guides,_=load(inputs,guide_layout)
+        centres,alignment=fit_guide_centres(tiles,guides,budgets)
+    costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=max(64,int(np.ceil(4*sigma))+2),centres=centres)
     target,envelope=build(tiles,fixed,origin,next(iter(costs.values())).shape,sigma)
     yy,xx=np.nonzero(target)
-    matrix=np.column_stack([costs[c][yy,xx] for c in labels]);del costs
+    if power:
+        sites=np.array([centres[c] if centres is not None else np.mean(list(tiles[c]),axis=0) for c in labels])
+        points=np.column_stack((xx+origin[0],yy+origin[1]))
+        matrix=((points[:,None,:]-sites[None,:,:])**2).sum(axis=2)
+    else:matrix=np.column_stack([costs[c][yy,xx] for c in labels])
+    del costs
     assignment,solver=partition(matrix,[budgets[c] for c in labels],iterations)
     result={c:set(tiles[c]) for c in fixed}
     for index,c in enumerate(labels):result[c]=set(zip((xx[assignment==index]+origin[0]).tolist(),(yy[assignment==index]+origin[1]).tolist()))
@@ -86,7 +95,7 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300):
     if sum(map(len,result.values()))!=len(set().union(*result.values())):raise AssertionError('Overlapping cells')
     disconnected={c:n for c,points in result.items() if (n:=connectivity(points))!=1}
     holed={c:n for c,points in result.items() if (n:=holes(points))}
-    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide,anchor=anchor,maximum_iterations_per_stage=iterations,solver=solver,envelope=envelope,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
+    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,maximum_iterations_per_stage=iterations,solver=solver,envelope=envelope,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -107,4 +116,6 @@ if __name__=='__main__':
     for name in ['inputs','layout','output']:parser.add_argument(name,type=Path)
     for name,default in [('sigma',8.),('guide',4.),('anchor',.05)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--iterations',type=int,default=300)
+    parser.add_argument('--guide-layout',type=Path)
+    parser.add_argument('--power',action='store_true',help='Use uniform squared centre distance instead of outline costs')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
