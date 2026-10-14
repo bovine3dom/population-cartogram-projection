@@ -53,7 +53,7 @@ class MeshObjective:
         if not np.isfinite(jacobian).all():return float('inf'),np.zeros_like(values)
         # A quadratic extension of 1/det supplies a finite recovery gradient for
         # invalid line-search probes. No folded stage may be accepted or exported.
-        epsilon=1e-5;safe=np.maximum(determinant,epsilon);delta=np.minimum(determinant-epsilon,0)
+        epsilon=1e-12;safe=np.maximum(determinant,epsilon);delta=np.minimum(determinant-epsilon,0)
         reciprocal=1/safe-delta/epsilon**2+delta**2/epsilon**3
         derivative=-1/safe**2+2*delta/epsilon**3
         cofactor=np.empty_like(jacobian)
@@ -214,7 +214,7 @@ def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01
     source=read_shapes(prepared/'geometry.geojson');rows=read_csv(prepared/'areas.csv');budgets={r['component_id']:float(r['tiles']) for r in rows};labels=sorted(source)
     if len(rows)!=len(budgets) or set(budgets)!=set(source) or any(not np.isfinite(v) or v<=0 for v in budgets.values()):raise ValueError('Invalid guide budgets')
     output.mkdir(parents=True);started=time.monotonic()
-    record=dict(method='Planar fixed-frame mesh with area error and Sargent shape/scale distortion costs',reference='https://arxiv.org/abs/2411.17129',inputs={str(p):digest(p) for p in [prepared/'geometry.geojson',prepared/'areas.csv']},script_sha256=digest(Path(__file__)),optimizer=optimizer,stage_geometry=stage_geometry,water_weight=water_weight,density_weight=density_weight,rotation_weight=rotation_weight,maximum_iterations_per_stage=iterations,reciprocal_extension_threshold=1e-5,minimum_accepted_determinant=1e-12,union_precision=1e-12,seam_cleanup_radius=1e-11,stages=[],limit='Independent planar experiment, not the paper sphere or hybrid implementation. Reference triangles use Equal Earth planar geometry, not spherical geometry. Fixed frame and nearest-land water scale differ from the paper. Small regions share mesh degrees of freedom. Guide areas can remain inaccurate. No final tile budgets change. Positive triangle areas are checked; output component validity and overlaps must also be checked. No connector paths are added.')
+    record=dict(method='Planar fixed-frame mesh with area error and Sargent shape/scale distortion costs',reference='https://arxiv.org/abs/2411.17129',inputs={str(p):digest(p) for p in [prepared/'geometry.geojson',prepared/'areas.csv']},script_sha256=digest(Path(__file__)),optimizer=optimizer,stage_geometry=stage_geometry,water_weight=water_weight,density_weight=density_weight,rotation_weight=rotation_weight,maximum_iterations_per_stage=iterations,reciprocal_extension_threshold=1e-12,minimum_accepted_determinant=1e-12,union_precision=1e-12,seam_cleanup_radius=1e-11,stages=[],limit='Independent planar experiment, not the paper sphere or hybrid implementation. Reference triangles use Equal Earth planar geometry, not spherical geometry. Fixed frame and nearest-land water scale differ from the paper. Small regions share mesh degrees of freedom. Guide areas can remain inaccurate. No final tile budgets change. Positive triangle areas are checked; output component validity and overlaps must also be checked. No connector paths are added.')
     def save():(output/'mesh-guide.json').write_text(json.dumps(record,indent=2)+'\n')
     save()
     try:
