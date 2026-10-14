@@ -24,9 +24,9 @@ def adjacent(p):return [(p[0]+dx,p[1]+dy) for dx,dy in NEIGHBOURS]
 
 
 class Deformation:
-    def __init__(self, tiles, required, costs, origin, perimeter=1., false_contact=4., sea_perimeter=0., sea_mask=None):
+    def __init__(self, tiles, required, costs, origin, perimeter=1., false_contact=4., sea_perimeter=0., sea_mask=None,allow_holes=False):
         self.tiles={c:set(points) for c,points in tiles.items()}
-        if any(connectivity(p)!=1 or holes(p) for p in self.tiles.values()):
+        if any(connectivity(p)!=1 or (not allow_holes and holes(p)) for p in self.tiles.values()):
             raise ValueError('Starting regions must be connected and have no holes')
         self.owners={p:c for c,points in self.tiles.items() for p in points}
         if len(self.owners)!=sum(map(len,self.tiles.values())):raise ValueError('Overlapping cells')
@@ -209,6 +209,8 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         state_type=BoundedDeformation
     fixed=set(tiles)-{c for pair in required for c in pair} if land_only else set()
     options=dict(allowed_masks=guided[2],contact_reward=contact_reward,template_penalty=template_penalty,fixed=fixed) if bounded else {}
+    if fixed_footprint:options['allow_holes']=True
+    initial_holes={c:holes(p) for c,p in tiles.items()} if fixed_footprint else {}
     target=envelope=None
     if envelope_weight:
         from land_envelope import build, write_cells
@@ -243,7 +245,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         history.append(dict(phase='shape',round=turn,exchanges=moves,energy=energy,count_error=error));previous=energy
         print(f'Round {turn}: {moves} exchanges; energy {energy:.6f}',flush=True)
         if not moves:break
-    if any(len(state.tiles[c])!=counts[c] or connectivity(state.tiles[c])!=1 or holes(state.tiles[c]) for c in tiles):raise AssertionError('Count or topology changed')
+    if any(len(state.tiles[c])!=counts[c] or connectivity(state.tiles[c])!=1 or holes(state.tiles[c])!=initial_holes.get(c,0) for c in tiles):raise AssertionError('Count or topology changed')
     if fixed_footprint and set(state.owners)!=initial_occupied:raise AssertionError('Fixed footprint changed')
     if bounded:state.check_contacts()
     if envelope is not None:
@@ -255,7 +257,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
         cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,fit_attempts=fit_attempts,strict_fit=strict_fit,absolute_tile_error=error,
         bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,sea_perimeter=sea_perimeter,interior_sea_radius=interior_sea_radius,
-        template_penalty=template_penalty,land_only=land_only,fixed_footprint=fixed_footprint,fixed_components=len(fixed),guide_area='requested budget' if fit_rounds else 'initial count',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,cache_regrowth=cache_regrowth,full_topology_checks=full_topology_checks,envelope=envelope,
+        template_penalty=template_penalty,land_only=land_only,fixed_footprint=fixed_footprint,preserved_holes=sum(initial_holes.values()),fixed_components=len(fixed),guide_area='requested budget' if fit_rounds else 'initial count',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,cache_regrowth=cache_regrowth,full_topology_checks=full_topology_checks,envelope=envelope,
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
         input_cells_sha256=input_hashes[str(layout/'cells.csv')],inputs=input_hashes,scripts=hashes,
         limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed guide centres can preserve poor geographic positions. A guide layout changes target centres, not the starting cells; alignment uses a positive uniform scale and translation without rotation. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders during shape optimization, and also during count fitting in bounded mode. An interior sea radius restricts the extra sea-edge cost to water inside a fixed closing envelope of initial land; this envelope can include real water.')
