@@ -1054,6 +1054,23 @@ The separated layout has exact budgets but is not an acceptable replacement.
   retains internal shapes and borders. Large mainlands stay fixed. These are
   ignored prototypes, not new defaults or accepted layouts.
 
+## 22:16–22:23 UTC — Integrated run and rejected shared-body placement
+
+- Waited for the recorded pipeline and body-placement tests from 22:16 to 22:19
+  UTC. The integrated pipeline finishes at 22:18:58 UTC. Its exact cells match
+  the saved `fixed-coasts-55000` candidate byte for byte. Added its run record
+  and stage logs to that bundle.
+- Visually checked both shared-body world images and Indonesia details. Reject
+  both. The 0.001 threshold moves Timor too close to New Guinea. The 0.01
+  threshold moves Borneo and New Guinea too far south. Counts and contacts stay
+  exact, but positions get worse.
+- Repeated the two thresholds while initially holding all unshared islands
+  fixed. Checked both Indonesia details. Timor still moves too far east, and
+  the larger threshold puts Borneo east of Sulawesi. Reject both variants.
+  Nearest-coast placement alone is not sufficient for shared islands. A future
+  joint placement must constrain relative island positions as well as mainland
+  separation. Do not promote these prototypes into the recorded pipeline.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
