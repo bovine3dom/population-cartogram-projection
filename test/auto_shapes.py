@@ -49,6 +49,18 @@ from geographic_order import GeographicOrder
 
 
 class ShapeTests(unittest.TestCase):
+    def test_gap_svg_uses_bounded_paths(self):
+        import xml.etree.ElementTree as ET
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'gaps.svg';land=np.ones((101,101),dtype=bool);empty=np.zeros_like(land)
+            review_gaps.draw(path,land,empty,{1:empty},'Large mask')
+            paths=ET.parse(path).getroot().findall('{http://www.w3.org/2000/svg}path')
+            self.assertEqual([p.attrib['d'].count('M') for p in paths],[10000,201])
+            owners={(x,y):'A' for y in range(101) for x in range(101)}
+            review_gaps.draw_layout(path,owners,'Large country',{}, {})
+            paths=ET.parse(path).getroot().findall('{http://www.w3.org/2000/svg}path')
+            self.assertEqual([p.attrib['d'].count('M') for p in paths],[10000,201])
+
     def test_gap_proxy_counts_open_channels_and_enclosed_water(self):
         solid={(x,y):'a' for x in range(11) for y in range(11)}
         report,*_=review_gaps.measure(solid,(1,2))

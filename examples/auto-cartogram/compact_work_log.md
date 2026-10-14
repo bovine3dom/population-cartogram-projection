@@ -521,6 +521,44 @@ The separated layout has exact budgets but is not an acceptable replacement.
   tests pass. The 40 shape tests passed before the final cache adjustment.
   Existing background jobs still use their original saved code.
 
+## 19:08–19:21 UTC — first 500,000-tile image and upstream island control
+
+- Started two fresh repairs of the saved 500,000-tile partition, with limits of
+  100 and 2,000 strict swaps. Both use immutable code from `a0ef7a6` and the
+  optional coastal fallback. The original pipeline continues separately.
+- The 100-swap control finished in 452 seconds, including island placement and
+  reviews. It has exact counts and no split regions. Inspected its world,
+  Indonesia, Europe, and gap images. Reject it: the USA is rectangular, Canada
+  is displaced, and the Americas remain separate. More resolution preserves
+  isolated island detail but does not correct a poor mainland footprint.
+- Saved this control with its failed-upstream-flow status. It has ten region
+  holes, 119 missing contacts, and 151 false contacts. Its 27,823 enclosed empty
+  cells include the Mediterranean. Do not call all of them artificial holes.
+- The gap SVG exceeded the renderer's default XML attribute-size limit. Split
+  cell commands into bounded paths instead of disabling the parser limit.
+  Added a regression test. The first render had visible path-edge seams;
+  crisp square-cell rendering removes them. Inspected the corrected image.
+  This changes rendering only, not gap measurements.
+- Inspected the pinned external solver's area replacement code in
+  `src/cartogram_info/cartogram_info.cpp`, lines 213–284. It raises some small
+  targets, subject to geometric-area and density bounds. Thus isolated islands
+  can influence deformation before the later island-shape preservation stage.
+  This is a possible cause to test, not a demonstrated explanation.
+- Added mainland-only flow preparation. It excludes isolated components, not
+  overseas parts by country ID. Partial flow geometry requires population sites
+  for the absent islands; missing mainland geometry is rejected. Final budgets
+  and intact island templates remain unchanged.
+- The 55,000-tile control excludes 292 isolated components from the flow and
+  keeps 189 land-border components, with 49,894 guide tiles. The external solve
+  exits successfully in 11 seconds; geometry is valid with no overlap pairs.
+  All 55,000 final tiles are still requested.
+- Inspected its first world image at stretch 1.2. North Africa is wider and Japan
+  is farther north than in the full-flow control. However, Pakistan is still
+  stretched, Korea extends from the wrong part of China, and Southeast Asia
+  remains poor. No production approval. The stretch-1.5 control is running.
+- All nine test commands passed at checkpoint `b69ad5d`. After the SVG fix,
+  the shape suite has 41 passing tests. Production files remain unchanged.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

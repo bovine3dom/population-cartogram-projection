@@ -70,7 +70,8 @@ def draw(path,land,enclosed,masks,title,legend='Grey: land. Red: enclosed empty 
     for mask,color in [(land,'#666'),(masks[max(masks)],'#e9a23b'),(enclosed,'#c53b40')]:
         yy,xx=np.nonzero(mask)
         commands=[f'M{20+x*scale:.3f},{100+(land.shape[0]-1-y)*scale:.3f}h{scale:.3f}v{scale:.3f}h-{scale:.3f}z' for y,x in zip(yy,xx)]
-        parts.append(f'<path fill="{color}" d="{" ".join(commands)}"/>')
+        for start in range(0,len(commands),10000):
+            parts.append(f'<path fill="{color}" shape-rendering="crispEdges" d="{" ".join(commands[start:start+10000])}"/>')
     path.write_text('\n'.join(parts)+'</svg>\n')
 
 
@@ -88,7 +89,8 @@ def draw_layout(path,owners,title,names,country_ids):
         '<text x="40" y="70" font-family="sans-serif" font-size="16">Layout comparison only. Country colours and population scope can differ. See the numeric checks.</text>']
     for c,points in sorted(countries.items()):
         commands=[f'M{tx(x-.5):.3f},{ty(y+.5):.3f}h{scale:.3f}v{scale:.3f}h-{scale:.3f}z' for x,y in sorted(points)]
-        parts.append(f'<path fill="{country_color(c)}" d="{" ".join(commands)}"/>')
+        for start in range(0,len(commands),10000):
+            parts.append(f'<path fill="{country_color(c)}" shape-rendering="crispEdges" d="{" ".join(commands[start:start+10000])}"/>')
     boxes=[]
     for c,points in sorted(countries.items(),key=lambda item:(-len(item[1]),item[0])):
         if len(points)*scale*scale<1200:continue

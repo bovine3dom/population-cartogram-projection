@@ -1,0 +1,23 @@
+{
+  "output/auto-cartogram/world-500000-dissolved-input/geographic-contacts.csv": "de308b8e39759ba7e2f6f4313f2512e6d7abf2292e9623dd78950efe866cc722",
+  "output/auto-cartogram/world-500000-dissolved-input/groups.csv": "6a9de0a7294d00416ee6288714e97bd3216a09c7870d40e64b5108b00f735d15",
+  "output/auto-cartogram/world-500000-dissolved-input/input.wkt": "ec731515febb04bca65c097c0f30cd26ef9d1f42ff3f067b5c0b03b44ecad509",
+  "output/auto-cartogram/world-500000-dissolved-input/manifest.json": "3857df812558696f916d3ef8818bea822eb919b7167a2b45a5506a2d79ecdc8f",
+  "output/auto-cartogram/world-500000-dissolved-input/original-outlines.json": "a80a857639f084b5a334b293c9822d3e70a6b1fc79021de44ca6a8e779d5b67f",
+  "output/auto-cartogram/world-500000-dissolved-input/outline-checks.json": "0af68a4ab36603ca9d3bcd04f8915359a2288f63daba2b16b15e4caaaf1df711",
+  "output/auto-cartogram/world-500000-dissolved-input/validated.wkt": "78296821be9239c321932a0e56a8cc58e54e819de74926b620edb77449557ef1",
+  "output/auto-cartogram/world-500000-dissolved-input/weights.tsv": "e0b5f13f9af6d0b06df0ffb0aa95fa54fccdcc110b57b0be5d885dfd4429c781",
+  "output/auto-cartogram/world-500000-cached100-islands/cells.csv": "70b8dc1f89d4deed3685e1f1ec8e4d1c93e638b5c967db01bad3e644aa69f4f3",
+  "output/auto-cartogram/world-500000-cached100-islands/complete.txt": "f0058023de954750ffb342008d1ee914a981cde64ba7cc02a962737b2f3186b3",
+  "output/auto-cartogram/world-500000-cached100-islands/contact-errors.csv": "0b33e1762cac7793406e642bd6f1aa2336b7872dbb80292a882d1cf6825279f0",
+  "output/auto-cartogram/world-500000-cached100-islands/country-counts.csv": "8cbeb9c270c58cd38f5a7bacff147787bcda1f30e8b9e795ef6014f0b320bb91",
+  "output/auto-cartogram/world-500000-cached100-islands/country-order-errors.csv": "cae17b8fa4face45bdd687c3f3c72bdce360f720d947dba2e2dcc45c6b0fcb47",
+  "output/auto-cartogram/world-500000-cached100-islands/group-capacities.csv": "d8424912beafbb40d0d232c2753b4b3347efdc814e630709494ce04c3677d9c2",
+  "output/auto-cartogram/world-500000-cached100-islands/island-anchors.csv": "67af138d508ddbe170f2513c6e49450cca13d6e4b9a4c433d92fc0c7e49926bd",
+  "output/auto-cartogram/world-500000-cached100-islands/island-order-errors.csv": "fa584d5ebec699b7a32bc6c6bbaecfd55b6fcc5a05eac1114f25a2237cbf149c",
+  "output/auto-cartogram/world-500000-cached100-islands/island-placement.json": "46a0355066330d639ec3c47af1c3427c854590479eddc72d94aae76121a3e32c",
+  "output/auto-cartogram/world-500000-cached100-islands/metrics.json": "d9e41e014359a646e7d70d895ceb3b05522bbb4cc9ff285beb603301af40b3f3",
+  "output/auto-cartogram/world-500000-cached100-islands/region-quality.csv": "1c7fe08a7db3c3d6dd2ece2c0d9f0136cee57b373dfcb351b8955db3ff049e57",
+  "output/auto-cartogram/world-500000-cached100-islands/review.png": "dccb5f73c5116160758379a34979b59be3c70b55a193d1b980002d5c4e95fed9",
+  "output/auto-cartogram/world-500000-cached100-islands/review.svg": "ff6af4236ed13766bc7c49a0908da85e19d0386d1df15117454974b851553ff5"
+}
