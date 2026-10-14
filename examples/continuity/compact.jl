@@ -321,7 +321,8 @@ function compact_workspace(c,force,prior,backend;proximal=0.,cache_bytes=512*102
 end
 
 function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=nothing,maxiters=10000,retry_after=1000,
-                       stage_callback=nothing,cache_bytes=512*1024^2,max_pairs=8_000_000,kwargs...)
+                       stage_callback=nothing,cache_bytes=512*1024^2,max_pairs=8_000_000,retry_factor::Int=16,kwargs...)
+    ispow2(retry_factor) || error("retry factor must be a positive power of two")
     retry_after>0 || error("invalid retry interval")
     isfinite(eta) && eta>0 && maxiters>0 && get(kwargs,:tolerance,1e-4)>0 && get(kwargs,:block_pairs,1_000_000)>0 || error("invalid solve limits")
     workspace=compact_workspace(c,force,prior,backend;proximal,cache_bytes,max_pairs)
@@ -336,7 +337,8 @@ function compact_solve(c,force,prior,backend;eta=.002,proximal=0.,initial_beta=n
     end
     GC.gc() # Release temporary solve buffers; keep the cost workspace.
     result=nothing;iterations=0
-    for factor in (16.,8.,4.,2.,1.)
+    for exponent in trailing_zeros(retry_factor):-1:0
+        factor=2.0^exponent
         # Scale the full effective temperature, not only its non-proximal part.
         temperature=(eta+proximal)*factor-proximal
         result=compact_sinkhorn(c,force,prior,backend;eta=temperature,proximal,initial_beta,maxiters,workspace,cache_bytes,max_pairs,kwargs...)

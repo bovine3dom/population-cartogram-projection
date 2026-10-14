@@ -99,8 +99,12 @@ floor. No plan is accepted without the full check.
 keep the prior plan and proximal weight fixed. Each stage checks the original
 mass tolerance. Only the last stage becomes a candidate, with the requested
 temperature. Earlier stages supply dual initial values, not extra plan history.
-A failed final solve raises an error. No dense host plan or CPU solver fallback
-is used. Reuse the cost workspace across temperature stages: the force, prior,
+A failed final solve raises an error. Set `compact_retry_factor=64` in
+`run_case`, or `retry_factor=64` in `compact_solve`, to start the retry at 64
+and halve it through 1. The value must be a positive integer power of two.
+The default remains 16. This can help with sharp priors and strong forces;
+it does not change the accepted temperature or mass limits. The runner saves
+the chosen factor. No dense host plan or CPU solver fallback is used. Reuse the cost workspace across temperature stages: the force, prior,
 and proximal weight stay fixed. Restore the cached cost if dense refinement
 overwrote it. Do not change these inputs in a stage callback.
 

@@ -234,3 +234,21 @@ The sharp seeds have border RMS 695.2 km and reversed triangle area 508,559 km²
 Sharpness does not remove geometric defects. The border refit is now running
 with per-country eta, proximal weight 0.01, and checked full-step trials. The
 baseline report is `planet-baseline-audit.toml`; no public file has changed.
+
+## 10:16 UTC: sharp-prior convergence failure and checked recovery
+
+The first border pass stops at Russia: the factor-16 retry reaches 10,000
+iterations without passing the mass check. No invalid plan is accepted.
+A separate solve with the exact saved prior and force starts at factor 64,
+then halves through 1. It passes all stages and the final original-temperature
+mass check. The final target L1 is 7.99e-5. This trial is `retry-russia.log`.
+Added an explicit power-of-two retry factor to the compact research solver
+and runner. The default remains 16; saved settings record the choice. All
+114 compact checks pass on CPU and oneAPI, including the longer retry path.
+
+The stopped partial pass has 1.826 connections/source at 99.5%, versus 1.837
+in the matched old export. Mean spatial RMS is 0.510, versus 0.412 before.
+Border RMS falls from 695.2 to 663.6 km, but reversed triangle area increases
+from 0.509 to 2.598 million km². This is not a complete pass or a publication
+candidate. Its independent audit is `planet-partial-v2-audit.toml`. Resume
+from this checked checkpoint rather than repeat completed country updates.

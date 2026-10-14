@@ -122,6 +122,12 @@ for backend in backends
                 @test stages==[16.,8.,4.,2.,1.]
                 @test Matrix(retried.plan) ≈ reference.plan atol=2e-6
                 @test length(retried.plan.data.rho)==length(p.data.rho)+1
+                empty!(stages)
+                hotter=CE.compact_solve(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,retry_after=1,retry_factor=64,
+                    stage_callback=(factor,result)->push!(stages,factor))
+                @test stages==[64.,32.,16.,8.,4.,2.,1.]
+                @test Matrix(hotter.plan) ≈ reference.plan atol=2e-6
+                @test_throws ErrorException CE.compact_solve(c,force,p,backend;retry_factor=3)
             end
             if iteration==3
                 implicit=CE.compact_sinkhorn(c,force,p,backend;eta,proximal=.1,tolerance=1e-6,cache_bytes=0,max_pairs=10).plan
@@ -164,7 +170,7 @@ for backend in backends
             @test resumed[2].iteration==1 && resumed[2].updated_country==2
             resumed_plans=deserialize(joinpath(dir,"resumed","candidate.jls"))
             @test all(isapprox(Matrix(a),Matrix(b);atol=2e-5) for (a,b) in zip(resumed_plans,compact_plans))
-            full_kwargs=merge(kwargs,(;max_damping=1.,country_etas=Dict(2=>.01),save_passes=true))
+            full_kwargs=merge(kwargs,(;max_damping=1.,country_etas=Dict(2=>.01),save_passes=true,compact_retry_factor=64))
             full_dense=CE.run_case(countries,backend,joinpath(dir,"full-dense");full_kwargs...)
             full_compact=CE.run_case(countries,backend,joinpath(dir,"full-compact");compact=true,full_kwargs...)
             @test last(full_compact).objective ≈ last(full_dense).objective atol=2e-5
@@ -173,6 +179,7 @@ for backend in backends
             @test saved[:max_damping]==1.
             @test saved[:country_etas]==Dict(1=>.02,2=>.01)
             @test saved[:save_passes]
+            @test saved[:compact_retry_factor]==64
             snapshot=deserialize(joinpath(dir,"full-compact","pass-2.jls"))
             @test (snapshot.iteration,snapshot.step,snapshot.start_step)==(2,4,1)
             @test last(snapshot.metrics)==last(full_compact)

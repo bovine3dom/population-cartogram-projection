@@ -534,7 +534,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
                   proximal=0.0,anneal=false,accelerate=false,internal_form=form,starting_plans=nothing,
                   border_scale=1.0,coordinate=false,border_factors=Dict(),checkpoint_interval=1,compact=false,
                   compact_cache_bytes=512*1024^2,start_step::Int=1,initial_duals=nothing,max_damping=.5,
-                  country_etas=Dict(),save_passes=false)
+                  country_etas=Dict(),save_passes=false,compact_retry_factor::Int=16)
     groups=coordinate ? length(countries) : 1
     1<=start_step<=outer_steps*groups+1 || error("invalid starting step")
     start_step>1 && isnothing(starting_plans) && error("a later starting step requires seed plans")
@@ -547,6 +547,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     isfinite(eta) && eta>0 || error("invalid eta")
     all(code in getproperty.(countries,:code) && isfinite(value) && value>0 for (code,value) in country_etas) || error("invalid country eta")
     temperatures=[get(country_etas,c.code,eta) for c in countries]
+    ispow2(compact_retry_factor) || error("retry factor must be a positive power of two")
     isfinite(max_damping) && 0<max_damping<=1 || error("invalid maximum damping")
     checkpoint_interval>=1 || error("checkpoint interval must be positive")
     proximal>=0 || error("proximal weight must be nonnegative")
@@ -573,7 +574,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
         saturating=[saturating],preserve_displacements=[preserve_displacements],fold_strength=[fold_strength],fold_smoothing=[fold_smoothing],
         matrix_free=[matrix_free],internal_scale=[internal_scale],border_scale=[border_scale],inner_tolerance=[inner_tolerance],
         proximal=[proximal],max_damping=[max_damping],anneal=[anneal],accelerate=[accelerate],coordinate=[coordinate],outer_steps=[outer_steps],
-        checkpoint_interval=[checkpoint_interval],save_passes=[save_passes],compact=[compact],compact_cache_bytes=[compact_cache_bytes],start_step=[start_step],
+        checkpoint_interval=[checkpoint_interval],save_passes=[save_passes],compact_retry_factor=[compact_retry_factor],compact=[compact],compact_cache_bytes=[compact_cache_bytes],start_step=[start_step],
         internal_edges=[count(e -> e[1]==e[3],edges)], border_edges=[count(e -> e[1]!=e[3],edges)]))
     println("Case: $(getproperty.(countries,:code)); sources=$(nrow.(getproperty.(countries,:source))); targets=$(nrow.(getproperty.(countries,:target))); edges=$(length(edges))")
     flush(stdout)
@@ -581,7 +582,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
     if isnothing(initial_plans)
         for (k,c) in enumerate(countries)
             elapsed = @elapsed result = compact ?
-                compact_solve(c,zeros(3,length(c.b)),nothing,backend;eta=temperatures[k],tolerance=inner_tolerance,accelerate,cache_bytes=compact_cache_bytes) : matrix_free ?
+                compact_solve(c,zeros(3,length(c.b)),nothing,backend;eta=temperatures[k],tolerance=inner_tolerance,accelerate,cache_bytes=compact_cache_bytes,retry_factor=compact_retry_factor) : matrix_free ?
                 feature_sinkhorn(c,zeros(3,length(c.b)),backend;eta=temperatures[k],tolerance=inner_tolerance,anneal,accelerate) :
                 sinkhorn(c.cost,c.a,c.b,backend;eta=temperatures[k],tolerance=inner_tolerance,anneal,accelerate)
             println("Baseline $(c.code): $(round(elapsed;digits=1)) s, $(result.iterations) dual + $(result.refinement_iterations) primal iterations, residual=$(result.marginal_error)")
@@ -641,7 +642,7 @@ function run_case(countries, backend, outdir; strength=0.001, eta=0.002, outer_s
             end
             save_stage=(factor,result)->checkpoint(joinpath(outdir,"inner-stage.jls"),(;step,country=c.code,factor,result))
             compact ? compact_solve(c,g,plans[k],backend;eta=temperatures[k],proximal,initial_beta=duals[k],tolerance=inner_tolerance,accelerate,
-                cache_bytes=compact_cache_bytes,stage_callback=save_stage) :
+                cache_bytes=compact_cache_bytes,stage_callback=save_stage,retry_factor=compact_retry_factor) :
             matrix_free ? feature_sinkhorn(c,g,backend;eta=temperatures[k],initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate) :
                 sinkhorn(proximal==0 ? c.cost .+ g : c.cost .+ g .- proximal.*log.(max.(plans[k],floatmin(Float64))),c.a,c.b,backend;
                          eta=temperatures[k]+proximal,initial_beta=duals[k],tolerance=inner_tolerance,anneal,accelerate)
