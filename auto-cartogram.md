@@ -4,9 +4,12 @@
 
 The separated-shape trials are not an acceptable replacement for OWID. They
 remove connector paths but leave large artificial spaces between countries.
-The current experiment returns to the Tutte partial fit and tests joint shape
-deformation with a separate land-sea boundary cost. It measures empty spaces
-between countries, not only holes inside each component.
+The joint-deformation trials now reach exact counts, but visual checks still
+reject them. Fixed Tutte positions leave tangled countries. Geographic starts
+leave too much empty space. A land-sea boundary cost alone also damages coasts.
+The next test uses a shared, area-matched land footprint. A separate global
+capacity partition tests whether local exchanges are the main limit. That
+partition does not enforce connectivity and is not a replacement generator.
 
 Open the [compactness comparison](examples/auto-cartogram/results/compact-landmass/index.html)
 for OWID, Tutte, and the rejected separated layout. See the
