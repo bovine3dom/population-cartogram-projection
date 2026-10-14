@@ -1,6 +1,6 @@
 {
-  "checked_at_utc": "2026-10-14T18:30:40.390714+00:00",
-  "script_sha256": "ac61c21fc096acc326f3ab03519497f7ca62bf245ae732ec09fc78f8e0688a68",
+  "checked_at_utc": "2026-10-14T18:54:36.902984+00:00",
+  "script_sha256": "3db936d204d4b3c9be727480f2b01448d9df8310552103ee5075947d426c562e",
   "results": [
     {
       "layout": "flow-compact",
@@ -32,6 +32,14 @@
     },
     {
       "layout": "global-coast-rejected",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "world-10000-connected",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "world-110000-connected",
       "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
     }
   ]
