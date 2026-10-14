@@ -1,0 +1,769 @@
+{
+  "method": "Small source land-border groups translated as rigid bodies; soft box separation followed by exact-shape packing with centre-order constraints",
+  "maximum_area_fraction": 0.01,
+  "minimum_tiles": 16,
+  "radius_km": 1000.0,
+  "minimum_degrees": 3.0,
+  "weight": 10.0,
+  "shift_scale": 6.0,
+  "members": {
+    "BRN:72e2eec83e114e7f": [
+      "BRN:72e2eec83e114e7f",
+      "IDN:51a10640dee7162b",
+      "MYS:0abe504273f2e4bd"
+    ],
+    "CUB:a203a2643a40db9f": [
+      "CUB:a203a2643a40db9f",
+      "USG:4318b9af790790b9"
+    ],
+    "DOM:1493e296a532a3a2": [
+      "DOM:1493e296a532a3a2",
+      "HTI:a3ce6059435c00f9"
+    ],
+    "IDN:41ba51e85ddbb728": [
+      "IDN:41ba51e85ddbb728",
+      "TLS:e102fc60287c6426"
+    ],
+    "IDN:91fa24efd9a13b2f": [
+      "IDN:91fa24efd9a13b2f",
+      "PNX:cd0b182a6ff3f568"
+    ],
+    "IRL:9661cba0fca9f89c": [
+      "IRL:9661cba0fca9f89c",
+      "NIR:69fa50e543fa7c66"
+    ]
+  },
+  "edges": [
+    {
+      "a": "IDN:41ba51e85ddbb728",
+      "b": "AUS:adfd7567b2399535",
+      "axis": 0,
+      "bound": 39,
+      "centre_bound": 39,
+      "separated": false
+    },
+    {
+      "a": "AUS:adfd7567b2399535",
+      "b": "IDN:41ba51e85ddbb728",
+      "axis": 1,
+      "bound": 0,
+      "centre_bound": 12,
+      "separated": true
+    },
+    {
+      "a": "AUS:adfd7567b2399535",
+      "b": "IDN:91fa24efd9a13b2f",
+      "axis": 0,
+      "bound": 5,
+      "centre_bound": 5,
+      "separated": false
+    },
+    {
+      "a": "AUS:adfd7567b2399535",
+      "b": "IDN:91fa24efd9a13b2f",
+      "axis": 1,
+      "bound": 18,
+      "centre_bound": 18,
+      "separated": false
+    },
+    {
+      "a": "IRL:9661cba0fca9f89c",
+      "b": "BEL:b124863414a6dcdb",
+      "axis": 0,
+      "bound": 19,
+      "centre_bound": 29,
+      "separated": true
+    },
+    {
+      "a": "IDN:43eb860ae00ba2ae",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 1,
+      "bound": 11,
+      "centre_bound": 22,
+      "separated": true
+    },
+    {
+      "a": "IDN:4d155ba9803cf6be",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 1,
+      "bound": -1,
+      "centre_bound": 9,
+      "separated": true
+    },
+    {
+      "a": "IDN:6f7a11314a3b7af3",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 1,
+      "bound": 11,
+      "centre_bound": 23,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "IDN:7c3797a36dd1a69b",
+      "axis": 0,
+      "bound": 9,
+      "centre_bound": 9,
+      "separated": false
+    },
+    {
+      "a": "IDN:829c07ff03d97c10",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 0,
+      "bound": 78,
+      "centre_bound": 97,
+      "separated": true
+    },
+    {
+      "a": "IDN:fecb2bac3d81ef76",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 0,
+      "bound": 53,
+      "centre_bound": 53,
+      "separated": false
+    },
+    {
+      "a": "IDN:fecb2bac3d81ef76",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 1,
+      "bound": -14,
+      "centre_bound": 11,
+      "separated": true
+    },
+    {
+      "a": "MYS:4035fe8bf71b03f5",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 0,
+      "bound": 17,
+      "centre_bound": 32,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "MYS:4035fe8bf71b03f5",
+      "axis": 1,
+      "bound": 5,
+      "centre_bound": 5,
+      "separated": false
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:3dde36a3deef9e30",
+      "axis": 0,
+      "bound": 45,
+      "centre_bound": 53,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:3dde36a3deef9e30",
+      "axis": 1,
+      "bound": 7,
+      "centre_bound": 27,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:6f9539ae2d2e4af7",
+      "axis": 0,
+      "bound": 49,
+      "centre_bound": 58,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:6f9539ae2d2e4af7",
+      "axis": 1,
+      "bound": 5,
+      "centre_bound": 23,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:7516d4fddea7755b",
+      "axis": 0,
+      "bound": 52,
+      "centre_bound": 70,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:7516d4fddea7755b",
+      "axis": 1,
+      "bound": 14,
+      "centre_bound": 14,
+      "separated": false
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:d9dc6d8657118070",
+      "axis": 0,
+      "bound": 53,
+      "centre_bound": 63,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:d9dc6d8657118070",
+      "axis": 1,
+      "bound": 11,
+      "centre_bound": 27,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:eb1fb8d27ecf0027",
+      "axis": 0,
+      "bound": 34,
+      "centre_bound": 50,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "PHL:eb1fb8d27ecf0027",
+      "axis": 1,
+      "bound": 20,
+      "centre_bound": 55,
+      "separated": true
+    },
+    {
+      "a": "SGP:860d04320dbb7b18",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 0,
+      "bound": 14,
+      "centre_bound": 25,
+      "separated": true
+    },
+    {
+      "a": "THA:2d2e3dd6e4f6c675",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 0,
+      "bound": 24,
+      "centre_bound": 45,
+      "separated": true
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "THA:2d2e3dd6e4f6c675",
+      "axis": 1,
+      "bound": 32,
+      "centre_bound": 32,
+      "separated": false
+    },
+    {
+      "a": "VNM:749468814d903c2a",
+      "b": "BRN:72e2eec83e114e7f",
+      "axis": 0,
+      "bound": 24,
+      "centre_bound": 24,
+      "separated": false
+    },
+    {
+      "a": "BRN:72e2eec83e114e7f",
+      "b": "VNM:749468814d903c2a",
+      "axis": 1,
+      "bound": 6,
+      "centre_bound": 39,
+      "separated": true
+    },
+    {
+      "a": "CUB:a203a2643a40db9f",
+      "b": "COL:08d1c79f212fc17e",
+      "axis": 0,
+      "bound": 2,
+      "centre_bound": 2,
+      "separated": false
+    },
+    {
+      "a": "COL:08d1c79f212fc17e",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 1,
+      "bound": 23,
+      "centre_bound": 43,
+      "separated": true
+    },
+    {
+      "a": "COL:08d1c79f212fc17e",
+      "b": "DOM:1493e296a532a3a2",
+      "axis": 1,
+      "bound": 2,
+      "centre_bound": 22,
+      "separated": true
+    },
+    {
+      "a": "CUB:a203a2643a40db9f",
+      "b": "DOM:1493e296a532a3a2",
+      "axis": 0,
+      "bound": 10,
+      "centre_bound": 10,
+      "separated": false
+    },
+    {
+      "a": "GTM:304e3cb8ddf6bb44",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 0,
+      "bound": 2,
+      "centre_bound": 22,
+      "separated": true
+    },
+    {
+      "a": "GTM:304e3cb8ddf6bb44",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 1,
+      "bound": 6,
+      "centre_bound": 18,
+      "separated": true
+    },
+    {
+      "a": "HND:177f117072fa67d2",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 0,
+      "bound": 12,
+      "centre_bound": 12,
+      "separated": false
+    },
+    {
+      "a": "HND:177f117072fa67d2",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 1,
+      "bound": 9,
+      "centre_bound": 21,
+      "separated": true
+    },
+    {
+      "a": "JAM:64623d7d4c4ecdba",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 1,
+      "bound": 1,
+      "centre_bound": 8,
+      "separated": true
+    },
+    {
+      "a": "MEX:aa67baf61acd20f3",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 0,
+      "bound": 4,
+      "centre_bound": 38,
+      "separated": true
+    },
+    {
+      "a": "NIC:99f10eccc73d03bc",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 0,
+      "bound": 7,
+      "centre_bound": 7,
+      "separated": false
+    },
+    {
+      "a": "NIC:99f10eccc73d03bc",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 1,
+      "bound": 19,
+      "centre_bound": 29,
+      "separated": true
+    },
+    {
+      "a": "CUB:a203a2643a40db9f",
+      "b": "PRI:e9799df54353f02b",
+      "axis": 0,
+      "bound": 14,
+      "centre_bound": 28,
+      "separated": true
+    },
+    {
+      "a": "PRI:e9799df54353f02b",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 1,
+      "bound": 15,
+      "centre_bound": 22,
+      "separated": true
+    },
+    {
+      "a": "USA:90107a05206832e4",
+      "b": "CUB:a203a2643a40db9f",
+      "axis": 0,
+      "bound": 27,
+      "centre_bound": 27,
+      "separated": false
+    },
+    {
+      "a": "CUB:a203a2643a40db9f",
+      "b": "USA:90107a05206832e4",
+      "axis": 1,
+      "bound": 10,
+      "centre_bound": 38,
+      "separated": true
+    },
+    {
+      "a": "IRL:9661cba0fca9f89c",
+      "b": "DEU:0b0480fae55fd996",
+      "axis": 0,
+      "bound": 32,
+      "centre_bound": 50,
+      "separated": true
+    },
+    {
+      "a": "HND:177f117072fa67d2",
+      "b": "DOM:1493e296a532a3a2",
+      "axis": 0,
+      "bound": 4,
+      "centre_bound": 23,
+      "separated": true
+    },
+    {
+      "a": "HND:177f117072fa67d2",
+      "b": "DOM:1493e296a532a3a2",
+      "axis": 1,
+      "bound": -12,
+      "centre_bound": 1,
+      "separated": true
+    },
+    {
+      "a": "JAM:64623d7d4c4ecdba",
+      "b": "DOM:1493e296a532a3a2",
+      "axis": 0,
+      "bound": -11,
+      "centre_bound": 7,
+      "separated": true
+    },
+    {
+      "a": "NIC:99f10eccc73d03bc",
+      "b": "DOM:1493e296a532a3a2",
+      "axis": 0,
+      "bound": 0,
+      "centre_bound": 19,
+      "separated": true
+    },
+    {
+      "a": "NIC:99f10eccc73d03bc",
+      "b": "DOM:1493e296a532a3a2",
+      "axis": 1,
+      "bound": -2,
+      "centre_bound": 8,
+      "separated": true
+    },
+    {
+      "a": "DOM:1493e296a532a3a2",
+      "b": "PRI:e9799df54353f02b",
+      "axis": 0,
+      "bound": 1,
+      "centre_bound": 16,
+      "separated": true
+    },
+    {
+      "a": "USA:90107a05206832e4",
+      "b": "DOM:1493e296a532a3a2",
+      "axis": 0,
+      "bound": 39,
+      "centre_bound": 39,
+      "separated": false
+    },
+    {
+      "a": "DOM:1493e296a532a3a2",
+      "b": "USA:90107a05206832e4",
+      "axis": 1,
+      "bound": 31,
+      "centre_bound": 59,
+      "separated": true
+    },
+    {
+      "a": "DOM:1493e296a532a3a2",
+      "b": "VEN:301beeea27f4cccb",
+      "axis": 0,
+      "bound": 4,
+      "centre_bound": 4,
+      "separated": false
+    },
+    {
+      "a": "VEN:301beeea27f4cccb",
+      "b": "DOM:1493e296a532a3a2",
+      "axis": 1,
+      "bound": 7,
+      "centre_bound": 22,
+      "separated": true
+    },
+    {
+      "a": "IRL:9661cba0fca9f89c",
+      "b": "ESP:ff9451038f1a27e4",
+      "axis": 0,
+      "bound": 8,
+      "centre_bound": 8,
+      "separated": false
+    },
+    {
+      "a": "ESP:ff9451038f1a27e4",
+      "b": "IRL:9661cba0fca9f89c",
+      "axis": 1,
+      "bound": 15,
+      "centre_bound": 29,
+      "separated": true
+    },
+    {
+      "a": "IRL:9661cba0fca9f89c",
+      "b": "FXX:f023db15990ca569",
+      "axis": 0,
+      "bound": 4,
+      "centre_bound": 21,
+      "separated": true
+    },
+    {
+      "a": "FXX:f023db15990ca569",
+      "b": "IRL:9661cba0fca9f89c",
+      "axis": 1,
+      "bound": -2,
+      "centre_bound": 15,
+      "separated": true
+    },
+    {
+      "a": "IRL:9661cba0fca9f89c",
+      "b": "GBR:241258080ec293c4",
+      "axis": 0,
+      "bound": 13,
+      "centre_bound": 13,
+      "separated": false
+    },
+    {
+      "a": "IDN:43eb860ae00ba2ae",
+      "b": "IDN:41ba51e85ddbb728",
+      "axis": 0,
+      "bound": 24,
+      "centre_bound": 32,
+      "separated": true
+    },
+    {
+      "a": "IDN:4d155ba9803cf6be",
+      "b": "IDN:41ba51e85ddbb728",
+      "axis": 0,
+      "bound": 35,
+      "centre_bound": 45,
+      "separated": true
+    },
+    {
+      "a": "IDN:6f7a11314a3b7af3",
+      "b": "IDN:41ba51e85ddbb728",
+      "axis": 0,
+      "bound": 19,
+      "centre_bound": 26,
+      "separated": true
+    },
+    {
+      "a": "IDN:7c3797a36dd1a69b",
+      "b": "IDN:41ba51e85ddbb728",
+      "axis": 0,
+      "bound": 9,
+      "centre_bound": 9,
+      "separated": false
+    },
+    {
+      "a": "IDN:41ba51e85ddbb728",
+      "b": "IDN:7c3797a36dd1a69b",
+      "axis": 1,
+      "bound": -15,
+      "centre_bound": -2,
+      "separated": true
+    },
+    {
+      "a": "IDN:41ba51e85ddbb728",
+      "b": "IDN:91fa24efd9a13b2f",
+      "axis": 0,
+      "bound": 29,
+      "centre_bound": 45,
+      "separated": true
+    },
+    {
+      "a": "IDN:41ba51e85ddbb728",
+      "b": "IDN:91fa24efd9a13b2f",
+      "axis": 1,
+      "bound": 4,
+      "centre_bound": 4,
+      "separated": false
+    },
+    {
+      "a": "IDN:fecb2bac3d81ef76",
+      "b": "IDN:41ba51e85ddbb728",
+      "axis": 0,
+      "bound": 31,
+      "centre_bound": 74,
+      "separated": true
+    },
+    {
+      "a": "IDN:7c3797a36dd1a69b",
+      "b": "IDN:91fa24efd9a13b2f",
+      "axis": 0,
+      "bound": 38,
+      "centre_bound": 56,
+      "separated": true
+    },
+    {
+      "a": "IDN:91fa24efd9a13b2f",
+      "b": "IDN:7c3797a36dd1a69b",
+      "axis": 1,
+      "bound": -7,
+      "centre_bound": -7,
+      "separated": false
+    },
+    {
+      "a": "IRL:9661cba0fca9f89c",
+      "b": "NLX:8b9c3398a58bdb2a",
+      "axis": 0,
+      "bound": 24,
+      "centre_bound": 35,
+      "separated": true
+    },
+    {
+      "a": "IRL:9661cba0fca9f89c",
+      "b": "NOW:a387a8ce67e0d957",
+      "axis": 0,
+      "bound": 45,
+      "centre_bound": 54,
+      "separated": true
+    },
+    {
+      "a": "IRL:9661cba0fca9f89c",
+      "b": "NOW:a387a8ce67e0d957",
+      "axis": 1,
+      "bound": 9,
+      "centre_bound": 16,
+      "separated": true
+    },
+    {
+      "a": "PRX:31cd60a8869cd87c",
+      "b": "IRL:9661cba0fca9f89c",
+      "axis": 1,
+      "bound": 17,
+      "centre_bound": 28,
+      "separated": true
+    }
+  ],
+  "solver": [
+    {
+      "axis": 0,
+      "objective": 448.1781000815119,
+      "rounding_error": 0.0
+    },
+    {
+      "axis": 1,
+      "objective": 2156.7719158150944,
+      "rounding_error": 0.0
+    }
+  ],
+  "packing": [
+    {
+      "component": "BRN:72e2eec83e114e7f",
+      "translation": [
+        0,
+        0
+      ],
+      "bounds": [
+        [
+          -24.0,
+          -9.0
+        ],
+        [
+          9.0,
+          5.0
+        ]
+      ]
+    },
+    {
+      "component": "DOM:1493e296a532a3a2",
+      "translation": [
+        1,
+        18
+      ],
+      "bounds": [
+        [
+          -7.0,
+          -1.0
+        ],
+        [
+          4.0,
+          59.0
+        ]
+      ]
+    },
+    {
+      "component": "IDN:91fa24efd9a13b2f",
+      "translation": [
+        4,
+        -7
+      ],
+      "bounds": [
+        [
+          -5.0,
+          -18.0
+        ],
+        [
+          62.0,
+          -7.0
+        ]
+      ]
+    },
+    {
+      "component": "CUB:a203a2643a40db9f",
+      "translation": [
+        -5,
+        2
+      ],
+      "bounds": [
+        [
+          -7.0,
+          -8.0
+        ],
+        [
+          2.0,
+          38.0
+        ]
+      ]
+    },
+    {
+      "component": "IRL:9661cba0fca9f89c",
+      "translation": [
+        0,
+        2
+      ],
+      "bounds": [
+        [
+          -41.0,
+          -15.0
+        ],
+        [
+          8.0,
+          16.0
+        ]
+      ]
+    },
+    {
+      "component": "IDN:41ba51e85ddbb728",
+      "translation": [
+        2,
+        -7
+      ],
+      "bounds": [
+        [
+          -9.0,
+          -12.0
+        ],
+        [
+          28.0,
+          -3.0
+        ]
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-55000-fixed-coast-bridged-v2/final/cells.csv": "9f0c734b0fab4f18e732dbed9339863b7662a46b46478f0520e31156bcb5be7a",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "scripts": {
+    "place_shared_islands.py": "5a9952f1f1fe9eda32e2b92c9824d485cf4751d4be0e0ef0103884c69e1aa186",
+    "partition_land.py": "78121045076a619462b8b296af3a7c6429f33ba92511187c9e4d254367b4b051",
+    "place_islands.py": "bc31965d423bbfc009b0474055429c8180fddac4e3235d883fd2196a304b5964",
+    "prepare_flow.py": "b794cd56bfcce5910034d405d600deb257dd01829425a0301c79a0b432678fc2",
+    "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3"
+  },
+  "limit": "Experimental. The area threshold is not an island classification. Distance is planar Equal Earth distance times Earth radius. Source centroid order does not prove correct positions. Box separation is a soft target. Each translation axis is bounded separately. A failed packing stops without a layout. No cells or connector paths are added.",
+  "cells_sha256": "0e99ec714b7c6c9586a06752c83faf8d901d9bb5850b6df3566cd650275de7d0"
+}

@@ -1,0 +1,3 @@
+mode=shared-island-positions
+counts=exact
+contacts=source-unchanged

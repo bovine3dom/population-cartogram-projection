@@ -1092,6 +1092,22 @@ The separated layout has exact budgets but is not an acceptable replacement.
   an unrelated small-island placement step. Official-script world checks are
   next. The production pipeline and selected controls are unchanged.
 
+## 22:37–22:43 UTC — Shared-position checks and review bundles
+
+- Ran the new script at four resolutions. It completes at 55,000 and 110,000
+  tiles with exact counts, unchanged component shapes, and unchanged source
+  contacts. It fails at 10,000 and 500,000 tiles before writing a completed
+  layout. Saved both completed review bundles and both failure records.
+- Visually checked both world images and Indonesia details, plus the
+  55,000-tile Europe and North America details. Timor moves farther south, but
+  Hispaniola moves too far from Puerto Rico. Do not select these tests over the
+  fixed-coast controls. A local correction is not a whole-world improvement.
+- The clean 22:38 checkpoint passes all eleven test commands, including the four
+  new shared-position tests. No tested code changed during the checkpoint.
+  The gallery HTTP check passes for 167 resources. At 22:44 UTC, all 32 complete
+  layout archives pass their file-hash, layout-metric, and gap-metric checks.
+  Production files and both user-preferred controls remain unchanged.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

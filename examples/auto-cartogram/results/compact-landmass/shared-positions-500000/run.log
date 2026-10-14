@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gap-jobs/shared-positions-run.py", line 10, in <module>
+    place_shared_islands.run(inputs,base,p/'world-dissolved/polygons.geojson',root/'final')
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gap-jobs/code-shared-positions-2238/place_shared_islands.py", line 98, in run
+    placed,packing=pack(bodies,fixed,edges,shifts,shift_scale);result={}
+                   ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gap-jobs/code-shared-positions-2238/place_shared_islands.py", line 75, in pack
+    result[c]=place(tiles[c],np.mean(list(tiles[c]),axis=0)+shifts[c],blocked,maximum_radius=512,translation_bounds=bounds)
+              ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gap-jobs/code-shared-positions-2238/shape_placement.py", line 37, in place
+    raise ValueError('Placement search exhausted')
+ValueError: Placement search exhausted
