@@ -155,6 +155,13 @@ p=output/auto-cartogram
   "$p/world-dissolved/polygons.geojson" "$p/world-55000-island-group-test"
 ```
 
+The optional `--bridge-groups` control merges nearby groups through small source
+islands. It changes group membership only; it adds no cells or lines. A group can
+merge into the group of its root's nearest larger island if a close pair of source
+coasts joins them. Roots whose nearest larger component is land remain separate.
+This tests cases where small islands lie between two large islands, but the
+population hierarchy divides them into different groups.
+
 The default source-gap threshold is 0.2 times the square root of the larger
 island's source area. Groups need at least 16 tiles. Definite source-axis
 separations from land within approximately 500 km constrain group translation.

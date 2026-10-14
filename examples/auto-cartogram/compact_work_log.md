@@ -944,6 +944,24 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The 500,000-tile run has reached fixed-border refinement. The three fixed-coast
   controls and two recorded 55,000-tile pipelines remain active.
 
+## 21:46–21:51 UTC — Fixed-coast visual review and group coherence
+
+- Visually checked the 10,000- and 55,000-tile fixed-coast world maps and the
+  55,000-tile Indonesia detail. Sulawesi moves east of Borneo; Australia moves
+  below New Guinea. These positions are better than the former distant anchors.
+  Mainland cells and component border totals stay unchanged.
+- The Philippines exposes a second issue: separate island groups move apart.
+  Luzon's initial placement is unchanged. Mindanao now anchors to Malaysian
+  Borneo, then the independent group placements increase the gap between groups.
+  Do not treat the whole fixed-coast result as accepted.
+- Added an optional group-merge control. Small source islands can link two
+  nearby groups along the existing larger-island parent choices. This changes
+  group membership, not map connectivity: no cells or connector lines are added.
+  Roots attached to land under that hierarchy remain separate.
+- A synthetic test joins two large islands through a small middle island and
+  checks that a land-attached root stays separate. All 24 partition tests pass.
+  Combined world controls are next; their quality is not yet known.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

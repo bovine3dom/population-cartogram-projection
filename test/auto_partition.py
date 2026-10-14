@@ -123,6 +123,20 @@ class CapacityPartitionTests(unittest.TestCase):
         single=np.zeros((3,3),dtype=bool);single[1,1]=True
         np.testing.assert_array_equal(dock_parts(single,np.zeros_like(single))[0],single)
 
+    def test_small_islands_can_bridge_nearby_groups(self):
+        from restore_archipelagos import clusters
+        from shapely.geometry import box
+        source={'a':box(0,0,2,2),'b':box(4,0,6,2),'c':box(2.5,0,3.5,1)}
+        rows={c:dict(group_population=p) for c,p in [('a',10),('b',6),('c',1)]}
+        tiles={c:{(j,0)} for j,c in enumerate(rows)}
+        groups,_=clusters(tiles,rows,source,set(),.35)
+        self.assertEqual(groups,{'a':['a','c'],'b':['b']})
+        groups,edges=clusters(tiles,rows,source,set(),.35,bridge_groups=True)
+        self.assertEqual(groups,{'a':['a','b','c']});self.assertEqual(edges[-1]['bridge_roots'],['b','a'])
+        source['land']=box(6.1,0,8.1,2);rows['land']=dict(group_population=100);tiles['land']={(4,0)}
+        groups,_=clusters(tiles,rows,source,{'land'},.35,bridge_groups=True)
+        self.assertEqual(groups,{'a':['a','c'],'b':['b']})
+
     def test_island_segment_cells(self):
         from review_island_separation import segment_cells,crossings
         self.assertEqual(segment_cells((0,0),(0,0)),{(0,0)})
