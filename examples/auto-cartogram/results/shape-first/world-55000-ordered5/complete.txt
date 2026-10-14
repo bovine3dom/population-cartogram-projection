@@ -1,0 +1,3 @@
+mode=shape-stress
+counts=exact
+contacts=not-required

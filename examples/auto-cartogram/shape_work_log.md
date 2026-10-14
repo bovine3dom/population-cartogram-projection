@@ -210,7 +210,7 @@ Inspect the resulting images at world and regional scales.
   still has 77,246,034 unmatched people. This resolution has 20 source holes
   that the tile representation omits. Template generation is running.
 
-## 11:31–11:47 UTC — position checks and provenance
+## 11:31–11:45 UTC — position checks and provenance
 
 - Visually reviewed the bounded trials. They still remove too much outline
   detail, and they do not improve the border count enough. Keep intact-shape
@@ -234,3 +234,22 @@ Inspect the resulting images at world and regional scales.
   before the new edit, with SHA-256 `d5585e4c300ae7d33ad0a0b7ae86839f60308298ca7c24ee74f34fece2a009ab`.
   Their late source-hash fields will need this documented correction after
   completion. No cell data will change.
+
+## 11:45–12:05 UTC — checked image bundles
+
+- Added a static HTML gallery. A plain file server can display it without
+  Markdown support. Each bundle includes compressed cells and templates,
+  independent checks, file hashes, and regional images.
+- All 23 focused tests pass. The file-based test renders images without a
+  display, restores compressed cells, and rejects a changed bundle file.
+- Reviewed the 55,000-tile direction-cost trials at weights 1, 5, and 20.
+  Weight 5 is the next comparison candidate, not an approved layout. It has
+  exact counts, no false borders, and 89 of 348 source borders.
+- Reviewed its Indonesia and South Asia details. No connector paths were
+  added. Positions still need work: Singapore is north of peninsular Malaysia,
+  and Sri Lanka is too far north. Large gaps remain in North America.
+  These defects must stay visible in the review, not be hidden by the scores.
+- Started weight-5 trials at 10,000, 110,000, and 500,000 tiles. The earlier
+  500,000-tile trial is also still running. Production files are unchanged.
+- Corrected the completed 110,000-tile trial's late runner hash with the saved
+  source record. Its cell data did not change.

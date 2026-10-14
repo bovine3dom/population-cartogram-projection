@@ -2,6 +2,8 @@
 import json
 import contextlib
 import io
+import gzip
+import shutil
 from pathlib import Path
 import sys
 import tempfile
@@ -21,6 +23,8 @@ import shape_placement
 import place_shapes
 import review_regions
 import check_shape_translation
+import publish_shape_review
+import build_shape_gallery
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
@@ -124,10 +128,12 @@ class ShapeTests(unittest.TestCase):
         self.assertFalse(state.exchange((2,0),(10,10)))
         self.assertEqual(state.tiles['a'],saved)
 
+    @unittest.skipUnless(shutil.which('rsvg-convert'),'Install rsvg-convert for the headless bundle test')
     def test_deformation_and_placement_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);inputs=root/'input';layout=root/'layout';inputs.mkdir();layout.mkdir()
-            (inputs/'groups.csv').write_text('component_id,tiles,west,east,south,north,country_id,group_population\na,5,0,1,40,41,A,20000000\nb,3,10,11,50,51,B,20000000\n')
+            (inputs/'groups.csv').write_text('component_id,tiles,west,east,south,north,country_id,group_population,name\na,5,0,1,40,41,A,20000000,A\nb,3,10,11,50,51,B,20000000,B\n')
+            (inputs/'manifest.json').write_text(json.dumps(dict(tile_budget=8,population_total=40000000,represented_population=40000000,grouped_population=0,omitted_population=0,holes_not_encoded_in_wkt=0,policy='group')))
             (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\n')
             (inputs/'validated.wkt').write_text('STAGE 1\nOUTLINES 2\nOUT 0\ta\n0 0\t2 0\t2 2\t0 2\nSITECOUNT 0\nOUT 1\tb\n2 0\t4 0\t4 2\t2 2\nSITECOUNT 0\n')
             (layout/'cells.csv').write_text('component_id,x,y\na,0,0\na,1,0\na,0,1\na,1,1\nb,2,0\nb,3,0\nb,2,1\nb,3,1\n')
@@ -154,8 +160,15 @@ class ShapeTests(unittest.TestCase):
             lines=(root/'placed/cells.csv').read_text().splitlines();row=lines[1].split(',');row[1]=str(int(row[1])+100);lines[1]=','.join(row)
             (broken/'cells.csv').write_text('\n'.join(lines)+'\n')
             with self.assertRaisesRegex(ValueError,'Changed template'):check_shape_translation.run(inputs,root/'deformed',broken,root/'bad-check')
-            (root/'placed/metrics.json').write_text(json.dumps(dict(tiles=8,absolute_tile_error=0,missing_contacts=0,false_contacts=0)))
-            (root/'placed/review.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg"/>')
+            with contextlib.redirect_stdout(io.StringIO()):
+                bundle=publish_shape_review.run(inputs,root/'deformed',root/'placed',root/'bundle',regions=False)
+            self.assertEqual(gzip.decompress((root/'bundle/cells.csv.gz').read_bytes()),(root/'placed/cells.csv').read_bytes())
+            self.assertIn('translation-check/translation-check.json',bundle['files'])
+            build_shape_gallery.run(root/'index.html',[root/'bundle'])
+            self.assertIn('40,000,000 matched people',(root/'index.html').read_text())
+            with self.assertRaisesRegex(ValueError,'already exists'):build_shape_gallery.run(root/'index.html',[root/'bundle'])
+            (root/'bundle/complete.txt').write_text('tampered')
+            with self.assertRaisesRegex(ValueError,'checksum differs'):build_shape_gallery.verify_files(root/'bundle')
             crops=review_regions.run(inputs,root/'placed',root/'crops',render=False)
             self.assertEqual([r['name'] for r in crops['regions']],['europe'])
             self.assertIn('Positions are unchanged',(root/'crops/europe.svg').read_text())
@@ -320,6 +333,10 @@ class ShapeTests(unittest.TestCase):
         self.assertAlmostEqual(audit.outline_similarity(cells,box(-10,-10,10,10)),1)
         self.assertAlmostEqual(audit.outline_similarity({(x+100,y-60) for x,y in cells},box(0,0,1,1)),1)
         self.assertLess(audit.outline_similarity(cells,box(0,0,1,10)),.3)
+
+    def test_regional_label_uses_the_wide_part_of_a_shape(self):
+        points={(x,y) for x in range(5) for y in range(5)}|{(x,2) for x in range(5,20)}
+        self.assertEqual(review_regions.label_point(points),(2,2))
 
     def test_equal_earth_symmetry_and_origin(self):
         points=flow.equal_earth(np.array([[0.,0.],[30.,50.],[-30.,50.],[30.,-50.]]))
