@@ -105,7 +105,7 @@ function run(source_path, inputs, layout, output, resolution; pooled=false)
     merge!(metadata,Dict("coarse_h3_resolution"=>resolution,"coarse_sources"=>nrow(sources),
         "targets"=>nrow(targets),"groups"=>length(unique(sources.group_id)),"pooled"=>pooled,
         "elapsed_seconds"=>time()-started,"backend"=>"CPU",
-        "source_coordinates"=>"population-weighted Equal Earth centres; aggregate by ORIGINAL component and H3 parent",
+        "source_coordinates"=>"population-weighted Equal Earth centres; aggregate by input component and H3 parent",
         "target_coordinates"=>"north-up grid; y negated for the screen-coordinate solver, then restored in export",
         "script_sha256_at_load"=>SCRIPT_HASH,
         "limit"=>(resolution < 8 ? "Coarse transport experiment, not native H3-8 validation. " : "Native H3-8 centres. ") *

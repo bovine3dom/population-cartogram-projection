@@ -117,9 +117,27 @@ Then validate outlines and build the geographic rotation file using
 polygons only within the same `ADM0_A3`. It does not join point contacts,
 disconnected islands, or different countries. It uses no coordinate snapping.
 It preserves the population assigned to original polygons and records an
-original-to-dissolved ID table. Future transport must apply that table before
-the small-island grouping table. The Indonesia-only transport tests still use
-their original, unchanged input.
+original-to-dissolved ID table. World transport applies that table before the
+small-island grouping table. The Indonesia-only transport tests still use their
+original, unchanged input.
+
+Prepare matched world sources for transport with:
+
+```sh
+"$PY" examples/auto-cartogram/prepare_transport_sources.py \
+  "$BASE/world-components/source-membership.arrow" \
+  "$BASE/world-components/components.csv" \
+  "$BASE/world-dissolved/original-to-dissolved.csv" \
+  "$BASE/world-transport-sources"
+```
+
+This stage preserves native IDs and population. It keeps both original and
+merged component labels, checks each original component's count and mass, and
+reports excluded unmatched and ambiguous sources. It rejects cross-country
+unions and incomplete ID tables. Pass the new `sources.arrow` to
+`group_transport.jl` with the dissolved inputs and an exact-count layout.
+Coarse transport then aggregates by input component and H3 parent. This is
+not native H3-8 transport, even though preparation starts from native cells.
 
 ## Generate and inspect
 

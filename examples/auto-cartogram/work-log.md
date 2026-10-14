@@ -455,3 +455,20 @@ under ignored `output/auto-cartogram/`.
   against the sea. The topology-mode setup is unchanged. All 12 Python/Java
   layout tests pass. Started new exact-mode fits with one-hour limits and the
   overall 04:20 UTC compute deadline. Counts are not accepted until reviewed.
+
+## 01:42–01:45 UTC — world source preparation and coarse transport
+
+- Added an atomic preparation stage from indexed world membership to transport
+  sources. It preserves every matched native ID and value, keeps original
+  labels, and applies the same-country union table before island grouping.
+  It checks counts and population for every original component.
+- Preparation retains 32,668,501 cells and 7,954,677,990 people. It separately
+  reports the 289,198 unmatched cells and 77,246,034 excluded people. Tests
+  cover merged labels, original identity, cross-country rejection, count/mass
+  mismatches, and refusal to overwrite output. All 21 geometry tests pass.
+- Started grouped H3-3 transport for the three exact-count geographic world
+  layouts. Each solve has a one-hour limit and a shared 04:15 UTC deadline.
+  These are coarse experiments, not native whole-world validation. The source
+  preparation does not change the earlier native Indonesia result.
+- One-unit exact polishing still cannot complete the 10,000-budget fit. Its
+  final count check fails and no completed layout is exported.
