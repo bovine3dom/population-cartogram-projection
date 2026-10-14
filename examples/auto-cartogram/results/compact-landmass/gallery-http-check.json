@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-14T22:05:37.677216+00:00",
+  "checked_at_utc": "2026-10-14T22:14:39.222165+00:00",
   "method": "Headless local HTTP requests for every unique relative href and src on the gallery page",
   "resources": [
     {
@@ -336,6 +336,26 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/mesh-controls/index.html",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/moment-tiles-rejected/100-sigma4/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/moment-tiles-rejected/100-sigma8/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/moment-tiles-rejected/1000-sigma4/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/moment-tiles-rejected/1000-sigma8/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/moment-tiles-rejected/bundle.json",
       "status": 200
     },
     {

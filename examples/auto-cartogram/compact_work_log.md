@@ -1039,6 +1039,21 @@ The separated layout has exact budgets but is not an acceptable replacement.
   Canada remains at the northeast edge of the USA. Italy is too broad and Spain
   is rectangular. These defects rule out production use despite exact counts.
 
+## 22:13–22:16 UTC — Clean validation and shared-island position tests
+
+- The clean checkpoint passes all ten test commands. It records code hashes and
+  commit `e9760f1`; no tested code changed during this run. Production files
+  remain unchanged. The updated gallery HTTP check passes for 158 resources.
+- Tested source-direction constraints on single islands as well as groups, with
+  radii of 500, 1,000, and 2,000 km. Visually checked all three Indonesia details.
+  Timor remains above Sulawesi. The larger radii move the Philippines west, but
+  do not solve the shared-island defect. The Sulawesi group has conflicting
+  bounds from Borneo and Timor, so the safety check leaves it unchanged.
+- Started two placement tests that treat each small shared landmass as one rigid
+  body. They use source-area thresholds of 0.001 and 0.01. Whole-body movement
+  retains internal shapes and borders. Large mainlands stay fixed. These are
+  ignored prototypes, not new defaults or accepted layouts.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
