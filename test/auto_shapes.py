@@ -20,6 +20,7 @@ from fit_counts import CountFit
 import shape_placement
 import place_shapes
 import review_regions
+import check_shape_translation
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
@@ -29,6 +30,7 @@ from concave_stress import ConcaveStress, convex_pieces
 from raster_stress import RasterStress, bilinear
 from smooth_raster_stress import SmoothRasterStress
 from bounded_deformation import BoundedDeformation
+from geographic_order import GeographicOrder
 
 
 class ShapeTests(unittest.TestCase):
@@ -125,7 +127,7 @@ class ShapeTests(unittest.TestCase):
     def test_deformation_and_placement_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);inputs=root/'input';layout=root/'layout';inputs.mkdir();layout.mkdir()
-            (inputs/'groups.csv').write_text('component_id,tiles,west,east,south,north\na,5,0,1,40,41\nb,3,2,3,40,41\n')
+            (inputs/'groups.csv').write_text('component_id,tiles,west,east,south,north,country_id,group_population\na,5,0,1,40,41,A,20000000\nb,3,10,11,50,51,B,20000000\n')
             (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\n')
             (inputs/'validated.wkt').write_text('STAGE 1\nOUTLINES 2\nOUT 0\ta\n0 0\t2 0\t2 2\t0 2\nSITECOUNT 0\nOUT 1\tb\n2 0\t4 0\t4 2\t2 2\nSITECOUNT 0\n')
             (layout/'cells.csv').write_text('component_id,x,y\na,0,0\na,1,0\na,0,1\na,1,1\nb,2,0\nb,3,0\nb,2,1\nb,3,1\n')
@@ -134,8 +136,9 @@ class ShapeTests(unittest.TestCase):
                 metadata=compact.run(inputs,layout,root/'deformed',rounds=5,fit_rounds=10,atomic=True)
                 self.assertEqual(metadata['absolute_tile_error'],0)
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
-                stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True)
+                stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True,order_weight=1)
                 self.assertEqual(stress['collision_geometry'],'signed-distance raster')
+                self.assertEqual(stress['order_constraints'],2)
                 bounded=compact.run(inputs,root/'stress',root/'bounded',rounds=5,bounded=True,guide=8)
                 self.assertEqual(bounded['absolute_tile_error'],0)
                 self.assertTrue(bounded['bounded'])
@@ -145,6 +148,12 @@ class ShapeTests(unittest.TestCase):
             _,tiles,owners=compact.load(inputs,root/'placed')
             self.assertEqual(len(owners),8)
             self.assertEqual({c:len(p) for c,p in tiles.items()},{'a':5,'b':3})
+            proof=check_shape_translation.run(inputs,root/'deformed',root/'placed',root/'translation-check')
+            self.assertTrue(proof['all_shapes_are_integer_translations'])
+            broken=root/'broken';broken.mkdir();(broken/'complete.txt').write_text('mode=test\n')
+            lines=(root/'placed/cells.csv').read_text().splitlines();row=lines[1].split(',');row[1]=str(int(row[1])+100);lines[1]=','.join(row)
+            (broken/'cells.csv').write_text('\n'.join(lines)+'\n')
+            with self.assertRaisesRegex(ValueError,'Changed template'):check_shape_translation.run(inputs,root/'deformed',broken,root/'bad-check')
             (root/'placed/metrics.json').write_text(json.dumps(dict(tiles=8,absolute_tile_error=0,missing_contacts=0,false_contacts=0)))
             (root/'placed/review.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg"/>')
             crops=review_regions.run(inputs,root/'placed',root/'crops',render=False)
@@ -284,6 +293,22 @@ class ShapeTests(unittest.TestCase):
         self.assertAlmostEqual(state.edge('a','b'),1.5)
         with self.assertRaisesRegex(ValueError,'False contact'):
             BoundedDeformation({'a':{(0,0)},'b':{(1,0)}},set(),costs,(-5,-5),allowed_masks=masks)
+
+    def test_geographic_order_gradient_and_longitude_seam(self):
+        rows={'a':dict(country_id='A',group_population=20e6,west=0,east=2,south=0,north=2),
+              'b':dict(country_id='B',group_population=20e6,west=10,east=12,south=10,north=12)}
+        state=GeographicOrder(['a','b'],rows)
+        self.assertEqual(state.count,2)
+        positions=np.array([[4.,5.],[0.,0.]]);value,gradient=state.objective(positions)
+        self.assertGreater(value,0)
+        numeric=[]
+        for i in range(4):
+            shift=np.zeros(4);shift[i]=1e-6;shift=shift.reshape(2,2)
+            numeric.append((state.objective(positions+shift)[0]-state.objective(positions-shift)[0])/2e-6)
+        np.testing.assert_allclose(gradient.ravel(),numeric,atol=1e-6)
+        self.assertEqual(state.objective(positions[::-1])[0],0)
+        rows['a'].update(west=-179,east=-177);rows['b'].update(west=177,east=179)
+        self.assertEqual(GeographicOrder(['a','b'],rows).count,1)
 
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))

@@ -209,3 +209,28 @@ Inspect the resulting images at world and regional scales.
   countries. Grouped island population falls to 1,865,414 people. The source
   still has 77,246,034 unmatched people. This resolution has 20 source holes
   that the tile representation omits. Template generation is running.
+
+## 11:31–11:47 UTC — position checks and provenance
+
+- Visually reviewed the bounded trials. They still remove too much outline
+  detail, and they do not improve the border count enough. Keep intact-shape
+  placement as the main comparison. Do not select a result only because its
+  perimeter is smaller.
+- Compression of long non-border distances makes the world easier to inspect.
+  The 55,000-tile smooth trial has exact counts, no false contacts, and 84 of
+  348 source contacts. Geographic order in Southeast Asia still needs work.
+- Added a soft geographic-order cost. It checks the main components of
+  countries with at least 10 million people and components of the same country.
+  It skips longitude-seam pairs and near ties. It cannot draw a path or alter
+  a tile budget. Tests check its gradient and the seam exclusion.
+- Added an independent check that every component is an integer translation
+  of its input template. This distinguishes intact placement from deformation
+  and detects an added or moved cell within a shape.
+- The existing Python and Julia test suites pass, including the 108 production
+  CPU assertions. The current focused shape suite has 22 passing tests.
+- Found a provenance weakness: the position runner hashed source files after
+  the solve. New runs capture hashes before the solve. The active 110,000- and
+  500,000-tile runs loaded runner revision `73c5f06`. Saved its unchanged source
+  before the new edit, with SHA-256 `d5585e4c300ae7d33ad0a0b7ae86839f60308298ca7c24ee74f34fece2a009ab`.
+  Their late source-hash fields will need this documented correction after
+  completion. No cell data will change.
