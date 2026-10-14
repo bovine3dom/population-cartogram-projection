@@ -1,0 +1,12 @@
+{
+  "components": 341,
+  "tiles": 10000,
+  "all_shapes_are_integer_translations": true,
+  "inputs": {
+    "output/auto-cartogram/world-10000-dissolved-input/groups.csv": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+    "output/auto-cartogram/world-10000-clean-templates/cells.csv": "78e7a6a86027181683e1d2bddc4213ecfb5909bb51a6abd8615c21726090f745",
+    "output/auto-cartogram/world-10000-shape-islands/cells.csv": "06718f3d203f6309c83d266d7571e64d945488e3caa2e01c54a8d70ab9ca2822"
+  },
+  "script_sha256": "fe25790b92d7a9a4daf646eab1241ffe36a84c7d7a1bffecabc67cb8d9c7f20d",
+  "limit": "Proves that represented tile templates did not change. Does not prove correct positions, source-hole preservation, or separate representation of zero-budget islands."
+}

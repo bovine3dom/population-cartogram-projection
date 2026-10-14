@@ -1,0 +1,2977 @@
+{
+  "method": "Fill narrow interior raster cuts, remove boundary cells to restore exact counts, and retain only source-intersection and perimeter improvements",
+  "changed_components": 66,
+  "components": {
+    "ABW:0d999085fdb95914": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ACA:cb08ec7461da4063": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AFG:cda2af5bb6ea22f0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AGO:2b9c8d9b36ed1f1d": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AGO:704113b148b7974b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AIA:09a59ce4723b5dc9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ALB:c931cc5315aed954": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ALD:47f8615cf1330e71": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AND:0923843c3687a75e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ARE:2a921eedd33e22f9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ARE:6af70f4330c4f4bf": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.3151120087413147,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "ARG:7462ff4f8b49993a": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.32868903401432537,
+      "perimeter_reduction": 8,
+      "accepted": true
+    },
+    "ARG:b42dd8a02e55c90b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ARM:433ac98029e5a761": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ASM:7f40f5358bbd2440": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ATA:a3f793773cb0a0b5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ATF:466bffce003497f7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AUS:6a36c6fd1db93bf9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AUS:adfd7567b2399535": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AUT:709fdd785650b149": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AZE:0510388634a9edd9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "AZE:e5af19283650a3e3": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BDI:b3ecb03d79bf1cb5": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.03492617530432618,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "BEL:b124863414a6dcdb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BEN:5911ab4fd3e84cb1": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BFA:9c8f06c312ed722e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BGD:042f51d8dc6403c1": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BGD:19954db53276f45c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BGD:31f73d0e612038c5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BGD:938be7fc0dcd9e43": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BGD:9d4073b87fe90ca9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BGD:d6d0c7df0b40a187": {
+      "added": 16,
+      "removed": 16,
+      "intersection_gain": 3.6326862306332517,
+      "perimeter_reduction": 42,
+      "accepted": true
+    },
+    "BGD:ee4951d7c5e4344f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BGD:f058ecaa7fb035b6": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BGD:f25678f67bf11d4f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BGR:8a6e196d0e9089ee": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BHR:7a146d25b735f173": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BHR:d53271f1e46354e7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BHS:d03207e09866ed23": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BIH:76753bb1c9d6c52b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BLM:827ad9ed4c2f6184": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BLR:216ea6b406f5bc6c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BLZ:4f146436bd0251b5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BMU:4a0d97b264a07eaa": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BOL:1a7254807c71e166": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BRA:1e30221c7873119b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BRA:c9a395c2d321cd60": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.038760494433610626,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "BRA:eff3200271a767a0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BRA:f3313e497cca50c7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BRA:f5c11e45059562b8": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BRB:18a3b038d121e1b6": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BRN:72e2eec83e114e7f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BRT:fef0fc6bba22ada7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BTN:fe4a4d07e153ef17": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "BWA:41766e3f9df3a4d1": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CAF:1f15d49e1132c1f3": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": -0.007012871377307772,
+      "perimeter_reduction": 0,
+      "accepted": false
+    },
+    "CAN:150d768b31d42278": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CAN:2f9cda75c78586e5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CAN:361131cc2ae1ac25": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CAN:614ec007a6324298": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CAN:9076c2432c64faec": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CAN:95c7ebac82699331": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CAN:c2f1e4e52d5cc0c3": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 1.9995248489129347,
+      "perimeter_reduction": 6,
+      "accepted": true
+    },
+    "CAN:d18c57e4ac8eb9d4": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHE:b37ef58a1d6dee0a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHL:150a87c1995fb5ad": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.8810843886815333,
+      "perimeter_reduction": 0,
+      "accepted": false
+    },
+    "CHL:c7e83ec3b56ed34a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:1fe2d636aa152758": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:2719f4f324178f96": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:4f018d125c727170": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:614315231acdc665": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:6758aa1ed075f43e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:68d9459587b3e328": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:72cd37e37e634df7": {
+      "added": 10,
+      "removed": 10,
+      "intersection_gain": 2.9364923556832796,
+      "perimeter_reduction": 38,
+      "accepted": true
+    },
+    "CHN:7331c80e6a0aeaf6": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:8a7084ca793e108f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:92b6e2946d6e9cf2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:9a10ed80b028fd43": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:a1d8a1f7255ae4e3": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:a7b54b9567d1bd7a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:b0d6cdeb74633edd": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:b6f6968952ede1bd": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:b8cc67f79ad103ff": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:bc6aa9717e94f769": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:da91019566ae5d0e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:e959a445c659f4ad": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CHN:fba815b612791d7c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CIV:1c18880d4492d85c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CMR:35df8c314c8ef083": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.4789781195995292,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "CNM:85db95ef4bf8489c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "COD:34b7cfda818ccf80": {
+      "added": 3,
+      "removed": 3,
+      "intersection_gain": 0.22831122721719477,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "COG:c5650e58e144375b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "COK:59fe00fd93eed20c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "COL:08d1c79f212fc17e": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.5748823635115937,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "COM:1fe8ef77b8d7172f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "COM:306e297809981428": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CPV:35fe8ce92e3d94c5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CPV:ba70bc183d52ff1a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CRI:5a22dcdd3a44dc5b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CUB:1617e1799612bc7d": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CUB:a203a2643a40db9f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CUW:2dc808a8cf441409": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CXR:810b3572fd4f37bc": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CYM:98d679f5360c472c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CYN:3fa61972653460ef": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CYP:0e9f924ff6746fe5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "CZE:bf3969a8b4fbfc04": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "DEU:0b0480fae55fd996": {
+      "added": 3,
+      "removed": 3,
+      "intersection_gain": 0.9601272466513293,
+      "perimeter_reduction": 12,
+      "accepted": true
+    },
+    "DEU:783c67ca6ea7bf74": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "DJI:8814228594ff16f1": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "DMA:5371714512bc2530": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "DNK:6ca9994f5cea019a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "DNK:856510ae70f04d27": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "DNK:d3d12b2e248a600a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "DNK:d4951f6fa8360f9a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "DNK:daf481ed6e2f79e2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "DOM:1493e296a532a3a2": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.9339753015836919,
+      "perimeter_reduction": 6,
+      "accepted": true
+    },
+    "DZA:704d2c59e6450910": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ECU:ef48f29c8aa10327": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.3550193161186732,
+      "perimeter_reduction": 6,
+      "accepted": true
+    },
+    "EGY:f7cc24b776a75221": {
+      "added": 9,
+      "removed": 9,
+      "intersection_gain": 2.064712117745628,
+      "perimeter_reduction": 22,
+      "accepted": true
+    },
+    "ENG:bf2fff53240de3db": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ERI:b257cabcc1caab95": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESB:432b2cb88c6056bf": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:1b9f595463c4150a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:3705469b3ef783dc": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:65533d41ead559e6": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:791b8810feaa4071": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:7dc2b5da1e2aaae9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:94551cac3165236f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:d0884f530f40b0fb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:d5030a8f162b4ff0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:e886baf081d9b038": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ESP:ff9451038f1a27e4": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "EST:50bd04ff06509a99": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ETH:38a05216b358b154": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "FIN:9332a3268ae7c503": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "FJI:02cc1c9fbbc8a320": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "FJI:3dd1a1f7bfb548f8": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "FLK:881178e659639c79": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "FRO:0f77e91ccf10bf9d": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "FSM:446beaaeecdff78b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "FXX:b04574696bff21bc": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "FXX:f023db15990ca569": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GAB:9b0fa4569aef69bd": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GAZ:0cd9171edc8ff269": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GBR:241258080ec293c4": {
+      "added": 9,
+      "removed": 9,
+      "intersection_gain": 3.3469593500302603,
+      "perimeter_reduction": 26,
+      "accepted": true
+    },
+    "GEO:d709e483cc2819fe": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GGY:a7d1dc6a309f18d0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GHA:1beea30af91e217d": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.14917282356626793,
+      "perimeter_reduction": 0,
+      "accepted": false
+    },
+    "GIB:71de83b149a1d32c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GIN:eb019150f12e3d47": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.16961657475358138,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "GLP:53697300cc251789": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GLP:6d7ccc1850ff782c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GMB:e5cba77f98187ac4": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.3726795650034269,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "GNB:06bb5bdc3716e8ff": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GNQ:703503e059bb9243": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GNQ:c49e160563316bbb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GRC:4194034da182d040": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GRC:4f20757287dcdf70": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GRC:6f3829212fc06f4b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GRC:70edd41aef80d178": {
+      "added": 7,
+      "removed": 7,
+      "intersection_gain": 4.061486952749859,
+      "perimeter_reduction": 18,
+      "accepted": true
+    },
+    "GRC:7f7de33444a506e9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GRC:91167024ef538ce0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GRC:c215c5157cd86f15": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GRC:edfec97267c5f3af": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GRD:5c44dc268d11bb57": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GRL:2a53232ea84e3e84": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GTM:304e3cb8ddf6bb44": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.19923444036400872,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "GUF:4acf8ebf720d2a5f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GUM:97ae1edcd71bddbc": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "GUY:5aec9f8c07eb9159": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HKG:0dbdf00bf060cdf0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HKG:69095e2cb57de445": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HKG:a4b1c1ec313ba36c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HMD:68b90fe1c7cf90ee": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HND:0269c68ccb526298": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HND:177f117072fa67d2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HRV:23be6296644271a5": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.33929672127441735,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "HRV:2a6ba7505aec5af9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HTI:1d6ad8a3ef07a04f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HTI:a3ce6059435c00f9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "HUN:9f803be1643ca956": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:022bfe9dad3f0890": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:0b4d32f4b9727f82": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:1675c019d412853f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:17180a9338137fd2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:1882fc741812bb99": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:2342a73d6e3d4204": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:241c829edbe9ddf3": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:2f668109d000a646": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:323211ce84279d17": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:3302be3ad51214b8": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:3f7b064a42d6c495": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:41ba51e85ddbb728": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:43eb860ae00ba2ae": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:461e2601656ce574": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:49b2a8a33d2211b5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:4d155ba9803cf6be": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:51a10640dee7162b": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.2872951660767841,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "IDN:563e4c39826b9ed6": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:58f5fb574eea3969": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:602ec010d55b1aa4": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:676455c554852bce": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:6f7a11314a3b7af3": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:735932740a80f252": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:746e7e525dfc90c5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:7930308e19fa0905": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:7a59bb18e03f91d9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:7c3797a36dd1a69b": {
+      "added": 11,
+      "removed": 11,
+      "intersection_gain": 10.028050193424736,
+      "perimeter_reduction": 16,
+      "accepted": true
+    },
+    "IDN:7cb96e5a2c123f8f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:7d68fcb39519952c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:829c07ff03d97c10": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 1.0872648729236705,
+      "perimeter_reduction": 6,
+      "accepted": true
+    },
+    "IDN:88a8321cb31b5225": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:8b7b64d2940fb8dc": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:902a51c01c39bc1e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:9053dfc21a705bd2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:91fa24efd9a13b2f": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.4648724578896741,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "IDN:9736be9cd3e2b4ff": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:a2e8d108d88be94f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:a3f93df7f6853469": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:a6a2a921eb1e80b9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:a9a80def964512c2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:b212698e7fc50989": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:b9a02107a9d8774f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:bbe17f60e9fb07dc": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:cae0ccf851b4aa17": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:e03a8d3be0282f36": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:e0b729a0e374c21c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:fd97b33af0678261": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IDN:fecb2bac3d81ef76": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.33329252295988,
+      "perimeter_reduction": 0,
+      "accepted": false
+    },
+    "IDN:ffd26863a64545a3": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IMN:e2108479644de92c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IND:2b0aafcf1d6a984f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IND:3f0bb94d859b2064": {
+      "added": 9,
+      "removed": 9,
+      "intersection_gain": 2.413473562470073,
+      "perimeter_reduction": 34,
+      "accepted": true
+    },
+    "IND:a01bf6ca67fb03d1": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IOT:c99e174898a000d0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IRL:9661cba0fca9f89c": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.33786941833948053,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "IRN:3c2b5bd7d999fbee": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IRN:83939dedc8d53abc": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "IRQ:741e7a31e643a8a8": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ISL:a7601b85cd746eec": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ISR:7ab28b88983e2128": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ITA:73444d4331e5f7cd": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ITA:7d6868fd136c6c11": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ITA:e7ab63898f24eb00": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ITA:ebecacbac755556c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "JAM:64623d7d4c4ecdba": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "JEY:2e82dcf9ab1c8905": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "JOR:97289b5947dc77c2": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.12717575403865033,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "JPN:3876400cea5031e2": {
+      "added": 5,
+      "removed": 5,
+      "intersection_gain": -0.014205194775184449,
+      "perimeter_reduction": 6,
+      "accepted": false
+    },
+    "JPN:44be296f191b30d1": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "JPN:6703a8f8d1682ec9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "JPN:c1b6e25b62179c19": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.16443041297155192,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "JPN:ccbb1b73257464db": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "JPN:dd1f679d5c572195": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "JPN:e121bcc962504d09": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "JPN:ec0a7dcff3300192": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "JPN:f07fed45233efce3": {
+      "added": 5,
+      "removed": 5,
+      "intersection_gain": 1.7155055211786794,
+      "perimeter_reduction": 12,
+      "accepted": true
+    },
+    "KAB:13532639e9546e01": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "KAS:b7c84d817c090062": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "KAZ:5d6f63a9b9f3c9f9": {
+      "added": 3,
+      "removed": 3,
+      "intersection_gain": 0.25452431026792577,
+      "perimeter_reduction": 12,
+      "accepted": true
+    },
+    "KEN:4b9b5a7ce90b0bb0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "KGZ:401b8fcdc0eef69c": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.005167750419920458,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "KHM:299a58dab837de1b": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": -0.1050131094834248,
+      "perimeter_reduction": 2,
+      "accepted": false
+    },
+    "KIR:a4942b8cdd492ae9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "KNA:ab73693bbdf69270": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "KOR:1a1881fe9e034788": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.7462019303854774,
+      "perimeter_reduction": 6,
+      "accepted": true
+    },
+    "KOR:1fefdd99c987e9c9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "KOR:dc7ca58831c8b415": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "KOR:ee0f5a0f2f25a339": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "KOS:e68a710dbd926c28": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "KWT:575b7c67b7a3657d": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LAO:b4c511d27634a146": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.30973128082264995,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "LBN:8d427f2407db4cf0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LBR:791c4a2bdad8b682": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LBY:7ca6524733c4cc0b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LCA:5f3167c756c94e88": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LIE:452f33c4300c02b9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LKA:1e8de9d1844ab756": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LKA:9bc04c56a9e8bd7a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LSO:085148348451b82a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LTU:4c2a60810b4196cd": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LUX:2287a57343a7d085": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "LVA:ff14565ea5d338a5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MAC:59c43825d5da45fb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MAF:8903408c5624c48e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MAR:41e7d86fdd4b2365": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MCO:8f146e45080f16d1": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MDA:c11ef650966bdfca": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MDG:4bc42083f90d1ae9": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.34312288100232136,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "MDG:d395cac872ab71a8": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MDV:71a3bda6017f731e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MEX:aa67baf61acd20f3": {
+      "added": 3,
+      "removed": 3,
+      "intersection_gain": 0.20220192164669126,
+      "perimeter_reduction": 6,
+      "accepted": true
+    },
+    "MEX:af154dcbd399bd79": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MHL:df7cdd8f2cbda575": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MKD:072da3322c97fa27": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MLI:cfb1983a0687bf5c": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.2681413878465915,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "MLT:1209f8ef697868f9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MMR:00bfaa2932dfddb9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MMR:14246adefd082a60": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MMR:e9f27e99686071f9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MNE:52f7987265ed3935": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MNG:7ecd8e5b0a42fa66": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MNP:d5d7b61494f517b6": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MOZ:0c9516b3b1958290": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.2723331792202565,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "MQI:3f3d9ac1758dd787": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MRT:93e93b11bab4502c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MSR:b4f63de1ac80f565": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MTQ:b687db533c81cb97": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MUS:241a4096fe3cf2e9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MWI:7555dabddb4364d9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MYS:03f858a579d3b26b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MYS:0abe504273f2e4bd": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": -0.15582203609770173,
+      "perimeter_reduction": 4,
+      "accepted": false
+    },
+    "MYS:38845839aa7557f7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MYS:4035fe8bf71b03f5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MYS:e044f0d14c5194e9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "MYT:36f0323f642f2bbb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NAM:d67affdeafffe7f2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NCL:9e9b31b5b9879e1e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NER:225f284b6e95d815": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NFK:8bd0b8fb2f7ee228": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NGA:3c88882c2e580374": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NGA:edcdec1fdf6fb5c7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NGA:fdfbab60e4bd69a7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NIC:99f10eccc73d03bc": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NIR:69fa50e543fa7c66": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NIU:833bfd21210ac56a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NLX:5daa52b59ba80d17": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NLX:8b9c3398a58bdb2a": {
+      "added": 3,
+      "removed": 3,
+      "intersection_gain": 0.44149780865647914,
+      "perimeter_reduction": 10,
+      "accepted": true
+    },
+    "NOW:a387a8ce67e0d957": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NOW:ec082e7601ce6831": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NPL:c1885306c87c4123": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.3846481807652872,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "NRU:caeaede682b2e6af": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NZL:8f99f1c50259113a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "NZL:979ee6939c934325": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "OMN:21af2c17fe172531": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PAK:447ed1858f7b7a5d": {
+      "added": 5,
+      "removed": 5,
+      "intersection_gain": 0.7454913535065248,
+      "perimeter_reduction": 8,
+      "accepted": true
+    },
+    "PAN:04773d2112e86006": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PAZ:982ece08e8ced750": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PCN:9f1762b21c5a6e6d": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PER:5a1c843bf55d41e0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PER:d420f75fe20c6a02": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PGA:9843ae99694c2ecf": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:09326678e2013608": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:124f53ed2a9a90b2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:13c5d331c2b85fff": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:1657f9a811dfa613": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:21362b5a399c84c0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:27694b49fed5e295": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:2ce786cb39ab6f61": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:36cbb2fd3e6f6374": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:3dde36a3deef9e30": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:4c8567135848a850": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:55f4748ebb0e9d7b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:565bea380f2a8f38": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:6db0873e452de6c9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:6f9539ae2d2e4af7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:726d0196a803e063": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:7516d4fddea7755b": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.1478475685370157,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "PHL:8bf898d20852a1e2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:8cc353e906e9a7ba": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:90b293ce7c82f783": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:9f45a34a40c23d0d": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:a054fd0f49fb86bb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:b8fbb9d4a0a4d4fc": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:c20794a54eb22900": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:d37f189e16094fe0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:d3c6f6bf47091a8d": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:d9dc6d8657118070": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:dab4eac01b067017": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:e9207a07dbe16607": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PHL:eb1fb8d27ecf0027": {
+      "added": 11,
+      "removed": 11,
+      "intersection_gain": 9.723120357997201,
+      "perimeter_reduction": 26,
+      "accepted": true
+    },
+    "PHL:f6d8e393f979d3c4": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PLW:c1d57327f74beca7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PMD:d0ef99f5c34da522": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PNB:965650135f10f84e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PNB:aad6c9a8a176c962": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PNX:64fcdde643ac8285": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PNX:7cc333b69cac4996": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PNX:ac8508505c0cde6d": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PNX:cd0b182a6ff3f568": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "POL:1980df7ed9d16d12": {
+      "added": 3,
+      "removed": 3,
+      "intersection_gain": 0.7013803083998935,
+      "perimeter_reduction": 8,
+      "accepted": true
+    },
+    "PRI:e9799df54353f02b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PRK:443ac4e48c09b5a9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PRX:31cd60a8869cd87c": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.1315655535446868,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "PRY:8be730e7955b0934": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "PYF:3da92f8d77dc4ec9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "QAT:f6210114a7fc4646": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "REU:50209727462df21b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ROU:8bc181463815c013": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "RUS:7e6e84c769819aed": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "RUS:8afd88fb65e5e555": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "RUS:b85c5bca1852870f": {
+      "added": 13,
+      "removed": 13,
+      "intersection_gain": 2.919392025398693,
+      "perimeter_reduction": 38,
+      "accepted": true
+    },
+    "RUS:e5454b5f169f758a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "RWA:11c3869510b66d95": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SAH:c067a975f328d956": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SAU:11ac65250772b5d3": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.19985556113227443,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "SDN:e4296cf2bfa47003": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.13969059495459674,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "SDS:9ecb0b566ac02a31": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SEN:fa5de3704b02f675": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.2862591658134406,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "SGP:860d04320dbb7b18": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SGS:f72252273c93ccac": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SHN:cea4236cc2d14354": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SLB:89ab665da4011bf7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SLB:c3b8559867bbf650": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SLE:aeb8476c9a2c5e10": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SLV:6884a91b71669fb2": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SMR:65f777115cf6c77c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SOL:e03433706d8873bb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SOM:b94bcf137ecd6275": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.6561567286339908,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "SPI:47f581a247f875ae": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SPM:82efd5ba4ffee3ed": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SRB:334f04d632601018": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "STP:6eeda55e5e762902": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SUR:1d7cda681e299b07": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SVK:1f440da2e10fbb82": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SVN:e8f334b689926950": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.12361004072212867,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "SWE:1320ee42b8e1186c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SWE:45e6e69fa38b3e06": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SWZ:e315454282eb3136": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SXM:09188f4114a598b9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SYC:06e7b337bf21f107": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "SYR:bb46c77ee43515e0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TCA:8f132c5885c6ed3e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TCD:a34f6ca4b3bd052d": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TGO:f7afd783bdbbc052": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.4940540942430852,
+      "perimeter_reduction": 0,
+      "accepted": false
+    },
+    "THA:121007cc8c8eb751": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.34204837500681706,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "THA:2d2e3dd6e4f6c675": {
+      "added": 6,
+      "removed": 6,
+      "intersection_gain": 5.02042956703382,
+      "perimeter_reduction": 10,
+      "accepted": true
+    },
+    "TJK:d6e62d7f585e085c": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TKM:ef25c6485f2078c2": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.610713851769661,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "TLS:e102fc60287c6426": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TON:f2fc3e28996a68cf": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TTO:c755d5dbf151e3d4": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TUN:2d14cf8d637899d4": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TUN:9e23ed3c89bdb2f6": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.10191010475094675,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "TUR:3b553df250ebf332": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.28248431758272974,
+      "perimeter_reduction": 4,
+      "accepted": true
+    },
+    "TUR:6fce5e1d91133e37": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.33073165533889126,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "TUV:3dbb41c9aa575d81": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TWN:0e5b45704eef8ddd": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.062117647812313825,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "TWN:7e4004ddd1829f26": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TZA:331225b62136622a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TZA:88eb4141b8ee7ab7": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TZZ:50b84429088b02a6": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "TZZ:9185ad05dcf3419a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "UGA:c937c439d1615753": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.2608125129118193,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "UKR:52622876ebf1ecb8": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.2889917157180414,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "URY:a93a37d95dfce9bb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USA:07ed9e11d3ffe922": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USA:13c14a072880aac5": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USA:53281e0ad0b87aeb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USA:5e512db06aed1701": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USA:63257470544bea15": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USA:63b54f0fb7efa7a0": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USA:8f1b933b729d8403": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USA:90107a05206832e4": {
+      "added": 3,
+      "removed": 3,
+      "intersection_gain": 1.1782839629401158,
+      "perimeter_reduction": 12,
+      "accepted": true
+    },
+    "USA:c78710e5bfb7f314": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.5744470479134873,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "USA:cc58c4c14d03150e": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USA:ed809571c4cb473f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "USG:4318b9af790790b9": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "UZB:448c5653f0be3548": {
+      "added": 3,
+      "removed": 3,
+      "intersection_gain": 1.936932552410207,
+      "perimeter_reduction": 6,
+      "accepted": true
+    },
+    "VCT:8a1bf16e1fe09fe4": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "VEN:301beeea27f4cccb": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "VEN:d01ddcc4bca41887": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "VGB:fbe0a46652f34473": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "VIR:08404301006acbb1": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "VNM:749468814d903c2a": {
+      "added": 4,
+      "removed": 4,
+      "intersection_gain": 2.2622456391711583,
+      "perimeter_reduction": 16,
+      "accepted": true
+    },
+    "VNM:9e943f334983e219": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "VNM:b72d286f4ac3b4ba": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "VNM:d7575eb45eea9fbe": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "VUT:3e9e300e853e9a46": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "VUT:cd29270f54664d5f": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "WEB:8660f88c9871d216": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "WLF:be1abc47bb646f80": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "WLS:71b2d76ca054b400": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "WSB:50ca0205ee67e049": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "WSM:13f12c032321342b": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "YEM:64d271dfdccb3847": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.04538756539303934,
+      "perimeter_reduction": 2,
+      "accepted": true
+    },
+    "YEM:f78116744ba13f6a": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ZAF:eb3d29c8e7d957f4": {
+      "added": 0,
+      "removed": 0,
+      "intersection_gain": 0.0,
+      "accepted": false
+    },
+    "ZMB:583491139c8eb3b0": {
+      "added": 2,
+      "removed": 2,
+      "intersection_gain": 0.22621622240450645,
+      "perimeter_reduction": 8,
+      "accepted": true
+    },
+    "ZWE:241a07c809723778": {
+      "added": 1,
+      "removed": 1,
+      "intersection_gain": 0.3445297175038634,
+      "perimeter_reduction": 2,
+      "accepted": true
+    }
+  },
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509",
+    "output/auto-cartogram/world-55000-dissolved-geographic/cells.csv": "9fbe009ef5b1b6de9f31935e4167fc1f0b5df6b9cbe94aa7b0e7cfbcec4dcb89"
+  },
+  "scripts": {
+    "clean_templates.py": "4380c6e53273d9b71047cdedce04f15a8691039da2d7e8b6bb856eb92aa4fba3",
+    "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+    "shape_placement.py": "20ed59825d0b0fde5893db3a267218e5c46846a9c0edd766f31b7ec41ef8dfd0"
+  },
+  "limit": "Templates can change shape. Source holes remain omitted. The result is a separate-component baseline, not a border-preserving map."
+}
