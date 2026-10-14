@@ -133,6 +133,14 @@ class CapacityPartitionTests(unittest.TestCase):
         owner={p:c for c,points in tiles.items() for p in points}
         report=crossings(tiles,owner,[dict(component='a',anchor='b')],{'land'})
         self.assertEqual(report[0]['end'],[2,-1]);self.assertEqual(report[0]['blocking_components'],['land'])
+        from shapely.geometry import LineString,box
+        rng=np.random.default_rng(17)
+        for _ in range(25):
+            start,end=rng.integers(-3,4,size=(2,2))
+            if np.array_equal(start,end):continue
+            line=LineString([start,end]);low=np.minimum(start,end);high=np.maximum(start,end)
+            expected={(x,y) for x in range(low[0],high[0]+1) for y in range(low[1],high[1]+1) if line.intersection(box(x-.5,y-.5,x+.5,y+.5)).length>1e-9}
+            self.assertEqual(segment_cells(start,end),expected)
 
     def test_archipelago_separation(self):
         from restore_archipelagos import run as restore
