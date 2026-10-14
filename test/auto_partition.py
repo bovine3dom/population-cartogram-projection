@@ -136,6 +136,9 @@ class CapacityPartitionTests(unittest.TestCase):
         source['land']=box(6.1,0,8.1,2);rows['land']=dict(group_population=100);tiles['land']={(4,0)}
         groups,_=clusters(tiles,rows,source,{'land'},.35,bridge_groups=True)
         self.assertEqual(groups,{'a':['a','c'],'b':['b']})
+        separate={'a':box(0,0,1,1),'b':box(2,0,12,10)}
+        groups,_=clusters({c:tiles[c] for c in separate},rows,separate,set(),.35,bridge_groups=True)
+        self.assertEqual(groups,{'a':['a'],'b':['b']})
 
     def test_island_segment_cells(self):
         from review_island_separation import segment_cells,crossings
