@@ -125,3 +125,24 @@ scaling of the fold term remain under test. With smaller temperature steps and
 the original planet mass limits, factor 3 reaches a support ratio of 1.965 at
 eta `1.25e-5` in 64 seconds for the last stage. It still needs geometry correction;
 a sharper transport alone does not preserve the map.
+
+## 22:07 UTC: preserve coarse flows before adding detail
+
+The colder factor-3 geometry trial still has 71,338 square km of positive
+triangle area after nine accepted updates. The next inner solve fails. Its
+partial output is not suitable for publication.
+
+Tested a hierarchy that keeps the coarse parent-to-target flows as additional
+constraints. First adjust those flows to the native source population. On
+Angola this gives target L1 error `7.6e-7` and a 3.39 km RMS shift of coarse
+centres. The fine graph has 2,876,337 edges and 61,917 group constraints. Five
+small three-way solver checks pass on both CPU and oneAPI. The warm real-data
+stage passes mass checks but is too broad; its colder stage fails the group
+mass limit. This solver remains an ignored diagnostic, not a shipped feature.
+
+A simpler sequential hierarchy is now under test: first split each coarse
+source into its native children while preserving coarse flows, then split each
+target using the resulting fixed source contributions. Both steps use the
+existing checked two-way KA solver. This avoids the extra three-way solver and
+keeps the coarse target means fixed during target subdivision. Fine-grid folds
+and sharpness still need independent checks. No whole-planet fit has started.
