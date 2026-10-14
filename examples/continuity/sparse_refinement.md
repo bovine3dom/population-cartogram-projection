@@ -18,6 +18,9 @@ error at most `1e-4`. Source relative error must be at most `1e-10`.
 The solver checks Float64 host weights before it returns. It can use GPU primal
 scaling to correct Float32 error. Failure to meet the limits raises an error.
 The returned weights refer to the sorted edges in the graph, not input order.
+The optional `deadline` is an absolute Unix time in seconds. The log solver
+raises an error when that limit is reached. Primal scaling stops without a
+result at its next time check. Finite marginal limits are required.
 
 The graph is part of the model: omitted edges have zero weight. These mass
 checks do not prove agreement with an all-pair solve. They do not prove good

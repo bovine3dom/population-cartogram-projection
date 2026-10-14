@@ -78,7 +78,7 @@ function device_graph(g,w,backend)
         columns=merge(g.columns,(;values=Float32.(w[g.perm])))))
 end
 
-function polish(g,w,a,b,backend;tolerance,maxrelative,maxiters=10000)
+function polish(g,w,a,b,backend;tolerance,maxrelative,maxiters=10000,deadline=Inf)
     device=device_graph(g,w,backend);commands=Ref(0)
     u=PCP._copy_to_backend(backend,ones(Float32,g.n));v=PCP._copy_to_backend(backend,ones(Float32,g.m))
     da=PCP._copy_to_backend(backend,Float32.(a));db=PCP._copy_to_backend(backend,Float32.(b))
@@ -89,6 +89,7 @@ function polish(g,w,a,b,backend;tolerance,maxrelative,maxiters=10000)
         end
     end
     for iteration in 1:maxiters
+        iteration%20==1 && time()>=deadline && return nothing
         update!(u,device.rows,v,da);update!(v,device.columns,u,db)
         iteration%20==0 || continue
         update!(u,device.rows,v,da);update!(probe,device.columns,u,db)
@@ -108,10 +109,11 @@ function polish(g,w,a,b,backend;tolerance,maxrelative,maxiters=10000)
     return nothing
 end
 
-function solve(g,a,b,backend;eta,initial_beta=nothing,tolerance=1e-6,maxrelative=1e-4,maxiters=10000)
+function solve(g,a,b,backend;eta,initial_beta=nothing,tolerance=1e-6,maxrelative=1e-4,maxiters=10000,deadline=Inf)
     length(a)==g.n && length(b)==g.m && all(x->isfinite(x)&&x>0,a) && all(x->isfinite(x)&&x>0,b) || error("invalid masses")
     isapprox(sum(a),1.;atol=1e-12) && isapprox(sum(b),1.;atol=1e-12) || error("masses must sum to one")
-    isfinite(eta) && eta>0 && tolerance>0 && maxrelative>0 && maxiters>0 || error("invalid solve limits")
+    all(isfinite,(eta,tolerance,maxrelative)) && eta>0 && tolerance>0 && maxrelative>0 && maxiters>0 || error("invalid solve limits")
+    time()<deadline || error("sparse refinement deadline reached")
     isnothing(initial_beta) || length(initial_beta)==g.m && all(isfinite,initial_beta) || error("invalid initial dual")
     device=device_graph(g,g.shifted,backend);commands=Ref(0)
     da=PCP._copy_to_backend(backend,Float32.(a));db=PCP._copy_to_backend(backend,Float32.(b))
@@ -130,6 +132,7 @@ function solve(g,a,b,backend;eta,initial_beta=nothing,tolerance=1e-6,maxrelative
     end
     outputs=Vector{Float64}[];differences=Vector{Float64}[];previous=Float64.(Array(beta));previous.-=mean(previous)
     for iteration in 1:maxiters
+        iteration%50==1 && time()>=deadline && error("sparse refinement deadline reached")
         update!(alpha,device.rows,beta,da);update!(beta,device.columns,alpha,db)
         iteration%50==0 || continue
         current,scaled=check!();centered=current.-mean(current)
@@ -148,7 +151,7 @@ function solve(g,a,b,backend;eta,initial_beta=nothing,tolerance=1e-6,maxrelative
                 return (;weights=w,beta=current.+g.coloffset,iterations=iteration,primal_iterations=0,error=stats)
             end
             if stats.l1<.01 && stats.relative<.1
-                corrected=polish(g,w,a,b,backend;tolerance,maxrelative)
+                corrected=polish(g,w,a,b,backend;tolerance,maxrelative,deadline)
                 if !isnothing(corrected)
                     return (;weights=corrected.weights,beta=current.+g.coloffset.+eta.*corrected.correction,
                         iterations=iteration,primal_iterations=corrected.iterations,error=corrected.error)
