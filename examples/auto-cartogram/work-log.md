@@ -697,3 +697,19 @@ under ignored `output/auto-cartogram/`.
   source Arrow file is byte-identical to the earlier subset. It has two groups
   and groups 358,920 people from zero-budget components, versus 167,346 at the
   larger budget. This test cannot establish preservation of every small island.
+
+## 04:17–04:21 UTC — second native result
+
+- The 84-tile GBR run completes. Solves and in-memory checks take 241 seconds.
+  It retains 99.892% of source population, has zero cross-group mass, and has
+  2.517% maximum target error. Native ID, population, and group checks pass.
+- Correction on unchanged support takes 676 iterations and 2.55 seconds. It
+  restores full source mass to floating-point precision and reduces maximum
+  target error below 0.01%. All 339,438 ordered pairs remain unchanged.
+- Saved a balance image, native checks, source selection, and target errors.
+  Mean expected-position change is 0.00372 tile sides; the maximum is 0.399.
+  The two-group layout does not preserve every small island. It excludes other
+  entity IDs and is not a reproduction of the Portsmouth report.
+- Rechecked all 17 published transport exports, including both new GBR exports.
+  Started a bounded one-thread repeat of the successful two-thread native run
+  to test reproducibility. No further layout algorithms are being added.

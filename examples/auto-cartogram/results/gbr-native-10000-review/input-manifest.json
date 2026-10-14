@@ -1,0 +1,20 @@
+{
+  "entity_id": "GBR",
+  "source_rows": 219045,
+  "source_population": 66962523.0,
+  "target_tiles": 84,
+  "groups": 2,
+  "grouped_population": 358920.0,
+  "limit": "This is the GBR entity subset of the 10000-tile world layout. Dependencies with other entity IDs are excluded. Country-specific unmatched coverage is unknown. It is not the handmade OWID map.",
+  "inputs": {
+    "output/auto-cartogram/world-transport-sources/sources.arrow": "191347088c1b2998892e019c4f61bb1effeea62b4675dc4f8bc3a22af1b692fc",
+    "output/auto-cartogram/world-10000-dissolved-input/groups.csv": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+    "output/auto-cartogram/world-10000-dissolved-geographic/cells.csv": "df60240393d98124f718a044d9fa66486b0f1e0fa77ed8e0f91a2c90f7c44cdf",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-jobs/prepare_gbr_native_10000.py": "f2c224006bd9958c327f2c7cd8931b983796ce938be853337a41ddae356779b1"
+  },
+  "outputs": {
+    "sources.arrow": "90e00c60ef92b12645d800a1fd556ea31081cade78c988f4479908a8a7ffb35a",
+    "inputs/groups.csv": "e2f35c4bcb9fbd33ec2b776f2a6ce50f76d7a42badb6f9c4ac597b9894f75c7c",
+    "layout/cells.csv": "c4c24be821e5f1e342137d95d86fe72cc8f7fe066da82545fae586dd5874210f"
+  }
+}

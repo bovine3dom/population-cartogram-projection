@@ -46,6 +46,9 @@ A later placement step keeps all island shapes and counts, but reduces island
 axis-order errors from 426 to 5 out of 2,323 comparisons. The balanced native
 mapping moves with those shapes through checked integer translations. No
 weights change, and the new export passes flow and native-source checks.
+A second native test covers 219,045 GBR source cells at 84 tiles. Its correction
+also reaches the 0.01% target limit without adding pairs or crossing groups.
+A larger 463-tile GBR attempt times out; it has no complete mapping.
 
 Whole-world H3-3 tests also keep cross-group mass at zero, but have target errors
 up to 36.090%. Their saved sparse support cannot reach the 0.01% correction

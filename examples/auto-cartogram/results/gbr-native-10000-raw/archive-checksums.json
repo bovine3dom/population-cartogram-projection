@@ -1,0 +1,7 @@
+{
+  "cut-checks.json": "dc594bbb8fab0c128181afb932279d31123d6c5148a17d92fc3eb17c73457aa4",
+  "independent-checks.json": "3402ab4650ceff6280a0ac89c2371079b49344f25fcc4e2df0cd55cdf1e2706a",
+  "manifest.json": "830dee38edfcfa2fbdae5b737a204dad8115025761edf8671fed794d346754fa",
+  "native-source-checks.json": "14f6f7b52430fe5e38a5abf35f2624a15b03e9574caeb0959c0d9d62efbe5393",
+  "target-quality.csv": "64ec34f18a9342f5bcd583adcddc1731641e402c9023205e989f60d194ed83e4"
+}

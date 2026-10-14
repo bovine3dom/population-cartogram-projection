@@ -1,0 +1,53 @@
+{
+  "ordered_support_unchanged": true,
+  "mapping_pairs": 339438,
+  "appended_pairs": 0,
+  "appended_pairs_one_rook_step": false,
+  "absolute_pair_mass_change": 471606.0207476448,
+  "unit": "Target coordinate units; one square-tile side for these layouts",
+  "method": "Normalize each source's retained weights before computing its expected target position; compare raw and corrected positions",
+  "limit": "This measures a change in expectations, not a bound on each person's displacement. Opposite assignment changes can cancel. It does not assess absolute geographic accuracy.",
+  "summary": {
+    "source_cells": 219045,
+    "population": 66962523.0,
+    "maximum_shift": 0.39854312069530806,
+    "population_weighted_mean_shift": 0.003720786579109502,
+    "population_weighted_rms_shift": 0.009633384733374379,
+    "population_share_shift_above_one": 0.0
+  },
+  "groups": {
+    "GBR:241258080ec293c4": {
+      "source_cells": 201358,
+      "population": 64952685.0,
+      "maximum_shift": 0.39854312069530806,
+      "population_weighted_mean_shift": 0.003515217625676679,
+      "population_weighted_rms_shift": 0.00886227110713165,
+      "population_share_shift_above_one": 0.0
+    },
+    "NIR:69fa50e543fa7c66": {
+      "source_cells": 17687,
+      "population": 2009838.0,
+      "maximum_shift": 0.08369769673331007,
+      "population_weighted_mean_shift": 0.010364235194421855,
+      "population_weighted_rms_shift": 0.023531269236845283,
+      "population_share_shift_above_one": 0.0
+    }
+  },
+  "inputs": {
+    "output/auto-cartogram/gbr-native-10000-transport": {
+      "manifest.json": "830dee38edfcfa2fbdae5b737a204dad8115025761edf8671fed794d346754fa",
+      "sources.csv": "fc5beafaede31331e7cdd4ba19463f3849944aa0ffb5aa7ad3fb2b3d0cff54f3",
+      "targets.csv": "10e2ca600b92724ffe5e4a218e343e5426367b03d8a4e3d3d286552640c1da04",
+      "mapping.csv": "b790d1db4d6a46d7c3e19036ce837c50e27114ad890a56d489ea561378e0d814",
+      "target-quality.csv": "64ec34f18a9342f5bcd583adcddc1731641e402c9023205e989f60d194ed83e4"
+    },
+    "output/auto-cartogram/gbr-native-10000-balanced": {
+      "manifest.json": "1acfb7bac5b307c39cbc0a7b6e1d2e7ba9e3dced7335c1db00a5149d22e96289",
+      "sources.csv": "fc5beafaede31331e7cdd4ba19463f3849944aa0ffb5aa7ad3fb2b3d0cff54f3",
+      "targets.csv": "10e2ca600b92724ffe5e4a218e343e5426367b03d8a4e3d3d286552640c1da04",
+      "mapping.csv": "f5a37aa44b945fa1a10c088365f03026a68700d59fa6fe993d9062a49ae9bda0",
+      "target-quality.csv": "273de25a7ddf480f49c9fe3f869aa007954435fb84832db9da1d35fc202167f8"
+    }
+  },
+  "script_sha256": "f688805a054fa8cd321332fb37e9340086e70b45d4fb7ece04d396b2a85d5afd"
+}
