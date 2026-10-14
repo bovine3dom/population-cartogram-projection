@@ -6,7 +6,7 @@
   "omitted_population": 0.0,
   "holes_not_encoded_in_wkt": 19,
   "policy": "group",
-  "review_script_sha256": "bc9e8c355931876f9bf0537ef7291a86e5c6025f828d33d9a1c495df25e30f86",
+  "review_script_sha256": "88c281bf37a1bd6f512d412d4babe3ecb797ba62b6479cfbc8453f78aae565fd",
   "tiles": 55000,
   "countries": 250,
   "absolute_tile_error": 0,

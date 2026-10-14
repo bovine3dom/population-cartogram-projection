@@ -62,6 +62,10 @@ class Stress:
         normal=axes[index] if index<len(axes) else -axes[index-len(axes)]
         return float(depth),normal
 
+    def pair_energy_gradient(self,a,b,positions):
+        depth,normal=self.penetration(a,b,positions)
+        return .5*self.collision*depth*depth,self.collision*depth*normal
+
     def objective(self,flat):
         positions=flat.reshape(-1,2);difference=positions-self.initial
         value=.5*self.anchor*np.sum(difference*difference);gradient=self.anchor*difference
@@ -73,13 +77,12 @@ class Stress:
             a,b=self.pairs.T;low=positions+self.low;high=positions+self.high
             candidates=self.pairs[np.all((high[a]+self.gap>low[b]) & (high[b]+self.gap>low[a]),axis=1)]
             for a,b in candidates:
-                depth,normal=self.penetration(int(a),int(b),positions)
-                value+=.5*self.collision*depth*depth
-                force=self.collision*depth*normal;gradient[a]+=force;gradient[b]-=force
+                energy,force=self.pair_energy_gradient(int(a),int(b),positions)
+                value+=energy;gradient[a]+=force;gradient[b]-=force
         return float(value),gradient.ravel()
 
 
-def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8):
+def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8,source_polygons=None):
     if output.exists():raise ValueError('Output already exists')
     if iterations<1 or spacing<=0 or any(not math.isfinite(v) or v<0 for v in [spacing,collision,spring,anchor,spatial,gap]):raise ValueError('Invalid stress settings')
     rows,tiles,_=load(inputs,templates)
@@ -89,8 +92,14 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
     scale=spacing*math.sqrt(sum(map(len,tiles.values()))/sum(p.area for p in polygons.values()))
     centres={c:np.array([p.centroid.x,p.centroid.y])*scale for c,p in polygons.items()}
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
-    state=Stress(tiles,centres,required,collision,spring,anchor,spatial,gap)
-    started=time.monotonic();history=[]
+    started=time.monotonic()
+    state_type=Stress
+    if source_polygons:
+        from concave_stress import ConcaveStress
+        state_type=ConcaveStress
+    state=state_type(tiles,centres,required,collision,spring,anchor,spatial,gap)
+    if source_polygons:state.border_targets(source_polygons,tiles,required)
+    history=[]
     def callback(x):
         energy,_=state.objective(x);history.append(dict(iteration=len(history)+1,energy=energy))
         if len(history)%25==0:print(f'Stress iteration {len(history)}: {energy:.6f}',flush=True)
@@ -103,13 +112,15 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
         moved=place(tiles[c],positions[state.ids[c]],blocked);placed[c]=moved;blocked.update(moved)
         if gap>=1:blocked.update((x+dx,y+dy) for x,y in moved for dx,dy in NEIGHBOURS)
     scripts=[Path(__file__),Path(__file__).with_name('shape_placement.py')]
-    metadata=dict(method='Geographic spring displacement with convex-hull collision penalties, followed by exact integer translation; no border paths',
+    if source_polygons:scripts.extend(Path(__file__).with_name(name) for name in ['concave_stress.py','prepare_flow.py'])
+    metadata=dict(method='Geographic spring displacement with collision penalties, followed by exact integer translation; no border paths',
+        collision_geometry='convex pieces' if source_polygons else 'convex hulls',border_anchors=bool(source_polygons),
         spacing=spacing,maximum_iterations=iterations,iterations=int(result.nit),success=bool(result.success),message=str(result.message),
         collision=collision,spring=spring,anchor=anchor,spatial=spatial,gap=gap,initial_energy=initial,final_energy=float(result.fun),
         elapsed_seconds=time.monotonic()-started,
-        inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv']},
+        inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv']+([source_polygons] if source_polygons else [])},
         scripts={p.name:digest(p) for p in scripts},
-        limit='Convex hulls overestimate some shapes. Soft penalties do not prove that the continuous hulls are disjoint. Final integer placement prevents overlap but can change order and contacts. No shape is distorted; input holes remain omitted.')
+        limit='Collision geometry is approximate; convex pieces use outlines simplified by 0.75 tile. Soft penalties do not prove that continuous shapes are disjoint. Final integer placement prevents overlap but can change order and contacts. No tile shape is distorted; input holes remain omitted.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='stress-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -133,4 +144,5 @@ if __name__=='__main__':
     for name in ['inputs','templates','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--iterations',type=int,default=3000)
     for name,default in [('spacing',1.),('collision',100.),('spring',1.),('anchor',.01),('spatial',.03),('gap',.8)]:parser.add_argument('--'+name,type=float,default=default)
-    args=parser.parse_args();print(json.dumps(run(args.inputs,args.templates,args.output,args.spacing,args.iterations,args.collision,args.spring,args.anchor,args.spatial,args.gap),indent=2))
+    parser.add_argument('--source-polygons',type=Path,help='Use concave collision pieces and anchors on actual source borders')
+    args=parser.parse_args();print(json.dumps(run(args.inputs,args.templates,args.output,args.spacing,args.iterations,args.collision,args.spring,args.anchor,args.spatial,args.gap,args.source_polygons),indent=2))

@@ -23,6 +23,7 @@ import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
 from shape_stress import Stress
+from concave_stress import ConcaveStress, convex_pieces
 
 
 class ShapeTests(unittest.TestCase):
@@ -175,6 +176,41 @@ class ShapeTests(unittest.TestCase):
         fit=minimize(state.objective,x,jac=True,method='L-BFGS-B')
         self.assertLess(fit.fun,value)
         self.assertLess(state.penetration(0,1,fit.x.reshape(-1,2))[0],.01)
+
+    def test_concave_collision_keeps_space_in_a_bay(self):
+        from shapely import union_all
+        points={(x,y) for x in range(7) for y in range(7) if x<2 or y<2 or y>4}
+        pieces=convex_pieces(points,tolerance=0)
+        centre=np.mean(list(points),axis=0)
+        geometry=union_all([Polygon(v+centre) for v,n in pieces])
+        self.assertAlmostEqual(geometry.area,len(points))
+        self.assertLess(geometry.area,geometry.convex_hull.area)
+        tiles={'a':points,'b':{(0,0)}}
+        positions={'a':centre,'b':np.array([4.,3.])}
+        state=ConcaveStress(tiles,positions,set(),gap=0)
+        self.assertEqual(state.pair_energy_gradient(0,1,state.initial)[0],0)
+        self.assertGreater(state.penetration(0,1,state.initial)[0],0)
+        x=state.initial.ravel()+np.array([.03,.02,-2.1,.07])
+        value,gradient=state.objective(x);numeric=[]
+        for i in range(len(x)):
+            shift=np.zeros_like(x);shift[i]=1e-6
+            numeric.append((state.objective(x+shift)[0]-state.objective(x-shift)[0])/2e-6)
+        np.testing.assert_allclose(gradient,numeric,rtol=1e-6,atol=1e-6)
+
+    def test_border_targets_use_a_shared_source_point(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'source.json'
+            source={'a':box(0,0,1,1),'b':box(1,0,2,1)}
+            path.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(p)) for c,p in source.items()])))
+            tiles={'a':{(0,0)},'b':{(x,y) for x in range(2) for y in range(2)}}
+            state=ConcaveStress(tiles,{'a':(0.,0.),'b':(2.,0.)},{('a','b')},gap=0)
+            state.border_targets(path,tiles,{('a','b')})
+            self.assertTrue(np.isfinite(state.targets).all())
+            self.assertGreater(state.targets[0,0],1)
+            self.assertLess(abs(state.targets[0,1]),.01)
+            source['b']=box(3,0,4,1)
+            path.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(p)) for c,p in source.items()])))
+            with self.assertRaisesRegex(ValueError,'No source border'):state.border_targets(path,tiles,{('a','b')})
 
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))
