@@ -173,3 +173,23 @@ Inspect the resulting images at world and regional scales.
 - Nineteen focused tests pass, including file-based raster displacement.
   Next: compare the new collision model from geographic centres and from an
   existing non-overlapping geographic layout.
+
+## 11:13–11:25 UTC — silhouette results and regional views
+
+- The first full-silhouette run has exact 55,000-tile counts and no false
+  contacts. It retains 102 of 348 land contacts without connector paths.
+  Its country outlines are intact. Visual review still finds position problems
+  in Southeast Asia, but Nepal no longer jumps to Europe.
+- Starting from the separate geographic layout gives a more spread-out map.
+  A very strong collision cost can stop before enough geographic movement has
+  occurred. Added a smooth collision interpolant to test this limitation.
+- Added regional review images. They crop the world layout without moving
+  components. Selection uses source component bounds, so overseas territories
+  are not pulled into the crop for their mainland country. Labels use a fixed
+  screen size in the regional view.
+- Added optional compression of long non-border spring distances. This is a
+  position experiment, not a classification of ocean or land. It can reduce
+  empty space without making a path or changing tile budgets.
+- The faster placement path produces the same baseline cells as exhaustive
+  placement in the file-based test. Twenty focused tests pass. This will also
+  support a larger 500,000-tile world preview.
