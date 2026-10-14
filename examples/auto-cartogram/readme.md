@@ -1,14 +1,25 @@
-# Island capacity audit
+# Automatic cartogram experiments
 
-This example starts the [automatic cartogram plan](../../auto-cartogram.md).
-It identifies geographic polygon components, sums their Kontur populations,
-and compares reviewed matches with the fixed OWID tile layout.
-See the [measured Indonesia results](results.md) and
+Start with the [world image gallery](gallery.md). It compares layouts at
+10,000, 55,000, and 110,000 tiles. These are not production replacements.
+
+- [Research and recommendation](../../auto-cartogram.md)
+- [Generator and transport commands](generator.md)
+- [Island and world transport checks](transport-results.md)
+- [Eight-hour work log](work-log.md)
+
+Production data and the core solver are unchanged. Experiments use headless CPU
+code. Large inputs, mappings, and downloaded tools stay in ignored `output/`.
+
+## Original island capacity audit
+
+The audit identifies geographic polygon components, sums their Kontur
+populations, and compares reviewed matches with the fixed OWID tile layout.
+See the [measured Indonesia audit](results.md) and
 [reviewed match table](indonesia-matches.csv).
 
-It does not generate a new layout or run population transport. It does not
-change production data or the core solver. All processing is headless and uses
-CPU code. No GPU or plotting package is required.
+The audit itself does not generate a layout or run transport. The commands
+below reproduce that first stage. Use the generator link above for later work.
 
 ## Run
 

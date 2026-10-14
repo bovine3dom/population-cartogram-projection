@@ -37,6 +37,16 @@ class TransportTests(unittest.TestCase):
             self.assertEqual(result["mapping_rows"],2)
             self.assertEqual(result["source_rows_below_99_5_percent"],0)
 
+    def test_target_normalized_weights_when_present(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); self.fixture(root)
+            path=root/"mapping.csv"
+            path.write_text("id,x,y,weight,weight_mean\na,0,0,1,1\nb,1,0,1,1\n")
+            self.assertEqual(audit.check(root)["target_normalized_weights_checked"],2)
+            for value in ["0", "-1", "nan", ".9", "1.1"]:
+                path.write_text(f"id,x,y,weight,weight_mean\na,0,0,1,{value}\nb,1,0,1,1\n")
+                with self.assertRaisesRegex(ValueError,"[Tt]arget-normalized"): audit.check(root)
+
     def test_balance_figure_checks_files_and_support(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); raw=root/"raw"; raw.mkdir(); self.fixture(raw)

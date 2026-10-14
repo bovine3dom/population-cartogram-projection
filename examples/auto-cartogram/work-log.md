@@ -671,3 +671,17 @@ under ignored `output/auto-cartogram/`.
 - Started a 20-minute-bounded native GBR test from the 55,000-tile world layout.
   It excludes other Natural Earth entity IDs and does not reproduce the old
   OWID or Portsmouth mapping. Country-specific missing coverage remains unknown.
+
+## 04:02 UTC — review entry point and export audit
+
+- Updated the example readme to point first to the world gallery, generator,
+  transport evidence, and work log. Added the next acceptance decisions to the
+  research document. Saved a table of 14 selected generator failures and stops.
+- Extended the independent CSV checker to verify `weight_mean` when present.
+  This field must equal each pair's share of the retained target population.
+  Added corruption tests; all six standard-library transport tests pass.
+- Rechecked all 15 published transport exports. Every real export has the
+  target-normalized field, and every row passes. Saved the new audit separately;
+  historical check files remain tied to their original checker versions.
+- Native GBR transport is still running within its 20-minute bound. Its input
+  has 219,045 matched native cells, 66,962,523 people, 463 tiles, and four groups.

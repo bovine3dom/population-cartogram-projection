@@ -1,0 +1,15 @@
+case,exit_code,outcome,diagnostic,log_sha256
+no-sea-10000-default,1,failed,"Exception in thread ""main"" java.lang.AssertionError: cannot embed graph, crossings detected 	at arrange.algorithms.graph.PlanarSubdivision.<init>(PlanarSubdivision.java:29)",f88d62b4fe7fcef5554b11cc08307583db8dc9481368ef4b745b2760b4c3c93f
+no-sea-55000-default,1,failed,"Exception in thread ""main"" java.lang.AssertionError: cannot embed graph, crossings detected 	at arrange.algorithms.graph.PlanarSubdivision.<init>(PlanarSubdivision.java:29)",f88d62b4fe7fcef5554b11cc08307583db8dc9481368ef4b745b2760b4c3c93f
+no-sea-110000-default,1,failed,"Exception in thread ""main"" java.lang.AssertionError: cannot embed graph, crossings detected 	at arrange.algorithms.graph.PlanarSubdivision.<init>(PlanarSubdivision.java:29)",f88d62b4fe7fcef5554b11cc08307583db8dc9481368ef4b745b2760b4c3c93f
+tutte-none-10000,1,failed,"Exception in thread ""main"" java.lang.AssertionError: cannot embed graph, crossings detected 	at arrange.algorithms.graph.PlanarSubdivision.<init>(PlanarSubdivision.java:29)",f88d62b4fe7fcef5554b11cc08307583db8dc9481368ef4b745b2760b4c3c93f
+tutte-none-55000,1,failed,"Exception in thread ""main"" java.lang.AssertionError: cannot embed graph, crossings detected 	at arrange.algorithms.graph.PlanarSubdivision.<init>(PlanarSubdivision.java:29)",f88d62b4fe7fcef5554b11cc08307583db8dc9481368ef4b745b2760b4c3c93f
+tutte-none-110000,1,failed,"Exception in thread ""main"" java.lang.AssertionError: cannot embed graph, crossings detected 	at arrange.algorithms.graph.PlanarSubdivision.<init>(PlanarSubdivision.java:29)",f88d62b4fe7fcef5554b11cc08307583db8dc9481368ef4b745b2760b4c3c93f
+initial-sea-10000-exact,1,failed,"Exception in thread ""main"" java.lang.AssertionError 	at arrange.algorithms.MosaicFinalizer.run(MosaicFinalizer.java:68)",81dd1ccd8c4bfb3d61da594d7b3c4d63e1ecdd48cd11ce252c048c1d0010f65b
+initial-sea-55000-exact,1,failed,"Exception in thread ""main"" java.lang.AssertionError 	at arrange.algorithms.MosaicFinalizer.run(MosaicFinalizer.java:68)",a9c836129465f03d102dec9b32035060952d73b2f31a50103d1480dd882eb2ac
+initial-sea-110000-exact,143,stopped,,7dbfb0dc2dd19a384604e45879e4c524befc7a8257dcdcfa25245956c064831d
+one-unit-10000-exact,1,failed,"Exception in thread ""main"" java.lang.AssertionError 	at arrange.algorithms.MosaicFinalizer.run(MosaicFinalizer.java:68)",8fa7e8c7b4acb1d3e44d61f8880467fa66199af31e2824f4e08aaacc3d79c10b
+one-unit-55000-exact,1,failed,"Exception in thread ""main"" java.lang.AssertionError 	at arrange.algorithms.MosaicFinalizer.run(MosaicFinalizer.java:68)",4de213221e14dd30df81cfd48586acc249517a4e62a6fb20b82f69c64ca77520
+one-unit-110000-exact,143,stopped,,7dbfb0dc2dd19a384604e45879e4c524befc7a8257dcdcfa25245956c064831d
+tutte-initial-110000,124,timeout,,856ce5d55d58fcfbbe1f5b870b126b98243b66651d6ca91a2f0a6ee0f66710c8
+dissolved-10000-extended,1,failed,"Exception in thread ""main"" java.lang.AssertionError 	at arrange.algorithms.sub.Polisher.polish(Polisher.java:52)",32f489851eeaa0ec6cf07c4f66c789150eb033dcba2152a3d893265a3baecdbe

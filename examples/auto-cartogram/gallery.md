@@ -138,7 +138,9 @@ error can hide a large error for one country.
 Earlier rows in the table predate the flow-feasibility correction. Their final
 geometric checks remain valid, but their internal flow results are not a proof
 of feasible population allocation. Read the [work log](work-log.md) for the
-failed and stopped trials.
+failed and stopped trials. A [failure table](results/generator-failures.csv)
+records 14 selected failures, stops, and timeouts with log hashes. Those trials
+used different inputs and builds; they are not completed layouts.
 
 The corrected 55,000-tile fit with a convex-boundary initializer and 200
 polishing passes has 53,017 tiles and 2,011 tiles of absolute component error.
