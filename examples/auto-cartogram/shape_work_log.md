@@ -104,3 +104,15 @@ Inspect the resulting images at world and regional scales.
   cases passed count, connectivity, hole, and energy checks. Saved the first
   diagnostic tables, rejected flow image, and boundary-cycle comparisons.
   The new review guide is `shape-first.md`.
+
+## 06:55–06:58 UTC — regrowth cost correction
+
+- The full-map energy guard stopped one regrowth trial. The local region cost
+  omitted the neighbouring country's coast when a contact was removed. Fixed
+  the local cost by measuring it against the map with that region removed.
+- Stopped the other two regrowth trials from this build. No result from that
+  build is published. Added a direct contact-removal regression and 30 random
+  local-versus-global energy checks. All 13 focused tests pass.
+- The 10,000-tile atomic result has exact counts, but its continent positions
+  are poor. Its starting layout already had that problem. Shape smoothing
+  alone cannot correct it.
