@@ -187,6 +187,14 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertLessEqual(fixed['after']['fragment_cells'],fixed['before']['fragment_cells'])
             self.assertTrue((root/'repaired/parent-partition.json').exists())
             with self.assertRaisesRegex(ValueError,'either'):run(inputs,layout,root/'bad-flow',flow_geometry=geometry,guide_layout=layout)
+            geometry.write_text(json.dumps(dict(type='FeatureCollection',features=features[:-1])))
+            with self.assertRaisesRegex(ValueError,'projected sites'):run(inputs,layout,root/'missing-sites',flow_geometry=geometry,power=True)
+            with contextlib.redirect_stdout(io.StringIO()):mainland=run(inputs,layout,root/'mainland-flow',sigma=1,iterations=20,power=True,by_landmass=True,flow_geometry=geometry,sites=sites,float_islands=True)
+            self.assertEqual(mainland['flow']['excluded_isolated_components'],['e'])
+            self.assertGreater(mainland['flow']['island_site_alignment']['scale'],0)
+            self.assertEqual(len(load(inputs,root/'mainland-flow')[2]),9)
+            geometry.write_text(json.dumps(dict(type='FeatureCollection',features=features[1:-1])))
+            with self.assertRaisesRegex(ValueError,'labels differ'):run(inputs,layout,root/'missing-mainland',flow_geometry=geometry,sites=sites,power=True)
 
     def test_fragment_swap(self):
         tiles={'a':{(0,0),(0,1),(3,0)},'b':{(1,0),(1,1),(2,0),(2,1),(3,1)},'island':{(9,9)}}

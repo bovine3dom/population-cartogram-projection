@@ -122,14 +122,16 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     if not movable:raise ValueError('No movable components')
     groups=contact_groups(pairs) if by_landmass else [sorted(movable)]
     groups.sort(key=lambda group:(-sum(budgets[c] for c in group),group))
-    centres=alignment=flow=None
+    centres=alignment=flow=None;projected_sites=None
+    if sites:
+        from population_sites import read_sites
+        projected_sites=read_sites(sites,tiles)
     if flow_geometry:
         from flow_footprint import prepare
-        tiles,centres,flow=prepare(flow_geometry,tiles,fixed,budgets,flow_stretch)
+        tiles,centres,flow=prepare(flow_geometry,tiles,fixed,budgets,flow_stretch,projected_sites)
     if guide_layout or sites:
         if sites:
-            from population_sites import read_sites
-            guides={c:{point} for c,point in read_sites(sites,tiles).items()}
+            guides={c:{point} for c,point in projected_sites.items()}
         else:_,guides,_=load(inputs,guide_layout)
         centres,alignment=fit_guide_centres(tiles,guides,budgets)
     margin=max(64,int(np.ceil(4*sigma))+2)
