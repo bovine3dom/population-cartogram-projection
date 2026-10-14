@@ -86,6 +86,23 @@ class MeshTests(unittest.TestCase):
         # The reciprocal barrier must remain active above the accepted floor.
         self.assertGreater(objective.evaluate((objective.vertices*1e-4).ravel())[0],1e6)
 
+    def test_component_shape_prior(self):
+        from mesh_shape_prior import RegionShapePrior
+        vertices,triangles,portions,fixed,pieces,_=build_mesh([box(0,0,1,1),box(1,0,2,1)],8)
+        targets=np.asarray(portions.sum(axis=1)).ravel()
+        prior=RegionShapePrior(vertices,triangles,pieces,targets)
+        self.assertAlmostEqual(prior.evaluate(vertices)[0],0)
+        self.assertAlmostEqual(prior.evaluate(vertices+[3,4])[0],0)
+        objective=MeshObjective(vertices,triangles,portions,targets,fixed)
+        objective.shape_prior=prior;objective.region_shape_weight=3
+        values=vertices[~fixed].ravel()+np.random.default_rng(7).normal(0,.001,np.sum(~fixed)*2)
+        cost,gradient=objective.evaluate(values)
+        for i in np.linspace(0,len(values)-1,20,dtype=int):
+            step=np.zeros_like(values);step[i]=1e-6
+            estimate=(objective.evaluate(values+step)[0]-objective.evaluate(values-step)[0])/2e-6
+            self.assertAlmostEqual(estimate,gradient[i],places=5)
+        self.assertGreater(cost,0)
+
     def test_orientation_prior(self):
         objective=self.fixture();objective.rotation_weight=2
         values=objective.vertices.ravel();rotation=np.array([[0.,-1],[1,0]])
@@ -124,7 +141,7 @@ class MeshTests(unittest.TestCase):
             features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(g)) for c,g in [('a',box(0,0,1,1)),('b',box(1,0,2,1))]]
             (prepared/'geometry.geojson').write_text(json.dumps(dict(type='FeatureCollection',features=features)))
             (prepared/'areas.csv').write_text('component_id,tiles\na,7\nb,3\n')
-            with contextlib.redirect_stdout(io.StringIO()):report=run(prepared,root/'output',resolution=8,iterations=100,distortions=(.1,.01),stage_geometry=True)
+            with contextlib.redirect_stdout(io.StringIO()):report=run(prepared,root/'output',resolution=8,iterations=100,distortions=(.1,.01),stage_geometry=True,region_shape_weight=.1)
             self.assertLess(report['stages'][-1]['weighted_absolute_area_error'],report['initial']['weighted_absolute_area_error'])
             self.assertEqual(report['stages'][-1]['folded_triangles'],0);self.assertEqual(report['overlap_pairs'],[])
             geometries=read_shapes(root/'output/geometry.geojson');self.assertEqual(set(geometries),{'a','b'})
