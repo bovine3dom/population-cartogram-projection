@@ -47,6 +47,21 @@ Record this setting when you compare runs. The external solver can raise small
 area targets before solving; its error is not necessarily the error against the
 original population budgets. Any failed external run stops the pipeline.
 
+## Optional controls
+
+- `--sites FILE`: use [population sites](population-sites.md) for country costs.
+- `--float-islands`: let intact isolated islands move outside the mainland target
+  instead of reserving their old cells as holes.
+- `--dock-landmasses`: translate separate target pieces until they touch. This
+  acts within each source land-border group. It adds no connector cells, but
+  can change coasts and positions. Country sites do not move with the pieces.
+- `--borrow-coast`: if an interior region cannot grow into empty space, try a
+  donor-cell exchange. A neighbour gives one cell to that region and grows one
+  cell into empty space. Each country keeps its budget. The search has limits
+  of 32 fragment cells and 64 donor-cell choices per step. It can still fail.
+
+These controls are off by default. They are experiments, not acceptance rules.
+
 ## Stages
 
 1. Prepare component geometry and run continuous flow, unless geometry was

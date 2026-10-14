@@ -21,7 +21,7 @@ import review_regions
 from save_review import digest
 
 
-def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,stretch=1.5,flow_guide_weight=0.,sigma=None,iterations=300,flow_grid=256,flow_area_error=.01):
+def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,stretch=1.5,flow_guide_weight=0.,sigma=None,iterations=300,flow_grid=256,flow_area_error=.01,sites=None,float_islands=False,dock_landmasses=False,borrow_coast=False):
     if output.exists():raise ValueError('Output already exists')
     if flow_geometry is None and (flow_binary is None or not flow_binary.is_file()):raise ValueError('Supply an existing flow geometry or the optional flow binary')
     shapes,_,_=review_layout.load(inputs,templates);budget=sum(int(r['tiles']) for r in shapes.values())
@@ -29,9 +29,9 @@ def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,str
     if any(not math.isfinite(v) for v in [stretch,flow_guide_weight,sigma]) or min(stretch,sigma)<=0 or flow_guide_weight<0 or iterations<1:raise ValueError('Invalid pipeline settings')
     if not isinstance(flow_grid,int) or flow_grid<16 or flow_grid&(flow_grid-1):raise ValueError('Flow grid must be a power of two, at least 16')
     if not math.isfinite(flow_area_error) or not 0<flow_area_error<1:raise ValueError('Invalid flow area tolerance')
-    files=[inputs/'groups.csv',inputs/'manifest.json',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv',polygons,flow_geometry if flow_geometry else flow_binary]
+    files=[inputs/'groups.csv',inputs/'manifest.json',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv',polygons,flow_geometry if flow_geometry else flow_binary]+([sites] if sites else [])
     def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
-    record=dict(started_at_utc=now(),complete=False,approved_for_production=False,tile_budget=budget,stretch=stretch,flow_guide_weight=flow_guide_weight,sigma=sigma,iterations=iterations,flow_grid=flow_grid,flow_area_error=flow_area_error,
+    record=dict(started_at_utc=now(),complete=False,approved_for_production=False,tile_budget=budget,stretch=stretch,flow_guide_weight=flow_guide_weight,sigma=sigma,iterations=iterations,flow_grid=flow_grid,flow_area_error=flow_area_error,sites=str(sites) if sites else None,float_islands=float_islands,dock_landmasses=dock_landmasses,borrow_coast=borrow_coast,
         inputs={str(p):digest(p) for p in files},scripts={p.name:digest(p) for p in sorted(Path(__file__).parent.glob('*.py'))},steps=[],limit='Experimental layouts only. Exact counts do not prove geographic or border accuracy. Review images and failures before selection. The optional external flow binary has an AGPL-3.0 licence and remains outside production dependencies.')
     output.mkdir(parents=True)
     def save():(output/'pipeline.json').write_text(json.dumps(record,indent=2)+'\n')
@@ -57,8 +57,8 @@ def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,str
         raw=stage('check-flow',lambda:review_flow.run(inputs,flow_geometry,output/'flow-review'))
         if raw['overlap_pairs']:raise ValueError('Continuous flow has overlaps')
         record['flow_geometry_sha256']=digest(flow_geometry)
-        stage('partition',lambda:partition_land.run(inputs,templates,output/'partition',sigma=sigma,iterations=iterations,power=True,by_landmass=True,flow_geometry=flow_geometry,flow_stretch=stretch,flow_guide_weight=flow_guide_weight))
-        stage('repair',lambda:repair_partition.run(inputs,output/'partition',output/'repaired',relocate_fragments=True))
+        stage('partition',lambda:partition_land.run(inputs,templates,output/'partition',sigma=sigma,iterations=iterations,power=True,by_landmass=True,flow_geometry=flow_geometry,flow_stretch=stretch,flow_guide_weight=flow_guide_weight,sites=sites,float_islands=float_islands,dock_landmasses=dock_landmasses))
+        stage('repair',lambda:repair_partition.run(inputs,output/'partition',output/'repaired',relocate_fragments=True,borrow_coast=borrow_coast))
         stage('islands',lambda:place_islands.run(inputs,output/'repaired',polygons,output/'layout',preserve_mainland_defects=True))
         title=f'Automatic shared-footprint experiment: {budget:,} tiles'
         metrics=stage('metrics',lambda:review_layout.run(inputs,output/'layout',title))
@@ -81,6 +81,8 @@ if __name__=='__main__':
     parser.add_argument('--flow-binary',type=Path);parser.add_argument('--flow-geometry',type=Path)
     parser.add_argument('--stretch',type=float,default=1.5);parser.add_argument('--flow-guide-weight',type=float,default=0.)
     parser.add_argument('--sigma',type=float);parser.add_argument('--iterations',type=int,default=300)
+    parser.add_argument('--sites',type=Path)
+    for flag in ['float-islands','dock-landmasses','borrow-coast']:parser.add_argument('--'+flag,action='store_true')
     parser.add_argument('--flow-grid',type=int,default=256)
     parser.add_argument('--flow-area-error',type=float,default=.01,help='External guide-area tolerance; final tile budgets remain exact')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

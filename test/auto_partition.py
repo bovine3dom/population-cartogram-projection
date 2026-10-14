@@ -246,8 +246,10 @@ class CapacityPartitionTests(unittest.TestCase):
             (layout/'cells.csv').write_text('component_id,x,y\na,0,0\na,0,1\na,1,0\na,1,1\na,2,0\nb,2,1\nb,3,0\nb,3,1\n')
             features=[dict(type='Feature',properties=dict(component_id=c),geometry=dict(type='Polygon',coordinates=[[[x,0],[x+2,0],[x+2,2],[x,2],[x,0]]])) for c,x in [('a',0),('b',2)]]
             geometry=root/'geometry.geojson';geometry.write_text(json.dumps(dict(type='FeatureCollection',features=features)))
-            report=run_compact_pipeline.run(inputs,layout,geometry,root/'pipeline',flow_geometry=geometry,sigma=1,iterations=20)
+            sites=root/'sites.csv';sites.write_text('component_id,x,y\na,0,0\nb,1,0\n')
+            report=run_compact_pipeline.run(inputs,layout,geometry,root/'pipeline',flow_geometry=geometry,sigma=1,iterations=20,sites=sites,float_islands=True,dock_landmasses=True,borrow_coast=True)
             self.assertTrue(report['complete']);self.assertFalse(report['approved_for_production'])
+            self.assertTrue(report['dock_landmasses']);self.assertTrue(report['borrow_coast']);self.assertIn(str(sites),report['inputs'])
             self.assertEqual(report['metrics']['absolute_tile_error'],0)
             self.assertTrue(all(step['complete'] for step in report['steps']))
             self.assertTrue((root/'pipeline/layout/review.png').is_file())
