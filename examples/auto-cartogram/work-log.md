@@ -329,7 +329,7 @@ under ignored `output/auto-cartogram/`.
 - Started three-resolution topology and geography comparisons with dissolved
   country outlines. Earlier map-unit results remain available as comparisons.
 
-## 23:43–00:49 UTC — completed native transport and new world previews
+## 23:43–00:48 UTC — completed native transport and new world previews
 
 - Long native and Java runs continued during this interval. At 00:43, inspected
   the completed native Indonesia export. It has 832,166 source rows and
@@ -349,3 +349,16 @@ under ignored `output/auto-cartogram/`.
   Earlier map-unit images and checks remain in `early-layouts.md`.
 - Started a longer dissolved 10,000-budget fit. Large-resolution and default
   fits remain bounded by their recorded timeouts. No production files changed.
+
+## 00:50–00:55 UTC — whole-shape relaxation
+
+- Added a translation stage before greedy border repair. It keeps each shape
+  and tile count unchanged, forbids false contacts, and reduces neighbour-gap
+  cost plus a penalty for movement from the baseline. This is a local search,
+  not a topology or geographic-order guarantee.
+- The first 10,000-tile trial reduces missing represented borders from 60 to
+  32 after repair. Weighted compactness improves from 0.175 to 0.193, but country
+  axis-order errors increase from 58 to 105. Long connectors remain visible.
+- All 17 geometry tests pass, including repeatability, shape preservation,
+  contact checks, and decreasing translation cost. Added parent settings to
+  repair provenance before the larger parameter comparison.

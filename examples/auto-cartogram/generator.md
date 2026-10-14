@@ -158,6 +158,16 @@ and all contacts already restored. It forbids false contacts. Failed paths are
 rolled back. Some borders remain missing, and long thin connectors can damage
 shape and position. This is a separate experiment, not the published algorithm.
 
+`relax_layout.py INPUT BASELINE NEW_OUTPUT` first tries whole-shape translations.
+It reduces squared gaps between required neighbours, with a penalty for movement
+from each baseline position. The penalty is `stiffness * sqrt(tile_count)` times
+squared translation distance. Shapes and counts do not change, and false
+contacts are forbidden. The default stiffness is 0.05; `--rounds` bounds the
+coordinate search. This can improve later border repair, but can damage country
+and island order. It does not preserve every contact during the translation
+stage. Run the independent review after each stage. Repair metadata records the
+parent layout settings as well as its tile-file hash.
+
 Without `--rotations`, the initializer uses an arbitrary planar embedding. This
 can put entire continental regions inside the wrong faces. Retained contacts
 alone do not imply a useful geographic layout.
