@@ -1003,6 +1003,21 @@ The separated layout has exact budgets but is not an acceptable replacement.
   remain unchanged. No production files changed. These candidates are not
   approved replacements.
 
+## 22:05–22:07 UTC — Recorded island options and new footprint tests
+
+- Added optional fixed-coast placement and group merging to the recorded
+  pipeline. Fixed-coast placement follows shared-island correction. Group merging
+  requires archipelago placement. Defaults stay unchanged. All 24 partition
+  tests pass, including the combined stages and fixed-coast placement alone.
+- The gallery HTTP check passes for 153 resources. A new archive check and full
+  test checkpoint are running. Code changed during this checkpoint, so repeat
+  it with a frozen code version before using its result as validation.
+- Started four exact-tile tests of the moment-shape mesh guides. They use shape
+  weights 100 and 1,000, footprint smoothing 4 and 8, stretch 1, and guide cost 8.
+  Population sites pass through each saved mesh. The raw guides had thin spikes;
+  this tests whether footprint smoothing removes them without flattening China.
+  No result is selected before visual review.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
