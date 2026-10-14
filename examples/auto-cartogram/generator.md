@@ -334,6 +334,14 @@ mismatched targets. Source IDs and weight values stay unchanged; there is no
 new solve. It runs independent transport checks before publication. Review the
 new layout separately, and repeat native-source checks where applicable.
 
+An optional `balance_transport.py --expand-group GROUP_ID` adds eligible
+pairs within a selected group before scaling. Repeat the option for each group.
+Each source can reach one additional rook step from its existing targets, but
+cannot cross a group boundary. New pairs receive a small positive seed; initial
+source totals stay unchanged. This is a separate experiment, not the default
+correction. It changes support and is not a minimum-cost solve. Check feasibility,
+weight changes, and position changes before use.
+
 `check_support.py TRANSPORT_DIR NEW_CHECKS.json` checks exact marginal
 feasibility for grouped exports with integer source populations. Run it in the
 geometry environment. It combines identical source neighbourhoods, then uses

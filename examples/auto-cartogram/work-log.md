@@ -618,3 +618,16 @@ under ignored `output/auto-cartogram/`.
   also passed at 03:12, before these two added tests.
 - Started a bounded 200-pass comparison at 110,000 tiles. The remaining
   convex-boundary fit and native-support checks are kept separate.
+
+## 03:25–03:28 UTC — local support expansion trial
+
+- The integer flow check finds feasible exact marginals for all 51 native
+  Indonesia groups. This does not guarantee fast convergence of positive
+  scaling, but separates its slow strict-tolerance run from the world obstruction.
+- Added optional one-step support expansion for explicitly selected groups.
+  Each source can reach rook neighbours of its saved targets within the same
+  group. Initial source totals stay unchanged. Default correction still adds
+  no pairs. The new test checks locality, eligibility, and a solved bottleneck.
+- Started a 30-minute-bounded correction for the four infeasible world H3-5
+  groups. No accepted result is available yet. This is not a new cost-optimal
+  transport solve and will need independent balance and position checks.
