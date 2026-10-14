@@ -87,16 +87,24 @@ def build_mesh(geometries,resolution=64):
     extent=(upper-lower)/span+.4;lo=-extent/2;hi=extent/2
     nx=resolution;ny=max(4,round(resolution*extent[1]/extent[0]))
     xx,yy=np.meshgrid(np.linspace(lo[0],hi[0],nx+1),np.linspace(lo[1],hi[1],ny+1))
-    points=list(zip(xx.ravel(),yy.ravel()))
-    # Local samples give small components mesh support without country-ID unions.
-    for g in normalized:
-        x0,y0,x1,y1=g.bounds
-        points.extend((x,y) for x in np.linspace(x0,x1,5)[1:-1] for y in np.linspace(y0,y1,5)[1:-1])
-        p=g.representative_point();points.append((p.x,p.y))
-    vertices=np.unique(np.asarray(points),axis=0);mesh=Delaunay(vertices);triangles=mesh.simplices.copy()
+    vertices=np.column_stack((xx.ravel(),yy.ravel()));refinements=[]
+    # Midpoint refinement avoids inserting tiny country boxes into coarse cells,
+    # which can make nearly degenerate triangles and stall the area solve.
+    for level in range(17):
+        triangles=Delaunay(vertices).simplices.copy()
+        polygons=[Polygon(v) for v in vertices[triangles]];tree=STRtree(polygons);selected=set();counts=[]
+        for g in normalized:
+            hits=[t for t in tree.query(g,predicate='intersects') if g.intersection(polygons[t]).area>0]
+            counts.append(len(hits))
+            if len(hits)<4:selected.update(hits)
+        refinements.append(dict(level=level,vertices=len(vertices),triangles=len(triangles),minimum_region_support=min(counts)))
+        if not selected or level==16:break
+        corners=vertices[triangles[sorted(selected)]]
+        midpoints=np.concatenate([(corners[:,a]+corners[:,b])/2 for a,b in [(0,1),(1,2),(2,0)]])
+        vertices=np.unique(np.concatenate([vertices,midpoints]),axis=0)
     if np.any(np.linalg.det(edge_matrices(vertices,triangles))<=0):raise ValueError('Invalid initial mesh orientation')
     fixed=np.any(np.isclose(vertices,lo,atol=1e-12,rtol=0)|np.isclose(vertices,hi,atol=1e-12,rtol=0),axis=1)
-    polygons=[Polygon(v) for v in vertices[triangles]];tree=STRtree(polygons);rows=[];cols=[];areas=[];pieces=[]
+    rows=[];cols=[];areas=[];pieces=[]
     for r,g in enumerate(normalized):
         region=[]
         for t in sorted(tree.query(g,predicate='intersects').tolist()):
@@ -107,7 +115,7 @@ def build_mesh(geometries,resolution=64):
     portions=coo_matrix((areas,(rows,cols)),shape=(len(geometries),len(triangles))).tocsr()
     expected=np.array([g.area for g in normalized]);actual=np.asarray(portions.sum(axis=1)).ravel()
     if not np.allclose(actual,expected,rtol=1e-8,atol=1e-14):raise ValueError('Mesh intersections lose source area')
-    return vertices,triangles,portions,fixed,pieces,dict(span=span,centre=centre.tolist(),resolution=resolution,grid_shape=[nx,ny],region_triangle_counts=[len(p) for p in pieces])
+    return vertices,triangles,portions,fixed,pieces,dict(span=span,centre=centre.tolist(),resolution=resolution,grid_shape=[nx,ny],refinements=refinements,region_triangle_counts=[len(p) for p in pieces])
 
 
 def transform_pieces(objective,values,pieces,cleanup=None):

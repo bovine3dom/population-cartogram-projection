@@ -26,8 +26,9 @@ load its pickle files, or use its bundled population data.
 `mesh_guide.py` is an independent, smaller planar experiment based on the paper's
 objective. It uses prepared Equal Earth component geometry and guide budgets.
 
-1. Make a rectangular Delaunay mesh with a water margin. Add local samples near
-   each component, including small components. Keep the outer frame fixed.
+1. Make a rectangular Delaunay mesh with a water margin. Refine triangles near
+   components with fewer than four supporting triangles. Add edge midpoints and
+   repeat, up to 16 refinement levels. Keep the outer frame fixed.
 2. Intersect each source component with each relevant triangle. Check that the
    intersections retain its source area. Save the number of supporting triangles.
 3. Move the free vertices. Each triangle defines one affine transformation.
@@ -66,6 +67,12 @@ Other differences from the paper are important:
   sum of mapped piece areas, not only the union area. Reject errors above the
   larger of `1e-12` and `1e-8` times the expected area. Reject changed hole counts.
   This can affect extremely small features; it is not a way to close map gaps.
+
+The first country-box sampling trials stopped with about 97% weighted area
+error. The optimizer reported a relative-change stopping condition, not a useful
+cartogram. Their world images remain close to the geographic input. They are
+rejected. Midpoint refinement now replaces those box samples; it still requires
+independent tests and visual review.
 
 ## Run
 
