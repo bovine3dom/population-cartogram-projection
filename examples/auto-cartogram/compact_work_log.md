@@ -1071,6 +1071,27 @@ The separated layout has exact budgets but is not an acceptable replacement.
   joint placement must constrain relative island positions as well as mainland
   separation. Do not promote these prototypes into the recorded pipeline.
 
+## 22:23–22:36 UTC — Joint direction targets and exact-shape packing
+
+- Read the SciPy 1.17 linear-program documentation directly after a focused web
+  search. Tested joint island position targets with soft source-box separation
+  and a movement cost. Four linear-program trials produce 80, 223, 114, and
+  170 overlapping large-body cells. Rejected them before rendering a valid map.
+- Added exact-shape packing with source-centroid order constraints to the
+  prototype. All four unrestricted trials stop: bounds conflict or placement
+  fails. Solver success alone does not establish a usable layout.
+- Restricted movement to small shared islands. At 55,000 tiles, the 1,000 km
+  test puts Timor farther south without moving the main Japanese islands.
+  Visually checked its Indonesia detail and the 500 km control. The latter does
+  not correct Timor. The 1,000 km test also moves New Guinea south; this needs
+  further review. Neither is approved.
+- The restricted prototype completes at 110,000 tiles, but fails at 10,000 and
+  500,000 tiles. Added a separate experimental script with explicit failure,
+  count, shape, fixed-cell, and contact checks. Four synthetic tests pass.
+  Tiny shared islands below 16 tiles now stay fixed, rather than passing through
+  an unrelated small-island placement step. Official-script world checks are
+  next. The production pipeline and selected controls are unchanged.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

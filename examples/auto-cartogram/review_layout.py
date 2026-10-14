@@ -192,6 +192,7 @@ def draw(path, shapes, tiles, owners, metrics, title):
              "mode=shape-placement":"Intact source shapes; translated without border paths",
              "mode=island-placement":"Islands translated; mainland shapes unchanged in this stage",
              "mode=shared-island-templates":"Shared-island templates; unselected components unchanged",
+             "mode=shared-island-positions":"Shared islands translated as rigid bodies; other components unchanged",
              "mode=archipelago-placement":"Nearby island groups translated; mainland unchanged",
              "mode=shape-stress":"Intact source shapes; geographic springs and collision repulsion"}
     method = methods.get(metrics["generation"][0],"GridMapPipeline")
