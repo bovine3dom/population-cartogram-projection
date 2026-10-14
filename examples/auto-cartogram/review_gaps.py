@@ -61,12 +61,12 @@ def measure(owners,radii=(1,2,4,8)):
     return report,land,enclosed,masks,(x0,y0)
 
 
-def draw(path,land,enclosed,masks,title):
+def draw(path,land,enclosed,masks,title,legend='Grey: land. Red: enclosed empty space. Orange: closing proxy, including open gaps. Not all marked water is artificial.'):
     width=1500;height=1000;scale=min((width-40)/land.shape[1],(height-150)/land.shape[0])
     parts=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">',
         '<rect width="100%" height="100%" fill="#faf9f6"/>',
         f'<text x="20" y="35" font-family="sans-serif" font-size="24">{html.escape(title)}</text>',
-        '<text x="20" y="65" font-family="sans-serif" font-size="16">Grey: land. Red: enclosed empty space. Orange: closing proxy, including open gaps. Not all marked water is artificial.</text>']
+        f'<text x="20" y="65" font-family="sans-serif" font-size="16">{html.escape(legend)}</text>']
     for mask,color in [(land,'#666'),(masks[max(masks)],'#e9a23b'),(enclosed,'#c53b40')]:
         yy,xx=np.nonzero(mask)
         commands=[f'M{20+x*scale:.3f},{100+(land.shape[0]-1-y)*scale:.3f}h{scale:.3f}v{scale:.3f}h-{scale:.3f}z' for y,x in zip(yy,xx)]

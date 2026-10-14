@@ -164,10 +164,11 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None,budgets=
     return (costs,origin,allowed) if stretch is not None else (costs,origin)
 
 
-def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.,fit_attempts=1,strict_fit=False,interior_sea_radius=0,guide_layout=None,cache_regrowth=True,full_topology_checks=False):
+def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.,fit_attempts=1,strict_fit=False,interior_sea_radius=0,guide_layout=None,cache_regrowth=True,full_topology_checks=False,envelope_weight=0.,envelope_sigma=8.):
     if output.exists():raise ValueError('Output already exists')
-    if rounds<1 or choices<1 or fit_rounds<0 or fit_attempts<1 or interior_sea_radius<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty,sea_perimeter]):raise ValueError('Invalid optimization settings')
+    if rounds<1 or choices<1 or fit_rounds<0 or fit_attempts<1 or interior_sea_radius<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty,sea_perimeter,envelope_weight,envelope_sigma]):raise ValueError('Invalid optimization settings')
     if template_penalty and not bounded:raise ValueError('Template penalty requires bounded deformation')
+    if envelope_weight and (not land_only or envelope_sigma<=0):raise ValueError('Envelope cost requires land-only mode and a positive scale')
     if bounded:regrow=True
     if regrow:atomic=True
     scripts=[Path(__file__)]+[Path(__file__).with_name(name) for name in ['geographic_baseline.py','review_layout.py']]
@@ -176,16 +177,18 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     if atomic:scripts.append(Path(__file__).with_name('atomic_deformation.py'))
     if regrow:scripts.append(Path(__file__).with_name('regrow_regions.py'))
     if bounded:scripts.append(Path(__file__).with_name('bounded_deformation.py'))
+    if envelope_weight:scripts.append(Path(__file__).with_name('land_envelope.py'))
     hashes={p.name:digest(p) for p in scripts}
     input_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',layout/'cells.csv']+([guide_layout/'cells.csv',guide_layout/'complete.txt'] if guide_layout else [])}
     shapes,tiles,_=load(inputs,layout)
     requested={c:int(row['tiles']) for c,row in shapes.items()}
+    if envelope_weight and any(len(tiles[c])!=requested[c] for c in tiles):raise ValueError('Envelope cost requires exact starting budgets')
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
     centres=alignment=None
     if guide_layout:
         _,guides,_=load(inputs,guide_layout)
         centres,alignment=fit_guide_centres(tiles,guides,requested)
-    started=time.monotonic();guided=guide_costs(inputs,tiles,anchor,guide,margin=max(64,interior_sea_radius+2),stretch=stretch if bounded else None,budgets=requested if fit_rounds else None,centres=centres)
+    started=time.monotonic();guided=guide_costs(inputs,tiles,anchor,guide,margin=max(64,interior_sea_radius+2,math.ceil(4*envelope_sigma)+2 if envelope_weight else 0),stretch=stretch if bounded else None,budgets=requested if fit_rounds else None,centres=centres)
     costs,origin=guided[:2]
     state_type=Deformation
     if cycles:
@@ -205,6 +208,12 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         state_type=BoundedDeformation
     fixed=set(tiles)-{c for pair in required for c in pair} if land_only else set()
     options=dict(allowed_masks=guided[2],contact_reward=contact_reward,template_penalty=template_penalty,fixed=fixed) if bounded else {}
+    target=envelope=None
+    if envelope_weight:
+        from land_envelope import build, write_cells
+        target,envelope=build(tiles,fixed,origin,next(iter(costs.values())).shape,envelope_sigma)
+        penalty=(envelope_weight*(~target)).astype(np.float32)
+        for c in set(tiles)-fixed:costs[c]+=penalty
     sea_mask=None
     if interior_sea_radius:
         sea_mask=np.zeros(next(iter(costs.values())).shape,dtype=bool)
@@ -234,11 +243,16 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         if not moves:break
     if any(len(state.tiles[c])!=counts[c] or connectivity(state.tiles[c])!=1 or holes(state.tiles[c]) for c in tiles):raise AssertionError('Count or topology changed')
     if bounded:state.check_contacts()
+    if envelope is not None:
+        occupied=np.zeros_like(target)
+        for x,y in state.owners:occupied[y-origin[1],x-origin[0]]=True
+        envelope['final_empty_target_cells']=int((target&~occupied).sum())
+        envelope['weight']=envelope_weight
     metadata=dict(method='Count-preserving local boundary exchanges with perimeter and geographic-guide costs; no required-contact paths',
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
         cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,fit_attempts=fit_attempts,strict_fit=strict_fit,absolute_tile_error=error,
         bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,sea_perimeter=sea_perimeter,interior_sea_radius=interior_sea_radius,
-        template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),guide_area='requested budget' if fit_rounds else 'initial count',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,cache_regrowth=cache_regrowth,full_topology_checks=full_topology_checks,
+        template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),guide_area='requested budget' if fit_rounds else 'initial count',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,cache_regrowth=cache_regrowth,full_topology_checks=full_topology_checks,envelope=envelope,
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
         input_cells_sha256=input_hashes[str(layout/'cells.csv')],inputs=input_hashes,scripts=hashes,
         limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed guide centres can preserve poor geographic positions. A guide layout changes target centres, not the starting cells; alignment uses a positive uniform scale and translation without rotation. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders during shape optimization, and also during count fitting in bounded mode. An interior sea radius restricts the extra sea-edge cost to water inside a fixed closing envelope of initial land; this envelope can include real water.')
@@ -249,6 +263,9 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
             for c,points in sorted(state.tiles.items()):writer.writerows((c,x,y) for x,y in sorted(points))
         with (temp/'history.csv').open('w',newline='') as stream:
             writer=csv.DictWriter(stream,fieldnames=list(history[0]));writer.writeheader();writer.writerows(history)
+        if envelope is not None:
+            write_cells(temp/'envelope.csv',target,origin)
+            envelope['cells_sha256']=digest(temp/'envelope.csv')
         (temp/'compact.json').write_text(json.dumps(metadata,indent=2)+'\n')
         (temp/'complete.txt').write_text(f'mode=compact-deformation\ncounts={"exact" if not error else "partial"}\ncontacts=soft\n')
         temp.rename(output)
@@ -271,5 +288,6 @@ if __name__=='__main__':
     parser.add_argument('--guide-layout',type=Path)
     parser.add_argument('--no-regrowth-cache',dest='cache_regrowth',action='store_false')
     parser.add_argument('--full-topology-checks',action='store_true')
+    parser.add_argument('--envelope-weight',type=float,default=0.);parser.add_argument('--envelope-sigma',type=float,default=8.)
     parser.add_argument('--land-only',action='store_true');parser.add_argument('--interior-sea-radius',type=int,default=0)
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
