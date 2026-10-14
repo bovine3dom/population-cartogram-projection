@@ -650,6 +650,26 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The original 500,000-tile pipeline and old outline-cost control still run
   separately with their original code. No result is assumed from their runtime.
 
+## 19:50–20:05 UTC — carry population sites through the mesh
+
+- The combined guide-8 and border-cost-16 control retains 266 of 311 matched
+  country borders, with 39 unsupported borders and 198 axis reversals. OWID has
+  248, 48, and 210 respectively. Inspected the world image. Canada, Korea, and
+  Pakistan still have poor shapes. These scores do not establish visual quality.
+- Both tile assignments from the bounded 32-grid mesh have exact budgets and
+  connected components. Inspected both world images. Korea and Southeast Asia
+  remain misplaced. Neither result is suitable for production.
+- Found a coordinate mismatch in the experiment design: native population sites
+  had only a global scale and translation fit to the deformed geometry. Added
+  piecewise affine site interpolation through the saved mesh. It checks the
+  triangulation, triangle orientation, finite coordinates, and frame coverage.
+- Added an explicit flow-coordinate site mode. It applies the same raster scale
+  and stretch to geometry and sites, without a second global fit. All 481 world
+  sites map inside the mesh frame. Six mesh tests and 20 partition tests pass.
+- The transformed population mean is not the mean of all transformed population
+  cells. This remains a site-placement approximation. Population totals and
+  component labels do not change.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
