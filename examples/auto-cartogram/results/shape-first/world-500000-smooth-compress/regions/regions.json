@@ -1,0 +1,107 @@
+{
+  "regions": [
+    {
+      "name": "north-america",
+      "source_bounds": [
+        -170,
+        -50,
+        5,
+        85
+      ],
+      "selected_components": 107,
+      "svg_view_box": [
+        199.42884801548882,
+        283.0106485963214,
+        372.0087124878993,
+        378.3446272991288
+      ]
+    },
+    {
+      "name": "south-america",
+      "source_bounds": [
+        -85,
+        -30,
+        -60,
+        15
+      ],
+      "selected_components": 53,
+      "svg_view_box": [
+        392.22168441432717,
+        554.5498547918684,
+        335.80348499515975,
+        394.6369796708616
+      ]
+    },
+    {
+      "name": "europe",
+      "source_bounds": [
+        -15,
+        45,
+        35,
+        72
+      ],
+      "selected_components": 160,
+      "svg_view_box": [
+        617.5992255566312,
+        143.62052274927396,
+        401.8780251694095,
+        302.3136495643756
+      ]
+    },
+    {
+      "name": "africa",
+      "source_bounds": [
+        -25,
+        55,
+        -38,
+        38
+      ],
+      "selected_components": 145,
+      "svg_view_box": [
+        578.678606001936,
+        342.74927395934174,
+        479.71926427879976,
+        593.7657308809294
+      ]
+    },
+    {
+      "name": "south-asia",
+      "source_bounds": [
+        60,
+        105,
+        5,
+        40
+      ],
+      "selected_components": 58,
+      "svg_view_box": [
+        960.6437560503389,
+        140,
+        495.1064859632138,
+        935
+      ]
+    },
+    {
+      "name": "indonesia",
+      "source_bounds": [
+        90,
+        145,
+        -12,
+        10
+      ],
+      "selected_components": 162,
+      "svg_view_box": [
+        1179.6853823814133,
+        585.324298160697,
+        338.51887705711533,
+        306.83930300096813
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-500000-dissolved-input/groups.csv": "6a9de0a7294d00416ee6288714e97bd3216a09c7870d40e64b5108b00f735d15",
+    "output/auto-cartogram/world-500000-smooth-compress/cells.csv": "475131a24bcbe62c5c9e89c7f2265bd50020649568baac025f5cc4034234a56c",
+    "output/auto-cartogram/world-500000-smooth-compress/review.svg": "39ec2cc8a64c1bf1778319b0382b9f9ac2877432e0c205346fb90e246d6b2fc3",
+    "output/auto-cartogram/world-500000-smooth-compress/metrics.json": "0aeba36ffa0ad38144496da3e85746b4a20b2fa324c1b33f49b362e16adde988"
+  },
+  "script_sha256": "898371fc21b08d4b1dd08c906709a54708934e11cbf4d95e133f327f2144d2db"
+}

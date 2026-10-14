@@ -51,9 +51,21 @@ The direction cost does not prove correct geographic positions. Further trials
 will use nearest source coast points to position separated components, rather
 than only their centres. These position preferences do not create border paths.
 
-Trials at 10,000, 110,000, and 500,000 tiles are running. The largest input has
-888 represented components. Its grouped island population is 1,865,414 people,
-compared with 10,133,200 at 55,000 tiles. It still does not represent every island.
+The gallery now includes 10,000, 55,000, 110,000, and 500,000 tiles. These are
+separate trials, not a controlled resolution test with identical settings.
+The 500,000-tile trial uses no geographic-order cost. Further trials continue.
+
+| Tiles | Represented components | Grouped island population | Retained source borders |
+| ---: | ---: | ---: | ---: |
+| 10,000 | 341 | 26,992,339 | 70 / 341 |
+| 55,000 | 481 | 10,133,200 | 89 / 348 |
+| 110,000 | 585 | 5,992,710 | 95 / 353 |
+| 500,000 | 888 | 1,865,414 | 101 / 359 |
+
+All four have exact requested tile budgets and no false contacts. The largest
+layout has more coast detail, but it still puts Sri Lanka near Malaysia. Its
+Indonesia detail shows that small shape errors and correct counts do not prove
+correct island positions. It also does not represent every island.
 
 Local distortion remains an option, not the default. The bounded trials removed
 coast detail without a sufficient improvement in border retention. The current
@@ -118,8 +130,9 @@ component. Neither result is an accepted layout.
 - At 55,000 tiles, zero-budget islands contribute 10,133,200 people to larger
   groups of the same country. This preserves their population, not their
   individual island shapes.
-- The tile experiments still omit 19 source holes. A tile region with no holes
-  is not proof that the original geographic topology is preserved.
+- The tile experiments omit 19 source holes through 110,000 tiles and 20 at
+  500,000 tiles. A tile region with no holes is not proof that the original
+  geographic topology is preserved.
 - Moving intact country shapes removes artificial strips, but greedy placement
   can change country order. Those trials need further position checks.
 - No new native-resolution population transport has been approved for these

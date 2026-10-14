@@ -1,0 +1,8 @@
+{
+  "source_file": "examples/auto-cartogram/shape_stress.py",
+  "loaded_revision": "73c5f06",
+  "loaded_source_sha256": "d5585e4c300ae7d33ad0a0b7ae86839f60308298ca7c24ee74f34fece2a009ab",
+  "reason": "These runs started at 11:33 UTC. The tracked runner was unchanged until the snapshot and the subsequent order-constraint edit. The old runner hashes its source at completion. Correct that late hash to the source actually loaded, and retain this explanation. New runs capture source hashes before optimization.",
+  "late_recorded_sha256": "1995e042567f9661f7730e090ea14585c84edf40446020e093ee3afe95d0d9dc",
+  "cells_sha256": "475131a24bcbe62c5c9e89c7f2265bd50020649568baac025f5cc4034234a56c"
+}

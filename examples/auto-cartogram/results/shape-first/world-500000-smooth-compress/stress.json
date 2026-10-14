@@ -1,0 +1,42 @@
+{
+  "method": "Geographic spring displacement with collision penalties, followed by exact integer translation; no border paths",
+  "collision_geometry": "signed-distance raster",
+  "border_anchors": true,
+  "no_false_contacts": true,
+  "start_from_templates": false,
+  "smooth_collision": true,
+  "ocean_scale_fraction": 0.1,
+  "ocean_scale_tiles": 70.71067811865476,
+  "maximum_integer_placement_shift": 77.04786942678163,
+  "integer_placement_shifts_over_two_tiles": 190,
+  "spacing": 1.0,
+  "maximum_iterations": 10000,
+  "iterations": 4820,
+  "success": true,
+  "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+  "collision": 100.0,
+  "spring": 1.0,
+  "anchor": 0.001,
+  "spatial": 0.03,
+  "gap": 0.1,
+  "initial_energy": 13062025306.167843,
+  "final_energy": 705916.8272896735,
+  "elapsed_seconds": 3095.1600278927945,
+  "inputs": {
+    "output/auto-cartogram/world-500000-dissolved-input/groups.csv": "6a9de0a7294d00416ee6288714e97bd3216a09c7870d40e64b5108b00f735d15",
+    "output/auto-cartogram/world-500000-dissolved-input/validated.wkt": "78296821be9239c321932a0e56a8cc58e54e819de74926b620edb77449557ef1",
+    "output/auto-cartogram/world-500000-dissolved-input/geographic-contacts.csv": "de308b8e39759ba7e2f6f4313f2512e6d7abf2292e9623dd78950efe866cc722",
+    "output/auto-cartogram/world-500000-dissolved-geographic/cells.csv": "414938f0c62ba114ac03dcebd63820d4b6a18549fa84eb7f0213a9b916c34bb9",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "scripts": {
+    "shape_stress.py": "d5585e4c300ae7d33ad0a0b7ae86839f60308298ca7c24ee74f34fece2a009ab",
+    "shape_placement.py": "20ed59825d0b0fde5893db3a267218e5c46846a9c0edd766f31b7ec41ef8dfd0",
+    "concave_stress.py": "0cdfda26f22cf6b273ce10262f5984141f85fe688508df1298aaa2c94c898d2a",
+    "prepare_flow.py": "74fae58dc179b144b0373c796c66d6614e012b33eb345706a5daf0913a7914bf",
+    "raster_stress.py": "9da4a14905f50dfc2d9bc2e6c15b395494f454c5e948a87952ca0f56992af29e",
+    "smooth_raster_stress.py": "a02adb8aa54a45f0222659b60cc6f9595850aba08d1a1e9780fd0831a3dc9659"
+  },
+  "limit": "Collision geometry is approximate. Convex pieces use outlines simplified by 0.75 tile; raster penalties use bilinear interpolation or a 0.6-tile Gaussian filter with cubic splines. Soft penalties do not prove that continuous shapes are disjoint. Final integer placement prevents overlap but can change order and contacts. No tile shape is distorted; input holes remain omitted.",
+  "source_hash_correction": "See source-hash-correction.json. No cell data changed."
+}

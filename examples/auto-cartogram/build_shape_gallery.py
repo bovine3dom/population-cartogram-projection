@@ -36,12 +36,13 @@ def run(output,bundles,replace=False):
         '<h1>Automatic world cartograms</h1>',
         '<p class="warning">Review candidates, not production maps. Each represented component keeps its tile shape. There are no added connector paths. Many real land borders remain separated.</p>',
         '<p>The production map has not changed. Requested tile budgets are exact; population ratios are approximate. Small islands with no tile budget remain grouped with a represented component of the same country.</p>',
+        '<p>These are separate trials. Position settings can differ between resolutions. The run name identifies each saved candidate.</p>',
         '<nav>'+''.join(f'<a href="#tiles-{n}">{n:,} tiles</a>' for n,b,m,p in sorted(cases))+'</nav>']
     for n,bundle,m,proof in sorted(cases):
         relative=os.path.relpath(bundle,output.parent)
         url=lambda name:html.escape(relative+'/'+name,quote=True)
         large='review-large.png' if (bundle/'review-large.png').exists() else 'review.png'
-        rows=[('Represented components',proof['components']),
+        rows=[('Run',bundle.name),('Represented components',proof['components']),
               ('Requested / actual tiles',f'{n:,} / {m["tiles"]:,}'),('Component count error',m['absolute_tile_error']),
               ('Retained source borders',f'{m["required_contacts"]-m["missing_contacts"]} / {m["required_contacts"]}'),
               ('False borders',m['false_contacts']),('Grouped island population',f'{m["grouped_population"]:,.0f}'),

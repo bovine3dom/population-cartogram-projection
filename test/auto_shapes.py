@@ -370,6 +370,22 @@ class ShapeTests(unittest.TestCase):
         rows['a'].update(west=-179,east=-177);rows['b'].update(west=177,east=179)
         self.assertEqual(GeographicOrder(['a','b'],rows).count,1)
 
+    def test_local_order_includes_small_neighbours_but_not_distant_countries(self):
+        rows={'a':dict(country_id='A',group_population=1e6,west=0,east=2,south=0,north=2),
+              'b':dict(country_id='B',group_population=20e6,west=10,east=12,south=10,north=12),
+              'c':dict(country_id='C',group_population=20e6,west=130,east=132,south=40,north=42)}
+        state=GeographicOrder(['a','b','c'],rows,local_degrees=35)
+        self.assertEqual(state.count,2)
+        self.assertTrue(np.all(state.weight<1))
+        positions=np.array([[4.,5.],[0.,0.],[100.,100.]])
+        _,gradient=state.objective(positions)
+        numeric=[]
+        for i in range(6):
+            shift=np.zeros(6);shift[i]=1e-6;shift=shift.reshape(3,2)
+            numeric.append((state.objective(positions+shift)[0]-state.objective(positions-shift)[0])/2e-6)
+        np.testing.assert_allclose(gradient.ravel(),numeric,atol=1e-6)
+        np.testing.assert_array_equal(gradient[2],[0.,0.])
+
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))
         self.assertFalse(state.exchange((0,0),(1,0)))
