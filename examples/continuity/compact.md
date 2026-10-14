@@ -58,6 +58,22 @@ loading and grid refinement preserve it. Do not change eta during a fit while
 comparing objective values as if they belonged to the same objective. The
 planet runner still uses its existing fixed eta unless explicitly adapted.
 
+For a saved country set, run:
+
+```sh
+julia --threads=8 --project=examples/uk-h3 examples/continuity/tune_baselines.jl \
+  INPUT_ROOT POSES_CSV_OR_DASH NEW_OUTPUT [COUNTRY_CODES...]
+```
+
+Use `-` instead of a pose CSV for the original geometry. The script requires
+oneAPI. It saves each converged eta stage, the selected plans, and a selection
+report. It can resume complete country selections when its input and code
+hashes match. A completed calibration can still have unmet support targets;
+inspect `selection.csv`. It does not fit borders or publish Arrow files.
+Set `CONTINUITY_COMPACT_CACHE_BYTES` for the device cache limit and
+`CONTINUITY_TUNE_MULTIPLIER` for the row target multiplier. The defaults are
+512 MiB and 2. Use a process timeout for long trials.
+
 ## Reductions and checks
 
 KernelAbstractions evaluates costs and history entries directly on the backend.

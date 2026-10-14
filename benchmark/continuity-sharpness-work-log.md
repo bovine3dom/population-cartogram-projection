@@ -133,3 +133,21 @@ relative deviation from a uniform quota is 96.69. The old 0.02 aggregate mass
 tolerance could conceal large individual errors. Keep the new strict checks;
 use old support counts as a sharpness goal, not as permission to copy these
 mass errors. See `production-mass.csv` for the full audit.
+
+## 07:50 UTC: US baseline reaches the old sharpness range
+
+The US passes at eta 1e-6. Its 99.5% support is 1.297 connections/source,
+versus 1.272 in the old exported mapping. Mean inverse-Simpson support is
+1.112, versus 1.110 before. Mean source spatial RMS is 0.181 coordinate units,
+versus 0.169 before. Target L1 is 7.99e-5 and maximum target relative error
+is 0.000341. This is a sharp, mass-checked baseline, not yet a border fit.
+The large-country sweep is now on India. Stage times include two deliberate
+pauses for small oneAPI checks; they are not performance benchmarks.
+
+Added `tune_baselines.jl` for resumable country calibration. It saves stages,
+selected plans, code/input hashes, and a table of achieved support. It rejects
+changed configurations and unknown country codes. A two-country oneAPI run,
+its completed-country restart, and rejection checks pass. The next calibration
+will cover the other 149 fitted countries after the large-country GPU job.
+The selected pose angles remain the earlier checked angles; this work does
+not claim to find new globally optimal orientations.
