@@ -1,0 +1,16 @@
+{
+  "started_at": "2026-10-14T21:30:55.341835+00:00",
+  "geographic_centroid_fraction": 0.0,
+  "guide": 8.0,
+  "position_coordinates": "Longitude times cos(30 degrees), latitude; both in radians. Fitted by positive uniform scale and translation.",
+  "limit": "Position guides only, not an equal-area projection or population targets. All budgets and the continuous footprint stay unchanged. No country-specific rules. Source polygon centroids near the longitude seam require review.",
+  "inputs": {
+    "output/auto-cartogram/world-55000-mainland-flow/flow/areas_cartogram.geojson": "f2a07dd37f4a9af04c44c1a62c661073c56b9c19d762bea7d580ad0ebdf4544c",
+    "output/auto-cartogram/world-55000-population-sites/sites.csv": "5edba0bf6b81a4b20b6b5706e43aa74b0d14f9ff333ced87691c55007cc09ac7",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca"
+  },
+  "sites_sha256": "3347123d555cd28ab6727d99d11a4f147dd720cc2305d6dc8e5c9d88ab1a36b7",
+  "runner_sha256": "a4e77b9a7f2c16e568166625e1a8933542efa9312caf12b8f649d91e0a49e0df",
+  "finished_at": "2026-10-14T21:37:06.186604+00:00"
+}

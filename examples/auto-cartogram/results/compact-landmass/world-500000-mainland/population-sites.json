@@ -1,0 +1,18 @@
+{
+  "method": "Population-weighted spherical mean of native H3 centres, then Equal Earth projection with radius 1",
+  "source_cells": 32668501,
+  "population": 7954677990.0,
+  "components": 888,
+  "inputs": {
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-500000-dissolved-input/groups.csv": "6a9de0a7294d00416ee6288714e97bd3216a09c7870d40e64b5108b00f735d15",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-transport-sources/sources.arrow": "191347088c1b2998892e019c4f61bb1effeea62b4675dc4f8bc3a22af1b692fc",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-centres/centres.arrow": "d106ba32c139475982859fcf0ca19dedb02eed5e01c16aa90d8630ce42bdda91"
+  },
+  "scripts": {
+    "population_sites.py": "4cbca099e97ae35abffb5d0cfa2721078b977f2443d7c7d8e24f36f03e5532f8",
+    "prepare_flow.py": "b794cd56bfcce5910034d405d600deb257dd01829425a0301c79a0b432678fc2"
+  },
+  "pyarrow_version": "23.0.1",
+  "limit": "Sites, not a layout. Each native H3 cell places its population at its centre. Existing population groups are unchanged. A group site need not lie inside its outline. Source year remains unspecified.",
+  "sites_sha256": "ad989077d8e119d1474d262eb834f4294e29e89cae86b2ac378aedb49705c1ab"
+}
