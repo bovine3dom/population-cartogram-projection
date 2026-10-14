@@ -24,14 +24,14 @@ def adjacent(p):return [(p[0]+dx,p[1]+dy) for dx,dy in NEIGHBOURS]
 
 
 class Deformation:
-    def __init__(self, tiles, required, costs, origin, perimeter=1., false_contact=4.):
+    def __init__(self, tiles, required, costs, origin, perimeter=1., false_contact=4., sea_perimeter=0.):
         self.tiles={c:set(points) for c,points in tiles.items()}
         if any(connectivity(p)!=1 or holes(p) for p in self.tiles.values()):
             raise ValueError('Starting regions must be connected and have no holes')
         self.owners={p:c for c,points in self.tiles.items() for p in points}
         if len(self.owners)!=sum(map(len,self.tiles.values())):raise ValueError('Overlapping cells')
         self.required=set(required);self.costs=costs;self.origin=origin
-        self.perimeter=perimeter;self.false_contact=false_contact
+        self.perimeter=perimeter;self.false_contact=false_contact;self.sea_perimeter=sea_perimeter
         self.bounds=next(iter(costs.values())).shape
 
     def inside(self,p):
@@ -44,6 +44,7 @@ class Deformation:
     def edge(self,a,b):
         if a==b:return 0.
         value=self.perimeter*((a is not None)+(b is not None))
+        if a is None or b is None:value+=self.sea_perimeter
         if a is not None and b is not None and tuple(sorted((a,b))) not in self.required:value+=self.false_contact
         return value
 
@@ -137,9 +138,9 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None):
     return (costs,origin,allowed) if stretch is not None else (costs,origin)
 
 
-def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False):
+def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.):
     if output.exists():raise ValueError('Output already exists')
-    if rounds<1 or choices<1 or fit_rounds<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty]):raise ValueError('Invalid optimization settings')
+    if rounds<1 or choices<1 or fit_rounds<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty,sea_perimeter]):raise ValueError('Invalid optimization settings')
     if (template_penalty or land_only) and not bounded:raise ValueError('Template penalty and land-only mode require bounded deformation')
     if bounded:regrow=True
     if regrow:atomic=True
@@ -174,7 +175,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         state_type=BoundedDeformation
     fixed=set(tiles)-{c for pair in required for c in pair} if land_only else set()
     options=dict(allowed_masks=guided[2],contact_reward=contact_reward,template_penalty=template_penalty,fixed=fixed) if bounded else {}
-    state=state_type(tiles,required,costs,origin,perimeter,false_contact,**options)
+    state=state_type(tiles,required,costs,origin,perimeter,false_contact,sea_perimeter=sea_perimeter,**options)
     history=[];initial=state.energy()
     for turn in range(1,fit_rounds+1):
         moves=state.fit_step(requested,choices)
@@ -196,7 +197,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     metadata=dict(method='Count-preserving local boundary exchanges with perimeter and geographic-guide costs; no required-contact paths',
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
         cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,absolute_tile_error=error,
-        bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,
+        bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,sea_perimeter=sea_perimeter,
         template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
         input_cells_sha256=input_hashes[str(layout/'cells.csv')],inputs=input_hashes,scripts=hashes,
@@ -220,7 +221,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ['inputs','layout','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--rounds',type=int,default=300);parser.add_argument('--choices',type=int,default=4)
-    for name,default in [('perimeter',1.),('false-contact',4.),('guide',1.),('anchor',.05)]:parser.add_argument('--'+name,type=float,default=default)
+    for name,default in [('perimeter',1.),('false-contact',4.),('guide',1.),('anchor',.05),('sea-perimeter',0.)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--cycles',action='store_true');parser.add_argument('--atomic',action='store_true')
     parser.add_argument('--fit-rounds',type=int,default=0);parser.add_argument('--regrow',action='store_true')
     parser.add_argument('--bounded',action='store_true');parser.add_argument('--stretch',type=float,default=.1)

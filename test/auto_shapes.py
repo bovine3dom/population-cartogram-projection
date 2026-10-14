@@ -32,6 +32,7 @@ import place_islands
 import publish_shape_review
 import recheck_shape_bundle
 import build_shape_gallery
+import review_gaps
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
@@ -45,6 +46,41 @@ from geographic_order import GeographicOrder
 
 
 class ShapeTests(unittest.TestCase):
+    def test_gap_proxy_counts_open_channels_and_enclosed_water(self):
+        solid={(x,y):'a' for x in range(11) for y in range(11)}
+        report,*_=review_gaps.measure(solid,(1,2))
+        self.assertEqual(report['enclosed_empty_cells'],0)
+        self.assertEqual(report['closing'][1]['added_empty_cells'],0)
+        ring=dict(solid);del ring[5,5]
+        report,*_=review_gaps.measure(ring,(1,2))
+        self.assertEqual(report['enclosed_empty_cells'],1)
+        channel={p:c for p,c in solid.items() if not(p[0]==5 and p[1]>=5)}
+        report,*_=review_gaps.measure(channel,(1,2))
+        self.assertEqual(report['enclosed_empty_cells'],0)
+        self.assertGreater(report['closing'][1]['open_empty_cells'],0)
+        shifted={(x+73,y-19):c for (x,y),c in channel.items()}
+        self.assertEqual(review_gaps.measure(shifted,(1,2))[0],report)
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'owid.csv';path.write_text('10,20,a\n12,20,b\n10,22,a\n')
+            owners,step=review_gaps.read_cells(path,True)
+            self.assertEqual(step,2);self.assertEqual(len(owners),3)
+            path.write_text('10,20,a\n10,20,b\n')
+            with self.assertRaisesRegex(ValueError,'Overlapping'):review_gaps.read_cells(path,True)
+
+    def test_sea_perimeter_delta_matches_complete_energy(self):
+        tiles={'a':{(2,2),(2,3)},'b':{(3,2),(3,3)}}
+        state=Regrowth(tiles,{('a','b')},{c:np.zeros((8,8)) for c in tiles},(0,0),sea_perimeter=8.)
+        self.assertEqual(state.edge('a','b'),2.)
+        self.assertEqual(state.edge('a',None),9.)
+        for p,target in [((2,2),None),((1,3),'a'),((3,2),'a')]:
+            before=state.energy();delta=state.delta(p,target);old=state.change(p,target)
+            self.assertAlmostEqual(state.energy()-before,delta)
+            state.change(p,old)
+        current=state.tiles['a'];candidate={(1,3),(2,3)}
+        before=state.energy();delta=state.region_energy('a',candidate)-state.region_energy('a',current)
+        state.change((2,2),None);state.change((1,3),'a')
+        self.assertAlmostEqual(state.energy()-before,delta)
+
     def test_opening_detects_a_thin_tail_not_a_solid_square(self):
         square={(x,y) for x in range(5) for y in range(5)}
         self.assertEqual(audit.thin_shape(square)['opening_loss'],0)
