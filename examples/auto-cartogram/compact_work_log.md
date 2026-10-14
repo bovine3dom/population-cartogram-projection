@@ -731,6 +731,35 @@ The separated layout has exact budgets but is not an acceptable replacement.
   gradient, translation, and rotation tests pass. Started three 32-grid controls
   with rotation weights 2 or 10. Eight mesh tests pass.
 
+## 20:15–20:25 UTC — resolution runs and component-wide shape prior
+
+- Started the mainland-only flow, guide-8 partition, fixed-border control, and
+  shared-island correction at 10,000, 110,000, and 500,000 tiles. Each resolution
+  gets its own population sites and external flow solve. Envelope width scales
+  with the square root of tile count. All three external flow solves pass.
+  The new 500,000-tile run does not use the earlier failed guide.
+- The 10,000-tile run finishes with exact counts, no split components, three
+  region holes, and 81 missing plus 62 unsupported component contacts. Inspected
+  its world image: the broad layout follows the 55,000-tile control, but Canada
+  and Korea remain poor and small shapes lose detail. Higher-resolution runs
+  are still in progress.
+- Tested three blends of native population sites and flow-geometry centroids.
+  Inspected all three final world images. More centroid weight moves Russia too
+  far east; Canada and Korea do not improve enough. Reject these controls.
+- Two low-water rotation trials stop at the determinant step floor with about
+  95–96% weighted area error. Reduced the reciprocal-extension threshold from
+  `1e-5` to `1e-12`, below the step floor, so the barrier remains active there.
+  Tests pass; new controlled runs are in progress. The old failures are retained.
+- Added an optional component-wide shape prior with free translation and fixed
+  orientation. It compares transformed intersection centroids with uniformly
+  scaled source centroids. It is not part of the cited paper's objective and is
+  off by default. Nine mesh tests pass, including its analytic gradient. Started
+  weight-1 and weight-10 controls. Coarse centroid samples remain a limitation.
+- At 20:20 UTC, stopped the old 500,000-tile guide-only pipeline and stress-outline
+  control. The cached 500,000-tile controls had already finished. The stress run
+  still reported 79 split regions after 925 swaps. Neither cancelled run has a
+  completed final result. Saved cancellation records in the job directory.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
