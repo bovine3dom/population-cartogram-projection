@@ -1,0 +1,10 @@
+{
+  "purpose": "Diagnostic tile partition using an explicitly supplied approximate footprint, not a successful external area solve",
+  "external_run": "output/auto-cartogram/world-500000-flow512-retry",
+  "external_log": "output/auto-cartogram/gap-jobs/flow512-500000.log",
+  "external_exit_code": 1,
+  "external_failure": "Could not converge; maximum area error 0.0843155 against adjusted targets, above the default 0.01 tolerance",
+  "pipeline": "output/auto-cartogram/world-500000-shared-footprint-guide-only",
+  "checks": "The pipeline must separately validate all supplied geometry and reject overlaps. Its tile assignment uses original component budgets, not the external solver's adjusted areas.",
+  "approval": "Not approved. Do not describe the external flow as converged. Review tile counts, topology, border errors, and images separately."
+}
