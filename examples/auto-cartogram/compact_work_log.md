@@ -301,6 +301,55 @@ The separated layout has exact budgets but is not an acceptable replacement.
   recognizable broad coast shapes remain the target. Better local gap scores
   do not compensate for narrow continents or displaced large countries.
 
+## 17:06–17:51 UTC — connected partitions and visual checks
+
+- Added an explicit fragment-relocation option. It removes secondary pieces and
+  grows the main piece by the same number of cells. It does not draw paths to
+  the removed pieces. Counts remain exact; coasts can change. A blocked region
+  can still fail. The output records each removed and added cell.
+- Added an island-only mode that can preserve reported mainland defects. It
+  must not change fixed mainland cells or represented contacts, and must not
+  add false contacts. This is not permission to hide existing defects.
+- The flow-footprint trial with horizontal stretch 1.5 now has 55,000 cells,
+  no disconnected components, 197 enclosed empty cells, and 7,546 land-sea
+  edges. OWID has 172 enclosed empty cells and 7,364 edges. Different population
+  and country scopes prevent a controlled comparison. The new map still loses
+  125 component contacts and adds 133 unsupported contacts.
+- Inspected its world image. The large internal gaps are much smaller. Africa
+  and North America remain narrow; China is flat; Russia is too far east.
+  Exact counts and better gap scores do not make this a replacement for OWID.
+- Measured population sites from 32,668,501 matched native H3 centres. Group
+  masses match the prepared inputs. Russia's main component has a population
+  site near 52 degrees east, rather than the polygon centroid near 99 degrees
+  east. The centroid here is measured in longitude and latitude, not in the
+  projected guide plane. Source year remains unspecified.
+- Inspected rigid placement at these population sites. Russia moves west, but
+  greedy collision removal changes country order. Reject rigid placement.
+  Added validated site input to the global partition instead. It uses one
+  positive uniform scale and translation, not rotation or reflected axes.
+- All nine full test commands passed at the 17:26 checkpoint, before the later
+  flow-guide and pipeline changes. The current focused suites pass 14 partition
+  tests and 40 shape tests. An initial site-input test found a local variable
+  that hid the input path; renamed it and repeated both suites successfully.
+- Added a recorded, headless multi-resolution pipeline. Restarted the runs from
+  an immutable copy of commit `68612f4` so later edits cannot change imported
+  code halfway through a run. The stopped runs have explicit stop records.
+- Inspected the 10,000-tile world image. It has exact counts but one disconnected
+  region. Continents remain too narrow and the Koreas are displaced. The
+  110,000-tile run is still computing. The 500,000-tile flow run returned exit
+  status 1: its maximum area error was above its convergence threshold. The
+  pipeline stopped and recorded the failure. Do not treat that as success.
+- Inspected both flow-guide weight controls, 0.5 and 2. The stronger guide
+  retains more source borders but leaves one split region. Weight 0.5 has no
+  split regions, 112 missing contacts, and 115 false contacts. Also inspected
+  its Europe, Africa, Indonesia, and South Asia details. Europe no longer has
+  nested countries, and Indonesia retains island detail. South Korea is still
+  separated from North Korea; Southeast Asia has rectangular blocks; North
+  Africa is too narrow. Neither control is approved.
+- Two global partitions with native population sites are running. These test
+  country positions without using the greedy placement's final country centres.
+  Production code and targets remain unchanged.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
