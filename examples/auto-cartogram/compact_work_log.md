@@ -495,6 +495,32 @@ The separated layout has exact budgets but is not an acceptable replacement.
   stage is still running. This uses geometry from a failed external flow solve,
   not a converged external result. Production files remain unchanged.
 
+## 18:53–19:08 UTC — stretch controls and repair cost
+
+- Saved the connected 10,000- and 110,000-tile controls. Recomputed all layout
+  and gap metrics from their compressed cells. All ten saved controls pass the
+  archive checks, and all 80 gallery resources return successfully over HTTP.
+- All nine test commands passed at checkpoint `3c3ef8d`, before the repair
+  optimization below. Logs are in `validation-1857`.
+- Inspected world images with horizontal stretch 1 and 1.2. China is less flat,
+  but Africa and the Americas become narrower. Japan moves too far south and
+  the Koreas remain on an odd northern extension. Both have exact counts and
+  no split regions. Neither is selected. Global stretch cannot correct these
+  different regional shape errors.
+- Profiled a candidate repair optimization on the 500,000-tile partition. An
+  initial version did unnecessary topology work for interior fragment cells;
+  that version was slow and was not committed. Moved the work after candidate
+  selection and cached repeated donor topology and frontier choices.
+- Compared the optimized method with the saved earlier implementation on 200
+  seeded random layouts, for eight steps each. Swap records and resulting cells
+  match. On the first three 500,000-tile swaps, records and cells also match:
+  the new version takes 0.54–0.57 seconds per step versus 5.82–6.12 seconds for
+  the earlier version. This is a small timing sample, not a whole-run speedup.
+- Added random-grid regression checks for counts, fixed islands, occupied cells,
+  exact component partitions, and strict fragment reduction. The 20 partition
+  tests pass. The 40 shape tests passed before the final cache adjustment.
+  Existing background jobs still use their original saved code.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
