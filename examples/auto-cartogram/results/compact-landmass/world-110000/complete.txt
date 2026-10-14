@@ -1,0 +1,3 @@
+mode=island-placement
+counts=exact
+contacts=land-unchanged
