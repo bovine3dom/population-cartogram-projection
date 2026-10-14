@@ -4,6 +4,11 @@
 geography-first images below. Then compare border repair and the topology-first
 fit. Production targets and solver files are unchanged.
 
+![World resolution and border-policy overview](results/world-overview/review.png)
+
+The overview combines six published images. Open the full images below to
+inspect small islands and country labels.
+
 ## Scope and common limits
 
 All world images represent 7,954,677,990 matched people and 250 Natural Earth
@@ -114,6 +119,26 @@ not approve their tile counts or geography.
 A full-default run on the earlier map-unit input reduces the 10,000-budget
 absolute count error to 1,013, but still fails the area requirement. Longer
 fits on the dissolved inputs are being tested separately.
+
+### Longer fits and corrected flow
+
+The [comparison table](results/topology-comparison.csv) records completed
+full-default fits, fixed drawing transforms, a convex-boundary initializer,
+and corrected partial polishing. It includes input, build, and cell hashes.
+All listed fits retain represented contacts, but none has exact tile budgets.
+
+At 10,000 tiles, corrected partial polishing reduces absolute count error to
+241, with 500 country order errors. Extending its limit from 40 to 200 passes
+produces byte-identical cells. The largest connected part stops after 29 passes.
+Ethiopia still receives only 43 of its requested 158 tiles. A small global
+error can hide a large error for one country.
+
+![Corrected partial polishing at 10,000 tiles](results/world-10000-partial-polish/review.png)
+
+Earlier rows in the table predate the flow-feasibility correction. Their final
+geometric checks remain valid, but their internal flow results are not a proof
+of feasible population allocation. Read the [work log](work-log.md) for the
+failed and stopped trials. Larger corrected fits are still being reviewed.
 
 Original WKT outlines omit 19 holes. A successful contact check does not prove
 correct enclave containment or full geographic topology. The exact-mode runs

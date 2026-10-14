@@ -1,0 +1,96 @@
+{
+  "panels": [
+    {
+      "case": "examples/auto-cartogram/results/world-10000-dissolved-geographic",
+      "metrics": {
+        "tiles": 10000,
+        "absolute_tile_error": 0,
+        "missing_contacts": 341,
+        "false_contacts": 0,
+        "disconnected_regions": 0,
+        "regions_with_holes": 0
+      },
+      "files": {
+        "review.png": "c153f96f599d0990b3347590dc0d802aba6b166b13668bcfca61de0f7b4f3ff4",
+        "metrics.json": "2ae73b0ababee88aa5980355a5271b2e210ec732b782b09250a1b4d7862faddd"
+      }
+    },
+    {
+      "case": "examples/auto-cartogram/results/world-55000-dissolved-geographic",
+      "metrics": {
+        "tiles": 55000,
+        "absolute_tile_error": 0,
+        "missing_contacts": 348,
+        "false_contacts": 0,
+        "disconnected_regions": 0,
+        "regions_with_holes": 0
+      },
+      "files": {
+        "review.png": "5416795561a03d2a40af580af02d86c6dd38934549262026d935e83a8a03fd97",
+        "metrics.json": "5a5b0d12e679eedae577e016ef8415a3ae7628b5ce4b61212d06c945a200ece8"
+      }
+    },
+    {
+      "case": "examples/auto-cartogram/results/world-110000-dissolved-geographic",
+      "metrics": {
+        "tiles": 110000,
+        "absolute_tile_error": 0,
+        "missing_contacts": 353,
+        "false_contacts": 0,
+        "disconnected_regions": 0,
+        "regions_with_holes": 0
+      },
+      "files": {
+        "review.png": "9137d229198401f6de92b00622f7a5bf58b3b45bb4039d2fb33c5bbcb181182e",
+        "metrics.json": "62e66ad531858c7cb785424431490fb91a68e5a538ae82100a48a275358ffeac"
+      }
+    },
+    {
+      "case": "examples/auto-cartogram/results/world-10000-dissolved-geographic-repair",
+      "metrics": {
+        "tiles": 10000,
+        "absolute_tile_error": 0,
+        "missing_contacts": 60,
+        "false_contacts": 0,
+        "disconnected_regions": 0,
+        "regions_with_holes": 0
+      },
+      "files": {
+        "review.png": "9c78963cc5a6a76c2bb9a26eb862ba60a1d8d2cb90dd6bbc7b0232f7e9143783",
+        "metrics.json": "fed5c4e3cc3f172295e5b7c2d035aee7775ad5750242bc770946e70964a03cf1"
+      }
+    },
+    {
+      "case": "examples/auto-cartogram/results/world-55000-dissolved-geographic-repair",
+      "metrics": {
+        "tiles": 55000,
+        "absolute_tile_error": 0,
+        "missing_contacts": 44,
+        "false_contacts": 0,
+        "disconnected_regions": 0,
+        "regions_with_holes": 0
+      },
+      "files": {
+        "review.png": "c08435e1c32700e461a7c2353c64ea969703fe5adeca0749f259256de0821082",
+        "metrics.json": "34795e0e8c0f2160629969ce2e33cfcd2817afb99a75f95fe00c98601f657e25"
+      }
+    },
+    {
+      "case": "examples/auto-cartogram/results/world-110000-dissolved-geographic-repair",
+      "metrics": {
+        "tiles": 110000,
+        "absolute_tile_error": 0,
+        "missing_contacts": 52,
+        "false_contacts": 0,
+        "disconnected_regions": 0,
+        "regions_with_holes": 0
+      },
+      "files": {
+        "review.png": "4c935cefe965baeadbf860b3276de6a28f2ee7ee58b47c99308a2381a928bb1a",
+        "metrics.json": "9b0a78b72f26a4f490c25694930963cb7acbf526716379a629f8078e9bf140f6"
+      }
+    }
+  ],
+  "method": "Combine and crop the published review PNGs; no cell coordinates or colours change",
+  "script_sha256": "276b245d6f47d0acb7147681874fbb8c0dc68d972bdfb62183a3325d1b918e34"
+}

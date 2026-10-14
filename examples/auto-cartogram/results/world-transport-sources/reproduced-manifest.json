@@ -1,0 +1,28 @@
+{
+  "source_cells": 32668501,
+  "source_population": 7954677990.0,
+  "unmatched_cells": 289198,
+  "unmatched_population": 77246034.0,
+  "ambiguous_cells": 0,
+  "ambiguous_population": 0.0,
+  "policy": "Keep matched native IDs and values unchanged. Change component labels through the explicit same-country crosswalk. Keep original labels in a separate column.",
+  "inputs": [
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-components/source-membership.arrow",
+      "sha256": "df685d7db2a22d8e072981d8004c5d18404062bc4f30cbde5ceb7c4522aa6633"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-components/components.csv",
+      "sha256": "d8df67ca5119aa6ac21e5ccd0c1221c6e5c889379ab094925da3dca4e6a5e164"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-dissolved/original-to-dissolved.csv",
+      "sha256": "22024065d336d35c13e20cf2bf4bf1071e9353c4893cf1632e51c60170568f65"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/prepare_transport_sources.py",
+      "sha256": "09f91e90204a7c0a5c5a31fc5186c8c2099a04d3d17e3375dd5e0f8e14511ffa"
+    }
+  ],
+  "sources_sha256": "191347088c1b2998892e019c4f61bb1effeea62b4675dc4f8bc3a22af1b692fc"
+}

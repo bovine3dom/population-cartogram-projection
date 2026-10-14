@@ -1,0 +1,11 @@
+{
+  "byte_identical": true,
+  "sources_sha256": "191347088c1b2998892e019c4f61bb1effeea62b4675dc4f8bc3a22af1b692fc",
+  "source_rows": 32668501,
+  "population": 7954677990,
+  "explanation": "The current preparer adds a UInt64 type check and reproduces the same source table byte for byte.",
+  "manifests": {
+    "output/auto-cartogram/world-transport-sources": "b946fa91d4a58d98e48ab77c5b06bfcf1ea91ca38e37971caf1f936cb2299694",
+    "output/auto-cartogram/world-transport-sources-reproduced": "81e3095c8ee61688f7eb2cf3518d1a230c9262f5a7a9da33809cd7408fddda62"
+  }
+}
