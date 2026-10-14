@@ -25,6 +25,7 @@ component IDs. These are coarse tests, not native H3-8 validation.
 | H3-3 | 619 | Pooled | 83,707,437 | 99.580% | 9.788% |
 | H3-5 | 8,545 | Grouped | 0 | 99.757% | 3.865% |
 | H3-5 | 8,545 | Pooled | 83,826,178 | 99.753% | 4.522% |
+| H3-8 | 832,166 | Grouped | 0 | 99.883% | 7.350% |
 
 The pooled H3-5 result sends about 31% of input population to a different
 declared group. This is a measurement for this layout and input, not a general
@@ -32,8 +33,26 @@ estimate for Indonesia or the OWID map. The independent CSV checker recomputes
 all totals and checks source IDs, target ownership, weights, and duplicate pairs.
 All four exports pass those checks.
 
-Native H3-8 grouped transport is still in progress. Do not use the coarse tests
-as proof of native-cell performance.
+## Native H3-8 grouped transport
+
+The native run takes 8,997 seconds for solves and in-memory checks, excluding
+source preparation and file export. It writes 1,432,890 nonzero source-target
+pairs. All 832,166 original source IDs occur once in the source table, with
+unchanged population and the declared component/group labels. Every source
+retains at least 99.5% of its contribution. No population crosses groups.
+The raw export omits about 316,791 people in total. Its largest target error,
+7.350%, occurs in the Java group.
+
+![Native grouped transport](results/indonesia-transport-r8-grouped/review.png)
+
+[Flow checks](results/indonesia-transport-r8-grouped/independent-checks.json) ·
+[Native source checks](results/indonesia-transport-r8-grouped/native-source-checks.json) ·
+[Target errors](results/indonesia-transport-r8-grouped/target-quality.csv).
+
+This is native-cell validation for the matched input and this automatic layout.
+It is not a native pooled comparison, a test of the handmade map, or proof of
+complete Indonesian coverage. Sparse balance correction is still running on
+this native export.
 
 ## H3-5 grouped transport
 

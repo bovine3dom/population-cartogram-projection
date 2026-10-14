@@ -1,0 +1,13 @@
+{
+  "checked": true,
+  "native_sources": 832166,
+  "population": 270120945.0,
+  "check": "Every native ID occurs once with unchanged population and the declared component/group labels",
+  "limit": "This check does not assess projected coordinates or spatial transport quality",
+  "files": {
+    "output/auto-cartogram/indonesia-reviewed/source-components.arrow": "db6449eb1f4a59cc1c25bd8891950ea7298aecca72ceb91d13cada4fb25891f6",
+    "output/auto-cartogram/indonesia-1894-v2-input/groups.csv": "3f38998797c74f2c4d8386608075897a5a5e3de3e37acd2f80b3c1b09a6b1123",
+    "output/auto-cartogram/indonesia-transport-r8-v3-grouped/sources.csv": "b447d8c201b56711a71e2c31d88b40e81cdf3e91768ab7eecb336ce1c524af2a"
+  },
+  "checker_sha256": "e0e1de3b5bb1ed5374e7c1ec4ec8d634f8b7e1b58c8653a09150035e43b7dfe0"
+}

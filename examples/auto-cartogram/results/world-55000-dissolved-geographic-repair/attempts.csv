@@ -1,0 +1,470 @@
+pass_number,owner,target,success,reason
+1,CYN:3fa61972653460ef,ESB:432b2cb88c6056bf,True,connected
+1,MAF:8903408c5624c48e,SXM:09188f4114a598b9,True,connected
+1,CYN:3fa61972653460ef,CNM:85db95ef4bf8489c,False,no route
+1,CNM:85db95ef4bf8489c,CYN:3fa61972653460ef,False,no route
+1,CYP:0e9f924ff6746fe5,WSB:50ca0205ee67e049,True,connected
+1,CYP:0e9f924ff6746fe5,CNM:85db95ef4bf8489c,True,connected
+1,CNM:85db95ef4bf8489c,ESB:432b2cb88c6056bf,False,no route
+1,ESB:432b2cb88c6056bf,CNM:85db95ef4bf8489c,False,no route
+1,KOS:e68a710dbd926c28,MNE:52f7987265ed3935,True,connected
+1,MYS:0abe504273f2e4bd,BRN:72e2eec83e114e7f,True,connected
+1,LVA:ff14565ea5d338a5,EST:50bd04ff06509a99,True,connected
+1,LTU:4c2a60810b4196cd,LVA:ff14565ea5d338a5,True,connected
+1,ARM:433ac98029e5a761,AZE:e5af19283650a3e3,True,connected
+1,CYP:0e9f924ff6746fe5,ESB:432b2cb88c6056bf,False,no simple count-preserving move
+1,ESB:432b2cb88c6056bf,CYP:0e9f924ff6746fe5,False,no route
+1,ALB:c931cc5315aed954,MKD:072da3322c97fa27,True,connected
+1,ITA:7d6868fd136c6c11,SMR:65f777115cf6c77c,True,connected
+1,MNE:52f7987265ed3935,HRV:2a6ba7505aec5af9,False,no route
+1,HRV:2a6ba7505aec5af9,MNE:52f7987265ed3935,False,no route
+1,MKD:072da3322c97fa27,KOS:e68a710dbd926c28,True,connected
+1,SRB:334f04d632601018,KOS:e68a710dbd926c28,True,connected
+1,ALB:c931cc5315aed954,KOS:e68a710dbd926c28,True,connected
+1,IRL:9661cba0fca9f89c,NIR:69fa50e543fa7c66,True,connected
+1,SRB:334f04d632601018,MNE:52f7987265ed3935,True,connected
+1,IDN:41ba51e85ddbb728,TLS:e102fc60287c6426,True,connected
+1,AZE:0510388634a9edd9,ARM:433ac98029e5a761,True,connected
+1,GRC:70edd41aef80d178,MKD:072da3322c97fa27,True,connected
+1,SEN:fa5de3704b02f675,GMB:e5cba77f98187ac4,True,connected
+1,LTU:4c2a60810b4196cd,RUS:8afd88fb65e5e555,True,connected
+1,SUR:1d7cda681e299b07,GUF:4acf8ebf720d2a5f,True,connected
+1,GRC:70edd41aef80d178,ALB:c931cc5315aed954,True,connected
+1,POL:1980df7ed9d16d12,RUS:8afd88fb65e5e555,True,connected
+1,ALB:c931cc5315aed954,MNE:52f7987265ed3935,False,no route
+1,MNE:52f7987265ed3935,ALB:c931cc5315aed954,False,no route
+1,GTM:304e3cb8ddf6bb44,BLZ:4f146436bd0251b5,True,connected
+1,HND:177f117072fa67d2,NIC:99f10eccc73d03bc,True,connected
+1,GEO:d709e483cc2819fe,ARM:433ac98029e5a761,True,connected
+1,ROU:8bc181463815c013,BGR:8a6e196d0e9089ee,True,connected
+1,HUN:9f803be1643ca956,AUT:709fdd785650b149,True,connected
+1,VNM:749468814d903c2a,KHM:299a58dab837de1b,True,connected
+1,HUN:9f803be1643ca956,SVK:1f440da2e10fbb82,True,connected
+1,SRB:334f04d632601018,MKD:072da3322c97fa27,True,connected
+1,KAZ:5d6f63a9b9f3c9f9,KAB:13532639e9546e01,True,connected
+1,GIN:eb019150f12e3d47,SLE:aeb8476c9a2c5e10,True,connected
+1,SWE:1320ee42b8e1186c,NOW:a387a8ce67e0d957,True,connected
+1,GAB:9b0fa4569aef69bd,GNQ:703503e059bb9243,True,connected
+1,TUR:6fce5e1d91133e37,BGR:8a6e196d0e9089ee,True,connected
+1,HUN:9f803be1643ca956,SVN:e8f334b689926950,True,connected
+1,GUY:5aec9f8c07eb9159,SUR:1d7cda681e299b07,True,connected
+1,HND:177f117072fa67d2,SLV:6884a91b71669fb2,True,connected
+1,COG:c5650e58e144375b,GAB:9b0fa4569aef69bd,True,connected
+1,DOM:1493e296a532a3a2,HTI:a3ce6059435c00f9,True,connected
+1,SYR:bb46c77ee43515e0,LBN:8d427f2407db4cf0,True,connected
+1,SRB:334f04d632601018,BGR:8a6e196d0e9089ee,True,connected
+1,BGR:8a6e196d0e9089ee,MKD:072da3322c97fa27,True,connected
+1,ROU:8bc181463815c013,SRB:334f04d632601018,True,connected
+1,GTM:304e3cb8ddf6bb44,SLV:6884a91b71669fb2,True,connected
+1,SEN:fa5de3704b02f675,GNB:06bb5bdc3716e8ff,True,connected
+1,ROU:8bc181463815c013,MDA:c11ef650966bdfca,True,connected
+1,SLE:aeb8476c9a2c5e10,LBR:791c4a2bdad8b682,True,connected
+1,AUT:709fdd785650b149,SVN:e8f334b689926950,True,connected
+1,NIC:99f10eccc73d03bc,CRI:5a22dcdd3a44dc5b,True,connected
+1,HUN:9f803be1643ca956,SRB:334f04d632601018,True,connected
+1,BLR:216ea6b406f5bc6c,LTU:4c2a60810b4196cd,True,connected
+1,ZAF:eb3d29c8e7d957f4,LSO:085148348451b82a,True,connected
+1,UKR:52622876ebf1ecb8,MDA:c11ef650966bdfca,True,connected
+1,HRV:23be6296644271a5,BIH:76753bb1c9d6c52b,True,connected
+1,ESP:ff9451038f1a27e4,PRX:31cd60a8869cd87c,True,connected
+1,GTM:304e3cb8ddf6bb44,HND:177f117072fa67d2,True,connected
+1,POL:1980df7ed9d16d12,LTU:4c2a60810b4196cd,True,connected
+1,GIN:eb019150f12e3d47,GNB:06bb5bdc3716e8ff,True,connected
+1,SRB:334f04d632601018,HRV:23be6296644271a5,True,connected
+1,CUB:a203a2643a40db9f,USG:4318b9af790790b9,True,connected
+1,CIV:1c18880d4492d85c,LBR:791c4a2bdad8b682,True,connected
+1,FXX:f023db15990ca569,AND:0923843c3687a75e,True,connected
+1,GHA:1beea30af91e217d,CIV:1c18880d4492d85c,True,connected
+1,JOR:97289b5947dc77c2,ISR:7ab28b88983e2128,True,connected
+1,SYR:bb46c77ee43515e0,JOR:97289b5947dc77c2,True,connected
+1,ITA:7d6868fd136c6c11,AUT:709fdd785650b149,True,connected
+1,CRI:5a22dcdd3a44dc5b,PAN:04773d2112e86006,True,connected
+1,POL:1980df7ed9d16d12,SVK:1f440da2e10fbb82,False,no route
+1,SVK:1f440da2e10fbb82,POL:1980df7ed9d16d12,False,no route
+1,BIH:76753bb1c9d6c52b,MNE:52f7987265ed3935,True,connected
+1,ITA:7d6868fd136c6c11,CHE:b37ef58a1d6dee0a,True,connected
+1,SOL:e03433706d8873bb,DJI:8814228594ff16f1,True,connected
+1,CZE:bf3969a8b4fbfc04,SVK:1f440da2e10fbb82,False,no route
+1,SVK:1f440da2e10fbb82,CZE:bf3969a8b4fbfc04,False,no route
+1,AZE:0510388634a9edd9,GEO:d709e483cc2819fe,True,connected
+1,RWA:11c3869510b66d95,BDI:b3ecb03d79bf1cb5,True,connected
+1,POL:1980df7ed9d16d12,CZE:bf3969a8b4fbfc04,True,connected
+1,GRC:70edd41aef80d178,BGR:8a6e196d0e9089ee,True,connected
+1,ESP:ff9451038f1a27e4,GIB:71de83b149a1d32c,True,connected
+1,ARE:6af70f4330c4f4bf,OMN:21af2c17fe172531,True,connected
+1,DEU:0b0480fae55fd996,LUX:2287a57343a7d085,True,connected
+1,TUR:6fce5e1d91133e37,GRC:70edd41aef80d178,True,connected
+1,AFG:cda2af5bb6ea22f0,TKM:ef25c6485f2078c2,True,connected
+1,MWI:7555dabddb4364d9,ZMB:583491139c8eb3b0,True,connected
+1,BFA:9c8f06c312ed722e,BEN:5911ab4fd3e84cb1,True,connected
+1,BLR:216ea6b406f5bc6c,LVA:ff14565ea5d338a5,True,connected
+1,ETH:38a05216b358b154,DJI:8814228594ff16f1,True,connected
+1,FXX:f023db15990ca569,LUX:2287a57343a7d085,True,connected
+1,NLX:8b9c3398a58bdb2a,BEL:b124863414a6dcdb,True,connected
+1,IDN:51a10640dee7162b,MYS:0abe504273f2e4bd,True,connected
+1,TZA:88eb4141b8ee7ab7,BDI:b3ecb03d79bf1cb5,True,connected
+1,ROU:8bc181463815c013,HUN:9f803be1643ca956,True,connected
+1,DEU:0b0480fae55fd996,CZE:bf3969a8b4fbfc04,True,connected
+1,FXX:f023db15990ca569,MCO:8f146e45080f16d1,True,connected
+1,CMR:35df8c314c8ef083,GNQ:703503e059bb9243,True,connected
+1,ARG:7462ff4f8b49993a,CHL:150a87c1995fb5ad,True,connected
+1,UKR:52622876ebf1ecb8,RUS:7e6e84c769819aed,True,connected
+1,CHE:b37ef58a1d6dee0a,LIE:452f33c4300c02b9,True,connected
+1,SRB:334f04d632601018,BIH:76753bb1c9d6c52b,True,connected
+1,MRT:93e93b11bab4502c,SAH:c067a975f328d956,True,connected
+1,HRV:23be6296644271a5,SVN:e8f334b689926950,True,connected
+1,UKR:52622876ebf1ecb8,BLR:216ea6b406f5bc6c,False,no route
+1,BLR:216ea6b406f5bc6c,UKR:52622876ebf1ecb8,False,no route
+1,TUR:3b553df250ebf332,SYR:bb46c77ee43515e0,True,connected
+1,UKR:52622876ebf1ecb8,ROU:8bc181463815c013,True,connected
+1,KEN:4b9b5a7ce90b0bb0,UGA:c937c439d1615753,True,connected
+1,ESP:ff9451038f1a27e4,AND:0923843c3687a75e,False,no route
+1,AND:0923843c3687a75e,ESP:ff9451038f1a27e4,False,no route
+1,GIN:eb019150f12e3d47,LBR:791c4a2bdad8b682,True,connected
+1,TZA:88eb4141b8ee7ab7,RWA:11c3869510b66d95,True,connected
+1,KOR:1a1881fe9e034788,PRK:443ac4e48c09b5a9,True,connected
+1,COG:c5650e58e144375b,AGO:2b9c8d9b36ed1f1d,True,connected
+1,DEU:0b0480fae55fd996,BEL:b124863414a6dcdb,True,connected
+1,ITA:7d6868fd136c6c11,SVN:e8f334b689926950,False,no route
+1,SVN:e8f334b689926950,ITA:7d6868fd136c6c11,False,no route
+1,GHA:1beea30af91e217d,BFA:9c8f06c312ed722e,True,connected
+1,TJK:d6e62d7f585e085c,KGZ:401b8fcdc0eef69c,True,connected
+1,IRQ:741e7a31e643a8a8,SYR:bb46c77ee43515e0,True,connected
+1,MOZ:0c9516b3b1958290,ZWE:241a07c809723778,True,connected
+1,UZB:448c5653f0be3548,KAZ:5d6f63a9b9f3c9f9,True,connected
+1,COD:34b7cfda818ccf80,RWA:11c3869510b66d95,True,connected
+1,IRQ:741e7a31e643a8a8,JOR:97289b5947dc77c2,True,connected
+1,BWA:41766e3f9df3a4d1,NAM:d67affdeafffe7f2,True,connected
+1,MLI:cfb1983a0687bf5c,BFA:9c8f06c312ed722e,True,connected
+1,ERI:b257cabcc1caab95,DJI:8814228594ff16f1,True,connected
+1,DEU:0b0480fae55fd996,NLX:8b9c3398a58bdb2a,True,connected
+1,UGA:c937c439d1615753,RWA:11c3869510b66d95,True,connected
+1,CIV:1c18880d4492d85c,GIN:eb019150f12e3d47,True,connected
+1,JOR:97289b5947dc77c2,WEB:8660f88c9871d216,False,no simple count-preserving move
+1,WEB:8660f88c9871d216,JOR:97289b5947dc77c2,True,connected
+1,ZAF:eb3d29c8e7d957f4,SWZ:e315454282eb3136,True,connected
+1,EGY:f7cc24b776a75221,GAZ:0cd9171edc8ff269,True,connected
+1,GHA:1beea30af91e217d,TGO:f7afd783bdbbc052,True,connected
+1,CMR:35df8c314c8ef083,CAF:1f15d49e1132c1f3,True,connected
+1,SOM:b94bcf137ecd6275,SOL:e03433706d8873bb,True,connected
+1,ETH:38a05216b358b154,SOL:e03433706d8873bb,True,connected
+1,SWE:1320ee42b8e1186c,FIN:9332a3268ae7c503,True,connected
+1,EGY:f7cc24b776a75221,BRT:fef0fc6bba22ada7,True,connected
+1,ISR:7ab28b88983e2128,GAZ:0cd9171edc8ff269,True,connected
+1,CIV:1c18880d4492d85c,BFA:9c8f06c312ed722e,True,connected
+1,AFG:cda2af5bb6ea22f0,UZB:448c5653f0be3548,True,connected
+1,AUT:709fdd785650b149,LIE:452f33c4300c02b9,False,no route
+1,LIE:452f33c4300c02b9,AUT:709fdd785650b149,False,no route
+1,CMR:35df8c314c8ef083,GAB:9b0fa4569aef69bd,True,connected
+1,ZWE:241a07c809723778,BWA:41766e3f9df3a4d1,True,connected
+1,MLI:cfb1983a0687bf5c,MRT:93e93b11bab4502c,True,connected
+1,TUR:3b553df250ebf332,GEO:d709e483cc2819fe,True,connected
+1,ZMB:583491139c8eb3b0,ZWE:241a07c809723778,True,connected
+1,PNX:cd0b182a6ff3f568,IDN:91fa24efd9a13b2f,True,connected
+1,CMR:35df8c314c8ef083,COG:c5650e58e144375b,True,connected
+1,UKR:52622876ebf1ecb8,SVK:1f440da2e10fbb82,False,no route
+1,SVK:1f440da2e10fbb82,UKR:52622876ebf1ecb8,False,no route
+1,BEL:b124863414a6dcdb,NLX:5daa52b59ba80d17,False,no route
+1,NLX:5daa52b59ba80d17,BEL:b124863414a6dcdb,False,no route
+1,VEN:301beeea27f4cccb,GUY:5aec9f8c07eb9159,True,connected
+1,FXX:f023db15990ca569,ESP:ff9451038f1a27e4,True,connected
+1,VNM:749468814d903c2a,LAO:b4c511d27634a146,True,connected
+1,IRQ:741e7a31e643a8a8,KWT:575b7c67b7a3657d,True,connected
+1,ARG:7462ff4f8b49993a,URY:a93a37d95dfce9bb,True,connected
+1,MOZ:0c9516b3b1958290,MWI:7555dabddb4364d9,True,connected
+1,TZA:88eb4141b8ee7ab7,MWI:7555dabddb4364d9,True,connected
+1,NER:225f284b6e95d815,BEN:5911ab4fd3e84cb1,True,connected
+1,DEU:0b0480fae55fd996,DNK:d4951f6fa8360f9a,False,no route
+1,DNK:d4951f6fa8360f9a,DEU:0b0480fae55fd996,False,no route
+1,MAR:41e7d86fdd4b2365,SAH:c067a975f328d956,True,connected
+1,COD:34b7cfda818ccf80,BDI:b3ecb03d79bf1cb5,True,connected
+1,PAK:447ed1858f7b7a5d,AFG:cda2af5bb6ea22f0,True,connected
+1,SAU:11ac65250772b5d3,QAT:f6210114a7fc4646,True,connected
+1,ETH:38a05216b358b154,SOM:b94bcf137ecd6275,True,connected
+1,MAR:41e7d86fdd4b2365,ESP:7dc2b5da1e2aaae9,False,no route
+1,ESP:7dc2b5da1e2aaae9,MAR:41e7d86fdd4b2365,False,no route
+1,COL:08d1c79f212fc17e,VEN:301beeea27f4cccb,True,connected
+1,TUR:3b553df250ebf332,ARM:433ac98029e5a761,True,connected
+1,DEU:0b0480fae55fd996,POL:1980df7ed9d16d12,True,connected
+1,KHM:299a58dab837de1b,LAO:b4c511d27634a146,True,connected
+1,SYR:bb46c77ee43515e0,ISR:7ab28b88983e2128,True,connected
+1,SDN:e4296cf2bfa47003,BRT:fef0fc6bba22ada7,True,connected
+1,IRN:3c2b5bd7d999fbee,IRQ:741e7a31e643a8a8,True,connected
+1,TUR:3b553df250ebf332,AZE:e5af19283650a3e3,True,connected
+1,SDN:e4296cf2bfa47003,ERI:b257cabcc1caab95,True,connected
+1,ZAF:eb3d29c8e7d957f4,BWA:41766e3f9df3a4d1,True,connected
+1,AUT:709fdd785650b149,CHE:b37ef58a1d6dee0a,False,no route
+1,CHE:b37ef58a1d6dee0a,AUT:709fdd785650b149,False,no simple count-preserving move
+1,UGA:c937c439d1615753,SDS:9ecb0b566ac02a31,True,connected
+1,KAZ:5d6f63a9b9f3c9f9,KGZ:401b8fcdc0eef69c,True,connected
+1,MAR:41e7d86fdd4b2365,ESP:94551cac3165236f,True,connected
+1,NGA:edcdec1fdf6fb5c7,CMR:35df8c314c8ef083,True,connected
+1,BEL:b124863414a6dcdb,LUX:2287a57343a7d085,False,no route
+1,LUX:2287a57343a7d085,BEL:b124863414a6dcdb,False,no route
+1,SEN:fa5de3704b02f675,MRT:93e93b11bab4502c,True,connected
+1,ISR:7ab28b88983e2128,LBN:8d427f2407db4cf0,False,no simple count-preserving move
+1,LBN:8d427f2407db4cf0,ISR:7ab28b88983e2128,False,no simple count-preserving move
+1,COL:08d1c79f212fc17e,PAN:04773d2112e86006,True,connected
+1,COD:34b7cfda818ccf80,COG:c5650e58e144375b,True,connected
+1,COL:08d1c79f212fc17e,ECU:ef48f29c8aa10327,True,connected
+1,MOZ:0c9516b3b1958290,ZMB:583491139c8eb3b0,True,connected
+1,ETH:38a05216b358b154,SDS:9ecb0b566ac02a31,True,connected
+1,DEU:0b0480fae55fd996,FXX:f023db15990ca569,True,connected
+1,DEU:0b0480fae55fd996,AUT:709fdd785650b149,False,no route
+1,AUT:709fdd785650b149,DEU:0b0480fae55fd996,True,connected
+1,NGA:edcdec1fdf6fb5c7,BEN:5911ab4fd3e84cb1,True,connected
+1,TZA:88eb4141b8ee7ab7,KEN:4b9b5a7ce90b0bb0,True,connected
+1,NER:225f284b6e95d815,TCD:a34f6ca4b3bd052d,True,connected
+1,MMR:e9f27e99686071f9,LAO:b4c511d27634a146,False,no route
+1,LAO:b4c511d27634a146,MMR:e9f27e99686071f9,False,no route
+1,FIN:9332a3268ae7c503,NOW:a387a8ce67e0d957,True,connected
+1,YEM:64d271dfdccb3847,OMN:21af2c17fe172531,True,connected
+1,KEN:4b9b5a7ce90b0bb0,SOM:b94bcf137ecd6275,True,connected
+1,DZA:704d2c59e6450910,TUN:9e23ed3c89bdb2f6,True,connected
+1,COD:34b7cfda818ccf80,UGA:c937c439d1615753,True,connected
+1,UKR:52622876ebf1ecb8,HUN:9f803be1643ca956,False,no route
+1,HUN:9f803be1643ca956,UKR:52622876ebf1ecb8,False,no route
+1,TUR:3b553df250ebf332,IRQ:741e7a31e643a8a8,True,connected
+1,SDS:9ecb0b566ac02a31,CAF:1f15d49e1132c1f3,True,connected
+1,TZA:88eb4141b8ee7ab7,UGA:c937c439d1615753,True,connected
+1,AGO:704113b148b7974b,ZMB:583491139c8eb3b0,True,connected
+1,POL:1980df7ed9d16d12,UKR:52622876ebf1ecb8,False,no route
+1,UKR:52622876ebf1ecb8,POL:1980df7ed9d16d12,False,no route
+1,NGA:edcdec1fdf6fb5c7,NER:225f284b6e95d815,True,connected
+1,DEU:0b0480fae55fd996,CHE:b37ef58a1d6dee0a,True,connected
+1,SAU:11ac65250772b5d3,YEM:64d271dfdccb3847,True,connected
+1,SAU:11ac65250772b5d3,ARE:6af70f4330c4f4bf,True,connected
+1,DZA:704d2c59e6450910,MAR:41e7d86fdd4b2365,True,connected
+1,ETH:38a05216b358b154,KEN:4b9b5a7ce90b0bb0,True,connected
+1,SAU:11ac65250772b5d3,KWT:575b7c67b7a3657d,False,no route
+1,KWT:575b7c67b7a3657d,SAU:11ac65250772b5d3,False,no route
+1,BOL:1a7254807c71e166,PRY:8be730e7955b0934,True,connected
+1,COG:c5650e58e144375b,CAF:1f15d49e1132c1f3,False,no simple count-preserving move
+1,CAF:1f15d49e1132c1f3,COG:c5650e58e144375b,False,no simple count-preserving move
+1,SDN:e4296cf2bfa47003,TCD:a34f6ca4b3bd052d,True,connected
+1,PER:d420f75fe20c6a02,ECU:ef48f29c8aa10327,True,connected
+1,SDN:e4296cf2bfa47003,SDS:9ecb0b566ac02a31,True,connected
+1,ZAF:eb3d29c8e7d957f4,NAM:d67affdeafffe7f2,True,connected
+1,EGY:f7cc24b776a75221,LBY:7ca6524733c4cc0b,True,connected
+1,MLI:cfb1983a0687bf5c,GIN:eb019150f12e3d47,True,connected
+1,COD:34b7cfda818ccf80,AGO:2b9c8d9b36ed1f1d,True,connected
+1,MLI:cfb1983a0687bf5c,SEN:fa5de3704b02f675,True,connected
+1,UZB:448c5653f0be3548,TKM:ef25c6485f2078c2,True,connected
+1,COD:34b7cfda818ccf80,TZA:88eb4141b8ee7ab7,True,connected
+1,KEN:4b9b5a7ce90b0bb0,SDS:9ecb0b566ac02a31,True,connected
+1,TCD:a34f6ca4b3bd052d,CAF:1f15d49e1132c1f3,True,connected
+1,TZA:88eb4141b8ee7ab7,ZMB:583491139c8eb3b0,True,connected
+1,TUN:9e23ed3c89bdb2f6,LBY:7ca6524733c4cc0b,True,connected
+1,SAU:11ac65250772b5d3,JOR:97289b5947dc77c2,True,connected
+1,NER:225f284b6e95d815,MLI:cfb1983a0687bf5c,True,connected
+1,IRN:3c2b5bd7d999fbee,TKM:ef25c6485f2078c2,False,no route
+1,TKM:ef25c6485f2078c2,IRN:3c2b5bd7d999fbee,False,no route
+1,NGA:edcdec1fdf6fb5c7,TCD:a34f6ca4b3bd052d,True,connected
+1,THA:2d2e3dd6e4f6c675,MYS:4035fe8bf71b03f5,True,connected
+1,AGO:704113b148b7974b,NAM:d67affdeafffe7f2,False,no route
+1,NAM:d67affdeafffe7f2,AGO:704113b148b7974b,False,no route
+1,BFA:9c8f06c312ed722e,TGO:f7afd783bdbbc052,True,connected
+1,CIV:1c18880d4492d85c,MLI:cfb1983a0687bf5c,True,connected
+1,NER:225f284b6e95d815,BFA:9c8f06c312ed722e,True,connected
+1,COD:34b7cfda818ccf80,CAF:1f15d49e1132c1f3,True,connected
+1,MOZ:0c9516b3b1958290,SWZ:e315454282eb3136,True,connected
+1,IND:3f0bb94d859b2064,NPL:c1885306c87c4123,True,connected
+1,SAU:11ac65250772b5d3,OMN:21af2c17fe172531,True,connected
+1,IRQ:741e7a31e643a8a8,SAU:11ac65250772b5d3,True,connected
+1,EGY:f7cc24b776a75221,SDN:e4296cf2bfa47003,True,connected
+1,BRA:c9a395c2d321cd60,BOL:1a7254807c71e166,True,connected
+1,MEX:aa67baf61acd20f3,GTM:304e3cb8ddf6bb44,True,connected
+1,ETH:38a05216b358b154,SDN:e4296cf2bfa47003,True,connected
+1,FXX:f023db15990ca569,BEL:b124863414a6dcdb,False,no route
+1,BEL:b124863414a6dcdb,FXX:f023db15990ca569,False,no route
+1,ZAF:eb3d29c8e7d957f4,ZWE:241a07c809723778,True,connected
+1,UZB:448c5653f0be3548,KGZ:401b8fcdc0eef69c,True,connected
+1,COD:34b7cfda818ccf80,AGO:704113b148b7974b,True,connected
+1,IND:3f0bb94d859b2064,BTN:fe4a4d07e153ef17,True,connected
+1,PAK:447ed1858f7b7a5d,IRN:3c2b5bd7d999fbee,True,connected
+1,MEX:aa67baf61acd20f3,BLZ:4f146436bd0251b5,True,connected
+1,IRN:3c2b5bd7d999fbee,AZE:e5af19283650a3e3,False,no route
+1,AZE:e5af19283650a3e3,IRN:3c2b5bd7d999fbee,False,no route
+1,ARG:7462ff4f8b49993a,PRY:8be730e7955b0934,True,connected
+1,DZA:704d2c59e6450910,LBY:7ca6524733c4cc0b,True,connected
+1,COD:34b7cfda818ccf80,ZMB:583491139c8eb3b0,True,connected
+1,PER:d420f75fe20c6a02,BOL:1a7254807c71e166,True,connected
+1,CHN:72cd37e37e634df7,MNG:7ecd8e5b0a42fa66,True,connected
+1,CMR:35df8c314c8ef083,TCD:a34f6ca4b3bd052d,True,connected
+1,NER:225f284b6e95d815,LBY:7ca6524733c4cc0b,True,connected
+1,KAZ:5d6f63a9b9f3c9f9,TKM:ef25c6485f2078c2,True,connected
+1,DZA:704d2c59e6450910,MLI:cfb1983a0687bf5c,True,connected
+1,TCD:a34f6ca4b3bd052d,LBY:7ca6524733c4cc0b,True,connected
+1,DZA:704d2c59e6450910,NER:225f284b6e95d815,True,connected
+1,DZA:704d2c59e6450910,SAH:c067a975f328d956,True,connected
+1,COD:34b7cfda818ccf80,SDS:9ecb0b566ac02a31,True,connected
+1,THA:2d2e3dd6e4f6c675,KHM:299a58dab837de1b,False,no route
+1,KHM:299a58dab837de1b,THA:2d2e3dd6e4f6c675,True,connected
+1,SDN:e4296cf2bfa47003,CAF:1f15d49e1132c1f3,True,connected
+1,IRN:3c2b5bd7d999fbee,AZE:0510388634a9edd9,False,no route
+1,AZE:0510388634a9edd9,IRN:3c2b5bd7d999fbee,False,no route
+1,ZMB:583491139c8eb3b0,NAM:d67affdeafffe7f2,True,connected
+1,BEN:5911ab4fd3e84cb1,TGO:f7afd783bdbbc052,True,connected
+1,IRN:3c2b5bd7d999fbee,ARM:433ac98029e5a761,False,no route
+1,ARM:433ac98029e5a761,IRN:3c2b5bd7d999fbee,False,no route
+1,DZA:704d2c59e6450910,MRT:93e93b11bab4502c,True,connected
+1,THA:2d2e3dd6e4f6c675,LAO:b4c511d27634a146,False,no route
+1,LAO:b4c511d27634a146,THA:2d2e3dd6e4f6c675,False,no route
+1,BRA:c9a395c2d321cd60,PRY:8be730e7955b0934,True,connected
+1,BGD:d6d0c7df0b40a187,MMR:e9f27e99686071f9,True,connected
+1,ARG:7462ff4f8b49993a,SPI:47f581a247f875ae,True,connected
+1,IRN:3c2b5bd7d999fbee,AFG:cda2af5bb6ea22f0,False,no route
+1,AFG:cda2af5bb6ea22f0,IRN:3c2b5bd7d999fbee,False,no route
+1,COL:08d1c79f212fc17e,PER:d420f75fe20c6a02,True,connected
+1,IRN:3c2b5bd7d999fbee,TUR:3b553df250ebf332,False,no route
+1,TUR:3b553df250ebf332,IRN:3c2b5bd7d999fbee,False,no route
+1,PAK:447ed1858f7b7a5d,KAS:b7c84d817c090062,True,connected
+1,CHL:150a87c1995fb5ad,SPI:47f581a247f875ae,True,connected
+1,ZAF:eb3d29c8e7d957f4,MOZ:0c9516b3b1958290,True,connected
+1,IND:3f0bb94d859b2064,KAS:b7c84d817c090062,True,connected
+1,SDN:e4296cf2bfa47003,LBY:7ca6524733c4cc0b,True,connected
+1,BRA:c9a395c2d321cd60,GUF:4acf8ebf720d2a5f,True,connected
+1,RUS:b85c5bca1852870f,KAZ:5d6f63a9b9f3c9f9,False,no route
+1,KAZ:5d6f63a9b9f3c9f9,RUS:b85c5bca1852870f,False,no route
+1,AFG:cda2af5bb6ea22f0,TJK:d6e62d7f585e085c,False,no route
+1,TJK:d6e62d7f585e085c,AFG:cda2af5bb6ea22f0,False,no route
+1,UZB:448c5653f0be3548,TJK:d6e62d7f585e085c,False,no route
+1,TJK:d6e62d7f585e085c,UZB:448c5653f0be3548,False,no route
+1,USA:90107a05206832e4,MEX:aa67baf61acd20f3,True,connected
+1,BRA:c9a395c2d321cd60,GUY:5aec9f8c07eb9159,True,connected
+1,USA:90107a05206832e4,CAN:614ec007a6324298,True,connected
+1,BRA:c9a395c2d321cd60,PER:d420f75fe20c6a02,True,connected
+1,CHL:150a87c1995fb5ad,BOL:1a7254807c71e166,True,connected
+1,CHN:72cd37e37e634df7,PRK:443ac4e48c09b5a9,True,connected
+1,CHN:72cd37e37e634df7,BTN:fe4a4d07e153ef17,True,connected
+1,RUS:b85c5bca1852870f,MNG:7ecd8e5b0a42fa66,True,connected
+1,ARG:7462ff4f8b49993a,BOL:1a7254807c71e166,True,connected
+1,IND:3f0bb94d859b2064,BGD:d6d0c7df0b40a187,True,connected
+1,CHN:72cd37e37e634df7,MMR:e9f27e99686071f9,True,connected
+1,CHN:72cd37e37e634df7,NPL:c1885306c87c4123,True,connected
+1,THA:2d2e3dd6e4f6c675,MMR:e9f27e99686071f9,False,no route
+1,MMR:e9f27e99686071f9,THA:2d2e3dd6e4f6c675,False,no route
+1,IND:3f0bb94d859b2064,PAK:447ed1858f7b7a5d,True,connected
+1,BRA:c9a395c2d321cd60,VEN:301beeea27f4cccb,True,connected
+1,CHN:72cd37e37e634df7,HKG:a4b1c1ec313ba36c,True,connected
+1,BRA:c9a395c2d321cd60,COL:08d1c79f212fc17e,True,connected
+1,BRA:c9a395c2d321cd60,URY:a93a37d95dfce9bb,True,connected
+1,CHN:72cd37e37e634df7,LAO:b4c511d27634a146,False,no route
+1,LAO:b4c511d27634a146,CHN:72cd37e37e634df7,False,no route
+1,CHN:72cd37e37e634df7,KAS:b7c84d817c090062,True,connected
+1,USA:90107a05206832e4,CAN:c2f1e4e52d5cc0c3,True,connected
+1,IND:3f0bb94d859b2064,MMR:e9f27e99686071f9,True,connected
+1,CHN:72cd37e37e634df7,TJK:d6e62d7f585e085c,False,no route
+1,TJK:d6e62d7f585e085c,CHN:72cd37e37e634df7,False,no route
+1,PER:d420f75fe20c6a02,CHL:150a87c1995fb5ad,True,connected
+1,CAN:614ec007a6324298,USA:13c14a072880aac5,True,connected
+1,CHN:72cd37e37e634df7,VNM:749468814d903c2a,False,no route
+1,VNM:749468814d903c2a,CHN:72cd37e37e634df7,False,no route
+1,RUS:b85c5bca1852870f,AZE:0510388634a9edd9,True,connected
+1,IND:3f0bb94d859b2064,CHN:72cd37e37e634df7,True,connected
+1,RUS:b85c5bca1852870f,GEO:d709e483cc2819fe,True,connected
+1,CHN:72cd37e37e634df7,KGZ:401b8fcdc0eef69c,False,no route
+1,KGZ:401b8fcdc0eef69c,CHN:72cd37e37e634df7,False,no route
+1,RUS:b85c5bca1852870f,UKR:52622876ebf1ecb8,True,connected
+1,CHN:72cd37e37e634df7,KAZ:5d6f63a9b9f3c9f9,False,no route
+1,KAZ:5d6f63a9b9f3c9f9,CHN:72cd37e37e634df7,False,no route
+1,RUS:b85c5bca1852870f,BLR:216ea6b406f5bc6c,False,no route
+1,BLR:216ea6b406f5bc6c,RUS:b85c5bca1852870f,False,no route
+1,RUS:b85c5bca1852870f,EST:50bd04ff06509a99,False,no route
+1,EST:50bd04ff06509a99,RUS:b85c5bca1852870f,False,no route
+1,CHN:72cd37e37e634df7,AFG:cda2af5bb6ea22f0,False,no route
+1,AFG:cda2af5bb6ea22f0,CHN:72cd37e37e634df7,False,no route
+1,RUS:b85c5bca1852870f,LVA:ff14565ea5d338a5,False,no route
+1,LVA:ff14565ea5d338a5,RUS:b85c5bca1852870f,False,no route
+1,RUS:b85c5bca1852870f,FIN:9332a3268ae7c503,True,connected
+1,RUS:b85c5bca1852870f,PRK:443ac4e48c09b5a9,True,connected
+1,RUS:b85c5bca1852870f,NOW:a387a8ce67e0d957,True,connected
+2,CYN:3fa61972653460ef,CNM:85db95ef4bf8489c,False,no route
+2,CNM:85db95ef4bf8489c,CYN:3fa61972653460ef,False,no route
+2,CNM:85db95ef4bf8489c,ESB:432b2cb88c6056bf,False,no route
+2,ESB:432b2cb88c6056bf,CNM:85db95ef4bf8489c,False,no route
+2,CYP:0e9f924ff6746fe5,ESB:432b2cb88c6056bf,False,no simple count-preserving move
+2,ESB:432b2cb88c6056bf,CYP:0e9f924ff6746fe5,False,no route
+2,MNE:52f7987265ed3935,HRV:2a6ba7505aec5af9,False,no route
+2,HRV:2a6ba7505aec5af9,MNE:52f7987265ed3935,False,no route
+2,ALB:c931cc5315aed954,MNE:52f7987265ed3935,False,no route
+2,MNE:52f7987265ed3935,ALB:c931cc5315aed954,False,no route
+2,POL:1980df7ed9d16d12,SVK:1f440da2e10fbb82,False,no route
+2,SVK:1f440da2e10fbb82,POL:1980df7ed9d16d12,False,no route
+2,CZE:bf3969a8b4fbfc04,SVK:1f440da2e10fbb82,False,no route
+2,SVK:1f440da2e10fbb82,CZE:bf3969a8b4fbfc04,False,no route
+2,UKR:52622876ebf1ecb8,BLR:216ea6b406f5bc6c,False,no route
+2,BLR:216ea6b406f5bc6c,UKR:52622876ebf1ecb8,False,no route
+2,ESP:ff9451038f1a27e4,AND:0923843c3687a75e,False,no route
+2,AND:0923843c3687a75e,ESP:ff9451038f1a27e4,False,no route
+2,ITA:7d6868fd136c6c11,SVN:e8f334b689926950,False,no route
+2,SVN:e8f334b689926950,ITA:7d6868fd136c6c11,False,no route
+2,AUT:709fdd785650b149,LIE:452f33c4300c02b9,False,no route
+2,LIE:452f33c4300c02b9,AUT:709fdd785650b149,False,no route
+2,UKR:52622876ebf1ecb8,SVK:1f440da2e10fbb82,False,no route
+2,SVK:1f440da2e10fbb82,UKR:52622876ebf1ecb8,False,no route
+2,BEL:b124863414a6dcdb,NLX:5daa52b59ba80d17,False,no route
+2,NLX:5daa52b59ba80d17,BEL:b124863414a6dcdb,False,no route
+2,DEU:0b0480fae55fd996,DNK:d4951f6fa8360f9a,False,no route
+2,DNK:d4951f6fa8360f9a,DEU:0b0480fae55fd996,False,no route
+2,MAR:41e7d86fdd4b2365,ESP:7dc2b5da1e2aaae9,False,no route
+2,ESP:7dc2b5da1e2aaae9,MAR:41e7d86fdd4b2365,False,no route
+2,AUT:709fdd785650b149,CHE:b37ef58a1d6dee0a,False,no route
+2,CHE:b37ef58a1d6dee0a,AUT:709fdd785650b149,False,no route
+2,BEL:b124863414a6dcdb,LUX:2287a57343a7d085,False,no route
+2,LUX:2287a57343a7d085,BEL:b124863414a6dcdb,False,no route
+2,ISR:7ab28b88983e2128,LBN:8d427f2407db4cf0,False,no route
+2,LBN:8d427f2407db4cf0,ISR:7ab28b88983e2128,False,no route
+2,MMR:e9f27e99686071f9,LAO:b4c511d27634a146,False,no route
+2,LAO:b4c511d27634a146,MMR:e9f27e99686071f9,False,no route
+2,UKR:52622876ebf1ecb8,HUN:9f803be1643ca956,False,no route
+2,HUN:9f803be1643ca956,UKR:52622876ebf1ecb8,False,no route
+2,POL:1980df7ed9d16d12,UKR:52622876ebf1ecb8,False,no route
+2,UKR:52622876ebf1ecb8,POL:1980df7ed9d16d12,False,no route
+2,SAU:11ac65250772b5d3,KWT:575b7c67b7a3657d,False,no route
+2,KWT:575b7c67b7a3657d,SAU:11ac65250772b5d3,False,no route
+2,COG:c5650e58e144375b,CAF:1f15d49e1132c1f3,False,no simple count-preserving move
+2,CAF:1f15d49e1132c1f3,COG:c5650e58e144375b,False,no simple count-preserving move
+2,IRN:3c2b5bd7d999fbee,TKM:ef25c6485f2078c2,False,no route
+2,TKM:ef25c6485f2078c2,IRN:3c2b5bd7d999fbee,False,no route
+2,AGO:704113b148b7974b,NAM:d67affdeafffe7f2,False,no route
+2,NAM:d67affdeafffe7f2,AGO:704113b148b7974b,False,no route
+2,FXX:f023db15990ca569,BEL:b124863414a6dcdb,False,no route
+2,BEL:b124863414a6dcdb,FXX:f023db15990ca569,False,no route
+2,IRN:3c2b5bd7d999fbee,AZE:e5af19283650a3e3,False,no route
+2,AZE:e5af19283650a3e3,IRN:3c2b5bd7d999fbee,False,no route
+2,IRN:3c2b5bd7d999fbee,AZE:0510388634a9edd9,False,no route
+2,AZE:0510388634a9edd9,IRN:3c2b5bd7d999fbee,False,no route
+2,IRN:3c2b5bd7d999fbee,ARM:433ac98029e5a761,False,no route
+2,ARM:433ac98029e5a761,IRN:3c2b5bd7d999fbee,False,no route
+2,THA:2d2e3dd6e4f6c675,LAO:b4c511d27634a146,True,connected
+2,IRN:3c2b5bd7d999fbee,AFG:cda2af5bb6ea22f0,False,no route
+2,AFG:cda2af5bb6ea22f0,IRN:3c2b5bd7d999fbee,False,no route
+2,IRN:3c2b5bd7d999fbee,TUR:3b553df250ebf332,False,no route
+2,TUR:3b553df250ebf332,IRN:3c2b5bd7d999fbee,False,no route
+2,RUS:b85c5bca1852870f,KAZ:5d6f63a9b9f3c9f9,False,no route
+2,KAZ:5d6f63a9b9f3c9f9,RUS:b85c5bca1852870f,False,no route
+2,AFG:cda2af5bb6ea22f0,TJK:d6e62d7f585e085c,False,no route
+2,TJK:d6e62d7f585e085c,AFG:cda2af5bb6ea22f0,False,no route
+2,UZB:448c5653f0be3548,TJK:d6e62d7f585e085c,False,no route
+2,TJK:d6e62d7f585e085c,UZB:448c5653f0be3548,False,no route
+2,THA:2d2e3dd6e4f6c675,MMR:e9f27e99686071f9,False,no route
+2,MMR:e9f27e99686071f9,THA:2d2e3dd6e4f6c675,False,no route
+2,CHN:72cd37e37e634df7,LAO:b4c511d27634a146,False,no route
+2,LAO:b4c511d27634a146,CHN:72cd37e37e634df7,False,no route
+2,CHN:72cd37e37e634df7,TJK:d6e62d7f585e085c,False,no route
+2,TJK:d6e62d7f585e085c,CHN:72cd37e37e634df7,False,no route
+2,CHN:72cd37e37e634df7,VNM:749468814d903c2a,False,no route
+2,VNM:749468814d903c2a,CHN:72cd37e37e634df7,False,no route
+2,CHN:72cd37e37e634df7,KGZ:401b8fcdc0eef69c,False,no route
+2,KGZ:401b8fcdc0eef69c,CHN:72cd37e37e634df7,False,no route
+2,CHN:72cd37e37e634df7,KAZ:5d6f63a9b9f3c9f9,False,no route
+2,KAZ:5d6f63a9b9f3c9f9,CHN:72cd37e37e634df7,False,no route
+2,RUS:b85c5bca1852870f,BLR:216ea6b406f5bc6c,False,no route
+2,BLR:216ea6b406f5bc6c,RUS:b85c5bca1852870f,False,no route
+2,RUS:b85c5bca1852870f,EST:50bd04ff06509a99,False,no route
+2,EST:50bd04ff06509a99,RUS:b85c5bca1852870f,False,no route
+2,CHN:72cd37e37e634df7,AFG:cda2af5bb6ea22f0,False,no route
+2,AFG:cda2af5bb6ea22f0,CHN:72cd37e37e634df7,False,no route
+2,RUS:b85c5bca1852870f,LVA:ff14565ea5d338a5,False,no route
+2,LVA:ff14565ea5d338a5,RUS:b85c5bca1852870f,False,no route

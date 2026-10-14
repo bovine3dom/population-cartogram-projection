@@ -1,0 +1,2 @@
+mode=geographic-baseline
+contacts=not-preserved
