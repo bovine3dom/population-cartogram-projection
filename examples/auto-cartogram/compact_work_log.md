@@ -805,6 +805,21 @@ The separated layout has exact budgets but is not an acceptable replacement.
   those samples with exact polygon means and second moments, including holes.
   Ten mesh tests pass. New weight-100 and weight-1000 controls are running.
 
+## 20:54–21:00 UTC — Japan review and displacement limit
+
+- Visually checked both new world maps and dedicated Japan–Korea details.
+  The main Japanese islands no longer lie on opposite sides of South Korea.
+  Mainland cells, tile counts, and land contacts do not change.
+- The first rule is not suitable for general use. At 10,000 tiles it moves
+  Java and Sumatra too far south and east. At 55,000 tiles, some Philippine
+  islands also move too far. Keep these controls separate from the leading maps.
+- Added a maximum group translation of twice the square root of the group tile
+  count. This is a safety limit, not a geographic accuracy test. A rejected group
+  keeps all its original cells. The report gives its proposed move and limit.
+- Added the Japan–Korea view to regional reviews. The 22 partition tests pass,
+  including a check that a rejected group remains unchanged. New bounded world
+  controls are next; their quality is not yet known.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

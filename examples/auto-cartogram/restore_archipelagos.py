@@ -54,9 +54,9 @@ def separation_bounds(local,tiles,rows,source,land,radius_km):
     return np.array([lower,upper]),constraints
 
 
-def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimum_tiles=16):
+def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimum_tiles=16,maximum_shift_scale=2.):
     if output.exists():raise ValueError('Output already exists')
-    if not np.isfinite([gap_fraction,land_radius_km]).all() or min(gap_fraction,land_radius_km)<=0 or minimum_tiles<1:raise ValueError('Invalid archipelago settings')
+    if not np.isfinite([gap_fraction,land_radius_km,maximum_shift_scale]).all() or min(gap_fraction,land_radius_km,maximum_shift_scale)<=0 or minimum_tiles<1:raise ValueError('Invalid archipelago settings')
     rows,tiles,owner=load(inputs,layout)
     if any(len(points)!=int(rows[c]['tiles']) for c,points in tiles.items()):raise ValueError('Exact input budgets required')
     contacts=read_csv(inputs/'geographic-contacts.csv');land={r[k] for r in contacts for k in ['a','b']}&set(tiles)
@@ -81,6 +81,9 @@ def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimu
         except ValueError as error:record['not_moved']=str(error);continue
         shift=np.asarray(min(moved))-np.asarray(min(union))
         if {(x+int(shift[0]),y+int(shift[1])) for x,y in union}!=moved:raise AssertionError('Group placement is not a translation')
+        limit=maximum_shift_scale*np.sqrt(sum(len(tiles[c]) for c in members))
+        record.update(proposed_translation=shift.tolist(),maximum_translation=limit)
+        if np.linalg.norm(shift)>limit:record['not_moved']='Group translation exceeds displacement limit';continue
         for c,points in local.items():result[c]={(x+int(shift[0]),y+int(shift[1])) for x,y in points}
         record['group_translation']=shift.tolist()
     for c,points in result.items():
@@ -89,7 +92,7 @@ def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimu
     if any(result[c]!=tiles[c] for c in land):raise AssertionError('Mainland moved')
     after_owner={p:c for c,points in result.items() for p in points};after=tile_contacts(after_owner)
     if len(after_owner)!=total or after-required-before or after&required!=before&required:raise AssertionError('Overlap or source contacts changed')
-    report=dict(method='Nearby island groups placed together with source-axis separation from nearby land; no country-identity links',gap_fraction=gap_fraction,land_radius_km=land_radius_km,minimum_tiles=minimum_tiles,cluster_edges=edges,groups=records,moved_components=sum(result[c]!=tiles[c] for c in tiles),failed_groups=sum('not_moved' in r for r in records),inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]},scripts={name:digest(Path(__file__).with_name(name)) for name in ['restore_archipelagos.py','place_islands.py','shape_placement.py','prepare_flow.py']},limit='Proximity groups can cross country IDs. No cells join separate islands. Nearby-land distances use Equal Earth planar distance times Earth radius, not geodesic distance. Inconsistent or blocked groups remain unchanged and are reported. Preserving axis separation does not prove good geographic placement.')
+    report=dict(method='Nearby island groups placed together with source-axis separation from nearby land; no country-identity links',gap_fraction=gap_fraction,land_radius_km=land_radius_km,minimum_tiles=minimum_tiles,maximum_shift_scale=maximum_shift_scale,cluster_edges=edges,groups=records,moved_components=sum(result[c]!=tiles[c] for c in tiles),failed_groups=sum('not_moved' in r for r in records),inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]},scripts={name:digest(Path(__file__).with_name(name)) for name in ['restore_archipelagos.py','place_islands.py','shape_placement.py','prepare_flow.py']},limit='Proximity groups can cross country IDs. No cells join separate islands. Nearby-land distances use Equal Earth planar distance times Earth radius, not geodesic distance. Inconsistent or blocked groups remain unchanged and are reported. Preserving axis separation does not prove good geographic placement.')
     output.mkdir(parents=True)
     with (output/'cells.csv').open('w',newline='') as stream:
         writer=csv.writer(stream);writer.writerow(['component_id','x','y'])
@@ -105,4 +108,5 @@ if __name__=='__main__':
     parser.add_argument('--gap-fraction',type=float,default=.2)
     parser.add_argument('--land-radius-km',type=float,default=500.)
     parser.add_argument('--minimum-tiles',type=int,default=16)
+    parser.add_argument('--maximum-shift-scale',type=float,default=2.)
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

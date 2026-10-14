@@ -19,6 +19,7 @@ REGIONS={
     'europe':('Europe',(-15,45,35,72)),
     'africa':('Africa and nearby coasts',(-25,55,-38,38)),
     'south-asia':('South Asia',(60,105,5,40)),
+    'japan-korea':('Japan and Korea',(125,150,30,46)),
     'indonesia':('Indonesia and nearby islands',(90,145,-12,10)),
 }
 NS='http://www.w3.org/2000/svg'
