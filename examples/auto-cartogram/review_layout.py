@@ -93,23 +93,30 @@ def country_color(country):
     return f"hsl({int.from_bytes(digest[:2], 'big') % 360},48%,70%)"
 
 
-def draw(path, shapes, tiles, owners, metrics, title):
+def viewport(owners, metrics, header=None):
     xmin = min(x for x, y in owners) - 1
     xmax = max(x for x, y in owners) + 1
     ymin = min(y for x, y in owners) - 1
     ymax = max(y for x, y in owners) + 1
     width, height = 1800, 1120
     topology_warning = metrics['disconnected_regions'] or metrics['regions_with_holes']
-    header = 160 if topology_warning else 140
+    if header is None:header = 160 if topology_warning else 140
     scale = min((width - 80) / (xmax - xmin), (height - header - 45) / (ymax - ymin))
     left = (width - scale * (xmax - xmin)) / 2
     top = header + ((height - header - 45) - scale * (ymax - ymin)) / 2
+    return xmin, xmax, ymin, ymax, scale, left, top, header
+
+
+def draw(path, shapes, tiles, owners, metrics, title):
+    width, height = 1800, 1120
+    xmin, xmax, ymin, ymax, scale, left, top, header = viewport(owners, metrics)
+    topology_warning = metrics['disconnected_regions'] or metrics['regions_with_holes']
     tx = lambda x: left + (x - xmin) * scale
     ty = lambda y: top + (ymax - y) * scale
     fmt = lambda n: f"{n:.3f}"
     unmatched=metrics.get("unmatched_source_population")
     unmatched_label=f"{unmatched:,.0f}" if unmatched is not None else "not assessed"
-    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
+    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" data-map-header="{header}">',
              f'<rect width="{width}" height="{height}" fill="#faf9f6"/>',
              '<g font-family="sans-serif" fill="#242424">',
              f'<text x="40" y="40" font-size="27">{html.escape(title)}</text>',
