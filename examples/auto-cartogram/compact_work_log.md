@@ -847,6 +847,28 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - Updated pipeline instructions for the implemented options and the separate
   bounded island-group command. Production files remain unchanged.
 
+## 21:04–21:11 UTC — Small Japanese islands and verification
+
+- The 110,000-tile Japan detail exposed small nearby islands left behind by the
+  0.2 source-gap threshold. Tested thresholds 0.35 and 0.5. Both include the
+  represented Goto and Tanegashima components in the main Japanese group.
+  No country-ID rule was added.
+- Visually checked both Japan details, the 0.35 world maps at 10,000, 55,000,
+  and 110,000 tiles, and the 110,000-tile Indonesia detail. The main Japanese
+  group is no longer separated by Korea. Taiwan also moves north at 110,000
+  tiles. Sulawesi remains too far southeast; this control does not fix it.
+- Saved the 110,000-tile threshold-0.35 variant separately. Keep the default at
+  0.2 while wider effects are assessed. The island direction-error counts at
+  110,000 tiles are 1,041 for threshold 0.2, 1,027 for 0.35, and 1,063 for 0.5.
+  These aggregate counts are not visual acceptance tests.
+- Cached mainland tile bounds within each constraint calculation. A repeated
+  55,000-tile run produces identical cells. The 22 partition tests pass.
+- The full ten-command validation checkpoint passes. All 21 archived layout
+  bundles pass hash, layout-metric, and gap-metric checks.
+- Started 128- and 512-grid mainland-flow controls with the recorded pipeline.
+  These test guide-grid sensitivity, not a new population scope. The 500,000-tile
+  run remains active. No result is assumed for the running controls.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
