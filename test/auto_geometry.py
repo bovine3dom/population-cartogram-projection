@@ -18,6 +18,7 @@ import dissolve_map_units as dissolve
 import geographic_baseline as baseline
 import geographic_embedding as geographic
 import planar_embedding as embedding
+import prepare_transport_sources as transport_sources
 import review_layout as review
 import repair_contacts as repair
 import relax_layout as relax
@@ -78,6 +79,36 @@ class BalanceTests(unittest.TestCase):
             balance.scale([0],[0],[1],[1],[2])
         with self.assertRaisesRegex(ValueError,"no positive support"):
             balance.scale([0],[0],[1],[1,1],[2])
+
+
+class TransportSourceTests(unittest.TestCase):
+    def test_native_ids_values_and_original_labels_survive_union(self):
+        import pyarrow as pa
+        import pyarrow.ipc as ipc
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); members=root/"members.arrow"; components=root/"components.csv"; crosswalk=root/"crosswalk.csv"
+            table=pa.table(dict(id=pa.array([1,2,3,4],type=pa.uint64()),value=[10.,20.,30.,40.],component_index=[1,2,3,0]))
+            with ipc.new_file(str(members),table.schema) as writer: writer.write_table(table)
+            components.write_text("component_id,country_id,population,source_cells\na,A,10,1\nb,A,20,1\nc,A,30,1\n")
+            crosswalk.write_text("original_component_id,component_id,country_id\na,ab,A\nb,ab,A\nc,c,A\n")
+            report=transport_sources.run(members,components,crosswalk,root/"out")
+            actual=ipc.open_file(str(root/"out"/"sources.arrow")).read_all().to_pydict()
+            self.assertEqual(actual,dict(id=[1,2,3],value=[10.,20.,30.],component_id=["ab","ab","c"],original_component_id=["a","b","c"]))
+            self.assertEqual(report["source_population"],60)
+            self.assertEqual(report["unmatched_population"],40)
+            with self.assertRaisesRegex(ValueError,"already exists"):
+                transport_sources.run(members,components,crosswalk,root/"out")
+            components.write_text(components.read_text().replace("b,A,20","b,B,20"))
+            with self.assertRaisesRegex(ValueError,"different countries"):
+                transport_sources.run(members,components,crosswalk,root/"bad")
+            components.write_text(components.read_text().replace("b,B,20","b,A,21"))
+            with self.assertRaisesRegex(ValueError,"counts or population"):
+                transport_sources.run(members,components,crosswalk,root/"bad")
+            self.assertFalse((root/"bad").exists())
+            duplicate=table.set_column(0,"id",pa.array([1,1,3,4],type=pa.uint64()))
+            with ipc.new_file(str(members),duplicate.schema) as writer: writer.write_table(duplicate)
+            with self.assertRaisesRegex(ValueError,"Duplicate or null source ID"):
+                transport_sources.run(members,components,crosswalk,root/"bad")
 
 
 class PopulationTests(unittest.TestCase):
