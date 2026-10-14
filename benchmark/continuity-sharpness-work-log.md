@@ -339,3 +339,25 @@ but this is not a 128 MiB total-memory result: after collection, reported heap
 use is 39.6 MB and backing storage is 120.1 MB, before other browser costs.
 This is a headless desktop check, not a real mobile-device test. The screenshot
 and memory trace are in `browser-pass-1-128-system/`. No app files were changed.
+
+## 15:32 UTC: second complete pass
+
+Pass 2 passes the independent full-plan audit. For the fitted sources, support
+at 99.5% is 2.172 connections/source and mean spatial RMS is 1.026 coordinate
+units. Border RMS improves from 654.0 to 646.1 km. Reversed area falls from
+3.324 to 3.046 million km². Spatial spread nevertheless increases. Keep both
+pass snapshots; a lower objective is not sufficient to choose a sharper map.
+
+The packed pass-2 preview has 1,148,612 rows and uses 29,440,434 bytes for
+transport plus 5,035,946 bytes for density. Its maximum packing total variation
+is 2.48e-8. All coverage, city-anchor, density, and owner checks pass. Including
+the 54 unfitted countries, the actual packed export has 2.180 connections/source
+at 99.5%, versus 1.875 for the old production export. It has 2.966 stored
+physical connections/source, versus 2.310 before. The pass-2 fitted export
+still passes the strict target mass limits after sparse extraction.
+
+The first packing attempt reached its 180-second process limit during Arrow
+writing. Its incomplete staging directory is retained. A repeat with two Julia
+threads and a longer bound passes as `packed-pass-2-v2/`. Other geometry research
+jobs are now using CPU time; they were left unchanged. The third fit pass is
+running, with the same 17:45 UTC hard stop. No public dataset has changed.
