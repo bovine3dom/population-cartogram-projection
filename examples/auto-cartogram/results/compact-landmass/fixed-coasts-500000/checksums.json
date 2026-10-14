@@ -1,0 +1,23 @@
+{
+  "output/auto-cartogram/world-500000-dissolved-input/geographic-contacts.csv": "de308b8e39759ba7e2f6f4313f2512e6d7abf2292e9623dd78950efe866cc722",
+  "output/auto-cartogram/world-500000-dissolved-input/groups.csv": "6a9de0a7294d00416ee6288714e97bd3216a09c7870d40e64b5108b00f735d15",
+  "output/auto-cartogram/world-500000-dissolved-input/input.wkt": "ec731515febb04bca65c097c0f30cd26ef9d1f42ff3f067b5c0b03b44ecad509",
+  "output/auto-cartogram/world-500000-dissolved-input/manifest.json": "3857df812558696f916d3ef8818bea822eb919b7167a2b45a5506a2d79ecdc8f",
+  "output/auto-cartogram/world-500000-dissolved-input/original-outlines.json": "a80a857639f084b5a334b293c9822d3e70a6b1fc79021de44ca6a8e779d5b67f",
+  "output/auto-cartogram/world-500000-dissolved-input/outline-checks.json": "0af68a4ab36603ca9d3bcd04f8915359a2288f63daba2b16b15e4caaaf1df711",
+  "output/auto-cartogram/world-500000-dissolved-input/validated.wkt": "78296821be9239c321932a0e56a8cc58e54e819de74926b620edb77449557ef1",
+  "output/auto-cartogram/world-500000-dissolved-input/weights.tsv": "e0b5f13f9af6d0b06df0ffb0aa95fa54fccdcc110b57b0be5d885dfd4429c781",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/archipelagos.json": "cbf5df67a009ea065bcb9ae0f8a97944bf97da86fbe1ebced450df03b35ad0c2",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/cells.csv": "bf2079af2db20f92015c976dac7d82b9990092f40549dc921e5c35ad390da9aa",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/complete.txt": "d847589bcf81927df5e3fbb0f09b663be70a716c57c221149ef335918b16529e",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/contact-errors.csv": "90dd5b5140d716b23c0909e0fd6c8a1b1d204c17bde0e500d508b6820c1ac2e0",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/country-counts.csv": "8cbeb9c270c58cd38f5a7bacff147787bcda1f30e8b9e795ef6014f0b320bb91",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/country-order-errors.csv": "5a583bb1a72badefdd36a6661860379c8d5729944bb6b9ae5949cf9706aa7284",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/group-capacities.csv": "d8424912beafbb40d0d232c2753b4b3347efdc814e630709494ce04c3677d9c2",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/island-order-errors.csv": "33a8dd77c50936c823bf91da8259e6ec3c319bb16239fc899d7fc1f358ef692a",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/island-separation.json": "7f1adae03b5bd96ecd0a4a73dbf6625c98ee42d8df97b1af26fac21238394a83",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/metrics.json": "e208706ca25521af1c971c5a98e4027abfac3347babff78e2a3f6a7622734136",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/region-quality.csv": "ace6b89a3a875b60c8e3eb02d6417defab568d4b1ad79e102b565d3d97d5c2fc",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/review.png": "c68690409efb53dacc18912233fe9bbee984b85b3cb487e5769c974068c5d32b",
+  "output/auto-cartogram/world-500000-fixed-coast-bridged-v2/final/review.svg": "21dc2d11d96efd1c3a9d9162cba643042bcbfecc9d44c13d7dc4f3ce9e0a9efb"
+}

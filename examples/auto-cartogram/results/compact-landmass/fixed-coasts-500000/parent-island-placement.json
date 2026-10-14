@@ -1,0 +1,36 @@
+{
+  "method": "Keep components with source land borders or population at or above the threshold fixed. Place smaller isolated components from largest population to smallest, near the nearest eligible source coast. Larger components are eligible; fixed components are also eligible when fixed_land_anchors is enabled. No country-membership links.",
+  "fixed_land_anchors": true,
+  "max_population_fraction": 0.01,
+  "maximum_population": 79546779.9,
+  "absolute_tile_error": 0,
+  "allow_partial_counts": false,
+  "preserve_mainland_defects": true,
+  "unchanged_invalid_fixed_components": [
+    "IDN:91fa24efd9a13b2f",
+    "UZB:448c5653f0be3548",
+    "ZAF:eb3d29c8e7d957f4"
+  ],
+  "initial_false_contacts": 59,
+  "final_false_contacts": 59,
+  "source_contacts_unchanged": true,
+  "eligible_isolated_components": 684,
+  "moved_components": 384,
+  "ocean_scale": 0.1,
+  "maximum_placement_shift": 89.51864431974617,
+  "inputs": {
+    "output/auto-cartogram/world-500000-dissolved-input/groups.csv": "6a9de0a7294d00416ee6288714e97bd3216a09c7870d40e64b5108b00f735d15",
+    "output/auto-cartogram/world-500000-dissolved-input/geographic-contacts.csv": "de308b8e39759ba7e2f6f4313f2512e6d7abf2292e9623dd78950efe866cc722",
+    "output/auto-cartogram/world-500000-dissolved-input/validated.wkt": "78296821be9239c321932a0e56a8cc58e54e819de74926b620edb77449557ef1",
+    "output/auto-cartogram/world-500000-mainland-combined/final/cells.csv": "1220ef3369725c63c2e77138ce48ce6be669538a361901f92f08aaf1929feeae",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "scripts": {
+    "place_islands.py": "bc31965d423bbfc009b0474055429c8180fddac4e3235d883fd2196a304b5964",
+    "coast_anchors.py": "ec7dc2230a88cef5a41cc7cf733ef192b5c3478d2f36dcbea0bc712917d148b7",
+    "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3",
+    "prepare_flow.py": "b794cd56bfcce5910034d405d600deb257dd01829425a0301c79a0b432678fc2"
+  },
+  "parent_layout_records": {},
+  "limit": "A nearest-coast hierarchy is a position heuristic, not a proof of correct geography. Counts and tile shapes are unchanged. No native-resolution transport is approved."
+}

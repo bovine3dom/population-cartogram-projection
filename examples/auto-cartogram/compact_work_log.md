@@ -983,6 +983,26 @@ The separated layout has exact budgets but is not an acceptable replacement.
   have better relative positions, but the separate Philippine groups still need
   work. The group-merge controls are running at three resolutions.
 
+## 21:55–22:04 UTC — Fixed-coast and island-group controls
+
+- The first merged-group control keeps the Philippine islands together. Its
+  55,000-tile world and Indonesia detail were checked visually. The Philippines
+  moves too far east, but the large gap between its main groups is reduced.
+- Found a threshold error: the larger geographic area allowed Greenland and
+  Iceland to merge. Changed the test to use the area of the higher-population
+  endpoint, as in the original hierarchy. Added a regression check. All 24
+  partition tests pass. Added a Philippines review viewport.
+- Repeated the combined island placement at 10,000, 55,000, 110,000, and 500,000
+  tiles with the corrected rule. All four runs complete. Visually checked all
+  four world images, the 55,000-tile Philippines detail, and the 500,000-tile
+  Japan detail. Kyushu and Honshu are east of Korea. Korea remains stretched;
+  this island stage cannot change its mainland shape.
+- Saved separate `fixed-coasts-*` review bundles, with exact cells, checksums,
+  parent coast-anchor records, group records, and regional images. Added a
+  7,200-pixel-wide world image at 500,000 tiles. The two user-preferred controls
+  remain unchanged. No production files changed. These candidates are not
+  approved replacements.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
