@@ -25,6 +25,27 @@ import relax_flow_areas
 
 
 class CapacityPartitionTests(unittest.TestCase):
+    def test_cached_repair_topology(self):
+        from repair_partition import pieces
+        rng=np.random.default_rng(37)
+        for _ in range(50):
+            labels=rng.integers(0,5,size=(9,9))
+            tiles={str(c):{(int(x),int(y)) for y,x in zip(*np.where(labels==c))} for c in range(5)}
+            state=Repair(tiles,{'4'});occupied=set(state.owners)
+            for _ in range(8):
+                before=state.report();parts={c:len(p) for c,p in state.parts.items()}
+                move=state.step()
+                if move is None:break
+                self.assertEqual(before['fragment_cells']-state.report()['fragment_cells'],move['fragment_reduction'])
+                self.assertGreater(move['fragment_reduction'],0)
+                self.assertEqual(set(state.owners),occupied)
+                self.assertEqual(state.tiles['4'],tiles['4'])
+                for c,points in state.tiles.items():
+                    self.assertEqual(len(points),len(tiles[c]))
+                    self.assertEqual(state.parts[c],pieces(points))
+                    self.assertLessEqual(len(state.parts[c]),parts[c])
+                    self.assertTrue(all(state.owners[p]==c for p in points))
+
     def test_gradient(self):
         rng=np.random.default_rng(4);costs=rng.random((12,3));weights=rng.random(3);budgets=np.array([2,4,6])
         value,gradient=dual(weights,costs,budgets,.3)

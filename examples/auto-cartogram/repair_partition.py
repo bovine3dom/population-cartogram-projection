@@ -41,26 +41,49 @@ class Repair:
         return dict(disconnected_regions=sum(len(p)>1 for p in self.parts.values()),fragment_cells=sum(self.fragments(c) for c in self.tiles))
 
     def step(self,choices=16):
+        # Many fragment cells test the same donor removals. Cache topology, not
+        # full copies of large regions. Rebuild exact pieces only for a chosen swap.
+        cache={}
+        def removal(c,p):
+            key=(c,p)
+            if key not in cache:
+                parts=[]
+                for part in self.parts[c]:
+                    parts.extend(pieces(part-{p}) if p in part else [part])
+                parts.sort(key=lambda part:(-len(part),min(part)))
+                if len(cache)>=64:cache.clear()
+                cache[key]=([len(part) for part in parts],{q:i for i,part in enumerate(parts[1:],1) for q in part})
+            return cache[key]
+        def addition(c,removed,point,summary):
+            sizes,labels=summary
+            touched={labels.get(q,0) for q in adjacent(point) if q!=removed and self.owners.get(q)==c}
+            merged=1+sum(sizes[i] for i in touched)
+            largest=max([merged]+[size for i,size in enumerate(sizes) if i not in touched])
+            return len(sizes)-len(touched)+1,len(self.tiles[c])-largest
         for c in sorted(self.tiles,key=lambda c:(-self.fragments(c),c)):
             if c in self.fixed or len(self.parts[c])==1:continue
             main=self.parts[c][0];cx=sum(x for x,y in main)/len(main);cy=sum(y for x,y in main)/len(main)
             frontier={q for p in main for q in adjacent(p) if self.owners.get(q) not in (None,c)}
+            options={}
             for p in sorted(self.tiles[c]-main):
+                reduced=None
                 for d in sorted({self.owners[q] for q in adjacent(p) if q in self.owners}-{c}-self.fixed):
                     other=self.parts[d][0]
                     if not any(q in other for q in adjacent(p)):continue
-                    dx=sum(x for x,y in other)/len(other);dy=sum(y for x,y in other)/len(other)
-                    def score(q):
-                        # Prefer a nearby main-piece attachment, not a distant path.
-                        return ((q[0]-cx)**2+(q[1]-cy)**2)/len(main)-((q[0]-dx)**2+(q[1]-dy)**2)/len(other)
-                    for q in sorted(frontier&other,key=lambda q:(score(q),q))[:choices]:
-                        a=(self.tiles[c]-{p})|{q};b=(self.tiles[d]-{q})|{p}
-                        ap=pieces(a);bp=pieces(b)
-                        if len(ap)>len(self.parts[c]) or len(bp)>len(self.parts[d]):continue
-                        before=self.fragments(c)+self.fragments(d)
-                        after=len(a)-len(ap[0])+len(b)-len(bp[0])
+                    if d not in options:
+                        dx=sum(x for x,y in other)/len(other);dy=sum(y for x,y in other)/len(other)
+                        def score(q):
+                            # Prefer a nearby main-piece attachment, not a distant path.
+                            return ((q[0]-cx)**2+(q[1]-cy)**2)/len(main)-((q[0]-dx)**2+(q[1]-dy)**2)/len(other)
+                        options[d]=sorted(frontier&other,key=lambda q:(score(q),q))[:choices]
+                    for q in options[d]:
+                        if reduced is None:reduced=removal(c,p)
+                        ac,af=addition(c,p,q,reduced);bc,bf=addition(d,q,p,removal(d,q))
+                        if ac>len(self.parts[c]) or bc>len(self.parts[d]):continue
+                        before=self.fragments(c)+self.fragments(d);after=af+bf
                         if after>=before:continue
-                        self.tiles[c]=a;self.tiles[d]=b;self.parts[c]=ap;self.parts[d]=bp
+                        a=(self.tiles[c]-{p})|{q};b=(self.tiles[d]-{q})|{p}
+                        self.tiles[c]=a;self.tiles[d]=b;self.parts[c]=pieces(a);self.parts[d]=pieces(b)
                         self.owners[p]=d;self.owners[q]=c
                         return dict(component=c,other=d,fragment_cell=list(p),replacement_cell=list(q),fragment_reduction=before-after)
         return None
