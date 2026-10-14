@@ -174,7 +174,8 @@ def draw(path, shapes, tiles, owners, metrics, title):
              "mode=geographic-border-repair":"Geographic baseline with border repair",
              "mode=relaxed-geographic":"Whole-shape geographic relaxation",
              "mode=compact-deformation":"Local shape deformation; borders are not required",
-             "mode=shape-placement":"Intact source shapes; translated without border paths"}
+             "mode=shape-placement":"Intact source shapes; translated without border paths",
+             "mode=shape-stress":"Intact source shapes; geographic springs and collision repulsion"}
     method = methods.get(metrics["generation"][0],"GridMapPipeline")
     parts.append('<text x="40" y="1094" font-size="13">Sources: Kontur population; Natural Earth map units. '
                  f'Layout: {method}. Population year is not declared by the input file.</text></g></svg>')

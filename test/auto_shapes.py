@@ -22,6 +22,7 @@ import place_shapes
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
+from shape_stress import Stress
 
 
 class ShapeTests(unittest.TestCase):
@@ -160,6 +161,20 @@ class ShapeTests(unittest.TestCase):
                 old=state.energy();local=state.region_energy(c,state.tiles[c]);state.regrow(c)
                 self.assertAlmostEqual(state.energy()-old,state.region_energy(c,state.tiles[c])-local)
                 self.assertLessEqual(state.energy(),old+1e-8)
+
+    def test_stress_gradient_and_collision_separation(self):
+        from scipy.optimize import minimize
+        tiles={c:{(x,y) for x in range(3) for y in range(4)} for c in ['a','b']}
+        state=Stress(tiles,{'a':(0.,0.),'b':(1.3,.7)},{('a','b')})
+        x=state.initial.ravel().copy()+np.array([.03,.01,-.02,.04])
+        value,gradient=state.objective(x);numeric=[]
+        for i in range(len(x)):
+            shift=np.zeros_like(x);shift[i]=1e-6
+            numeric.append((state.objective(x+shift)[0]-state.objective(x-shift)[0])/2e-6)
+        np.testing.assert_allclose(gradient,numeric,rtol=1e-6,atol=1e-6)
+        fit=minimize(state.objective,x,jac=True,method='L-BFGS-B')
+        self.assertLess(fit.fun,value)
+        self.assertLess(state.penetration(0,1,fit.x.reshape(-1,2))[0],.01)
 
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))

@@ -116,3 +116,18 @@ Inspect the resulting images at world and regional scales.
 - The 10,000-tile atomic result has exact counts, but its continent positions
   are poor. Its starting layout already had that problem. Shape smoothing
   alone cannot correct it.
+
+## 06:59–07:04 UTC — position model
+
+- Added an experimental position model for intact tile shapes. Geographic
+  springs retain approximate relative positions. Convex-hull repulsion moves
+  overlapping shapes apart. The final integer placement prevents cell overlap.
+  Springs are not rendered, and no border contact is required.
+- This tests simultaneous displacement rather than the earlier largest-first
+  placement. It does not yet allow affine shape distortion. Convex hulls can
+  leave too much space around concave coastlines.
+- Checked the objective gradient against finite differences and tested a
+  two-region collision. All 14 focused tests pass. World trials are next.
+- The 55,000-tile count-fit reproduction has finished. Its exported cells match
+  the earlier run byte for byte. The corrected regrowth trials with guide costs
+  1 and 4 have also finished; their images still need review.
