@@ -40,6 +40,13 @@ cells at 55,000 tiles. It changes with the square root of the tile budget.
 The default is zero. No step requests a path to preserve a border. A poor
 result can still contain thin shapes.
 
+`--flow-grid` sets the external flow grid size (default 256).
+`--flow-area-error` sets its relative area-error tolerance (default 0.01).
+A less strict tolerance changes the guide geometry, not the final tile budgets.
+Record this setting when you compare runs. The external solver can raise small
+area targets before solving; its error is not necessarily the error against the
+original population budgets. Any failed external run stops the pipeline.
+
 ## Stages
 
 1. Prepare component geometry and run continuous flow, unless geometry was
