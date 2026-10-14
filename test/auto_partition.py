@@ -114,7 +114,8 @@ class CapacityPartitionTests(unittest.TestCase):
             _,flow_tiles,_=load(inputs,root/'flow-result')
             self.assertEqual({c:len(p) for c,p in flow_tiles.items()},{c:len(p) for c,p in tiles.items()})
             self.assertIn(str(geometry),flow['inputs'])
-            with contextlib.redirect_stdout(io.StringIO()):fixed=repair(inputs,root/'flow-result',root/'repaired',rounds=10)
+            with contextlib.redirect_stdout(io.StringIO()):fixed=repair(inputs,root/'flow-result',root/'repaired',rounds=10,relocate_fragments=True,borrow_coast=True)
+            self.assertTrue(fixed['borrow_coast'])
             self.assertLessEqual(fixed['after']['fragment_cells'],fixed['before']['fragment_cells'])
             self.assertTrue((root/'repaired/parent-partition.json').exists())
             with self.assertRaisesRegex(ValueError,'either'):run(inputs,layout,root/'bad-flow',flow_geometry=geometry,guide_layout=layout)
@@ -138,6 +139,17 @@ class CapacityPartitionTests(unittest.TestCase):
         self.assertTrue(all(abs(x)+abs(y)<=1 for x,y in state.tiles['a']))
         blocked={'a':{(0,0),(100,0)},'b':{(-1,0),(1,0),(0,1),(0,-1)}}
         state=Repair(blocked,{'b'});self.assertIsNone(state.relocate('a'));self.assertEqual(state.tiles,blocked)
+
+    def test_blocked_fragment_can_borrow_a_neighbour_coast(self):
+        tiles={'a':{(1,1),(10,0)},'b':{(x,y) for x in range(3) for y in range(3)}-{(1,1)},'island':{(20,20)}}
+        state=Repair(tiles,{'island'})
+        self.assertIsNone(state.relocate('a'));self.assertEqual(state.tiles,tiles)
+        moved=state.relocate('a',borrow=True)
+        self.assertEqual(moved['removed'],[(10,0)]);self.assertEqual(len(moved['coast_compensations']),1)
+        self.assertEqual(state.report()['disconnected_regions'],0)
+        self.assertTrue(all(len(state.tiles[c])==len(tiles[c]) for c in tiles))
+        self.assertEqual(state.tiles['island'],tiles['island']);self.assertEqual(len(state.owners),11)
+        blocked=Repair(tiles,{'b','island'});self.assertIsNone(blocked.relocate('a',borrow=True));self.assertEqual(blocked.tiles,tiles)
 
     def test_random_fragment_swaps(self):
         rng=np.random.default_rng(11)
