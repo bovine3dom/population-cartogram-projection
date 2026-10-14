@@ -34,3 +34,25 @@ seven children per H3-5 cell. A dense all-pair fit could therefore require about
 targets and is a better initial size match. A population aggregation audit and
 bounded refinement pilot must precede a whole-planet choice. No H3-6 result is
 published yet.
+
+## 20:49 UTC: browser comparison and population audit
+
+The second rendering run has the same animation timeout. A detached worktree
+at the old H3-MON head also fails the held-frame title check. Thus the failure
+also occurs before this rebase; its cause is not established. The temporary
+worktree is removed. The user service was not stopped or restarted.
+
+The source audit found 2,003,260 populated H3-6 cells within the old H3-5
+coverage. Direct aggregation of all their resolution-8 children gives 0.933%
+more population than the old input. Do not rescale this difference away or
+claim identical coverage. The old country extracts used polygon filtering.
+The first regional pilot instead uses the existing native H3-6 country extract.
+The global parent-inherited aggregation remains an audit, not a final input.
+
+Added a bounded-edge, fixed-graph OT solver for research. It uses KA and oneAPI
+and checks host Float64 source and target masses. It does not contain a border
+penalty: the pilot uses the accepted coarse map as a guide. Graph restriction
+and geographic costs change the model, so mass checks alone cannot approve a
+planet result. All 13 initial checks pass on CPU and GPU. With graph-budget and
+Int32 guards, all 15 CPU checks pass. A real Angola factor-2 pilot is running.
+No H3-6 planet fit has started.
