@@ -715,3 +715,16 @@ Logs are `final-test-*`, `audit-public-final.toml`, `final-public-hashes.log`,
 in `output/mobile-export/`. All these jobs have stopped. The normal H3-MON
 service is still stopped. No further dataset reduction is planned in the
 remaining window; the checked public 65.7 MB profile remains selected.
+
+
+## 2026-10-14 01:06 UTC: reproduce the long browser check
+
+Added `VIEWPORT_CYCLES` to the reusable browser check. This removes the need
+for a separate copy of the script. Its default remains one cycle. Repeated
+the full 200-cycle, 600-movement test with the new option and a 64 MiB V8
+heap limit. All checks pass again. World-view heap plus backing storage is
+362.0–364.2 MB; return-view memory is 227.2–229.3 MB. Cell counts are
+unchanged in every movement. Logs are in `browser-soak-reproducible/`.
+
+The public files have not changed. All long tests have stopped. The rest of
+the window is reserved for final hashes, repository checks, and cleanup.

@@ -14,6 +14,8 @@ await mkdir(output, {recursive: true});
 const failures = [], warnings = [], requests = [], samples = [], timings = [];
 const heapMB = Number(process.env.JS_HEAP_MB || 0);
 assert(Number.isSafeInteger(heapMB) && heapMB >= 0, 'JS_HEAP_MB must be a nonnegative integer');
+const viewportCycles = Number(process.env.VIEWPORT_CYCLES || 1);
+assert(Number.isSafeInteger(viewportCycles) && viewportCycles > 0, 'VIEWPORT_CYCLES must be a positive integer');
 const dataPath = process.env.DATA_PATH || 'mobile.arrow';
 const metadata = process.env.METADATA_PATH ? JSON.parse(await readFile(process.env.METADATA_PATH, 'utf8'))
     : {cartogram: 'mobile-cartogram_hilo.arrow', trimFactor: 0};
@@ -112,7 +114,8 @@ try {
     const pans = [];
     if (process.env.VIEWPORT_STRESS) {
         const initial = await page.evaluate(() => ({center: window.m.getCenter().toArray(), zoom: window.m.getZoom()}));
-        for (const camera of [{center: [0, 0], zoom: 0}, {center: [179, 0], zoom: 3}, initial]) {
+        const cameras = [{center: [0, 0], zoom: 0}, {center: [179, 0], zoom: 3}, initial];
+        for (const camera of Array.from({length: viewportCycles}, () => cameras).flat()) {
             await page.evaluate(camera => { window.m.jumpTo(camera); }, camera);
             await page.waitForFunction(() => {
                 const layer = window.m._controls.find(control => control.getCanvas?.()?.id === 'deckgl-overlay')

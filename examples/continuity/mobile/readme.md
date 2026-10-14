@@ -128,6 +128,8 @@ root before replacing an experimental dataset. Do not change production data.
 Set `DATA_PATH` and `METADATA_PATH` for `browser.mjs` to test the published
 relative URL and its actual JSON metadata before moving the directory. Set
 `VIEWPORT_STRESS=1` to test a world view, the date line, and return navigation.
+Set `VIEWPORT_CYCLES=200` to repeat this sequence for 600 movements. Each
+movement records memory after garbage collection. The default is one cycle.
 The staged metadata enables visible-region geometry in H3-MON `fe5b200` or
 later. This limits rendered geographic polygons, not source data or queries.
 The option is off by default for other datasets. A world view can still use
