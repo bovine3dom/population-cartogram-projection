@@ -20,6 +20,7 @@ import geographic_embedding as geographic
 import planar_embedding as embedding
 import review_layout as review
 import repair_contacts as repair
+import relax_layout as relax
 import validate_outlines as outlines
 
 
@@ -149,6 +150,23 @@ class OutlineTests(unittest.TestCase):
             self.assertIn("0.0 0.0\t1.0 0.0",(root/"validated.wkt").read_text())
             with self.assertRaises(ValueError):
                 outlines.run(root)
+
+
+class RelaxTests(unittest.TestCase):
+    def test_translation_preserves_shapes_and_reduces_energy(self):
+        tiles={"a":{(x,y) for x in range(2) for y in range(2)},
+               "b":{(x+10,y) for x in range(2) for y in range(2)},"c":{(5,3)}}
+        moved,metadata=relax.relax(tiles,{("a","b")},rounds=30,stiffness=.01)
+        self.assertLess(metadata["final_energy"],metadata["initial_energy"])
+        self.assertGreater(metadata["moves"],0)
+        self.assertEqual(moved["c"],tiles["c"])
+        for c,points in moved.items():
+            dx=min(x for x,y in points)-min(x for x,y in tiles[c])
+            dy=min(y for x,y in points)-min(y for x,y in tiles[c])
+            self.assertEqual(points,{(x+dx,y+dy) for x,y in tiles[c]})
+        checked=repair.Repair(moved,{("a","b")})
+        self.assertEqual(set(checked.contacts),{("a","b")})
+        self.assertEqual(relax.relax(tiles,{("a","b")},rounds=30,stiffness=.01)[0],moved)
 
 
 class RepairTests(unittest.TestCase):

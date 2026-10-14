@@ -182,6 +182,8 @@ def run(inputs, baseline, output, max_search=30000, passes=2):
             required_contacts=len(required),retained_contacts=len(state.contacts),elapsed_seconds=time.monotonic()-started,
             limit="Some borders can remain missing. Position and shape can worsen. This is not the published mosaic algorithm.",
             baseline_cells_sha256=hashlib.sha256((baseline/"cells.csv").read_bytes()).hexdigest(),
+            baseline_generation=(baseline/"complete.txt").read_text().splitlines(),
+            baseline_metadata={name:json.loads((baseline/name).read_text()) for name in ["baseline.json","relax.json"] if (baseline/name).exists()},
             script_sha256=SCRIPT_SHA256)
         (temp/"repair.json").write_text(json.dumps(metadata,indent=2)+"\n")
         (temp/"complete.txt").write_text("mode=geographic-border-repair\ncounts=exact\n")
