@@ -72,6 +72,7 @@ public class MosaicAdapter {
             for (Dual dual : map.duals) if (dual.vertexCount() > 1) new GridEmbedder(dual);
         }
         new DeformAlgorithm(GridGeometrySpawner.inferFromString("SQUARE")).run(map);
+        if (Boolean.getBoolean("mosaic.initialSeaOnly")) map.outlines.removeIf(o -> o.label.startsWith("SEA:"));
         if (placement.equals("directional")) DirectionalPlacement.run(map);
         else new CombineAlgorithm(new AgnosticCombination()).run(map);
 
@@ -111,6 +112,7 @@ public class MosaicAdapter {
             + "polishIterations=" + polishIterations + "\n"
             + "javaVersion=" + System.getProperty("java.version") + "\n"
             + "orientInitial=" + Boolean.getBoolean("mosaic.orientInitial") + "\n"
+            + "initialSeaOnly=" + Boolean.getBoolean("mosaic.initialSeaOnly") + "\n"
             // JLS 14.10: nested assertions use their enclosing top-level class status.
             + "regionAssertions=" + MosaicCartogram.class.desiredAssertionStatus() + "\n");
     }

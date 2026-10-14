@@ -203,14 +203,49 @@
 +            }
 --- a/arrange/DeformAlgorithm.java
 +++ b/arrange/DeformAlgorithm.java
-@@ -106,6 +106,9 @@
+@@ -47,8 +47,8 @@
+             map.determineDuals();
+         }
+         
+-        for (Dual d : map.duals) {
+-            run(d, map.gridmath);
++        for (int i = 0; i < map.duals.size(); i++) {
++            map.duals.set(i, run(map.duals.get(i), map.gridmath));
+         }
+ 
+         map.stage = Stage.DEFORMED;
+@@ -56,7 +56,7 @@
+         sw.stop();        
+     }
+ 
+-    private void run(Dual dual, GridMath gridmath) {
++    private Dual run(Dual dual, GridMath gridmath) {
+ 
+         int nfaces = dual.vertexCount();
+         int totalTiles = 0;
+@@ -106,6 +106,16 @@
  
              GridEmbedder embedder = new GridEmbedder(dual);
              embedder.run(cartogram);
++            if (Boolean.getBoolean("mosaic.initialSeaOnly")) {
++                var land = arrange.algorithms.InitialSeaRemoval.remove(dual, cartogram);
++                dual = land.dual();
++                cartogram = land.cartogram();
++                nfaces = dual.vertexCount();
++                totalTiles = dual.getTotalWeight();
++            }
 +            if (Boolean.getBoolean("mosaic.orientInitial")) {
 +                cartogram = arrange.algorithms.GeographicOrientation.orient(cartogram, dual);
 +            }
  
             // cartogram.export("embedded", 0);
  
-
+@@ -163,7 +173,7 @@
+                 p.guide = region.getGuidingShape();
+             }
+         }
+-
++        return dual;
+     }
+ 
+     private MosaicCartogram runRound(MosaicCartogram cartogram, MosaicSlider slider, MoveAndReshape heuristic, boolean final_round, double factor, int it) {

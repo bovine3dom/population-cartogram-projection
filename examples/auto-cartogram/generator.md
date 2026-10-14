@@ -37,6 +37,25 @@ change that owner. A second test executes a transfer chain in reverse order.
 Topology mode can then report a residual count error instead of accepting a
 worse pass. Exact mode still fails if it cannot obtain the requested counts.
 
+The optional `-Dmosaic.initialSeaOnly=true` setting removes temporary sea
+regions immediately after grid initialization. It retains every land cell
+and land contact, then fits only the original population regions. This avoids
+artificial sea-contact constraints during fitting. Unit and adapter tests check
+this transition. The default retains sea regions through fitting for comparison.
+
+The initializer reports a necessary tile-budget bound: a connected shape of
+`n` square cells has at most `2n+2` boundary edges. Temporary sea contacts violate
+this bound for one one-tile region at each of the 10,000 and 110,000 world
+budgets. The original land contacts have no such violation. This bound alone
+does not prove that a layout exists. See the
+[degree checks](results/world-dissolved-input/degree-bound.json).
+
+`planar_embedding.py --no-sea` instead exports the original dual without added
+vertices. NetworkX draws it by adding edges to a private copy, not to the
+exported constraints. All three world trials fail upstream geometric preflight
+with crossing assertions. Do not use this route for the current world inputs.
+See the [NetworkX drawing source](https://networkx.org/documentation/stable/_modules/networkx/algorithms/planar_drawing.html).
+
 ## Prepare population and shapes
 
 The population file must contain H3 resolution-8 `h3` and `population` columns.

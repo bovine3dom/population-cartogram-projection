@@ -160,6 +160,29 @@ class AdapterTests(unittest.TestCase):
             self.assertIn("embedding=planar",(output/"complete.txt").read_text())
             self.assertIn("orientInitial=true",(output/"complete.txt").read_text())
 
+    def test_initial_sea_is_removed_before_fitting(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory=Path(tmp)
+            positions={"a":(0,0),"b":(2,0),"c":(2,2),"SEA:test":(0,2)}
+            lines=["STAGE 1","OUTLINES 4"]
+            for i,(label,(x,y)) in enumerate(positions.items()):
+                lines += [f"OUT {i}\t{label}\t{x} {y}\t100 100 100",
+                          f"{x-.4} {y-.4}\t{x+.4} {y-.4}\t{x+.4} {y+.4}\t{x-.4} {y+.4}","SITECOUNT 0"]
+            inputs,weights=directory/"input.wkt",directory/"weights.tsv"
+            inputs.write_text("\n".join(lines)+"\n")
+            weights.write_text("a\t3\nb\t3\nc\t3\nSEA:test\t1\n")
+            (directory/"embedding.tsv").write_text("".join(f"{v}\t{x}\t{y}\n" for v,(x,y) in positions.items()))
+            (directory/"embedding-edges.tsv").write_text("a\tb\nb\tc\nc\tSEA:test\nSEA:test\ta\n")
+            output=directory/"land"
+            command=self.command(inputs,weights,output)+[str(directory)]
+            command.insert(1,"-Dmosaic.initialSeaOnly=true")
+            result=subprocess.run(command,capture_output=True,timeout=60)
+            self.assertEqual(result.returncode,0,result.stderr)
+            self.assertIn(b"Removed initial sea regions=1",result.stdout)
+            self.assertEqual({r["component_id"] for r in review.read_csv(output/"counts.csv")},{"a","b","c"})
+            self.assertFalse(review.read_csv(output/"sea.csv"))
+            self.assertIn("initialSeaOnly=true",(output/"complete.txt").read_text())
+
     def test_round_budget_is_validated_and_recorded(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory=Path(tmp)
@@ -183,7 +206,7 @@ class AdapterTests(unittest.TestCase):
 
     def test_upstream_algorithms_against_independent_oracles(self):
         java = Path((VENDOR/"java-path.txt").read_text().strip())
-        classes=["MosaicConnectivity","MosaicMinCostFlow","MosaicPolishTransaction"]
+        classes=["MosaicConnectivity","MosaicMinCostFlow","MosaicPolishTransaction","MosaicInitialSea"]
         with tempfile.TemporaryDirectory() as tmp:
             subprocess.run([str(java.with_name("javac")), "-cp", str(VENDOR/"classes"),
                             "-d", tmp, *[str(ROOT/"test"/(name+".java")) for name in classes]], check=True, timeout=30)
