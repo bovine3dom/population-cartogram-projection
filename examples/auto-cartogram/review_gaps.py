@@ -22,9 +22,9 @@ def read_cells(path,owid=False):
     steps=[]
     for axis in (0,1):
         values=sorted({r[axis] for r in rows})
-        steps.append(math.gcd(*(b-a for a,b in zip(values,values[1:]))) or 1)
+        steps.append(math.gcd(*(b-a for a,b in zip(values,values[1:]))))
     # OWID uses a two-unit square lattice. Generator cells already use unit steps.
-    step=math.gcd(*steps) if owid else 1
+    step=(math.gcd(*steps) or 1) if owid else 1
     x0=min(x for x,y,c in rows);y0=min(y for x,y,c in rows)
     owners={};conflicts=set();duplicates=set()
     for x,y,c in rows:
