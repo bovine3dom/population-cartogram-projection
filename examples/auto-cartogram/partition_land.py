@@ -80,7 +80,7 @@ def contact_groups(pairs):
 def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.,sites=None,float_islands=False):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([sigma,guide,anchor]).all() or sigma<=0 or min(guide,anchor)<0:raise ValueError('Invalid settings')
-    if sum(value is not None for value in [flow_geometry,guide_layout,sites])>1:raise ValueError('Choose either flow geometry, guide layout, or sites')
+    if guide_layout and (flow_geometry or sites):raise ValueError('Choose either a guide layout or flow geometry/projected sites')
     if flow_stretch!=1 and not flow_geometry:raise ValueError('Flow stretch requires flow geometry')
     if not np.isfinite(flow_guide_weight) or flow_guide_weight<0 or (flow_guide_weight and not (flow_geometry and power)):raise ValueError('Flow guide cost requires flow geometry and power distance')
     started=time.monotonic()
@@ -181,7 +181,7 @@ if __name__=='__main__':
     for name,default in [('sigma',8.),('guide',4.),('anchor',.05)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--iterations',type=int,default=300)
     parser.add_argument('--guide-layout',type=Path)
-    parser.add_argument('--sites',type=Path,help='CSV of projected component sites; align by translation and positive uniform scale')
+    parser.add_argument('--sites',type=Path,help='CSV of projected component sites; align to the starting or flow raster by translation and positive uniform scale')
     parser.add_argument('--flow-geometry',type=Path,help='Use continuous geometry for the footprint and sites, with original budgets')
     parser.add_argument('--flow-guide-weight',type=float,default=0.,help='Add squared distance from each raw flow region to the power cost')
     parser.add_argument('--flow-stretch',type=float,default=1.,help='Area-preserving horizontal stretch of the flow footprint and sites')
