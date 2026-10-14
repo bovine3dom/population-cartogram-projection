@@ -15,9 +15,10 @@ continuous cartogram. Some 55,000-tile gap measurements are close to OWID.
 
 The latest control excludes isolated islands from the upstream flow, not only
 from later boundary changes. It retains every final population budget. At
-55,000 tiles a stronger guide retains 256 of 311 matched country borders,
-versus OWID's 248, but has 69 unsupported contacts versus 48. A separate
-fixed-footprint border control has 251 retained and 54 unsupported contacts.
+55,000 tiles the combined stronger-guide and fixed-footprint control retains
+266 of 311 matched country borders, versus OWID's 248. It has 39 unsupported
+contacts versus 48, and 198 direction reversals versus 210. Boundary changes
+leave the occupied footprint unchanged; they cannot open new gaps.
 Visual checks still reject these layouts:
 Pakistan is stretched, Korea is misplaced, and Southeast Asia is poor. A higher
 retained-border count alone is not sufficient. A separate
