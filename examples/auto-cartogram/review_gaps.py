@@ -11,6 +11,7 @@ import numpy as np
 from scipy.ndimage import binary_closing, binary_fill_holes, label
 
 from save_review import digest
+from review_layout import country_color
 
 
 def read_cells(path,owid=False):
@@ -73,14 +74,50 @@ def draw(path,land,enclosed,masks,title):
     path.write_text('\n'.join(parts)+'</svg>\n')
 
 
-def run(cells,output,owid=False,title='Empty-space review',radii=(1,2,4,8)):
+def draw_layout(path,owners,title,names,country_ids):
+    width,height=1800,1120
+    xmin=min(x for x,y in owners)-1;xmax=max(x for x,y in owners)+1
+    ymin=min(y for x,y in owners)-1;ymax=max(y for x,y in owners)+1
+    scale=min((width-80)/(xmax-xmin),(height-150)/(ymax-ymin))
+    tx=lambda x:40+(x-xmin)*scale;ty=lambda y:110+(ymax-y)*scale
+    countries={}
+    for p,c in owners.items():countries.setdefault(country_ids.get(c,c),set()).add(p)
+    parts=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">',
+        '<rect width="100%" height="100%" fill="#faf9f6"/>',
+        f'<text x="40" y="40" font-family="sans-serif" font-size="27">{html.escape(title)}</text>',
+        '<text x="40" y="70" font-family="sans-serif" font-size="16">Layout comparison only. Country colours and population scope can differ. See the numeric checks.</text>']
+    for c,points in sorted(countries.items()):
+        commands=[f'M{tx(x-.5):.3f},{ty(y+.5):.3f}h{scale:.3f}v{scale:.3f}h-{scale:.3f}z' for x,y in sorted(points)]
+        parts.append(f'<path fill="{country_color(c)}" d="{" ".join(commands)}"/>')
+    boxes=[]
+    for c,points in sorted(countries.items(),key=lambda item:(-len(item[1]),item[0])):
+        if len(points)*scale*scale<1200:continue
+        cx=sum(x for x,y in points)/len(points);cy=sum(y for x,y in points)/len(points)
+        x,y=min(points,key=lambda p:((p[0]-cx)**2+(p[1]-cy)**2,p))
+        text=names.get(c,c);px,py=tx(x),ty(y);half=len(text)*3.5
+        box=(px-half,py-10,px+half,py+4)
+        if any(not(box[2]<b[0] or b[2]<box[0] or box[3]<b[1] or b[3]<box[1]) for b in boxes):continue
+        boxes.append(box)
+        parts.append(f'<text x="{px:.3f}" y="{py:.3f}" text-anchor="middle" font-family="sans-serif" font-size="12" paint-order="stroke" stroke="#faf9f6" stroke-width="2">{html.escape(text)}</text>')
+    path.write_text('\n'.join(parts)+'</svg>\n')
+
+
+def run(cells,output,owid=False,title='Empty-space review',radii=(1,2,4,8),names=None,groups=None):
     if output.exists():raise ValueError('Output already exists')
     hashes=dict(cells_sha256=digest(cells),script_sha256=digest(Path(__file__)))
+    labels={};country_ids={}
+    if groups:
+        hashes['groups_sha256']=digest(groups)
+        with groups.open(newline='') as stream:country_ids={r['component_id']:r['country_id'] for r in csv.DictReader(stream)}
+    if names:
+        hashes['names_sha256']=digest(names)
+        with names.open(newline='') as stream:labels={str(int(r['code'])):r['name'] for r in csv.DictReader(stream)}
     owners,source=read_cells(cells,owid);report,land,enclosed,masks,origin=measure(owners,radii)
     report.update(**hashes,**source,owid=owid)
     output.mkdir(parents=True)
     (output/'gaps.json').write_text(json.dumps(report,indent=2)+'\n')
     draw(output/'gaps.svg',land,enclosed,masks,title)
+    draw_layout(output/'layout.svg',owners,title,labels,country_ids)
     return report
 
 
@@ -88,5 +125,5 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('cells',type=Path);parser.add_argument('output',type=Path)
     parser.add_argument('--owid',action='store_true');parser.add_argument('--title',default='Empty-space review')
-    parser.add_argument('--radii',type=int,nargs='+',default=[1,2,4,8])
+    parser.add_argument('--radii',type=int,nargs='+',default=[1,2,4,8]);parser.add_argument('--names',type=Path);parser.add_argument('--groups',type=Path)
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

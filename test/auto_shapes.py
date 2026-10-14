@@ -68,6 +68,10 @@ class ShapeTests(unittest.TestCase):
             path.write_text('10,20,a\n10,20,b\n')
             owners,source=review_gaps.read_cells(path,True)
             self.assertEqual(source['conflicting_coordinates'],1);self.assertEqual(len(owners),1)
+            report=review_gaps.run(path,Path(tmp)/'review',owid=True,radii=(1,2))
+            self.assertEqual(report['tiles'],1)
+            self.assertTrue((Path(tmp)/'review/layout.svg').is_file())
+            self.assertTrue((Path(tmp)/'review/gaps.svg').is_file())
             path.write_text('component_id,x,y\na,10,20\nb,10,20\n')
             with self.assertRaisesRegex(ValueError,'Overlapping'):review_gaps.read_cells(path)
 
