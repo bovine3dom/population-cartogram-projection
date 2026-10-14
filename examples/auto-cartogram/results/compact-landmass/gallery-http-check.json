@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-14T21:07:29.529774+00:00",
+  "checked_at_utc": "2026-10-14T21:37:01.869649+00:00",
   "method": "Headless local HTTP requests for every unique relative href and src on the gallery page",
   "resources": [
     {
@@ -20,6 +20,18 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/archipelago-10000/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/archipelago-110000/archipelagos.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/archipelago-110000/regions/japan-korea.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/archipelago-110000/review.png",
       "status": 200
     },
     {
@@ -115,6 +127,22 @@
       "status": 200
     },
     {
+      "path": "examples/auto-cartogram/results/compact-landmass/flow-grid128-incomplete/intermediate-review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/flow-grid128-incomplete/pipeline.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/flow-grid512/pipeline.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/flow-grid512/review.png",
+      "status": 200
+    },
+    {
       "path": "examples/auto-cartogram/results/compact-landmass/flow-guided/bundle.json",
       "status": 200
     },
@@ -156,6 +184,10 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/global-coast-rejected/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/island-separation/comparison.json",
       "status": 200
     },
     {
