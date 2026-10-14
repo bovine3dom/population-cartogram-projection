@@ -267,3 +267,37 @@ country eta table into the output. The dense and compact oneAPI publication
 fixtures pass, including eta-table preservation. No real dataset is published
 by this test. The full planet regression has 12 workflow checks, plus the
 assembly and shared-target checks.
+
+## 13:20 UTC: first complete sharp border pass
+
+The factor-256 continuation passes India and China at the requested final eta.
+The first whole-planet pass is complete. Its immutable snapshot and independent
+audit are in `planet-refit-v4/fit/pass-1.jls` and `pass-1-audit.toml`.
+The skipped update prefixes are verified in the earlier continuation roots.
+The second pass is running. No mass limit was relaxed.
+
+Matched results cover the same 353,480 fitted sources:
+
+| Mapping | Connections/source at 99.5% | Mean source spatial RMS | Low-population connections/source |
+| --- | ---: | ---: | ---: |
+| Old production | 1.837 | 0.412 | 1.607 |
+| Old full continuity | 147.973 | 5.868 | 102.432 |
+| Old mobile continuity | 5.738 | 5.739 | 3.384 |
+| New sharp baseline | 1.906 | 0.426 | 1.634 |
+| New sharp border pass 1 | 2.004 | 0.715 | 1.773 |
+
+Low population means below one tenth of a uniform country target quota; the
+same 277,637 sources meet this condition in each row. Coordinate units, not
+kilometres, are used for source spatial RMS. The production export already
+omits tails. The first pass is close to the old connection ratio, but its
+remaining long-distance contributions still increase spatial spread. Border
+RMS is about 654 km and reversed area is 3.324 million km². These defects
+remain important; the map is not a solved continuity result.
+
+A research-only export of pass 1 retains 99.999%, not 99.5%, and restores all
+54 unfitted countries. It has 1,107,156 rows, 387,294 sources, and all 1,715
+labelled sources. The transport is 75,581,682 bytes and density is 6,197,474
+bytes: 81,779,156 bytes combined, without mobile moment reduction or new
+transport compression. After export, fitted-country target L1 is at most
+9.57e-5 and maximum relative error is 0.0009862; source sums pass as well.
+Files are under `preview-pass-1/`, not H3-MON. No public file has changed.
