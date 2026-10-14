@@ -211,6 +211,22 @@ The separated layout has exact budgets but is not an acceptable replacement.
   Both remain diagnostic. The first smoothing stages hit their iteration
   limits. Do not report convergence merely because final counts can be repaired.
 
+## 16:36–16:40 UTC — saved results and partition controls
+
+- Recomputed all numeric layout and gap checks for the three saved exact fits
+  from their archived cells and input records. They match. All bundle hashes
+  match too. The comparison page and its 26 linked local resources return HTTP
+  status 200. Reports are beside the latest validation record.
+- Added independent guide positions and a uniform squared-distance control to
+  the partition diagnostic. Unlike the earlier area-normalized centre cost,
+  the uniform cost defines a power diagram before discrete count correction.
+  A non-convex target mask can still split its regions.
+- Started a compact Tutte-footprint control with geographic target centres and
+  uniform distance costs. It can change country positions globally rather than
+  preserve the initial nested shapes. The 40 shape tests and five partition
+  tests pass after this addition. These additions are later than the full
+  validation checkpoint and have only these focused checks so far.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

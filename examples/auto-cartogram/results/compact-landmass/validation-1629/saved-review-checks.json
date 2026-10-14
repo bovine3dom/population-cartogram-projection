@@ -1,0 +1,23 @@
+[
+  {
+    "layout": "joint-geographic-guides",
+    "all_bundle_hashes_match": true,
+    "numeric_layout_metrics_match": true,
+    "gap_metrics_match": true,
+    "cells_sha256": "671bbdfdc4da39fcea848ab8d3ec8a2e4267c75f98c41245c961bdd25c21eab4"
+  },
+  {
+    "layout": "joint-geographic-start",
+    "all_bundle_hashes_match": true,
+    "numeric_layout_metrics_match": true,
+    "gap_metrics_match": true,
+    "cells_sha256": "0ad6bab66f535dc06e4ad163adeee3b7fe997fb94fec49bc322322d16be61dca"
+  },
+  {
+    "layout": "joint-interior4-guide16-sea8",
+    "all_bundle_hashes_match": true,
+    "numeric_layout_metrics_match": true,
+    "gap_metrics_match": true,
+    "cells_sha256": "f4709c6ffb9e559678cf5b408d684473d8959ef5e3c0aff7db5454fe19bbddb3"
+  }
+]
