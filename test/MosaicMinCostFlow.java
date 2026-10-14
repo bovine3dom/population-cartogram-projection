@@ -9,7 +9,8 @@ import java.util.Set;
 public class MosaicMinCostFlow {
     public static void main(String[] args) {
         Random random = new Random(314159);
-        for (int trial=0;trial<1000;trial++) {
+        int infeasible=0;
+        for (int trial=0;trial<2000;trial++) {
             FlowDigraph graph = new FlowDigraph();
             for (int v=0;v<4;v++) graph.addVertex();
             int[] from=new int[8],to=new int[8],supply=new int[4];
@@ -30,6 +31,10 @@ public class MosaicMinCostFlow {
                 capacity[v]=Math.min(incoming[v],outgoing[v])+random.nextInt(2);
                 graph.getVertex(v).setCapacity(capacity[v]);
             }
+            if (trial>=1000) {
+                int extra=random.nextInt(5); supply[0]+=extra; supply[3]-=extra;
+                graph.getVertex(0).setSupply(supply[0]); graph.getVertex(3).setSupply(supply[3]);
+            }
             double optimum=Double.POSITIVE_INFINITY;
             for (int mask=0;mask<256;mask++) {
                 int[] balance=new int[4],inflow=new int[4],outflow=new int[4]; double cost=0;
@@ -42,6 +47,10 @@ public class MosaicMinCostFlow {
             }
             if (trial%25==0) System.out.println("Flow trial "+trial);
             int[] flow=graph.solve();
+            if (Double.isInfinite(optimum)) {
+                if (flow!=null) throw new AssertionError("Infeasible graph accepted: "+trial);
+                infeasible++; continue;
+            }
             if (flow==null) throw new AssertionError("Feasible graph rejected: "+trial);
             int[] balance=new int[4],inflow=new int[4],outflow=new int[4]; double cost=0;
             for (int e=0;e<8;e++) {
@@ -54,6 +63,17 @@ public class MosaicMinCostFlow {
                 throw new AssertionError("Nonoptimal flow at "+trial+": cost="+cost+", optimum="+optimum);
             }
         }
-        System.out.println("1000 flow problems agree with exhaustive optima.");
+        FlowDigraph impossible=new FlowDigraph();
+        var source=impossible.addVertex(); var sink=impossible.addVertex();
+        source.setSupply(1); sink.setSupply(-1);
+        if (impossible.solve()!=null) throw new AssertionError("Artificial edges hid infeasibility");
+        FlowDigraph costly=new FlowDigraph();
+        source=costly.addVertex(); sink=costly.addVertex();
+        source.setSupply(1); sink.setSupply(-1);
+        var edge=costly.addEdge(source,sink); edge.setWeight(300000); edge.setCapacity(1);
+        int[] expensive=costly.solve();
+        if (expensive==null || expensive[edge.getId()]!=1) throw new AssertionError("Artificial route replaced a valid expensive edge");
+        if (new FlowDigraph().solve()==null) throw new AssertionError("Empty flow problem is feasible");
+        System.out.println("2000 flow problems agree with exhaustive search, including "+infeasible+" infeasible cases; high-cost and empty cases pass.");
     }
 }

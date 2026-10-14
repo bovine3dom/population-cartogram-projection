@@ -25,11 +25,16 @@ so later builds cannot change their class files. It applies
 an inverted size assertion, removal-queue ties, and a local connectivity check.
 Keep Java assertions enabled for reference runs. The independent flood-fill test checks
 accepted moves against both land connectivity and four-neighbour sea holes.
-A second oracle compares 1,000 small flow problems with exhaustive optima. The
-unpatched flow solver stalls on this test. The patch updates each reduced cost
+A second oracle compares 2,000 small flow problems with exhaustive search,
+including 523 infeasible cases. It also tests a high-cost edge and an empty
+graph. The unpatched flow solver stalls on the original feasible tests. The patch updates each reduced cost
 once and removes only tiny negative roundoff terms on usable edges. Larger
 negative reduced costs cause an error. The tolerance is 16 floating-point units
 at the network cost scale. Inactive reverse edges keep their negative costs.
+The solver's artificial connectivity edges now have a cost above any simple
+residual path. Any remaining artificial flow makes the original problem
+infeasible. Previously, such flow could be reported as feasible, and a fixed
+artificial cost could replace a valid expensive route.
 Polishing now restores the previous tile ownership if a partly executable flow
 does not reduce count error. A synthetic forced-flow test checks the rollback.
 Each transfer uses its planned destination owner. An earlier transfer must not
@@ -39,6 +44,15 @@ worse pass. Exact mode now selects one nonzero region supply per flow pass.
 The previous code could select several surplus regions despite its one-unit
 limit. A regression test checks the total supply. Exact mode still fails if it
 cannot obtain the requested counts.
+
+`-Dmosaic.partialPolish=true` tests explicit unmet-demand edges between region
+supply nodes and the sea. Real move costs are scaled so every simple real path
+costs less than one; each unmet-demand edge costs one. These extra edges are
+never tile moves and cannot bypass cell capacities. They allow a partly
+successful polishing pass when not all count errors can be fixed at once.
+The transactional guard still rejects a pass that does not reduce total count
+error. A capacity-limited test checks one real move and one unmet unit. This
+option does not guarantee exact counts or correct geographic positions.
 
 The optional `-Dmosaic.initialSeaOnly=true` setting removes temporary sea
 regions immediately after grid initialization. It retains every land cell

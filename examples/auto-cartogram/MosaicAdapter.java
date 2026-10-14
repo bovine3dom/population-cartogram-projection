@@ -113,6 +113,7 @@ public class MosaicAdapter {
             + "javaVersion=" + System.getProperty("java.version") + "\n"
             + "orientInitial=" + Boolean.getBoolean("mosaic.orientInitial") + "\n"
             + "initialSeaOnly=" + Boolean.getBoolean("mosaic.initialSeaOnly") + "\n"
+            + "partialPolish=" + Boolean.getBoolean("mosaic.partialPolish") + "\n"
             // JLS 14.10: nested assertions use their enclosing top-level class status.
             + "regionAssertions=" + MosaicCartogram.class.desiredAssertionStatus() + "\n");
     }

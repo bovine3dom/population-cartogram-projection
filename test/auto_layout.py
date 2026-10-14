@@ -176,12 +176,14 @@ class AdapterTests(unittest.TestCase):
             output=directory/"land"
             command=self.command(inputs,weights,output)+[str(directory)]
             command.insert(1,"-Dmosaic.initialSeaOnly=true")
+            command.insert(1,"-Dmosaic.partialPolish=true")
             result=subprocess.run(command,capture_output=True,timeout=60)
             self.assertEqual(result.returncode,0,result.stderr)
             self.assertIn(b"Removed initial sea regions=1",result.stdout)
             self.assertEqual({r["component_id"] for r in review.read_csv(output/"counts.csv")},{"a","b","c"})
             self.assertFalse(review.read_csv(output/"sea.csv"))
             self.assertIn("initialSeaOnly=true",(output/"complete.txt").read_text())
+            self.assertIn("partialPolish=true",(output/"complete.txt").read_text())
 
     def test_round_budget_is_validated_and_recorded(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -130,7 +130,20 @@
  
                  // grid.export("Finalizing: exact polish " + (MosaicConstants.POLISHER_MAX_ITERATIONS - it), 2);
                  if (!change) {
-@@ -170,6 +170,20 @@
+@@ -154,10 +154,11 @@
+         int seaSupply = initializeRegionSupply(regionVertices, exact);
+ 
+         //Create supply vertex for the sea region.
+-        initializeSea(seaVertices, seaSupply);
++        FlowDigraph.Vertex sea = initializeSea(seaVertices, seaSupply);
+ 
+         //increase all the weights by the minimum such that there are no negative values
+         makeAllPositive();
++        if (Boolean.getBoolean("mosaic.partialPolish")) addSupplySlack(sea);
+ 
+     }
+ 
+@@ -170,6 +171,20 @@
       * adjacencies.
       * @return
       */
@@ -151,7 +164,7 @@
      private boolean execute(final boolean exact) {
  
          int[] flow = flowDigraph.solve();
-@@ -177,13 +191,16 @@
+@@ -177,13 +192,16 @@
              return false;
          }
  
@@ -170,7 +183,7 @@
  
                  if (rSource == rTarget) {//can't do a move if they are from the same one
                      continue;
-@@ -403,20 +420,14 @@
+@@ -403,20 +421,14 @@
       */
      private int initializeRegionSupply(ElementList<ArrayList<FlowDigraph.Vertex>> regionVertices, final boolean exact) {
          int seaSupply = 0;
@@ -194,9 +207,89 @@
              }
  
              FlowDigraph.Vertex u = flowDigraph.addVertex();
+@@ -442,7 +454,7 @@
+      * @param seaVertices
+      * @param seaSupply
+      */
+-    private void initializeSea(ArrayList<FlowDigraph.Vertex> seaVertices, int seaSupply) {
++    private FlowDigraph.Vertex initializeSea(ArrayList<FlowDigraph.Vertex> seaVertices, int seaSupply) {
+         FlowDigraph.Vertex seaVertex = flowDigraph.addVertex();
+         seaVertex.name = "#SEA#";
+ 
+@@ -451,7 +463,24 @@
+             flowDigraph.addEdge(seaVertex, v);
+             flowDigraph.addEdge(v, seaVertex);
+         }
++        return seaVertex;
++    }
+ 
++    private void addSupplySlack(FlowDigraph.Vertex sea) {
++        // Only region supplies can remain unmet. Never bypass a cell capacity.
++        double maximum = 1.0;
++        for (FlowDigraph.Edge e : flowDigraph.edges()) maximum = Math.max(maximum, e.getWeight());
++        double scale = 1.0 / (maximum * (flowDigraph.numberOfVertices() + 1));
++        if (!Double.isFinite(maximum) || scale == 0) throw new IllegalArgumentException("Flow costs are too large");
++        for (FlowDigraph.Edge e : flowDigraph.edges()) e.setWeight(e.getWeight() * scale);
++        for (FlowDigraph.Vertex v : flowDigraph.vertices()) {
++            int supply = v.getSupply();
++            if (v == sea || supply == 0) continue;
++            FlowDigraph.Edge slack = supply > 0 ? flowDigraph.addEdge(v, sea) : flowDigraph.addEdge(sea, v);
++            slack.setCapacity(Math.abs(supply));
++            slack.setWeight(1.0); // More expensive than any simple path of real moves.
++            // Do not add this edge to watchEdges: slack never moves a tile.
++        }
+     }
+ 
+     private void makeAllPositive() {
 --- a/common/mcf/SuccessiveShortestPathMininumCostFlow.java
 +++ b/common/mcf/SuccessiveShortestPathMininumCostFlow.java
-@@ -159,12 +159,16 @@
+@@ -20,6 +20,7 @@
+     int[] flow; // NB: just one array here...
+     private int[] imbalance;
+     private Status status;
++    private int artificialStart, artificialEnd;
+ 
+     SuccessiveShortestPathMininumCostFlow(FlowDigraph graph) {
+         this.graph = graph;
+@@ -90,16 +91,23 @@
+                 e.setCapacity(v.getCapacity());
+             }
+         }
++        // Artificial paths must cost more than any simple residual path.
++        double maximumWeight = 1.0;
++        for (Edge e : residual.edges()) maximumWeight = Math.max(maximumWeight, e.getWeight());
++        double artificialCost = Math.nextUp(maximumWeight * (residual.numberOfVertices() + 1));
++        if (!Double.isFinite(artificialCost)) throw new IllegalArgumentException("Flow costs are too large");
++        artificialStart = residual.numberOfEdges();
+         // Add artificial vertex to guarantee connectivity
+         FlowDigraph.Vertex artificial = residual.addVertex();
+         for (FlowDigraph.Vertex v : residual.vertices()) {
+             if (v != artificial) {
+                 FlowDigraph.Edge e = residual.addEdge(artificial, v);
+                 FlowDigraph.Edge f = residual.addEdge(v, artificial);
+-                e.setWeight(FlowDigraph.MAX_VALUE / 10 - 1);
+-                f.setWeight(FlowDigraph.MAX_VALUE / 10 - 1);
++                e.setWeight(artificialCost);
++                f.setWeight(artificialCost);
+             }
+         }
++        artificialEnd = residual.numberOfEdges();
+         // Add opposite edges
+         opposite = new Edge[residual.numberOfEdges() * 2];
+         int originalEdges = residual.numberOfEdges();
+@@ -116,7 +124,7 @@
+         // Initialize arrays
+         flow = new int[residual.numberOfEdges()];
+         Arrays.fill(flow, 0);
+-        imbalance = new int[residual.numberOfEdges()];
++        imbalance = new int[residual.numberOfVertices()];
+         for (Vertex v : residual.vertices()) {
+             imbalance[v.id] = v.getSupply();
+         }
+@@ -156,17 +164,21 @@
+                 e.setCapacity(e.getCapacity() - delta);
+                 f.setCapacity(f.getCapacity() + delta);
+             }
 -            for (Vertex v : residual.vertices()) {
 -                double d = dsp.distances[v.id];
 -                if (Double.isInfinite((d))) {
@@ -207,8 +300,6 @@
 -                }
 -                for (Edge e : v.getOutgoingEdges()) {
 -                    e.setWeight(e.getWeight() + d);
--                }
--            }
 +            for (Edge e : residual.edges()) {
 +                double from = dsp.distances[e.getSource().id];
 +                double to = dsp.distances[e.getTarget().id];
@@ -221,10 +312,23 @@
 +                if (e.getCapacity() > 0 && reduced < 0) {
 +                    if (reduced < -tolerance) throw new IllegalStateException("Negative reduced cost: " + reduced);
 +                    reduced = 0;
-+                }
+                 }
 +                // Keep negative costs on inactive reverse edges.
 +                e.setWeight(reduced);
-+            }
+             }
+ 
+             ve = getExcessVertex();
+@@ -196,6 +208,10 @@
+                 flow[f.id] = 0;
+             }
+         }
++        // Artificial flow is not a feasible solution of the caller's graph.
++        for (int i = artificialStart; i < artificialEnd; i++) {
++            if (flow[i] != 0) status = Status.EXCESS_AND_DEFICIT;
++        }
+         // Fix reversed edges
+         for (Edge e : reversed) {
+             Edge original = graph.getEdge(e.id);
 --- a/arrange/DeformAlgorithm.java
 +++ b/arrange/DeformAlgorithm.java
 @@ -47,8 +47,8 @@
