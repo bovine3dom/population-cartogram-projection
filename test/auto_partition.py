@@ -128,7 +128,10 @@ class CapacityPartitionTests(unittest.TestCase):
             shifted={c:np.mean(list(p),axis=0) for c,p in tiles.items()};shifted['e']=(100000.,100000.)
             with patch('partition_land.fit_guide_centres',return_value=(shifted,dict(test=True))),contextlib.redirect_stdout(io.StringIO()):
                 run(inputs,layout,root/'outline-sites',sigma=1,iterations=20,sites=sites,by_landmass=True)
+                floating_sites=run(inputs,layout,root/'floating-sites',sigma=1,iterations=20,sites=sites,by_landmass=True,power=True,float_islands=True)
             self.assertEqual(len(load(inputs,root/'outline-sites')[2]),9)
+            self.assertEqual(load(inputs,root/'floating-sites')[1]['e'],{(100000,100000)})
+            self.assertEqual(floating_sites['translated_islands']['e'],[99990.,99990.])
             features=[]
             for c,x in zip('abcde',[0,1,20,21,10]):
                 size=.01 if c=='a' else 1.;x+=.05;y=.05
