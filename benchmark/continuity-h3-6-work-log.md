@@ -56,3 +56,19 @@ and geographic costs change the model, so mass checks alone cannot approve a
 planet result. All 13 initial checks pass on CPU and GPU. With graph-budget and
 Int32 guards, all 15 CPU checks pass. A real Angola factor-2 pilot is running.
 No H3-6 planet fit has started.
+
+## 21:00 UTC: native extraction and first refinement measurements
+
+Added a native H3-8 polygon extraction and H3-6 aggregation script. It retains
+one owner per source and reports overlap, cross-country assignment, and missing
+countries. Angola exactly matches the previous independent country extraction:
+19,020 sources and 36,407,494 people. The whole-planet extraction audit is now
+running with a 90-minute limit.
+
+The factor-2 Angola pilot has 1,016 targets and 2,354,740 graph edges. At eta
+`1e-4`, the solve passes all mass checks in 63 seconds, but its 99.5% support
+ratio is 3.25, above the coarse result's 2.45. It is not yet sharp enough.
+A direct jump to `1e-5` converges too slowly; stopped that trial after 5,000
+iterations without accepting its unfinished stage. Saved valid stages remain.
+A smaller temperature step is under test. This is not evidence that the full
+planet can yet use the restricted geographic model without a quality loss.
