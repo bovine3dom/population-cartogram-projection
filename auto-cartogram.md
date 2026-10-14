@@ -7,12 +7,15 @@ remove connector paths but leave large artificial spaces between countries.
 The joint-deformation trials now reach exact counts, but visual checks still
 reject them. Fixed Tutte positions leave tangled countries. Geographic starts
 leave too much empty space. A land-sea boundary cost alone also damages coasts.
-The next test uses a shared, area-matched land footprint. A separate global
-capacity partition tests whether local exchanges are the main limit. That
-partition does not enforce connectivity and is not a replacement generator.
+The latest tests use a shared, area-matched land footprint. A global capacity
+partition followed by fragment repair reaches exact counts and connected regions
+at 55,000 tiles. Internal gap measurements are now close to OWID. Visual checks
+still reject the result: continents are narrow, some countries are displaced,
+and too many borders are wrong. This is not a replacement generator.
 
 Open the [compactness comparison](examples/auto-cartogram/results/compact-landmass/index.html)
-for OWID, Tutte, and the rejected separated layout. See the
+for the latest shared-footprint images, OWID, Tutte, and the rejected separated
+layout. See the
 [new work log](examples/auto-cartogram/compact_work_log.md) for completed checks.
 The new work deadline is 06:00 UTC on 15 October 2026. No replacement is approved.
 Production code and targets remain unchanged.
