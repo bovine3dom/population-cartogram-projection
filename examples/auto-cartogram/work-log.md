@@ -403,3 +403,16 @@ under ignored `output/auto-cartogram/`.
 - Updated the main research report with implementation findings and the native
   transport result. Three transport-check/figure tests pass, including file
   tampering and changed pair order.
+
+## 01:18–01:29 UTC — planned transfer destinations
+
+- Found a second polishing fault. The flow names a destination region, but
+  execution read the current owner of the destination cell. An earlier move
+  could change that owner and send tiles to the wrong region.
+- Added a reverse-order three-region transfer test. It fails on the previous
+  frozen build and passes with destination owners saved before execution.
+  All 11 Python/Java layout tests pass. Kept transactional rollback as a
+  separate guard against partly executable flows.
+- Started new full-default world fits from a frozen build. The previous
+  full-default dissolved fits have 637 and 7,176 tiles of absolute count
+  error at budgets of 10,000 and 55,000. The 110,000 case is still running.

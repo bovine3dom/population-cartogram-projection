@@ -16,6 +16,31 @@ public class MosaicPolishTransaction {
         Field field=target.getClass().getDeclaredField(name);
         field.setAccessible(true); field.set(target,value);
     }
+    private static void checkPlannedDestinations() throws Exception {
+        GridMath math=new GridMath(new SquareGeometry());
+        Dual dual=new Dual();
+        var a=dual.addVertex(new Vector(0,0)); var b=dual.addVertex(new Vector(1,0)); var c=dual.addVertex(new Vector(2,0));
+        dual.addEdge(a,b); dual.addEdge(b,c);
+        MosaicCartogram grid=new MosaicCartogram(math,dual);
+        var origin=math.origin(); var middle=origin.plus(1,0); var right=origin.plus(2,0);
+        grid.setVertex(origin,a); grid.setVertex(origin.plus(-1,0),a);
+        grid.setVertex(middle,b); grid.setVertex(origin.plus(0,1),b); grid.setVertex(origin.plus(1,1),b);
+        grid.setVertex(right,c); grid.setVertex(origin.plus(2,1),c);
+        FlowDigraph flow=new FlowDigraph() {
+            @Override public int[] solve() { return new int[]{1,1}; }
+        };
+        var first=flow.addVertex(); var second=flow.addVertex(); var third=flow.addVertex();
+        var bc=flow.addEdge(first,second); var ab=flow.addEdge(third,first);
+        Polisher polisher=new Polisher(dual,grid);
+        set(polisher,"flowDigraph",flow); set(polisher,"watchEdges",new ArrayList<>(List.of(bc,ab)));
+        set(polisher,"vertexToCoordinate",new GridMath.Coordinate[]{middle,right,origin});
+        var execute=Polisher.class.getDeclaredMethod("execute",boolean.class); execute.setAccessible(true);
+        if (!(Boolean)execute.invoke(polisher,true) || grid.getVertex(origin)!=b || grid.getVertex(middle)!=c
+                || !grid.isConnectedAndCorrectAdjacencies()) {
+            throw new AssertionError("An earlier move changed the planned destination owner");
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         GridMath math=new GridMath(new SquareGeometry());
         Dual dual=new Dual();
@@ -48,6 +73,7 @@ public class MosaicPolishTransaction {
                 || grid.totalTileError()!=error || !grid.isConnectedAndCorrectAdjacencies()) {
             throw new AssertionError("Polishing did not restore cells, counts, and contacts");
         }
+        checkPlannedDestinations();
         Class<?> region=Class.forName("arrange.model.MosaicCartogram$MosaicRegion");
         Field disabled=region.getDeclaredField("$assertionsDisabled"); disabled.setAccessible(true);
         boolean effective=!disabled.getBoolean(null);
