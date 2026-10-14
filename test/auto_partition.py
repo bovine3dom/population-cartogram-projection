@@ -348,6 +348,20 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertEqual(report['metrics']['absolute_tile_error'],0)
             self.assertTrue(all(step['complete'] for step in report['steps']))
             self.assertTrue((root/'pipeline/layout/review.png').is_file())
+            refined=run_compact_pipeline.run(inputs,layout,geometry,root/'refined',flow_geometry=geometry,sigma=1,iterations=20,sites=sites,sites_in_flow=True,mainland_only=True,float_islands=True,dock_landmasses=True,borrow_coast=True,fixed_border_rounds=2,shared_islands=True)
+            self.assertTrue(refined['complete']);self.assertEqual(refined['metrics']['absolute_tile_error'],0)
+            self.assertTrue({'prepare-flow','fixed-border','shared-islands'} <= {step['name'] for step in refined['steps']})
+            self.assertTrue((root/'refined/layout/shared-islands.json').exists())
+            import review_flow
+            original_groups=(inputs/'groups.csv').read_text()
+            with (inputs/'groups.csv').open('a') as f:f.write('c,1,10,11,10,11,C,1,C,0\n')
+            partial=review_flow.run(inputs,geometry,root/'partial-review',allow_isolated_missing=True)
+            self.assertEqual(partial['excluded_isolated_components'],['c'])
+            self.assertEqual(partial['tile_budget'],8);self.assertEqual(partial['input_tile_budget'],9)
+            with self.assertRaisesRegex(ValueError,'labels differ'):review_flow.run(inputs,geometry,root/'bad-review')
+            missing=root/'missing.geojson';missing.write_text(json.dumps(dict(type='FeatureCollection',features=features[:1])))
+            with self.assertRaisesRegex(ValueError,'labels differ'):review_flow.run(inputs,missing,root/'missing-land',allow_isolated_missing=True)
+            (inputs/'groups.csv').write_text(original_groups)
             for options in [dict(flow_grid=17),dict(flow_area_error=0),dict(flow_area_error=float('nan'))]:
                 with self.assertRaisesRegex(ValueError,'[Ff]low'):
                     run_compact_pipeline.run(inputs,layout,geometry,root/'bad',flow_geometry=geometry,**options)
