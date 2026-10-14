@@ -713,6 +713,24 @@ The separated layout has exact budgets but is not an acceptable replacement.
   connected components, whole-group placement, and unchanged unselected cells.
   World visual checks are still required.
 
+## 20:11–20:15 UTC — inspect shared islands and mesh weight controls
+
+- The shared-island control selects eight groups. Inspected its world, Europe,
+  and Indonesia images. Borneo and Ireland have more geographic shapes than the
+  flow versions. Counts remain exact, every component stays connected, and the
+  component contact totals remain 59 missing and 55 unsupported contacts.
+  Mainland cells are unchanged. Saved the result for review, not approval.
+- Corrected the new mode's image caption and included its settings in saved
+  review files. It is not a GridMapPipeline output.
+- Inspected the final source-area-weighted mesh and the third stages of both
+  low-water controls. Source-area weighting alone leaves thin features. Low
+  water weight permits large rotations of Europe and Africa and bends Korea
+  northward. Reject these inspected guides as production footprints.
+- Added an optional polar-rotation cost to test that failure. It is explicitly
+  separate from Sargent's published objective and is off by default. Analytic
+  gradient, translation, and rotation tests pass. Started three 32-grid controls
+  with rotation weights 2 or 10. Eight mesh tests pass.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
