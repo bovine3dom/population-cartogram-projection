@@ -95,6 +95,10 @@ p=output/auto-cartogram
   --resolution 64 --iterations 1000 --distortions .3 .1 .03 .01
 ```
 
+Add `--stage-geometry` to save checked geometry after each distortion-weight
+stage. Compare these images before selecting a guide. Lower area error can come
+with worse shapes; the last stage is not automatically the best guide.
+
 The input above excludes isolated components from the guide. Their final budgets
 are not removed. Pass the output geometry and population sites to the separate
 partition stages described in [the shared-footprint notes](compact-pipeline.md).

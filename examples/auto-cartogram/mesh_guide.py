@@ -186,14 +186,24 @@ def transform_pieces(objective,values,pieces,cleanup=None):
     return result
 
 
-def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01),optimizer='bounded-lbfgs'):
+def save_geometry(objective,values,pieces,source,labels,path):
+    cleanup=[];mapped=transform_pieces(objective,values,pieces,cleanup);tree=STRtree(mapped);area=sum(g.area for g in mapped)
+    overlaps=[(i,int(j)) for i,g in enumerate(mapped) for j in tree.query(g,predicate='intersects') if j>i and g.intersection(mapped[j]).area>area*1e-12]
+    changed=sum(len(source[c].interiors)!=len(g.interiors) for c,g in zip(labels,mapped))
+    if overlaps or changed:raise ValueError('Mapped regions overlap or change hole topology')
+    features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(g)) for c,g in zip(labels,mapped)]
+    path.write_text(json.dumps(dict(type='FeatureCollection',features=features),separators=(',',':'))+'\n')
+    return dict(geometry_cleanup=cleanup,overlap_pairs=overlaps,changed_hole_counts=changed,geometry_sha256=digest(path))
+
+
+def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01),optimizer='bounded-lbfgs',stage_geometry=False):
     if output.exists():raise ValueError('Output already exists')
     if optimizer not in ('bounded-lbfgs','scipy'):raise ValueError('Unknown optimizer')
     if resolution<8 or iterations<1 or not distortions or any(not np.isfinite(w) or w<=0 for w in distortions):raise ValueError('Invalid solver settings')
     source=read_shapes(prepared/'geometry.geojson');rows=read_csv(prepared/'areas.csv');budgets={r['component_id']:float(r['tiles']) for r in rows};labels=sorted(source)
     if len(rows)!=len(budgets) or set(budgets)!=set(source) or any(not np.isfinite(v) or v<=0 for v in budgets.values()):raise ValueError('Invalid guide budgets')
     output.mkdir(parents=True);started=time.monotonic()
-    record=dict(method='Planar fixed-frame mesh with area error and Sargent shape/scale distortion costs',reference='https://arxiv.org/abs/2411.17129',inputs={str(p):digest(p) for p in [prepared/'geometry.geojson',prepared/'areas.csv']},script_sha256=digest(Path(__file__)),optimizer=optimizer,maximum_iterations_per_stage=iterations,reciprocal_extension_threshold=1e-5,minimum_accepted_determinant=1e-12,union_precision=1e-12,seam_cleanup_radius=1e-11,stages=[],limit='Independent planar experiment, not the paper sphere or hybrid implementation. Reference triangles use Equal Earth planar geometry, not spherical geometry. Fixed frame and nearest-land water scale differ from the paper. Small regions share mesh degrees of freedom. Guide areas can remain inaccurate. No final tile budgets change. Positive triangle areas are checked; output component validity and overlaps must also be checked. No connector paths are added.')
+    record=dict(method='Planar fixed-frame mesh with area error and Sargent shape/scale distortion costs',reference='https://arxiv.org/abs/2411.17129',inputs={str(p):digest(p) for p in [prepared/'geometry.geojson',prepared/'areas.csv']},script_sha256=digest(Path(__file__)),optimizer=optimizer,stage_geometry=stage_geometry,maximum_iterations_per_stage=iterations,reciprocal_extension_threshold=1e-5,minimum_accepted_determinant=1e-12,union_precision=1e-12,seam_cleanup_radius=1e-11,stages=[],limit='Independent planar experiment, not the paper sphere or hybrid implementation. Reference triangles use Equal Earth planar geometry, not spherical geometry. Fixed frame and nearest-land water scale differ from the paper. Small regions share mesh degrees of freedom. Guide areas can remain inaccurate. No final tile budgets change. Positive triangle areas are checked; output component validity and overlaps must also be checked. No connector paths are added.')
     def save():(output/'mesh-guide.json').write_text(json.dumps(record,indent=2)+'\n')
     save()
     try:
@@ -207,16 +217,12 @@ def run(prepared,output,resolution=64,iterations=1000,distortions=(.3,.1,.03,.01
             values=result.x;stage=dict(distortion_weight=weight,iterations=int(result.nit),converged=bool(result.success),message=str(result.message),cost=float(result.fun),elapsed_seconds=time.monotonic()-before,**objective.report(values))
             record['stages'].append(stage);save();print(json.dumps(stage),flush=True)
             if stage['minimum_determinant']<=1e-12:raise ValueError('Folded or collapsed mesh stage')
-        record['geometry_cleanup']=[]
-        mapped=transform_pieces(objective,values,pieces,record['geometry_cleanup']);tree=STRtree(mapped);area=sum(g.area for g in mapped)
-        overlaps=[(i,int(j)) for i,g in enumerate(mapped) for j in tree.query(g,predicate='intersects') if j>i and g.intersection(mapped[j]).area>area*1e-12]
-        record['overlap_pairs']=overlaps
-        record['changed_hole_counts']=sum(len(source[c].interiors)!=len(g.interiors) for c,g in zip(labels,mapped))
-        if overlaps or record['changed_hole_counts']:raise ValueError('Mapped regions overlap or change hole topology')
-        features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(g)) for c,g in zip(labels,mapped)]
-        (output/'geometry.geojson').write_text(json.dumps(dict(type='FeatureCollection',features=features),separators=(',',':'))+'\n')
+            if stage_geometry:
+                filename=f'stage-{len(record["stages"])}.geojson'
+                stage['geometry']=dict(file=filename,**save_geometry(objective,values,pieces,source,labels,output/filename));save()
+        record.update(save_geometry(objective,values,pieces,source,labels,output/'geometry.geojson'))
         np.savez_compressed(output/'mesh.npz',initial=vertices,transformed=objective.unpack(values),triangles=triangles,fixed=fixed)
-        record['geometry_sha256']=digest(output/'geometry.geojson');record['elapsed_seconds']=time.monotonic()-started;save()
+        record['elapsed_seconds']=time.monotonic()-started;save()
     except Exception as error:
         record['error']=str(error);record['elapsed_seconds']=time.monotonic()-started;save();raise
     return record
@@ -227,5 +233,6 @@ if __name__=='__main__':
     for name in ['prepared','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--resolution',type=int,default=64);parser.add_argument('--iterations',type=int,default=1000)
     parser.add_argument('--optimizer',choices=['bounded-lbfgs','scipy'],default='bounded-lbfgs')
+    parser.add_argument('--stage-geometry',action='store_true',help='Save checked geometry after each distortion-weight stage')
     parser.add_argument('--distortions',type=float,nargs='+',default=[.3,.1,.03,.01])
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

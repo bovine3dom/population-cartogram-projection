@@ -78,11 +78,15 @@ class MeshTests(unittest.TestCase):
             features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(g)) for c,g in [('a',box(0,0,1,1)),('b',box(1,0,2,1))]]
             (prepared/'geometry.geojson').write_text(json.dumps(dict(type='FeatureCollection',features=features)))
             (prepared/'areas.csv').write_text('component_id,tiles\na,7\nb,3\n')
-            with contextlib.redirect_stdout(io.StringIO()):report=run(prepared,root/'output',resolution=8,iterations=100,distortions=(.1,.01))
+            with contextlib.redirect_stdout(io.StringIO()):report=run(prepared,root/'output',resolution=8,iterations=100,distortions=(.1,.01),stage_geometry=True)
             self.assertLess(report['stages'][-1]['weighted_absolute_area_error'],report['initial']['weighted_absolute_area_error'])
             self.assertEqual(report['stages'][-1]['folded_triangles'],0);self.assertEqual(report['overlap_pairs'],[])
             geometries=read_shapes(root/'output/geometry.geojson');self.assertEqual(set(geometries),{'a','b'})
             self.assertGreater(geometries['a'].area,geometries['b'].area)
+            self.assertEqual(len(report['stages']),2)
+            for stage in report['stages']:
+                self.assertEqual(set(read_shapes(root/'output'/stage['geometry']['file'])),{'a','b'})
+                self.assertEqual(stage['geometry']['overlap_pairs'],[])
             mesh=np.load(root/'output/mesh.npz',allow_pickle=False)
             np.testing.assert_array_equal(mesh['initial'][mesh['fixed']],mesh['transformed'][mesh['fixed']])
             with self.assertRaisesRegex(ValueError,'already exists'):run(prepared,root/'output')
