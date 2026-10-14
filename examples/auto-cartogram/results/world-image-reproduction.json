@@ -1,0 +1,59 @@
+{
+  "renderer": "rsvg-convert version 2.62.3\n\nlibraries used:\n  cairo 1.18.4\n  pango 1.58.2\n  harfbuzz 14.4.0\n  fontconfig 2.18.3",
+  "cases": [
+    {
+      "case": "world-10000-dissolved-geographic",
+      "svg_sha256": "b3a90620b7b1587a596b2d401d8d76df6c53a533db7d9f04e2a034a76fa71800",
+      "png_sha256": "c153f96f599d0990b3347590dc0d802aba6b166b13668bcfca61de0f7b4f3ff4",
+      "byte_identical": true
+    },
+    {
+      "case": "world-10000-dissolved-geographic-repair",
+      "svg_sha256": "0bbe8c9eff770a9201b2aef54ad67333a1f55b6408bdabb628ef50cc97ee46ae",
+      "png_sha256": "9c78963cc5a6a76c2bb9a26eb862ba60a1d8d2cb90dd6bbc7b0232f7e9143783",
+      "byte_identical": true
+    },
+    {
+      "case": "world-55000-dissolved-geographic",
+      "svg_sha256": "0b443b0d4c26723809a62ab9e2936f5d694fa6d9a4d12f8d5646b91237c08818",
+      "png_sha256": "5416795561a03d2a40af580af02d86c6dd38934549262026d935e83a8a03fd97",
+      "byte_identical": true
+    },
+    {
+      "case": "world-55000-dissolved-geographic-repair",
+      "svg_sha256": "25a7906c7fb4e119f345e05c62dd78b8a39c73ebd984efdf92fce62a2c566e3a",
+      "png_sha256": "c08435e1c32700e461a7c2353c64ea969703fe5adeca0749f259256de0821082",
+      "byte_identical": true
+    },
+    {
+      "case": "world-110000-dissolved-geographic",
+      "svg_sha256": "65d732328bb62fe6cde6c83a74181d26580656848878bed07a96bf1fdc372f05",
+      "png_sha256": "9137d229198401f6de92b00622f7a5bf58b3b45bb4039d2fb33c5bbcb181182e",
+      "byte_identical": true
+    },
+    {
+      "case": "world-110000-dissolved-geographic-repair",
+      "svg_sha256": "972d68b88f5eff6acbdc15c2559c5ce8b56299ebe2cbbda66401afc24833ffaa",
+      "png_sha256": "4c935cefe965baeadbf860b3276de6a28f2ee7ee58b47c99308a2381a928bb1a",
+      "byte_identical": true
+    },
+    {
+      "case": "world-10000-partial-polish",
+      "svg_sha256": "b4cf8e7a201ce70bba3d6e945244b98bf9bca0d9fbd7093b09b1ebea55f97e04",
+      "png_sha256": "c269213911366c7ec46b375f3d83c59add7e3f2e5d5cd6fdb76f092fedc116cf",
+      "byte_identical": true
+    },
+    {
+      "case": "world-55000-tutte-partial-200",
+      "svg_sha256": "f6f717e6bff8e5b8fb149494eaa436d9efec7131361cb0a3c1a7ef6a47fc6f6c",
+      "png_sha256": "95c5325405824e6398d82f9dc8f0f8a3df0209a786aac4884fee42b3cbeabef8",
+      "byte_identical": true
+    },
+    {
+      "case": "world-110000-partial-200",
+      "svg_sha256": "2c16121b95cbcef13a8cef4df2fdce4b4ac76adda8442db96853282df82af0da",
+      "png_sha256": "b966ef3f81cebf9c588f6fffe7df8c5c81df19c4c79ca7e25897b2287d9790ef",
+      "byte_identical": true
+    }
+  ]
+}

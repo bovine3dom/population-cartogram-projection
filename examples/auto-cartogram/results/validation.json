@@ -1,0 +1,135 @@
+{
+  "checked_at_utc": "2026-10-14 04:37:52 UTC",
+  "tests": {
+    "exit_code": 0,
+    "commands": [
+      "python3 test/auto_layout.py",
+      "python3 test/auto_transport.py",
+      "output/auto-cartogram/geometry-env/bin/python test/auto_geometry.py",
+      "julia --project=examples/auto-cartogram test/auto_layout.jl",
+      "julia --project=examples/auto-cartogram test/auto_transport.jl",
+      "julia --project=examples/auto-cartogram test/auto_cartogram.jl",
+      "julia --project=examples/auto-cartogram -e 'push!(LOAD_PATH,pwd()); include(\"test/runtests.jl\")'"
+    ],
+    "log_sha256": "c94b51765b783f51ce6e9629ce2a46a9f9623bb2641bb80e2d90bdd81c3e24a5",
+    "python_test_methods": {
+      "layout": 12,
+      "transport": 6,
+      "geometry": 28
+    },
+    "julia_assertions": {
+      "layout": 34,
+      "transport": 22,
+      "initial_audit": 215,
+      "production_cpu": 108
+    },
+    "additional_oracles": {
+      "java_connectivity_candidates": 13725,
+      "java_accepted_connectivity_moves": 8224,
+      "java_flow_trials": 2000,
+      "python_support_patterns": 343,
+      "python_random_integer_support_trials": 1000
+    }
+  },
+  "code_sha256": {
+    "examples/auto-cartogram/DirectionalPlacement.java": "43a9694c7bce9e75c3da8952b8b336460d9fe2035a1ac9ceda90e6522d5d01c1",
+    "examples/auto-cartogram/GeographicOrientation.java": "853eec734e0333bee5c03af504ce53f344dff8f9598747a830bce0f972707ad3",
+    "examples/auto-cartogram/InitialSeaRemoval.java": "6bd498b13b03563c9303e2c8f1eccbde47dddc5abaae3d916b5dd9e29f905c22",
+    "examples/auto-cartogram/MosaicAdapter.java": "6bc34b3343dcc8f7233a41cec15f46af2a1f4af534b154b60af4b63318d0bee6",
+    "examples/auto-cartogram/assign_population.py": "b42da4b8127869fb1baf8cb21b410035d8499f0b161214d79dd0442c88e03bdd",
+    "examples/auto-cartogram/audit.jl": "ff826dd81f540f86b4806867eb3b94e792bd8e71cc217856f8a70b4fae8c7d9c",
+    "examples/auto-cartogram/balance_transport.py": "b468356b2d7ceaf39a900f5120ca15aca41b72bfe5b9ab32e69c0770c79e3d43",
+    "examples/auto-cartogram/check_native_sources.py": "e0e1de3b5bb1ed5374e7c1ec4ec8d634f8b7e1b58c8653a09150035e43b7dfe0",
+    "examples/auto-cartogram/check_support.py": "724b1174de0cd540f0095860a3cf515738adac134eee4a920d9a51392320aa42",
+    "examples/auto-cartogram/check_transport.py": "b1c6909f9d6316e223270ee9aaae5c207276ab990cb2fcc4448c1237b281ba17",
+    "examples/auto-cartogram/check_transport_shift.py": "f688805a054fa8cd321332fb37e9340086e70b45d4fb7ece04d396b2a85d5afd",
+    "examples/auto-cartogram/dissolve_map_units.py": "bb5b14ad217a4420e8d12691efe0947a8eeaf76706e714b1b032e792f00db4f3",
+    "examples/auto-cartogram/geographic_baseline.py": "5ae7bba493e19272ddd3b8068c5b0418f993112737d8c7f3509a548a18587af8",
+    "examples/auto-cartogram/geographic_embedding.py": "2ea141cb754e7aa344c0d97675e00ceb958992fb80d9810d3b6542efa146df4d",
+    "examples/auto-cartogram/group_transport.jl": "a25b508dfe5154e60e9fbeb92c8980dd54e2c0d1947b6d918dabf4e0750d9b57",
+    "examples/auto-cartogram/planar_embedding.py": "7b514ad4de430e20b41094b8e897ec3cae51015616717115f86682412672b546",
+    "examples/auto-cartogram/prepare_dissolved.jl": "6a02f1324514ad9b55aade5f90634025aaedcec0d30e51e4dfa7ab96a8e64c1e",
+    "examples/auto-cartogram/prepare_layout.jl": "365d8688c0cf8709c8baf0d822ea26908bf143218638909e54d44d8d417cc4c6",
+    "examples/auto-cartogram/prepare_points.jl": "efdbcf4326cc5f0a05d90cfcb1211b9a09b72febcfb6d9f3a441ca9e95d0e939",
+    "examples/auto-cartogram/prepare_transport_sources.py": "09f91e90204a7c0a5c5a31fc5186c8c2099a04d3d17e3375dd5e0f8e14511ffa",
+    "examples/auto-cartogram/prepare_world.jl": "3acacdfb04e4ca4cedd82525ff7cb5484dc93073b34d3f99ee54048425c29414",
+    "examples/auto-cartogram/relax_layout.py": "efa0a23df2a3a97c387483f74121a0ba9d5bdef1cf1f6609ec0d10425b2097b7",
+    "examples/auto-cartogram/repair_contacts.py": "6ec1c1456a377effe0841724fe41ab88352039580c70c42e0fa557fa3edf9715",
+    "examples/auto-cartogram/review_balance.py": "0d80da6fd1527383303774f54383ef5409ff2a7d940faa1ccb8c32306cb73e3f",
+    "examples/auto-cartogram/review_layout.py": "bb3b552349c1f8e40818071b245517f12e858454812ef5d73be799dfc662e232",
+    "examples/auto-cartogram/review_transport.py": "4e75e02c1e2f203049eba82603194ed531fe6a523be781f3cb175802600146a4",
+    "examples/auto-cartogram/review_unmatched.py": "d17fa46f62cb8aba02913a73ce5828e4abfda47c76a1ee36ad3cc9132e784f5a",
+    "examples/auto-cartogram/save_review.py": "892f6256f0777f101d70e4163b6d8853cf058a885bb79658ca058eec27c08456",
+    "examples/auto-cartogram/translate_transport.py": "42f1184cf7605b4b3d5817c0a2117e151277dc65b5aab6c03b2eb564f1fed6a6",
+    "examples/auto-cartogram/upstream-fixes.patch": "abf2c92fa228becec163a4914f7a226505b9f13cc855c22701bd68e33f7a5898",
+    "examples/auto-cartogram/validate_outlines.py": "77370f1e53b86aa62516fec5d7a57bd02680f6bc11833c7245a03a98ffb84ac8",
+    "test/MosaicConnectivity.java": "03eb5ef2fa1a4b1acaa774735c3c38831a211088d8e0f2f47824abb04ddc3518",
+    "test/MosaicInitialSea.java": "5fb829a60994cab8b1607a45c8cd4f23e5b6e4fe9ae3a60b09c9cfc269534565",
+    "test/MosaicMinCostFlow.java": "be0937a6aeaad7a9f7ac55d0f39a21e0bfd231cf32727ff968e49415a9f20f82",
+    "test/MosaicPolishTransaction.java": "e10cc529b219a2eba9d19af06e761a9e85d1e94cf137473318ffa4dc27c544fb",
+    "test/auto_cartogram.jl": "6bf31930b3c5672815dc7ba3e6c4a508c24505538f78c07372d069051df39c0e",
+    "test/auto_geometry.py": "52379052807cebb36c6a20d69d98847705c59ff7a9628203216ec4e6b99354ef",
+    "test/auto_layout.jl": "6f8ee829dd5045ed33f427be879918379165bffeebc9a4812ff319fd4dc921cc",
+    "test/auto_layout.py": "d56dd170068eef06abe29cfbdc7a04ec052cd5779bfa6f01a25e9dfc731b2e80",
+    "test/auto_transport.jl": "09fbf369d9a5cd5dc1a0864cd4566941a31c4dac0a678cd4e27733b7579a2b6d",
+    "test/auto_transport.py": "6726d0a6d1e5a303f23eea6a242bf1971abcff0117f70bf5c97dc3db460971f8",
+    "test/runtests.jl": "c083f3d8a0fe3b63f5b839c429a702576e296c422e4eea52fd20a7cf17ef02cc"
+  },
+  "review": {
+    "utc": "2026-10-14 04:37:52 UTC",
+    "local_links_checked": [
+      "auto-cartogram.md",
+      "examples/auto-cartogram/readme.md",
+      "examples/auto-cartogram/results.md",
+      "examples/auto-cartogram/work-log.md",
+      "examples/auto-cartogram/generator.md",
+      "examples/auto-cartogram/transport-results.md",
+      "examples/auto-cartogram/early-layouts.md",
+      "examples/auto-cartogram/gallery.md"
+    ],
+    "archive_files_verified": 496,
+    "extra_review_files": [
+      "examples/auto-cartogram/results/world-10000-topology-oriented/assertion-status-correction.json",
+      "examples/auto-cartogram/results/world-55000-topology-oriented/assertion-status-correction.json",
+      "examples/auto-cartogram/results/world-10000-dissolved-topology/assertion-status-correction.json",
+      "examples/auto-cartogram/results/world-55000-dissolved-topology/assertion-status-correction.json",
+      "examples/auto-cartogram/results/indonesia-transport-r8-grouped/cut-checks.json"
+    ],
+    "geographic_reproduction": [
+      {
+        "tile_budget": 10000,
+        "python_hash_seed": "21",
+        "cells_sha256": "df60240393d98124f718a044d9fa66486b0f1e0fa77ed8e0f91a2c90f7c44cdf",
+        "byte_identical": true
+      },
+      {
+        "tile_budget": 55000,
+        "python_hash_seed": "42",
+        "cells_sha256": "9fbe009ef5b1b6de9f31935e4167fc1f0b5df6b9cbe94aa7b0e7cfbcec4dcb89",
+        "byte_identical": true
+      },
+      {
+        "tile_budget": 110000,
+        "python_hash_seed": "random",
+        "cells_sha256": "0550374bf83d363e5311db8debfb05c215797ab07ad9db23d5123e6467065146",
+        "byte_identical": true
+      }
+    ],
+    "production_unchanged": true
+  },
+  "proof_files": {
+    "examples/auto-cartogram/results/published-transport-recheck.json": "38c2e12e36bf48a9a8b611402f8569adb8f85a488f8b74247ebd769109a392c7",
+    "examples/auto-cartogram/results/world-image-reproduction.json": "5b3088b24136917999fb7b08798ab75d53a41bc8a7cf3eb32a4b5c87325955c2",
+    "examples/auto-cartogram/results/gbr-native-reproduction.json": "7d2fc0586777082926fcbcc20544a504015ba7246920693207e48fd7411142c8",
+    "examples/auto-cartogram/results/world-overview/review.png": "2141a593d31057a2f304c5fdfa3f781985b45dcea1719197dbb934cc2e31f40f"
+  },
+  "production": {
+    "unchanged_since": "cbb6c8b",
+    "paths": [
+      "src/",
+      "data/cartogram.csv"
+    ],
+    "cartogram_sha256": "a08f41f7b3f8912e3956c8882a255a0e6ea60b5a720216a0746416ba5d62c257"
+  },
+  "limit": "Passing tests and accounting checks do not approve the world layouts for production. Layout, source coverage, year, grouping, capacity, and geographic quality limits remain."
+}

@@ -298,6 +298,12 @@ island and produced no complete mapping. See the
 [timeout record](results/gbr-native-55000-timeout/status.json). The smaller run
 does not establish performance at the larger resolution.
 
+A one-thread repeat of the 84-tile native solve reproduces the source, target,
+mapping, and target-quality CSV files byte for byte. It takes 478 seconds for
+solves and in-memory checks, versus 241 with two threads. This is a result for
+this fixed case, not a general speed or determinism guarantee.
+[Reproduction check](results/gbr-native-reproduction.json).
+
 ## What this means for issue #17
 
 Separate solves prevent cross-group transport by construction. This result
