@@ -86,6 +86,27 @@ class Stress:
         return float(value),gradient.ravel()
 
 
+def seed_positions(state,tiles,layout):
+    if not (layout/'complete.txt').exists():raise ValueError('Seed layout has no completion marker')
+    points={};occupied=set();count=0
+    for row in read_csv(layout/'cells.csv'):
+        p=(int(row['x']),int(row['y']))
+        if p in occupied:raise ValueError('Seed cells overlap')
+        occupied.add(p);points.setdefault(row['component_id'],[]).append(p);count+=1
+    if not count:raise ValueError('Empty seed layout')
+    coverage=sum(len(tiles[c]) for c in tiles if c in points)/sum(map(len,tiles.values()))
+    if coverage<.95:raise ValueError('Seed labels cover less than 95% of target tiles')
+    factor=np.sqrt(sum(map(len,tiles.values()))/count);start=state.initial.copy()
+    shared=[c for c in state.labels if c in points]
+    for c in shared:start[state.ids[c]]=np.mean(points[c],axis=0)*factor
+    ids=np.array([state.ids[c] for c in shared]);displacement=start[ids]-state.initial[ids]
+    for c in set(state.labels)-set(shared):
+        i=state.ids[c];distance=np.sum((state.initial[ids]-state.initial[i])**2,axis=1)
+        nearest=np.argsort(distance,kind='stable')[:3];weights=1/np.maximum(distance[nearest],1e-8)
+        start[i]+=np.average(displacement[nearest],axis=0,weights=weights)
+    return start,dict(source_tiles=count,scale=float(factor),shared_components=len(shared),new_components=len(tiles)-len(shared),target_tile_coverage=coverage)
+
+
 def weight_springs(state,rows):
     masses=np.array([float(rows[c]['group_population']) for c in state.labels])
     mean=masses.sum()/len({rows[c]['country_id'] for c in state.labels})
@@ -95,9 +116,10 @@ def weight_springs(state,rows):
         state.weights*=np.clip(np.sqrt(np.minimum(masses[a],masses[b])/mean),.02,5.)
 
 
-def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8,source_polygons=None,raster=False,no_false_contacts=False,start_from_templates=False,smooth_collision=False,ocean_scale=0.,order_weight=0.,coast_anchors=False,local_order=0.,mass_weighted=False):
+def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring=1.,anchor=.01,spatial=.03,gap=.8,source_polygons=None,raster=False,no_false_contacts=False,start_from_templates=False,smooth_collision=False,ocean_scale=0.,order_weight=0.,coast_anchors=False,local_order=0.,mass_weighted=False,start_layout=None):
     if output.exists():raise ValueError('Output already exists')
     if iterations<1 or spacing<=0 or any(not math.isfinite(v) or v<0 for v in [spacing,collision,spring,anchor,spatial,gap,ocean_scale,order_weight,local_order]):raise ValueError('Invalid stress settings')
+    if start_layout is not None and start_from_templates:raise ValueError('Choose one position initializer')
     scripts=[Path(__file__),Path(__file__).with_name('shape_placement.py')]
     if source_polygons or raster or smooth_collision:scripts.extend(Path(__file__).with_name(name) for name in ['concave_stress.py','prepare_flow.py'])
     if raster or smooth_collision:scripts.append(Path(__file__).with_name('raster_stress.py'))
@@ -107,7 +129,7 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
         if not source_polygons:raise ValueError('Coast anchors require source polygons')
         scripts.append(Path(__file__).with_name('coast_anchors.py'))
     script_hashes={p.name:digest(p) for p in scripts}
-    input_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv']+([source_polygons] if source_polygons else [])}
+    input_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv']+([source_polygons] if source_polygons else [])+([start_layout/'cells.csv',start_layout/'complete.txt'] if start_layout else [])}
     rows,tiles,_=load(inputs,templates)
     if any(len(tiles[c])!=int(rows[c]['tiles']) or connectivity(tiles[c])!=1 or holes(tiles[c]) for c in rows):raise ValueError('Invalid templates')
     lines=(inputs/'validated.wkt').read_text().splitlines()
@@ -148,6 +170,8 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
         energy,_=state.objective(x);history.append(dict(iteration=len(history)+1,energy=energy))
         if len(history)%25==0:print(f'Stress iteration {len(history)}: {energy:.6f}',flush=True)
     start=np.array([np.mean(list(tiles[c]),axis=0) for c in state.labels]) if start_from_templates else state.initial
+    seed=None
+    if start_layout is not None:start,seed=seed_positions(state,tiles,start_layout)
     initial=state.objective(start.ravel())[0]
     result=minimize(state.objective,start.ravel(),jac=True,method='L-BFGS-B',callback=callback,
         options=dict(maxiter=iterations,maxfun=iterations*30,maxls=40,ftol=1e-11,gtol=1e-5,maxcor=20))
@@ -158,6 +182,7 @@ def run(inputs,templates,output,spacing=1.,iterations=3000,collision=100.,spring
     metadata=dict(method='Geographic spring displacement with collision penalties, followed by exact integer translation; no border paths',
         collision_geometry='signed-distance raster' if raster else 'convex pieces' if source_polygons else 'convex hulls',border_anchors=bool(source_polygons),
         no_false_contacts=no_false_contacts,start_from_templates=start_from_templates,smooth_collision=smooth_collision,
+        start_layout=str(start_layout) if start_layout else None,seed=seed,
         ocean_scale_fraction=ocean_scale,ocean_scale_tiles=ocean_length,
         order_weight=order_weight,local_order_degrees=local_order,order_constraints=state.order.count if state.order else 0,
         coast_anchors=coast_anchors,coast_anchor_pairs=coast_count,mass_weighted=mass_weighted,
@@ -191,5 +216,6 @@ if __name__=='__main__':
     parser.add_argument('--iterations',type=int,default=3000)
     for name,default in [('spacing',1.),('collision',100.),('spring',1.),('anchor',.01),('spatial',.03),('gap',.8),('ocean-scale',0.),('order-weight',0.),('local-order',0.)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--source-polygons',type=Path,help='Use concave collision pieces and anchors on actual source borders')
+    parser.add_argument('--start-layout',type=Path,help='Use component centres from another resolution; keep current templates and budgets')
     for name in ['raster','no-false-contacts','start-from-templates','smooth-collision','coast-anchors','mass-weighted']:parser.add_argument('--'+name,action='store_true')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

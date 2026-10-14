@@ -154,6 +154,9 @@ class ShapeTests(unittest.TestCase):
                 self.assertEqual(stress['order_constraints'],2)
                 subprocess.run([sys.executable,shape_stress.__file__,str(inputs),str(root/'deformed'),str(root/'stress-cli'),'--iterations','30','--raster','--no-false-contacts','--start-from-templates','--order-weight','1','--local-order','35','--mass-weighted'],check=True,stdout=subprocess.DEVNULL)
                 self.assertEqual((root/'stress/cells.csv').read_bytes(),(root/'stress-cli/cells.csv').read_bytes())
+                seeded=shape_stress.run(inputs,root/'deformed',root/'seeded',iterations=5,raster=True,no_false_contacts=True,start_layout=root/'stress')
+                self.assertEqual(seeded['seed']['target_tile_coverage'],1.)
+                check_shape_translation.run(inputs,root/'deformed',root/'seeded',root/'seeded-check')
                 (root/'source.json').write_text(json.dumps(dict(type='FeatureCollection',features=[])))
                 relaxed=relax_shapes.run(inputs,root/'stress',root/'relaxed',root/'source.json',rounds=3)
                 self.assertLessEqual(relaxed['final_energy'],relaxed['initial_energy']+1e-8)
@@ -421,6 +424,22 @@ class ShapeTests(unittest.TestCase):
         fixed,records=place_islands.place_islands(tiles,rows,source,{'m','far'},1.,10.,maximum_population=500)
         self.assertEqual(fixed,tiles)
         self.assertEqual(records,[])
+
+    def test_cross_resolution_seed_scales_centres_and_checks_coverage(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp);(path/'complete.txt').write_text('mode=test\n')
+            (path/'cells.csv').write_text('component_id,x,y\na,0,0\nb,10,0\n')
+            tiles={c:{(x,y) for x in range(10) for y in range(10)} for c in ['a','b']};tiles['c']={(0,0)}
+            state=shape_stress.Stress(tiles,{'a':(0.,0.),'b':(2.,0.),'c':(1.,1.)},set())
+            start,report=shape_stress.seed_positions(state,tiles,path)
+            self.assertEqual(report['new_components'],1)
+            np.testing.assert_allclose(start[1],[10*np.sqrt(201/2),0])
+            self.assertTrue(np.isfinite(start).all())
+            self.assertGreater(start[2,0],state.initial[2,0])
+            (path/'cells.csv').write_text('component_id,x,y\na,0,0\nb,0,0\n')
+            with self.assertRaisesRegex(ValueError,'overlap'):shape_stress.seed_positions(state,tiles,path)
+            (path/'cells.csv').write_text('component_id,x,y\nz,0,0\n')
+            with self.assertRaisesRegex(ValueError,'95%'):shape_stress.seed_positions(state,tiles,path)
 
     def test_population_weights_reduce_tiny_island_forces(self):
         tiles={c:{(i,0)} for i,c in enumerate(['a','b','c'])};centres={'a':(0.,0.),'b':(2.,0.),'c':(1.,1.)}
