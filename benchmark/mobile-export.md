@@ -1,6 +1,6 @@
 # Mobile export results
 
-Status: 2026-10-13 23:50 UTC. Work continues until 2026-10-14 01:45 UTC.
+Status: complete, 2026-10-14 01:43 UTC. The work window ends at 01:45 UTC.
 
 ## Published experiment
 
@@ -24,8 +24,9 @@ MB means 1,000,000 bytes. The combined raw files are about 125 times smaller.
 The gzip measurement uses level 6 and includes both files. The headless
 browser confirms the encoded and decoded transfer sizes. A simulated
 200,000-byte/s connection with 150 ms latency takes 171.7 seconds to load
-and render, with 4× CPU throttling. The download can still take minutes. The 80% profile
-passed its audit but exceeded the 100 MB raw limit. It was not published.
+and render, with 4× CPU throttling. The download can still take minutes.
+The 80% profile passed its audit but exceeded the 100 MB raw limit.
+It was not published.
 
 The full reference remains outside the web root in
 `output/mobile-export/full-reference/`. Its transport SHA256 is

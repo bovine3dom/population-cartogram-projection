@@ -738,3 +738,21 @@ pass. This is a desktop browser simulation, not a phone measurement. The
 26 MB compressed download can still take minutes on a slow connection.
 The script and results are `browser_network.mjs` and `browser-network-final/`
 in `output/mobile-export/`. No normal service was started.
+
+## 01:43 UTC: closeout
+
+Work is complete before the 01:45 UTC deadline. Final public manifest and
+production-input hash checks pass. All reduction, audit, and browser jobs
+from this task have stopped. H3-MON remains stopped. The H3-MON working tree
+is clean. The projection tree has only the pre-existing unrelated untracked
+files after this log is committed. No production, UK, or Germany dataset
+was replaced.
+
+The selected files total 65,733,852 bytes raw and 26,028,735 bytes with gzip.
+All source cells and displayed city labels remain. Query approximation and
+missing-data limits remain explicit in the results and public reports.
+Browser memory is still above 100 MB. No claim of mobile-device validation
+or solved border continuity is made. The latest H3-MON code is `a0803ce`.
+The reduction, publication, browser checks, results, and this work log are
+committed in small steps. Full references and failed trials remain outside
+the web root for review.
