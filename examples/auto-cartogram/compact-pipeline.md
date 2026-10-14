@@ -151,7 +151,10 @@ Conflicting bounds, blocked placements, and excessive translations leave the
 whole group unchanged. `archipelagos.json` records these failures. This safety
 limit prevents some extreme moves; it does not prove good positions. Review
 Japan, Indonesia, the Philippines, and other affected groups before selection.
-The pipeline does not enable this control automatically.
+To include this control in a recorded pipeline run, add `--archipelagos`.
+Use `--archipelago-gap-fraction 0.35` to test the wider grouping that also keeps
+small nearby Japanese islands with the main group. Other island groups can move.
+The control remains off by default.
 
 The pipeline does run `review_island_separation.py` as a diagnostic. For each
 nearby-island parent pair, it checks the shortest tile-centre segment for land

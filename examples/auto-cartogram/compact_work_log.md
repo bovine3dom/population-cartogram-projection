@@ -895,6 +895,25 @@ The separated layout has exact budgets but is not an acceptable replacement.
   reverse traversal, corner crossings, nearest-pair ties, and a synthetic blocked
   island pair before and after correction. All 23 partition tests pass.
 
+## 21:29–21:36 UTC — Position coordinates and recorded island correction
+
+- Visually checked geographic-centroid controls with guide weights 0 and 0.25.
+  Canada still lies too far east. South Korea separates from North Korea in
+  both images. Reject these controls; lower guide weight is not sufficient.
+- Found a position-guide issue worth testing: Equal Earth's curved meridians
+  shift Canada's projected centre east relative to the USA. Native population
+  longitudes differ by about one degree, while projected x coordinates differ
+  by about 0.10 at unit Earth radius. This does not establish the cause of all
+  placement errors. Started angular-coordinate site controls to test it.
+- Saved the 512-grid result and the 128-grid failure record and intermediate
+  image. Visually checked the latter; its Canada and Korea defects remain.
+- Added `--archipelagos` and `--archipelago-gap-fraction` to the recorded pipeline.
+  The correction runs after optional shared-island templates. It remains off by
+  default. The final nearby-island diagnostic runs whether correction is used
+  or not. All 23 partition tests pass, including the combined optional stages.
+- Added an independent geometry check for grid traversal: 25 generated segments
+  match positive-length intersections with tile boxes. The test suite passes.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
