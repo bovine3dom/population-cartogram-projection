@@ -68,7 +68,7 @@ def run(inputs,layout,polygons,output,ocean_scale=.1,max_population_fraction=.01
     lines=(inputs/'validated.wkt').read_text().splitlines()
     area=sum(Polygon([tuple(map(float,p.split())) for p in lines[i+1].split('\t')]).area for i in range(2,len(lines),3))
     total=sum(map(len,tiles.values()));scale=np.sqrt(total/area);ocean_length=ocean_scale*np.sqrt(total)
-    parent_files=[layout/name for name in ['stress.json','relax.json','placement.json'] if (layout/name).exists()]
+    parent_files=[layout/name for name in ['stress.json','relax.json','placement.json','compact.json'] if (layout/name).exists()]
     parent_records={p.name:json.loads(p.read_text()) for p in parent_files}
     for record in list(parent_records.values()):
         for name,expected in record.get('inputs',{}).items():
