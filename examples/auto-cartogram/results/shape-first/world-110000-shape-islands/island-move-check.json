@@ -1,0 +1,10 @@
+{
+  "fixed_components": 198,
+  "eligible_components": 387,
+  "moved_components": 382,
+  "all_protected_components_unchanged": true,
+  "all_moved_shapes_are_translations": true,
+  "land_contacts_unchanged": true,
+  "parent_cells_sha256": "192aa55a2f68ed4372f58cfd1f67223c91ab8a4f5460aecd4b7937238a494c8f",
+  "final_cells_sha256": "b38c99a8e6f5335a7cc8a53f047e496f1bb4fbf4a7e6e7c4d4296fd6c608912a"
+}

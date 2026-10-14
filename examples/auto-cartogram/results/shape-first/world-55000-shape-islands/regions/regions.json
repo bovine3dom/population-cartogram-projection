@@ -1,0 +1,107 @@
+{
+  "regions": [
+    {
+      "name": "north-america",
+      "source_bounds": [
+        -170,
+        -50,
+        5,
+        85
+      ],
+      "selected_components": 64,
+      "svg_view_box": [
+        227.65456989247306,
+        290.8064516129032,
+        397.1236559139785,
+        341.82795698924735
+      ]
+    },
+    {
+      "name": "south-america",
+      "source_bounds": [
+        -85,
+        -30,
+        -60,
+        15
+      ],
+      "selected_components": 34,
+      "svg_view_box": [
+        466.4314516129032,
+        522.0430107526881,
+        278.991935483871,
+        354.3951612903227
+      ]
+    },
+    {
+      "name": "europe",
+      "source_bounds": [
+        -15,
+        45,
+        35,
+        72
+      ],
+      "selected_components": 84,
+      "svg_view_box": [
+        647.3991935483871,
+        150.05376344086017,
+        326.747311827957,
+        296.5860215053764
+      ]
+    },
+    {
+      "name": "africa",
+      "source_bounds": [
+        -25,
+        55,
+        -38,
+        38
+      ],
+      "selected_components": 103,
+      "svg_view_box": [
+        589.5900537634409,
+        336.04838709677415,
+        442.36559139784936,
+        593.1720430107528
+      ]
+    },
+    {
+      "name": "south-asia",
+      "source_bounds": [
+        60,
+        105,
+        5,
+        40
+      ],
+      "selected_components": 31,
+      "svg_view_box": [
+        923.877688172043,
+        150.05376344086017,
+        545.4166666666667,
+        872.1639784946237
+      ]
+    },
+    {
+      "name": "indonesia",
+      "source_bounds": [
+        90,
+        145,
+        -12,
+        10
+      ],
+      "selected_components": 72,
+      "svg_view_box": [
+        1142.5470430107528,
+        527.0698924731182,
+        467.4999999999998,
+        319.20698924731187
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-shape-islands/cells.csv": "3005fca220af87ec54339c7a35660b8f77358fbbe17545f80ed3fc6d546afc85",
+    "output/auto-cartogram/world-55000-shape-islands/review.svg": "82e1c8077bc18c5bf7dc0b7a1319a778dce48285185b39a3f4e9888500a2ce8a",
+    "output/auto-cartogram/world-55000-shape-islands/metrics.json": "3d1d1ebc0c9c6fda5c6c75ff957b29366dde77b113f13a27695d0424b4fc9520"
+  },
+  "script_sha256": "898371fc21b08d4b1dd08c906709a54708934e11cbf4d95e133f327f2144d2db"
+}

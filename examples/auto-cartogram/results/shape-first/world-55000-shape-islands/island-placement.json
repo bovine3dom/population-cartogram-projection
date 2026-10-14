@@ -1,0 +1,158 @@
+{
+  "method": "Keep components with source land borders or population at or above the threshold fixed. Place smaller isolated components from largest population to smallest, near the nearest larger source component coast. No country-membership links.",
+  "max_population_fraction": 0.01,
+  "maximum_population": 79546779.9,
+  "eligible_isolated_components": 289,
+  "moved_components": 280,
+  "ocean_scale": 0.1,
+  "maximum_placement_shift": 43.527728643698886,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509",
+    "output/auto-cartogram/world-55000-clean-local35-relax/cells.csv": "c17eb6da690e0208014987a884cc73fc9241c1a2f50d98a3803a3c95df53f975",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "output/auto-cartogram/world-55000-clean-local35-relax/relax.json": "b09924720132ae1d81048d956b6388424e7d07c64f7b6c10cdc3e86c5549ebb3",
+    "output/auto-cartogram/world-55000-clean-local35/stress.json": "8411e1af2a9202e7c577c2ae0613b73d62ad63f6bda4fcac3118a35ecfc823a2"
+  },
+  "scripts": {
+    "place_islands.py": "fcdd62ac912e20524d5c976ac06034c784beca9540e063b85ba95e73d9331f9d",
+    "coast_anchors.py": "ec7dc2230a88cef5a41cc7cf733ef192b5c3478d2f36dcbea0bc712917d148b7",
+    "shape_placement.py": "20ed59825d0b0fde5893db3a267218e5c46846a9c0edd766f31b7ec41ef8dfd0",
+    "prepare_flow.py": "74fae58dc179b144b0373c796c66d6614e012b33eb345706a5daf0913a7914bf"
+  },
+  "parent_layout_records": {
+    "relax.json": {
+      "method": "Conditional position relaxation with exact integer translations; no required contacts or shape changes",
+      "initial_energy": 237217.9681831297,
+      "final_energy": 193849.2362271661,
+      "rounds": 11,
+      "history": [
+        {
+          "round": 1,
+          "moves": 239,
+          "energy": 207199.71848965596
+        },
+        {
+          "round": 2,
+          "moves": 212,
+          "energy": 198975.13364011957
+        },
+        {
+          "round": 3,
+          "moves": 135,
+          "energy": 197980.6421630477
+        },
+        {
+          "round": 4,
+          "moves": 79,
+          "energy": 197126.87500527274
+        },
+        {
+          "round": 5,
+          "moves": 47,
+          "energy": 196552.7203800917
+        },
+        {
+          "round": 6,
+          "moves": 37,
+          "energy": 194046.03948371313
+        },
+        {
+          "round": 7,
+          "moves": 40,
+          "energy": 193873.09270490002
+        },
+        {
+          "round": 8,
+          "moves": 24,
+          "energy": 193852.73744324493
+        },
+        {
+          "round": 9,
+          "moves": 11,
+          "energy": 193849.63523113888
+        },
+        {
+          "round": 10,
+          "moves": 2,
+          "energy": 193849.2362271661
+        },
+        {
+          "round": 11,
+          "moves": 0,
+          "energy": 193849.2362271661
+        }
+      ],
+      "elapsed_seconds": 181.8452447131276,
+      "inputs": {
+        "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+        "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+        "output/auto-cartogram/world-55000-clean-local35/cells.csv": "fc4604de89877896ce64e46747c0633f661dca32c40856ed01d67a2ce271b5af",
+        "output/auto-cartogram/world-55000-clean-local35/stress.json": "8411e1af2a9202e7c577c2ae0613b73d62ad63f6bda4fcac3118a35ecfc823a2",
+        "output/auto-cartogram/world-55000-clean-local35/centres.csv": "abe2ac844bc5d3bcb0123a4bdb1976cd936fb468afb9c99468d7eb391634acb3",
+        "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+        "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509"
+      },
+      "scripts": {
+        "relax_shapes.py": "0df6359f69bafb5c27f91e1be226398562f1c68dc6b21a43d8fac46d9efefc73",
+        "shape_stress.py": "787baafbb623c569901d7b4b27bd1041f6b1d59f9f251ccc3d046dd87988fbf0",
+        "shape_placement.py": "20ed59825d0b0fde5893db3a267218e5c46846a9c0edd766f31b7ec41ef8dfd0",
+        "concave_stress.py": "0cdfda26f22cf6b273ce10262f5984141f85fe688508df1298aaa2c94c898d2a",
+        "geographic_order.py": "1eef6abd017d5dffe4906cc49ce9a8a2644aa2f4f69ebc9bccad8b11834ec7bc",
+        "coast_anchors.py": "ec7dc2230a88cef5a41cc7cf733ef192b5c3478d2f36dcbea0bc712917d148b7",
+        "prepare_flow.py": "74fae58dc179b144b0373c796c66d6614e012b33eb345706a5daf0913a7914bf"
+      },
+      "limit": "Lower position energy does not prove geographic correctness. Missing borders remain permitted. No new population transport is approved."
+    },
+    "initial-stress.json": {
+      "method": "Geographic spring displacement with collision penalties, followed by exact integer translation; no border paths",
+      "collision_geometry": "signed-distance raster",
+      "border_anchors": true,
+      "no_false_contacts": true,
+      "start_from_templates": false,
+      "smooth_collision": true,
+      "ocean_scale_fraction": 0.1,
+      "ocean_scale_tiles": 23.45207879911715,
+      "order_weight": 5.0,
+      "local_order_degrees": 35.0,
+      "order_constraints": 13988,
+      "coast_anchors": true,
+      "coast_anchor_pairs": 1159,
+      "maximum_integer_placement_shift": 54.97257816493971,
+      "integer_placement_shifts_over_two_tiles": 90,
+      "spacing": 1.0,
+      "maximum_iterations": 10000,
+      "iterations": 1584,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "collision": 100.0,
+      "spring": 1.0,
+      "anchor": 0.001,
+      "spatial": 0.3,
+      "gap": 0.1,
+      "initial_energy": 160740243.77273065,
+      "final_energy": 189160.52535337323,
+      "elapsed_seconds": 284.4437327911146,
+      "inputs": {
+        "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+        "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509",
+        "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+        "output/auto-cartogram/world-55000-clean-templates/cells.csv": "3779f01dd30aff9c867bde6e47a4ccd489d7991c4746245ae8193d6dd74f53e9",
+        "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+      },
+      "scripts": {
+        "shape_stress.py": "787baafbb623c569901d7b4b27bd1041f6b1d59f9f251ccc3d046dd87988fbf0",
+        "shape_placement.py": "20ed59825d0b0fde5893db3a267218e5c46846a9c0edd766f31b7ec41ef8dfd0",
+        "concave_stress.py": "0cdfda26f22cf6b273ce10262f5984141f85fe688508df1298aaa2c94c898d2a",
+        "prepare_flow.py": "74fae58dc179b144b0373c796c66d6614e012b33eb345706a5daf0913a7914bf",
+        "raster_stress.py": "9da4a14905f50dfc2d9bc2e6c15b395494f454c5e948a87952ca0f56992af29e",
+        "smooth_raster_stress.py": "a02adb8aa54a45f0222659b60cc6f9595850aba08d1a1e9780fd0831a3dc9659",
+        "geographic_order.py": "1eef6abd017d5dffe4906cc49ce9a8a2644aa2f4f69ebc9bccad8b11834ec7bc",
+        "coast_anchors.py": "ec7dc2230a88cef5a41cc7cf733ef192b5c3478d2f36dcbea0bc712917d148b7"
+      },
+      "limit": "Collision geometry is approximate. Convex pieces use outlines simplified by 0.75 tile; raster penalties use bilinear interpolation or a 0.6-tile Gaussian filter with cubic splines. Soft penalties do not prove that continuous shapes are disjoint. Final integer placement prevents overlap but can change order and contacts. No tile shape is distorted; input holes remain omitted."
+    }
+  },
+  "limit": "A nearest-coast hierarchy is a position heuristic, not a proof of correct geography. Counts and tile shapes are unchanged. No native-resolution transport is approved."
+}

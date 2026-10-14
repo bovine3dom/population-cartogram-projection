@@ -1,0 +1,3 @@
+mode=shape-placement
+counts=exact
+contacts=not-required

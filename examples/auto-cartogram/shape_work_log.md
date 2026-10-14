@@ -446,3 +446,22 @@ Inspect the resulting images at world and regional scales.
 - All 30 focused tests pass. The file test checks both archive types and rejects
   a moved protected component. Rechecked all four current gallery bundles with
   plain Python; their metrics and translation records match.
+
+## 13:34–13:46 UTC — checked island bundles and resolution seeds
+
+- Saved cleaned-shape island layouts at 10,000, 55,000, and 110,000 tiles.
+  Rechecked all three bundles with plain Python. Counts are exact, all shapes
+  are unchanged translations, and no false contacts occur. The island stage
+  leaves protected components and existing land contacts unchanged.
+- Reviewed the three world images. The 55,000-tile case is the best current
+  parent. Coarse and fine trials still have incorrect mainland positions in
+  South Asia. More tiles alone do not correct these positions. Regional review
+  also finds Switzerland south of northern Italy and Norway east of Sweden in
+  the 55,000-tile case. This parent is not an approved geographic layout.
+- Added an optional position seed from another resolution. It scales component
+  centres, not shapes or budgets. New components use nearby source-component
+  displacements. The seed must cover at least 95% of the target tiles.
+- All 31 focused tests pass. Started 10,000- and 110,000-tile trials from the
+  55,000-tile parent. Also started a 55,000-tile trial from Tutte centres.
+  Each trial will run integer refinement and small-island placement. No result
+  from these new trials is approved yet. The 500,000-tile refinement continues.
