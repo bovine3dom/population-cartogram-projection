@@ -193,3 +193,19 @@ Inspect the resulting images at world and regional scales.
 - The faster placement path produces the same baseline cells as exhaustive
   placement in the file-based test. Twenty focused tests pass. This will also
   support a larger 500,000-tile world preview.
+
+## 11:25–11:31 UTC — bounded distortion
+
+- Added a bounded deformation mode after intact-shape placement. It permits
+  small source-outline changes and gives real shared borders a soft preference.
+  It never requires a contact. False contacts are rejected.
+- New cells must stay within a buffer of the source outline. The default width
+  is 10% of the square root of the component's tile count, with a two-tile
+  minimum. Initial cells remain allowed. This avoids a request for a distant
+  border becoming a long new connector.
+- Twenty-one focused tests pass, including forbidden false contacts, the
+  outline buffer, and an exact-count file-based run. World trials are next.
+- Prepared the 500,000-tile input. It has 888 represented components in 250
+  countries. Grouped island population falls to 1,865,414 people. The source
+  still has 77,246,034 unmatched people. This resolution has 20 source holes
+  that the tile representation omits. Template generation is running.
