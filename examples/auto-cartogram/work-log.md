@@ -575,3 +575,24 @@ under ignored `output/auto-cartogram/`.
   transport test at 55,000 tiles also finished and passed independent CSV checks.
   It retains 99.597% of source mass and has 34.802% maximum target error. The
   larger transport and higher source-resolution tests are still running.
+
+## 02:31–03:00 UTC — completed world comparisons and review overview
+
+- Monitored the bounded fits and collected their independent reviews. The
+  topology table now has 25 completed runs. Fixed transforms 2 and 5 complete
+  at 110,000 tiles, but still have 15,613 and 16,734 tiles of count error.
+  The 110,000-budget convex-boundary fit reaches its 40-minute limit without
+  export. Corrected convex-boundary fits are now running separately.
+- The 200-pass small-world comparison is byte-identical to the 40-pass result.
+  Its largest connected part stops after 29 passes with 233 tiles of error;
+  the whole-world error is 241. More polishing passes do not help this case.
+- All three H3-3 world transport exports pass independent accounting checks.
+  Their maximum target errors are 12.070%, 34.802%, and 36.090%. Saved support
+  requires at least 2.131%, 3.196%, and 9.339% error, so all three 0.01%
+  correction attempts fail without output. Saved checks and worst-target tables.
+- Re-ran the current world source preparer, including its UInt64 type check.
+  Its 32,668,501-row Arrow output is byte-identical to the transport input.
+  Saved both preparation records and the comparison.
+- Added a six-panel overview of exact-count geographic and repaired layouts
+  at all three resolutions. The overview changes no cell coordinates or colours.
+  It records hashes of the published source images and their metrics.

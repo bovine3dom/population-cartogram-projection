@@ -42,6 +42,17 @@ and reduces maximum relative target error below 0.01%, without adding pairs.
 This does not preserve every island: zero-budget islands can share a group.
 It also permits population per tile to vary between groups.
 
+A later placement step keeps all island shapes and counts, but reduces island
+axis-order errors from 426 to 5 out of 2,323 comparisons. The balanced native
+mapping moves with those shapes through checked integer translations. No
+weights change, and the new export passes flow and native-source checks.
+
+Whole-world H3-3 tests also keep cross-group mass at zero, but have target errors
+up to 36.090%. Their saved sparse support cannot reach the 0.01% correction
+limit. Thus, successful grouping and a good layout image do not prove balanced
+transport. The gallery now includes a six-image resolution and border-policy
+overview, plus a table of initialization and fitting experiments.
+
 These results support component-aware inputs and explicit group eligibility.
 They do not establish a production-ready world layout. Source year, unmatched
 coastal population, small-island policy, and geographic quality remain open.

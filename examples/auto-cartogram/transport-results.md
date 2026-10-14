@@ -158,6 +158,37 @@ Convergence depends on the support and requested marginals. The successful
 correction changes weights, so spatial quality still needs review. It is not
 an excuse to report the uncorrected solver output as fully balanced.
 
+## Coarse world tests
+
+The world tests use the exact-count geographic layouts at all three budgets.
+They cover 7,954,677,990 matched people, aggregated into 16,885 H3-3 source rows.
+The country-union table is applied before small-island grouping. Original native
+IDs and values survive preparation. A second preparation run produces a
+[byte-identical source table](results/world-transport-sources/reproduction-check.json).
+These are not native whole-world transport tests.
+
+| Target tiles | Groups | Retained source mass | Largest target error | Necessary target-error bound on saved support |
+| ---: | ---: | ---: | ---: | ---: |
+| 10,000 | 341 | 99.720% | 12.070% | 2.131% |
+| 55,000 | 481 | 99.597% | 34.802% | 3.196% |
+| 110,000 | 585 | 99.563% | 36.090% | 9.339% |
+
+All three have zero cross-group population. Independent CSV checks confirm the
+reported values, but do not approve these balance errors. Disconnected support
+blocks make the 0.01% correction tolerance impossible on these saved pairs.
+All three correction attempts fail without exporting a result. A zero bound
+would not, by itself, prove feasibility.
+
+[Comparison data](results/world-transport-comparison.csv) ·
+[10,000 checks](results/world-10000-transport-r3-grouped/support-bound.json) ·
+[55,000 checks](results/world-55000-transport-r3-grouped/support-bound.json) ·
+[110,000 checks](results/world-110000-transport-r3-grouped/support-bound.json).
+
+Solves and in-memory checks take 123, 913, and 1,772 seconds, excluding source
+preparation and export. The native Indonesia success must not be treated as
+whole-world validation. More source detail may change the support, but does
+not guarantee balance. An H3-5 world comparison is still running.
+
 ## What this means for issue #17
 
 Separate solves prevent cross-group transport by construction. This result
