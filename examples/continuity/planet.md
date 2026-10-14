@@ -33,7 +33,13 @@ It does not change island outlines or estimate separate island populations.
 Internal grid edges still contribute to the objective.
 
 Check source and target mass before export. Keep at least 99.999% of each fitted
-source's transport, then normalize the retained weights. Density is people/km².
+source's transport, then normalize the retained weights. Publication checks
+fitted-country target masses again after this extraction. A valid full plan can
+fail this second check if its residual is already near the limit. In that case,
+increase `CONTINUITY_EXPORT_RETAINED`, for example to `0.9999999`, and retry.
+The default is `0.99999`; the Julia `publish` function also accepts `retained`.
+`export-mass.csv` records the fraction and the post-extraction errors.
+Density is people/km².
 Both Arrow files use unsigned 32-bit index halves. Keep city names from the old
 file; place each source's labels at its largest-weight target. Do not invent
 missing prominence values.

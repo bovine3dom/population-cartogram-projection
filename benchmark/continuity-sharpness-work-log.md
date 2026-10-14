@@ -374,3 +374,33 @@ explicit because the geometry tradeoffs are not yet suitable for an automatic
 production change. Twelve CPU checks pass, including incomplete calibration,
 incorrect eta, overwrite rejection, saved settings, and the sharper-stage path.
 The numerical oneAPI solver path is unchanged from the running global trial.
+
+## 17:58 UTC: third pass, budget stop, and sparse-export mass guard
+
+The third whole-planet pass completes at about 17:31 UTC. The fitting process
+is then stopped deliberately, rather than spend the remaining budget on a
+partial fourth pass. Three complete snapshots remain. The independent pass-3
+audit passes: fitted support is 2.312 connections/source at 99.5%, mean source
+spatial RMS is 1.254, border RMS is 641.3 km, and reversed area is 2.487 million
+km². Compared with pass 1, borders and folds improve but source spread grows.
+For the user's sharpness goal, retain pass 1 as the preferred preview.
+
+The committed refit CLI also passes a real oneAPI Mali–Burkina Faso run from
+the saved calibration. Final CPU checks pass for source diagnostics (34),
+checkpoint audits (9), the refit runner (12), and direct packing (10). The
+existing continuity checks pass as well. Direct packing now also rejects an
+input with inconsistent physical target weights.
+
+Pass 3 exposes an export edge case. Its full plan passes, but 99.999% extraction
+raises maximum target L1 to 0.000100700, just above 0.0001. That sparse result
+is not promoted. Added a post-extraction target-mass guard to planet publication
+and an explicit retained-fraction option. Dense and compact oneAPI publication
+fixtures pass, including the new rejection check and saved export-mass report.
+
+Retaining 99.99999% for pass 3 restores the strict limits: maximum target L1 is
+9.9661e-5 and maximum relative error is 0.0009849. Its packed comparison files
+use 36,018,218 bytes for transport and 5,035,946 bytes for density. These files
+are `packed-pass-3-tight/`; the rejected lower-retention diagnostic is retained
+separately. The preferred first-pass files pass at the original 99.999% setting.
+A complete local first-pass bundle, with verified full update history and JSON,
+is `planet-h3-5-factor1-continuity-sharp-pass1/`. Nothing is published to H3-MON.

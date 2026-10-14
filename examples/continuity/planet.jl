@@ -110,7 +110,20 @@ function assemble(original,replacement)
     return select(d,:x,:y,:weight,:population,:code,:label,:weight_mean,:index_lower,:index_upper,:prominence),sources
 end
 
-function publish(out,destination)
+function export_mass_checks(countries,d)
+    mass=Dict((r.code,r.x,r.y)=>r.mass for r in eachrow(combine(groupby(d,[:code,:x,:y]),
+        [:weight,:population]=>((w,p)->sum(w.*p))=>:mass)))
+    checks=map(countries) do c
+        population=sum(c.source.value)
+        totals=[mass[(c.code,x,y)]/population for (x,y) in zip(c.target.x,c.target.y)]
+        (;code=c.code,target_l1=sum(abs.(totals.-c.b)),target_relative=maximum(abs.(totals./c.b.-1)))
+    end
+    all(r->r.target_l1<=1e-4 && r.target_relative<=.001,checks) ||
+        error("sparse export mass check failed; increase the retained fraction")
+    return DataFrame(checks)
+end
+
+function publish(out,destination;retained=.99999)
     isfile(joinpath(out,"fit-complete.txt")) || error("fit is not complete")
     ispath(destination) && error("refusing to overwrite $destination")
     staging=destination*".pending"
@@ -128,15 +141,18 @@ function publish(out,destination)
         moments=(c,p)->p isa CE.CompactPlan ? p.stats.moment : c.xyz*p)
     CSV.write(joinpath(out,"candidate-orientation.csv"),orientation)
     rawpath=joinpath(out,"candidate.arrow")
-    CE.export_mapping(rawpath,countries,plans;retained=.99999)
+    CE.export_mapping(rawpath,countries,plans;retained)
     raw=DataFrame(Arrow.Table(rawpath))
     d,sources=assemble(input_frame(joinpath(out,"input.arrow")),raw)
+    checks=export_mass_checks(countries,d)
+    checks.retained=fill(retained,nrow(checks))
+    CSV.write(joinpath(out,"export-mass.csv"),checks)
     mkpath(staging)
     Arrow.write(joinpath(staging,"cartogram_weights_planet_h3_5_factor1_continuity_hilo.arrow"),d)
     Arrow.write(joinpath(staging,"population_density_hilo.arrow"),(
         index_lower=UInt32.(sources.id .& 0xffffffff),index_upper=UInt32.(sources.id .>> 32),
         value=sources.population./H3.API.cellAreaKm2.(sources.id)))
-    for name in ("provenance.txt","contacts.csv","countries.csv","candidate-orientation.csv")
+    for name in ("provenance.txt","contacts.csv","countries.csv","candidate-orientation.csv","export-mass.csv")
         cp(joinpath(out,name),joinpath(staging,name))
     end
     for name in ("metrics.csv","settings.csv","baseline-seams.csv","candidate-seams.csv")
@@ -159,7 +175,7 @@ if abspath(PROGRAM_FILE)==@__FILE__
     elseif length(ARGS)==2 && ARGS[1] in ("fit","fit-compact")
         fit(ARGS[2];compact=ARGS[1]=="fit-compact")
     elseif length(ARGS)==3 && ARGS[1]=="publish"
-        publish(ARGS[2],ARGS[3])
+        publish(ARGS[2],ARGS[3];retained=parse(Float64,get(ENV,"CONTINUITY_EXPORT_RETAINED",".99999")))
     else
         error("usage: planet.jl prepare INPUT.arrow NEW_OUT | fit OUT | fit-compact OUT | publish OUT NEW_H3_MON_FOLDER")
     end

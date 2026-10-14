@@ -30,6 +30,14 @@ end
     @test_throws ErrorException assemble(original,replacement[1:1,:])
 end
 
+@testset "Sparse publication target masses" begin
+    c=(;code=1,source=DataFrame(value=[100.]),target=DataFrame(x=[0,2],y=[0,0]),b=[.5,.5])
+    d=DataFrame(code=[1,1],x=[0,2],y=[0,0],weight=[.5,.5],population=[100.,100.])
+    @test only(export_mass_checks([c],d).target_l1)==0
+    d.weight=[.50006,.49994]
+    @test_throws ErrorException export_mass_checks([c],d)
+end
+
 # Optional complete GPU workflow, including publication into a temporary directory.
 if get(ENV,"CONTINUITY_GPU_TEST","")=="1"
     @testset "Planet oneAPI workflow" begin
@@ -57,6 +65,7 @@ if get(ENV,"CONTINUITY_GPU_TEST","")=="1"
                 @test isfile(joinpath(dest,"population_density_hilo.arrow"))
                 @test isfile(joinpath(dest,"cartogram_weights_planet_h3_5_factor1_continuity_hilo.arrow"))
                 @test isfile(joinpath(out,"published.txt"))
+                @test isfile(joinpath(dest,"export-mass.csv"))
                 @test !ispath(dest*".pending")
                 @test_throws ErrorException publish(out,dest)
                 compact && @test isfile(joinpath(out,"coarse-poses","poses.csv"))
