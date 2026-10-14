@@ -357,3 +357,19 @@ Inspect the resulting images at world and regional scales.
   neighbourhood trials at 55,000 tiles. A soft geographic-order score can
   conflict with the new sizes of distant countries; it must not become another
   hard constraint that forces unnatural shapes or positions.
+
+## 12:48–12:55 UTC — population-weighted position preferences
+
+- Inspected Sri Lanka's source-neighbour graph. Its links include the Indian
+  mainland and several one- or two-tile islands. Equal spring weights let tiny
+  neighbours exert the same position preference as the mainland.
+- Added optional population weights. Spring weights use the square root of the
+  smaller component population divided by mean country population, with bounds.
+  Same-country direction weights also decrease for tiny components. This does
+  not remove any component, population, tile, or border record.
+- All 28 focused tests pass. The new test checks that tiny-island forces decrease
+  and that spring weights are unchanged by a uniform rescaling of population.
+  The file test also covers weighted placement and its integer refinement.
+- Started two weighted 55,000-tile trials. The smaller local-neighbourhood trials
+  are complete; refinement is running. Their first images still place Sri Lanka
+  too far north, so neither is selected yet.

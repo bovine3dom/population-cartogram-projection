@@ -146,7 +146,7 @@ class ShapeTests(unittest.TestCase):
                 metadata=compact.run(inputs,layout,root/'deformed',rounds=5,fit_rounds=10,atomic=True)
                 self.assertEqual(metadata['absolute_tile_error'],0)
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
-                stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True,order_weight=1)
+                stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True,order_weight=1,local_order=35,mass_weighted=True)
                 self.assertEqual(stress['collision_geometry'],'signed-distance raster')
                 self.assertEqual(stress['order_constraints'],2)
                 (root/'source.json').write_text(json.dumps(dict(type='FeatureCollection',features=[])))
@@ -380,6 +380,18 @@ class ShapeTests(unittest.TestCase):
         self.assertEqual(state.objective(positions[::-1])[0],0)
         rows['a'].update(west=-179,east=-177);rows['b'].update(west=177,east=179)
         self.assertEqual(GeographicOrder(['a','b'],rows).count,1)
+
+    def test_population_weights_reduce_tiny_island_forces(self):
+        tiles={c:{(i,0)} for i,c in enumerate(['a','b','c'])};centres={'a':(0.,0.),'b':(2.,0.),'c':(1.,1.)}
+        rows={c:dict(country_id='A' if c in ['a','c'] else 'B',group_population=mass,west=i*10,east=i*10+1,south=0,north=1) for i,(c,mass) in enumerate([('a',100_000_000),('b',100_000_000),('c',1000)])}
+        state=shape_stress.Stress(tiles,centres,set());shape_stress.weight_springs(state,rows)
+        weights={tuple(state.labels[i] for i in pair):w for pair,w in zip(state.edges,state.weights)}
+        self.assertLess(weights[('a','c')],weights[('a','b')]/10)
+        scaled={c:dict(r,group_population=r['group_population']*10) for c,r in rows.items()}
+        second=shape_stress.Stress(tiles,centres,set());shape_stress.weight_springs(second,scaled)
+        np.testing.assert_allclose(state.weights,second.weights)
+        plain=GeographicOrder(['a','c'],rows);weighted=GeographicOrder(['a','c'],rows,mass_weighted=True)
+        self.assertTrue(np.all(weighted.weight<plain.weight))
 
     def test_local_order_includes_small_neighbours_but_not_distant_countries(self):
         rows={'a':dict(country_id='A',group_population=1e6,west=0,east=2,south=0,north=2),
