@@ -112,14 +112,14 @@ class Deformation:
         return changed
 
 
-def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64):
+def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None):
     all_points=set().union(*tiles.values())
     origin=(min(x for x,y in all_points)-margin,min(y for x,y in all_points)-margin)
     xmax=max(x for x,y in all_points)+margin;ymax=max(y for x,y in all_points)+margin
     yy,xx=np.mgrid[origin[1]:ymax+1,origin[0]:xmax+1]
     lines=(inputs/'validated.wkt').read_text().splitlines()
     polygons={lines[i].split('\t')[1]:Polygon([tuple(map(float,p.split())) for p in lines[i+1].split('\t')]) for i in range(2,len(lines),3)}
-    costs={}
+    costs={};allowed={}
     for c,points in sorted(tiles.items()):
         n=len(points);cx=sum(x for x,y in points)/n;cy=sum(y for x,y in points)/n
         polygon=polygons[c];centre=polygon.centroid;scale=math.sqrt(n/polygon.area)
@@ -131,16 +131,21 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64):
             mask[y,x]=True
         distance=distance_transform_edt(~mask)
         costs[c]=(guide*distance**2/math.sqrt(n)+anchor*((xx-cx)**2+(yy-cy)**2)/n).astype(np.float32)
-    return costs,origin
+        if stretch is not None:
+            allowed[c]=distance<=max(2.,stretch*math.sqrt(n))
+            for x,y in points:allowed[c][y-origin[1],x-origin[0]]=True
+    return (costs,origin,allowed) if stretch is not None else (costs,origin)
 
 
-def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False):
+def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5):
     if output.exists():raise ValueError('Output already exists')
-    if rounds<1 or choices<1 or fit_rounds<0 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor]):raise ValueError('Invalid optimization settings')
+    if rounds<1 or choices<1 or fit_rounds<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward]):raise ValueError('Invalid optimization settings')
     shapes,tiles,_=load(inputs,layout)
     requested={c:int(row['tiles']) for c,row in shapes.items()}
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
-    started=time.monotonic();costs,origin=guide_costs(inputs,tiles,anchor,guide)
+    started=time.monotonic();guided=guide_costs(inputs,tiles,anchor,guide,stretch=stretch if bounded else None)
+    costs,origin=guided[:2]
+    if bounded:regrow=True
     state_type=Deformation
     if cycles:
         from cycle_deformation import CycleDeformation
@@ -155,12 +160,17 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     if regrow:
         from regrow_regions import Regrowth
         state_type=Regrowth
-    state=state_type(tiles,required,costs,origin,perimeter,false_contact)
+    if bounded:
+        from bounded_deformation import BoundedDeformation
+        state_type=BoundedDeformation
+    options=dict(allowed_masks=guided[2],contact_reward=contact_reward) if bounded else {}
+    state=state_type(tiles,required,costs,origin,perimeter,false_contact,**options)
     scripts=[Path(__file__)]
     if cycles or fit_rounds or atomic:scripts.append(Path(__file__).with_name('cycle_deformation.py'))
     if fit_rounds or atomic:scripts.append(Path(__file__).with_name('fit_counts.py'))
     if atomic:scripts.append(Path(__file__).with_name('atomic_deformation.py'))
     if regrow:scripts.append(Path(__file__).with_name('regrow_regions.py'))
+    if bounded:scripts.append(Path(__file__).with_name('bounded_deformation.py'))
     hashes={p.name:digest(p) for p in scripts}
     history=[];initial=state.energy()
     for turn in range(1,fit_rounds+1):
@@ -179,12 +189,14 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         print(f'Round {turn}: {moves} exchanges; energy {energy:.6f}',flush=True)
         if not moves:break
     if any(len(state.tiles[c])!=counts[c] or connectivity(state.tiles[c])!=1 or holes(state.tiles[c]) for c in tiles):raise AssertionError('Count or topology changed')
+    if bounded:state.check_contacts()
     metadata=dict(method='Count-preserving local boundary exchanges with perimeter and geographic-guide costs; no required-contact paths',
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
         cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,absolute_tile_error=error,
+        bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
         input_cells_sha256=digest(layout/'cells.csv'),scripts=hashes,
-        limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state.')
+        limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='compact-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -207,4 +219,6 @@ if __name__=='__main__':
     for name,default in [('perimeter',1.),('false-contact',4.),('guide',1.),('anchor',.05)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--cycles',action='store_true');parser.add_argument('--atomic',action='store_true')
     parser.add_argument('--fit-rounds',type=int,default=0);parser.add_argument('--regrow',action='store_true')
-    args=parser.parse_args();print(json.dumps(run(args.inputs,args.layout,args.output,args.rounds,args.perimeter,args.false_contact,args.guide,args.anchor,args.choices,args.cycles,args.fit_rounds,args.atomic,args.regrow),indent=2))
+    parser.add_argument('--bounded',action='store_true');parser.add_argument('--stretch',type=float,default=.1)
+    parser.add_argument('--contact-reward',type=float,default=.5)
+    args=parser.parse_args();print(json.dumps(run(args.inputs,args.layout,args.output,args.rounds,args.perimeter,args.false_contact,args.guide,args.anchor,args.choices,args.cycles,args.fit_rounds,args.atomic,args.regrow,args.bounded,args.stretch,args.contact_reward),indent=2))

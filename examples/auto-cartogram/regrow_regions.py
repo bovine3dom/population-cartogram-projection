@@ -18,13 +18,16 @@ class Regrowth(AtomicDeformation):
                 value+=self.edge(c,other)-self.edge(None,other)
         return value
 
+    def allowed_growth(self,c,p):
+        return self.inside(p) and self.owners.get(p) in (None,c)
+
     def regrow(self,c):
         current=self.tiles[c];count=len(current)
         if count<3:return False
         start=min(current,key=lambda p:(self.cost(c,p),p))
         grown={start};frontier=[];versions={}
         def offer(p):
-            if p in grown or not self.inside(p) or self.owners.get(p) not in (None,c):return
+            if p in grown or not self.allowed_growth(c,p):return
             version=versions.get(p,0)+1;versions[p]=version
             delta=self.cost(c,p)
             for q in adjacent(p):

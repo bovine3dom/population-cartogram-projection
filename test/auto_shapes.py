@@ -28,6 +28,7 @@ from shape_stress import Stress
 from concave_stress import ConcaveStress, convex_pieces
 from raster_stress import RasterStress, bilinear
 from smooth_raster_stress import SmoothRasterStress
+from bounded_deformation import BoundedDeformation
 
 
 class ShapeTests(unittest.TestCase):
@@ -135,6 +136,9 @@ class ShapeTests(unittest.TestCase):
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
                 stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True)
                 self.assertEqual(stress['collision_geometry'],'signed-distance raster')
+                bounded=compact.run(inputs,root/'stress',root/'bounded',rounds=5,bounded=True,guide=8)
+                self.assertEqual(bounded['absolute_tile_error'],0)
+                self.assertTrue(bounded['bounded'])
                 geographic_baseline.run(inputs,root/'slow-baseline')
                 geographic_baseline.run(inputs,root/'fast-baseline',fast_placement=True)
                 self.assertEqual((root/'slow-baseline/cells.csv').read_bytes(),(root/'fast-baseline/cells.csv').read_bytes())
@@ -266,6 +270,20 @@ class ShapeTests(unittest.TestCase):
             numeric.append((state.objective(x+shift)[0]-state.objective(x-shift)[0])/2e-6)
         self.assertGreater(value,0)
         np.testing.assert_allclose(gradient,numeric,rtol=1e-6,atol=1e-6)
+
+    def test_bounded_deformation_forbids_false_contacts_and_distant_cells(self):
+        tiles={'a':{(0,0),(0,1)},'b':{(2,0),(2,1)}}
+        costs={c:np.zeros((15,15)) for c in tiles};masks={c:np.ones((15,15),dtype=bool) for c in tiles}
+        state=BoundedDeformation(tiles,set(),costs,(-5,-5),allowed_masks=masks)
+        self.assertFalse(state.possible((1,0),'a'))
+        self.assertFalse(state.allowed_growth('a',(1,0)))
+        state=BoundedDeformation(tiles,{('a','b')},costs,(-5,-5),allowed_masks=masks)
+        self.assertTrue(state.possible((1,0),'a'))
+        masks['a'][5,6]=False
+        self.assertFalse(state.possible((1,0),'a'))
+        self.assertAlmostEqual(state.edge('a','b'),1.5)
+        with self.assertRaisesRegex(ValueError,'False contact'):
+            BoundedDeformation({'a':{(0,0)},'b':{(1,0)}},set(),costs,(-5,-5),allowed_masks=masks)
 
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))
