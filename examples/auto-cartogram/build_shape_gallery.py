@@ -55,7 +55,10 @@ def run(output,bundles,replace=False):
         if (bundle/'regions/regions.json').exists():
             regions=json.loads((bundle/'regions/regions.json').read_text())['regions']
             parts.append('<p>Regional details: '+ ' · '.join(f'<a href="{url("regions/"+r["name"]+".png")}">{html.escape(r["name"].replace("-"," "))}</a>' for r in regions)+'</p>')
-        parts.append(f'<p>Data and checks: <a href="{url("cells.csv.gz")}">generated cells</a> · <a href="{url("metrics.json")}">metrics</a> · <a href="{url("translation-check/translation-check.json")}">unchanged-shape proof</a> · <a href="{url("bundle.json")}">file checksums</a>.</p></article>')
+        checks=[('cells.csv.gz','generated cells'),('metrics.json','metrics'),('translation-check/translation-check.json','unchanged-shape proof'),('bundle.json','file checksums')]
+        for name,label in [('template-cleanup.json','template cleanup'),('island-move-check.json','protected-component and land-contact check')]:
+            if (bundle/name).exists():checks.append((name,label))
+        parts.append('<p>Data and checks: '+' · '.join(f'<a href="{url(name)}">{label}</a>' for name,label in checks)+'.</p></article>')
     parts.extend(['<h2>Limits</h2>',
         f'<p>The source contains {scope["population_total"]:,.0f} matched people. Unmatched population: {unmatched_label}. Its year is unknown. No new native-resolution population transport is approved for these layouts.</p>',
         '<p>Country direction checks use main components of countries with at least 10 million people and a five-degree source separation. Island checks use a one-degree separation. These checks do not prove correct geographic positions.</p>',
