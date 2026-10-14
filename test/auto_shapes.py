@@ -24,6 +24,7 @@ import place_shapes
 import review_regions
 import check_shape_translation
 import coast_anchors
+import relax_shapes
 import publish_shape_review
 import build_shape_gallery
 import geographic_baseline
@@ -146,6 +147,10 @@ class ShapeTests(unittest.TestCase):
                 stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True,order_weight=1)
                 self.assertEqual(stress['collision_geometry'],'signed-distance raster')
                 self.assertEqual(stress['order_constraints'],2)
+                (root/'source.json').write_text(json.dumps(dict(type='FeatureCollection',features=[])))
+                relaxed=relax_shapes.run(inputs,root/'stress',root/'relaxed',root/'source.json',rounds=3)
+                self.assertLessEqual(relaxed['final_energy'],relaxed['initial_energy']+1e-8)
+                check_shape_translation.run(inputs,root/'deformed',root/'relaxed',root/'relaxed-check')
                 bounded=compact.run(inputs,root/'stress',root/'bounded',rounds=5,bounded=True,guide=8)
                 self.assertEqual(bounded['absolute_tile_error'],0)
                 self.assertTrue(bounded['bounded'])
@@ -252,6 +257,27 @@ class ShapeTests(unittest.TestCase):
             source['b']=box(3,0,4,1)
             path.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(p)) for c,p in source.items()])))
             with self.assertRaisesRegex(ValueError,'No source border'):state.border_targets(path,tiles,{('a','b')})
+
+    def test_conditional_translation_cost_and_hard_collisions(self):
+        tiles={'a':{(0,0),(1,0)},'b':{(8,0),(9,0)},'c':{(4,6)}}
+        centres={'a':(0.,0.),'b':(3.,0.),'c':(1.,4.)}
+        rows={c:dict(country_id=c,group_population=20_000_000,west=i*10,east=i*10+1,south=i*8,north=i*8+1) for i,c in enumerate(tiles)}
+        state=shape_stress.Stress(tiles,centres,set(),anchor=.1)
+        state.order=GeographicOrder(state.labels,rows);state.order_weight=2.;state.pairs=np.empty((0,2),dtype=int)
+        positions=np.array([np.mean(list(tiles[c]),axis=0) for c in state.labels])
+        for i in range(3):
+            optimum,cost=relax_shapes.conditional(state,i,positions)
+            changed=positions.copy();changed[i]=optimum
+            delta=state.objective(changed.ravel())[0]-state.objective(positions.ravel())[0]
+            self.assertAlmostEqual(delta,cost(optimum)-cost(positions[i]))
+            self.assertLessEqual(delta,1e-8)
+        with contextlib.redirect_stdout(io.StringIO()):result,history=relax_shapes.relax(state,tiles,set(),10)
+        self.assertLess(history[-1]['energy'],state.objective(positions.ravel())[0])
+        for c,points in result.items():
+            old=min(tiles[c]);new=min(points);dx=new[0]-old[0];dy=new[1]-old[1]
+            self.assertEqual(points,{(x+dx,y+dy) for x,y in tiles[c]})
+            for other in result:
+                if other!=c:self.assertFalse(points & (result[other]|{q for p in result[other] for q in compact.adjacent(p)}))
 
     def test_coast_anchors_keep_an_island_beyond_the_scaled_coast(self):
         with tempfile.TemporaryDirectory() as tmp:
