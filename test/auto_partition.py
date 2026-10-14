@@ -136,7 +136,7 @@ class CapacityPartitionTests(unittest.TestCase):
             (layout/'cells.csv').write_text('component_id,x,y\n'+''.join(f'{c},{x},{y}\n' for c,points in tiles.items() for x,y in sorted(points)))
             (layout/'complete.txt').write_text('mode=test\n')
             path=root/'source.geojson';path.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(g)) for c,g in geometry.items()])))
-            report=restore(inputs,layout,path,root/'result',minimum_tiles=2)
+            report=restore(inputs,layout,path,root/'result',minimum_tiles=2,maximum_shift_scale=100.)
             result=load(inputs,root/'result')[1]
             self.assertEqual(report['failed_groups'],0);self.assertEqual(report['groups'][0]['components'],['c','r'])
             self.assertEqual(result['a'],tiles['a']);self.assertEqual(result['b'],tiles['b'])
@@ -146,6 +146,10 @@ class CapacityPartitionTests(unittest.TestCase):
                 offset=np.asarray(min(result[c]))-np.asarray(min(tiles[c]))
                 self.assertEqual(result[c],{(x+offset[0],y+offset[1]) for x,y in tiles[c]})
             self.assertEqual(sum(map(len,result.values())),len(set().union(*result.values())))
+            rejected=restore(inputs,layout,path,root/'limited',minimum_tiles=2,maximum_shift_scale=.001)
+            self.assertEqual(rejected['failed_groups'],1)
+            self.assertIn('displacement limit',rejected['groups'][0]['not_moved'])
+            self.assertEqual(load(inputs,root/'limited')[1],tiles)
 
     def test_shared_island_template(self):
         from restore_shared_islands import template,run as restore
