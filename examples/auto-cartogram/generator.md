@@ -65,6 +65,17 @@ initializer selects the best geographic fit. These transforms do not change
 contacts or pair distances, but can change the upstream grid initialization.
 Keep the later `-Dmosaic.orientInitial=true` setting the same for comparisons.
 
+`--drawing tutte` tests a convex-boundary alternative. It places the selected
+outer-face vertices on a circle and solves uniform barycentric equations for
+interior vertices of a triangulated copy. Added drawing edges do not become
+land contacts. Coordinates are rounded at increasing scales; an independent
+segment-intersection check must pass before export. Upstream geometric
+preflight is still required. This changes initialization, not the population
+budgets. The selected outer face is not a guarantee of geographic containment.
+See the introduction of [Colin de Verdière, Despré, and Dubois](https://arxiv.org/html/2507.13096v2)
+for the continuous barycentric theorem and its connectivity conditions. This
+experiment does not implement their separate discrete surface algorithm.
+
 ## Prepare population and shapes
 
 The population file must contain H3 resolution-8 `h3` and `population` columns.

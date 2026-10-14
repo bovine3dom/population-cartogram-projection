@@ -169,6 +169,19 @@ class EmbeddingTests(unittest.TestCase):
             self.assertNotEqual(positions["a"][0],positions["b"][0])
             self.assertNotEqual(positions["a"][1],positions["b"][1])
 
+    def test_barycentric_drawing_is_planar_after_rounding(self):
+        for original in [nx.path_graph(5),nx.star_graph(6),nx.wheel_graph(8),nx.complete_graph(4)]:
+            original=nx.relabel_nodes(original,lambda n:f"land:{n}")
+            graph,_,rotation=embedding.augment(original)
+            before=rotation.get_data()
+            geography={v:(i,i%3) for i,v in enumerate(graph)}
+            positions=embedding.integer_positions(graph,geography,rotation,drawing="tutte")
+            embedding.check_drawing(graph,positions)
+            self.assertEqual(rotation.get_data(),before)
+        graph=nx.Graph([("a","b"),("c","d")])
+        with self.assertRaisesRegex(ValueError,"crossing"):
+            embedding.check_drawing(graph,{"a":(0,0),"b":(2,2),"c":(0,2),"d":(2,0)})
+
     def test_fixed_drawing_transforms_are_rigid(self):
         graph=nx.Graph([("a","b"),("b","c"),("c","a")])
         geography={"a":(0,0),"b":(2,0),"c":(1,1)}

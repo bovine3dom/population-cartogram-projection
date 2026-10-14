@@ -472,3 +472,19 @@ under ignored `output/auto-cartogram/`.
   preparation does not change the earlier native Indonesia result.
 - One-unit exact polishing still cannot complete the 10,000-budget fit. Its
   final count check fails and no completed layout is exported.
+
+## 01:48 UTC — convex-boundary initialization
+
+- Added a barycentric drawing option. It fixes an outer facial cycle on a
+  circle and solves a linear system for interior vertices of a triangulated
+  copy. The added drawing edges are not exported as land contacts.
+- Integer rounding must pass independent segment-intersection checks. Tests
+  cover paths, stars, wheels, complete planar graphs, and a crossing rejection.
+  All 22 geometry tests pass. All six world input drawings were prepared.
+- Started fits with sea vertices used only for initialization and with no sea
+  vertices. This tests whether better initial geometry can avoid the severe
+  area errors without adding artificial population constraints.
+- The first coarse world transport solve finished in 123 seconds after source
+  preparation: zero cross-group mass, 99.720% source retention, and 12.070%
+  maximum relative target error. Independent CSV checks pass. This raw result
+  needs correction; it is not an accepted balanced transport result.
