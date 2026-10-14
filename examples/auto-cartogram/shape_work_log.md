@@ -409,3 +409,22 @@ Inspect the resulting images at world and regional scales.
   without moving Japan or Java. It keeps exact counts, no false contacts, and
   the same 124 retained land borders as its parent layout. No connector paths
   are added. Indonesia's relation to the enlarged India shape still needs review.
+
+## 13:12–13:23 UTC — controlled mainland distortion
+
+- Added checked parent position records to island outputs. Repeated the
+  55,000-tile island placement and obtained byte-identical cells. Prepared the
+  same small-island stage for 10,000 and 110,000 tiles; the 500,000-tile stage
+  waits for integer refinement.
+- Reviewed the weighted trials. The 15-degree case improves Sri Lanka but
+  reverses Myanmar and Thailand. The 35-degree case moves Cambodia too far
+  south. Keep the unweighted 35-degree trial as the current comparison parent.
+- Returned to bounded distortion with a new limit on shape change. A cost now
+  applies to cells outside each initial tile template. Components without
+  represented land borders can stay fixed. This protects island shapes and
+  makes loss of mainland coast detail more expensive.
+- Started two 55,000-tile trials with different template penalties. New cells
+  stay within a small source-outline buffer. Neither trial requires any border
+  contact. False contacts remain forbidden.
+- All 30 focused tests pass. Added checks for the template cost and fixed
+  components, and exercised the new mode through the file pipeline.

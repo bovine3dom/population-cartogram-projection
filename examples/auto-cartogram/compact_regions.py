@@ -137,9 +137,10 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None):
     return (costs,origin,allowed) if stretch is not None else (costs,origin)
 
 
-def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5):
+def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False):
     if output.exists():raise ValueError('Output already exists')
-    if rounds<1 or choices<1 or fit_rounds<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward]):raise ValueError('Invalid optimization settings')
+    if rounds<1 or choices<1 or fit_rounds<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty]):raise ValueError('Invalid optimization settings')
+    if (template_penalty or land_only) and not bounded:raise ValueError('Template penalty and land-only mode require bounded deformation')
     shapes,tiles,_=load(inputs,layout)
     requested={c:int(row['tiles']) for c,row in shapes.items()}
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
@@ -163,7 +164,8 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     if bounded:
         from bounded_deformation import BoundedDeformation
         state_type=BoundedDeformation
-    options=dict(allowed_masks=guided[2],contact_reward=contact_reward) if bounded else {}
+    fixed=set(tiles)-{c for pair in required for c in pair} if land_only else set()
+    options=dict(allowed_masks=guided[2],contact_reward=contact_reward,template_penalty=template_penalty,fixed=fixed) if bounded else {}
     state=state_type(tiles,required,costs,origin,perimeter,false_contact,**options)
     scripts=[Path(__file__)]
     if cycles or fit_rounds or atomic:scripts.append(Path(__file__).with_name('cycle_deformation.py'))
@@ -194,9 +196,10 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
         cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,absolute_tile_error=error,
         bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,
+        template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
         input_cells_sha256=digest(layout/'cells.csv'),scripts=hashes,
-        limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed.')
+        limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='compact-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -221,4 +224,6 @@ if __name__=='__main__':
     parser.add_argument('--fit-rounds',type=int,default=0);parser.add_argument('--regrow',action='store_true')
     parser.add_argument('--bounded',action='store_true');parser.add_argument('--stretch',type=float,default=.1)
     parser.add_argument('--contact-reward',type=float,default=.5)
-    args=parser.parse_args();print(json.dumps(run(args.inputs,args.layout,args.output,args.rounds,args.perimeter,args.false_contact,args.guide,args.anchor,args.choices,args.cycles,args.fit_rounds,args.atomic,args.regrow,args.bounded,args.stretch,args.contact_reward),indent=2))
+    parser.add_argument('--template-penalty',type=float,default=0.)
+    parser.add_argument('--land-only',action='store_true')
+    print(json.dumps(run(**vars(parser.parse_args())),indent=2))

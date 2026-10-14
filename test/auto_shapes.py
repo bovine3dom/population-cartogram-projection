@@ -157,7 +157,7 @@ class ShapeTests(unittest.TestCase):
                 relaxed=relax_shapes.run(inputs,root/'stress',root/'relaxed',root/'source.json',rounds=3)
                 self.assertLessEqual(relaxed['final_energy'],relaxed['initial_energy']+1e-8)
                 check_shape_translation.run(inputs,root/'deformed',root/'relaxed',root/'relaxed-check')
-                bounded=compact.run(inputs,root/'stress',root/'bounded',rounds=5,bounded=True,guide=8)
+                bounded=compact.run(inputs,root/'stress',root/'bounded',rounds=5,bounded=True,guide=8,template_penalty=2,land_only=True)
                 self.assertEqual(bounded['absolute_tile_error'],0)
                 self.assertTrue(bounded['bounded'])
                 geographic_baseline.run(inputs,root/'slow-baseline')
@@ -371,6 +371,18 @@ class ShapeTests(unittest.TestCase):
         self.assertAlmostEqual(state.edge('a','b'),1.5)
         with self.assertRaisesRegex(ValueError,'False contact'):
             BoundedDeformation({'a':{(0,0)},'b':{(1,0)}},set(),costs,(-5,-5),allowed_masks=masks)
+
+    def test_bounded_deformation_keeps_fixed_shapes_and_charges_for_new_cells(self):
+        tiles={'a':{(0,0),(0,1),(1,0)},'b':{(5,0),(5,1),(6,0)}}
+        costs={c:np.zeros((15,15)) for c in tiles};masks={c:np.ones((15,15),dtype=bool) for c in tiles}
+        state=BoundedDeformation(tiles,set(),costs,(-5,-5),allowed_masks=masks,template_penalty=4,fixed={'a'})
+        self.assertEqual(state.cost('b',(5,0)),0)
+        self.assertEqual(state.cost('b',(5,2)),4)
+        self.assertFalse(state.possible((0,0),None))
+        self.assertFalse(state.allowed_growth('a',(1,1)))
+        self.assertFalse(state.regrow('a'))
+        self.assertFalse(state.exchange((0,0),(2,0)))
+        self.assertEqual(state.tiles['a'],tiles['a'])
 
     def test_geographic_order_gradient_and_longitude_seam(self):
         rows={'a':dict(country_id='A',group_population=20e6,west=0,east=2,south=0,north=2),
