@@ -15,6 +15,8 @@ from shapely.geometry import box,mapping
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from mesh_guide import MeshObjective,build_mesh,transform_pieces,run
 from review_flow import read_shapes
+from warp_population_sites import interpolate,run as warp_sites
+from scipy.spatial import Delaunay
 
 
 class MeshTests(unittest.TestCase):
@@ -23,6 +25,28 @@ class MeshTests(unittest.TestCase):
         triangles=np.array([[0,1,2],[0,2,3]])
         portions=csr_matrix([[.5,0],[0,.5]])
         return MeshObjective(vertices,triangles,portions,[.7,.3],[False]*4)
+
+    def test_site_interpolation(self):
+        initial=np.array([[0.,0.],[2,0],[2,2],[0,2],[.8,.9]])
+        triangles=Delaunay(initial).simplices
+        matrix=np.array([[2.,.3],[.1,1.]])
+        transformed=initial@matrix.T+[4,5]
+        points=np.array([[.2,.4],[1.5,1.2]])
+        np.testing.assert_allclose(interpolate(initial,transformed,triangles,points),points@matrix.T+[4,5])
+        with self.assertRaisesRegex(ValueError,'outside'):interpolate(initial,transformed,triangles,[[3,3]])
+        with self.assertRaisesRegex(ValueError,'differs'):interpolate(initial,transformed,triangles[:-1],points)
+        with self.assertRaisesRegex(ValueError,'Folded'):interpolate(initial,-initial[:,::-1],triangles,points)
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);guide=root/'guide';guide.mkdir()
+            np.savez(guide/'mesh.npz',initial=initial,transformed=transformed,triangles=triangles)
+            (guide/'mesh-guide.json').write_text(json.dumps(dict(mesh=dict(span=1000,centre=[0,0]))))
+            (root/'sites.csv').write_text('component_id,population,x,y\na,7,.2,.4\nb,3,1.5,1.2\n')
+            report=warp_sites(root/'sites.csv',guide,root/'output')
+            from population_sites import read_sites
+            np.testing.assert_allclose(list(read_sites(root/'output/sites.csv',['a','b']).values()),points@matrix.T+[4,5])
+            self.assertEqual(report['components'],2)
+            self.assertEqual(len(report['sites_sha256']),64)
+            self.assertIn('a,7,',(root/'output/sites.csv').read_text())
 
     def test_gradient(self):
         objective=self.fixture();values=objective.vertices.ravel()+np.random.default_rng(5).normal(0,.03,8)

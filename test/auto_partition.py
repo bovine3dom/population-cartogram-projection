@@ -193,6 +193,12 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertEqual(mainland['flow']['excluded_isolated_components'],['e'])
             self.assertGreater(mainland['flow']['island_site_alignment']['scale'],0)
             self.assertEqual(len(load(inputs,root/'mainland-flow')[2]),9)
+            with contextlib.redirect_stdout(io.StringIO()):warped=run(inputs,layout,root/'warped-flow',sigma=1,iterations=20,power=True,by_landmass=True,flow_geometry=geometry,sites=sites,float_islands=True,sites_in_flow=True)
+            self.assertTrue(warped['sites_in_flow'])
+            self.assertEqual(warped['guide_alignment']['translation'],[0.,0.])
+            self.assertEqual(warped['guide_alignment']['x_scale'],warped['flow']['x_scale'])
+            self.assertEqual(len(load(inputs,root/'warped-flow')[2]),9)
+            with self.assertRaisesRegex(ValueError,'require sites'):run(inputs,layout,root/'bad-warp',sites=sites,sites_in_flow=True)
             geometry.write_text(json.dumps(dict(type='FeatureCollection',features=features[1:-1])))
             with self.assertRaisesRegex(ValueError,'labels differ'):run(inputs,layout,root/'missing-mainland',flow_geometry=geometry,sites=sites,power=True)
 
