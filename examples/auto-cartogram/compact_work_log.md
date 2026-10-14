@@ -650,7 +650,7 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The original 500,000-tile pipeline and old outline-cost control still run
   separately with their original code. No result is assumed from their runtime.
 
-## 19:50–20:05 UTC — carry population sites through the mesh
+## 19:50–20:04 UTC — carry population sites through the mesh
 
 - The combined guide-8 and border-cost-16 control retains 266 of 311 matched
   country borders, with 39 unsupported borders and 198 axis reversals. OWID has
@@ -669,6 +669,15 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The transformed population mean is not the mean of all transformed population
   cells. This remains a site-placement approximation. Population totals and
   component labels do not change.
+- Inspected the combined control's Europe, South Asia, and Indonesia details.
+  Europe is more readable, but Italy is broad and Spain is rectangular. Shared
+  island shapes remain poor. Saved the control and updated the gallery. All 16
+  layout archives pass numeric and file-hash checks; 105 linked resources load.
+- Inspected the long 64-grid mesh guide and the first and third 32-grid stages.
+  The long guide has 2.20% weighted area error but 136% maximum component error.
+  Its gradient stopping test passes. Russia and Central America are still thin.
+  Earlier stages reduce some distortions but have larger area errors. They do
+  not establish an acceptable mainland footprint.
 
 ## Method reference
 
