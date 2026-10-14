@@ -585,6 +585,44 @@ The separated layout has exact budgets but is not an acceptable replacement.
   It has no split regions, ten region holes, 118 missing contacts, and 152 false
   contacts. It does not replace the shorter saved diagnostic.
 
+## 19:26–19:42 UTC — inspect border controls and test a mesh objective
+
+- Inspected both stronger mainland guide worlds. Guide weight 2 leaves two split
+  regions. Weight 8 has no split regions, two region holes, and better border
+  and direction checks, but the main coast and Korea defects remain.
+- On the matched country scope, guide weight 8 retains 256 borders, adds 69
+  unsupported contacts, and has 198 direction reversals. The fixed-footprint
+  cost-16 control retains 251, adds 54, and has 236 reversals. OWID has 248, 48,
+  and 210. Inspected both fixed-footprint worlds: they keep gaps fixed and reduce
+  border errors, but make some internal borders more angular. No approval.
+- Read the September 2026 optimal-transport preprint by Bogdan, including its
+  numerical fold and comparison limits. Inspected its world figures. They still
+  have very thin features; no native-density transport implementation was added.
+- Read Sargent's 2024 planar mesh method, cost functions, and repository README.
+  Inspected its plane-cartogram figure. The explicit shape-distortion objective
+  looks more relevant than another gap penalty. GitHub metadata did not identify
+  a licence for either research repository. No upstream solver code, pickle
+  files, or bundled population data were adopted.
+- Added an independent planar mesh objective based on the published equations,
+  with analytic gradients, fixed frame, area checks, and validity checks. This
+  is not the paper's spherical or hybrid solver. Four new tests pass, including
+  finite differences, rotations, fixed frame, synthetic area improvement, and
+  invalid line-search probes.
+- Initial infinite-cost trial steps caused the optimizer to stop without useful
+  movement. A finite reciprocal-barrier extension gives recovery gradients;
+  accepted stages must still have strictly positive triangle determinants.
+- Initial polygon unions exposed numerical seams and, without a precision grid,
+  an overlay result that lost a triangle-sized area. Added explicit comparison
+  with the sum of mapped piece areas, a small precision grid, bounded seam
+  cleanup, and unchanged-hole checks. Synthetic tests now pass.
+- Ran the first world guides at grid widths 64 and 128. Both pass geometry
+  checks but retain about 97% weighted area error. Inspected the 128-grid world;
+  it is still close to an ordinary geographic map. The solver's relative-change
+  stopping condition does not establish area accuracy. Reject both guides.
+- Replaced tiny country-box samples with midpoint refinement near poorly
+  supported components. This is a mesh-conditioning test, not a successful
+  cartogram result. Existing frozen runs remain unchanged.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

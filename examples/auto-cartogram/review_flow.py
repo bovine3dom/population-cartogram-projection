@@ -27,7 +27,7 @@ def read_shapes(path):
     return result
 
 
-def draw(path, geometries, groups, title, caption):
+def draw(path, geometries, groups, title, caption, method='Flow method: Gastner, Seguy and More (2018), cartogram-cpp.'):
     xmin=min(g.bounds[0] for g in geometries.values());xmax=max(g.bounds[2] for g in geometries.values())
     ymin=min(g.bounds[1] for g in geometries.values());ymax=max(g.bounds[3] for g in geometries.values())
     scale=min(1700/(xmax-xmin),900/(ymax-ymin));left=(1800-scale*(xmax-xmin))/2;top=140+(900-scale*(ymax-ymin))/2
@@ -52,7 +52,7 @@ def draw(path, geometries, groups, title, caption):
         if any(not(bounds[2]<b[0] or b[2]<bounds[0] or bounds[3]<b[1] or b[3]<bounds[1]) for b in boxes):continue
         boxes.append(bounds)
         parts.append(f'<text x="{x:.3f}" y="{y:.3f}" text-anchor="middle" font-size="12" paint-order="stroke" stroke="#faf9f6" stroke-width="2">{html.escape(groups[c]["country_id"])}</text>')
-    parts.append('<text x="40" y="1094" font-size="13">Sources: Kontur population; Natural Earth. Flow method: Gastner, Seguy and More (2018), cartogram-cpp. Source year is unknown.</text></g></svg>')
+    parts.append(f'<text x="40" y="1094" font-size="13">Sources: Kontur population; Natural Earth. {html.escape(method)} Source year is unknown.</text></g></svg>')
     path.write_text('\n'.join(parts))
 
 
