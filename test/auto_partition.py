@@ -123,6 +123,31 @@ class CapacityPartitionTests(unittest.TestCase):
         single=np.zeros((3,3),dtype=bool);single[1,1]=True
         np.testing.assert_array_equal(dock_parts(single,np.zeros_like(single))[0],single)
 
+    def test_shared_island_template(self):
+        from restore_shared_islands import template,run as restore
+        from review_layout import connectivity
+        from shapely.geometry import box,mapping
+        geometry={'a':box(0,0,1,1),'b':box(1,0,2,1)}
+        with contextlib.redirect_stdout(io.StringIO()):tiles,_=template(geometry,{'a':7,'b':3})
+        self.assertEqual({c:len(p) for c,p in tiles.items()},{'a':7,'b':3})
+        self.assertEqual(len(set().union(*tiles.values())),10)
+        self.assertTrue(all(connectivity(p)==1 for p in tiles.values()))
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'inputs';layout=root/'layout';inputs.mkdir();layout.mkdir()
+            (inputs/'groups.csv').write_text('component_id,tiles\na,2\nb,2\nc,2\nd,2\ne,1\n')
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\nc,d,true\n')
+            (layout/'complete.txt').write_text('mode=test\n')
+            (layout/'cells.csv').write_text('component_id,x,y\na,0,0\na,0,1\nb,1,0\nb,1,1\nc,20,0\nc,20,1\nd,21,0\nd,21,1\ne,10,10\n')
+            source={'a':box(0,0,10,10),'b':box(10,0,20,10),'c':box(30,0,31,1),'d':box(31,0,32,1)}
+            path=root/'source.geojson';path.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(g)) for c,g in source.items()])))
+            with contextlib.redirect_stdout(io.StringIO()):report=restore(inputs,layout,path,root/'output')
+            self.assertEqual([r['components'] for r in report['landmasses']],[['c','d']])
+            before=load(inputs,layout)[1];after=load(inputs,root/'output')[1]
+            for c in 'abe':self.assertEqual(before[c],after[c])
+            self.assertEqual({c:len(p) for c,p in before.items()},{c:len(p) for c,p in after.items()})
+            self.assertTrue(all(connectivity(p)==1 for p in after.values()))
+            with self.assertRaisesRegex(ValueError,'Invalid'):restore(inputs,layout,path,root/'bad',maximum_area_fraction=1)
+
     def test_landmass_groups(self):
         self.assertEqual(contact_groups([('b','a'),('c','d'),('b','e')]),[['a','b','e'],['c','d']])
         with tempfile.TemporaryDirectory() as tmp:

@@ -697,6 +697,22 @@ The separated layout has exact budgets but is not an acceptable replacement.
   follow the same transformation as intermediate geometry. Seven mesh tests
   pass. Started a new ten-command validation checkpoint.
 
+## 20:09–20:11 UTC — shared-island template control
+
+- All ten commands passed at checkpoint `2591727`. Saved the logs and code hashes
+  in `validation-2006`. Production code and targets remain unchanged.
+- Added a separate shared-island control. It selects connected source land-border
+  groups whose combined source area is at most 1% of the represented land-border
+  area. This is a geometric rule, not a claim to classify every island.
+- Each selected group gets a uniformly scaled geographic outline, exact local
+  country quotas, and fragment repair without connector paths. The whole group
+  is then translated clear of other land. Unselected components stay unchanged.
+  This tests Ireland, Borneo, and other shared islands that singleton-island
+  protection does not cover. It does not change the mainland deformation.
+- The expanded 21-test partition suite passes. Tests check exact local budgets,
+  connected components, whole-group placement, and unchanged unselected cells.
+  World visual checks are still required.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
