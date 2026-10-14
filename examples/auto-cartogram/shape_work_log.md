@@ -41,3 +41,30 @@ Inspect the resulting images at world and regional scales.
 - Started an isolated build. The documented Conan 2.16.1 does not recognize the
   installed GCC 16. Switched the isolated tool environment to Conan 2.33.0 and
   kept its cache inside `output/`. No production dependency files changed.
+
+## 05:55–06:26 UTC — diagnosis and first deformation tests
+
+- All 348 required contacts at the 55,000-tile resolution have a shared source
+  border. None joins two components merely because they have the same country
+  ID. Of these contacts, 26 involve a secondary population component. This does
+  not mean that all 26 are overseas borders.
+- The Tutte fit has substantial thin detail on mainlands. South Sudan,
+  Kazakhstan, Honduras, Bolivia, and the Netherlands are examples. Island
+  grouping is not the main cause of these strips. Hard border constraints and
+  the layout fitting process remain problems.
+- Built the pinned C++ flow implementation without source changes. Its six unit
+  tests pass. The 55,000-budget world run took about 9.4 seconds. An independent
+  check found no overlaps, no missing land contacts, and all 19 input holes.
+- Rejected this first continuous-flow image on visual grounds. Canada, Russia,
+  Australia, and much of the Americas become long thin shapes. The method does
+  not add connector paths, but that alone does not give a useful map.
+- The C++ implementation also raises some small area targets. The largest error
+  against our original target is 450%, despite its reported convergence. Keep
+  original target checks outside the generator.
+- Added a local deformation experiment that starts with the reviewed Tutte fit.
+  It exchanges boundary cells to reduce perimeter and geographic shape error.
+  Borders are soft costs, not required paths. Component counts stay at their
+  initial values; this does not yet correct the Tutte count errors. One-cell
+  regions do not move. Seven focused shape tests pass.
+- Started five 55,000-budget trials with different shape, perimeter, and false
+  contact costs. Images and contact losses still need review.
