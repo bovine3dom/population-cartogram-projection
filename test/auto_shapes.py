@@ -23,6 +23,7 @@ import shape_placement
 import place_shapes
 import review_regions
 import check_shape_translation
+import coast_anchors
 import publish_shape_review
 import build_shape_gallery
 import geographic_baseline
@@ -251,6 +252,19 @@ class ShapeTests(unittest.TestCase):
             source['b']=box(3,0,4,1)
             path.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(p)) for c,p in source.items()])))
             with self.assertRaisesRegex(ValueError,'No source border'):state.border_targets(path,tiles,{('a','b')})
+
+    def test_coast_anchors_keep_an_island_beyond_the_scaled_coast(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'source.json'
+            source={'a':box(-1,1,1,3),'b':box(-.1,-.2,.1,0)}
+            path.write_text(json.dumps(dict(type='FeatureCollection',features=[dict(type='Feature',properties=dict(component_id=c),geometry=mapping(p)) for c,p in source.items()])))
+            tiles={'a':{(x,y) for x in range(20) for y in range(20)},'b':{(0,0)}}
+            state=shape_stress.Stress(tiles,{'a':(0.,2.),'b':(0.,-.1)},set(),gap=0)
+            self.assertEqual(coast_anchors.apply(state,path,tiles,set(),.00001,1.),1)
+            self.assertLess(state.targets[0,1],-10.)
+            saved=state.targets.copy()
+            self.assertEqual(coast_anchors.apply(state,path,tiles,{('a','b')},.00001,1.),0)
+            np.testing.assert_array_equal(state.targets,saved)
 
     def test_placement_can_forbid_false_contacts_without_adding_paths(self):
         tiles={'a':{(0,0),(1,0)},'b':{(0,0),(1,0)}};desired={'a':(.5,0),'b':(.5,1)}

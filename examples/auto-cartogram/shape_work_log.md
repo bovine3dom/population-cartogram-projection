@@ -235,7 +235,7 @@ Inspect the resulting images at world and regional scales.
   Their late source-hash fields will need this documented correction after
   completion. No cell data will change.
 
-## 11:45–12:05 UTC — checked image bundles
+## 11:45–12:03 UTC — checked image bundles
 
 - Added a static HTML gallery. A plain file server can display it without
   Markdown support. Each bundle includes compressed cells and templates,
@@ -253,3 +253,20 @@ Inspect the resulting images at world and regional scales.
   500,000-tile trial is also still running. Production files are unchanged.
 - Corrected the completed 110,000-tile trial's late runner hash with the saved
   source record. Its cell data did not change.
+
+## 12:03–12:09 UTC — coast-based position targets
+
+- Reviewed all six regional images for the saved 55,000-tile candidate. South
+  America keeps recognizable shapes and broad order. Europe has clear defects:
+  Ireland is too far south, and Norway is east of Sweden. These are position
+  failures, even though the shape and count checks pass.
+- Added an optional position target for non-border neighbours. It uses nearest
+  source coast points, scales the offsets within each component, and compresses
+  only the intervening gap. A large mainland can thus move an island beyond its
+  enlarged coast instead of leaving the island near its old centre.
+- This target changes only soft position preferences. It adds no contact,
+  connector path, or tile. Real border targets are unchanged.
+- All 24 focused tests pass. A new test checks an island south of an enlarged
+  mainland and verifies that required border targets remain unchanged.
+- Started 10,000- and 55,000-tile coast-target trials. Their visual quality is
+  not yet assessed. The other resolution trials continue.
