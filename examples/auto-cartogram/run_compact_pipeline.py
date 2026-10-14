@@ -21,15 +21,17 @@ import review_regions
 from save_review import digest
 
 
-def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,stretch=1.5,flow_guide_weight=0.,sigma=None,iterations=300):
+def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,stretch=1.5,flow_guide_weight=0.,sigma=None,iterations=300,flow_grid=256,flow_area_error=.01):
     if output.exists():raise ValueError('Output already exists')
     if flow_geometry is None and (flow_binary is None or not flow_binary.is_file()):raise ValueError('Supply an existing flow geometry or the optional flow binary')
     shapes,_,_=review_layout.load(inputs,templates);budget=sum(int(r['tiles']) for r in shapes.values())
     if sigma is None:sigma=4*math.sqrt(budget/55000)
     if any(not math.isfinite(v) for v in [stretch,flow_guide_weight,sigma]) or min(stretch,sigma)<=0 or flow_guide_weight<0 or iterations<1:raise ValueError('Invalid pipeline settings')
+    if not isinstance(flow_grid,int) or flow_grid<16 or flow_grid&(flow_grid-1):raise ValueError('Flow grid must be a power of two, at least 16')
+    if not math.isfinite(flow_area_error) or not 0<flow_area_error<1:raise ValueError('Invalid flow area tolerance')
     files=[inputs/'groups.csv',inputs/'manifest.json',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv',polygons,flow_geometry if flow_geometry else flow_binary]
     def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
-    record=dict(started_at_utc=now(),complete=False,approved_for_production=False,tile_budget=budget,stretch=stretch,flow_guide_weight=flow_guide_weight,sigma=sigma,iterations=iterations,
+    record=dict(started_at_utc=now(),complete=False,approved_for_production=False,tile_budget=budget,stretch=stretch,flow_guide_weight=flow_guide_weight,sigma=sigma,iterations=iterations,flow_grid=flow_grid,flow_area_error=flow_area_error,
         inputs={str(p):digest(p) for p in files},scripts={p.name:digest(p) for p in sorted(Path(__file__).parent.glob('*.py'))},steps=[],limit='Experimental layouts only. Exact counts do not prove geographic or border accuracy. Review images and failures before selection. The optional external flow binary has an AGPL-3.0 licence and remains outside production dependencies.')
     output.mkdir(parents=True)
     def save():(output/'pipeline.json').write_text(json.dumps(record,indent=2)+'\n')
@@ -48,7 +50,7 @@ def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,str
         if flow_geometry is None:
             stage('prepare-flow',lambda:prepare_flow.run(inputs,polygons,output/'flow-input'))
             flow_dir=output/'flow';flow_dir.mkdir()
-            command=[str(flow_binary.resolve()),str((output/'flow-input/geometry.geojson').resolve()),str((output/'flow-input/areas.csv').resolve()),'--skip_projection','--id','component_id','--area','tiles','--n_grid_rows_or_cols','256','--timeout','600','--export_preprocessed','--export_time_report']
+            command=[str(flow_binary.resolve()),str((output/'flow-input/geometry.geojson').resolve()),str((output/'flow-input/areas.csv').resolve()),'--skip_projection','--id','component_id','--area','tiles','--n_grid_rows_or_cols',str(flow_grid),'--max_permitted_area_error',str(flow_area_error),'--timeout','600','--export_preprocessed','--export_time_report']
             record['flow_command']=command;save()
             stage('flow',lambda:subprocess.run(command,cwd=flow_dir,stdout=sys.stdout,stderr=sys.stderr,check=True,timeout=660))
             flow_geometry=flow_dir/'areas_cartogram.geojson'
@@ -79,4 +81,6 @@ if __name__=='__main__':
     parser.add_argument('--flow-binary',type=Path);parser.add_argument('--flow-geometry',type=Path)
     parser.add_argument('--stretch',type=float,default=1.5);parser.add_argument('--flow-guide-weight',type=float,default=0.)
     parser.add_argument('--sigma',type=float);parser.add_argument('--iterations',type=int,default=300)
+    parser.add_argument('--flow-grid',type=int,default=256)
+    parser.add_argument('--flow-area-error',type=float,default=.01,help='External guide-area tolerance; final tile budgets remain exact')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

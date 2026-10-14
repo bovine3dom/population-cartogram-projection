@@ -188,6 +188,10 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertEqual(report['metrics']['absolute_tile_error'],0)
             self.assertTrue(all(step['complete'] for step in report['steps']))
             self.assertTrue((root/'pipeline/layout/review.png').is_file())
+            for options in [dict(flow_grid=17),dict(flow_area_error=0),dict(flow_area_error=float('nan'))]:
+                with self.assertRaisesRegex(ValueError,'[Ff]low'):
+                    run_compact_pipeline.run(inputs,layout,geometry,root/'bad',flow_geometry=geometry,**options)
+                self.assertFalse((root/'bad').exists())
 
     def test_review_viewport(self):
         owners={(0,0):'a',(1,100):'a'}
