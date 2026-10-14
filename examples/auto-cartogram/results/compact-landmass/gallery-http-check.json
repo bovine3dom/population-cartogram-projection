@@ -1,13 +1,9 @@
 {
-  "checked_at_utc": "2026-10-14T18:54:37.584748+00:00",
+  "checked_at_utc": "2026-10-14T19:21:07.363532+00:00",
   "method": "Headless local HTTP requests for every unique relative href and src on the gallery page",
   "resources": [
     {
       "path": "examples/auto-cartogram/compact_work_log.md",
-      "status": 200
-    },
-    {
-      "path": "examples/auto-cartogram/population-sites.md",
       "status": 200
     },
     {
@@ -320,6 +316,30 @@
     },
     {
       "path": "examples/auto-cartogram/results/compact-landmass/world-110000/review.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-guide-only/bundle.json",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-guide-only/gaps.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-guide-only/regions/europe.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-guide-only/regions/indonesia.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-guide-only/regions/north-america.png",
+      "status": 200
+    },
+    {
+      "path": "examples/auto-cartogram/results/compact-landmass/world-500000-guide-only/review.png",
       "status": 200
     }
   ]
