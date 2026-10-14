@@ -58,6 +58,16 @@ class MeshTests(unittest.TestCase):
                 self.assertAlmostEqual(estimate,gradient[i],places=6)
             self.assertTrue(np.isfinite(cost))
 
+    def test_distortion_weights(self):
+        vertices,triangles,portions,fixed,_,_=build_mesh([box(0,0,1,1),box(1,0,2,1)],8)
+        targets=np.asarray(portions.sum(axis=1)).ravel()*[1.5,.5]
+        objective=MeshObjective(vertices,triangles,portions,targets,fixed,water_weight=.001,density_weight=0)
+        land=np.asarray(portions.sum(axis=0)).ravel()>0
+        np.testing.assert_allclose(objective.weight[land],objective.areas[land])
+        np.testing.assert_allclose(objective.weight[~land],.001*objective.areas[~land])
+        for options in [dict(water_weight=-1),dict(density_weight=2),dict(water_weight=float('nan'))]:
+            with self.assertRaisesRegex(ValueError,'Invalid distortion'):MeshObjective(vertices,triangles,portions,targets,fixed,**options)
+
     def test_rotation_translation_and_folds(self):
         objective=self.fixture();values=objective.vertices.ravel()
         rotation=np.array([[0.,-1],[1,0]])
@@ -108,6 +118,7 @@ class MeshTests(unittest.TestCase):
             geometries=read_shapes(root/'output/geometry.geojson');self.assertEqual(set(geometries),{'a','b'})
             self.assertGreater(geometries['a'].area,geometries['b'].area)
             self.assertEqual(len(report['stages']),2)
+            self.assertTrue((root/'output/stage-1.npz').exists())
             for stage in report['stages']:
                 self.assertEqual(set(read_shapes(root/'output'/stage['geometry']['file'])),{'a','b'})
                 self.assertEqual(stage['geometry']['overlap_pairs'],[])
