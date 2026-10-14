@@ -66,6 +66,16 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertEqual({c:len(points) for c,points in tiles.items()},{'a':2,'b':2,'c':2,'d':2,'e':1})
             self.assertTrue(all(x<10 for c in 'ab' for x,y in tiles[c]))
             self.assertTrue(all(x>10 for c in 'cd' for x,y in tiles[c]))
+            original=(layout/'cells.csv').read_text()
+            (layout/'cells.csv').write_text(original.replace('e,10,10','e,0,2'))
+            with contextlib.redirect_stdout(io.StringIO()):floating=run(inputs,layout,root/'floating',sigma=1,iterations=20,power=True,by_landmass=True,float_islands=True)
+            (layout/'cells.csv').write_text(original)
+            _,floating_tiles,_=load(inputs,root/'floating')
+            self.assertNotEqual(floating['translated_islands']['e'],[0.,0.])
+            self.assertTrue(floating['float_islands']);self.assertEqual(set(floating['translated_islands']),{'e'})
+            self.assertEqual({c:len(p) for c,p in floating_tiles.items()},{c:len(p) for c,p in tiles.items()})
+            for x,y in floating_tiles['e']:
+                self.assertFalse({(x+1,y),(x-1,y),(x,y+1),(x,y-1)} & set().union(*(p for c,p in floating_tiles.items() if c!='e')))
             sites=root/'sites.csv';sites.write_text('component_id,x,y\n'+''.join(f'{c},{x},0\n' for c,x in zip('abcde',[0,1,20,21,10])))
             with patch('partition_land.guide_costs',side_effect=AssertionError('Power costs must not build outline grids')),contextlib.redirect_stdout(io.StringIO()):
                 site_record=run(inputs,layout,root/'site-result',sigma=1,iterations=20,power=True,by_landmass=True,sites=sites)
