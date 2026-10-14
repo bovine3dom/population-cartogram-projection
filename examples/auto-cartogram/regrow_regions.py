@@ -15,7 +15,7 @@ class Regrowth(AtomicDeformation):
                 if q in points:continue
                 other=self.owners.get(q)
                 if other==c:other=None
-                value+=self.edge(c,other)-self.edge(None,other)
+                value+=self.edge_at(p,q,c,other)-self.edge_at(p,q,None,other)
         return value
 
     def allowed_growth(self,c,p):
@@ -34,7 +34,7 @@ class Regrowth(AtomicDeformation):
             for q in adjacent(p):
                 other=c if q in grown else self.owners.get(q)
                 if other==c and q not in grown:other=None
-                delta+=self.edge(c,other)-self.edge(None,other)
+                delta+=self.edge_at(p,q,c,other)-self.edge_at(p,q,None,other)
             heapq.heappush(frontier,(delta,p,version))
         def neighbours_changed(p):
             for dx in [-1,0,1]:

@@ -100,17 +100,19 @@ class ShapeTests(unittest.TestCase):
 
     def test_sea_perimeter_delta_matches_complete_energy(self):
         tiles={'a':{(2,2),(2,3)},'b':{(3,2),(3,3)}}
-        state=Regrowth(tiles,{('a','b')},{c:np.zeros((8,8)) for c in tiles},(0,0),sea_perimeter=8.)
-        self.assertEqual(state.edge('a','b'),2.)
-        self.assertEqual(state.edge('a',None),9.)
-        for p,target in [((2,2),None),((1,3),'a'),((3,2),'a')]:
-            before=state.energy();delta=state.delta(p,target);old=state.change(p,target)
+        for mask in [None,np.indices((8,8))[0]<3]:
+            state=Regrowth(tiles,{('a','b')},{c:np.zeros((8,8)) for c in tiles},(0,0),sea_perimeter=8.,sea_mask=mask)
+            self.assertEqual(state.edge('a','b'),2.)
+            self.assertEqual(state.edge_at((2,3),(2,2),'a',None),9.)
+            self.assertEqual(state.edge_at((2,3),(2,4),'a',None),9. if mask is None else 1.)
+            for p,target in [((2,2),None),((1,3),'a'),((3,2),'a')]:
+                before=state.energy();delta=state.delta(p,target);old=state.change(p,target)
+                self.assertAlmostEqual(state.energy()-before,delta)
+                state.change(p,old)
+            current=state.tiles['a'];candidate={(1,3),(2,3)}
+            before=state.energy();delta=state.region_energy('a',candidate)-state.region_energy('a',current)
+            state.change((2,2),None);state.change((1,3),'a')
             self.assertAlmostEqual(state.energy()-before,delta)
-            state.change(p,old)
-        current=state.tiles['a'];candidate={(1,3),(2,3)}
-        before=state.energy();delta=state.region_energy('a',candidate)-state.region_energy('a',current)
-        state.change((2,2),None);state.change((1,3),'a')
-        self.assertAlmostEqual(state.energy()-before,delta)
 
     def test_opening_detects_a_thin_tail_not_a_solid_square(self):
         square={(x,y) for x in range(5) for y in range(5)}
@@ -215,6 +217,9 @@ class ShapeTests(unittest.TestCase):
             with contextlib.redirect_stdout(io.StringIO()):
                 metadata=compact.run(inputs,layout,root/'deformed',rounds=5,fit_rounds=10,atomic=True)
                 self.assertEqual(metadata['absolute_tile_error'],0)
+                joint=compact.run(inputs,layout,root/'joint',rounds=5,fit_rounds=10,strict_fit=True,regrow=True,land_only=True,sea_perimeter=8,interior_sea_radius=2)
+                self.assertEqual(joint['absolute_tile_error'],0)
+                self.assertEqual(joint['guide_area'],'requested budget')
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
                 stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True,order_weight=1,local_order=35,mass_weighted=True)
                 self.assertEqual(stress['collision_geometry'],'signed-distance raster')

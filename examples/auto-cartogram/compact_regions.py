@@ -11,7 +11,7 @@ import tempfile
 import time
 
 import numpy as np
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import binary_closing, distance_transform_edt
 from shapely import affinity, contains_xy
 from shapely.geometry import Polygon
 
@@ -24,7 +24,7 @@ def adjacent(p):return [(p[0]+dx,p[1]+dy) for dx,dy in NEIGHBOURS]
 
 
 class Deformation:
-    def __init__(self, tiles, required, costs, origin, perimeter=1., false_contact=4., sea_perimeter=0.):
+    def __init__(self, tiles, required, costs, origin, perimeter=1., false_contact=4., sea_perimeter=0., sea_mask=None):
         self.tiles={c:set(points) for c,points in tiles.items()}
         if any(connectivity(p)!=1 or holes(p) for p in self.tiles.values()):
             raise ValueError('Starting regions must be connected and have no holes')
@@ -33,6 +33,8 @@ class Deformation:
         self.required=set(required);self.costs=costs;self.origin=origin
         self.perimeter=perimeter;self.false_contact=false_contact;self.sea_perimeter=sea_perimeter
         self.bounds=next(iter(costs.values())).shape
+        self.sea_mask=sea_mask
+        if sea_mask is not None and sea_mask.shape!=self.bounds:raise ValueError('Sea mask and cost grid differ')
 
     def inside(self,p):
         x,y=p[0]-self.origin[0],p[1]-self.origin[1]
@@ -48,9 +50,16 @@ class Deformation:
         if a is not None and b is not None and tuple(sorted((a,b))) not in self.required:value+=self.false_contact
         return value
 
+    def edge_at(self,p,q,a,b):
+        value=self.edge(a,b)
+        if self.sea_mask is not None and ((a is None)!=(b is None)):
+            water=p if a is None else q
+            if not self.inside(water) or not self.sea_mask[water[1]-self.origin[1],water[0]-self.origin[0]]:value-=self.sea_perimeter
+        return value
+
     def delta(self,p,target):
         owner=self.owners.get(p)
-        return self.cost(target,p)-self.cost(owner,p)+sum(self.edge(target,self.owners.get(q))-self.edge(owner,self.owners.get(q)) for q in adjacent(p))
+        return self.cost(target,p)-self.cost(owner,p)+sum(self.edge_at(p,q,target,self.owners.get(q))-self.edge_at(p,q,owner,self.owners.get(q)) for q in adjacent(p))
 
     def possible(self,p,target):
         if not self.inside(p):return False
@@ -80,7 +89,7 @@ class Deformation:
         for p,c in self.owners.items():
             for q in adjacent(p):
                 other=self.owners.get(q)
-                if other is None or p<q:value+=self.edge(c,other)
+                if other is None or p<q:value+=self.edge_at(p,q,c,other)
         return value
 
     def candidates(self,choices,strict=False):
@@ -140,9 +149,9 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None,budgets=
     return (costs,origin,allowed) if stretch is not None else (costs,origin)
 
 
-def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.,fit_attempts=1,strict_fit=False):
+def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.,fit_attempts=1,strict_fit=False,interior_sea_radius=0):
     if output.exists():raise ValueError('Output already exists')
-    if rounds<1 or choices<1 or fit_rounds<0 or fit_attempts<1 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty,sea_perimeter]):raise ValueError('Invalid optimization settings')
+    if rounds<1 or choices<1 or fit_rounds<0 or fit_attempts<1 or interior_sea_radius<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty,sea_perimeter]):raise ValueError('Invalid optimization settings')
     if template_penalty and not bounded:raise ValueError('Template penalty requires bounded deformation')
     if bounded:regrow=True
     if regrow:atomic=True
@@ -157,7 +166,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     shapes,tiles,_=load(inputs,layout)
     requested={c:int(row['tiles']) for c,row in shapes.items()}
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
-    started=time.monotonic();guided=guide_costs(inputs,tiles,anchor,guide,stretch=stretch if bounded else None,budgets=requested if fit_rounds else None)
+    started=time.monotonic();guided=guide_costs(inputs,tiles,anchor,guide,margin=max(64,interior_sea_radius+2),stretch=stretch if bounded else None,budgets=requested if fit_rounds else None)
     costs,origin=guided[:2]
     state_type=Deformation
     if cycles:
@@ -177,7 +186,14 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         state_type=BoundedDeformation
     fixed=set(tiles)-{c for pair in required for c in pair} if land_only else set()
     options=dict(allowed_masks=guided[2],contact_reward=contact_reward,template_penalty=template_penalty,fixed=fixed) if bounded else {}
-    state=state_type(tiles,required,costs,origin,perimeter,false_contact,sea_perimeter=sea_perimeter,**options)
+    sea_mask=None
+    if interior_sea_radius:
+        sea_mask=np.zeros(next(iter(costs.values())).shape,dtype=bool)
+        for points in tiles.values():
+            for x,y in points:sea_mask[y-origin[1],x-origin[0]]=True
+        yy,xx=np.mgrid[-interior_sea_radius:interior_sea_radius+1,-interior_sea_radius:interior_sea_radius+1]
+        sea_mask|=binary_closing(sea_mask,structure=xx*xx+yy*yy<=interior_sea_radius**2)
+    state=state_type(tiles,required,costs,origin,perimeter,false_contact,sea_perimeter=sea_perimeter,sea_mask=sea_mask,**options)
     history=[];initial=state.energy()
     for turn in range(1,fit_rounds+1):
         moves=state.fit_step(requested,choices,fit_attempts,strict_fit)
@@ -200,11 +216,11 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     metadata=dict(method='Count-preserving local boundary exchanges with perimeter and geographic-guide costs; no required-contact paths',
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
         cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,fit_attempts=fit_attempts,strict_fit=strict_fit,absolute_tile_error=error,
-        bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,sea_perimeter=sea_perimeter,
+        bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,sea_perimeter=sea_perimeter,interior_sea_radius=interior_sea_radius,
         template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),guide_area='requested budget' if fit_rounds else 'initial count',
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
         input_cells_sha256=input_hashes[str(layout/'cells.csv')],inputs=input_hashes,scripts=hashes,
-        limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders during shape optimization, and also during count fitting in bounded mode.')
+        limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders during shape optimization, and also during count fitting in bounded mode. An interior sea radius restricts the extra sea-edge cost to water inside a fixed closing envelope of initial land; this envelope can include real water.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='compact-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -231,5 +247,5 @@ if __name__=='__main__':
     parser.add_argument('--bounded',action='store_true');parser.add_argument('--stretch',type=float,default=.1)
     parser.add_argument('--contact-reward',type=float,default=.5)
     parser.add_argument('--template-penalty',type=float,default=0.)
-    parser.add_argument('--land-only',action='store_true')
+    parser.add_argument('--land-only',action='store_true');parser.add_argument('--interior-sea-radius',type=int,default=0)
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
