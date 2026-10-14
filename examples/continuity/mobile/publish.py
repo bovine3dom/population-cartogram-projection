@@ -57,7 +57,7 @@ def publish(candidate, audit_file, reference, destination):
     for key, name in (("transport", TRANSPORT), ("density", DENSITY)):
         if digest(pending / name) != audit["sha256"][key]:
             raise ValueError(f"Staged file changed: {name}")
-    metadata = {"cartogram": f"{destination.name}/{TRANSPORT}", "trimFactor": 0, "viewportGeometry": True}
+    metadata = {"cartogram": f"{destination.name}/{TRANSPORT}", "trimFactor": 0}
     (pending / "population_density_hilo.json").write_text(json.dumps(metadata, indent=2) + "\n")
     (pending / "README.md").write_text(f"""# Small experimental planet export
 
@@ -101,10 +101,10 @@ the full reference, not this small file.
 
 Use a dictionary-capable Arrow reader. H3-MON commit `6563a17` or later uses
 Apache Arrow directly. Older loaders.gl readers can reject these files.
-HTTP gzip reduces transfer bytes but does not reduce decoded data size.
-File size alone does not establish a safe memory limit on a phone. Metadata
-enables visible-region geometry in updated H3-MON builds. All source data
-remain available for queries. A world view still needs full-world geometry.
+Use the existing server compression policy. Compression reduces transfer bytes,
+not decoded data size. File size alone does not establish a safe memory limit
+on a phone. All source data and geographic geometry remain available. The
+viewport-geometry option was removed after a panning regression.
 
 Open `/?data={destination.name}/population_density_hilo.arrow` in H3-MON.
 The adjacent JSON file selects this experimental cartogram. Publication does
