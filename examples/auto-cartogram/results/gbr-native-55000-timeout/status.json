@@ -1,0 +1,8 @@
+{
+  "status": "timeout",
+  "exit_code": 124,
+  "timeout_seconds": 1200,
+  "accepted_export": false,
+  "log_sha256": "8dda28677ebee5cd5b4348f53b52728df124fabbc4b9760e71fcdfb91372f672",
+  "limit": "No native GBR mapping completed at this target resolution. The timeout does not prove solver failure or infeasibility."
+}

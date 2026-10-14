@@ -685,3 +685,15 @@ under ignored `output/auto-cartogram/`.
   historical check files remain tied to their original checker versions.
 - Native GBR transport is still running within its 20-minute bound. Its input
   has 219,045 matched native cells, 66,962,523 people, 463 tiles, and four groups.
+
+## 04:14 UTC — complete tests and bounded native retry
+
+- The final combined experiment and production CPU test run passes at 04:05.
+  It includes the new target-normalized weight and complementary-cut checks.
+- The 463-tile native GBR run reaches its 20-minute timeout on the main island.
+  It writes no complete mapping. Saved its input selection, counts, source
+  hashes, timeout status, and log hash. A timeout is not proof of infeasibility.
+- Started a separate 84-tile GBR run from the 10,000-tile world layout. Its
+  source Arrow file is byte-identical to the earlier subset. It has two groups
+  and groups 358,920 people from zero-budget components, versus 167,346 at the
+  larger budget. This test cannot establish preservation of every small island.
