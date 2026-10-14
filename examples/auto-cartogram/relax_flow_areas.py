@@ -31,11 +31,14 @@ def run(inputs,flow_input,components,map_units,output,blend=.25):
     if labels!=set(budgets) or any(float(r['tiles'])!=budgets[r['component_id']] for r in rows):raise ValueError('Prepared guide budgets differ from original inputs')
     records=read_csv(components);units={r['component_id']:r['map_unit'] for r in records}
     if len(units)!=len(records):raise ValueError('Duplicate source component records')
-    continents={}
+    continents={};country_continents={}
     for feature in json.loads(map_units.read_text())['features']:
         p=feature['properties'];unit=p['GU_A3'];continent=p['CONTINENT']
         if unit in continents and continents[unit]!=continent:raise ValueError('Ambiguous source continent')
         continents[unit]=continent
+        if p.get('ADM0_A3'):country_continents.setdefault(p['ADM0_A3'],set()).add(continent)
+    fallbacks={c:next(iter(values)) for c,values in country_continents.items() if c not in continents and len(values)==1}
+    continents.update(fallbacks)
     pairs=[(r['a'],r['b']) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true']
     groups=contact_groups(pairs);membership={c:str(i) for i,group in enumerate(groups) for c in group}
     if not set(membership)<=labels:raise ValueError('Border labels differ')
@@ -48,7 +51,7 @@ def run(inputs,flow_input,components,map_units,output,blend=.25):
         record['requested']+=float(r['tiles']);record['guide']+=areas[c]
     if any(not math.isclose(r['requested'],r['guide'],rel_tol=1e-12,abs_tol=1e-8) for r in totals.values()):raise AssertionError('Regional budget changed')
     files=[inputs/'groups.csv',inputs/'geographic-contacts.csv',flow_input/'components.csv',flow_input/'geometry.geojson',components,map_units]
-    report=dict(method='Blend requested guide areas with source-area shares inside each source land-border group and Natural Earth continent label',blend=blend,regions=totals,inputs={str(p):digest(p) for p in files},scripts={name:digest(Path(__file__).with_name(name)) for name in ['relax_flow_areas.py','partition_land.py']},limit='Footprint guide only. These are not population targets. Final tile assignment must use the original inputs. Source continent labels can place a transcontinental component in one region. Isolated components retain their requested guide areas. No geometry or adjacency is joined by this classification. The external solver can further adjust small areas.')
+    report=dict(method='Blend requested guide areas with source-area shares inside each source land-border group and Natural Earth continent label',blend=blend,regions=totals,continent_fallbacks={u:fallbacks[u] for u in sorted({units[c] for c in membership}&set(fallbacks))},inputs={str(p):digest(p) for p in files},scripts={name:digest(Path(__file__).with_name(name)) for name in ['relax_flow_areas.py','partition_land.py']},limit='Footprint guide only. These are not population targets. Final tile assignment must use the original inputs. Source continent labels can place a transcontinental component in one region. A dissolved map-unit code can use its country code only when all source map units of that country have one continent label; these fallbacks are recorded. Isolated components retain their requested guide areas. No geometry or adjacency is joined by this classification. The external solver can further adjust small areas.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='relaxed-flow-',dir=output.parent))
     try:
         shutil.copyfile(flow_input/'geometry.geojson',temp/'geometry.geojson')
