@@ -168,3 +168,39 @@ H3-MON remains at rebased head `bfbd50e`, with a clean tracked tree and no
 `viewportGeometry` introduction in the current `src/app.js` history. The user
 service was not stopped or restarted by this work. This repository's changes
 are committed in small steps; no core `src/` file changed.
+
+## 22:51 UTC: new six-hour window
+
+The user requests continued H3-6 work at several factors. The new datasets will
+coexist with H3-5; they are not replacements. Work window: 2026-10-14 22:51 UTC
+to 2026-10-15 04:51 UTC. Use separate output folders and keep the current H3-MON
+branch and published files unchanged. Continue with KA and oneAPI.
+
+Priorities: complete a native-source planet baseline; compare subdivision
+factors; measure sharpness, fine-grid geometry, border continuity, and file size.
+Do not block all native-resolution work on success of a higher-factor model.
+Label experimental results and incomplete fits explicitly. A bounded adaptive
+geometry trial is running while the common planet pipeline is prepared.
+
+## 23:09 UTC: common native-source pipeline
+
+The adaptive fine-grid trial reduces fold area but broadens support to more
+than six cells per source. Stopped it and retained its checkpoints. It is not
+ready for publication.
+
+Added a common source-refinement pipeline. It first adjusts the coarse flows
+to native parent population, then splits each flow among the native children.
+It retains the old target grid as a factor-1 baseline. Higher factors can use
+this common result. This is not a new border-optimization pass. The runner
+records any proportional-inheritance fallback rather than calling it optimized.
+
+On native Angola, source refinement passes all checks. Its 99.5% ratio is 2.371,
+versus 2.451 in the coarse reference. The conservative packed trial has 73,920
+rows, target L1 `9.18e-7`, maximum target relative error `6.20e-6`, and all 11
+city labels. The runner will also test smaller row selections and keep them
+only if mass and target-centre checks pass.
+
+All 12 hierarchy checks pass on CPU and oneAPI. All 18 sparse-solver checks
+pass on both backends, including deadline checks. Added internal time limits
+so a difficult country cannot consume the whole six-hour window. The native
+planet baseline will run before further target-grid experiments.
