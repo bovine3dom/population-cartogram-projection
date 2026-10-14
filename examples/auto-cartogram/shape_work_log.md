@@ -288,7 +288,7 @@ Inspect the resulting images at world and regional scales.
   error. Started new trials in separate output directories. All 24 focused
   tests pass, including gap units and the one-cell anchor bound.
 
-## 12:16–12:23 UTC — exact-translation position refinement
+## 12:16–12:21 UTC — exact-translation position refinement
 
 - Saved the 110,000-tile candidate and added it to the static gallery. It has
   585 represented components, exact counts, no false borders, and 95 of 353
@@ -306,3 +306,30 @@ Inspect the resulting images at world and regional scales.
   Visual review shows Sri Lanka farther south, but Vietnam and Cambodia still
   have poor positions. Lower energy is not sufficient for map approval.
 - The 55,000-tile refinement and both 500,000-tile position trials continue.
+
+## 12:21–12:34 UTC — four resolutions and local direction checks
+
+- All eight Python and Julia test commands pass again. Saved their logs, source
+  hashes, and timings under `output/auto-cartogram/shape-jobs/validation-1222`.
+  The focused suite had 25 tests at this checkpoint. Production files remain
+  unchanged since `cbb6c8b`.
+- Completed the 500,000-tile smooth trial. Corrected its late runner hash from
+  the saved source record, without changing cells. Its review bundle includes
+  this correction. The gallery now has four resolutions and six regional
+  details per resolution. Position settings differ between trials.
+- Visually reviewed the large world, Indonesia, and Europe. The extra coast
+  detail is useful, but Sri Lanka is near Malaysia and Sumatra lies in a bay of
+  the enlarged India shape. These are not acceptable geographic positions.
+- Global direction constraints can create avoidable gaps. For example, they
+  ask Canada to remain north of Germany as well as north of the United States.
+  Added an optional local distance limit. Local checks include small countries
+  with lower weights. They do not connect islands or change counts.
+- All 26 focused tests pass. The added test checks local small-country pairs,
+  excludes a distant country, and checks the gradient. Started local-order
+  trials with two strengths for non-border position preferences.
+- The 55,000-tile integer refinement retains 114 of 348 borders. Sri Lanka
+  moves south but to the wrong side of India. Do not select it on border count.
+- The large Europe detail also shows narrow white cuts inside Great Britain.
+  A source-outline overlay confirms that some cuts are template artifacts,
+  not source coast features. Template cleanup needs a separate check before
+  calling these outlines satisfactory.
