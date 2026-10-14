@@ -75,6 +75,19 @@ class ShapeTests(unittest.TestCase):
             path.write_text('component_id,x,y\na,10,20\nb,10,20\n')
             with self.assertRaisesRegex(ValueError,'Overlapping'):review_gaps.read_cells(path)
 
+    def test_requested_guide_area_and_fixed_regrowth(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);(root/'validated.wkt').write_text('header\nheader\nregion\ta\n0 0\t1 0\t1 1\t0 1\nend\n')
+            small,origin=compact.guide_costs(root,{'a':{(0,0)}},anchor=0,margin=4)
+            large,other=compact.guide_costs(root,{'a':{(0,0)}},anchor=0,margin=4,budgets={'a':9})
+            self.assertEqual(origin,other)
+            self.assertGreater(small['a'][-origin[1],1-origin[0]],large['a'][-origin[1],1-origin[0]])
+        points={(2,2),(2,3),(3,3)}
+        state=Regrowth({'a':points},set(),{'a':np.zeros((8,8))},(0,0),sea_perimeter=8.)
+        state.fixed=frozenset(['a'])
+        self.assertFalse(state.possible((2,2),None));self.assertFalse(state.possible((3,2),'a'))
+        self.assertEqual(state.step(),0);self.assertEqual(state.tiles['a'],points)
+
     def test_count_fit_tries_alternatives_after_a_topology_rejection(self):
         costs=np.zeros((8,8));costs[2,3]=10.
         state=AtomicDeformation({'a':{(2,2),(3,2),(4,2)}},set(),{'a':costs},(0,0))

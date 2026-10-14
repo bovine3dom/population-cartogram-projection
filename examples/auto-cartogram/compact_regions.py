@@ -55,7 +55,7 @@ class Deformation:
     def possible(self,p,target):
         if not self.inside(p):return False
         owner=self.owners.get(p)
-        if owner==target:return False
+        if owner==target or owner in getattr(self,'fixed',()) or target in getattr(self,'fixed',()):return False
         if owner is not None and (len(self.tiles[owner])<=1 or not simple_toggle(self.tiles[owner],p)):return False
         if target is not None and not simple_toggle(self.tiles[target],p):return False
         return True
@@ -114,7 +114,7 @@ class Deformation:
         return changed
 
 
-def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None):
+def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None,budgets=None):
     all_points=set().union(*tiles.values())
     origin=(min(x for x,y in all_points)-margin,min(y for x,y in all_points)-margin)
     xmax=max(x for x,y in all_points)+margin;ymax=max(y for x,y in all_points)+margin
@@ -123,7 +123,8 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None):
     polygons={lines[i].split('\t')[1]:Polygon([tuple(map(float,p.split())) for p in lines[i+1].split('\t')]) for i in range(2,len(lines),3)}
     costs={};allowed={}
     for c,points in sorted(tiles.items()):
-        n=len(points);cx=sum(x for x,y in points)/n;cy=sum(y for x,y in points)/n
+        count=len(points);n=budgets[c] if budgets is not None else count
+        cx=sum(x for x,y in points)/count;cy=sum(y for x,y in points)/count
         polygon=polygons[c];centre=polygon.centroid;scale=math.sqrt(n/polygon.area)
         polygon=affinity.translate(affinity.scale(affinity.translate(polygon,-centre.x,-centre.y),scale,scale,origin=(0,0)),cx,cy)
         mask=contains_xy(polygon,xx,yy)
@@ -142,7 +143,7 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None):
 def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.,fit_attempts=1,strict_fit=False):
     if output.exists():raise ValueError('Output already exists')
     if rounds<1 or choices<1 or fit_rounds<0 or fit_attempts<1 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty,sea_perimeter]):raise ValueError('Invalid optimization settings')
-    if (template_penalty or land_only) and not bounded:raise ValueError('Template penalty and land-only mode require bounded deformation')
+    if template_penalty and not bounded:raise ValueError('Template penalty requires bounded deformation')
     if bounded:regrow=True
     if regrow:atomic=True
     scripts=[Path(__file__)]+[Path(__file__).with_name(name) for name in ['geographic_baseline.py','review_layout.py']]
@@ -156,7 +157,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
     shapes,tiles,_=load(inputs,layout)
     requested={c:int(row['tiles']) for c,row in shapes.items()}
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
-    started=time.monotonic();guided=guide_costs(inputs,tiles,anchor,guide,stretch=stretch if bounded else None)
+    started=time.monotonic();guided=guide_costs(inputs,tiles,anchor,guide,stretch=stretch if bounded else None,budgets=requested if fit_rounds else None)
     costs,origin=guided[:2]
     state_type=Deformation
     if cycles:
@@ -184,6 +185,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         history.append(dict(phase='counts',round=turn,exchanges=moves,energy=state.energy(),count_error=error))
         print(f'Count round {turn}: {moves} transfers; count error {error}',flush=True)
         if not moves or not error:break
+    if land_only:state.fixed=frozenset(fixed)
     counts={c:len(points) for c,points in state.tiles.items()}
     error=sum(abs(counts[c]-requested[c]) for c in requested)
     previous=state.energy()
@@ -199,10 +201,10 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
         cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,fit_attempts=fit_attempts,strict_fit=strict_fit,absolute_tile_error=error,
         bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,sea_perimeter=sea_perimeter,
-        template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),
+        template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),guide_area='requested budget' if fit_rounds else 'initial count',
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
         input_cells_sha256=input_hashes[str(layout/'cells.csv')],inputs=input_hashes,scripts=hashes,
-        limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders.')
+        limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed initial centres can preserve poor geographic positions. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders during shape optimization, and also during count fitting in bounded mode.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='compact-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:

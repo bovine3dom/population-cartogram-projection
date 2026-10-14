@@ -9,7 +9,7 @@ from review_layout import connectivity, holes
 class AtomicDeformation(CountFit):
     def possible(self,p,target):
         owner=self.owners.get(p)
-        return self.inside(p) and owner!=target and (target is None or any(self.owners.get(q)==target for q in adjacent(p)))
+        return self.inside(p) and owner!=target and owner not in getattr(self,'fixed',()) and target not in getattr(self,'fixed',()) and (target is None or any(self.owners.get(q)==target for q in adjacent(p)))
 
     def transaction(self,moves,decrease=True,balanced=True):
         if len({p for p,target in moves})!=len(moves):return False

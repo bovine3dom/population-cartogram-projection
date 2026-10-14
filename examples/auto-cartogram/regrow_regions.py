@@ -22,6 +22,7 @@ class Regrowth(AtomicDeformation):
         return self.inside(p) and self.owners.get(p) in (None,c)
 
     def regrow(self,c):
+        if c in getattr(self,'fixed',()):return False
         current=self.tiles[c];count=len(current)
         if count<3:return False
         start=min(current,key=lambda p:(self.cost(c,p),p))
