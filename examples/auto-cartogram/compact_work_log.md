@@ -460,6 +460,41 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The current partition suite has 17 passing tests. Production code and target
   data remain unchanged. The work window has not ended.
 
+## 18:29–18:55 UTC — regional controls and multi-resolution repairs
+
+- All nine test commands passed at checkpoint `9dc336c`. Saved their logs in
+  `validation-1831`. Later changes pass the 19-test partition suite; this is
+  not yet a new full-suite result.
+- Inspected both relaxed-density guide worlds. Spain moves against North
+  Africa, China remains flat, and the Americas remain narrow. Both have exact
+  counts and no split regions, but neither is a production candidate.
+- Tested population sites on the earlier stress-shaped footprint, with
+  smoothing scales 8 and 16. Inspected both world images. Large gaps remain,
+  and some African countries move into the footprint south of India. Reject
+  both results. An outline-cost control is still running with many fragments.
+- Added a two-level regional quota control. It assigns regional budgets first,
+  then country budgets inside each region. Original population counts do not
+  change. Inspected its flow and stress worlds. It prevents the most extreme
+  Africa-to-Asia moves, but the stress world still has large holes, thin shapes,
+  and poor island positions. The flow world still has Spain against Africa and
+  separated Koreas. Neither control is selected.
+- Corrected floating-island placement to use fitted guide sites when available.
+  Also stopped unused island outlines from enlarging or invalidating the
+  mainland cost grid. Added regression tests.
+- Extended coastal compensation to bounded chains through adjacent regions.
+  Tests cover a nested interior region and rollback when the depth limit stops
+  an exchange. No path is drawn to an old fragment.
+- The 10,000-tile chain repair removes the last split region. Inspected its world
+  image: exact counts and no region holes, but 145 missing and 153 false
+  represented contacts remain. The Americas are separate and North Africa is
+  narrow. Connectivity alone does not make this a good map.
+- The 110,000-tile single-donor repair also has no split regions. Inspected its
+  world image; the existing shape defects remain. Five region holes include
+  occupied holes and must not be described as five empty land holes.
+- The 500,000-tile guide-only partition finished in 2,248 seconds. Its repair
+  stage is still running. This uses geometry from a failed external flow solve,
+  not a converged external result. Production files remain unchanged.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
