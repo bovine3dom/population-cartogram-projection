@@ -155,7 +155,8 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
         blocked={p for x,y in assigned for p in [(x,y),(x+1,y),(x-1,y),(x,y+1),(x,y-1)]}
         for c in sorted(fixed,key=lambda c:(-budgets[c],c)):
             centre=np.mean(list(tiles[c]),axis=0)
-            moved=place(tiles[c],centre,blocked);result[c]=moved
+            desired=centres[c] if centres is not None else centre
+            moved=place(tiles[c],desired,blocked);result[c]=moved
             island_shifts[c]=(np.mean(list(moved),axis=0)-centre).tolist()
             blocked.update(p for x,y in moved for p in [(x,y),(x+1,y),(x-1,y),(x,y+1),(x,y-1)])
     if any(len(result[c])!=budgets[c] for c in tiles):raise AssertionError('Capacity changed')
