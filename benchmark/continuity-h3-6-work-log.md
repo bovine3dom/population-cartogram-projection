@@ -95,3 +95,33 @@ are slow. The H3 experimental centre-containment fill gives exactly the same
 cells on all three Angola polygons; the main polygon takes 9.1 seconds versus
 18.6 seconds for the old fill. An Australia speed check is running separately.
 No installed package has changed. API reference: https://h3geo.org/docs/api/regions/.
+
+## 21:38 UTC: native planet input complete
+
+The experimental Australia fill also hit its ten-minute limit. Do not use its
+Angola speedup as a planet estimate. Replaced full polygon filling with direct
+classification of populated H3 cell centres. Latitude bins index original
+polygon edges; polygons are not simplified. Closed rings and split antimeridian
+edges are required. The six geometry checks pass, including 1,000 comparisons
+with an independent ray test. All 66,618 regional sources match the existing
+Angola, DRC, and Zambia native extracts after the documented owner merge.
+
+The planet preparation completes with 1,992,902 sources and all 206 countries.
+Population is 7,947,202,049, which is 68,417 below the old input. No population
+was rescaled to conceal this difference. There are 16,449 shared H3-6 cells;
+assigning each to its largest country share moves 14,958,488 people between
+country totals but preserves total selected population. All 1,715 old label
+parents have native children. A separate worldwide check compares all
+1,992,902 H3-6 centres with H3 polygon fills across all 206 countries: zero
+mismatches. The slow full-resolution fill was stopped. The final extraction at
+`output/continuity-h3-6/native-planet-final/` matches the diagnostic Arrow file
+byte for byte (SHA-256 `24e89ff22a8fbc725c0ecd2c08ff2d9e11725339933bbc0a91cfd6079dfb0ec8`).
+
+The factor-3 geometry correction reduces positive triangle area from 142,057
+to 12,910 square km, but its support ratio rises to 4.248. Factor 2 reaches a
+ratio of 2.453, close to the coarse 2.451, but still has excess fold area. Neither
+pilot is a published planet result. Colder temperatures and the subdivision
+scaling of the fold term remain under test. With smaller temperature steps and
+the original planet mass limits, factor 3 reaches a support ratio of 1.965 at
+eta `1.25e-5` in 64 seconds for the last stage. It still needs geometry correction;
+a sharper transport alone does not preserve the map.
