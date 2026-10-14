@@ -40,7 +40,8 @@ def clusters(tiles,rows,source,land,gap_fraction,bridge_groups=False):
                 target=root(anchor)
                 if target==c:continue
                 gap,a,b=min((source[a].distance(source[b]),a,b) for a in members for b in groups[target])
-                if gap>gap_fraction*np.sqrt(max(source[a].area,source[b].area)):continue
+                reference=a if population[a]>population[b] else b
+                if gap>gap_fraction*np.sqrt(source[reference].area):continue
                 parents[c]=target;groups[target].extend(members);del groups[c];changed=True
                 edges.append(dict(component=a,anchor=b,source_gap=gap,bridge_roots=[c,target]))
     return {c:sorted(members) for c,members in groups.items()},edges
