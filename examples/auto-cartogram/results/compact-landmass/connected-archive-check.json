@@ -1,6 +1,6 @@
 {
-  "checked_at_utc": "2026-10-14T19:21:06.669524+00:00",
-  "script_sha256": "ad7847ca4a9f8e464c259f9af9733ec2fe8aa8fa7105a28a2e3a39135df3eb90",
+  "checked_at_utc": "2026-10-14T19:26:10.937010+00:00",
+  "script_sha256": "f3e6bbd888a479f9f8e5bfa7220ed6c25206a969fdb88c4868ee9813d35e554a",
   "results": [
     {
       "layout": "flow-compact",
@@ -44,6 +44,14 @@
     },
     {
       "layout": "world-500000-guide-only",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "mainland-flow1.2",
+      "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
+    },
+    {
+      "layout": "mainland-flow1.5",
       "checks": "All bundle hashes, all layout metrics, and all gap metrics match. Script hashes are excluded from numeric comparisons."
     }
   ]

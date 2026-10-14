@@ -9,9 +9,16 @@ reject them. Fixed Tutte positions leave tangled countries. Geographic starts
 leave too much empty space. A land-sea boundary cost alone also damages coasts.
 The latest tests use a shared, area-matched land footprint. A global capacity
 partition followed by fragment repair reaches exact counts and connected regions
-at 55,000 tiles. Internal gap measurements are now close to OWID. Visual checks
-still reject the result: continents are narrow, some countries are displaced,
-and too many borders are wrong. This is not a replacement generator.
+at 10,000, 55,000, 110,000, and 500,000 tiles. The 500,000-tile diagnostic uses
+an approximate guide from a failed external flow solve; it is not an accepted
+continuous cartogram. Some 55,000-tile gap measurements are close to OWID.
+
+The latest control excludes isolated islands from the upstream flow, not only
+from later boundary changes. It retains every final population budget. At
+55,000 tiles it retains 249 of 311 matched country borders, versus OWID's 248,
+but has 82 unsupported contacts versus 48. Visual checks still reject it:
+Pakistan is stretched, Korea is misplaced, and Southeast Asia is poor. A higher
+retained-border count alone is not sufficient. This is not a replacement generator.
 
 Open the [compactness comparison](examples/auto-cartogram/results/compact-landmass/index.html)
 for the latest shared-footprint images, OWID, Tutte, and the rejected separated

@@ -559,6 +559,32 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - All nine test commands passed at checkpoint `b69ad5d`. After the SVG fix,
   the shape suite has 41 passing tests. Production files remain unchanged.
 
+## 19:21–19:26 UTC — compare mainland-only flow and freeze gap geometry
+
+- Inspected the completed stretch-1.5 mainland-only world. It has exact counts,
+  no split regions, and no region holes, but China becomes too flat again.
+- Compared both mainland-only controls with OWID on the same matched country
+  scope. Stretch 1.2 retains 249 of 311 borders, but has 82 unsupported contacts
+  and 227 direction reversals. OWID has 248, 48, and 210 respectively. The
+  higher retained-border count does not establish better quality. Stretch 1.5
+  is weaker: 240 retained, 85 unsupported, and 237 direction reversals.
+- Saved both controls, their external-flow logs, and the country comparison.
+  Started guide weights 2 and 8 from the stretch-1.2 mainland-only footprint.
+  These tests change assignment costs, not requested population budgets.
+- Added a fixed-footprint mode to the basic boundary exchange method. It permits
+  only country-to-country swaps. It checks unchanged occupied cells, exact
+  counts, and the existing connected, hole-free region conditions. It excludes
+  count fitting, atomic moves, and regrowth. This tests border changes without
+  reopening the gaps that earlier local deformation controls created.
+- Started fixed-footprint false-border costs 4 and 16 from the hole-free
+  mainland-only stretch-1.5 layout. Isolated islands are fixed. The 41 shape
+  tests pass, including occupied-mask and invalid-option checks.
+- The longer cached 500,000-tile repair completed after 204 strict swaps and 21
+  component relocations. Its repair stage took 734 seconds; the full recorded
+  control took 852 seconds. Inspected the world: the same major defects remain.
+  It has no split regions, ten region holes, 118 missing contacts, and 152 false
+  contacts. It does not replace the shorter saved diagnostic.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
