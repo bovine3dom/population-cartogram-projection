@@ -1,0 +1,296 @@
+{
+  "backend": "CPU",
+  "coarse_h3_resolution": 8,
+  "coarse_sources": 832166,
+  "cross_group_population": 0.0,
+  "elapsed_seconds": 8997.044300079346,
+  "groups": 51,
+  "inputs": [
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-reviewed/source-components.arrow",
+      "sha256": "db6449eb1f4a59cc1c25bd8891950ea7298aecca72ceb91d13cada4fb25891f6"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-1894-v2-input/groups.csv",
+      "sha256": "3f38998797c74f2c4d8386608075897a5a5e3de3e37acd2f80b3c1b09a6b1123"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-1894-v2-layout/cells.csv",
+      "sha256": "109656c22606c4bea3b4625539e683d1b82e43f97891e2f863025fc2b352cdbe"
+    }
+  ],
+  "limit": "Native H3-8 centres. Grouped islands can exchange mass within their declared group. Each group has its own population per tile.",
+  "maximum_relative_target_error": 9.999445747754798e-05,
+  "maximum_source_retained_share": 1.0000000000000004,
+  "minimum_source_retained_share": 0.9999999999999994,
+  "pooled": false,
+  "retained_population": 270120945.0,
+  "retained_share": 1.0,
+  "script_sha256_at_load": "7f0079d61ed7b0d90b22debe4e05555250a12f6fdf7ba0e49cecaf52a9142977",
+  "source_coordinates": "population-weighted Equal Earth centres; aggregate by ORIGINAL component and H3 parent",
+  "source_population": 270120945.0,
+  "target_coordinates": "north-up grid; y negated for the screen-coordinate solver, then restored in export",
+  "targets": 1894,
+  "sparse_balance": {
+    "method": "Alternating target and source scaling on unchanged sparse support",
+    "iterations": 26348,
+    "maximum_iterations": 50000,
+    "tolerance": 0.0001,
+    "elapsed_seconds": 513.0512072579004,
+    "absolute_mass_change": 5105705.616083512,
+    "script_sha256_at_load": "c549e7d01163ff799ac404e84e51644acd94c1e382b704a41b48a582f0bf2385",
+    "original_checks": {
+      "source_population": 270120945.0,
+      "retained_population": 269804154.3313739,
+      "retained_share": 0.9988272265646556,
+      "cross_group_population": 0.0,
+      "minimum_source_retained_share": 0.99500001434688,
+      "maximum_source_retained_share": 1.0000000000000002,
+      "maximum_relative_target_error": 0.07349786607062536,
+      "coarse_sources": 832166,
+      "targets": 1894,
+      "groups": 51,
+      "mapping_rows": 1432890,
+      "source_rows_below_99_5_percent": 0,
+      "checked": true,
+      "checker_sha256": "303e1a2fedb19b85e84b6ad2eb947f84ad7d713bcb2673781dd5786df47cbd40",
+      "files": {
+        "manifest.json": "c10c346f641225c0aedcaad3d2e45a0f4b8f688c7c8a15f4edffb68d5df2a3fb",
+        "sources.csv": "b447d8c201b56711a71e2c31d88b40e81cdf3e91768ab7eecb336ce1c524af2a",
+        "targets.csv": "38b91aa0d1010cb1acce15106da8f8aeb2bed7363821e8fbfc9188d108ed0ca9",
+        "mapping.csv": "cfa358f92d5358d56f8bb6f17523b3ed7d7733c415f28d477e18d79925f4fff1",
+        "target-quality.csv": "ad249b42915ac8d49121a36e332c48600fd47c455ebc956658e8aaa2eb503314"
+      }
+    },
+    "limit": "No new source-target pairs. Does not prove spatial quality or general feasibility."
+  },
+  "target_translation": {
+    "method": "Push the existing mapping through a checked per-group integer translation; do not solve again or change weights",
+    "shifts": {
+      "IDN:022bfe9dad3f0890": [
+        -557,
+        57
+      ],
+      "IDN:0b4d32f4b9727f82": [
+        -549,
+        48
+      ],
+      "IDN:1675c019d412853f": [
+        -478,
+        56
+      ],
+      "IDN:17180a9338137fd2": [
+        -553,
+        48
+      ],
+      "IDN:1882fc741812bb99": [
+        -554,
+        55
+      ],
+      "IDN:2342a73d6e3d4204": [
+        -541,
+        46
+      ],
+      "IDN:241c829edbe9ddf3": [
+        -493,
+        54
+      ],
+      "IDN:2f668109d000a646": [
+        -477,
+        51
+      ],
+      "IDN:323211ce84279d17": [
+        -541,
+        46
+      ],
+      "IDN:3302be3ad51214b8": [
+        -549,
+        60
+      ],
+      "IDN:3f7b064a42d6c495": [
+        -520,
+        55
+      ],
+      "IDN:41ba51e85ddbb728": [
+        -535,
+        41
+      ],
+      "IDN:43eb860ae00ba2ae": [
+        -562,
+        31
+      ],
+      "IDN:461e2601656ce574": [
+        -568,
+        64
+      ],
+      "IDN:49b2a8a33d2211b5": [
+        -536,
+        43
+      ],
+      "IDN:4d155ba9803cf6be": [
+        -551,
+        50
+      ],
+      "IDN:51a10640dee7162b": [
+        -539,
+        54
+      ],
+      "IDN:563e4c39826b9ed6": [
+        -551,
+        49
+      ],
+      "IDN:58f5fb574eea3969": [
+        -489,
+        49
+      ],
+      "IDN:602ec010d55b1aa4": [
+        -533,
+        43
+      ],
+      "IDN:60f0f1d972640ca3": [
+        -481,
+        71
+      ],
+      "IDN:676455c554852bce": [
+        -538,
+        40
+      ],
+      "IDN:69994775e238d8aa": [
+        -526,
+        71
+      ],
+      "IDN:6f7a11314a3b7af3": [
+        -548,
+        49
+      ],
+      "IDN:735932740a80f252": [
+        -474,
+        57
+      ],
+      "IDN:746e7e525dfc90c5": [
+        -524,
+        47
+      ],
+      "IDN:7930308e19fa0905": [
+        -557,
+        56
+      ],
+      "IDN:7a59bb18e03f91d9": [
+        -484,
+        48
+      ],
+      "IDN:7c3797a36dd1a69b": [
+        -522,
+        54
+      ],
+      "IDN:7cb96e5a2c123f8f": [
+        -557,
+        57
+      ],
+      "IDN:7d68fcb39519952c": [
+        -478,
+        56
+      ],
+      "IDN:829c07ff03d97c10": [
+        -560,
+        58
+      ],
+      "IDN:88a8321cb31b5225": [
+        -560,
+        59
+      ],
+      "IDN:8b7b64d2940fb8dc": [
+        -552,
+        43
+      ],
+      "IDN:902a51c01c39bc1e": [
+        -561,
+        58
+      ],
+      "IDN:9053dfc21a705bd2": [
+        -531,
+        34
+      ],
+      "IDN:91fa24efd9a13b2f": [
+        -471,
+        49
+      ],
+      "IDN:9736be9cd3e2b4ff": [
+        -549,
+        66
+      ],
+      "IDN:a2e8d108d88be94f": [
+        -487,
+        49
+      ],
+      "IDN:a3f93df7f6853469": [
+        -496,
+        55
+      ],
+      "IDN:a6a2a921eb1e80b9": [
+        -549,
+        67
+      ],
+      "IDN:a9a80def964512c2": [
+        -520,
+        77
+      ],
+      "IDN:b212698e7fc50989": [
+        -524,
+        47
+      ],
+      "IDN:b9a02107a9d8774f": [
+        -549,
+        42
+      ],
+      "IDN:bbe17f60e9fb07dc": [
+        -537,
+        42
+      ],
+      "IDN:cae0ccf851b4aa17": [
+        -530,
+        44
+      ],
+      "IDN:e03a8d3be0282f36": [
+        -474,
+        59
+      ],
+      "IDN:e0b729a0e374c21c": [
+        -573,
+        69
+      ],
+      "IDN:fd97b33af0678261": [
+        -477,
+        62
+      ],
+      "IDN:fecb2bac3d81ef76": [
+        -544,
+        48
+      ],
+      "IDN:ffd26863a64545a3": [
+        -559,
+        56
+      ]
+    },
+    "source_target_pairs": 1432890,
+    "script_sha256": "42f1184cf7605b4b3d5817c0a2117e151277dc65b5aab6c03b2eb564f1fed6a6",
+    "inputs": [
+      {
+        "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-transport-r8-balanced-tol1e-4-grouped/manifest.json",
+        "sha256": "590dc6f919e061532ec612c04ffacc96b515abf8b1460be836666bcf76a7b008"
+      },
+      {
+        "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-transport-r8-balanced-tol1e-4-grouped/independent-checks.json",
+        "sha256": "35152b9a7ba611d85e74a3726aa8f42aab717fe0d2dbbd6febf21158d51403dd"
+      },
+      {
+        "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-1894-v2-layout/cells.csv",
+        "sha256": "109656c22606c4bea3b4625539e683d1b82e43f97891e2f863025fc2b352cdbe"
+      },
+      {
+        "path": "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/indonesia-reposition-1.2/cells.csv",
+        "sha256": "85ae8f25b7b14f80377eb7fb5d674542840b12d7860fad297660e66486f081aa"
+      }
+    ]
+  }
+}
