@@ -30,5 +30,12 @@ include("../examples/continuity/mobile/pack_mapping.jl")
         bad=joinpath(root,"bad")
         @test_throws ErrorException pack_mapping(input,mapping,density,bad)
         @test !ispath(bad)
+        Arrow.write(density,(index_lower=UInt32.(ids.&0xffffffff),index_upper=UInt32.(ids.>>32),value=values))
+        wrong=table([0,2,0,0,4],[1,1,2,2,2],[.8,.2,.25,.25,.5],
+            Union{Missing,String}["A",missing,missing,missing,"B"])
+        wrong.weight_mean[1]*=2
+        Arrow.write(mapping,wrong)
+        @test_throws ErrorException pack_mapping(input,mapping,density,bad)
+        @test !ispath(bad)
     end
 end

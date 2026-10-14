@@ -16,6 +16,7 @@ function pack_mapping(input,mapping,density_file,out)
         original.population,original.code,original.label)
     reference=MA.stats(table,meta);ownership=MA.stats(original,meta).owners
     maximum(abs.(reference.source_sum.-1))<=1e-7 || error("input source mass failed")
+    reference.mean_error<=1e-7 && reference.mean_sum_error<=1e-7 || error("input target weights failed")
     source=Int32[meta.source_index[ME.cellid(lo,hi)] for (lo,hi) in zip(table.index_lower,table.index_upper)]
     target=Int32[meta.target_index[(Int(x),Int(y),Int(c))] for (x,y,c) in zip(table.x,table.y,table.code)]
     labels=Dict(i=>String(table.label[i]) for i in eachindex(table.label) if !ismissing(table.label[i]))
