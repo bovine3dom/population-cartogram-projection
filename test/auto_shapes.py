@@ -4,6 +4,7 @@ import contextlib
 import io
 import gzip
 import shutil
+import subprocess
 from pathlib import Path
 import sys
 import tempfile
@@ -149,6 +150,8 @@ class ShapeTests(unittest.TestCase):
                 stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True,order_weight=1,local_order=35,mass_weighted=True)
                 self.assertEqual(stress['collision_geometry'],'signed-distance raster')
                 self.assertEqual(stress['order_constraints'],2)
+                subprocess.run([sys.executable,shape_stress.__file__,str(inputs),str(root/'deformed'),str(root/'stress-cli'),'--iterations','30','--raster','--no-false-contacts','--start-from-templates','--order-weight','1','--local-order','35','--mass-weighted'],check=True,stdout=subprocess.DEVNULL)
+                self.assertEqual((root/'stress/cells.csv').read_bytes(),(root/'stress-cli/cells.csv').read_bytes())
                 (root/'source.json').write_text(json.dumps(dict(type='FeatureCollection',features=[])))
                 relaxed=relax_shapes.run(inputs,root/'stress',root/'relaxed',root/'source.json',rounds=3)
                 self.assertLessEqual(relaxed['final_energy'],relaxed['initial_energy']+1e-8)
