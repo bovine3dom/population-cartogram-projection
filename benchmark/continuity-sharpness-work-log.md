@@ -323,3 +323,19 @@ fit is 2.62e-8. Maximum target mass relative change is 5.94e-8, and geographic
 mean movement is 1.32e-5 km. All 1,715 city anchors remain. These are packing
 checks, not claims about continuity quality. Files are `packed-pass-1-v2/`.
 No gzip or application compression was added; production zstd is unchanged.
+
+## 14:32 UTC: headless browser check
+
+The packed first-pass files pass the isolated H3-MON browser check with a
+390-by-844 viewport, four-times CPU throttling, and three viewport cycles.
+All 387,294 source values and 54,931 physical target cells load. The browser
+shows 1,714 target labels from 1,715 labelled sources. There are no page errors;
+the existing legend-transform warning remains. H3-MON itself stays stopped.
+The first attempt found no Playwright-managed browser; the repeat uses the
+installed `/usr/bin/chromium` with software rendering.
+
+Load time is 20.1 seconds in this local test. A 128 MiB V8 heap limit passes,
+but this is not a 128 MiB total-memory result: after collection, reported heap
+use is 39.6 MB and backing storage is 120.1 MB, before other browser costs.
+This is a headless desktop check, not a real mobile-device test. The screenshot
+and memory trace are in `browser-pass-1-128-system/`. No app files were changed.
