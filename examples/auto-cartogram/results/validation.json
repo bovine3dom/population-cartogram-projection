@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-14 04:37:52 UTC",
+  "checked_at_utc": "2026-10-14 04:45:00 UTC",
   "tests": {
     "exit_code": 0,
     "commands": [
@@ -11,7 +11,7 @@
       "julia --project=examples/auto-cartogram test/auto_cartogram.jl",
       "julia --project=examples/auto-cartogram -e 'push!(LOAD_PATH,pwd()); include(\"test/runtests.jl\")'"
     ],
-    "log_sha256": "c94b51765b783f51ce6e9629ce2a46a9f9623bb2641bb80e2d90bdd81c3e24a5",
+    "log_sha256": "b25f54086960da13064a8aa2b1b8f68100da7d692f3086e9524b337d8bdda27f",
     "python_test_methods": {
       "layout": 12,
       "transport": 6,
@@ -68,7 +68,7 @@
     "test/MosaicMinCostFlow.java": "be0937a6aeaad7a9f7ac55d0f39a21e0bfd231cf32727ff968e49415a9f20f82",
     "test/MosaicPolishTransaction.java": "e10cc529b219a2eba9d19af06e761a9e85d1e94cf137473318ffa4dc27c544fb",
     "test/auto_cartogram.jl": "6bf31930b3c5672815dc7ba3e6c4a508c24505538f78c07372d069051df39c0e",
-    "test/auto_geometry.py": "52379052807cebb36c6a20d69d98847705c59ff7a9628203216ec4e6b99354ef",
+    "test/auto_geometry.py": "7413604adeee183fb199484a4340111ab4383ed4537980284605c0e2fe39f240",
     "test/auto_layout.jl": "6f8ee829dd5045ed33f427be879918379165bffeebc9a4812ff319fd4dc921cc",
     "test/auto_layout.py": "d56dd170068eef06abe29cfbdc7a04ec052cd5779bfa6f01a25e9dfc731b2e80",
     "test/auto_transport.jl": "09fbf369d9a5cd5dc1a0864cd4566941a31c4dac0a678cd4e27733b7579a2b6d",
@@ -76,7 +76,7 @@
     "test/runtests.jl": "c083f3d8a0fe3b63f5b839c429a702576e296c422e4eea52fd20a7cf17ef02cc"
   },
   "review": {
-    "utc": "2026-10-14 04:37:52 UTC",
+    "utc": "2026-10-14 04:45:00 UTC",
     "local_links_checked": [
       "auto-cartogram.md",
       "examples/auto-cartogram/readme.md",
