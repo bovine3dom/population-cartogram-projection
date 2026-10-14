@@ -1,0 +1,779 @@
+{
+  "method": "Nearby island groups placed together with source-axis separation from nearby land; no country-identity links",
+  "gap_fraction": 0.2,
+  "land_radius_km": 500.0,
+  "minimum_tiles": 16,
+  "maximum_shift_scale": 2.0,
+  "cluster_edges": [
+    {
+      "component": "AUS:6a36c6fd1db93bf9",
+      "anchor": "AUS:adfd7567b2399535",
+      "source_gap": 0.027930964840901115
+    },
+    {
+      "component": "FXX:b04574696bff21bc",
+      "anchor": "ITA:ebecacbac755556c",
+      "source_gap": 0.0018316020350367416
+    },
+    {
+      "component": "IDN:1882fc741812bb99",
+      "anchor": "IDN:6f7a11314a3b7af3",
+      "source_gap": 0.0016553293521984975
+    },
+    {
+      "component": "IDN:43eb860ae00ba2ae",
+      "anchor": "IDN:fecb2bac3d81ef76",
+      "source_gap": 0.0004169714610943644
+    },
+    {
+      "component": "IDN:461e2601656ce574",
+      "anchor": "IDN:829c07ff03d97c10",
+      "source_gap": 0.014784093805581029
+    },
+    {
+      "component": "IDN:4d155ba9803cf6be",
+      "anchor": "IDN:fecb2bac3d81ef76",
+      "source_gap": 0.0004026674282437768
+    },
+    {
+      "component": "IDN:746e7e525dfc90c5",
+      "anchor": "IDN:7c3797a36dd1a69b",
+      "source_gap": 0.0025924986950241692
+    },
+    {
+      "component": "IDN:829c07ff03d97c10",
+      "anchor": "IDN:fecb2bac3d81ef76",
+      "source_gap": 0.0035838018317331717
+    },
+    {
+      "component": "IDN:8b7b64d2940fb8dc",
+      "anchor": "IDN:829c07ff03d97c10",
+      "source_gap": 0.001908460699319703
+    },
+    {
+      "component": "IMN:e2108479644de92c",
+      "anchor": "GBR:241258080ec293c4",
+      "source_gap": 0.003866846072683166
+    },
+    {
+      "component": "JPN:3876400cea5031e2",
+      "anchor": "JPN:f07fed45233efce3",
+      "source_gap": 0.00023321915802023828
+    },
+    {
+      "component": "JPN:c1b6e25b62179c19",
+      "anchor": "JPN:f07fed45233efce3",
+      "source_gap": 0.0029607562351385962
+    },
+    {
+      "component": "JPN:ec0a7dcff3300192",
+      "anchor": "JPN:f07fed45233efce3",
+      "source_gap": 0.0015660995812855636
+    },
+    {
+      "component": "NZL:979ee6939c934325",
+      "anchor": "NZL:8f99f1c50259113a",
+      "source_gap": 0.0029285117222864593
+    },
+    {
+      "component": "PHL:21362b5a399c84c0",
+      "anchor": "PHL:3dde36a3deef9e30",
+      "source_gap": 0.00017151112637216897
+    },
+    {
+      "component": "PHL:2ce786cb39ab6f61",
+      "anchor": "PHL:7516d4fddea7755b",
+      "source_gap": 0.003166058883322777
+    },
+    {
+      "component": "PHL:3dde36a3deef9e30",
+      "anchor": "PHL:6f9539ae2d2e4af7",
+      "source_gap": 0.0008020039599178023
+    },
+    {
+      "component": "PHL:6f9539ae2d2e4af7",
+      "anchor": "PHL:d9dc6d8657118070",
+      "source_gap": 0.002418105987546951
+    },
+    {
+      "component": "PHL:9f45a34a40c23d0d",
+      "anchor": "PHL:eb1fb8d27ecf0027",
+      "source_gap": 0.0020552278242018107
+    },
+    {
+      "component": "PHL:d3c6f6bf47091a8d",
+      "anchor": "PHL:6db0873e452de6c9",
+      "source_gap": 0.00020318846455416798
+    },
+    {
+      "component": "PHL:f6d8e393f979d3c4",
+      "anchor": "PHL:eb1fb8d27ecf0027",
+      "source_gap": 0.0013503478126640925
+    },
+    {
+      "component": "SPM:82efd5ba4ffee3ed",
+      "anchor": "CAN:95c7ebac82699331",
+      "source_gap": 0.0033808415630004036
+    }
+  ],
+  "groups": [
+    {
+      "root": "IDN:fecb2bac3d81ef76",
+      "components": [
+        "IDN:43eb860ae00ba2ae",
+        "IDN:461e2601656ce574",
+        "IDN:4d155ba9803cf6be",
+        "IDN:829c07ff03d97c10",
+        "IDN:8b7b64d2940fb8dc",
+        "IDN:fecb2bac3d81ef76"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "IDN:829c07ff03d97c10",
+          "anchor": "IDN:fecb2bac3d81ef76",
+          "source_gap_tiles": 0.19887742381044843,
+          "mapped_gap_tiles": 0.19886431606738153,
+          "desired_x": 280.7884142326028,
+          "desired_y": 141.06649505009833,
+          "actual_x": 280.04477611940297,
+          "actual_y": 140.97014925373134,
+          "placement_shift": 0.7498534229307762
+        },
+        {
+          "component_id": "IDN:4d155ba9803cf6be",
+          "anchor": "IDN:fecb2bac3d81ef76",
+          "source_gap_tiles": 0.02234539311644149,
+          "mapped_gap_tiles": 0.022345374520773988,
+          "desired_x": 311.5623652512228,
+          "desired_y": 126.598005587481,
+          "actual_x": 312.0,
+          "actual_y": 127.0,
+          "placement_shift": 0.5942421064126916
+        },
+        {
+          "component_id": "IDN:43eb860ae00ba2ae",
+          "anchor": "IDN:fecb2bac3d81ef76",
+          "source_gap_tiles": 0.023139172833342898,
+          "mapped_gap_tiles": 0.023139152184715232,
+          "desired_x": 316.8654459433214,
+          "desired_y": 121.40493737812373,
+          "actual_x": 317.0,
+          "actual_y": 120.75,
+          "placement_shift": 0.6686163050900426
+        },
+        {
+          "component_id": "IDN:8b7b64d2940fb8dc",
+          "anchor": "IDN:829c07ff03d97c10",
+          "source_gap_tiles": 0.10590701303946111,
+          "mapped_gap_tiles": 0.10590503333214134,
+          "desired_x": 285.38024248487085,
+          "desired_y": 138.09977213307866,
+          "actual_x": 285.0,
+          "actual_y": 139.5,
+          "placement_shift": 1.450938464099648
+        },
+        {
+          "component_id": "IDN:461e2601656ce574",
+          "anchor": "IDN:829c07ff03d97c10",
+          "source_gap_tiles": 0.8204199415803244,
+          "mapped_gap_tiles": 0.8195023589050866,
+          "desired_x": 275.66800075107045,
+          "desired_y": 143.56157882895357,
+          "actual_x": 275.0,
+          "actual_y": 144.0,
+          "placement_shift": 0.7990232328614787
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "IDN:43eb860ae00ba2ae",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": 5,
+          "approximate_source_distance_km": 498.20375649426336
+        },
+        {
+          "component": "IDN:461e2601656ce574",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 29,
+          "approximate_source_distance_km": 395.01321706961437
+        },
+        {
+          "component": "IDN:4d155ba9803cf6be",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -1,
+          "approximate_source_distance_km": 357.4185340431227
+        },
+        {
+          "component": "IDN:829c07ff03d97c10",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 33,
+          "approximate_source_distance_km": 398.4450315400303
+        },
+        {
+          "component": "IDN:8b7b64d2940fb8dc",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 33,
+          "approximate_source_distance_km": 311.5185016355658
+        },
+        {
+          "component": "IDN:8b7b64d2940fb8dc",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 29,
+          "approximate_source_distance_km": 393.0656054670503
+        },
+        {
+          "component": "IDN:8b7b64d2940fb8dc",
+          "land_component": "MYS:4035fe8bf71b03f5",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -6,
+          "approximate_source_distance_km": 393.0656054670503
+        },
+        {
+          "component": "IDN:fecb2bac3d81ef76",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -6,
+          "approximate_source_distance_km": 382.14763955550916
+        }
+      ],
+      "translation_bounds": [
+        [
+          29.0,
+          null
+        ],
+        [
+          29.0,
+          -6.0
+        ]
+      ],
+      "proposed_translation": [
+        29,
+        -30
+      ],
+      "maximum_translation": 32.55764119219941,
+      "not_moved": "Group translation exceeds displacement limit"
+    },
+    {
+      "root": "JPN:f07fed45233efce3",
+      "components": [
+        "JPN:3876400cea5031e2",
+        "JPN:c1b6e25b62179c19",
+        "JPN:ec0a7dcff3300192",
+        "JPN:f07fed45233efce3"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "JPN:3876400cea5031e2",
+          "anchor": "JPN:f07fed45233efce3",
+          "source_gap_tiles": 0.012942128920079248,
+          "mapped_gap_tiles": 0.012942125307099,
+          "desired_x": 322.89194116977035,
+          "desired_y": 187.13622208147464,
+          "actual_x": 322.93333333333334,
+          "actual_y": 186.13333333333333,
+          "placement_shift": 1.0037425727510425
+        },
+        {
+          "component_id": "JPN:c1b6e25b62179c19",
+          "anchor": "JPN:f07fed45233efce3",
+          "source_gap_tiles": 0.16430249221964666,
+          "mapped_gap_tiles": 0.16429510078994972,
+          "desired_x": 328.497344109341,
+          "desired_y": 210.23755348647796,
+          "actual_x": 327.5,
+          "actual_y": 210.16666666666666,
+          "placement_shift": 0.9998600970436441
+        },
+        {
+          "component_id": "JPN:ec0a7dcff3300192",
+          "anchor": "JPN:f07fed45233efce3",
+          "source_gap_tiles": 0.08690822338412402,
+          "mapped_gap_tiles": 0.08690712938593048,
+          "desired_x": 325.58446499671066,
+          "desired_y": 189.5635545951511,
+          "actual_x": 325.75,
+          "actual_y": 189.0,
+          "placement_shift": 0.5873632768822956
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "JPN:3876400cea5031e2",
+          "land_component": "KOR:1a1881fe9e034788",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": -9,
+          "approximate_source_distance_km": 238.77501361115944
+        },
+        {
+          "component": "JPN:ec0a7dcff3300192",
+          "land_component": "KOR:1a1881fe9e034788",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 6,
+          "approximate_source_distance_km": 405.5296180560585
+        },
+        {
+          "component": "JPN:f07fed45233efce3",
+          "land_component": "KOR:1a1881fe9e034788",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 10,
+          "approximate_source_distance_km": 215.8968564407173
+        }
+      ],
+      "translation_bounds": [
+        [
+          10.0,
+          null
+        ],
+        [
+          null,
+          -9.0
+        ]
+      ],
+      "proposed_translation": [
+        10,
+        -9
+      ],
+      "maximum_translation": 24.576411454889016,
+      "group_translation": [
+        10,
+        -9
+      ]
+    },
+    {
+      "root": "GBR:241258080ec293c4",
+      "components": [
+        "GBR:241258080ec293c4",
+        "IMN:e2108479644de92c"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "IMN:e2108479644de92c",
+          "anchor": "GBR:241258080ec293c4",
+          "source_gap_tiles": 0.21458451703365453,
+          "mapped_gap_tiles": 0.2145680523297802,
+          "desired_x": 183.98678370429027,
+          "desired_y": 195.94777706129415,
+          "actual_x": 183.0,
+          "actual_y": 196.0,
+          "placement_shift": 0.9881646190690659
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "GBR:241258080ec293c4",
+          "land_component": "BEL:b124863414a6dcdb",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -3,
+          "approximate_source_distance_km": 87.96627237804428
+        },
+        {
+          "component": "GBR:241258080ec293c4",
+          "land_component": "DEU:0b0480fae55fd996",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 3,
+          "approximate_source_distance_km": 331.11625647233797
+        },
+        {
+          "component": "GBR:241258080ec293c4",
+          "land_component": "LUX:2287a57343a7d085",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 2,
+          "approximate_source_distance_km": 365.9105636075307
+        },
+        {
+          "component": "GBR:241258080ec293c4",
+          "land_component": "NLX:8b9c3398a58bdb2a",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": 0,
+          "approximate_source_distance_km": 155.0240265351801
+        },
+        {
+          "component": "IMN:e2108479644de92c",
+          "land_component": "FXX:f023db15990ca569",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": -6,
+          "approximate_source_distance_km": 469.1027719393114
+        },
+        {
+          "component": "IMN:e2108479644de92c",
+          "land_component": "IRL:9661cba0fca9f89c",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 0,
+          "approximate_source_distance_km": 100.86247119667975
+        },
+        {
+          "component": "IMN:e2108479644de92c",
+          "land_component": "NIR:69fa50e543fa7c66",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": 0,
+          "approximate_source_distance_km": 57.992442539151845
+        }
+      ],
+      "translation_bounds": [
+        [
+          0.0,
+          -6.0
+        ],
+        [
+          -3.0,
+          null
+        ]
+      ],
+      "not_moved": "Inconsistent geographic separation bounds"
+    },
+    {
+      "root": "PHL:eb1fb8d27ecf0027",
+      "components": [
+        "PHL:9f45a34a40c23d0d",
+        "PHL:eb1fb8d27ecf0027",
+        "PHL:f6d8e393f979d3c4"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "PHL:9f45a34a40c23d0d",
+          "anchor": "PHL:eb1fb8d27ecf0027",
+          "source_gap_tiles": 0.11405162288874218,
+          "mapped_gap_tiles": 0.11404915043748977,
+          "desired_x": 331.75437884921314,
+          "desired_y": 139.78571820400563,
+          "actual_x": 331.0,
+          "actual_y": 139.5,
+          "placement_shift": 0.8066736268407103
+        },
+        {
+          "component_id": "PHL:f6d8e393f979d3c4",
+          "anchor": "PHL:eb1fb8d27ecf0027",
+          "source_gap_tiles": 0.0749354196576312,
+          "mapped_gap_tiles": 0.07493471836511054,
+          "desired_x": 336.9757015953207,
+          "desired_y": 141.50104305888192,
+          "actual_x": 337.0,
+          "actual_y": 143.0,
+          "placement_shift": 1.4991538692862831
+        }
+      ],
+      "separation_constraints": [],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        5,
+        -2
+      ],
+      "maximum_translation": 17.663521732655695,
+      "group_translation": [
+        5,
+        -2
+      ]
+    },
+    {
+      "root": "AUS:adfd7567b2399535",
+      "components": [
+        "AUS:6a36c6fd1db93bf9",
+        "AUS:adfd7567b2399535"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "AUS:6a36c6fd1db93bf9",
+          "anchor": "AUS:adfd7567b2399535",
+          "source_gap_tiles": 1.5499847907082283,
+          "mapped_gap_tiles": 1.543844667272824,
+          "desired_x": 320.34295032225003,
+          "desired_y": 104.61221543325996,
+          "actual_x": 320.0,
+          "actual_y": 105.0,
+          "placement_shift": 0.5176792382674433
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "AUS:adfd7567b2399535",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": 12,
+          "approximate_source_distance_km": 470.43153478755914
+        },
+        {
+          "component": "AUS:adfd7567b2399535",
+          "land_component": "IDN:91fa24efd9a13b2f",
+          "axis": 1,
+          "direction": "negative",
+          "translation_bound": 15,
+          "approximate_source_distance_km": 232.8172100467135
+        }
+      ],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          12.0
+        ]
+      ],
+      "proposed_translation": [
+        0,
+        0
+      ],
+      "maximum_translation": 11.313708498984761,
+      "group_translation": [
+        0,
+        0
+      ]
+    },
+    {
+      "root": "PHL:7516d4fddea7755b",
+      "components": [
+        "PHL:2ce786cb39ab6f61",
+        "PHL:7516d4fddea7755b"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "PHL:2ce786cb39ab6f61",
+          "anchor": "PHL:7516d4fddea7755b",
+          "source_gap_tiles": 0.1756954385066866,
+          "mapped_gap_tiles": 0.1756864005576628,
+          "desired_x": 333.5043478945644,
+          "desired_y": 132.8245984268853,
+          "actual_x": 333.0,
+          "actual_y": 133.0,
+          "placement_shift": 0.5339780057292896
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "PHL:2ce786cb39ab6f61",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -6,
+          "approximate_source_distance_km": 493.6485169918592
+        },
+        {
+          "component": "PHL:2ce786cb39ab6f61",
+          "land_component": "IDN:51a10640dee7162b",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 2,
+          "approximate_source_distance_km": 493.6485169918592
+        },
+        {
+          "component": "PHL:2ce786cb39ab6f61",
+          "land_component": "MYS:0abe504273f2e4bd",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -6,
+          "approximate_source_distance_km": 279.37740274539726
+        },
+        {
+          "component": "PHL:7516d4fddea7755b",
+          "land_component": "MYS:0abe504273f2e4bd",
+          "axis": 0,
+          "direction": "positive",
+          "translation_bound": -7,
+          "approximate_source_distance_km": 314.7288551476303
+        }
+      ],
+      "translation_bounds": [
+        [
+          -6.0,
+          2.0
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        8,
+        9
+      ],
+      "maximum_translation": 11.313708498984761,
+      "not_moved": "Group translation exceeds displacement limit"
+    },
+    {
+      "root": "IDN:7c3797a36dd1a69b",
+      "components": [
+        "IDN:746e7e525dfc90c5",
+        "IDN:7c3797a36dd1a69b"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "IDN:746e7e525dfc90c5",
+          "anchor": "IDN:7c3797a36dd1a69b",
+          "source_gap_tiles": 0.1438666215115522,
+          "mapped_gap_tiles": 0.1438616591496058,
+          "desired_x": 337.5514989839137,
+          "desired_y": 119.85642445988242,
+          "actual_x": 338.0,
+          "actual_y": 119.0,
+          "placement_shift": 0.9667554069749734
+        }
+      ],
+      "separation_constraints": [
+        {
+          "component": "IDN:746e7e525dfc90c5",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -11,
+          "approximate_source_distance_km": 488.63112548201923
+        },
+        {
+          "component": "IDN:746e7e525dfc90c5",
+          "land_component": "IDN:41ba51e85ddbb728",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 11,
+          "approximate_source_distance_km": 488.63112548201923
+        },
+        {
+          "component": "IDN:746e7e525dfc90c5",
+          "land_component": "TLS:e102fc60287c6426",
+          "axis": 0,
+          "direction": "negative",
+          "translation_bound": -9,
+          "approximate_source_distance_km": 460.4976639224477
+        },
+        {
+          "component": "IDN:746e7e525dfc90c5",
+          "land_component": "TLS:e102fc60287c6426",
+          "axis": 1,
+          "direction": "positive",
+          "translation_bound": 11,
+          "approximate_source_distance_km": 460.4976639224477
+        }
+      ],
+      "translation_bounds": [
+        [
+          null,
+          11.0
+        ],
+        [
+          -11.0,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        -14,
+        19
+      ],
+      "maximum_translation": 10.0,
+      "not_moved": "Group translation exceeds displacement limit"
+    },
+    {
+      "root": "PHL:d9dc6d8657118070",
+      "components": [
+        "PHL:21362b5a399c84c0",
+        "PHL:3dde36a3deef9e30",
+        "PHL:6f9539ae2d2e4af7",
+        "PHL:d9dc6d8657118070"
+      ],
+      "coast_anchors": [
+        {
+          "component_id": "PHL:6f9539ae2d2e4af7",
+          "anchor": "PHL:d9dc6d8657118070",
+          "source_gap_tiles": 0.13418897357709333,
+          "mapped_gap_tiles": 0.13418494674006096,
+          "desired_x": 334.5933178163351,
+          "desired_y": 135.39701634736932,
+          "actual_x": 335.0,
+          "actual_y": 135.0,
+          "placement_shift": 0.568341779731978
+        },
+        {
+          "component_id": "PHL:3dde36a3deef9e30",
+          "anchor": "PHL:6f9539ae2d2e4af7",
+          "source_gap_tiles": 0.04450594338724744,
+          "mapped_gap_tiles": 0.04450579646116057,
+          "desired_x": 336.0343110603822,
+          "desired_y": 135.90888638372883,
+          "actual_x": 337.0,
+          "actual_y": 136.0,
+          "placement_shift": 0.9699777415849012
+        },
+        {
+          "component_id": "PHL:21362b5a399c84c0",
+          "anchor": "PHL:3dde36a3deef9e30",
+          "source_gap_tiles": 0.009517739141072578,
+          "mapped_gap_tiles": 0.009517737704095086,
+          "desired_x": 337.91037490766035,
+          "desired_y": 135.70461635900816,
+          "actual_x": 339.0,
+          "actual_y": 136.0,
+          "placement_shift": 1.1289527612888763
+        }
+      ],
+      "separation_constraints": [],
+      "translation_bounds": [
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "proposed_translation": [
+        -4,
+        3
+      ],
+      "maximum_translation": 8.246211251235321,
+      "group_translation": [
+        -4,
+        3
+      ]
+    }
+  ],
+  "moved_components": 11,
+  "failed_groups": 4,
+  "inputs": {
+    "output/auto-cartogram/world-10000-dissolved-input/groups.csv": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+    "output/auto-cartogram/world-10000-dissolved-input/geographic-contacts.csv": "c2b31c4287fe7fabaf7404429dd1c543c22c34dd06f4f280ac93cbcb56f8b18f",
+    "output/auto-cartogram/world-10000-dissolved-input/validated.wkt": "8c3f3851d927c12f648d627ee56cb6fb4b699548176c2e401bd2b094c2577680",
+    "output/auto-cartogram/world-10000-mainland-combined/final/cells.csv": "8ebdfce779e6901ec7f55e78f55835ff4633a26853e700ca2c9274b545f6581b",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "scripts": {
+    "restore_archipelagos.py": "0a0869e3447dffb6361e7c578ec3a2f2d8e52ce8c68035c3ef519a9050ee61c6",
+    "place_islands.py": "c5fa5399d336afd83646ed18c9344350b8ffce2e976d99251edef4e3eec265f9",
+    "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3",
+    "prepare_flow.py": "b794cd56bfcce5910034d405d600deb257dd01829425a0301c79a0b432678fc2"
+  },
+  "limit": "Proximity groups can cross country IDs. No cells join separate islands. Nearby-land distances use Equal Earth planar distance times Earth radius, not geodesic distance. Inconsistent or blocked groups remain unchanged and are reported. Preserving axis separation does not prove good geographic placement.",
+  "cells_sha256": "25cabc0664a77a8110d4e40f7f4a16b964fe51d9e4bc467b639448b6a293cc04"
+}

@@ -820,6 +820,17 @@ The separated layout has exact budgets but is not an acceptable replacement.
   including a check that a rejected group remains unchanged. New bounded world
   controls are next; their quality is not yet known.
 
+## 21:00 UTC — Bounded island controls saved
+
+- Visually checked the bounded 10,000- and 55,000-tile world images. Japan keeps
+  the corrected placement. The large Java–Sumatra displacement is rejected in
+  the coarse map. The mainland footprint is unchanged at both resolutions.
+- Saved separate `archipelago-10000` and `archipelago-55000` review bundles,
+  including cells, input contacts, placement records, hashes, and Japan details.
+  Added links to the gallery. The leading controls remain unchanged.
+- The 110,000-tile mainland pipeline finished at 20:39:55 UTC. Its images still
+  need visual review. The 500,000-tile run is still in progress.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

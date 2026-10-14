@@ -1,0 +1,22 @@
+{
+  "archipelagos.json": "358db58a985ab0ed74f6c506165e164c04b2d68aaeb6b4b4c1106bdab4155416",
+  "cells.csv.gz": "4370c64325be6445255298aeced741ee6153b2645ed5c9c1b3534d42c62523ac",
+  "checksums.json": "9ad42008f5bfcbc95200f135091733e290c201cbfe732da61e0e4f12f0e35fd8",
+  "complete.txt": "d847589bcf81927df5e3fbb0f09b663be70a716c57c221149ef335918b16529e",
+  "contact-errors.csv": "c13d32a69f7e9c46faeaeff0fcdb1743045f37e82d3806c1ddb7a29b53afa352",
+  "country-counts.csv": "d39fd3e04ece5c63cfd9ee9c39702ddd749d7c7e19406179f3c2d302dbc44fa9",
+  "country-order-errors.csv": "6d12fcad27608e680677f5063e674a564fd107fbc2d45d1f2007f6886e20735f",
+  "gaps.json": "3d69b61e4a9bd222be9b91f1d9bb083df09a684f545d8438db85c92545f3fe9d",
+  "group-capacities.csv": "de2c68a60d3ae19ad3b2c85f4e7079227b01b63496dfc07a57874619ed0253da",
+  "input-geographic-contacts.csv": "c2b31c4287fe7fabaf7404429dd1c543c22c34dd06f4f280ac93cbcb56f8b18f",
+  "input-groups.csv": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+  "input-manifest.json": "666538554cd81d6194f89494feb54f2119b5e4e7faed696349d20cd07e4211e1",
+  "input-outline-checks.json": "79fb92bd68158b0db5a05db1852d0a261b32a877af8f6252820226b48f4bee4b",
+  "island-order-errors.csv": "148873f43108052590ebeba99b356b42ac0536e44ae8b2c8e208d6d8f61e7714",
+  "metrics.json": "8899ec05c06a638551f0f222478857505e60c90bb21e14cffa99d0d1a038118d",
+  "region-quality.csv": "1f9e33fdced81b852e268e8c2714749db3068b32763aa40773e0bde802de560a",
+  "regions/europe.png": "fb66cc72349c058d598164dca386a786a9ebeb921e2509ff8fe6cfbf47faaa1a",
+  "regions/indonesia.png": "1b63d59b260ae559db9fdcc1bcf05b18194c33db13dacacb6488522d27c496b6",
+  "regions/japan-korea.png": "fbcd62bf04463cd4bdf419c46e441cc4b6c94ae19f89444eed04c814b4f90db7",
+  "review.png": "613f4c60d30da06aaad8369855abe444eabf22b040cf000d40307a155f9250a0"
+}
