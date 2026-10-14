@@ -33,6 +33,7 @@ import publish_shape_review
 import recheck_shape_bundle
 import build_shape_gallery
 import review_gaps
+import compare_country_contacts
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
@@ -74,6 +75,20 @@ class ShapeTests(unittest.TestCase):
             self.assertTrue((Path(tmp)/'review/gaps.svg').is_file())
             path.write_text('component_id,x,y\na,10,20\nb,10,20\n')
             with self.assertRaisesRegex(ValueError,'Overlapping'):review_gaps.read_cells(path)
+
+    def test_country_contact_comparison_excludes_unmatched_codes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'inputs';inputs.mkdir();layout=root/'layout';layout.mkdir()
+            (inputs/'groups.csv').write_text('component_id,country_id\na,A\nb,B\n')
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\n')
+            (layout/'cells.csv').write_text('component_id,x,y\na,0,0\nb,1,0\n')
+            (root/'owid.csv').write_text('0,0,1\n2,0,2\n4,0,3\n')
+            (root/'iso.json').write_text(json.dumps({'3166-1':[dict(numeric=str(i),alpha_3=c) for i,c in enumerate(['A','B','C'],1)]}))
+            report=compare_country_contacts.run(inputs,root/'owid.csv',root/'iso.json',[layout],root/'report.json')
+            self.assertEqual(report['common_country_ids'],['A','B'])
+            self.assertEqual(report['excluded_owid_codes'],['3'])
+            self.assertEqual([c['retained'] for c in report['cases']],[1,1])
+            self.assertEqual([c['unsupported'] for c in report['cases']],[0,0])
 
     def test_requested_guide_area_and_fixed_regrowth(self):
         with tempfile.TemporaryDirectory() as tmp:
