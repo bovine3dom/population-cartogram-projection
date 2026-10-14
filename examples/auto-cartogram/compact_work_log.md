@@ -104,6 +104,37 @@ The separated layout has exact budgets but is not an acceptable replacement.
 - The new comparison test exposed a single-row grid-step bug. Fixed the missing
   axis handling. Tests also reject ambiguous source code mappings.
 
+## 15:26–15:46 UTC — direction benchmark, paper review, and solver cost
+
+- A full validation attempt exceeded its 300-second harness limit after seven
+  successful commands. The production CPU command had no completed result.
+  Repeated all eight commands with a longer limit and saved each result as it
+  completed. All eight passed; the focused suite then had 37 tests. Logs and
+  source hashes are in `results/compact-landmass/validation-1532/`.
+- Added matched-scope direction checks for 92 countries with at least 10 million
+  source people. They use the largest connected output piece and a five-degree
+  source separation. Out of 7,496 axis comparisons, OWID has 210 reversals,
+  Tutte has 1,368, and separated shapes have 157. The first strong sea-edge
+  trial still has 1,356. These checks omit small-country position errors and
+  are not a complete visual score. They show why fixed Tutte guide centres
+  cannot be the final objective.
+- Re-read sections 4.2 and 6 of the supplied 2015 paper. The paper moves guiding
+  shapes between deformation stages. Its discussion explicitly identifies
+  rigid guiding shapes and large final size corrections as causes of thin
+  extensions. It proposes non-uniform scaling as further work. This supports
+  testing controlled guide deformation rather than more rigid placement.
+- Found a repeated computation cost: each round regrew every large region,
+  even after all relevant cells stopped changing. Added an optional cache of
+  failed regrowth attempts. It records every occupancy lookup, including
+  rejected growth cells and nearby contact checks. A changed dependency forces
+  a new calculation. Costs and masks remain fixed during each run.
+- The focused suite now has 38 passing tests. Cached and uncached runs match
+  across random bounded and unbounded cases and the file pipeline. Started a
+  full-size cached repeat to check final cell equality. Also started an
+  80-round geographic-guide preview for earlier visual inspection.
+- The corrected full-size deformation trials continue. No exact-budget joint
+  layout has completed visual review yet. Production code remains unchanged.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

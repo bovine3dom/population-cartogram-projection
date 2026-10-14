@@ -1,0 +1,180 @@
+{
+  "started_at_utc": "2026-10-14T15:31:53.532420+00:00",
+  "git_commit": "a327072b137b8e1b36def6f6400c4fe4dcb29044",
+  "threads": {
+    "OPENBLAS_NUM_THREADS": 1,
+    "OMP_NUM_THREADS": 1,
+    "JULIA_NUM_THREADS": 1
+  },
+  "code_sha256": {
+    "examples/auto-cartogram/DirectionalPlacement.java": "43a9694c7bce9e75c3da8952b8b336460d9fe2035a1ac9ceda90e6522d5d01c1",
+    "examples/auto-cartogram/GeographicOrientation.java": "853eec734e0333bee5c03af504ce53f344dff8f9598747a830bce0f972707ad3",
+    "examples/auto-cartogram/InitialSeaRemoval.java": "6bd498b13b03563c9303e2c8f1eccbde47dddc5abaae3d916b5dd9e29f905c22",
+    "examples/auto-cartogram/MosaicAdapter.java": "6bc34b3343dcc8f7233a41cec15f46af2a1f4af534b154b60af4b63318d0bee6",
+    "examples/auto-cartogram/assign_population.py": "b42da4b8127869fb1baf8cb21b410035d8499f0b161214d79dd0442c88e03bdd",
+    "examples/auto-cartogram/atomic_deformation.py": "0738a370b8a63ce9f7eb264e99a1b781c3aae1c77e7054771885ab9d621ae800",
+    "examples/auto-cartogram/audit.jl": "ff826dd81f540f86b4806867eb3b94e792bd8e71cc217856f8a70b4fae8c7d9c",
+    "examples/auto-cartogram/audit_shapes.py": "8a01070364cc318221570abba377d0462537fa8067dc12185f9ee674b8f8d163",
+    "examples/auto-cartogram/balance_transport.py": "b468356b2d7ceaf39a900f5120ca15aca41b72bfe5b9ab32e69c0770c79e3d43",
+    "examples/auto-cartogram/bounded_deformation.py": "d9c51d8929fbf830900b64606d09e935c3e7c89db08b415b0d415889ea19dd38",
+    "examples/auto-cartogram/build_shape_gallery.py": "939895d32f64506b061570fb977077a984a1c61bc7add0d4e0469bc88e0b9e19",
+    "examples/auto-cartogram/check_native_sources.py": "e0e1de3b5bb1ed5374e7c1ec4ec8d634f8b7e1b58c8653a09150035e43b7dfe0",
+    "examples/auto-cartogram/check_shape_translation.py": "fe25790b92d7a9a4daf646eab1241ffe36a84c7d7a1bffecabc67cb8d9c7f20d",
+    "examples/auto-cartogram/check_support.py": "724b1174de0cd540f0095860a3cf515738adac134eee4a920d9a51392320aa42",
+    "examples/auto-cartogram/check_transport.py": "b1c6909f9d6316e223270ee9aaae5c207276ab990cb2fcc4448c1237b281ba17",
+    "examples/auto-cartogram/check_transport_shift.py": "f688805a054fa8cd321332fb37e9340086e70b45d4fb7ece04d396b2a85d5afd",
+    "examples/auto-cartogram/clean_templates.py": "4380c6e53273d9b71047cdedce04f15a8691039da2d7e8b6bb856eb92aa4fba3",
+    "examples/auto-cartogram/coast_anchors.py": "ec7dc2230a88cef5a41cc7cf733ef192b5c3478d2f36dcbea0bc712917d148b7",
+    "examples/auto-cartogram/compact_regions.py": "34e8de25f7fef810a72ac15958057b2d3c5c7a90fb2a93c50ca41f0ab7fb30de",
+    "examples/auto-cartogram/compare_country_contacts.py": "0b1a39dbea0681bc4a0db913a71ee37d97ce748f925f42544f43812fe81fa832",
+    "examples/auto-cartogram/concave_stress.py": "0cdfda26f22cf6b273ce10262f5984141f85fe688508df1298aaa2c94c898d2a",
+    "examples/auto-cartogram/cycle_deformation.py": "727887bbf08fc5eb505d85b370af04d122d99b7b8ba6f439999739643047d24a",
+    "examples/auto-cartogram/dissolve_map_units.py": "bb5b14ad217a4420e8d12691efe0947a8eeaf76706e714b1b032e792f00db4f3",
+    "examples/auto-cartogram/fit_counts.py": "adefb7c08f3977e37963a28567f9c825b5f3c1cf77591358031078d5795baadb",
+    "examples/auto-cartogram/geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+    "examples/auto-cartogram/geographic_embedding.py": "2ea141cb754e7aa344c0d97675e00ceb958992fb80d9810d3b6542efa146df4d",
+    "examples/auto-cartogram/geographic_order.py": "d7e38c2e568b296146964d3de213ff2cb024a0bd978fb23dfdaaf63fc96a5ca3",
+    "examples/auto-cartogram/group_transport.jl": "a25b508dfe5154e60e9fbeb92c8980dd54e2c0d1947b6d918dabf4e0750d9b57",
+    "examples/auto-cartogram/place_islands.py": "37b610094e899fa9b59b897c9d8d00a0f37b3d49b57254feebda660d3e146ead",
+    "examples/auto-cartogram/place_shapes.py": "0cc72af26844876ddf950c431fe45a0198192facd3ca0c3aba747e3bc445a14c",
+    "examples/auto-cartogram/planar_embedding.py": "7b514ad4de430e20b41094b8e897ec3cae51015616717115f86682412672b546",
+    "examples/auto-cartogram/prepare_dissolved.jl": "6a02f1324514ad9b55aade5f90634025aaedcec0d30e51e4dfa7ab96a8e64c1e",
+    "examples/auto-cartogram/prepare_flow.py": "74fae58dc179b144b0373c796c66d6614e012b33eb345706a5daf0913a7914bf",
+    "examples/auto-cartogram/prepare_layout.jl": "365d8688c0cf8709c8baf0d822ea26908bf143218638909e54d44d8d417cc4c6",
+    "examples/auto-cartogram/prepare_points.jl": "efdbcf4326cc5f0a05d90cfcb1211b9a09b72febcfb6d9f3a441ca9e95d0e939",
+    "examples/auto-cartogram/prepare_transport_sources.py": "09f91e90204a7c0a5c5a31fc5186c8c2099a04d3d17e3375dd5e0f8e14511ffa",
+    "examples/auto-cartogram/prepare_world.jl": "3acacdfb04e4ca4cedd82525ff7cb5484dc93073b34d3f99ee54048425c29414",
+    "examples/auto-cartogram/publish_shape_review.py": "5f546c5a2359d847c7b387d197cb43d1732e46f7e321d751e7bb03031fccb995",
+    "examples/auto-cartogram/raster_stress.py": "9da4a14905f50dfc2d9bc2e6c15b395494f454c5e948a87952ca0f56992af29e",
+    "examples/auto-cartogram/recheck_shape_bundle.py": "9a3e2b6961ae1d2e8eef3963f9b53e2370c51b63719c28bb43a456cb2bf19ea9",
+    "examples/auto-cartogram/regrow_regions.py": "50264a55503c1ccfcfc0da31d9cd3210bdb0e861597129af3278bc729b8d90a3",
+    "examples/auto-cartogram/relax_layout.py": "efa0a23df2a3a97c387483f74121a0ba9d5bdef1cf1f6609ec0d10425b2097b7",
+    "examples/auto-cartogram/relax_shapes.py": "296b689c500b19aa9f71ed0d867b3f66fca6cced5e6c49cb30e6f02ac2672f6a",
+    "examples/auto-cartogram/repair_contacts.py": "6ec1c1456a377effe0841724fe41ab88352039580c70c42e0fa557fa3edf9715",
+    "examples/auto-cartogram/review_balance.py": "0d80da6fd1527383303774f54383ef5409ff2a7d940faa1ccb8c32306cb73e3f",
+    "examples/auto-cartogram/review_flow.py": "946adffe3c0e2516c84ef25add60c1bbec405faeb88caa9a38e48be0fe1dbef2",
+    "examples/auto-cartogram/review_gaps.py": "a1e1fbe7c9b3e9bc9a9ec914f1d0434aa90183740f27f013fb732756d378efb6",
+    "examples/auto-cartogram/review_layout.py": "88c281bf37a1bd6f512d412d4babe3ecb797ba62b6479cfbc8453f78aae565fd",
+    "examples/auto-cartogram/review_regions.py": "898371fc21b08d4b1dd08c906709a54708934e11cbf4d95e133f327f2144d2db",
+    "examples/auto-cartogram/review_template.py": "6179d872f2178540bde21620b96cc451e82af6fe01accd9704d9ec1c31899ad4",
+    "examples/auto-cartogram/review_transport.py": "4e75e02c1e2f203049eba82603194ed531fe6a523be781f3cb175802600146a4",
+    "examples/auto-cartogram/review_unmatched.py": "d17fa46f62cb8aba02913a73ce5828e4abfda47c76a1ee36ad3cc9132e784f5a",
+    "examples/auto-cartogram/save_review.py": "58fe535e363c52103a76fd8990079e6bb7002a61b370728468b2c70f67c1b603",
+    "examples/auto-cartogram/shape_placement.py": "20ed59825d0b0fde5893db3a267218e5c46846a9c0edd766f31b7ec41ef8dfd0",
+    "examples/auto-cartogram/shape_stress.py": "73c56542a1a81a5219b924998d3ea6a57a11f641c66beb349f0b318eb1c50155",
+    "examples/auto-cartogram/smooth_raster_stress.py": "a02adb8aa54a45f0222659b60cc6f9595850aba08d1a1e9780fd0831a3dc9659",
+    "examples/auto-cartogram/translate_transport.py": "42f1184cf7605b4b3d5817c0a2117e151277dc65b5aab6c03b2eb564f1fed6a6",
+    "examples/auto-cartogram/validate_outlines.py": "77370f1e53b86aa62516fec5d7a57bd02680f6bc11833c7245a03a98ffb84ac8",
+    "test/MosaicConnectivity.java": "03eb5ef2fa1a4b1acaa774735c3c38831a211088d8e0f2f47824abb04ddc3518",
+    "test/MosaicInitialSea.java": "5fb829a60994cab8b1607a45c8cd4f23e5b6e4fe9ae3a60b09c9cfc269534565",
+    "test/MosaicMinCostFlow.java": "be0937a6aeaad7a9f7ac55d0f39a21e0bfd231cf32727ff968e49415a9f20f82",
+    "test/MosaicPolishTransaction.java": "e10cc529b219a2eba9d19af06e761a9e85d1e94cf137473318ffa4dc27c544fb",
+    "test/auto_cartogram.jl": "6bf31930b3c5672815dc7ba3e6c4a508c24505538f78c07372d069051df39c0e",
+    "test/auto_geometry.py": "7413604adeee183fb199484a4340111ab4383ed4537980284605c0e2fe39f240",
+    "test/auto_layout.jl": "6f8ee829dd5045ed33f427be879918379165bffeebc9a4812ff319fd4dc921cc",
+    "test/auto_layout.py": "d56dd170068eef06abe29cfbdc7a04ec052cd5779bfa6f01a25e9dfc731b2e80",
+    "test/auto_shapes.py": "63664fa48911e37b6e6e339ea60b2ddf6aa6833b0c46da9cf68774ff67c98898",
+    "test/auto_transport.jl": "09fbf369d9a5cd5dc1a0864cd4566941a31c4dac0a678cd4e27733b7579a2b6d",
+    "test/auto_transport.py": "6726d0a6d1e5a303f23eea6a242bf1971abcff0117f70bf5c97dc3db460971f8",
+    "test/compact.jl": "470cde4f89e15b7994f9854bb4822e7270a71abf236772e96ebd93b400cde9df",
+    "test/continuity.jl": "fc4baa6f82cae1f63607df92e30485e73a6282df55c1e06099fa7fc40677fd3e",
+    "test/mobile_audit.jl": "b0c2fafd7432d4feea44ea41e36f53e6d5037cbf4005936ed8978ff388a0e065",
+    "test/mobile_export.jl": "481484e04ff05075fc5956714b74496312a82214c0b7420d30e8fee7c61c0b8f",
+    "test/mobile_moments.jl": "f4626ad00c7a6026d156a19f6118ae2ecc792949715a452f1eccf8af4194ecbc",
+    "test/mobile_publish.py": "74e8874052db16391b96745d325bec4204efd58cd104500da40637cbafee46ea",
+    "test/planet.jl": "bbae57ca6975dda5dd1799a5513647fba5221f977e8e27c116101f451cdccdaa",
+    "test/runtests.jl": "c083f3d8a0fe3b63f5b839c429a702576e296c422e4eea52fd20a7cf17ef02cc",
+    "test/shared_borders.py": "73622c926b98ba253e1ba1fdd6d78068e337d0929231009d9786d643104eb64c",
+    "test/uk_h3.jl": "80fa17d3851d351f32398ce6b7f477d4e623fcfc7c1c4961cb7b65e49d2eb316"
+  },
+  "tests": [
+    {
+      "command": [
+        "python3",
+        "test/auto_layout.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 14.226518123876303,
+      "log": "test-1.log",
+      "log_sha256": "038f204b8e9dc011d296b2295c6fe612feb1165a2af077b7c4d170c7862710dc"
+    },
+    {
+      "command": [
+        "python3",
+        "test/auto_transport.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.15347396908327937,
+      "log": "test-2.log",
+      "log_sha256": "91bf10ce34b2b5f6f6efdd64fd681002bb5816631b2608575fab164709c80992"
+    },
+    {
+      "command": [
+        "output/auto-cartogram/geometry-env/bin/python",
+        "test/auto_geometry.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.16634470038116,
+      "log": "test-3.log",
+      "log_sha256": "ea79888baba6c2f4272f122e95e46187078b68fb7372e4c2e4778911e1342893"
+    },
+    {
+      "command": [
+        "output/auto-cartogram/geometry-env/bin/python",
+        "test/auto_shapes.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.620332302991301,
+      "log": "test-4.log",
+      "log_sha256": "188fb0a67286114187f598ec8ce4d50f0f2e50941ccda278198a23d32b562e0b"
+    },
+    {
+      "command": [
+        "julia",
+        "--project=examples/auto-cartogram",
+        "test/auto_layout.jl"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 43.785756703000516,
+      "log": "test-5.log",
+      "log_sha256": "041e474d49df09bed4b61fac292d87a1b1d8b7d57fac9c5913f8c8bd95bc4f56"
+    },
+    {
+      "command": [
+        "julia",
+        "--project=examples/auto-cartogram",
+        "test/auto_transport.jl"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 79.40148288710043,
+      "log": "test-6.log",
+      "log_sha256": "67c72444cf52375b6fb3f5879a9e85c389edd179940bcdebc2b157e7afa787e0"
+    },
+    {
+      "command": [
+        "julia",
+        "--project=examples/auto-cartogram",
+        "test/auto_cartogram.jl"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 73.86488637700677,
+      "log": "test-7.log",
+      "log_sha256": "1030db39896afb794fc576eac0c2cee9dbb842096c175f915fb4f9e06cf65612"
+    },
+    {
+      "command": [
+        "julia",
+        "--project=examples/auto-cartogram",
+        "-e",
+        "push!(LOAD_PATH,pwd()); include(\"test/runtests.jl\")"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 48.39326759520918,
+      "log": "test-8.log",
+      "log_sha256": "59166f4db0ca883a94373660557b09c2dbf27c1dd466263dc4d95eff1e340e68"
+    }
+  ],
+  "finished_at_utc": "2026-10-14T15:36:20.165064+00:00",
+  "all_passed": true,
+  "production_unchanged_since_cbb6c8b": true
+}
