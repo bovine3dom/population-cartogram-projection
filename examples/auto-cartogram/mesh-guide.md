@@ -80,8 +80,19 @@ error. The optimizer reported a relative-change stopping condition, not a useful
 cartogram. Their world images remain close to the geographic input. They are
 rejected. Midpoint refinement improves mesh support but still leaves 89–96%
 weighted area error with the original solver. A determinant-bounded line search
-now tests whether invalid trial steps caused premature stopping. It still
-requires independent tests and visual review.
+reduces weighted area error to about 1% in the short 32- and 64-grid tests.
+However, those tests reach every iteration limit. Longer solves pass the gradient
+stopping test, but their maximum component errors remain above 100%. Inspected
+their world images and all four saved 32-grid stages. Russia, Central America,
+and Southeast Asia retain thin features. Canada is too narrow. See the
+[saved visual controls](results/compact-landmass/mesh-controls/index.html).
+These guides are not approved.
+
+The default distortion weights are water 0.1 and density mix 0.8. The latter
+sets each triangle weight proportional to `area * (0.2 + 0.8 * target_scale)`.
+`--water-weight` and `--density-weight` permit controlled changes. Lower water
+weight permits more deformation of the sea. Zero density mix weights land
+triangles by source area alone. These settings are experiments, not new defaults.
 
 ## Run
 
@@ -96,7 +107,7 @@ p=output/auto-cartogram
 ```
 
 Add `--stage-geometry` to save checked geometry after each distortion-weight
-stage. Compare these images before selecting a guide. Lower area error can come
+stage, with its numeric mesh arrays. Compare these images before selecting a guide. Lower area error can come
 with worse shapes; the last stage is not automatically the best guide.
 
 The input above excludes isolated components from the guide. Their final budgets
@@ -104,6 +115,21 @@ are not removed. Pass the output geometry and population sites to the separate
 partition stages described in [the shared-footprint notes](compact-pipeline.md).
 Inspect the continuous guide before assigning tiles, then inspect the world and
 regional tile images. Do not select a map from its area error alone.
+
+To carry native population sites through a saved final mesh, run
+`warp_population_sites.py SITES_CSV GUIDE_DIRECTORY NEW_OUTPUT_DIRECTORY`.
+The default source scale converts radius-1 Equal Earth sites to the prepared
+radius-1000 coordinates. The script then applies the saved mesh normalization
+and piecewise affine transformation. It rejects sites outside the frame and
+changed triangulations. Pass its `sites.csv` to `partition_land.py` with
+`--sites-in-flow` and the corresponding `--flow-geometry`. This mode applies only
+the raster scale and stretch; it does not fit sites again. The transformed mean
+is not the mean of all transformed population cells.
+
+The first two transformed-site world tests have exact counts and connected
+components, but their visual checks fail. Korea remains misplaced, Taiwan moves
+to a poor position, and thin coasts remain. A correct coordinate transformation
+does not correct a poor guide.
 
 ## Another recent direction
 

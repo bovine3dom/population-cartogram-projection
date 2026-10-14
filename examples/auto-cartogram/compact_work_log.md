@@ -679,6 +679,24 @@ The separated layout has exact budgets but is not an acceptable replacement.
   Earlier stages reduce some distortions but have larger area errors. They do
   not establish an acceptable mainland footprint.
 
+## 20:04–20:09 UTC — reject transformed-site layouts; test mesh weights
+
+- Inspected both transformed-site world layouts. Both have exact counts and
+  connected components, but Korea remains misplaced. Taiwan moves to a poor
+  position. Guide cost 8 has 61 missing and 78 unsupported component contacts,
+  four region holes, and 319 direction reversals. Reject it as a replacement.
+- Saved the continuous mesh controls and their stage images, numerical arrays,
+  compressed geometry, solver records, and two transformed-site tile layouts.
+  Inspected every saved continuous image. Lower area error still permits thin
+  Russia and Central America. Earlier stages do not remove those defects.
+- Added explicit water and density weights to the mesh objective. Defaults are
+  unchanged. Started three 32-grid controls: water weight 0.001, source-area-only
+  land weights, and their combination. These test whether the sea and dense
+  land regions constrain low-density countries too much. No outcome is assumed.
+- New stage records also save numerical mesh arrays, so intermediate sites can
+  follow the same transformation as intermediate geometry. Seven mesh tests
+  pass. Started a new ten-command validation checkpoint.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
