@@ -32,9 +32,14 @@ The user found an island-placement defect: South Korea separates Kyushu from
 other main Japanese islands. A separate control now places nearby islands as a
 group, with source-direction constraints and a displacement limit. It adds no
 connector cells and leaves mainland cells unchanged. Visual checks show improved
-Japan placement at 10,000, 55,000, and 110,000 tiles. Wider grouping also moves
-other islands; this is not yet an accepted world layout. See the Japan details
-in the compactness comparison below. The two user-preferred controls remain
+Japan placement at 10,000, 55,000, 110,000, and 500,000 tiles. A further control
+allows nearby fixed coasts to anchor larger-population islands and merges nearby
+island groups through small intervening islands. Sulawesi is nearer Borneo, and
+Australia is below New Guinea. The Philippines stays together but is too far
+east. These changes do not fix Korea's stretched mainland shape.
+See the [500,000-tile Japan detail](examples/auto-cartogram/results/compact-landmass/fixed-coasts-500000/regions/japan-korea.png)
+and [high-resolution world image](examples/auto-cartogram/results/compact-landmass/fixed-coasts-500000/review-7200.png).
+This is not yet an accepted world layout. The two user-preferred controls remain
 unchanged.
 
 Open the [compactness comparison](examples/auto-cartogram/results/compact-landmass/index.html)
