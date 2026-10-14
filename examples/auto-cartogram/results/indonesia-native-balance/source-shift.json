@@ -1,0 +1,443 @@
+{
+  "ordered_support_unchanged": true,
+  "mapping_pairs": 1432890,
+  "absolute_pair_mass_change": 5105705.616083513,
+  "unit": "Target coordinate units; one square-tile side for these layouts",
+  "method": "Normalize each source's retained weights before computing its expected target position; compare raw and corrected positions",
+  "limit": "This measures a change in expectations, not a bound on each person's displacement. Opposite assignment changes can cancel. It does not assess absolute geographic accuracy.",
+  "summary": {
+    "source_cells": 832166,
+    "population": 270120945.0,
+    "maximum_shift": 5.482255274169009,
+    "population_weighted_mean_shift": 0.01019147123230815,
+    "population_weighted_rms_shift": 0.028098543022673894,
+    "population_share_shift_above_one": 5.521600703714405e-05
+  },
+  "groups": {
+    "IDN:022bfe9dad3f0890": {
+      "source_cells": 2101,
+      "population": 410467.0,
+      "maximum_shift": 0.0007156593446591055,
+      "population_weighted_mean_shift": 0.00016290497310893744,
+      "population_weighted_rms_shift": 0.0002521125126606965,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:0b4d32f4b9727f82": {
+      "source_cells": 443,
+      "population": 63907.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:1675c019d412853f": {
+      "source_cells": 313,
+      "population": 110525.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:17180a9338137fd2": {
+      "source_cells": 209,
+      "population": 84336.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:1882fc741812bb99": {
+      "source_cells": 8681,
+      "population": 1156220.0,
+      "maximum_shift": 0.0045121312811931494,
+      "population_weighted_mean_shift": 0.0004475257607060882,
+      "population_weighted_rms_shift": 0.0008367468381843821,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:2342a73d6e3d4204": {
+      "source_cells": 12823,
+      "population": 1947882.0,
+      "maximum_shift": 0.10358348946590468,
+      "population_weighted_mean_shift": 0.0060156646879498486,
+      "population_weighted_rms_shift": 0.013065352056075112,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:241c829edbe9ddf3": {
+      "source_cells": 625,
+      "population": 94405.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:2f668109d000a646": {
+      "source_cells": 1836,
+      "population": 200721.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:323211ce84279d17": {
+      "source_cells": 8015,
+      "population": 844135.0,
+      "maximum_shift": 0.12295178420035204,
+      "population_weighted_mean_shift": 0.00273060927780125,
+      "population_weighted_rms_shift": 0.010064224226991438,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:3302be3ad51214b8": {
+      "source_cells": 1359,
+      "population": 94560.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:3f7b064a42d6c495": {
+      "source_cells": 1917,
+      "population": 161827.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:41ba51e85ddbb728": {
+      "source_cells": 12107,
+      "population": 1882977.0,
+      "maximum_shift": 0.06928012845396987,
+      "population_weighted_mean_shift": 0.0030540229100340893,
+      "population_weighted_rms_shift": 0.0060503047456226975,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:43eb860ae00ba2ae": {
+      "source_cells": 7184,
+      "population": 3172301.0,
+      "maximum_shift": 0.022020780624188774,
+      "population_weighted_mean_shift": 0.0015049381796173324,
+      "population_weighted_rms_shift": 0.0026672026286454994,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:461e2601656ce574": {
+      "source_cells": 4313,
+      "population": 750393.0,
+      "maximum_shift": 0.0008755028786602196,
+      "population_weighted_mean_shift": 0.0001276514198030416,
+      "population_weighted_rms_shift": 0.00022043393773530723,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:49b2a8a33d2211b5": {
+      "source_cells": 1233,
+      "population": 107878.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:4d155ba9803cf6be": {
+      "source_cells": 6435,
+      "population": 3608011.0,
+      "maximum_shift": 0.12393538934838837,
+      "population_weighted_mean_shift": 0.007597602523460404,
+      "population_weighted_rms_shift": 0.012366281672155404,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:51a10640dee7162b": {
+      "source_cells": 168138,
+      "population": 16494686.0,
+      "maximum_shift": 5.482255274169009,
+      "population_weighted_mean_shift": 0.013849670480954134,
+      "population_weighted_rms_shift": 0.04004110758284594,
+      "population_share_shift_above_one": 0.0001261618438811142
+    },
+    "IDN:563e4c39826b9ed6": {
+      "source_cells": 241,
+      "population": 98663.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:58f5fb574eea3969": {
+      "source_cells": 2497,
+      "population": 201903.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:602ec010d55b1aa4": {
+      "source_cells": 2490,
+      "population": 194423.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:60f0f1d972640ca3": {
+      "source_cells": 1057,
+      "population": 166118.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:676455c554852bce": {
+      "source_cells": 1212,
+      "population": 145519.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:69994775e238d8aa": {
+      "source_cells": 529,
+      "population": 85177.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:6f7a11314a3b7af3": {
+      "source_cells": 5442,
+      "population": 2893866.0,
+      "maximum_shift": 0.00255346070627789,
+      "population_weighted_mean_shift": 0.0003061631959587058,
+      "population_weighted_rms_shift": 0.0005592613815425251,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:735932740a80f252": {
+      "source_cells": 596,
+      "population": 70593.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:746e7e525dfc90c5": {
+      "source_cells": 2666,
+      "population": 395837.0,
+      "maximum_shift": 0.03643222987828665,
+      "population_weighted_mean_shift": 0.005902442584209677,
+      "population_weighted_rms_shift": 0.011942398605856285,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:7930308e19fa0905": {
+      "source_cells": 131,
+      "population": 98571.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:7a59bb18e03f91d9": {
+      "source_cells": 5049,
+      "population": 557544.0,
+      "maximum_shift": 0.0092159248496273,
+      "population_weighted_mean_shift": 0.0002926239587676235,
+      "population_weighted_rms_shift": 0.001364172905376652,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:7c3797a36dd1a69b": {
+      "source_cells": 101967,
+      "population": 18583934.0,
+      "maximum_shift": 3.7294753156861358,
+      "population_weighted_mean_shift": 0.01813693137848259,
+      "population_weighted_rms_shift": 0.05078512752027834,
+      "population_share_shift_above_one": 0.0004038972587827744
+    },
+    "IDN:7cb96e5a2c123f8f": {
+      "source_cells": 546,
+      "population": 1450917.0,
+      "maximum_shift": 0.0013752635774528935,
+      "population_weighted_mean_shift": 0.0003312763927802283,
+      "population_weighted_rms_shift": 0.00046718561544354954,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:7d68fcb39519952c": {
+      "source_cells": 6698,
+      "population": 643876.0,
+      "maximum_shift": 0.13379697056938264,
+      "population_weighted_mean_shift": 0.01128011504934486,
+      "population_weighted_rms_shift": 0.028447001734537816,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:829c07ff03d97c10": {
+      "source_cells": 251235,
+      "population": 53418286.0,
+      "maximum_shift": 0.365554341826899,
+      "population_weighted_mean_shift": 0.004073195016562009,
+      "population_weighted_rms_shift": 0.010729643777857184,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:88a8321cb31b5225": {
+      "source_cells": 979,
+      "population": 122540.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:8b7b64d2940fb8dc": {
+      "source_cells": 10670,
+      "population": 1263584.0,
+      "maximum_shift": 0.033853155873404726,
+      "population_weighted_mean_shift": 0.001790698279652303,
+      "population_weighted_rms_shift": 0.0034064630733428576,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:902a51c01c39bc1e": {
+      "source_cells": 886,
+      "population": 134997.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:9053dfc21a705bd2": {
+      "source_cells": 580,
+      "population": 80171.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:91fa24efd9a13b2f": {
+      "source_cells": 27421,
+      "population": 7291740.0,
+      "maximum_shift": 3.296563464578943,
+      "population_weighted_mean_shift": 0.0059067105670683896,
+      "population_weighted_rms_shift": 0.025075750788700533,
+      "population_share_shift_above_one": 5.458230820078609e-05
+    },
+    "IDN:9736be9cd3e2b4ff": {
+      "source_cells": 624,
+      "population": 109164.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:a2e8d108d88be94f": {
+      "source_cells": 981,
+      "population": 551724.0,
+      "maximum_shift": 0.0006122054971099221,
+      "population_weighted_mean_shift": 0.0002111518156395668,
+      "population_weighted_rms_shift": 0.00024699352626561874,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:a3f93df7f6853469": {
+      "source_cells": 1107,
+      "population": 69032.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:a6a2a921eb1e80b9": {
+      "source_cells": 1082,
+      "population": 185912.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:a9a80def964512c2": {
+      "source_cells": 529,
+      "population": 249619.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:b212698e7fc50989": {
+      "source_cells": 2644,
+      "population": 315364.0,
+      "maximum_shift": 0.1342165002379545,
+      "population_weighted_mean_shift": 0.0034015732161566596,
+      "population_weighted_rms_shift": 0.015520684946828437,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:b9a02107a9d8774f": {
+      "source_cells": 4090,
+      "population": 304108.0,
+      "maximum_shift": 0.19771303721085332,
+      "population_weighted_mean_shift": 0.007694399221959179,
+      "population_weighted_rms_shift": 0.031513881555537825,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:bbe17f60e9fb07dc": {
+      "source_cells": 730,
+      "population": 119953.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:cae0ccf851b4aa17": {
+      "source_cells": 813,
+      "population": 112271.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:e03a8d3be0282f36": {
+      "source_cells": 688,
+      "population": 159240.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:e0b729a0e374c21c": {
+      "source_cells": 708,
+      "population": 108894.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:fd97b33af0678261": {
+      "source_cells": 965,
+      "population": 88764.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:fecb2bac3d81ef76": {
+      "source_cells": 156029,
+      "population": 148602005.0,
+      "maximum_shift": 1.7212885440781778,
+      "population_weighted_mean_shift": 0.012497907273371517,
+      "population_weighted_rms_shift": 0.029132924733350024,
+      "population_share_shift_above_one": 3.3175864619054094e-05
+    },
+    "IDN:ffd26863a64545a3": {
+      "source_cells": 552,
+      "population": 61405.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    }
+  },
+  "inputs": {
+    "output/auto-cartogram/indonesia-transport-r8-v3-grouped": {
+      "manifest.json": "c10c346f641225c0aedcaad3d2e45a0f4b8f688c7c8a15f4edffb68d5df2a3fb",
+      "sources.csv": "b447d8c201b56711a71e2c31d88b40e81cdf3e91768ab7eecb336ce1c524af2a",
+      "targets.csv": "38b91aa0d1010cb1acce15106da8f8aeb2bed7363821e8fbfc9188d108ed0ca9",
+      "mapping.csv": "cfa358f92d5358d56f8bb6f17523b3ed7d7733c415f28d477e18d79925f4fff1",
+      "target-quality.csv": "ad249b42915ac8d49121a36e332c48600fd47c455ebc956658e8aaa2eb503314"
+    },
+    "output/auto-cartogram/indonesia-transport-r8-balanced-tol1e-4-grouped": {
+      "manifest.json": "590dc6f919e061532ec612c04ffacc96b515abf8b1460be836666bcf76a7b008",
+      "sources.csv": "b447d8c201b56711a71e2c31d88b40e81cdf3e91768ab7eecb336ce1c524af2a",
+      "targets.csv": "38b91aa0d1010cb1acce15106da8f8aeb2bed7363821e8fbfc9188d108ed0ca9",
+      "mapping.csv": "3142eeaf3b1afe75450195d9baead941dda3690409b85f24fa0ecff9952de775",
+      "target-quality.csv": "376404309e38c6799eaef856bc0e18a0d5cb0672b59cdd7b65b12b4dc7fa8f18"
+    }
+  },
+  "script_sha256": "7492f504ff71fee02f94b69937a00b952d6b4fd988a1618809d639892f42e3a9"
+}

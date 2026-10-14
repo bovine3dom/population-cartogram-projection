@@ -31,7 +31,7 @@ The pooled H3-5 result sends about 31% of input population to a different
 declared group. This is a measurement for this layout and input, not a general
 estimate for Indonesia or the OWID map. The independent CSV checker recomputes
 all totals and checks source IDs, target ownership, weights, and duplicate pairs.
-All four exports pass those checks.
+All five raw exports pass those checks.
 
 ## Native H3-8 grouped transport
 
@@ -107,7 +107,16 @@ That run finishes after 26,348 iterations and 513 seconds of scaling:
 The sum of absolute changes to pair population is 5,105,706. This includes
 restored mass and changed distribution within the existing support. It does
 not add pairs or cross declared group boundaries. Groups can still contain
-multiple islands. Spatial quality needs a separate review.
+multiple islands.
+
+A separate [position-change check](results/indonesia-native-balance/source-shift.json)
+compares each source's expected target position. It first normalizes that
+source's retained weights, so lost raw mass does not bias the comparison.
+The population-weighted mean change is 0.0102 tile sides; the largest change
+is 5.482 tile sides. Sources with a change above one tile side contain 0.00552%
+of the matched population. These are changes in expected position, not bounds
+on each person's movement. Opposite changes can cancel. This check does not
+prove absolute geographic accuracy.
 
 ### Coarse results
 
@@ -143,9 +152,9 @@ This lower bound is half the sum of absolute group capacity differences. We
 must choose between exact uniform tile capacity, exact integer budgets, and
 zero cross-group movement. They cannot all hold for these budgets.
 
-The sparse solver export drops some source contribution. These tests do not
-renormalize it. Zero cross-group mass therefore does not imply exact mass
-retention or equal target values. Target error is measured against each group's
+The sparse solver export drops some source contribution. The raw results keep
+that loss; only the separate correction changes their weights. Zero cross-group
+mass therefore does not imply exact mass retention or equal target values. Target error is measured against each group's
 capacity in grouped mode, and the country-wide capacity in pooled mode.
 
 Before production use:

@@ -488,3 +488,19 @@ under ignored `output/auto-cartogram/`.
   preparation: zero cross-group mass, 99.720% source retention, and 12.070%
   maximum relative target error. Independent CSV checks pass. This raw result
   needs correction; it is not an accepted balanced transport result.
+
+## 01:52–01:58 UTC — spatial effect of native weight correction
+
+- Started an all-assertions reference run for land-only world fitting, with a
+  140-minute limit. Also started H3-5 transport at the 10,000-tile world budget.
+  H3-3 support at that budget cannot reach 0.01% target error: disconnected
+  support blocks require at least 2.131% error. No correction was exported.
+- Added an independent check of the native correction's effect on each source's
+  expected target position. It verifies hashes and all ordered pairs, then
+  normalizes each source's retained weights before comparing positions.
+- The population-weighted mean change is 0.0102 tile sides, with a maximum of
+  5.482. Sources whose change exceeds one tile side contain 0.00552% of the
+  matched population. This is a change in expectations, not a bound on each
+  person's movement; opposite changes can cancel.
+- All four standard-library transport tests pass. A synthetic case checks the
+  normalization explicitly. Tampered files and reordered pairs are rejected.
