@@ -1,0 +1,137 @@
+[
+  {
+    "path": "index.html",
+    "status": 200,
+    "bytes": 7110
+  },
+  {
+    "path": "../../compact_work_log.md",
+    "status": 200,
+    "bytes": 14443
+  },
+  {
+    "path": "country-contact-comparison-aliased.json",
+    "status": 200,
+    "bytes": 45979
+  },
+  {
+    "path": "geographic-comparison.json",
+    "status": 200,
+    "bytes": 337357
+  },
+  {
+    "path": "joint-geographic-guides/bundle.json",
+    "status": 200,
+    "bytes": 1965
+  },
+  {
+    "path": "joint-geographic-guides/gaps.png",
+    "status": 200,
+    "bytes": 113937
+  },
+  {
+    "path": "joint-geographic-guides/regions/europe.png",
+    "status": 200,
+    "bytes": 247245
+  },
+  {
+    "path": "joint-geographic-guides/review.png",
+    "status": 200,
+    "bytes": 260368
+  },
+  {
+    "path": "joint-geographic-start/bundle.json",
+    "status": 200,
+    "bytes": 1965
+  },
+  {
+    "path": "joint-geographic-start/gaps.png",
+    "status": 200,
+    "bytes": 124705
+  },
+  {
+    "path": "joint-geographic-start/review.png",
+    "status": 200,
+    "bytes": 245845
+  },
+  {
+    "path": "joint-interior4-guide16-sea8/review.png",
+    "status": 200,
+    "bytes": 255010
+  },
+  {
+    "path": "joint-sea0/review.png",
+    "status": 200,
+    "bytes": 228179
+  },
+  {
+    "path": "joint-sea8/gaps.png",
+    "status": 200,
+    "bytes": 75779
+  },
+  {
+    "path": "joint-sea8/metrics.json",
+    "status": 200,
+    "bytes": 1301
+  },
+  {
+    "path": "joint-sea8/regions/europe.png",
+    "status": 200,
+    "bytes": 217275
+  },
+  {
+    "path": "joint-sea8/regions/indonesia.png",
+    "status": 200,
+    "bytes": 86114
+  },
+  {
+    "path": "joint-sea8/review.png",
+    "status": 200,
+    "bytes": 233365
+  },
+  {
+    "path": "owid/gaps.json",
+    "status": 200,
+    "bytes": 1641
+  },
+  {
+    "path": "owid/gaps.png",
+    "status": 200,
+    "bytes": 90552
+  },
+  {
+    "path": "owid/layout.png",
+    "status": 200,
+    "bytes": 152568
+  },
+  {
+    "path": "shape-islands/gaps.json",
+    "status": 200,
+    "bytes": 1634
+  },
+  {
+    "path": "shape-islands/gaps.png",
+    "status": 200,
+    "bytes": 168339
+  },
+  {
+    "path": "shape-islands/layout.png",
+    "status": 200,
+    "bytes": 196581
+  },
+  {
+    "path": "tutte-partial-200/gaps.json",
+    "status": 200,
+    "bytes": 1643
+  },
+  {
+    "path": "tutte-partial-200/gaps.png",
+    "status": 200,
+    "bytes": 109315
+  },
+  {
+    "path": "tutte-partial-200/layout.png",
+    "status": 200,
+    "bytes": 198237
+  }
+]
