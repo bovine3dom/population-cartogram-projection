@@ -1,0 +1,15 @@
+{
+  "component": "GBR:241258080ec293c4",
+  "country": "GBR",
+  "before_tiles": 4064,
+  "after_tiles": 4064,
+  "before_outline_iou": 0.9297625391735865,
+  "after_outline_iou": 0.9457400606445603,
+  "inputs": {
+    "output/auto-cartogram/world-500000-dissolved-input/groups.csv": "6a9de0a7294d00416ee6288714e97bd3216a09c7870d40e64b5108b00f735d15",
+    "output/auto-cartogram/world-500000-dissolved-geographic/cells.csv": "414938f0c62ba114ac03dcebd63820d4b6a18549fa84eb7f0213a9b916c34bb9",
+    "output/auto-cartogram/world-500000-clean-templates/cells.csv": "e62daf07ab66e4537da92f4fd4853a6c9c10850212098b319be9b0ff38183afd",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "script_sha256": "6179d872f2178540bde21620b96cc451e82af6fe01accd9704d9ec1c31899ad4"
+}

@@ -26,6 +26,8 @@ def run(inputs,templates,layout,output,title='World: automatic shape-first popul
         save_review.run(inputs,layout,bundle)
         correction=layout/'source-hash-correction.json'
         if correction.exists():shutil.copyfile(correction,bundle/correction.name)
+        cleanup=templates/'cleanup.json'
+        if cleanup.exists():shutil.copyfile(cleanup,bundle/'template-cleanup.json')
         if metrics['tiles']>=110000:
             subprocess.run(['rsvg-convert',str(layout/'review.svg'),'-w','3600','-o',str(bundle/'review-large.png')],check=True)
         check_shape_translation.run(inputs,templates,layout,bundle/'translation-check')

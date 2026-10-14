@@ -1,0 +1,18 @@
+{
+  "required_contacts": 341,
+  "same_country_contacts": 0,
+  "contacts_involving_secondary_components": 20,
+  "opening_loss_share_for_regions_at_least_25_tiles": 0.0864914077614658,
+  "one_cell_detail_share_for_regions_at_least_25_tiles": 0.02879253442585638,
+  "minimum_region_tiles_for_summary": 25,
+  "limit": "Opening loss includes natural coasts and narrow countries. It is a diagnostic, not a proof of artificial connectors. Secondary means not the largest population group of its country; it does not mean overseas.",
+  "inputs": {
+    "output/auto-cartogram/world-10000-dissolved-input/groups.csv": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+    "output/auto-cartogram/world-10000-dissolved-input/geographic-contacts.csv": "c2b31c4287fe7fabaf7404429dd1c543c22c34dd06f4f280ac93cbcb56f8b18f",
+    "output/auto-cartogram/world-10000-clean-templates/cells.csv": "78e7a6a86027181683e1d2bddc4213ecfb5909bb51a6abd8615c21726090f745",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "script_sha256": "8a01070364cc318221570abba377d0462537fa8067dc12185f9ee674b8f8d163",
+  "tile_weighted_outline_iou_for_regions_at_least_25_tiles": 0.8895759036356208,
+  "outline_rule": "Equal Earth source geometry with holes; isotropic scale to actual cell area and translation to cell centroid. No rotation fit. IoU includes raster and source-hole differences."
+}

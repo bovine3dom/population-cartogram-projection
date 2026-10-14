@@ -333,3 +333,27 @@ Inspect the resulting images at world and regional scales.
   A source-outline overlay confirms that some cuts are template artifacts,
   not source coast features. Template cleanup needs a separate check before
   calling these outlines satisfactory.
+
+## 12:34–12:48 UTC — template cuts and cleaned trials
+
+- Added count-preserving template cleanup. It fills narrow interior cuts and
+  removes boundary cells to restore the budget. A change must improve source
+  intersection and perimeter, while preserving connectivity and no tile holes.
+  Components are processed separately and are not joined.
+- Visually reviewed Great Britain before and after cleanup. The white cuts are
+  removed while the coast remains recognizable. Its count stays at 4,064 tiles.
+  An independent full-source outline check improves from 0.9298 to 0.9457.
+- Cleaned 24, 66, 74, and 120 components at the four resolutions. Independent
+  tile-weighted outline scores improve at each resolution. Saved the audit
+  tables and the Great Britain comparison under `results/shape-first/template-cleanup`.
+- All 27 focused tests pass. Added cleanup count, topology, intersection, and
+  perimeter checks, plus a headless before/after image test. Review bundles can
+  now include the template-cleanup record.
+- Started cleaned-template placement at all four resolutions, followed by
+  exact-translation refinement. These are new output directories. The gallery
+  still shows the earlier templates until the new layouts are checked.
+- Local direction checks reduce the North American gaps, but the 35-degree
+  neighbourhood still gives Sri Lanka poor positions. Started two smaller
+  neighbourhood trials at 55,000 tiles. A soft geographic-order score can
+  conflict with the new sizes of distant countries; it must not become another
+  hard constraint that forces unnatural shapes or positions.
