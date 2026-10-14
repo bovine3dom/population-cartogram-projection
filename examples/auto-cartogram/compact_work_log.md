@@ -194,6 +194,23 @@ The separated layout has exact budgets but is not an acceptable replacement.
   one label, and invalid inputs. The 40-test shape suite also passes, including
   a new file-pipeline check. Full-world results have not yet been inspected.
 
+## 16:28–16:36 UTC — checks and footprint trial review
+
+- All nine validation commands passed at commit `34cd57f`: the previous eight
+  commands plus the new capacity-partition tests. Logs and source hashes are
+  in `results/compact-landmass/validation-1629/`. Production files are unchanged.
+- Inspected both completed footprint-cost world images. Reject weights 4 and
+  16: large spaces remain in Africa and Asia. Increasing the cost does not
+  solve the local movement limit. The stronger result also makes Russia and
+  several African countries more rectangular.
+- Inspected the islands-first geographic-guide world. It removes the large
+  cut through India, but Europe, central Africa, and China still have thin
+  shapes or cuts. It is not an acceptable replacement.
+- Started two global partition controls at 16:28 UTC. One uses source-outline
+  guide costs; the other uses only the existing area-normalized centre cost.
+  Both remain diagnostic. The first smoothing stages hit their iteration
+  limits. Do not report convergence merely because final counts can be repaired.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)
