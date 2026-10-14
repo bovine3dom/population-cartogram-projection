@@ -125,6 +125,10 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertIn(str(sites),site_record['inputs'])
             self.assertEqual({c:len(p) for c,p in load(inputs,root/'site-result')[1].items()},{c:len(p) for c,p in tiles.items()})
             with self.assertRaisesRegex(ValueError,'either'):run(inputs,layout,root/'bad-sites',sites=sites,guide_layout=layout)
+            shifted={c:np.mean(list(p),axis=0) for c,p in tiles.items()};shifted['e']=(100000.,100000.)
+            with patch('partition_land.fit_guide_centres',return_value=(shifted,dict(test=True))),contextlib.redirect_stdout(io.StringIO()):
+                run(inputs,layout,root/'outline-sites',sigma=1,iterations=20,sites=sites,by_landmass=True)
+            self.assertEqual(len(load(inputs,root/'outline-sites')[2]),9)
             features=[]
             for c,x in zip('abcde',[0,1,20,21,10]):
                 size=.01 if c=='a' else 1.;x+=.05;y=.05

@@ -119,7 +119,9 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
         lower=points.min(axis=0)-margin;upper=points.max(axis=0)+margin
         origin=tuple(lower.tolist());shape=tuple((upper-lower+1)[::-1].tolist());costs=None
     else:
-        costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=margin,centres=centres,budgets=budgets)
+        # Isolated-island costs are unused; keep those guides inside the current grid.
+        outline_centres={c:np.mean(list(tiles[c]),axis=0) if c in fixed else centres[c] for c in tiles} if centres is not None else None
+        costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=margin,centres=outline_centres,budgets=budgets)
         shape=next(iter(costs.values())).shape
     target=np.zeros(shape,dtype=bool)
     result={} if float_islands else {c:set(tiles[c]) for c in fixed};assigned=set();records=[]
