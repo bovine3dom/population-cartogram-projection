@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 import numpy as np
 from scipy.ndimage import distance_transform_edt
 
-from review_layout import load
+from review_layout import load, viewport
 from save_review import digest
 
 
@@ -37,9 +37,8 @@ def label_point(points):
 def run(inputs,layout,output,render=True):
     if output.exists():raise ValueError('Output already exists')
     shapes,tiles,owners=load(inputs,layout);metrics=json.loads((layout/'metrics.json').read_text())
-    xmin=min(x for x,y in owners)-1;xmax=max(x for x,y in owners)+1
-    ymin=min(y for x,y in owners)-1;ymax=max(y for x,y in owners)+1
-    scale=min(1720/(xmax-xmin),935/(ymax-ymin));left=(1800-scale*(xmax-xmin))/2;top=140+(935-scale*(ymax-ymin))/2
+    source_header=int(ET.parse(layout/'review.svg').getroot().get('data-map-header','140'))
+    xmin,xmax,ymin,ymax,scale,left,top,header=viewport(owners,metrics,source_header)
     output.mkdir(parents=True);regions=[]
     for name,(title,(west,east,south,north)) in REGIONS.items():
         selected=[c for c,r in shapes.items() if west<=(float(r['west'])+float(r['east']))/2<=east and south<=(float(r['south'])+float(r['north']))/2<=north]
@@ -47,7 +46,7 @@ def run(inputs,layout,output,render=True):
         cells=set().union(*(tiles[c] for c in selected));margin=6
         x0=max(40,left+(min(x for x,y in cells)-margin-xmin)*scale)
         x1=min(1760,left+(max(x for x,y in cells)+margin-xmin)*scale)
-        y0=max(140,top+(ymax-max(y for x,y in cells)-margin)*scale)
+        y0=max(header,top+(ymax-max(y for x,y in cells)-margin)*scale)
         y1=min(1075,top+(ymax-min(y for x,y in cells)+margin)*scale)
         root=ET.Element(f'{{{NS}}}svg',dict(width='1800',height='1120',viewBox='0 0 1800 1120'))
         ET.SubElement(root,f'{{{NS}}}rect',dict(width='1800',height='1120',fill='#faf9f6'))
@@ -56,6 +55,8 @@ def run(inputs,layout,output,render=True):
         text(40,f'{title}: detail of the world layout',27)
         text(70,'Positions are unchanged. Country shapes can continue outside the frame.')
         text(96,f'World checks: {metrics["tiles"]:,} tiles; count error {metrics["absolute_tile_error"]:,}; {metrics["missing_contacts"]} missing and {metrics["false_contacts"]} false contacts. Not a production map.',15)
+        if metrics['disconnected_regions'] or metrics['regions_with_holes']:
+            text(118,f'Topology: {metrics["disconnected_regions"]} disconnected regions; {metrics["regions_with_holes"]} regions with holes, including occupied holes.',15)
         source=ET.parse(layout/'review.svg').getroot()
         zoom=min(1760/(x1-x0),940/(y1-y0))
         group=source.find(f'{{{NS}}}g')

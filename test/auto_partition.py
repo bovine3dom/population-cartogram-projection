@@ -11,7 +11,7 @@ import numpy as np
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from partition_land import dual, partition, round_capacities, contact_groups, run
-from review_layout import load
+from review_layout import load, viewport
 
 
 class CapacityPartitionTests(unittest.TestCase):
@@ -58,6 +58,13 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertEqual({c:len(points) for c,points in tiles.items()},{'a':2,'b':2,'c':2,'d':2,'e':1})
             self.assertTrue(all(x<10 for c in 'ab' for x,y in tiles[c]))
             self.assertTrue(all(x>10 for c in 'cd' for x,y in tiles[c]))
+
+    def test_review_viewport(self):
+        owners={(0,0):'a',(1,100):'a'}
+        metrics=dict(disconnected_regions=1,regions_with_holes=0)
+        current=viewport(owners,metrics);legacy=viewport(owners,metrics,140)
+        self.assertEqual(current[-1],160);self.assertEqual(legacy[-1],140)
+        self.assertAlmostEqual(current[4],915/102);self.assertAlmostEqual(legacy[4],935/102)
 
     def test_invalid(self):
         for costs,budgets in [(np.zeros((4,2)),[1,1]),(np.zeros((4,2)),[0,4]),(np.zeros((4,2)),[1.5,2.5]),(np.full((4,2),np.nan),[2,2])]:
