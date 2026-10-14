@@ -36,3 +36,47 @@ Earlier commits to inspect include `22ca9ca`, `07108f5`, `32e42a6`, `12745e0`,
 `cc2dfdd`, and `82585bc`. No claim of a sharpness fix is made yet. The compact
 mobile export changes weights while preserving selected averages; it is not
 evidence that the fitted source distributions are sufficiently concentrated.
+
+## 07:06 UTC: matched export audit and strict eta trials
+
+The original tuning change is `cc2dfdd`: it adds automatic eta selection.
+Commit `12745e0` then changes the row multiplier from 10 to 2 and extends eta
+candidates down to 1e-7. It also relaxes the old marginal tolerance to 0.02.
+The current continuity checks are much stricter: target L1 at most 1e-4 and
+maximum target relative error at most 0.001. Do not relax those checks merely
+to reproduce an old row count.
+
+Added source-distribution diagnostics and 29 checks. They combine duplicate
+physical target positions, normalize each available source distribution, and
+measure support at 99.5% and 99.999%, inverse-Simpson effective support,
+entropy support, and spatial RMS spread. Spatial units are target coordinates,
+not kilometres. All three exports have the same 387,294 source IDs and 54,942
+country target cells. Production already omits tails, so its normalized 99.5%
+count is not a reconstruction of the original unpruned production plan.
+
+| Export | Stored distinct connections/source | Connections/source at 99.5% | Mean effective support | Mean spatial RMS |
+| --- | ---: | ---: | ---: | ---: |
+| Production | 2.310 | 1.875 | 1.337 | 0.425 |
+| Full continuity | 311.787 | 135.251 | 4.691 | 5.404 |
+| Mobile continuity | 6.178 | 5.411 | 3.051 | 5.285 |
+
+The mobile exporter removed many connections but barely reduced spatial
+spread. Low-population sources show the same problem. Among the same 307,595
+sources with population below one tenth of a uniform target quota, the mean
+99.5% support is 1.656, 92.661, and 3.232 respectively. Mobile ownership guard
+rows merge at the same position; this explains 22 fewer distinct connections
+than file rows. Full CSVs are in `output/continuity-sharpness/export-audit/`.
+
+Seven oneAPI country sweeps pass the strict mass checks at much smaller eta.
+For example, DRC at eta 0.002 needs 58.24 connections/source at 99.5%; at
+5e-5 it needs 2.257. This is a no-border baseline, not yet a border-fit result.
+The diagnostic runner then stopped because code 250 is absent from the
+saved fitted-country set. The seven completed countries and their stage
+checkpoints remain valid. See `tuned-small-v1/` and its log.
+
+Another source of persistent tails is the outer step rule. It tests damping
+at 0.5 or smaller, never 1. After four accepted updates, at least 6.25% of the
+initial plan remains through explicit mixtures, even if proposals are sharp.
+The proximal prior can preserve more. This makes a sharp initial plan and a
+checked full-step trial important. It does not justify removing mass checks,
+objective descent, or spatial distortion checks.
