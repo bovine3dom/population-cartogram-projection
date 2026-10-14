@@ -75,12 +75,15 @@ def place(cells, desired, blocked):
     raise ValueError("Placement search exhausted")
 
 
-def run(inputs, output, spacing=1.6, reuse_layout=None):
+def run(inputs, output, spacing=1.6, reuse_layout=None, fast_placement=False):
     if output.exists():
         raise ValueError("Output already exists")
     if not math.isfinite(spacing) or spacing <= 0:
         raise ValueError("Spacing must be positive and finite")
     started = time.monotonic()
+    placement=place
+    if fast_placement:
+        from shape_placement import place as placement
     rows = {r["component_id"]:r for r in read_csv(inputs/"groups.csv") if int(r["tiles"]) > 0}
     lines = (inputs/"validated.wkt").read_text().splitlines()
     polygons = {lines[i].split("\t")[1]:Polygon([tuple(map(float,p.split())) for p in lines[i+1].split("\t")])
@@ -106,7 +109,7 @@ def run(inputs, output, spacing=1.6, reuse_layout=None):
         else:
             cells=templates[label]
             centre=polygons[label].centroid.coords[0]
-        moved = place(cells,(centre[0]*scale,centre[1]*scale),blocked)
+        moved = placement(cells,(centre[0]*scale,centre[1]*scale),blocked)
         result[label] = moved
         blocked.update(moved)
         blocked.update((x+dx,y+dy) for x,y in moved for dx,dy in NEIGHBOURS)
@@ -122,7 +125,8 @@ def run(inputs, output, spacing=1.6, reuse_layout=None):
                     **parent,
                     "limit":"No land borders retained. Islands with zero budgets remain grouped." if templates is None else
                             "Requires no represented land borders; keeps each island shape and count. Zero-budget islands remain grouped.",
-                    "spacing":spacing,"elapsed_seconds":time.monotonic()-started,
+                    "spacing":spacing,"fast_placement":fast_placement,"elapsed_seconds":time.monotonic()-started,
+                    "placement_helper_sha256":hashlib.sha256(Path(__file__).with_name('shape_placement.py').read_bytes()).hexdigest() if fast_placement else None,
                     "script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
         (temp/"baseline.json").write_text(json.dumps(metadata,indent=2)+"\n")
         (temp/"complete.txt").write_text("mode=geographic-baseline\ncontacts=not-preserved\n" if templates is None else
@@ -140,5 +144,6 @@ if __name__ == "__main__":
     parser.add_argument("output",type=Path)
     parser.add_argument("--spacing",type=float,default=1.6)
     parser.add_argument("--reuse-layout",type=Path,help="Reposition existing shapes; require no land contacts")
+    parser.add_argument('--fast-placement',action='store_true')
     args=parser.parse_args()
-    print(json.dumps(run(args.inputs,args.output,args.spacing,args.reuse_layout),indent=2))
+    print(json.dumps(run(args.inputs,args.output,args.spacing,args.reuse_layout,args.fast_placement),indent=2))

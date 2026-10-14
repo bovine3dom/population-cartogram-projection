@@ -19,6 +19,7 @@ from cycle_deformation import CycleDeformation
 from fit_counts import CountFit
 import shape_placement
 import place_shapes
+import review_regions
 import geographic_baseline
 from atomic_deformation import AtomicDeformation
 from regrow_regions import Regrowth
@@ -26,6 +27,7 @@ import shape_stress
 from shape_stress import Stress
 from concave_stress import ConcaveStress, convex_pieces
 from raster_stress import RasterStress, bilinear
+from smooth_raster_stress import SmoothRasterStress
 
 
 class ShapeTests(unittest.TestCase):
@@ -122,7 +124,7 @@ class ShapeTests(unittest.TestCase):
     def test_deformation_and_placement_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);inputs=root/'input';layout=root/'layout';inputs.mkdir();layout.mkdir()
-            (inputs/'groups.csv').write_text('component_id,tiles\na,5\nb,3\n')
+            (inputs/'groups.csv').write_text('component_id,tiles,west,east,south,north\na,5,0,1,40,41\nb,3,2,3,40,41\n')
             (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\n')
             (inputs/'validated.wkt').write_text('STAGE 1\nOUTLINES 2\nOUT 0\ta\n0 0\t2 0\t2 2\t0 2\nSITECOUNT 0\nOUT 1\tb\n2 0\t4 0\t4 2\t2 2\nSITECOUNT 0\n')
             (layout/'cells.csv').write_text('component_id,x,y\na,0,0\na,1,0\na,0,1\na,1,1\nb,2,0\nb,3,0\nb,2,1\nb,3,1\n')
@@ -133,9 +135,17 @@ class ShapeTests(unittest.TestCase):
                 place_shapes.run(inputs,root/'deformed',root/'placed',anchors=root/'deformed')
                 stress=shape_stress.run(inputs,root/'deformed',root/'stress',iterations=30,raster=True,no_false_contacts=True,start_from_templates=True)
                 self.assertEqual(stress['collision_geometry'],'signed-distance raster')
+                geographic_baseline.run(inputs,root/'slow-baseline')
+                geographic_baseline.run(inputs,root/'fast-baseline',fast_placement=True)
+                self.assertEqual((root/'slow-baseline/cells.csv').read_bytes(),(root/'fast-baseline/cells.csv').read_bytes())
             _,tiles,owners=compact.load(inputs,root/'placed')
             self.assertEqual(len(owners),8)
             self.assertEqual({c:len(p) for c,p in tiles.items()},{'a':5,'b':3})
+            (root/'placed/metrics.json').write_text(json.dumps(dict(tiles=8,absolute_tile_error=0,missing_contacts=0,false_contacts=0)))
+            (root/'placed/review.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg"/>')
+            crops=review_regions.run(inputs,root/'placed',root/'crops',render=False)
+            self.assertEqual([r['name'] for r in crops['regions']],['europe'])
+            self.assertIn('Positions are unchanged',(root/'crops/europe.svg').read_text())
             with self.assertRaisesRegex(ValueError,'already exists'):compact.run(inputs,layout,root/'deformed')
             with self.assertRaisesRegex(ValueError,'Invalid'):compact.run(inputs,layout,root/'bad',rounds=0)
 
@@ -246,6 +256,16 @@ class ShapeTests(unittest.TestCase):
         self.assertAlmostEqual(state.pair_energy_gradient(0,1,state.initial)[0],0)
         state.initial[1]=[0.,3.]
         self.assertGreater(state.pair_energy_gradient(0,1,state.initial)[0],0)
+
+    def test_smooth_raster_gradient(self):
+        tiles={'a':{(x,y) for x in range(3) for y in range(4)},'b':{(0,0),(1,0),(0,1)}}
+        state=SmoothRasterStress(tiles,{'a':(0.,0.),'b':(1.37,.22)},set(),gap=.3)
+        x=state.initial.ravel();value,gradient=state.objective(x);numeric=[]
+        for i in range(len(x)):
+            shift=np.zeros_like(x);shift[i]=1e-6
+            numeric.append((state.objective(x+shift)[0]-state.objective(x-shift)[0])/2e-6)
+        self.assertGreater(value,0)
+        np.testing.assert_allclose(gradient,numeric,rtol=1e-6,atol=1e-6)
 
     def test_single_cell_is_not_removed(self):
         state=compact.Deformation({'a':{(0,0)}},set(),{'a':np.zeros((10,10))},(-5,-5))
