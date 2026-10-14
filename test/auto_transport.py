@@ -10,6 +10,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"examples"/"auto-cartogram"))
 import check_transport as audit
 import review_balance as picture
+import check_transport_shift as shift
 
 
 class TransportTests(unittest.TestCase):
@@ -42,15 +43,42 @@ class TransportTests(unittest.TestCase):
             for d in [raw,corrected]: (d/"independent-checks.json").write_text(json.dumps(audit.check(d)))
             picture.run(raw,corrected,root/"picture")
             self.assertTrue(json.loads((root/"picture/checks.json").read_text())["ordered_support_unchanged"])
+            self.assertEqual(shift.compare(raw,corrected)["summary"]["maximum_shift"],0)
             self.assertEqual(picture.color(0,.075),"#fafafa")
             self.assertEqual(picture.color(1,.075),picture.color(.075,.075))
             path=corrected/"mapping.csv"; lines=path.read_text().splitlines()
             path.write_text("\n".join([lines[0],lines[2],lines[1]])+"\n")
             with self.assertRaisesRegex(ValueError,"Files differ"):
                 picture.run(raw,corrected,root/"invalid")
+            with self.assertRaisesRegex(ValueError,"Files differ"):
+                shift.compare(raw,corrected)
             (corrected/"independent-checks.json").write_text(json.dumps(audit.check(corrected)))
             with self.assertRaisesRegex(ValueError,"support differs"):
                 picture.run(raw,corrected,root/"invalid")
+            with self.assertRaisesRegex(ValueError,"support differs"):
+                shift.compare(raw,corrected)
+
+    def test_expected_position_change_normalizes_retained_weights(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            for name,weights in [("raw",(.4,.1)),("corrected",(.5,.5))]:
+                d=root/name; d.mkdir()
+                (d/"sources.csv").write_text("id,group_id,value\na,ALL,100\n")
+                (d/"targets.csv").write_text("x,y,group_id\n0,0,ALL\n2,0,ALL\n")
+                (d/"mapping.csv").write_text("id,x,y,weight\n"+"".join(f"a,{x},0,{w}\n" for x,w in zip((0,2),weights)))
+                (d/"target-quality.csv").write_text("x,y,group_id,population,expected_population,relative_error\n"+
+                    "".join(f"{x},0,ALL,{100*w},50,{2*w-1}\n" for x,w in zip((0,2),weights)))
+                metadata=dict(pooled=False,source_population=100,retained_population=100*sum(weights),retained_share=sum(weights),
+                    cross_group_population=0,minimum_source_retained_share=sum(weights),maximum_source_retained_share=sum(weights),
+                    maximum_relative_target_error=max(abs(2*w-1) for w in weights),coarse_sources=1,targets=2,groups=1)
+                (d/"manifest.json").write_text(json.dumps(metadata))
+                (d/"independent-checks.json").write_text(json.dumps(audit.check(d)))
+            result=shift.compare(root/"raw",root/"corrected")
+            self.assertAlmostEqual(result["summary"]["population_weighted_mean_shift"],.6)
+            self.assertAlmostEqual(result["summary"]["population_weighted_rms_shift"],.6)
+            self.assertEqual(result["summary"]["source_cells"],1)
+            self.assertEqual(result["groups"]["ALL"]["source_cells"],1)
+            self.assertAlmostEqual(result["absolute_pair_mass_change"],50)
 
     def test_reject_corrupt_exports(self):
         for name,old,new in [

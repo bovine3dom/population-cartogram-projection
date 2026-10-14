@@ -307,6 +307,12 @@ not proof of infeasibility. The script exports only if the target tolerance is
 met, then runs the independent CSV checker. Original solver exports remain
 unchanged. This correction changes transport weights and needs a separate
 spatial-quality review.
+`check_transport_shift.py RAW_DIR CORRECTED_DIR NEW_CHECKS.json` compares each
+source's expected target position after normalizing its retained weights. It
+checks input hashes and every ordered pair first. It reports population-weighted
+mean and RMS changes, the maximum change, and per-group results. This is not a
+bound on individual movement or a measure of absolute geographic accuracy.
+
 `review_balance.py RAW_DIR CORRECTED_DIR NEW_OUTPUT` draws native H3-8 target
 errors on one colour scale. It verifies file hashes, unchanged source/target
 tables, equal capacities, and every ordered nonzero pair before drawing.
