@@ -76,10 +76,11 @@ def contact_groups(pairs):
     return groups
 
 
-def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None):
+def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([sigma,guide,anchor]).all() or sigma<=0 or min(guide,anchor)<0:raise ValueError('Invalid settings')
     if flow_geometry and guide_layout:raise ValueError('Choose either flow geometry or guide layout')
+    if flow_stretch!=1 and not flow_geometry:raise ValueError('Flow stretch requires flow geometry')
     started=time.monotonic()
     source_hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'validated.wkt',inputs/'geographic-contacts.csv',layout/'cells.csv']+([guide_layout/'cells.csv',guide_layout/'complete.txt'] if guide_layout else [])}
     script_hashes={name:digest(Path(__file__).with_name(name)) for name in ['partition_land.py','compact_regions.py','land_envelope.py','review_layout.py']}
@@ -97,7 +98,7 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     centres=alignment=flow=None
     if flow_geometry:
         from flow_footprint import prepare
-        tiles,centres,flow=prepare(flow_geometry,tiles,fixed,budgets)
+        tiles,centres,flow=prepare(flow_geometry,tiles,fixed,budgets,flow_stretch)
     if guide_layout:
         _,guides,_=load(inputs,guide_layout)
         centres,alignment=fit_guide_centres(tiles,guides,budgets)
@@ -148,6 +149,7 @@ if __name__=='__main__':
     parser.add_argument('--iterations',type=int,default=300)
     parser.add_argument('--guide-layout',type=Path)
     parser.add_argument('--flow-geometry',type=Path,help='Use continuous geometry for the footprint and sites, with original budgets')
+    parser.add_argument('--flow-stretch',type=float,default=1.,help='Area-preserving horizontal stretch of the flow footprint and sites')
     parser.add_argument('--power',action='store_true',help='Use uniform squared centre distance instead of outline costs')
     parser.add_argument('--by-landmass',action='store_true',help='Partition each connected source land-border group separately')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
