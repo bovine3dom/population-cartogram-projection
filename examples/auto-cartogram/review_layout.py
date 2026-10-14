@@ -99,9 +99,11 @@ def draw(path, shapes, tiles, owners, metrics, title):
     ymin = min(y for x, y in owners) - 1
     ymax = max(y for x, y in owners) + 1
     width, height = 1800, 1120
-    scale = min((width - 80) / (xmax - xmin), (height - 185) / (ymax - ymin))
+    topology_warning = metrics['disconnected_regions'] or metrics['regions_with_holes']
+    header = 160 if topology_warning else 140
+    scale = min((width - 80) / (xmax - xmin), (height - header - 45) / (ymax - ymin))
     left = (width - scale * (xmax - xmin)) / 2
-    top = 140 + ((height - 185) - scale * (ymax - ymin)) / 2
+    top = header + ((height - header - 45) - scale * (ymax - ymin)) / 2
     tx = lambda x: left + (x - xmin) * scale
     ty = lambda y: top + (ymax - y) * scale
     fmt = lambda n: f"{n:.3f}"
@@ -121,6 +123,9 @@ def draw(path, shapes, tiles, owners, metrics, title):
              f'<text x="40" y="114" font-size="15" fill="#973b28">EXPERIMENT: '
              f'{metrics["missing_contacts"]} missing and {metrics["false_contacts"]} false represented contacts; '
              f'{metrics["holes_not_encoded_in_wkt"]} input holes not encoded. Not a production map.</text>']
+    if topology_warning:
+        parts.append(f'<text x="40" y="136" font-size="15" fill="#973b28">TOPOLOGY: {metrics["disconnected_regions"]} disconnected regions; '
+                     f'{metrics["regions_with_holes"]} regions with holes (including occupied holes).</text>')
     # One path per component is smaller and faster than one SVG element per tile.
     for component in sorted(tiles):
         row = shapes[component]

@@ -63,7 +63,20 @@ def partition(costs,budgets,iterations=300):
     return labels,dict(stages=history,residual_tiles_reassigned=error//2,cost_scale=scale,assignment_cost=float(costs[np.arange(len(costs)),labels].sum()))
 
 
-def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False):
+def contact_groups(pairs):
+    neighbours={c:set() for pair in pairs for c in pair}
+    for a,b in pairs:neighbours[a].add(b);neighbours[b].add(a)
+    remaining=set(neighbours);groups=[]
+    while remaining:
+        start=min(remaining);remaining.remove(start);group={start};queue=[start]
+        while queue:
+            for c in sorted(neighbours[queue.pop()]&remaining):
+                remaining.remove(c);group.add(c);queue.append(c)
+        groups.append(sorted(group))
+    return groups
+
+
+def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([sigma,guide,anchor]).all() or sigma<=0 or min(guide,anchor)<0:raise ValueError('Invalid settings')
     started=time.monotonic()
@@ -72,30 +85,40 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     shapes,tiles,_=load(inputs,layout)
     budgets={c:int(row['tiles']) for c,row in shapes.items()}
     if any(len(points)!=budgets[c] for c,points in tiles.items()):raise ValueError('Exact starting budgets required')
-    movable={c for row in read_csv(inputs/'geographic-contacts.csv') if row['both_represented']=='true' for c in [row['a'],row['b']]}
-    fixed=set(tiles)-movable;labels=sorted(movable)
-    if not labels:raise ValueError('No movable components')
+    pairs=[(row['a'],row['b']) for row in read_csv(inputs/'geographic-contacts.csv') if row['both_represented']=='true']
+    movable={c for pair in pairs for c in pair};fixed=set(tiles)-movable
+    if not movable:raise ValueError('No movable components')
+    groups=contact_groups(pairs) if by_landmass else [sorted(movable)]
+    groups.sort(key=lambda group:(-sum(budgets[c] for c in group),group))
     centres=alignment=None
     if guide_layout:
         _,guides,_=load(inputs,guide_layout)
         centres,alignment=fit_guide_centres(tiles,guides,budgets)
     costs,origin=guide_costs(inputs,tiles,anchor,guide,margin=max(64,int(np.ceil(4*sigma))+2),centres=centres)
-    target,envelope=build(tiles,fixed,origin,next(iter(costs.values())).shape,sigma)
-    yy,xx=np.nonzero(target)
-    if power:
-        sites=np.array([centres[c] if centres is not None else np.mean(list(tiles[c]),axis=0) for c in labels])
-        points=np.column_stack((xx+origin[0],yy+origin[1]))
-        matrix=((points[:,None,:]-sites[None,:,:])**2).sum(axis=2)
-    else:matrix=np.column_stack([costs[c][yy,xx] for c in labels])
+    shape=next(iter(costs.values())).shape;target=np.zeros(shape,dtype=bool)
+    result={c:set(tiles[c]) for c in fixed};assigned=set();records=[]
+    for labels in groups:
+        # Reserve other landmasses' starting cells and all earlier target cells.
+        masks={**tiles,'__assigned__':assigned}
+        mask,envelope=build(masks,(set(tiles)-set(labels))|{'__assigned__'},origin,shape,sigma)
+        if np.any(mask&target):raise AssertionError('Landmass targets overlap')
+        target|=mask;yy,xx=np.nonzero(mask)
+        if power:
+            sites=np.array([centres[c] if centres is not None else np.mean(list(tiles[c]),axis=0) for c in labels])
+            points=np.column_stack((xx+origin[0],yy+origin[1]))
+            matrix=((points[:,None,:]-sites[None,:,:])**2).sum(axis=2)
+        else:matrix=np.column_stack([costs[c][yy,xx] for c in labels])
+        assignment,solver=partition(matrix,[budgets[c] for c in labels],iterations)
+        for index,c in enumerate(labels):
+            result[c]=set(zip((xx[assignment==index]+origin[0]).tolist(),(yy[assignment==index]+origin[1]).tolist()))
+            assigned.update(result[c])
+        records.append(dict(components=labels,envelope=envelope,solver=solver))
     del costs
-    assignment,solver=partition(matrix,[budgets[c] for c in labels],iterations)
-    result={c:set(tiles[c]) for c in fixed}
-    for index,c in enumerate(labels):result[c]=set(zip((xx[assignment==index]+origin[0]).tolist(),(yy[assignment==index]+origin[1]).tolist()))
     if any(len(result[c])!=budgets[c] for c in tiles):raise AssertionError('Capacity changed')
     if sum(map(len,result.values()))!=len(set().union(*result.values())):raise AssertionError('Overlapping cells')
     disconnected={c:n for c,points in result.items() if (n:=connectivity(points))!=1}
     holed={c:n for c,points in result.items() if (n:=holes(points))}
-    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,maximum_iterations_per_stage=iterations,solver=solver,envelope=envelope,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
+    record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,partitions=records,fixed_components=len(fixed),disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -118,4 +141,5 @@ if __name__=='__main__':
     parser.add_argument('--iterations',type=int,default=300)
     parser.add_argument('--guide-layout',type=Path)
     parser.add_argument('--power',action='store_true',help='Use uniform squared centre distance instead of outline costs')
+    parser.add_argument('--by-landmass',action='store_true',help='Partition each connected source land-border group separately')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

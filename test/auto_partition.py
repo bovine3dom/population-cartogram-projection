@@ -4,12 +4,14 @@ import contextlib
 import io
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 
 import numpy as np
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
-from partition_land import dual, partition, round_capacities
+from partition_land import dual, partition, round_capacities, contact_groups, run
+from review_layout import load
 
 
 class CapacityPartitionTests(unittest.TestCase):
@@ -39,6 +41,23 @@ class CapacityPartitionTests(unittest.TestCase):
     def test_single_label(self):
         with contextlib.redirect_stdout(io.StringIO()):labels,_=partition(np.arange(5.)[:,None],[5])
         np.testing.assert_array_equal(labels,np.zeros(5,dtype=int))
+
+    def test_landmass_groups(self):
+        self.assertEqual(contact_groups([('b','a'),('c','d'),('b','e')]),[['a','b','e'],['c','d']])
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'inputs';layout=root/'layout';inputs.mkdir();layout.mkdir()
+            (inputs/'groups.csv').write_text('component_id,tiles\na,2\nb,2\nc,2\nd,2\ne,1\n')
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\nc,d,true\n')
+            (inputs/'validated.wkt').write_text('header\nheader\n'+''.join(f'OUT\t{c}\n0 0\t1 0\t1 1\t0 1\nend\n' for c in 'abcde'))
+            (layout/'complete.txt').write_text('mode=test\n')
+            (layout/'cells.csv').write_text('component_id,x,y\na,0,0\na,0,1\nb,1,0\nb,1,1\nc,20,0\nc,20,1\nd,21,0\nd,21,1\ne,10,10\n')
+            with contextlib.redirect_stdout(io.StringIO()):record=run(inputs,layout,root/'result',sigma=1,iterations=20,power=True,by_landmass=True)
+            self.assertEqual([p['components'] for p in record['partitions']],[['a','b'],['c','d']])
+            _,tiles,owners=load(inputs,root/'result')
+            self.assertEqual(len(owners),9);self.assertEqual(tiles['e'],{(10,10)})
+            self.assertEqual({c:len(points) for c,points in tiles.items()},{'a':2,'b':2,'c':2,'d':2,'e':1})
+            self.assertTrue(all(x<10 for c in 'ab' for x,y in tiles[c]))
+            self.assertTrue(all(x>10 for c in 'cd' for x,y in tiles[c]))
 
     def test_invalid(self):
         for costs,budgets in [(np.zeros((4,2)),[1,1]),(np.zeros((4,2)),[0,4]),(np.zeros((4,2)),[1.5,2.5]),(np.full((4,2),np.nan),[2,2])]:
