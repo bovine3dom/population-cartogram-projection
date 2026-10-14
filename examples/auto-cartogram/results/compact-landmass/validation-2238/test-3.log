@@ -1,0 +1,46 @@
+......1/2 a: 3
+2/2 b: 1
+.............Validated outlines: 1 original-ring fallbacks
+Relax round 1: 2 translations, energy 36.040000
+Relax round 2: 2 translations, energy 16.160000
+Relax round 3: 2 translations, energy 4.360000
+Relax round 4: 2 translations, energy 0.640000
+Relax round 5: 0 translations, energy 0.640000
+Relax round 1: 2 translations, energy 36.040000
+Relax round 2: 2 translations, energy 16.160000
+Relax round 3: 2 translations, energy 4.360000
+Relax round 4: 2 translations, energy 0.640000
+Relax round 5: 0 translations, energy 0.640000
+.........
+----------------------------------------------------------------------
+Ran 28 tests in 0.753s
+
+OK
+{
+  "source_cells": 3,
+  "source_population": 60.0,
+  "unmatched_cells": 1,
+  "unmatched_population": 40.0,
+  "ambiguous_cells": 0,
+  "ambiguous_population": 0.0,
+  "policy": "Keep matched native IDs and values unchanged. Change component labels through the explicit same-country crosswalk. Keep original labels in a separate column.",
+  "inputs": [
+    {
+      "path": "/tmp/tmptiz1jcbb/members.arrow",
+      "sha256": "fec600ed236ed9a7397d90a25f836e28240d07a56a96f100ffc45f083c5488f0"
+    },
+    {
+      "path": "/tmp/tmptiz1jcbb/components.csv",
+      "sha256": "af56624829f6ebab3219e503e2e8926e1687e5d90d846a5ae173d8950454e002"
+    },
+    {
+      "path": "/tmp/tmptiz1jcbb/crosswalk.csv",
+      "sha256": "12b3f601b22cba3627fddbe9941b88b46fcbc29f3359173ef995b5da1ed45e25"
+    },
+    {
+      "path": "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/prepare_transport_sources.py",
+      "sha256": "09f91e90204a7c0a5c5a31fc5186c8c2099a04d3d17e3375dd5e0f8e14511ffa"
+    }
+  ],
+  "sources_sha256": "ff827cf4985a457a0d19eecc10b9f3bf68f959c915ec569c6c1d10f514cf4091"
+}

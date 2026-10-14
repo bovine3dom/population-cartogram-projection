@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gap-jobs/shared-positions-run.py", line 10, in <module>
+    place_shared_islands.run(inputs,base,p/'world-dissolved/polygons.geojson',root/'final')
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gap-jobs/code-shared-positions-2238/place_shared_islands.py", line 98, in run
+    placed,packing=pack(bodies,fixed,edges,shifts,shift_scale);result={}
+                   ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/gap-jobs/code-shared-positions-2238/place_shared_islands.py", line 74, in pack
+    if np.any(bounds[0]>bounds[1]):raise ValueError(f'Conflicting island direction bounds: {c}')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Conflicting island direction bounds: IDN:91fa24efd9a13b2f
