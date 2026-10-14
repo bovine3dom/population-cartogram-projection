@@ -1,0 +1,9 @@
+{
+  "iterations": 50000,
+  "tolerance": 0.0001,
+  "maximum_relative_target_error": 0.000249296318,
+  "accepted_export": false,
+  "added_pairs": 380,
+  "log_sha256": "1f2ff3fb05444a787c9cb20a2ccede30636d650e1e2560219d6a04423c7de9c8",
+  "limit": "A later minimum-cut certificate proves this tolerance impossible on the expanded support."
+}

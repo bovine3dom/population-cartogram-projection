@@ -22,6 +22,7 @@ import geographic_embedding as geographic
 import planar_embedding as embedding
 import prepare_transport_sources as transport_sources
 import review_layout as review
+import review_balance as balance_picture
 import repair_contacts as repair
 import relax_layout as relax
 import validate_outlines as outlines
@@ -67,6 +68,10 @@ class SupportTests(unittest.TestCase):
         self.assertFalse(result["exact_marginals_feasible"])
         self.assertEqual(result["necessary_maximum_relative_target_error"],.5)
         self.assertEqual(result["witness_target_indices"],[0])
+        result=support.equal_target_cut([5,1],[[0,1],[0,1,2]],3)
+        self.assertEqual(result["witness_excess_error_bound"],.25)
+        self.assertEqual(result["witness_complement_shortage_bound"],.5)
+        self.assertEqual(result["necessary_maximum_relative_target_error"],.5)
         result=support.equal_target_cut([1,2,1],[[0,1],[0,1],[0,1]],2)
         self.assertTrue(result["exact_marginals_feasible"])
         self.assertEqual(result["distinct_source_neighbourhoods"],1)
@@ -82,7 +87,9 @@ class SupportTests(unittest.TestCase):
             for mask in range(1,8):
                 selected=[i for i in range(3) if mask & (1 << i)]
                 targets=set().union(*(set(neighbours[i]) for i in selected))
-                strongest=max(strongest,sum(supply[i] for i in selected)/(2*len(targets))-1)
+                excess=sum(supply[i] for i in selected)-2*len(targets)
+                strongest=max(strongest,excess/(2*len(targets)))
+                if len(targets)<3: strongest=max(strongest,excess/(2*(3-len(targets))))
             result=support.equal_target_cut(supply,neighbours,3)
             bound=result["necessary_maximum_relative_target_error"]
             self.assertEqual(result["exact_marginals_feasible"],strongest == 0)
@@ -116,7 +123,7 @@ class BalanceTests(unittest.TestCase):
             (raw/"targets.csv").write_text("x,y,group_id\n0,0,A\n1,0,A\n")
             (raw/"mapping.csv").write_text("id,x,y,weight\na,0,0,1\nb,0,0,.5\nb,1,0,.5\n")
             (raw/"target-quality.csv").write_text("x,y,group_id,population,expected_population,relative_error\n0,0,A,3.5,2,.75\n1,0,A,.5,2,-.75\n")
-            metadata=dict(pooled=False,source_population=4,retained_population=4,retained_share=1,
+            metadata=dict(coarse_h3_resolution=5,pooled=False,source_population=4,retained_population=4,retained_share=1,
                 cross_group_population=0,minimum_source_retained_share=1,maximum_source_retained_share=1,
                 maximum_relative_target_error=.75,coarse_sources=2,targets=2,groups=1)
             (raw/"manifest.json").write_text(json.dumps(metadata))
@@ -133,6 +140,11 @@ class BalanceTests(unittest.TestCase):
             self.assertFalse(comparison["ordered_support_unchanged"])
             self.assertGreater(comparison["summary"]["population_weighted_mean_shift"],0)
             with self.assertRaisesRegex(ValueError,"already exists"): balance.run(raw,corrected)
+            with self.assertRaisesRegex(ValueError,"native H3-8"):
+                balance_picture.run(raw,corrected,root/"picture",allow_appended=True)
+            self.assertFalse((root/"picture").exists())
+            balance_picture.run(raw,corrected,root/"picture",allow_appended=True,allow_coarse=True)
+            self.assertIn("not native-cell validation",(root/"picture/review.svg").read_text())
 
     def test_marginals_and_structural_zeros(self):
         row=np.array([0,0,1,1,2]); column=np.array([0,1,0,1,2])

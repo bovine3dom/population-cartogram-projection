@@ -224,6 +224,48 @@ positive scaling will converge or that the positions are good. A failed result
 requires new eligible pairs, different capacities, or a relaxed balance limit;
 more iterations alone cannot fix it.
 
+### Local pair expansion
+
+A separate experiment adds one rook step of target support within only the
+infeasible groups. It never crosses a group boundary. It then scales the new
+positive weights. This changes the saved pairs and is not a minimum-cost solve.
+
+| Target budget | Source resolution | Added pairs | Scaling iterations | Scaling seconds | Maximum target error |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 10,000 | H3-5 | 105,925 | 17,009 | 169 | <0.01% |
+| 55,000 | H3-3 | 13,806 | 7,218 | 12 | <0.01% |
+
+Both retain all source mass to floating-point precision and have zero cross-group
+population. Independent integer flow checks find feasible exact marginals on
+the new support. The source and target tables remain byte-identical to the raw
+exports. These are coarse tests, not native whole-world validation.
+
+![World target balance after local pair expansion](results/world-10000-expanded-balance/review.png)
+
+[10,000-tile checks](results/world-10000-expanded-balance/independent-checks.json) ·
+[55,000-tile image](results/world-55000-expanded-balance/review.png) ·
+[Comparison data](results/world-balanced-comparison.csv).
+
+The position-change check verifies every original ordered pair and each new
+one-step pair. At 10,000 tiles, the population-weighted mean change in expected
+position is 0.0070 tile sides. The maximum is 16.547 tile sides, in China, where
+no pairs were added. Sources above one tile side contain 0.00416% of population.
+At 55,000 tiles, the mean is 0.0223 and the maximum is 2.748 tile sides.
+Small means do not remove the need to inspect outliers. See the saved
+`source-shift.json` and `worst-source-shifts.csv` files. These changes compare
+normalized retained weights; they are not bounds on individual movement.
+
+The 110,000-tile H3-3 trial does **not** pass. It adds 380 pairs, then stops after
+50,000 iterations at 0.02493% error. A minimum-cut witness proves that exact
+source totals force at least that much target error in one US group. The
+witness includes the target subset outside the source's eligible targets;
+its shortage gives a stronger bound than the excess inside the eligible set.
+A longer attempt was stopped after this proof. It has no accepted export.
+[Failure evidence](results/world-110000-expanded-balance-failed/world-110000-expanded-support-check.json).
+
+Thus, one-step expansion is a useful tested option, not a general solution.
+Support selection, geographic outliers, and source resolution still need work.
+
 ## What this means for issue #17
 
 Separate solves prevent cross-group transport by construction. This result

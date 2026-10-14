@@ -1,0 +1,3 @@
+tile_budget,source_resolution,source_rows,groups,added_pairs,iterations,scaling_seconds,retained_share,cross_group_population,maximum_relative_target_error,mean_expected_position_change,rms_expected_position_change,maximum_expected_position_change,population_share_change_above_one,infeasible_groups
+10000,5,400545,341,105925,17009,169.22203140798956,1.0,0.0,9.999889659217942e-05,0.007027286627467705,0.024981595413476436,16.546817754254942,4.160331825072406e-05,0
+55000,3,16885,481,13806,7218,11.866344931069762,1.0000000000000002,0.0,9.999039253816289e-05,0.022328086868556044,0.03689064987113093,2.7478674548451636,5.106429204433453e-07,0

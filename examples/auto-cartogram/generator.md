@@ -348,7 +348,8 @@ geometry environment. It combines identical source neighbourhoods, then uses
 integer maximum flow for each group. A failed cut records a source subset whose
 population exceeds the capacity of all its eligible targets. This detects
 obstructions inside connected support, unlike the simple disconnected-support
-bound. A feasible result permits zero weights and does not prove convergence
+bound. It also checks the shortage forced on the remaining targets. A feasible
+result permits zero weights and does not prove convergence
 of positive scaling. No mapping weights change.
 
 `check_transport_shift.py RAW_DIR CORRECTED_DIR NEW_CHECKS.json` compares each
@@ -363,6 +364,9 @@ from that source's original support. Independent flow checks still apply.
 `review_balance.py RAW_DIR CORRECTED_DIR NEW_OUTPUT` draws native H3-8 target
 errors on one colour scale. It verifies file hashes, unchanged source/target
 tables, equal capacities, and every ordered nonzero pair before drawing.
+Use `--allow-coarse` for explicitly labelled coarse-source figures. Use
+`--allow-appended` for checked one-step support expansion. These options do not
+relax the source, target, capacity, or file-hash checks.
 
 ## Tests
 

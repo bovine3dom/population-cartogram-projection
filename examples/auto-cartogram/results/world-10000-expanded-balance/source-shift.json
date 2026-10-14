@@ -1,0 +1,2765 @@
+{
+  "ordered_support_unchanged": false,
+  "mapping_pairs": 864839,
+  "appended_pairs": 105925,
+  "appended_pairs_one_rook_step": true,
+  "absolute_pair_mass_change": 95759280.80454877,
+  "unit": "Target coordinate units; one square-tile side for these layouts",
+  "method": "Normalize each source's retained weights before computing its expected target position; compare raw and corrected positions",
+  "limit": "This measures a change in expectations, not a bound on each person's displacement. Opposite assignment changes can cancel. It does not assess absolute geographic accuracy.",
+  "summary": {
+    "source_cells": 400545,
+    "population": 7954677990.0,
+    "maximum_shift": 16.546817754254942,
+    "population_weighted_mean_shift": 0.007027286627467705,
+    "population_weighted_rms_shift": 0.024981595413476436,
+    "population_share_shift_above_one": 4.160331825072406e-05
+  },
+  "groups": {
+    "ABW:0d999085fdb95914": {
+      "source_cells": 4,
+      "population": 87775.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ACA:cb08ec7461da4063": {
+      "source_cells": 11,
+      "population": 82610.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "AFG:cda2af5bb6ea22f0": {
+      "source_cells": 2166,
+      "population": 42084589.0,
+      "maximum_shift": 0.06334651212696356,
+      "population_weighted_mean_shift": 0.004187946210289357,
+      "population_weighted_rms_shift": 0.006116162443517425,
+      "population_share_shift_above_one": 0.0
+    },
+    "AGO:2b9c8d9b36ed1f1d": {
+      "source_cells": 38,
+      "population": 1362794.0,
+      "maximum_shift": 0.016292843313834737,
+      "population_weighted_mean_shift": 0.005744480230706646,
+      "population_weighted_rms_shift": 0.008912781562905937,
+      "population_share_shift_above_one": 0.0
+    },
+    "AGO:704113b148b7974b": {
+      "source_cells": 4004,
+      "population": 35044700.0,
+      "maximum_shift": 0.4571078169552365,
+      "population_weighted_mean_shift": 0.0071892874709345075,
+      "population_weighted_rms_shift": 0.011589198212922886,
+      "population_share_shift_above_one": 0.0
+    },
+    "AIA:09a59ce4723b5dc9": {
+      "source_cells": 6,
+      "population": 11739.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ALB:c931cc5315aed954": {
+      "source_cells": 134,
+      "population": 2809577.0,
+      "maximum_shift": 0.0022394901965157032,
+      "population_weighted_mean_shift": 0.0001252679005428698,
+      "population_weighted_rms_shift": 0.0003961007797400111,
+      "population_share_shift_above_one": 0.0
+    },
+    "ALD:47f8615cf1330e71": {
+      "source_cells": 38,
+      "population": 25602.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "AND:0923843c3687a75e": {
+      "source_cells": 6,
+      "population": 78907.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ARE:6af70f4330c4f4bf": {
+      "source_cells": 315,
+      "population": 9067377.0,
+      "maximum_shift": 0.009690331816248772,
+      "population_weighted_mean_shift": 0.0008106395162073824,
+      "population_weighted_rms_shift": 0.0014427871530996502,
+      "population_share_shift_above_one": 0.0
+    },
+    "ARG:7462ff4f8b49993a": {
+      "source_cells": 12805,
+      "population": 45714413.0,
+      "maximum_shift": 0.10659733760245096,
+      "population_weighted_mean_shift": 0.002161556266365902,
+      "population_weighted_rms_shift": 0.004174574160570994,
+      "population_share_shift_above_one": 0.0
+    },
+    "ARM:433ac98029e5a761": {
+      "source_cells": 151,
+      "population": 2766437.0,
+      "maximum_shift": 0.0012469579928567015,
+      "population_weighted_mean_shift": 0.00019171995488278775,
+      "population_weighted_rms_shift": 0.00046871927017857177,
+      "population_share_shift_above_one": 0.0
+    },
+    "ASM:7f40f5358bbd2440": {
+      "source_cells": 7,
+      "population": 37512.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ATA:a3f793773cb0a0b5": {
+      "source_cells": 14,
+      "population": 269.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ATF:466bffce003497f7": {
+      "source_cells": 28,
+      "population": 96.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "AUS:6a36c6fd1db93bf9": {
+      "source_cells": 358,
+      "population": 562704.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "AUS:adfd7567b2399535": {
+      "source_cells": 21878,
+      "population": 25410798.0,
+      "maximum_shift": 0.08857038220090616,
+      "population_weighted_mean_shift": 0.004275571610302808,
+      "population_weighted_rms_shift": 0.0061376323724218525,
+      "population_share_shift_above_one": 0.0
+    },
+    "AUT:709fdd785650b149": {
+      "source_cells": 402,
+      "population": 8991605.0,
+      "maximum_shift": 0.003673714938716871,
+      "population_weighted_mean_shift": 0.00048146458274705506,
+      "population_weighted_rms_shift": 0.0008482426302337333,
+      "population_share_shift_above_one": 0.0
+    },
+    "AZE:0510388634a9edd9": {
+      "source_cells": 369,
+      "population": 9936300.0,
+      "maximum_shift": 0.038055505542398484,
+      "population_weighted_mean_shift": 0.0029768785064946683,
+      "population_weighted_rms_shift": 0.005153118737095112,
+      "population_share_shift_above_one": 0.0
+    },
+    "AZE:e5af19283650a3e3": {
+      "source_cells": 36,
+      "population": 445791.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BDI:b3ecb03d79bf1cb5": {
+      "source_cells": 114,
+      "population": 13182651.0,
+      "maximum_shift": 0.05471851043660217,
+      "population_weighted_mean_shift": 0.007866609551479989,
+      "population_weighted_rms_shift": 0.012261623623190585,
+      "population_share_shift_above_one": 0.0
+    },
+    "BEL:b124863414a6dcdb": {
+      "source_cells": 181,
+      "population": 11702723.0,
+      "maximum_shift": 0.0025109173486581727,
+      "population_weighted_mean_shift": 0.00034678129925830027,
+      "population_weighted_rms_shift": 0.0005486524801488277,
+      "population_share_shift_above_one": 0.0
+    },
+    "BEN:5911ab4fd3e84cb1": {
+      "source_cells": 586,
+      "population": 13792451.0,
+      "maximum_shift": 0.10326073788058858,
+      "population_weighted_mean_shift": 0.002487283828234469,
+      "population_weighted_rms_shift": 0.007171465912306062,
+      "population_share_shift_above_one": 0.0
+    },
+    "BFA:9c8f06c312ed722e": {
+      "source_cells": 1393,
+      "population": 23266638.0,
+      "maximum_shift": 0.06800143124926565,
+      "population_weighted_mean_shift": 0.0026586356014881326,
+      "population_weighted_rms_shift": 0.00494624070565385,
+      "population_share_shift_above_one": 0.0
+    },
+    "BGD:31f73d0e612038c5": {
+      "source_cells": 16,
+      "population": 857938.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BGD:938be7fc0dcd9e43": {
+      "source_cells": 30,
+      "population": 1972139.0,
+      "maximum_shift": 1.071375625372184e-05,
+      "population_weighted_mean_shift": 1.3734643297567815e-06,
+      "population_weighted_rms_shift": 3.836008609504884e-06,
+      "population_share_shift_above_one": 0.0
+    },
+    "BGD:d6d0c7df0b40a187": {
+      "source_cells": 594,
+      "population": 166689522.0,
+      "maximum_shift": 0.0670243338489535,
+      "population_weighted_mean_shift": 0.0036479356628061773,
+      "population_weighted_rms_shift": 0.00506662136469369,
+      "population_share_shift_above_one": 0.0
+    },
+    "BGD:ee4951d7c5e4344f": {
+      "source_cells": 8,
+      "population": 535628.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BGR:8a6e196d0e9089ee": {
+      "source_cells": 468,
+      "population": 6710484.0,
+      "maximum_shift": 0.011639153458694134,
+      "population_weighted_mean_shift": 0.0007801174877361914,
+      "population_weighted_rms_shift": 0.0018829184158615322,
+      "population_share_shift_above_one": 0.0
+    },
+    "BHR:7a146d25b735f173": {
+      "source_cells": 13,
+      "population": 1303551.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BHS:d03207e09866ed23": {
+      "source_cells": 129,
+      "population": 312599.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BIH:76753bb1c9d6c52b": {
+      "source_cells": 239,
+      "population": 3317969.0,
+      "maximum_shift": 0.008509430600092323,
+      "population_weighted_mean_shift": 0.00018902329444040388,
+      "population_weighted_rms_shift": 0.0009069289107502666,
+      "population_share_shift_above_one": 0.0
+    },
+    "BLM:827ad9ed4c2f6184": {
+      "source_cells": 1,
+      "population": 10102.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BLR:216ea6b406f5bc6c": {
+      "source_cells": 1016,
+      "population": 9497448.0,
+      "maximum_shift": 0.00674619618927045,
+      "population_weighted_mean_shift": 0.00031364242632563093,
+      "population_weighted_rms_shift": 0.0007218043652007034,
+      "population_share_shift_above_one": 0.0
+    },
+    "BLZ:4f146436bd0251b5": {
+      "source_cells": 109,
+      "population": 380867.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BMU:4a0d97b264a07eaa": {
+      "source_cells": 4,
+      "population": 57781.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BOL:1a7254807c71e166": {
+      "source_cells": 3609,
+      "population": 12295313.0,
+      "maximum_shift": 0.00965791434930211,
+      "population_weighted_mean_shift": 0.0009484433675378894,
+      "population_weighted_rms_shift": 0.001529071043247221,
+      "population_share_shift_above_one": 0.0
+    },
+    "BRA:c9a395c2d321cd60": {
+      "source_cells": 23462,
+      "population": 211986498.0,
+      "maximum_shift": 1.4027478970968816,
+      "population_weighted_mean_shift": 0.005414693038015915,
+      "population_weighted_rms_shift": 0.011843577756341239,
+      "population_share_shift_above_one": 2.2690124349334737e-06
+    },
+    "BRA:f3313e497cca50c7": {
+      "source_cells": 40,
+      "population": 1062605.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BRA:f5c11e45059562b8": {
+      "source_cells": 226,
+      "population": 473957.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BRB:18a3b038d121e1b6": {
+      "source_cells": 6,
+      "population": 255866.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BRN:72e2eec83e114e7f": {
+      "source_cells": 42,
+      "population": 419535.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BRT:fef0fc6bba22ada7": {
+      "source_cells": 4,
+      "population": 78.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BTN:fe4a4d07e153ef17": {
+      "source_cells": 172,
+      "population": 942771.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "BWA:41766e3f9df3a4d1": {
+      "source_cells": 1707,
+      "population": 2651471.0,
+      "maximum_shift": 0.24514684057441644,
+      "population_weighted_mean_shift": 0.007835658714363751,
+      "population_weighted_rms_shift": 0.03962660211789437,
+      "population_share_shift_above_one": 0.0
+    },
+    "CAF:1f15d49e1132c1f3": {
+      "source_cells": 1481,
+      "population": 5689999.0,
+      "maximum_shift": 0.02317451787808992,
+      "population_weighted_mean_shift": 0.001062825917270407,
+      "population_weighted_rms_shift": 0.002968709566254638,
+      "population_share_shift_above_one": 0.0
+    },
+    "CAN:2f9cda75c78586e5": {
+      "source_cells": 310,
+      "population": 817531.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CAN:614ec007a6324298": {
+      "source_cells": 10908,
+      "population": 29447781.0,
+      "maximum_shift": 0.2954751200708614,
+      "population_weighted_mean_shift": 0.007001967802836324,
+      "population_weighted_rms_shift": 0.014956548035828063,
+      "population_share_shift_above_one": 0.0
+    },
+    "CAN:9076c2432c64faec": {
+      "source_cells": 15,
+      "population": 2058732.0,
+      "maximum_shift": 9.236755715846922e-08,
+      "population_weighted_mean_shift": 5.905006926997736e-08,
+      "population_weighted_rms_shift": 7.385330492609116e-08,
+      "population_share_shift_above_one": 0.0
+    },
+    "CAN:95c7ebac82699331": {
+      "source_cells": 583,
+      "population": 614037.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CAN:c2f1e4e52d5cc0c3": {
+      "source_cells": 998,
+      "population": 4533278.0,
+      "maximum_shift": 0.004120602287869701,
+      "population_weighted_mean_shift": 0.00047545361527659435,
+      "population_weighted_rms_shift": 0.0010356219320495938,
+      "population_share_shift_above_one": 0.0
+    },
+    "CHE:b37ef58a1d6dee0a": {
+      "source_cells": 214,
+      "population": 8849922.0,
+      "maximum_shift": 0.0031413856039963664,
+      "population_weighted_mean_shift": 0.0003815038391161135,
+      "population_weighted_rms_shift": 0.0006501607204807125,
+      "population_share_shift_above_one": 0.0
+    },
+    "CHL:150a87c1995fb5ad": {
+      "source_cells": 2659,
+      "population": 19347809.0,
+      "maximum_shift": 0.01792496879186135,
+      "population_weighted_mean_shift": 0.007667091707550981,
+      "population_weighted_rms_shift": 0.00886651734166749,
+      "population_share_shift_above_one": 0.0
+    },
+    "CHN:614315231acdc665": {
+      "source_cells": 191,
+      "population": 9605940.0,
+      "maximum_shift": 0.0031746644052655045,
+      "population_weighted_mean_shift": 0.00028426092714428983,
+      "population_weighted_rms_shift": 0.0005652521701333175,
+      "population_share_shift_above_one": 0.0
+    },
+    "CHN:68d9459587b3e328": {
+      "source_cells": 9,
+      "population": 429754.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CHN:72cd37e37e634df7": {
+      "source_cells": 30995,
+      "population": 1393191304.0,
+      "maximum_shift": 16.546817754254942,
+      "population_weighted_mean_shift": 0.009544376370855643,
+      "population_weighted_rms_shift": 0.04424630431733004,
+      "population_share_shift_above_one": 8.080871569953469e-05
+    },
+    "CHN:7331c80e6a0aeaf6": {
+      "source_cells": 31,
+      "population": 915610.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CHN:b6f6968952ede1bd": {
+      "source_cells": 25,
+      "population": 2176051.0,
+      "maximum_shift": 1.6484300218166936e-06,
+      "population_weighted_mean_shift": 8.536955667862645e-07,
+      "population_weighted_rms_shift": 1.0737966872685397e-06,
+      "population_share_shift_above_one": 0.0
+    },
+    "CHN:bc6aa9717e94f769": {
+      "source_cells": 11,
+      "population": 392619.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CHN:da91019566ae5d0e": {
+      "source_cells": 52,
+      "population": 1305880.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CHN:e959a445c659f4ad": {
+      "source_cells": 10,
+      "population": 442664.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CIV:1c18880d4492d85c": {
+      "source_cells": 1809,
+      "population": 28282814.0,
+      "maximum_shift": 0.010845567738772691,
+      "population_weighted_mean_shift": 0.0006588764643778815,
+      "population_weighted_rms_shift": 0.0012208977195501728,
+      "population_share_shift_above_one": 0.0
+    },
+    "CMR:35df8c314c8ef083": {
+      "source_cells": 1820,
+      "population": 28576803.0,
+      "maximum_shift": 0.13324055076120317,
+      "population_weighted_mean_shift": 0.002926537233602513,
+      "population_weighted_rms_shift": 0.007373556352750414,
+      "population_share_shift_above_one": 0.0
+    },
+    "CNM:85db95ef4bf8489c": {
+      "source_cells": 14,
+      "population": 103100.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "COD:34b7cfda818ccf80": {
+      "source_cells": 7322,
+      "population": 101621585.0,
+      "maximum_shift": 0.25483392947580424,
+      "population_weighted_mean_shift": 0.013137080882375937,
+      "population_weighted_rms_shift": 0.024111042703871988,
+      "population_share_shift_above_one": 0.0
+    },
+    "COG:c5650e58e144375b": {
+      "source_cells": 819,
+      "population": 6208800.0,
+      "maximum_shift": 0.017770103978616936,
+      "population_weighted_mean_shift": 0.0014839572153155936,
+      "population_weighted_rms_shift": 0.0024112135338640608,
+      "population_share_shift_above_one": 0.0
+    },
+    "COK:59fe00fd93eed20c": {
+      "source_cells": 8,
+      "population": 10687.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "COL:08d1c79f212fc17e": {
+      "source_cells": 3329,
+      "population": 51706170.0,
+      "maximum_shift": 0.037799829661455855,
+      "population_weighted_mean_shift": 0.0019930663228284375,
+      "population_weighted_rms_shift": 0.003294591245571192,
+      "population_share_shift_above_one": 0.0
+    },
+    "COM:306e297809981428": {
+      "source_cells": 19,
+      "population": 770671.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CPV:ba70bc183d52ff1a": {
+      "source_cells": 49,
+      "population": 503874.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CRI:5a22dcdd3a44dc5b": {
+      "source_cells": 254,
+      "population": 5191921.0,
+      "maximum_shift": 0.0037577384321139107,
+      "population_weighted_mean_shift": 0.0006167829701675988,
+      "population_weighted_rms_shift": 0.0009455097663158661,
+      "population_share_shift_above_one": 0.0
+    },
+    "CUB:a203a2643a40db9f": {
+      "source_cells": 608,
+      "population": 11033754.0,
+      "maximum_shift": 0.11283396785227284,
+      "population_weighted_mean_shift": 0.003458321560436311,
+      "population_weighted_rms_shift": 0.005937950043973607,
+      "population_share_shift_above_one": 0.0
+    },
+    "CUW:2dc808a8cf441409": {
+      "source_cells": 6,
+      "population": 187218.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CXR:810b3572fd4f37bc": {
+      "source_cells": 4,
+      "population": 61.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CYM:98d679f5360c472c": {
+      "source_cells": 11,
+      "population": 66721.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CYN:3fa61972653460ef": {
+      "source_cells": 33,
+      "population": 334359.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CYP:0e9f924ff6746fe5": {
+      "source_cells": 36,
+      "population": 798271.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "CZE:bf3969a8b4fbfc04": {
+      "source_cells": 384,
+      "population": 10461386.0,
+      "maximum_shift": 0.0030154675204465426,
+      "population_weighted_mean_shift": 0.0005249739958610689,
+      "population_weighted_rms_shift": 0.0007853457918406599,
+      "population_share_shift_above_one": 0.0
+    },
+    "DEU:0b0480fae55fd996": {
+      "source_cells": 1760,
+      "population": 83249503.0,
+      "maximum_shift": 0.24755758816676474,
+      "population_weighted_mean_shift": 0.0032926119123754395,
+      "population_weighted_rms_shift": 0.006950089374081893,
+      "population_share_shift_above_one": 0.0
+    },
+    "DJI:8814228594ff16f1": {
+      "source_cells": 109,
+      "population": 1073106.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "DMA:5371714512bc2530": {
+      "source_cells": 10,
+      "population": 59972.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "DNK:856510ae70f04d27": {
+      "source_cells": 48,
+      "population": 463562.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "DNK:d3d12b2e248a600a": {
+      "source_cells": 93,
+      "population": 2570544.0,
+      "maximum_shift": 0.00481977683206717,
+      "population_weighted_mean_shift": 0.000961867704282835,
+      "population_weighted_rms_shift": 0.001880149673474749,
+      "population_share_shift_above_one": 0.0
+    },
+    "DNK:d4951f6fa8360f9a": {
+      "source_cells": 209,
+      "population": 2310155.0,
+      "maximum_shift": 0.0004666776383857041,
+      "population_weighted_mean_shift": 5.558422939686656e-05,
+      "population_weighted_rms_shift": 0.00015301626990009607,
+      "population_share_shift_above_one": 0.0
+    },
+    "DOM:1493e296a532a3a2": {
+      "source_cells": 315,
+      "population": 11069688.0,
+      "maximum_shift": 0.012676287391304863,
+      "population_weighted_mean_shift": 0.0017609842172825092,
+      "population_weighted_rms_shift": 0.00259205315126093,
+      "population_share_shift_above_one": 0.0
+    },
+    "DZA:704d2c59e6450910": {
+      "source_cells": 4336,
+      "population": 45268215.0,
+      "maximum_shift": 0.00584867572478519,
+      "population_weighted_mean_shift": 0.0012219636090192289,
+      "population_weighted_rms_shift": 0.0016409132477152287,
+      "population_share_shift_above_one": 0.0
+    },
+    "ECU:ef48f29c8aa10327": {
+      "source_cells": 832,
+      "population": 17545597.0,
+      "maximum_shift": 0.05928982578198337,
+      "population_weighted_mean_shift": 0.0028768212448503274,
+      "population_weighted_rms_shift": 0.0058377702897928554,
+      "population_share_shift_above_one": 0.0
+    },
+    "EGY:f7cc24b776a75221": {
+      "source_cells": 1342,
+      "population": 111985330.0,
+      "maximum_shift": 0.2882411481768865,
+      "population_weighted_mean_shift": 0.004741931160062868,
+      "population_weighted_rms_shift": 0.007480600719731182,
+      "population_share_shift_above_one": 0.0
+    },
+    "ERI:b257cabcc1caab95": {
+      "source_cells": 503,
+      "population": 3715725.0,
+      "maximum_shift": 0.001669082919736553,
+      "population_weighted_mean_shift": 7.78774160376032e-05,
+      "population_weighted_rms_shift": 0.00022242460923487076,
+      "population_share_shift_above_one": 0.0
+    },
+    "ESB:432b2cb88c6056bf": {
+      "source_cells": 4,
+      "population": 18016.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ESP:1b9f595463c4150a": {
+      "source_cells": 12,
+      "population": 162045.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ESP:791b8810feaa4071": {
+      "source_cells": 37,
+      "population": 1021431.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ESP:d0884f530f40b0fb": {
+      "source_cells": 33,
+      "population": 998346.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ESP:d5030a8f162b4ff0": {
+      "source_cells": 34,
+      "population": 1120046.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ESP:ff9451038f1a27e4": {
+      "source_cells": 2058,
+      "population": 43293079.0,
+      "maximum_shift": 0.2717818555983459,
+      "population_weighted_mean_shift": 0.0027467780381919783,
+      "population_weighted_rms_shift": 0.0059911444592641045,
+      "population_share_shift_above_one": 0.0
+    },
+    "EST:50bd04ff06509a99": {
+      "source_cells": 298,
+      "population": 1311630.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ETH:38a05216b358b154": {
+      "source_cells": 4481,
+      "population": 126392575.0,
+      "maximum_shift": 0.04613789163323217,
+      "population_weighted_mean_shift": 0.0019123118430578213,
+      "population_weighted_rms_shift": 0.0031005309497137887,
+      "population_share_shift_above_one": 0.0
+    },
+    "FIN:9332a3268ae7c503": {
+      "source_cells": 1892,
+      "population": 5318840.0,
+      "maximum_shift": 0.0020151053966400738,
+      "population_weighted_mean_shift": 0.0001784798936773485,
+      "population_weighted_rms_shift": 0.0003775234369096815,
+      "population_share_shift_above_one": 0.0
+    },
+    "FJI:3dd1a1f7bfb548f8": {
+      "source_cells": 177,
+      "population": 838122.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "FLK:881178e659639c79": {
+      "source_cells": 88,
+      "population": 6148.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "FRO:0f77e91ccf10bf9d": {
+      "source_cells": 35,
+      "population": 38674.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "FSM:446beaaeecdff78b": {
+      "source_cells": 16,
+      "population": 52067.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "FXX:b04574696bff21bc": {
+      "source_cells": 55,
+      "population": 318971.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "FXX:f023db15990ca569": {
+      "source_cells": 2470,
+      "population": 63644927.0,
+      "maximum_shift": 0.13878501877208804,
+      "population_weighted_mean_shift": 0.0033009763707464086,
+      "population_weighted_rms_shift": 0.007913460305772767,
+      "population_share_shift_above_one": 0.0
+    },
+    "GAB:9b0fa4569aef69bd": {
+      "source_cells": 664,
+      "population": 2389555.0,
+      "maximum_shift": 0.12914359858790903,
+      "population_weighted_mean_shift": 0.001315713907052761,
+      "population_weighted_rms_shift": 0.008492110945463401,
+      "population_share_shift_above_one": 0.0
+    },
+    "GAZ:0cd9171edc8ff269": {
+      "source_cells": 4,
+      "population": 2041145.0,
+      "maximum_shift": 1.4651859672198952e-06,
+      "population_weighted_mean_shift": 7.951913168319356e-07,
+      "population_weighted_rms_shift": 1.0793994435227682e-06,
+      "population_share_shift_above_one": 0.0
+    },
+    "GBR:241258080ec293c4": {
+      "source_cells": 1237,
+      "population": 64952685.0,
+      "maximum_shift": 0.09559635318119358,
+      "population_weighted_mean_shift": 0.002797502171682703,
+      "population_weighted_rms_shift": 0.005765043263476496,
+      "population_share_shift_above_one": 0.0
+    },
+    "GEO:d709e483cc2819fe": {
+      "source_cells": 324,
+      "population": 3676815.0,
+      "maximum_shift": 0.02529148851241997,
+      "population_weighted_mean_shift": 0.00046789716448185207,
+      "population_weighted_rms_shift": 0.00167214053320294,
+      "population_share_shift_above_one": 0.0
+    },
+    "GGY:a7d1dc6a309f18d0": {
+      "source_cells": 8,
+      "population": 54947.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "GHA:1beea30af91e217d": {
+      "source_cells": 1309,
+      "population": 33750581.0,
+      "maximum_shift": 0.055731423255756786,
+      "population_weighted_mean_shift": 0.0035219754209299676,
+      "population_weighted_rms_shift": 0.006498362664663438,
+      "population_share_shift_above_one": 0.0
+    },
+    "GIB:71de83b149a1d32c": {
+      "source_cells": 1,
+      "population": 18812.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "GIN:eb019150f12e3d47": {
+      "source_cells": 1262,
+      "population": 14130966.0,
+      "maximum_shift": 0.025957973096474744,
+      "population_weighted_mean_shift": 0.0015017863837941197,
+      "population_weighted_rms_shift": 0.0025843388752202815,
+      "population_share_shift_above_one": 0.0
+    },
+    "GMB:e5cba77f98187ac4": {
+      "source_cells": 76,
+      "population": 2704566.0,
+      "maximum_shift": 0.02777301809900834,
+      "population_weighted_mean_shift": 0.005817089363288848,
+      "population_weighted_rms_shift": 0.008644357454447695,
+      "population_share_shift_above_one": 0.0
+    },
+    "GNB:06bb5bdc3716e8ff": {
+      "source_cells": 205,
+      "population": 2102202.0,
+      "maximum_shift": 0.4244599793983781,
+      "population_weighted_mean_shift": 0.006140755468073678,
+      "population_weighted_rms_shift": 0.03753019959212244,
+      "population_share_shift_above_one": 0.0
+    },
+    "GNQ:703503e059bb9243": {
+      "source_cells": 124,
+      "population": 1153479.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "GNQ:c49e160563316bbb": {
+      "source_cells": 13,
+      "population": 388850.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "GRC:70edd41aef80d178": {
+      "source_cells": 632,
+      "population": 8895267.0,
+      "maximum_shift": 0.0038169081804263517,
+      "population_weighted_mean_shift": 0.0002636831977739019,
+      "population_weighted_rms_shift": 0.0005407753595022514,
+      "population_share_shift_above_one": 0.0
+    },
+    "GRC:7f7de33444a506e9": {
+      "source_cells": 156,
+      "population": 900022.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "GRD:5c44dc268d11bb57": {
+      "source_cells": 6,
+      "population": 103590.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "GRL:2a53232ea84e3e84": {
+      "source_cells": 228,
+      "population": 15193.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "GTM:304e3cb8ddf6bb44": {
+      "source_cells": 476,
+      "population": 18103622.0,
+      "maximum_shift": 0.026620024428083866,
+      "population_weighted_mean_shift": 0.0014895744479054797,
+      "population_weighted_rms_shift": 0.0023322040444236896,
+      "population_share_shift_above_one": 0.0
+    },
+    "GUM:97ae1edcd71bddbc": {
+      "source_cells": 6,
+      "population": 167824.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "GUY:5aec9f8c07eb9159": {
+      "source_cells": 439,
+      "population": 798000.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "HKG:0dbdf00bf060cdf0": {
+      "source_cells": 8,
+      "population": 966772.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "HKG:a4b1c1ec313ba36c": {
+      "source_cells": 12,
+      "population": 5075346.0,
+      "maximum_shift": 0.004455432048907579,
+      "population_weighted_mean_shift": 0.0015500179313823414,
+      "population_weighted_rms_shift": 0.0021808927450991163,
+      "population_share_shift_above_one": 0.0
+    },
+    "HMD:68b90fe1c7cf90ee": {
+      "source_cells": 1,
+      "population": 4.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "HND:177f117072fa67d2": {
+      "source_cells": 541,
+      "population": 10531476.0,
+      "maximum_shift": 0.003998255599192171,
+      "population_weighted_mean_shift": 0.0002554930916408768,
+      "population_weighted_rms_shift": 0.00048245447539407453,
+      "population_share_shift_above_one": 0.0
+    },
+    "HRV:23be6296644271a5": {
+      "source_cells": 357,
+      "population": 3613638.0,
+      "maximum_shift": 0.003772580605696251,
+      "population_weighted_mean_shift": 0.00020474611925338438,
+      "population_weighted_rms_shift": 0.0004703411657091498,
+      "population_share_shift_above_one": 0.0
+    },
+    "HTI:a3ce6059435c00f9": {
+      "source_cells": 206,
+      "population": 11209202.0,
+      "maximum_shift": 0.01486568132016752,
+      "population_weighted_mean_shift": 0.0009592961383488347,
+      "population_weighted_rms_shift": 0.002085037088975653,
+      "population_share_shift_above_one": 0.0
+    },
+    "HUN:9f803be1643ca956": {
+      "source_cells": 416,
+      "population": 9614284.0,
+      "maximum_shift": 0.0049948958161465384,
+      "population_weighted_mean_shift": 0.0005557136154747071,
+      "population_weighted_rms_shift": 0.0009293947031686696,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:022bfe9dad3f0890": {
+      "source_cells": 86,
+      "population": 489349.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:1882fc741812bb99": {
+      "source_cells": 105,
+      "population": 1156220.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:2342a73d6e3d4204": {
+      "source_cells": 109,
+      "population": 2057134.0,
+      "maximum_shift": 0.07807279453129468,
+      "population_weighted_mean_shift": 0.007110382985724341,
+      "population_weighted_rms_shift": 0.01950338080572514,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:323211ce84279d17": {
+      "source_cells": 74,
+      "population": 851205.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:41ba51e85ddbb728": {
+      "source_cells": 180,
+      "population": 2427872.0,
+      "maximum_shift": 0.11394406453136696,
+      "population_weighted_mean_shift": 0.0049656817739002,
+      "population_weighted_rms_shift": 0.019041004345520585,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:43eb860ae00ba2ae": {
+      "source_cells": 55,
+      "population": 3236208.0,
+      "maximum_shift": 0.01653611709582492,
+      "population_weighted_mean_shift": 0.001665832325892733,
+      "population_weighted_rms_shift": 0.0034148395076948517,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:461e2601656ce574": {
+      "source_cells": 73,
+      "population": 859287.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:4d155ba9803cf6be": {
+      "source_cells": 46,
+      "population": 3791360.0,
+      "maximum_shift": 0.002004747563063347,
+      "population_weighted_mean_shift": 0.0005300001582129047,
+      "population_weighted_rms_shift": 0.0007310438734569702,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:51a10640dee7162b": {
+      "source_cells": 2243,
+      "population": 16923692.0,
+      "maximum_shift": 0.0734315194111174,
+      "population_weighted_mean_shift": 0.0031452803538444857,
+      "population_weighted_rms_shift": 0.006630474566089882,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:6f7a11314a3b7af3": {
+      "source_cells": 33,
+      "population": 2893866.0,
+      "maximum_shift": 0.003962106394290682,
+      "population_weighted_mean_shift": 0.0006159325659279974,
+      "population_weighted_rms_shift": 0.0013862442661383765,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:746e7e525dfc90c5": {
+      "source_cells": 89,
+      "population": 807535.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:7a59bb18e03f91d9": {
+      "source_cells": 193,
+      "population": 557544.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:7c3797a36dd1a69b": {
+      "source_cells": 892,
+      "population": 18814793.0,
+      "maximum_shift": 0.13432322547433345,
+      "population_weighted_mean_shift": 0.006285530247712749,
+      "population_weighted_rms_shift": 0.014396086736654887,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:7cb96e5a2c123f8f": {
+      "source_cells": 80,
+      "population": 2036124.0,
+      "maximum_shift": 0.009686381779335822,
+      "population_weighted_mean_shift": 0.0013912638276507283,
+      "population_weighted_rms_shift": 0.0030679172659010853,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:7d68fcb39519952c": {
+      "source_cells": 242,
+      "population": 1171741.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:829c07ff03d97c10": {
+      "source_cells": 1704,
+      "population": 53466786.0,
+      "maximum_shift": 0.35022264831727756,
+      "population_weighted_mean_shift": 0.008718877251328493,
+      "population_weighted_rms_shift": 0.01857058358052894,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:8b7b64d2940fb8dc": {
+      "source_cells": 129,
+      "population": 1567692.0,
+      "maximum_shift": 0.0011034855640064123,
+      "population_weighted_mean_shift": 8.252146394867629e-05,
+      "population_weighted_rms_shift": 0.00020175865847776717,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:91fa24efd9a13b2f": {
+      "source_cells": 1461,
+      "population": 7521573.0,
+      "maximum_shift": 0.13380999053187748,
+      "population_weighted_mean_shift": 0.002082230559861603,
+      "population_weighted_rms_shift": 0.004259885006015038,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:a2e8d108d88be94f": {
+      "source_cells": 129,
+      "population": 888959.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IDN:fecb2bac3d81ef76": {
+      "source_cells": 622,
+      "population": 148602005.0,
+      "maximum_shift": 0.2945352285784679,
+      "population_weighted_mean_shift": 0.006730668027217107,
+      "population_weighted_rms_shift": 0.01285816793744055,
+      "population_share_shift_above_one": 0.0
+    },
+    "IMN:e2108479644de92c": {
+      "source_cells": 8,
+      "population": 81689.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IND:2b0aafcf1d6a984f": {
+      "source_cells": 41,
+      "population": 342533.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IND:3f0bb94d859b2064": {
+      "source_cells": 12601,
+      "population": 1423106818.0,
+      "maximum_shift": 0.3583365118914064,
+      "population_weighted_mean_shift": 0.00957867634139623,
+      "population_weighted_rms_shift": 0.01853143453959047,
+      "population_share_shift_above_one": 0.0
+    },
+    "IOT:c99e174898a000d0": {
+      "source_cells": 2,
+      "population": 357.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "IRL:9661cba0fca9f89c": {
+      "source_cells": 383,
+      "population": 4924005.0,
+      "maximum_shift": 0.004665595893172281,
+      "population_weighted_mean_shift": 0.00015497618914127401,
+      "population_weighted_rms_shift": 0.0004828173246297114,
+      "population_share_shift_above_one": 0.0
+    },
+    "IRN:3c2b5bd7d999fbee": {
+      "source_cells": 5757,
+      "population": 88579038.0,
+      "maximum_shift": 0.23027803490694038,
+      "population_weighted_mean_shift": 0.0037115259614316663,
+      "population_weighted_rms_shift": 0.007455725339293126,
+      "population_share_shift_above_one": 0.0
+    },
+    "IRQ:741e7a31e643a8a8": {
+      "source_cells": 1431,
+      "population": 45480433.0,
+      "maximum_shift": 0.12822571109083647,
+      "population_weighted_mean_shift": 0.008596130882612324,
+      "population_weighted_rms_shift": 0.01186702268361103,
+      "population_share_shift_above_one": 0.0
+    },
+    "ISL:a7601b85cd746eec": {
+      "source_cells": 535,
+      "population": 341027.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ISR:7ab28b88983e2128": {
+      "source_cells": 118,
+      "population": 9091471.0,
+      "maximum_shift": 0.004897438880284886,
+      "population_weighted_mean_shift": 0.0013723739272595442,
+      "population_weighted_rms_shift": 0.0016737903786870048,
+      "population_share_shift_above_one": 0.0
+    },
+    "ITA:7d6868fd136c6c11": {
+      "source_cells": 1126,
+      "population": 51602866.0,
+      "maximum_shift": 0.13886386121404035,
+      "population_weighted_mean_shift": 0.00619368589191458,
+      "population_weighted_rms_shift": 0.012707596173622462,
+      "population_share_shift_above_one": 0.0
+    },
+    "ITA:e7ab63898f24eb00": {
+      "source_cells": 140,
+      "population": 4818709.0,
+      "maximum_shift": 0.013689882624774607,
+      "population_weighted_mean_shift": 0.0010323745239599726,
+      "population_weighted_rms_shift": 0.0026682880878969805,
+      "population_share_shift_above_one": 0.0
+    },
+    "ITA:ebecacbac755556c": {
+      "source_cells": 126,
+      "population": 1584922.0,
+      "maximum_shift": 0.2735727775685035,
+      "population_weighted_mean_shift": 0.0015465301107273311,
+      "population_weighted_rms_shift": 0.01759812085514707,
+      "population_share_shift_above_one": 0.0
+    },
+    "JAM:64623d7d4c4ecdba": {
+      "source_cells": 78,
+      "population": 2742319.0,
+      "maximum_shift": 0.027481767703648075,
+      "population_weighted_mean_shift": 0.001617867920347637,
+      "population_weighted_rms_shift": 0.004425461162864676,
+      "population_share_shift_above_one": 0.0
+    },
+    "JEY:2e82dcf9ab1c8905": {
+      "source_cells": 2,
+      "population": 62330.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "JOR:97289b5947dc77c2": {
+      "source_cells": 330,
+      "population": 11337891.0,
+      "maximum_shift": 0.006306062151166962,
+      "population_weighted_mean_shift": 0.0026844314699488664,
+      "population_weighted_rms_shift": 0.0030975775494034297,
+      "population_share_shift_above_one": 0.0
+    },
+    "JPN:3876400cea5031e2": {
+      "source_cells": 336,
+      "population": 11914077.0,
+      "maximum_shift": 0.005793729062111936,
+      "population_weighted_mean_shift": 0.0007268360171949328,
+      "population_weighted_rms_shift": 0.0010209464189453307,
+      "population_share_shift_above_one": 0.0
+    },
+    "JPN:c1b6e25b62179c19": {
+      "source_cells": 408,
+      "population": 4909102.0,
+      "maximum_shift": 0.03354933014104293,
+      "population_weighted_mean_shift": 0.0007463002503253206,
+      "population_weighted_rms_shift": 0.003030452507413762,
+      "population_share_shift_above_one": 0.0
+    },
+    "JPN:dd1f679d5c572195": {
+      "source_cells": 69,
+      "population": 1362763.0,
+      "maximum_shift": 6.564407198084155e-05,
+      "population_weighted_mean_shift": 2.619431945432049e-05,
+      "population_weighted_rms_shift": 4.1258001412006644e-05,
+      "population_share_shift_above_one": 0.0
+    },
+    "JPN:ec0a7dcff3300192": {
+      "source_cells": 182,
+      "population": 3622682.0,
+      "maximum_shift": 0.001785060629242943,
+      "population_weighted_mean_shift": 0.0004025250605392613,
+      "population_weighted_rms_shift": 0.0006095919537994306,
+      "population_share_shift_above_one": 0.0
+    },
+    "JPN:f07fed45233efce3": {
+      "source_cells": 1242,
+      "population": 99860671.0,
+      "maximum_shift": 0.452441819837145,
+      "population_weighted_mean_shift": 0.009898840163666954,
+      "population_weighted_rms_shift": 0.021110248389759195,
+      "population_share_shift_above_one": 0.0
+    },
+    "KAB:13532639e9546e01": {
+      "source_cells": 21,
+      "population": 105524.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "KAS:b7c84d817c090062": {
+      "source_cells": 9,
+      "population": 1658.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "KAZ:5d6f63a9b9f3c9f9": {
+      "source_cells": 8385,
+      "population": 19487008.0,
+      "maximum_shift": 0.09208447126315092,
+      "population_weighted_mean_shift": 0.005146002614613281,
+      "population_weighted_rms_shift": 0.008210170849223021,
+      "population_share_shift_above_one": 0.0
+    },
+    "KEN:4b9b5a7ce90b0bb0": {
+      "source_cells": 2237,
+      "population": 54786589.0,
+      "maximum_shift": 0.18676441942173969,
+      "population_weighted_mean_shift": 0.0021394506246903786,
+      "population_weighted_rms_shift": 0.004792109723521662,
+      "population_share_shift_above_one": 0.0
+    },
+    "KGZ:401b8fcdc0eef69c": {
+      "source_cells": 748,
+      "population": 6549173.0,
+      "maximum_shift": 0.0029460092603002938,
+      "population_weighted_mean_shift": 0.00027535515727148107,
+      "population_weighted_rms_shift": 0.00048227543381993874,
+      "population_share_shift_above_one": 0.0
+    },
+    "KHM:299a58dab837de1b": {
+      "source_cells": 653,
+      "population": 16902396.0,
+      "maximum_shift": 0.006973175508464739,
+      "population_weighted_mean_shift": 0.0008208595471207706,
+      "population_weighted_rms_shift": 0.001200175447173768,
+      "population_share_shift_above_one": 0.0
+    },
+    "KIR:a4942b8cdd492ae9": {
+      "source_cells": 34,
+      "population": 40100.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "KNA:ab73693bbdf69270": {
+      "source_cells": 8,
+      "population": 39258.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "KOR:1a1881fe9e034788": {
+      "source_cells": 652,
+      "population": 50109057.0,
+      "maximum_shift": 0.07659667555522881,
+      "population_weighted_mean_shift": 0.0026893391735052508,
+      "population_weighted_rms_shift": 0.005347087830572394,
+      "population_share_shift_above_one": 0.0
+    },
+    "KOR:ee0f5a0f2f25a339": {
+      "source_cells": 79,
+      "population": 615962.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "KOS:e68a710dbd926c28": {
+      "source_cells": 58,
+      "population": 1659899.0,
+      "maximum_shift": 0.27275111473304037,
+      "population_weighted_mean_shift": 0.008889895273174693,
+      "population_weighted_rms_shift": 0.02833581942135982,
+      "population_share_shift_above_one": 0.0
+    },
+    "KWT:575b7c67b7a3657d": {
+      "source_cells": 100,
+      "population": 4254764.0,
+      "maximum_shift": 0.024924049860491636,
+      "population_weighted_mean_shift": 0.0004645595837892445,
+      "population_weighted_rms_shift": 0.0016011929145176176,
+      "population_share_shift_above_one": 0.0
+    },
+    "LAO:b4c511d27634a146": {
+      "source_cells": 887,
+      "population": 7558008.0,
+      "maximum_shift": 0.020372778104985133,
+      "population_weighted_mean_shift": 0.001901531365197782,
+      "population_weighted_rms_shift": 0.0031317783804152475,
+      "population_share_shift_above_one": 0.0
+    },
+    "LBN:8d427f2407db4cf0": {
+      "source_cells": 57,
+      "population": 5290414.0,
+      "maximum_shift": 0.0006564679719996044,
+      "population_weighted_mean_shift": 0.0001257982226841829,
+      "population_weighted_rms_shift": 0.0002088504145518183,
+      "population_share_shift_above_one": 0.0
+    },
+    "LBR:791c4a2bdad8b682": {
+      "source_cells": 559,
+      "population": 5253587.0,
+      "maximum_shift": 0.0058058948468539635,
+      "population_weighted_mean_shift": 0.00018140192705437828,
+      "population_weighted_rms_shift": 0.0006049304617054157,
+      "population_share_shift_above_one": 0.0
+    },
+    "LBY:7ca6524733c4cc0b": {
+      "source_cells": 2394,
+      "population": 6862773.0,
+      "maximum_shift": 0.010125723102021674,
+      "population_weighted_mean_shift": 0.0010206051739705822,
+      "population_weighted_rms_shift": 0.00187689439069964,
+      "population_share_shift_above_one": 0.0
+    },
+    "LCA:5f3167c756c94e88": {
+      "source_cells": 6,
+      "population": 181829.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "LIE:452f33c4300c02b9": {
+      "source_cells": 4,
+      "population": 37631.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "LKA:1e8de9d1844ab756": {
+      "source_cells": 296,
+      "population": 21557494.0,
+      "maximum_shift": 0.007682099277378467,
+      "population_weighted_mean_shift": 0.0011137022661003274,
+      "population_weighted_rms_shift": 0.0017269121510636984,
+      "population_share_shift_above_one": 0.0
+    },
+    "LSO:085148348451b82a": {
+      "source_cells": 141,
+      "population": 2324049.0,
+      "maximum_shift": 0.004225840442863671,
+      "population_weighted_mean_shift": 0.000263581471251676,
+      "population_weighted_rms_shift": 0.0007864255383634623,
+      "population_share_shift_above_one": 0.0
+    },
+    "LTU:4c2a60810b4196cd": {
+      "source_cells": 354,
+      "population": 2713931.0,
+      "maximum_shift": 0.07338385224936772,
+      "population_weighted_mean_shift": 0.001273662100217847,
+      "population_weighted_rms_shift": 0.0071124945279665095,
+      "population_share_shift_above_one": 0.0
+    },
+    "LUX:2287a57343a7d085": {
+      "source_cells": 21,
+      "population": 654385.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "LVA:ff14565ea5d338a5": {
+      "source_cells": 369,
+      "population": 1816939.0,
+      "maximum_shift": 0.007786371393706304,
+      "population_weighted_mean_shift": 0.0010192023911546361,
+      "population_weighted_rms_shift": 0.0027426618746768513,
+      "population_share_shift_above_one": 0.0
+    },
+    "MAC:59c43825d5da45fb": {
+      "source_cells": 4,
+      "population": 447734.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MAF:8903408c5624c48e": {
+      "source_cells": 4,
+      "population": 42978.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MAR:41e7d86fdd4b2365": {
+      "source_cells": 1763,
+      "population": 37233743.0,
+      "maximum_shift": 0.11414985455045294,
+      "population_weighted_mean_shift": 0.0035438582174129674,
+      "population_weighted_rms_shift": 0.0053084097468621035,
+      "population_share_shift_above_one": 0.0
+    },
+    "MCO:8f146e45080f16d1": {
+      "source_cells": 1,
+      "population": 50062.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MDA:c11ef650966bdfca": {
+      "source_cells": 168,
+      "population": 3407303.0,
+      "maximum_shift": 0.0013757262906040069,
+      "population_weighted_mean_shift": 0.00021686488675188225,
+      "population_weighted_rms_shift": 0.00036087207594319345,
+      "population_share_shift_above_one": 0.0
+    },
+    "MDG:4bc42083f90d1ae9": {
+      "source_cells": 2432,
+      "population": 30003641.0,
+      "maximum_shift": 0.19697000459929223,
+      "population_weighted_mean_shift": 0.009279027500973223,
+      "population_weighted_rms_shift": 0.017865714161396398,
+      "population_share_shift_above_one": 0.0
+    },
+    "MDV:71a3bda6017f731e": {
+      "source_cells": 12,
+      "population": 231838.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MEX:aa67baf61acd20f3": {
+      "source_cells": 6634,
+      "population": 127984880.0,
+      "maximum_shift": 0.7903240798021155,
+      "population_weighted_mean_shift": 0.014274679640907511,
+      "population_weighted_rms_shift": 0.029868627378648295,
+      "population_share_shift_above_one": 0.0
+    },
+    "MHL:df7cdd8f2cbda575": {
+      "source_cells": 12,
+      "population": 3611.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MKD:072da3322c97fa27": {
+      "source_cells": 114,
+      "population": 2084670.0,
+      "maximum_shift": 0.021161027814322608,
+      "population_weighted_mean_shift": 0.00468611685118997,
+      "population_weighted_rms_shift": 0.00981018288558574,
+      "population_share_shift_above_one": 0.0
+    },
+    "MLI:cfb1983a0687bf5c": {
+      "source_cells": 3656,
+      "population": 23394199.0,
+      "maximum_shift": 0.061056437407030574,
+      "population_weighted_mean_shift": 0.0023326003610872844,
+      "population_weighted_rms_shift": 0.004835001458261424,
+      "population_share_shift_above_one": 0.0
+    },
+    "MLT:1209f8ef697868f9": {
+      "source_cells": 7,
+      "population": 518515.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MMR:e9f27e99686071f9": {
+      "source_cells": 2329,
+      "population": 53246821.0,
+      "maximum_shift": 0.06522348456380729,
+      "population_weighted_mean_shift": 0.003440997055802645,
+      "population_weighted_rms_shift": 0.005495664856703331,
+      "population_share_shift_above_one": 0.0
+    },
+    "MNE:52f7987265ed3935": {
+      "source_cells": 70,
+      "population": 601746.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MNG:7ecd8e5b0a42fa66": {
+      "source_cells": 5943,
+      "population": 3457746.0,
+      "maximum_shift": 0.00019747805546899144,
+      "population_weighted_mean_shift": 4.861506857217975e-05,
+      "population_weighted_rms_shift": 7.173672181910693e-05,
+      "population_share_shift_above_one": 0.0
+    },
+    "MNP:d5d7b61494f517b6": {
+      "source_cells": 11,
+      "population": 46955.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MOZ:0c9516b3b1958290": {
+      "source_cells": 2802,
+      "population": 33630282.0,
+      "maximum_shift": 0.19430186917441505,
+      "population_weighted_mean_shift": 0.010904068576018978,
+      "population_weighted_rms_shift": 0.022253110850260552,
+      "population_share_shift_above_one": 0.0
+    },
+    "MQI:3f3d9ac1758dd787": {
+      "source_cells": 7,
+      "population": 96.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MRT:93e93b11bab4502c": {
+      "source_cells": 2119,
+      "population": 4796378.0,
+      "maximum_shift": 0.03805063031864969,
+      "population_weighted_mean_shift": 0.0007610220014979611,
+      "population_weighted_rms_shift": 0.0019575865025438953,
+      "population_share_shift_above_one": 0.0
+    },
+    "MSR:b4f63de1ac80f565": {
+      "source_cells": 3,
+      "population": 4934.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MTQ:b687db533c81cb97": {
+      "source_cells": 156,
+      "population": 989678.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MUS:241a4096fe3cf2e9": {
+      "source_cells": 17,
+      "population": 1268014.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MWI:7555dabddb4364d9": {
+      "source_cells": 435,
+      "population": 21070702.0,
+      "maximum_shift": 0.04661305158464251,
+      "population_weighted_mean_shift": 0.002790761580271705,
+      "population_weighted_rms_shift": 0.004912166635899873,
+      "population_share_shift_above_one": 0.0
+    },
+    "MYS:0abe504273f2e4bd": {
+      "source_cells": 923,
+      "population": 6565903.0,
+      "maximum_shift": 0.01647955422658056,
+      "population_weighted_mean_shift": 0.002304853104087124,
+      "population_weighted_rms_shift": 0.003724606841070372,
+      "population_share_shift_above_one": 0.0
+    },
+    "MYS:38845839aa7557f7": {
+      "source_cells": 11,
+      "population": 929846.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "MYS:4035fe8bf71b03f5": {
+      "source_cells": 510,
+      "population": 25868998.0,
+      "maximum_shift": 0.0360523718496743,
+      "population_weighted_mean_shift": 0.0030983299474929703,
+      "population_weighted_rms_shift": 0.0045577730191896215,
+      "population_share_shift_above_one": 0.0
+    },
+    "NAM:d67affdeafffe7f2": {
+      "source_cells": 2721,
+      "population": 2628672.0,
+      "maximum_shift": 0.027671636895888696,
+      "population_weighted_mean_shift": 0.0011550471214677755,
+      "population_weighted_rms_shift": 0.0026550659717782593,
+      "population_share_shift_above_one": 0.0
+    },
+    "NCL:9e9b31b5b9879e1e": {
+      "source_cells": 120,
+      "population": 264067.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "NER:225f284b6e95d815": {
+      "source_cells": 2397,
+      "population": 27185459.0,
+      "maximum_shift": 0.02425108332846847,
+      "population_weighted_mean_shift": 0.001704139804963883,
+      "population_weighted_rms_shift": 0.003094518923325896,
+      "population_share_shift_above_one": 0.0
+    },
+    "NFK:8bd0b8fb2f7ee228": {
+      "source_cells": 2,
+      "population": 2372.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "NGA:edcdec1fdf6fb5c7": {
+      "source_cells": 4069,
+      "population": 222126465.0,
+      "maximum_shift": 0.16073465678047977,
+      "population_weighted_mean_shift": 0.005270708958638774,
+      "population_weighted_rms_shift": 0.008863313478265957,
+      "population_share_shift_above_one": 0.0
+    },
+    "NIC:99f10eccc73d03bc": {
+      "source_cells": 574,
+      "population": 6975837.0,
+      "maximum_shift": 0.0031994140763711614,
+      "population_weighted_mean_shift": 0.0003301248725778635,
+      "population_weighted_rms_shift": 0.0005795896409260568,
+      "population_share_shift_above_one": 0.0
+    },
+    "NIR:69fa50e543fa7c66": {
+      "source_cells": 209,
+      "population": 2009838.0,
+      "maximum_shift": 0.008626430220587622,
+      "population_weighted_mean_shift": 0.00037737639225012394,
+      "population_weighted_rms_shift": 0.0013413409627097122,
+      "population_share_shift_above_one": 0.0
+    },
+    "NIU:833bfd21210ac56a": {
+      "source_cells": 3,
+      "population": 2012.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "NLX:8b9c3398a58bdb2a": {
+      "source_cells": 251,
+      "population": 17295202.0,
+      "maximum_shift": 0.00843581578640851,
+      "population_weighted_mean_shift": 0.0006859258088580916,
+      "population_weighted_rms_shift": 0.0011733539676278724,
+      "population_share_shift_above_one": 0.0
+    },
+    "NOW:a387a8ce67e0d957": {
+      "source_cells": 2385,
+      "population": 4579520.0,
+      "maximum_shift": 0.017227950478583904,
+      "population_weighted_mean_shift": 0.0004587808545156247,
+      "population_weighted_rms_shift": 0.001595282764185212,
+      "population_share_shift_above_one": 0.0
+    },
+    "NPL:c1885306c87c4123": {
+      "source_cells": 628,
+      "population": 31935393.0,
+      "maximum_shift": 0.08368966748996239,
+      "population_weighted_mean_shift": 0.00851418466941778,
+      "population_weighted_rms_shift": 0.012955591026174598,
+      "population_share_shift_above_one": 0.0
+    },
+    "NRU:caeaede682b2e6af": {
+      "source_cells": 1,
+      "population": 11028.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "NZL:8f99f1c50259113a": {
+      "source_cells": 556,
+      "population": 3486893.0,
+      "maximum_shift": 0.023655941129876117,
+      "population_weighted_mean_shift": 0.0022496551776643023,
+      "population_weighted_rms_shift": 0.0050114631464760005,
+      "population_share_shift_above_one": 0.0
+    },
+    "NZL:979ee6939c934325": {
+      "source_cells": 610,
+      "population": 1173683.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "OMN:21af2c17fe172531": {
+      "source_cells": 1064,
+      "population": 4664194.0,
+      "maximum_shift": 0.3267032582843535,
+      "population_weighted_mean_shift": 0.002317917890412568,
+      "population_weighted_rms_shift": 0.011102720926224083,
+      "population_share_shift_above_one": 0.0
+    },
+    "PAK:447ed1858f7b7a5d": {
+      "source_cells": 3278,
+      "population": 240485685.0,
+      "maximum_shift": 1.956715479888098,
+      "population_weighted_mean_shift": 0.006631946135342251,
+      "population_weighted_rms_shift": 0.01688342777503017,
+      "population_share_shift_above_one": 2.1506477610091427e-05
+    },
+    "PAN:04773d2112e86006": {
+      "source_cells": 351,
+      "population": 4345907.0,
+      "maximum_shift": 0.005607846197719008,
+      "population_weighted_mean_shift": 0.00020062354324788784,
+      "population_weighted_rms_shift": 0.0006101561985135609,
+      "population_share_shift_above_one": 0.0
+    },
+    "PCN:9f1762b21c5a6e6d": {
+      "source_cells": 2,
+      "population": 94.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PER:d420f75fe20c6a02": {
+      "source_cells": 3322,
+      "population": 32781083.0,
+      "maximum_shift": 0.5552936489771314,
+      "population_weighted_mean_shift": 0.00943921431212328,
+      "population_weighted_rms_shift": 0.02112230947710305,
+      "population_share_shift_above_one": 0.0
+    },
+    "PGA:9843ae99694c2ecf": {
+      "source_cells": 2,
+      "population": 11.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:21362b5a399c84c0": {
+      "source_cells": 2,
+      "population": 526068.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:2ce786cb39ab6f61": {
+      "source_cells": 20,
+      "population": 334384.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:3dde36a3deef9e30": {
+      "source_cells": 35,
+      "population": 3891675.0,
+      "maximum_shift": 0.003659002317775162,
+      "population_weighted_mean_shift": 0.00022169717537320882,
+      "population_weighted_rms_shift": 0.0005518628790602666,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:6db0873e452de6c9": {
+      "source_cells": 77,
+      "population": 2449613.0,
+      "maximum_shift": 0.03917482417327278,
+      "population_weighted_mean_shift": 0.002133645109960296,
+      "population_weighted_rms_shift": 0.007210180171875223,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:6f9539ae2d2e4af7": {
+      "source_cells": 72,
+      "population": 4198029.0,
+      "maximum_shift": 0.013488039435848975,
+      "population_weighted_mean_shift": 0.0008804149774053347,
+      "population_weighted_rms_shift": 0.0021952957649068786,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:726d0196a803e063": {
+      "source_cells": 36,
+      "population": 1112826.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:7516d4fddea7755b": {
+      "source_cells": 438,
+      "population": 24609838.0,
+      "maximum_shift": 0.0384468081942002,
+      "population_weighted_mean_shift": 0.0025942695431073115,
+      "population_weighted_rms_shift": 0.004032331991907817,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:8bf898d20852a1e2": {
+      "source_cells": 39,
+      "population": 739897.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:90b293ce7c82f783": {
+      "source_cells": 52,
+      "population": 1025903.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:9f45a34a40c23d0d": {
+      "source_cells": 114,
+      "population": 1766275.0,
+      "maximum_shift": 0.021543069934516268,
+      "population_weighted_mean_shift": 0.0018501055026202136,
+      "population_weighted_rms_shift": 0.0025757520517706136,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:d3c6f6bf47091a8d": {
+      "source_cells": 76,
+      "population": 1809259.0,
+      "maximum_shift": 0.07296492631691365,
+      "population_weighted_mean_shift": 0.002970941451674971,
+      "population_weighted_rms_shift": 0.01412129241864392,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:d9dc6d8657118070": {
+      "source_cells": 75,
+      "population": 4764149.0,
+      "maximum_shift": 0.004818093250855782,
+      "population_weighted_mean_shift": 0.000817906591863267,
+      "population_weighted_rms_shift": 0.001495045052537688,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:dab4eac01b067017": {
+      "source_cells": 103,
+      "population": 907581.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:eb1fb8d27ecf0027": {
+      "source_cells": 575,
+      "population": 59885331.0,
+      "maximum_shift": 0.12345990698534404,
+      "population_weighted_mean_shift": 0.0032015617834181337,
+      "population_weighted_rms_shift": 0.006677016005950594,
+      "population_share_shift_above_one": 0.0
+    },
+    "PHL:f6d8e393f979d3c4": {
+      "source_cells": 21,
+      "population": 337622.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PLW:c1d57327f74beca7": {
+      "source_cells": 11,
+      "population": 8590.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "PNX:7cc333b69cac4996": {
+      "source_cells": 387,
+      "population": 1276307.0,
+      "maximum_shift": 0.1472271399004228,
+      "population_weighted_mean_shift": 0.00453606377030173,
+      "population_weighted_rms_shift": 0.021754802936719823,
+      "population_share_shift_above_one": 0.0
+    },
+    "PNX:cd0b182a6ff3f568": {
+      "source_cells": 1338,
+      "population": 8485547.0,
+      "maximum_shift": 0.001704520551848933,
+      "population_weighted_mean_shift": 0.00032052647074207327,
+      "population_weighted_rms_shift": 0.0004365624798949938,
+      "population_share_shift_above_one": 0.0
+    },
+    "POL:1980df7ed9d16d12": {
+      "source_cells": 1455,
+      "population": 41081927.0,
+      "maximum_shift": 0.010553529569606425,
+      "population_weighted_mean_shift": 0.0007680934088578787,
+      "population_weighted_rms_shift": 0.001241610063688222,
+      "population_share_shift_above_one": 0.0
+    },
+    "PRI:e9799df54353f02b": {
+      "source_cells": 76,
+      "population": 3232211.0,
+      "maximum_shift": 0.004432735431876722,
+      "population_weighted_mean_shift": 0.0003467098249461311,
+      "population_weighted_rms_shift": 0.0009205106167427246,
+      "population_share_shift_above_one": 0.0
+    },
+    "PRK:443ac4e48c09b5a9": {
+      "source_cells": 793,
+      "population": 25762865.0,
+      "maximum_shift": 0.1556278671325993,
+      "population_weighted_mean_shift": 0.003680611836914045,
+      "population_weighted_rms_shift": 0.008453228379884681,
+      "population_share_shift_above_one": 0.0
+    },
+    "PRX:31cd60a8869cd87c": {
+      "source_cells": 441,
+      "population": 10093173.0,
+      "maximum_shift": 0.024973966343224265,
+      "population_weighted_mean_shift": 0.0023485691086476824,
+      "population_weighted_rms_shift": 0.004055841162935591,
+      "population_share_shift_above_one": 0.0
+    },
+    "PRY:8be730e7955b0934": {
+      "source_cells": 1733,
+      "population": 6963917.0,
+      "maximum_shift": 0.018159351543286763,
+      "population_weighted_mean_shift": 0.0010926796557200415,
+      "population_weighted_rms_shift": 0.002151784151509576,
+      "population_share_shift_above_one": 0.0
+    },
+    "PYF:3da92f8d77dc4ec9": {
+      "source_cells": 69,
+      "population": 209797.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "QAT:f6210114a7fc4646": {
+      "source_cells": 64,
+      "population": 2640535.0,
+      "maximum_shift": 0.026248843103658714,
+      "population_weighted_mean_shift": 0.007699122299866917,
+      "population_weighted_rms_shift": 0.012109759413715407,
+      "population_share_shift_above_one": 0.0
+    },
+    "REU:50209727462df21b": {
+      "source_cells": 22,
+      "population": 1149775.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "ROU:8bc181463815c013": {
+      "source_cells": 981,
+      "population": 19757574.0,
+      "maximum_shift": 0.008614000449053975,
+      "population_weighted_mean_shift": 0.00047374242585301884,
+      "population_weighted_rms_shift": 0.001000907488979229,
+      "population_share_shift_above_one": 0.0
+    },
+    "RUS:7e6e84c769819aed": {
+      "source_cells": 140,
+      "population": 1989663.0,
+      "maximum_shift": 0.0006756022798128924,
+      "population_weighted_mean_shift": 0.00016303994742316306,
+      "population_weighted_rms_shift": 0.00022063504623474225,
+      "population_share_shift_above_one": 0.0
+    },
+    "RUS:8afd88fb65e5e555": {
+      "source_cells": 145,
+      "population": 987085.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "RUS:b85c5bca1852870f": {
+      "source_cells": 28197,
+      "population": 141958323.0,
+      "maximum_shift": 2.932485534749617,
+      "population_weighted_mean_shift": 0.02730209137521509,
+      "population_weighted_rms_shift": 0.08384542484801244,
+      "population_share_shift_above_one": 0.0014846540558245394
+    },
+    "RWA:11c3869510b66d95": {
+      "source_cells": 113,
+      "population": 14230487.0,
+      "maximum_shift": 0.005506979671270117,
+      "population_weighted_mean_shift": 0.0007714980361058434,
+      "population_weighted_rms_shift": 0.0011364207763803638,
+      "population_share_shift_above_one": 0.0
+    },
+    "SAH:c067a975f328d956": {
+      "source_cells": 182,
+      "population": 9890.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SAU:11ac65250772b5d3": {
+      "source_cells": 4961,
+      "population": 36364314.0,
+      "maximum_shift": 0.06495115122692735,
+      "population_weighted_mean_shift": 0.0028263377651786543,
+      "population_weighted_rms_shift": 0.004634783586298834,
+      "population_share_shift_above_one": 0.0
+    },
+    "SDN:e4296cf2bfa47003": {
+      "source_cells": 4497,
+      "population": 48061259.0,
+      "maximum_shift": 0.21149194948479283,
+      "population_weighted_mean_shift": 0.004174356725116722,
+      "population_weighted_rms_shift": 0.008608175618087213,
+      "population_share_shift_above_one": 0.0
+    },
+    "SDS:9ecb0b566ac02a31": {
+      "source_cells": 1712,
+      "population": 11036519.0,
+      "maximum_shift": 0.008611786171470735,
+      "population_weighted_mean_shift": 0.0006246299929801794,
+      "population_weighted_rms_shift": 0.0011600383856736336,
+      "population_share_shift_above_one": 0.0
+    },
+    "SEN:fa5de3704b02f675": {
+      "source_cells": 897,
+      "population": 17544221.0,
+      "maximum_shift": 0.011127856814857706,
+      "population_weighted_mean_shift": 0.0008960109534154845,
+      "population_weighted_rms_shift": 0.0018657899072550604,
+      "population_share_shift_above_one": 0.0
+    },
+    "SGP:860d04320dbb7b18": {
+      "source_cells": 5,
+      "population": 5570309.0,
+      "maximum_shift": 2.0942664140695396e-06,
+      "population_weighted_mean_shift": 1.303395388326913e-06,
+      "population_weighted_rms_shift": 1.43805819979684e-06,
+      "population_share_shift_above_one": 0.0
+    },
+    "SGS:f72252273c93ccac": {
+      "source_cells": 8,
+      "population": 142.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SHN:cea4236cc2d14354": {
+      "source_cells": 6,
+      "population": 5047.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SLB:c3b8559867bbf650": {
+      "source_cells": 259,
+      "population": 499887.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SLE:aeb8476c9a2c5e10": {
+      "source_cells": 406,
+      "population": 8449770.0,
+      "maximum_shift": 0.061048956849885976,
+      "population_weighted_mean_shift": 0.002235802444035145,
+      "population_weighted_rms_shift": 0.0060227939319035875,
+      "population_share_shift_above_one": 0.0
+    },
+    "SLV:6884a91b71669fb2": {
+      "source_cells": 114,
+      "population": 5956744.0,
+      "maximum_shift": 0.006972848252529276,
+      "population_weighted_mean_shift": 0.0008364809393637873,
+      "population_weighted_rms_shift": 0.0017410275548406732,
+      "population_share_shift_above_one": 0.0
+    },
+    "SMR:65f777115cf6c77c": {
+      "source_cells": 1,
+      "population": 27177.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SOL:e03433706d8873bb": {
+      "source_cells": 780,
+      "population": 4250437.0,
+      "maximum_shift": 0.08903311696576306,
+      "population_weighted_mean_shift": 0.003017149271268999,
+      "population_weighted_rms_shift": 0.007769426343678043,
+      "population_share_shift_above_one": 0.0
+    },
+    "SOM:b94bcf137ecd6275": {
+      "source_cells": 2006,
+      "population": 13625253.0,
+      "maximum_shift": 0.024173039674152998,
+      "population_weighted_mean_shift": 0.0018845867140631287,
+      "population_weighted_rms_shift": 0.0036770644597712066,
+      "population_share_shift_above_one": 0.0
+    },
+    "SPI:47f581a247f875ae": {
+      "source_cells": 3,
+      "population": 22.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SPM:82efd5ba4ffee3ed": {
+      "source_cells": 8,
+      "population": 5850.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SRB:334f04d632601018": {
+      "source_cells": 346,
+      "population": 7220316.0,
+      "maximum_shift": 0.0038342996459362158,
+      "population_weighted_mean_shift": 0.0005045788868004159,
+      "population_weighted_rms_shift": 0.0008248955246403452,
+      "population_share_shift_above_one": 0.0
+    },
+    "STP:6eeda55e5e762902": {
+      "source_cells": 10,
+      "population": 220511.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SUR:1d7cda681e299b07": {
+      "source_cells": 219,
+      "population": 611094.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SVK:1f440da2e10fbb82": {
+      "source_cells": 241,
+      "population": 5777971.0,
+      "maximum_shift": 0.004272388964153606,
+      "population_weighted_mean_shift": 0.00043339255437781606,
+      "population_weighted_rms_shift": 0.0008590040143189654,
+      "population_share_shift_above_one": 0.0
+    },
+    "SVN:e8f334b689926950": {
+      "source_cells": 108,
+      "population": 2121399.0,
+      "maximum_shift": 0.4084464275751465,
+      "population_weighted_mean_shift": 0.006390180678581869,
+      "population_weighted_rms_shift": 0.027568787558489183,
+      "population_share_shift_above_one": 0.0
+    },
+    "SWE:1320ee42b8e1186c": {
+      "source_cells": 2625,
+      "population": 10143605.0,
+      "maximum_shift": 0.003343088736635326,
+      "population_weighted_mean_shift": 0.0005909508966975593,
+      "population_weighted_rms_shift": 0.0009018306846194635,
+      "population_share_shift_above_one": 0.0
+    },
+    "SWZ:e315454282eb3136": {
+      "source_cells": 83,
+      "population": 1199601.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SXM:09188f4114a598b9": {
+      "source_cells": 3,
+      "population": 24732.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SYC:06e7b337bf21f107": {
+      "source_cells": 23,
+      "population": 95077.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "SYR:bb46c77ee43515e0": {
+      "source_cells": 649,
+      "population": 23008137.0,
+      "maximum_shift": 0.031686749515153004,
+      "population_weighted_mean_shift": 0.002342316038163948,
+      "population_weighted_rms_shift": 0.0036939990142950117,
+      "population_share_shift_above_one": 0.0
+    },
+    "TCA:8f132c5885c6ed3e": {
+      "source_cells": 17,
+      "population": 38967.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "TCD:a34f6ca4b3bd052d": {
+      "source_cells": 3133,
+      "population": 18370401.0,
+      "maximum_shift": 0.004521147265957682,
+      "population_weighted_mean_shift": 0.0005126607250330438,
+      "population_weighted_rms_shift": 0.000720946656635134,
+      "population_share_shift_above_one": 0.0
+    },
+    "TGO:f7afd783bdbbc052": {
+      "source_cells": 333,
+      "population": 9172318.0,
+      "maximum_shift": 0.0806473354019182,
+      "population_weighted_mean_shift": 0.005685654399577878,
+      "population_weighted_rms_shift": 0.011363422529917639,
+      "population_share_shift_above_one": 0.0
+    },
+    "THA:121007cc8c8eb751": {
+      "source_cells": 35,
+      "population": 1062436.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "THA:2d2e3dd6e4f6c675": {
+      "source_cells": 1926,
+      "population": 70414525.0,
+      "maximum_shift": 0.1961588734742179,
+      "population_weighted_mean_shift": 0.006380911140720362,
+      "population_weighted_rms_shift": 0.013072679649600603,
+      "population_share_shift_above_one": 0.0
+    },
+    "TJK:d6e62d7f585e085c": {
+      "source_cells": 574,
+      "population": 10250777.0,
+      "maximum_shift": 0.016041889794748767,
+      "population_weighted_mean_shift": 0.0013079847428790496,
+      "population_weighted_rms_shift": 0.002319868162421949,
+      "population_share_shift_above_one": 0.0
+    },
+    "TKM:ef25c6485f2078c2": {
+      "source_cells": 1199,
+      "population": 6699226.0,
+      "maximum_shift": 0.006598640827113395,
+      "population_weighted_mean_shift": 0.0005275919146919423,
+      "population_weighted_rms_shift": 0.0010401390916182013,
+      "population_share_shift_above_one": 0.0
+    },
+    "TLS:e102fc60287c6426": {
+      "source_cells": 91,
+      "population": 1320512.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "TON:f2fc3e28996a68cf": {
+      "source_cells": 14,
+      "population": 42446.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "TTO:c755d5dbf151e3d4": {
+      "source_cells": 38,
+      "population": 1485866.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "TUN:9e23ed3c89bdb2f6": {
+      "source_cells": 563,
+      "population": 12251837.0,
+      "maximum_shift": 0.0346934668693946,
+      "population_weighted_mean_shift": 0.004459604140125047,
+      "population_weighted_rms_shift": 0.007363160109798219,
+      "population_share_shift_above_one": 0.0
+    },
+    "TUR:3b553df250ebf332": {
+      "source_cells": 2967,
+      "population": 71384067.0,
+      "maximum_shift": 0.22682544822862286,
+      "population_weighted_mean_shift": 0.0034388566991366025,
+      "population_weighted_rms_shift": 0.007463370051332831,
+      "population_share_shift_above_one": 0.0
+    },
+    "TUR:6fce5e1d91133e37": {
+      "source_cells": 127,
+      "population": 12976240.0,
+      "maximum_shift": 0.0028169875797781243,
+      "population_weighted_mean_shift": 0.0016171123097625465,
+      "population_weighted_rms_shift": 0.0017828577419013259,
+      "population_share_shift_above_one": 0.0
+    },
+    "TUV:3dbb41c9aa575d81": {
+      "source_cells": 4,
+      "population": 863.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "TWN:0e5b45704eef8ddd": {
+      "source_cells": 203,
+      "population": 23435904.0,
+      "maximum_shift": 0.043441318892286675,
+      "population_weighted_mean_shift": 0.0023303015639511357,
+      "population_weighted_rms_shift": 0.004751115606603241,
+      "population_share_shift_above_one": 0.0
+    },
+    "TZA:88eb4141b8ee7ab7": {
+      "source_cells": 3269,
+      "population": 65268079.0,
+      "maximum_shift": 0.11764032954542561,
+      "population_weighted_mean_shift": 0.004308519599525719,
+      "population_weighted_rms_shift": 0.00751853142029491,
+      "population_share_shift_above_one": 0.0
+    },
+    "TZZ:50b84429088b02a6": {
+      "source_cells": 24,
+      "population": 1520179.0,
+      "maximum_shift": 8.454494336618268e-06,
+      "population_weighted_mean_shift": 3.6651342130155606e-06,
+      "population_weighted_rms_shift": 5.527472256840826e-06,
+      "population_share_shift_above_one": 0.0
+    },
+    "TZZ:9185ad05dcf3419a": {
+      "source_cells": 10,
+      "population": 467336.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "UGA:c937c439d1615753": {
+      "source_cells": 909,
+      "population": 48757093.0,
+      "maximum_shift": 0.01986699080188714,
+      "population_weighted_mean_shift": 0.002340229053263014,
+      "population_weighted_rms_shift": 0.003549330289439905,
+      "population_share_shift_above_one": 0.0
+    },
+    "UKR:52622876ebf1ecb8": {
+      "source_cells": 2519,
+      "population": 35648320.0,
+      "maximum_shift": 0.07486108573923345,
+      "population_weighted_mean_shift": 0.0040120289276349514,
+      "population_weighted_rms_shift": 0.007819367702719996,
+      "population_share_shift_above_one": 0.0
+    },
+    "URY:a93a37d95dfce9bb": {
+      "source_cells": 989,
+      "population": 3426314.0,
+      "maximum_shift": 0.03359210976902782,
+      "population_weighted_mean_shift": 0.0005748130065008262,
+      "population_weighted_rms_shift": 0.0035624500670602736,
+      "population_share_shift_above_one": 0.0
+    },
+    "USA:13c14a072880aac5": {
+      "source_cells": 1138,
+      "population": 681235.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "USA:53281e0ad0b87aeb": {
+      "source_cells": 110,
+      "population": 627113.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "USA:63257470544bea15": {
+      "source_cells": 108,
+      "population": 1461365.0,
+      "maximum_shift": 0.02449657601952282,
+      "population_weighted_mean_shift": 0.005158014547020398,
+      "population_weighted_rms_shift": 0.01066490982079281,
+      "population_share_shift_above_one": 0.0
+    },
+    "USA:90107a05206832e4": {
+      "source_cells": 30310,
+      "population": 322695617.0,
+      "maximum_shift": 1.8775262839742917,
+      "population_weighted_mean_shift": 0.012459158353234833,
+      "population_weighted_rms_shift": 0.0215470714262363,
+      "population_share_shift_above_one": 6.033549566308488e-06
+    },
+    "USA:c78710e5bfb7f314": {
+      "source_cells": 93,
+      "population": 7517697.0,
+      "maximum_shift": 0.005345328752245287,
+      "population_weighted_mean_shift": 0.0017740988669511346,
+      "population_weighted_rms_shift": 0.002502904246647287,
+      "population_share_shift_above_one": 0.0
+    },
+    "USA:cc58c4c14d03150e": {
+      "source_cells": 3,
+      "population": 1401490.0,
+      "maximum_shift": 1.519150359285959e-06,
+      "population_weighted_mean_shift": 8.744005696635149e-07,
+      "population_weighted_rms_shift": 1.1525389102169938e-06,
+      "population_share_shift_above_one": 0.0
+    },
+    "USG:4318b9af790790b9": {
+      "source_cells": 4,
+      "population": 3583.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "UZB:448c5653f0be3548": {
+      "source_cells": 1411,
+      "population": 35784418.0,
+      "maximum_shift": 0.32317520817039735,
+      "population_weighted_mean_shift": 0.0037515280921455235,
+      "population_weighted_rms_shift": 0.009248376763821719,
+      "population_share_shift_above_one": 0.0
+    },
+    "VCT:8a1bf16e1fe09fe4": {
+      "source_cells": 9,
+      "population": 76252.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "VEN:301beeea27f4cccb": {
+      "source_cells": 2740,
+      "population": 27831075.0,
+      "maximum_shift": 0.022323719695714467,
+      "population_weighted_mean_shift": 0.0018544778742929763,
+      "population_weighted_rms_shift": 0.002803950212325706,
+      "population_share_shift_above_one": 0.0
+    },
+    "VEN:d01ddcc4bca41887": {
+      "source_cells": 44,
+      "population": 556647.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "VGB:fbe0a46652f34473": {
+      "source_cells": 12,
+      "population": 25846.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "VIR:08404301006acbb1": {
+      "source_cells": 10,
+      "population": 93852.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "VNM:749468814d903c2a": {
+      "source_cells": 1357,
+      "population": 96442632.0,
+      "maximum_shift": 0.3359739057416517,
+      "population_weighted_mean_shift": 0.009241914998644511,
+      "population_weighted_rms_shift": 0.019208137659324626,
+      "population_share_shift_above_one": 0.0
+    },
+    "VNM:9e943f334983e219": {
+      "source_cells": 33,
+      "population": 518637.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "VUT:cd29270f54664d5f": {
+      "source_cells": 133,
+      "population": 258777.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "WEB:8660f88c9871d216": {
+      "source_cells": 33,
+      "population": 3377254.0,
+      "maximum_shift": 0.0005761777735244777,
+      "population_weighted_mean_shift": 0.00011636094524251156,
+      "population_weighted_rms_shift": 0.00019623690336276534,
+      "population_share_shift_above_one": 0.0
+    },
+    "WLF:be1abc47bb646f80": {
+      "source_cells": 5,
+      "population": 6399.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "WSB:50ca0205ee67e049": {
+      "source_cells": 3,
+      "population": 7482.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "WSM:13f12c032321342b": {
+      "source_cells": 25,
+      "population": 176446.0,
+      "maximum_shift": 0.0,
+      "population_weighted_mean_shift": 0.0,
+      "population_weighted_rms_shift": 0.0,
+      "population_share_shift_above_one": 0.0
+    },
+    "YEM:64d271dfdccb3847": {
+      "source_cells": 1361,
+      "population": 34219913.0,
+      "maximum_shift": 0.06762989479276092,
+      "population_weighted_mean_shift": 0.0014307606731002404,
+      "population_weighted_rms_shift": 0.002748012706115226,
+      "population_share_shift_above_one": 0.0
+    },
+    "ZAF:eb3d29c8e7d957f4": {
+      "source_cells": 4781,
+      "population": 60231178.0,
+      "maximum_shift": 0.18687186018384552,
+      "population_weighted_mean_shift": 0.0038565451983361516,
+      "population_weighted_rms_shift": 0.00892736732011071,
+      "population_share_shift_above_one": 0.0
+    },
+    "ZMB:583491139c8eb3b0": {
+      "source_cells": 2545,
+      "population": 20471139.0,
+      "maximum_shift": 0.02919854569054729,
+      "population_weighted_mean_shift": 0.002182254912283617,
+      "population_weighted_rms_shift": 0.0041615916761386755,
+      "population_share_shift_above_one": 0.0
+    },
+    "ZWE:241a07c809723778": {
+      "source_cells": 1347,
+      "population": 16596520.0,
+      "maximum_shift": 0.022233595814323204,
+      "population_weighted_mean_shift": 0.0008016420845151451,
+      "population_weighted_rms_shift": 0.001692586852675563,
+      "population_share_shift_above_one": 0.0
+    }
+  },
+  "inputs": {
+    "output/auto-cartogram/world-10000-transport-r5-grouped": {
+      "manifest.json": "4ab633d48b1f0c76614b36709171ef97d877fb5700dba404235a30aac8adb70e",
+      "sources.csv": "ccaf1c76e6d2257026ff04df307e83298f0b483175e65130d08acebcbdea47cd",
+      "targets.csv": "d812ecb9eeb845eb4a3a184ab9a6f81c4e1432eedab0f8fa2f26277ca5ff8399",
+      "mapping.csv": "c0545ed5ab61b27a877bdc7b99e78465c54f2253879c6e20331b50a365fa7c9c",
+      "target-quality.csv": "e3a4e0901ddfdbb9ed0019e2bf8f9a16f91a383d8a52a6f902cfba19e40e1025"
+    },
+    "output/auto-cartogram/world-10000-transport-r5-expanded-balanced": {
+      "manifest.json": "3c5607aca29853758b9b737facab441c6f8f68f5b1b120205ab4f54e0f62e4f4",
+      "sources.csv": "ccaf1c76e6d2257026ff04df307e83298f0b483175e65130d08acebcbdea47cd",
+      "targets.csv": "d812ecb9eeb845eb4a3a184ab9a6f81c4e1432eedab0f8fa2f26277ca5ff8399",
+      "mapping.csv": "65ca9de8a7d57335ad7a18ef2a06c55926619c27282866396c1d515b77b4bb0a",
+      "target-quality.csv": "9c05ff14741064d23fb83bf892094088ccd02321d6f163310da16d4c1778ef0c"
+    }
+  },
+  "script_sha256": "f688805a054fa8cd321332fb37e9340086e70b45d4fb7ece04d396b2a85d5afd"
+}

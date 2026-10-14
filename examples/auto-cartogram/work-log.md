@@ -644,3 +644,30 @@ under ignored `output/auto-cartogram/`.
   The world runs have 5, 13, and 12 infeasible groups. A returned cut need not
   give the strongest relative-error bound; retain the earlier disconnected
   bounds as well. Native Indonesia has no infeasible groups.
+
+## 03:30–03:57 UTC — corrected coarse world transport and final larger fit
+
+- All three geography-first world layouts reproduce byte-identical cells with
+  different Python hash seeds. Local documentation links and 447 archived file
+  hashes pass review at 03:32. Production source files and targets are unchanged.
+- The full experiment suite passes again at 03:34. The production CPU suite
+  also passes all 108 checks using the prepared example environment. A direct
+  root-project attempt lacks its DataFrames environment; no dependency or
+  production-file changes were made to resolve it.
+- The 200-pass 110,000-tile fit finishes with 103,884 tiles and 6,140 tiles of
+  absolute component error. Saved its image. It keeps all represented borders,
+  but its long strips and geographic order remain unacceptable.
+- Local support expansion succeeds for the 10,000-tile H3-5 world test and the
+  55,000-tile H3-3 test. Both retain full source mass, keep cross-group mass at
+  zero, and reduce maximum target error below 0.01%. They add 105,925 and 13,806
+  same-group one-step pairs. Integer flow, pair-order, and position checks pass.
+- Saved balance images with explicit coarse-source labels. At 10,000 tiles,
+  mean expected-position change is 0.0070 tile sides, but the maximum is 16.547
+  in China. This outlier occurs in unchanged support. A good mean is not enough.
+- The 110,000-tile one-step expansion fails at 0.02493% error. A complementary
+  target-set check proves this limit. Added that stronger bound and tested it
+  against all 343 three-source support cases. Stopped the longer scaling run
+  once the obstruction was proved; no corrected export exists for this case.
+- Started a 20-minute-bounded native GBR test from the 55,000-tile world layout.
+  It excludes other Natural Earth entity IDs and does not reproduce the old
+  OWID or Portsmouth mapping. Country-specific missing coverage remains unknown.
