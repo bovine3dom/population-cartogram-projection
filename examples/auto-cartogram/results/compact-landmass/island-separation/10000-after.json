@@ -1,0 +1,365 @@
+{
+  "method": "Nearest tile-centre segment for each nearby-island parent edge; no layout changes",
+  "gap_fraction": 0.35,
+  "segments_checked": 23,
+  "blocked_segments": 0,
+  "segments": [
+    {
+      "component": "AUS:6a36c6fd1db93bf9",
+      "anchor": "AUS:adfd7567b2399535",
+      "start": [
+        320,
+        105
+      ],
+      "end": [
+        320,
+        107
+      ],
+      "distance": 2.0,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "FXX:b04574696bff21bc",
+      "anchor": "ITA:ebecacbac755556c",
+      "start": [
+        199,
+        179
+      ],
+      "end": [
+        200,
+        178
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "IDN:1882fc741812bb99",
+      "anchor": "IDN:6f7a11314a3b7af3",
+      "start": [
+        321,
+        119
+      ],
+      "end": [
+        319,
+        119
+      ],
+      "distance": 2.0,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "IDN:43eb860ae00ba2ae",
+      "anchor": "IDN:fecb2bac3d81ef76",
+      "start": [
+        316,
+        121
+      ],
+      "end": [
+        315,
+        122
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "IDN:461e2601656ce574",
+      "anchor": "IDN:829c07ff03d97c10",
+      "start": [
+        274,
+        133
+      ],
+      "end": [
+        276,
+        133
+      ],
+      "distance": 2.0,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "IDN:4d155ba9803cf6be",
+      "anchor": "IDN:fecb2bac3d81ef76",
+      "start": [
+        310,
+        127
+      ],
+      "end": [
+        309,
+        126
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "IDN:746e7e525dfc90c5",
+      "anchor": "IDN:7c3797a36dd1a69b",
+      "start": [
+        338,
+        119
+      ],
+      "end": [
+        338,
+        121
+      ],
+      "distance": 2.0,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "IDN:829c07ff03d97c10",
+      "anchor": "IDN:fecb2bac3d81ef76",
+      "start": [
+        282,
+        129
+      ],
+      "end": [
+        284,
+        129
+      ],
+      "distance": 2.0,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "IDN:8b7b64d2940fb8dc",
+      "anchor": "IDN:829c07ff03d97c10",
+      "start": [
+        283,
+        130
+      ],
+      "end": [
+        282,
+        129
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "IMN:e2108479644de92c",
+      "anchor": "GBR:241258080ec293c4",
+      "start": [
+        183,
+        196
+      ],
+      "end": [
+        184,
+        197
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "JPN:3876400cea5031e2",
+      "anchor": "JPN:f07fed45233efce3",
+      "start": [
+        332,
+        179
+      ],
+      "end": [
+        332,
+        181
+      ],
+      "distance": 2.0,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "JPN:c1b6e25b62179c19",
+      "anchor": "JPN:f07fed45233efce3",
+      "start": [
+        338,
+        200
+      ],
+      "end": [
+        339,
+        199
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "JPN:ec0a7dcff3300192",
+      "anchor": "JPN:f07fed45233efce3",
+      "start": [
+        336,
+        181
+      ],
+      "end": [
+        335,
+        182
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "NZL:979ee6939c934325",
+      "anchor": "NZL:8f99f1c50259113a",
+      "start": [
+        331,
+        101
+      ],
+      "end": [
+        332,
+        102
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "PHL:21362b5a399c84c0",
+      "anchor": "PHL:3dde36a3deef9e30",
+      "start": [
+        334,
+        140
+      ],
+      "end": [
+        332,
+        140
+      ],
+      "distance": 2.0,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "PHL:2ce786cb39ab6f61",
+      "anchor": "PHL:7516d4fddea7755b",
+      "start": [
+        334,
+        132
+      ],
+      "end": [
+        334,
+        134
+      ],
+      "distance": 2.0,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "PHL:3dde36a3deef9e30",
+      "anchor": "PHL:6f9539ae2d2e4af7",
+      "start": [
+        332,
+        138
+      ],
+      "end": [
+        330,
+        138
+      ],
+      "distance": 2.0,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "PHL:6f9539ae2d2e4af7",
+      "anchor": "PHL:d9dc6d8657118070",
+      "start": [
+        330,
+        141
+      ],
+      "end": [
+        329,
+        142
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "PHL:726d0196a803e063",
+      "anchor": "PHL:3dde36a3deef9e30",
+      "start": [
+        333,
+        137
+      ],
+      "end": [
+        332,
+        138
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "PHL:9f45a34a40c23d0d",
+      "anchor": "PHL:eb1fb8d27ecf0027",
+      "start": [
+        336,
+        138
+      ],
+      "end": [
+        337,
+        139
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "PHL:d3c6f6bf47091a8d",
+      "anchor": "PHL:6db0873e452de6c9",
+      "start": [
+        327,
+        139
+      ],
+      "end": [
+        328,
+        138
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "PHL:f6d8e393f979d3c4",
+      "anchor": "PHL:eb1fb8d27ecf0027",
+      "start": [
+        342,
+        141
+      ],
+      "end": [
+        341,
+        140
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    },
+    {
+      "component": "SPM:82efd5ba4ffee3ed",
+      "anchor": "CAN:95c7ebac82699331",
+      "start": [
+        121,
+        188
+      ],
+      "end": [
+        120,
+        189
+      ],
+      "distance": 1.4142135623730951,
+      "blocking_components": [],
+      "blocked_cells": 0
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-10000-dissolved-input/groups.csv": "de670ff0aef7e2fbf2c499ed7400d9d24bd887a6e7f05f2f2757e23511ad051d",
+    "output/auto-cartogram/world-10000-dissolved-input/geographic-contacts.csv": "c2b31c4287fe7fabaf7404429dd1c543c22c34dd06f4f280ac93cbcb56f8b18f",
+    "output/auto-cartogram/world-10000-archipelago-gap0.35/cells.csv": "789346b13e9ef9a96a381198595a4d24ab86609d7c26bc1d5f730bb5c0ab340e",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "scripts": {
+    "review_island_separation.py": "717dd117af271722b96ef70087686a41e40720ff1bacc2f19c189363f4965823",
+    "restore_archipelagos.py": "7b92be8f09be319d64c751e8a6c31b5d9b6fe6faedd9cd24a23a0fe7aec9c2b3",
+    "prepare_flow.py": "b794cd56bfcce5910034d405d600deb257dd01829425a0301c79a0b432678fc2"
+  },
+  "limit": "A blocked segment is a review warning, not proof of a geographic error. The check uses source proximity, not country identity. It omits island pairs outside the threshold and blockers without source land borders. It checks one nearest tile-centre pair with fixed tie-breaking, not all possible paths. No connector cells or lines are added to the layout."
+}

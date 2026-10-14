@@ -869,6 +869,32 @@ The separated layout has exact budgets but is not an acceptable replacement.
   These test guide-grid sensitivity, not a new population scope. The 500,000-tile
   run remains active. No result is assumed for the running controls.
 
+## 21:12–21:28 UTC — Coast controls and an island-separation diagnostic
+
+- Ran four mainland controls that blend native population centres with native
+  geographic centroids: fractions 0.5 and 1, with guide weights 2 and 8.
+  Visually checked both guide-8 worlds and fraction-1/guide-2. Canada stays too
+  far east; Korea remains poor. The last control also has a split region.
+  Started guide weights 0 and 0.25 to test whether the flow guide dominates.
+- The 512-grid pipeline completes with exact counts, no split regions, two
+  region holes, and 60 missing plus 52 unsupported component contacts. Its world
+  image still shows poor Canada and Korea shapes. The 128-grid run stops at
+  fixed-border refinement because one region remains split. Rendered its
+  intermediate island stage for diagnosis. Do not label it a completed run.
+- Waited for these jobs from 21:12 to 21:22 UTC. This was compute waiting, not
+  continuous manual review. The 500,000-tile partition remains active.
+- Added a general nearby-island diagnostic. For each source-proximity parent
+  pair, trace the shortest tile-centre segment through grid-cell interiors.
+  Report any blocking component with source land borders. No map cells or lines
+  are added. Fixed tie-breaking and exact grid crossings avoid sampling gaps.
+- The diagnostic finds Kyushu separated from Honshu by South Korea in all three
+  original compact layouts. The threshold-0.35 variants have no blocked segments
+  among the 23, 67, and 90 checked pairs. Saved the full reports and comparison.
+  Other geographic defects can still escape this limited check.
+- Added the diagnostic to the recorded pipeline and review archives. Tests cover
+  reverse traversal, corner crossings, nearest-pair ties, and a synthetic blocked
+  island pair before and after correction. All 23 partition tests pass.
+
 ## Method reference
 
 The [SciPy closing documentation](https://docs.scipy.org/doc/scipy-1.17.0/reference/generated/scipy.ndimage.binary_closing.html)

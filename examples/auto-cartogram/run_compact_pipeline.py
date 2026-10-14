@@ -17,6 +17,7 @@ import repair_partition
 import review_flow
 import review_gaps
 import review_layout
+import review_island_separation
 import review_regions
 from save_review import digest
 
@@ -76,6 +77,7 @@ def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,str
             stage('shared-islands',lambda:restore_shared_islands.run(inputs,current,output/'flow-input/geometry.geojson',output/'layout'))
         title=f'Automatic shared-footprint experiment: {budget:,} tiles'
         metrics=stage('metrics',lambda:review_layout.run(inputs,output/'layout',title))
+        stage('island-separation',lambda:review_island_separation.run(inputs,output/'layout',polygons,output/'layout/island-separation.json'))
         gaps=stage('gaps',lambda:review_gaps.run(output/'layout/cells.csv',output/'review',groups=inputs/'groups.csv',title=title))
         def render():
             for source,target in [(output/'layout/review.svg',output/'layout/review.png'),(output/'review/gaps.svg',output/'review/gaps.png')]:

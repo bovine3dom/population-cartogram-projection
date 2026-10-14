@@ -1,0 +1,115 @@
+{
+  "checked_at_utc": "2026-10-14T21:28:48.227003+00:00",
+  "runner_sha256": "fcf9947c02355986370e2cac7e424200b11dae6da839ee9080d10e9cb4d4120d",
+  "results": [
+    {
+      "tiles": 10000,
+      "layout": "before",
+      "segments_checked": 23,
+      "blocked_segments": 1,
+      "blocked": [
+        {
+          "component": "JPN:3876400cea5031e2",
+          "anchor": "JPN:f07fed45233efce3",
+          "start": [
+            319,
+            186
+          ],
+          "end": [
+            322,
+            190
+          ],
+          "distance": 5.0,
+          "blocking_components": [
+            "KOR:1a1881fe9e034788"
+          ],
+          "blocked_cells": 4
+        }
+      ],
+      "record": "10000-before.json",
+      "sha256": "70a411e4cd29bb2d913bbcdbc8168c2464dff33c0da66bd9e150798bd0836af8"
+    },
+    {
+      "tiles": 10000,
+      "layout": "after",
+      "segments_checked": 23,
+      "blocked_segments": 0,
+      "blocked": [],
+      "record": "10000-after.json",
+      "sha256": "30389c5455244445ce2560c32d97a3917841630c4bce0f27a854b97f0cbf9a7e"
+    },
+    {
+      "tiles": 55000,
+      "layout": "before",
+      "segments_checked": 67,
+      "blocked_segments": 1,
+      "blocked": [
+        {
+          "component": "JPN:3876400cea5031e2",
+          "anchor": "JPN:f07fed45233efce3",
+          "start": [
+            742,
+            441
+          ],
+          "end": [
+            748,
+            448
+          ],
+          "distance": 9.219544457292887,
+          "blocking_components": [
+            "KOR:1a1881fe9e034788"
+          ],
+          "blocked_cells": 8
+        }
+      ],
+      "record": "55000-before.json",
+      "sha256": "f68242a123febebbfa433bd393f292f5d60d50d1f1c44ad9d2873b4ef65283ef"
+    },
+    {
+      "tiles": 55000,
+      "layout": "after",
+      "segments_checked": 67,
+      "blocked_segments": 0,
+      "blocked": [],
+      "record": "55000-after.json",
+      "sha256": "e8cfb67b5cd5a6a9d581cc446a9226a52c841beb18cb068f085d27b119f48f1e"
+    },
+    {
+      "tiles": 110000,
+      "layout": "before",
+      "segments_checked": 90,
+      "blocked_segments": 1,
+      "blocked": [
+        {
+          "component": "JPN:3876400cea5031e2",
+          "anchor": "JPN:f07fed45233efce3",
+          "start": [
+            1049,
+            624
+          ],
+          "end": [
+            1054,
+            634
+          ],
+          "distance": 11.180339887498949,
+          "blocking_components": [
+            "KOR:1a1881fe9e034788"
+          ],
+          "blocked_cells": 12
+        }
+      ],
+      "record": "110000-before.json",
+      "sha256": "a5f725896f599f1c60b4a4091a70c2bed9999895a8918bc14484e0aa94e25a03"
+    },
+    {
+      "tiles": 110000,
+      "layout": "after",
+      "segments_checked": 90,
+      "blocked_segments": 0,
+      "blocked": [],
+      "record": "110000-after.json",
+      "sha256": "4fb53ab43b34330da236928235f65c0dfc530c673efdc3bbaa7ebf2fdf5e5548"
+    }
+  ],
+  "limit": "Diagnostic, not proof of correct geographic placement. After layouts use source-gap threshold 0.35; the archived 10000- and 55000-tile bounded images use threshold 0.2."
+}
