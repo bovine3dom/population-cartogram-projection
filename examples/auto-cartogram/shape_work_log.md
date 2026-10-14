@@ -396,3 +396,16 @@ Inspect the resulting images at world and regional scales.
   Indian tip, but moves Japan north of China and pulls Java too far south. The
   hierarchy must not move every large isolated land mass. The rejected cells
   remain in ignored output for comparison.
+
+## 13:09–13:12 UTC — protect large isolated components
+
+- Limited the coast hierarchy to components below 1% of matched world
+  population. Components at or above that threshold stay fixed, as do all
+  components with source land borders. The threshold is a generic experiment
+  setting, not a list of hand-picked countries.
+- All 29 focused tests pass. The island test now checks the population limit
+  and verifies that protected components do not move.
+- Visual review of the 55,000-tile result puts Sri Lanka beside the Indian tip
+  without moving Japan or Java. It keeps exact counts, no false contacts, and
+  the same 124 retained land borders as its parent layout. No connector paths
+  are added. Indonesia's relation to the enlarged India shape still needs review.
