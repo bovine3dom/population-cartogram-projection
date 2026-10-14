@@ -164,7 +164,7 @@ def guide_costs(inputs,tiles,anchor=.05,guide=1.,margin=64,stretch=None,budgets=
     return (costs,origin,allowed) if stretch is not None else (costs,origin)
 
 
-def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.,fit_attempts=1,strict_fit=False,interior_sea_radius=0,guide_layout=None):
+def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,anchor=.05,choices=4,cycles=False,fit_rounds=0,atomic=False,regrow=False,bounded=False,stretch=.1,contact_reward=.5,template_penalty=0.,land_only=False,sea_perimeter=0.,fit_attempts=1,strict_fit=False,interior_sea_radius=0,guide_layout=None,cache_regrowth=True):
     if output.exists():raise ValueError('Output already exists')
     if rounds<1 or choices<1 or fit_rounds<0 or fit_attempts<1 or interior_sea_radius<0 or contact_reward>1 or any(not math.isfinite(v) or v<0 for v in [perimeter,false_contact,guide,anchor,stretch,contact_reward,template_penalty,sea_perimeter]):raise ValueError('Invalid optimization settings')
     if template_penalty and not bounded:raise ValueError('Template penalty requires bounded deformation')
@@ -221,6 +221,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         print(f'Count round {turn}: {moves} transfers; count error {error}',flush=True)
         if not moves or not error:break
     if land_only:state.fixed=frozenset(fixed)
+    state.cache_regrowth=cache_regrowth
     counts={c:len(points) for c,points in state.tiles.items()}
     error=sum(abs(counts[c]-requested[c]) for c in requested)
     previous=state.energy()
@@ -236,7 +237,7 @@ def run(inputs,layout,output,rounds=300,perimeter=1.,false_contact=4.,guide=1.,a
         maximum_rounds=rounds,rounds=turn,perimeter=perimeter,false_contact=false_contact,guide=guide,anchor=anchor,choices=choices,
         cycles=cycles or bool(fit_rounds) or atomic,atomic=atomic,regrow=regrow,maximum_fit_rounds=fit_rounds,fit_attempts=fit_attempts,strict_fit=strict_fit,absolute_tile_error=error,
         bounded=bounded,stretch=stretch if bounded else None,contact_reward=contact_reward if bounded else None,sea_perimeter=sea_perimeter,interior_sea_radius=interior_sea_radius,
-        template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),guide_area='requested budget' if fit_rounds else 'initial count',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,
+        template_penalty=template_penalty,land_only=land_only,fixed_components=len(fixed),guide_area='requested budget' if fit_rounds else 'initial count',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,cache_regrowth=cache_regrowth,
         initial_energy=initial,final_energy=previous,elapsed_seconds=time.monotonic()-started,
         input_cells_sha256=input_hashes[str(layout/'cells.csv')],inputs=input_hashes,scripts=hashes,
         limit='Shape exchanges preserve counts after optional budget fitting. See absolute_tile_error for residual error. Contacts may be lost or added. Fixed guide centres can preserve poor geographic positions. A guide layout changes target centres, not the starting cells; alignment uses a positive uniform scale and translation without rotation. Guides omit original holes. Sequential checks restrict single-cell movement. Atomic checks can move them through a temporary two-cell state. Bounded mode prevents false contacts and limits new cells to a source-outline buffer; initial cells always remain allowed. A template penalty charges for new cells outside the initial tile shape. Land-only mode freezes components without represented land borders during shape optimization, and also during count fitting in bounded mode. An interior sea radius restricts the extra sea-edge cost to water inside a fixed closing envelope of initial land; this envelope can include real water.')
@@ -267,5 +268,6 @@ if __name__=='__main__':
     parser.add_argument('--contact-reward',type=float,default=.5)
     parser.add_argument('--template-penalty',type=float,default=0.)
     parser.add_argument('--guide-layout',type=Path)
+    parser.add_argument('--no-regrowth-cache',dest='cache_regrowth',action='store_false')
     parser.add_argument('--land-only',action='store_true');parser.add_argument('--interior-sea-radius',type=int,default=0)
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
