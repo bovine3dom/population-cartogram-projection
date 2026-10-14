@@ -21,6 +21,7 @@ from land_envelope import dock_parts
 import population_sites
 import place_islands
 import run_compact_pipeline
+import relax_flow_areas
 
 
 class CapacityPartitionTests(unittest.TestCase):
@@ -50,6 +51,28 @@ class CapacityPartitionTests(unittest.TestCase):
     def test_single_label(self):
         with contextlib.redirect_stdout(io.StringIO()):labels,_=partition(np.arange(5.)[:,None],[5])
         np.testing.assert_array_equal(labels,np.zeros(5,dtype=int))
+
+    def test_relaxed_guide_areas(self):
+        rows=[dict(component_id=c,tiles=n,source_area=a) for c,n,a in [('a',9,1),('b',1,9),('c',3,100)]]
+        regions={'a':'mainland','b':'mainland','c':'island'}
+        self.assertEqual(relax_flow_areas.relaxed_areas(rows,regions,0),{'a':9.,'b':1.,'c':3.})
+        self.assertEqual(relax_flow_areas.relaxed_areas(rows,regions,.5),{'a':5.,'b':5.,'c':3.})
+        for blend in [-1,2,float('nan')]:
+            with self.assertRaises(ValueError):relax_flow_areas.relaxed_areas(rows,regions,blend)
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);inputs=root/'input';flow=root/'flow';inputs.mkdir();flow.mkdir()
+            (inputs/'groups.csv').write_text('component_id,tiles\na,9\nb,1\nc,3\n')
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\na,b,true\n')
+            (flow/'components.csv').write_text('component_id,tiles,source_area\na,9,1\nb,1,9\nc,3,100\n')
+            (flow/'geometry.geojson').write_text('{"type":"FeatureCollection","features":[]}\n')
+            (root/'components.csv').write_text('component_id,map_unit\na,A\nb,B\nc,C\n')
+            units=root/'units.geojson';units.write_text(json.dumps(dict(features=[dict(properties=dict(GU_A3=c,CONTINENT='Asia')) for c in 'ABC'])))
+            report=relax_flow_areas.run(inputs,flow,root/'components.csv',units,root/'result',blend=.5)
+            self.assertEqual(report['regions']['0 / Asia'],dict(requested=10.,guide=10.))
+            self.assertEqual((root/'result/geometry.geojson').read_bytes(),(flow/'geometry.geojson').read_bytes())
+            self.assertIn('a,5.0',(root/'result/areas.csv').read_text())
+            (inputs/'groups.csv').write_text('component_id,tiles\na,8\nb,2\nc,3\n')
+            with self.assertRaisesRegex(ValueError,'budgets differ'):relax_flow_areas.run(inputs,flow,root/'components.csv',units,root/'bad')
 
     def test_dock_parts(self):
         target=np.zeros((20,30),dtype=bool);target[2:6,2:6]=True;target[10:13,20:23]=True;target[16,26]=True
