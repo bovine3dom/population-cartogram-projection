@@ -1,0 +1,90 @@
+{
+  "border_export": {
+    "metrics": {
+      "cross_rms_all": 674.407828918336,
+      "cross_rms_max": 6380.467491907635,
+      "cross_rms_p50": 206.356968676414,
+      "cross_rms_p90": 889.1689401409344,
+      "interior_max": 1857.160131914704,
+      "interior_p50": 24.641309728407712,
+      "interior_p90": 105.00737399774064,
+      "local_p50": 53.72082822882083,
+      "local_p90": 204.65243398384033,
+      "local_rms_all": 159.63225706041715,
+      "local_rms_max": 1880.2567575883684,
+      "local_rms_p50": 67.27506697817637,
+      "local_rms_p90": 224.50189918954092,
+      "marginal_error": 9.384200822853961e-5,
+      "seam_max": 6681.132949043011,
+      "seam_p50": 198.83294987132837,
+      "seam_p90": 882.6964097384127,
+      "spread_max": 2491.30799997193,
+      "spread_mean": 17.236636180755283,
+      "spread_p90": 35.23850031130533,
+      "spread_p99": 129.9322532849994,
+      "target_max_relative": 9.999774954061458e-5
+    },
+    "reversed_triangle_area_km2": 3.322198835061482e6
+  },
+  "files": {
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/audit_h3_borders.jl": "6f472a243a443b9f124a84bebbe14f81963536167d5a5bc26eac44cb973c2c2f",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-55000-h3-5-border/balance-complete.json": "a22d12362f6944be4ff92ad49c508871ac4345fc729da6a5486bd9f4242a7737",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/world-55000-h3-5-border/recovered-complete/fit/candidate.jls": "85e6ad7f72dee3643bdeb707b862e4c2bf02a12f309320ce4128a6b12796547b"
+  },
+  "limit": "A numerical gate is not visual approval. Inspect folds, source spread, city positions, and all saved seam pairs. Layout coordinates and island population eligibility remain fixed.",
+  "numerical_gate": true,
+  "original": {
+    "metrics": {
+      "cross_rms_all": 716.3806662990335,
+      "cross_rms_max": 6382.5170989795715,
+      "cross_rms_p50": 273.2997191711679,
+      "cross_rms_p90": 931.1317928165859,
+      "interior_max": 2318.3048794415713,
+      "interior_p50": 23.583634176725496,
+      "interior_p90": 98.08572228748798,
+      "local_p50": 42.414812784655695,
+      "local_p90": 161.0676983357149,
+      "local_rms_all": 145.64276524387753,
+      "local_rms_max": 2309.0428221351676,
+      "local_rms_p50": 56.90437188378607,
+      "local_rms_p90": 187.5742469628257,
+      "marginal_error": 9.872565712226722e-5,
+      "seam_max": 6683.471444500581,
+      "seam_p50": 266.8704353910804,
+      "seam_p90": 923.5629655856889,
+      "spread_max": 2491.30799997193,
+      "spread_mean": 18.140957238580935,
+      "spread_p90": 35.99210687971238,
+      "spread_p99": 123.90109862572035,
+      "target_max_relative": 9.999976688812584e-5
+    },
+    "reversed_triangle_area_km2": 385646.2989763613
+  },
+  "tuned_baseline": {
+    "metrics": {
+      "cross_rms_all": 716.355005825067,
+      "cross_rms_max": 6382.6490091157375,
+      "cross_rms_p50": 273.3952285476764,
+      "cross_rms_p90": 931.7995395869945,
+      "interior_max": 2318.1321677628653,
+      "interior_p50": 23.846843207629057,
+      "interior_p90": 98.21511931852356,
+      "local_p50": 42.439239801538434,
+      "local_p90": 161.22849149833777,
+      "local_rms_all": 145.6016852232623,
+      "local_rms_max": 2308.8813744374525,
+      "local_rms_p50": 56.79964612794295,
+      "local_rms_p90": 188.0316216964894,
+      "marginal_error": 9.791787634612359e-5,
+      "seam_max": 6683.623646606478,
+      "seam_p50": 267.0091320603616,
+      "seam_p90": 923.5418398025081,
+      "spread_max": 2491.30799997193,
+      "spread_mean": 17.381397711455868,
+      "spread_p90": 35.8787132713497,
+      "spread_p99": 123.5883014504536,
+      "target_max_relative": 0.0007932154833399929
+    },
+    "reversed_triangle_area_km2": 405822.2050040925
+  }
+}

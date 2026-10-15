@@ -1,0 +1,7 @@
+{
+  "url": "http://127.0.0.1:1983/?data=planet-auto-55000-h3-5-islands-border/population_density_hilo.arrow&cartogram=planet-auto-55000-h3-5-islands-border/cartogram_weights_auto_55000_h3_5_hilo.arrow#x=0&y=15&z=-1",
+  "errors": [],
+  "failedRequests": [],
+  "basemap": "Neutral local style; actual H3-MON app and density overlay",
+  "bodyClass": "pane-open cartogram-ready load-complete"
+}
