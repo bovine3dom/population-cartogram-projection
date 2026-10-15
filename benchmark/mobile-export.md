@@ -1,5 +1,9 @@
 # Mobile export results
 
+> Historical measurements. Optional row reduction and replacement-dictionary
+> exports were removed on 2026-10-15. See
+> [the format cleanup](continuity-format-cleanup.md) for current files and policy.
+
 Status: complete, 2026-10-14 01:43 UTC. The work window ends at 01:45 UTC.
 
 ## Published experiment

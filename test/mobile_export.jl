@@ -4,7 +4,7 @@ include("../examples/continuity/mobile/write.jl")
 include("../examples/continuity/mobile/quality.jl")
 const ME=MobileExport
 const MW=MobileWriter
-@testset "Mobile export selection" begin
+@testset "Full mapping storage" begin
     meta=(;source_index=Dict(UInt64(1)=>Int32(1),UInt64(2)=>Int32(2)),
         target_index=Dict((0,0,1)=>Int32(1),(2,0,1)=>Int32(2)),
         ids=UInt64[1,2],population=[10.,1.],codes=[1,1],targets=[(0,0,1),(2,0,1)],
@@ -14,31 +14,7 @@ const MW=MobileWriter
     data=(;meta,index,weight=w)
     @test index.source_rows==[2,1,3,4]
     @test index.target_rows==[1,3,2,4]
-    @test ME.select_rows(data)==[1,2,3]
-    @test ME.select_rows(data;target_retained=.99)==[1,2,3]
-    @test ME.select_rows(data;source_retained=1.)==[1,2,3,4]
-    @test isnothing(ME.target_floor_rows(data,0.))
-    @test ME.target_floor_rows(data,.5)==[true,true,false,false]
-    @test ME.target_floor_rows(data,.99)==[true,true,true,false]
-    @test_throws ErrorException ME.target_floor_rows(data,1.1)
     reference=ME.reference_stats(data)
-    full=ME.evaluate(data,Int32[1,2,3,4],reference)
-    @test full.population_retained≈1
-    @test full.inverse_km_max<1e-9
-    @test full.forward_max<1e-12
-    @test full.target_mass_error_max<1e-12
-    @test full.target_tv_max<1e-12
-    @test ME.evaluate(data,Int32[1,2,3,4],reference;weights=w)==full
-    @test_throws ErrorException ME.evaluate(data,Int32[1,2,3,4],reference;weights=[.4,.6,.95,0.])
-    @test_throws ErrorException ME.evaluate(data,Int32[1,2,3,4],reference;weights=[1.])
-    reduced=ME.evaluate(data,ME.select_rows(data),reference)
-    @test reduced.rows==3
-    @test reduced.population_retained≈10.95/11
-    @test reduced.target_mass_error_max≈.05/4.95
-    @test 0<reduced.target_tv_max<1
-    @test_throws ErrorException ME.evaluate(data,Int32[1,2],reference)
-    @test_throws ErrorException ME.select_rows(data;source_retained=1.1)
-    @test_throws ErrorException ME.select_rows(data;source_top=-1)
     @test_throws ErrorException ME.group_rows(Int32[1],2)
     local_data=ME.country_data(data,1)
     @test local_data.original_rows==[2,1,3,4]
@@ -53,7 +29,7 @@ const MW=MobileWriter
     lost=MobileQuality.compare_fields(data,Int32[1,2],w[1:2],["full","partial","empty"],fields)
     @test lost[2].lost==2
     @test ismissing(lost[2].absolute_max)
-    part=MW.select_part(data,(;rows=Int32[1,2,3,4],weights=w))
+    part=(;meta,source=index.source,target=index.target,weights=w,labels=Dict(3=>"Test city"))
     second=merge(part,(;meta=merge(meta,(;population=2meta.population,codes=[2,2],targets=[(0,0,2),(2,0,2)]))))
     table=MW.columns([part,second])
     shifted=merge(part,(;weights=part.weights.*[1.00001,1.00001,.99999,.99999]))
@@ -80,7 +56,6 @@ const MW=MobileWriter
     @test sum(owned.weight)≈sum(table.weight) atol=1e-6
     @test count(!ismissing,owned.label)==2
     @test_throws ErrorException MW.columns([part];owners=Dict((0,0)=>2))
-    @test_throws ErrorException MW.select_part(data,(;rows=Int32[1,2,4],weights=w[[1,2,4]]))
     mktempdir() do dir
         path=joinpath(dir,"test.arrow")
         @test MW.write_file(path,[part,second]).rows==8

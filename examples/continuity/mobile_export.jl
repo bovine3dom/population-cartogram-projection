@@ -109,38 +109,6 @@ function country_data(data,code)
     return (;meta=local_meta,index=local_index,weight=w,original_rows=rows)
 end
 
-function keep_groups!(keep,rows,ptr,score;top=0,retained=0.)
-    top>=0 && 0<=retained<=1 || error("invalid selection limits")
-    Threads.@threads for i in 1:length(ptr)-1
-        first,last=ptr[i],ptr[i+1]-1
-        total=retained>0 ? sum(score(rows[k]) for k in first:last) : 0.
-        cumulative=0.
-        for (rank,k) in enumerate(first:last)
-            rank>top && cumulative>=retained*total && break
-            r=rows[k];keep[r]=true;cumulative+=score(r)
-        end
-    end
-    return keep
-end
-
-function select_rows(data;source_top=1,target_top=1,source_retained=0.,target_retained=0.)
-    (;index,weight,meta)=data
-    # Byte masks avoid concurrent read/modify/write operations on packed bits.
-    keep=zeros(Bool,length(weight))
-    keep_groups!(keep,index.source_rows,index.source_ptr,r->(@inbounds weight[r]);top=source_top,retained=source_retained)
-    keep_groups!(keep,index.target_rows,index.target_ptr,r->(@inbounds weight[r]*meta.population[index.source[r]]);top=target_top,retained=target_retained)
-    return Int32.(findall(keep))
-end
-
-function target_floor_rows(data,fraction)
-    0<=fraction<=1 || error("invalid target floor fraction")
-    fraction==0 && return nothing
-    (;index,weight,meta)=data
-    keep=zeros(Bool,length(weight))
-    keep_groups!(keep,index.target_rows,index.target_ptr,r->(@inbounds weight[r]*meta.population[index.source[r]]);retained=fraction)
-    return BitVector(keep)
-end
-
 function reference_stats(data)
     (;index,weight,meta)=data
     ns,nt=length(meta.ids),length(meta.targets)
@@ -158,45 +126,4 @@ function reference_stats(data)
     return (;source_sum,source_xy,target_mass,target_xyz)
 end
 
-function evaluate(data,rows,reference;weights=nothing)
-    isnothing(weights) || (length(weights)==length(rows) && all(w->isfinite(w)&&w>0,weights)) || error("invalid reduced weights")
-    (;index,weight,meta)=data
-    ns,nt=length(meta.ids),length(meta.targets)
-    retained=zeros(ns);target_retained=zeros(nt)
-    for r in rows
-        s,t=index.source[r],index.target[r]
-        retained[s]+=weight[r];target_retained[t]+=weight[r]*meta.population[s]
-    end
-    all(>(0),retained) && all(>(0),target_retained) || error("selection lost coverage")
-    source_xy=zeros(2,ns);source_sum=zeros(ns);target_mass=zeros(nt);target_xyz=zeros(3,nt)
-    for (position,r) in enumerate(rows)
-        s,t=index.source[r],index.target[r]
-        w=isnothing(weights) ? weight[r]/retained[s] : weights[position]
-        mass=w*meta.population[s];source_sum[s]+=w
-        source_xy[1,s]+=w*meta.targets[t][1];source_xy[2,s]+=w*meta.targets[t][2]
-        target_mass[t]+=mass
-        for k in 1:3
-            target_xyz[k,t]+=mass*meta.xyz[k,s]
-        end
-    end
-    source_xy./=transpose(source_sum);target_xyz./=transpose(target_mass)
-    tv=1 .- target_retained./reference.target_mass
-    for (position,r) in enumerate(rows)
-        s,t=index.source[r],index.target[r];mass=weight[r]*meta.population[s]
-        newweight=isnothing(weights) ? weight[r]/retained[s] : weights[position]
-        tv[t]+=abs(newweight*meta.population[s]/target_mass[t]-mass/reference.target_mass[t])
-    end
-    tv./=2
-    forward=vec(sqrt.(sum(abs2,source_xy.-reference.source_xy;dims=1)))
-    inverse=6371 .* vec(sqrt.(sum(abs2,target_xyz.-reference.target_xyz;dims=1)))
-    mass_error=abs.(target_mass./reference.target_mass.-1)
-    q(v,p)=quantile(v,p)
-    return (;rows=length(rows),estimated_mb=30.125length(rows)/1e6,source_sum_error=maximum(abs.(source_sum.-1)),
-        population_retained=sum(retained.*meta.population)/sum(meta.population),
-        source_retained_p01=q(retained,.01),source_retained_p50=q(retained,.5),
-        forward_p50=q(forward,.5),forward_p99=q(forward,.99),forward_max=maximum(forward),
-        inverse_km_p50=q(inverse,.5),inverse_km_p99=q(inverse,.99),inverse_km_max=maximum(inverse),
-        target_mass_error_p50=q(mass_error,.5),target_mass_error_p99=q(mass_error,.99),target_mass_error_max=maximum(mass_error),
-        target_tv_p50=q(tv,.5),target_tv_p99=q(tv,.99),target_tv_max=maximum(tv))
-end
 end

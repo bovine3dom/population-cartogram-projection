@@ -12,8 +12,8 @@ const MW=MobileWriter
     w=[.25,.75,.5,.5,.75,.25]
     meta=ME.metadata(lo,hi,x,y,pop,code,labels)
     index=ME.index_rows(lo,hi,x,y,code,w,meta)
-    data=(;meta,index,weight=w)
-    table=MW.columns([MW.select_part(data,(;rows=Int32.(1:6),weights=w))])
+    part=(;meta,source=index.source,target=index.target,weights=w,labels=Dict(2=>"City"))
+    table=MW.columns([part])
     kept=[2,3,4,5,6]
     cut=(; (name=>getproperty(table,name)[kept] for name in keys(table))...)
     cut.weight[1]=1

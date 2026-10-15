@@ -31,5 +31,8 @@ const NE=NativeExport
         input=Arrow.Table(joinpath(native,"all-res6.arrow"))
         @test_throws ErrorException NE.metadata([merge(part,(;meta=merge(meta,(;population=[11.,10.]))))],input)
         @test_throws ErrorException NE.metadata([part,part],input)
+        @test read(joinpath(out,"cartogram_weights_hilo.arrow"),6)==collect(codeunits("ARROW1"))
+        write(joinpath(fit,"input.toml"),"target_retained = 0.99\n")
+        @test_throws ErrorException NE.export_native(fit,native,guides,joinpath(dir,"reduced"))
     end
 end

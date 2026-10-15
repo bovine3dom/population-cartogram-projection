@@ -1,5 +1,9 @@
 # Native H3-6 planet results
 
+> Historical measurements. Optional row reduction and replacement-dictionary
+> exports were removed on 2026-10-15. See
+> [the format cleanup](continuity-format-cleanup.md) for current files and policy.
+
 Work window: 2026-10-14 22:51 UTC to 2026-10-15 04:51 UTC.
 The four H3-6 datasets are additional maps. H3-5 and the existing regional
 files are unchanged. H3-MON code, its default dataset, its service, and its

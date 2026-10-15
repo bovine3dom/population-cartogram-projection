@@ -17,54 +17,58 @@ def write_toml(path, values):
 
 class Publication(unittest.TestCase):
     def fixture(self, root):
-        raw, packed, quality, destination = [root / n for n in ("raw", "stream", "quality", "published")]
-        for p in (raw, packed, quality):
+        raw, quality, destination = [root / n for n in ("raw", "quality", "published")]
+        for p in (raw, quality):
             p.mkdir()
         audit = dict(parts_sha256="parts", factor=2, resolution=6, countries=206, sources=10,
                      physical_targets=20, rows=30, population=1000, labelled_sources=2, model="Test model")
         for kind, name in publisher.FILES.items():
-            (raw / name).write_bytes(b"original")
-            (packed / name).write_bytes(b"stream")
-            original, final = publisher.digest(raw / name), publisher.digest(packed / name)
-            audit[f"{kind}_sha256"] = original
-            write_toml(packed / f"{kind}-verified.toml", dict(all_columns_equal=True, reader="Arrow.Stream",
-                       reference_sha256=original, stream_sha256=final, stream_bytes=6))
-            (packed / Path(name).with_suffix(".packing.json")).write_text(json.dumps(dict(input_sha256=original, output_sha256=final)))
+            path = raw / name
+            path.write_bytes(b"ARROW1dataARROW1")
+            audit[f"{kind}_sha256"] = publisher.digest(path)
+            audit[f"{kind}_bytes"] = path.stat().st_size
         write_toml(raw / "audit.toml", audit)
         write_toml(raw / "fit-input.toml", dict(model="Test model"))
         for name in ("fit-countries.csv", "country-mass.csv"):
             (raw / name).write_text("code\n24\n")
-        write_toml(quality / "geometry.toml", dict(parts_sha256="parts", factor=2, ratio995=2., capacity_lower995=1., low_population_ratio995=1.5))
-        return raw, packed, quality, destination
+        write_toml(quality / "geometry.toml", dict(parts_sha256="parts", factor=2, ratio995=2., low_population_ratio995=1.5))
+        return raw, quality, destination
 
     def test_publish_and_refuse_overwrite(self):
         with tempfile.TemporaryDirectory() as d:
             args = self.fixture(Path(d))
-            self.assertEqual(publisher.publish(*args), 12)
+            self.assertEqual(publisher.publish(*args), 32)
             metadata = json.loads((args[-1] / "population_density_hilo.json").read_text())
             self.assertNotIn("viewportGeometry", metadata)
             self.assertEqual(metadata["trimFactor"], 0)
             self.assertTrue(metadata["cartogramLineProbe"])
             audit = json.loads((args[-1] / "audit.json").read_text())
-            self.assertEqual(audit["transport_bytes"], 6)
+            self.assertEqual(audit["encoding"], "Arrow IPC file")
             self.assertEqual(audit["transport_sha256"], publisher.digest(args[-1] / publisher.FILES["transport"]))
             with self.assertRaises(ValueError):
                 publisher.publish(*args)
 
-    def test_tampered_stream(self):
-        with tempfile.TemporaryDirectory() as d:
-            args = self.fixture(Path(d))
-            (args[1] / publisher.FILES["transport"]).write_bytes(b"changed")
-            with self.assertRaises(ValueError):
-                publisher.publish(*args)
-            self.assertFalse(args[-1].exists())
-
-    def test_packing_needs_binary_audit(self):
-        with tempfile.TemporaryDirectory() as d:
-            args = self.fixture(Path(d))
-            write_toml(args[0] / "fit-input.toml", dict(target_retained=.99))
-            with self.assertRaises(ValueError):
-                publisher.publish(*args)
+    def test_reject_invalid_inputs(self):
+        for failure in ("hash", "stream", "footer", "reduction", "geometry"):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as d:
+                args = self.fixture(Path(d))
+                raw, quality, destination = args
+                if failure in ("hash", "stream", "footer"):
+                    content = {"hash": b"ARROW1editARROW1", "stream": b"stream", "footer": b"ARROW1dataBROKEN"}[failure]
+                    path = raw / publisher.FILES["transport"]
+                    path.write_bytes(content)
+                    if failure != "hash":
+                        audit = publisher.toml(raw / "audit.toml")
+                        audit.update(transport_sha256=publisher.digest(path), transport_bytes=path.stat().st_size)
+                        write_toml(raw / "audit.toml", audit)
+                elif failure == "reduction":
+                    write_toml(raw / "fit-input.toml", dict(target_retained=.99))
+                else:
+                    write_toml(quality / "geometry.toml", dict(parts_sha256="other", factor=2))
+                with self.assertRaises(ValueError):
+                    publisher.publish(*args)
+                self.assertFalse(destination.exists())
+                self.assertFalse(destination.with_name(destination.name + ".pending").exists())
 
 
 if __name__ == "__main__":

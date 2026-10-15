@@ -1,34 +1,31 @@
 # Native H3-6 publication
 
-Use a new directory for each factor and packing setting. Do not replace H3-5.
+Use the saved fitted mapping. Do not apply optional row reduction or per-batch
+replacement dictionaries. Ordinary lossless dictionaries remain supported.
 The native source fit uses KernelAbstractions and oneAPI. Target subdivision
-and bounded moment packing use CPU linear programming.
+uses CPU linear programming; it is a fitting constraint, not export packing.
 
-1. Finish all countries. Retain `input.toml` and each country checkpoint.
-2. Run `native_export.jl FIT NATIVE GUIDES NEW_EXPORT FACTOR`.
-3. Run `native_quality.jl FIT GUIDES FACTOR BORDERS NEW_QUALITY`.
-4. For approximate moment packing, also export its full reference. Run
-   `audit_native_packing.jl REFERENCE_EXPORT PACKED_EXPORT NATIVE_ARROW REPORT`.
-   This checks the actual binary city and navigation anchors, query changes,
-   mass, geographic means, density, and the configured source-position bound.
-5. Use `mobile/pack_stream.py` on each Arrow file. This is lossless dictionary
-   packing, not HTTP compression. Keep the generated packing reports.
-6. Use `mobile/verify_stream.jl` on each original and stream file. Name the
-   reports `transport-verified.toml` and `density-verified.toml` in the stream
-   directory. Each comparison must check every column.
-7. Run a headless browser check. Record source cells, target cells, displayed
-   labels, errors, and memory. A file-size result is not a browser-memory result.
-8. Run `publish_native.py EXPORT STREAM QUALITY NEW_DESTINATION [PACKING_AUDIT]`.
+1. Finish all requested countries. Retain the input manifest and checkpoints.
+2. Run `native_export.jl FIT NATIVE GUIDES NEW_EXPORT FACTOR` with the mobile
+   example project. This checks every binary column, masses, and coverage.
+3. Run `native_quality.jl FIT GUIDES FACTOR BORDERS NEW_QUALITY` with the uk-h3
+   example project. Its fitted-part hash must match the binary audit.
+4. Run a headless browser check. Record coverage, labels, errors, and memory.
+5. Run `publish_native.py EXPORT QUALITY NEW_DESTINATION`.
 
-The publisher verifies the hash chain before staging files. It refuses an
-existing destination. It adds `population_density_hilo.json` and then renames
-the staging directory. It does not start H3-MON, alter application code, change
-compression, or add a viewport geometry option.
+The publisher checks file headers, footers, hashes, sizes, and fit provenance.
+It rejects old moment-packed inputs and Arrow streams. It stages ordinary
+Arrow IPC files, adds `population_density_hilo.json`, and renames the directory.
+It refuses to overwrite an existing destination. It does not start H3-MON,
+change application defaults or compression, or add a viewport geometry option.
 
-Use `Arrow.Stream` with Arrow.jl 2.8.1. `Arrow.Table` can read replacement
-dictionaries incorrectly. Apache Arrow JavaScript supports the stream format.
-See `mobile/stream.md` for the reader checks.
+Arrow.Table and Apache Arrow JavaScript can read the ordinary IPC files.
+No replacement-dictionary reader workaround is needed. Existing saved fits can
+retain their original numerical sparsification policy; re-encoding cannot
+restore discarded fitted contributions. New native fits export every positive
+contribution and cannot resume an old row-selected export root.
 
-The baseline native planet retained about 1.3 GB of browser backing storage.
-It is not established as phone-safe. Keep H3-5 available. Higher subdivision
-factors add target cells; they do not reduce the native geographic layer.
+The native planet requires substantial browser memory. Removing export packing
+increases file sizes and does not remove the geographic-layer memory cost.
+Keep H3-5 available. Preserve old experimental publications outside the served
+data tree when migrating existing URLs to checked full exports.

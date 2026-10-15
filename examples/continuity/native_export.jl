@@ -66,6 +66,11 @@ end
 
 function export_native(root,native_dir,guides,out;factor=1)
     isfile(joinpath(root,"fit-complete.txt"))||error("fit is incomplete")
+    config=joinpath(root,"input.toml")
+    if isfile(config)
+        saved=TOML.parsefile(config)
+        (haskey(saved,"target_retained")||haskey(saved,"forward_tolerance"))&&error("use the full fit, not a row-reduced checkpoint")
+    end
     ispath(out)&&error("output exists");pending=out*".pending";ispath(pending)&&error("staging exists")
     codes=sort(deserialize(joinpath(guides,"codes.jls")))
     native_path=joinpath(native_dir,"all-res6.arrow");input_hash=hash(native_path)
@@ -131,7 +136,6 @@ function export_native(root,native_dir,guides,out;factor=1)
     density_seen==Set(meta.ids)&&density_error<=6e-8||error("density check failed")
     CSV.write(joinpath(pending,"country-mass.csv"),reports)
     cp(joinpath(root,"summary.csv"),joinpath(pending,"fit-countries.csv"))
-    config=joinpath(root,"input.toml")
     model="Native-source refinement of the sharp H3-5 continuity map; not a new global border pass"
     if isfile(config)
         model=get(TOML.parsefile(config),"model",model)

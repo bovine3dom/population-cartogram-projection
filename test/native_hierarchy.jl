@@ -26,8 +26,6 @@ for backend in backends
     support=[Set([1]),Set([2])]
     @test NH.bridge!(support,[.8,.2],2)==2
     @test 2 in support[1]
-    kept=NH.retain([1,1,2],[1,2,2],[.9,.01,.09],2,2;fraction=.8)
-    @test 1 in kept && 3 in kept
     ids=[H3.API.latLngToCell(H3.Lib.LatLng(0.,x),5) for x in (0.,.1)]
     children=vcat([H3.API.cellToChildren(id,6)[1:2] for id in ids]...)
     meta=(;ids,population=[30.,70.],codes=[24,24],targets=[(0,0,24),(2,0,24)],xyz=NH.xyz(ids),labels=Dict(Int32(1)=>"City"))
@@ -48,13 +46,21 @@ for backend in backends
         projection=NH.project(state,backend)
         @test projection.check.l1<=1e-5
         fit=NH.split_sources(state,projection,backend;etas=(.01,))
-        result=NH.pack_part(state,fit)
+        result=NH.export_part(state,fit)
+        positive=findall(>(0),fit.weights)
+        @test result.part.weights==fit.weights[positive]
+        @test result.part.source==fit.source[positive]
+        @test result.part.target==fit.target[positive]
+        weights=copy(fit.weights);weights[1]-=1e-12
+        tiny=merge(fit,(;source=vcat(fit.source,fit.source[1]),target=vcat(fit.target,fit.target[1]),
+            weights=vcat(weights,1e-12)))
+        @test NH.export_part(state,tiny).part.weights==tiny.weights
         @test result.stats.source<1e-10
         @test result.stats.relative<=.001
         @test length(result.part.meta.ids)==4
         @test collect(values(result.part.labels))==["City"]
         @test result.label_fallbacks==0
-        inherited=NH.pack_part(state,NH.inherited(state,projection))
+        inherited=NH.export_part(state,NH.inherited(state,projection))
         @test inherited.stats.source<1e-10
         @test inherited.stats.relative<=.001
     end

@@ -16,9 +16,8 @@ The reference map supplies the coarse flows, target centres, and city names.
    flow is a fixed marginal in this solve. Use KA and oneAPI. Stop cooling when
    the 99.5% support ratio reaches the reference country's ratio, or keep the
    last valid temperature stage.
-4. Keep rows from both source and target mass rankings. Normalize sources and
-   check target masses again. Limit the target-centre shift from row selection
-   to 2 km. Try stricter row retention if a check fails.
+4. Export every positive fitted contribution and check the country masses.
+   Do not rank or remove contributions to reduce the export size.
 
 If the source split fails, the runner can distribute each parent flow in
 proportion to native child population. It marks that country `inherited`, not
@@ -54,7 +53,8 @@ at a time. Each successful country has `state.jls`, `projection.jls`, `fit.jls`,
 `part.jls`, and `summary.csv`. A failed country has `error.log`.
 
 The output manifest records input hashes. A resume checks those hashes and
-skips completed countries. The completion marker covers the requested country
+skips completed countries. It also checks the all-positive export policy;
+old row-selected checkpoints require a new output root. The completion marker covers the requested country
 list only. A planet publisher must separately check coverage of all native
 sources and all countries. This runner does not publish files or alter H3-MON.
 
@@ -70,9 +70,9 @@ The exporter uses dictionaries where they reduce the column size. Population
 uses Float32 only when every source value is exactly representable; otherwise
 it remains Float64. Density uses Float32, with measured relative error at most
 `6e-8`. The H3 halves remain UInt32. Use a dictionary-capable Arrow reader.
-This changes storage, not the fitted transport. For a smaller lossless output,
-see [stream packing](mobile/stream.md) and its reader limits. There is no HTTP compression
-setting in this exporter. The server keeps its existing compression policy.
+This changes storage, not the fitted transport. Outputs are ordinary Arrow
+IPC files. There are no per-batch replacement dictionaries or optional export
+row reductions. The server keeps its existing compression policy.
 
 `native_quality.jl FIT GUIDES FACTOR BORDER_CSV NEW_OUTPUT` measures support,
 source spread, target-mean changes, triangle orientation, and edge separation.
@@ -80,7 +80,7 @@ It excludes shared target positions and false country contacts from the edge
 graph. Compare these results before publication. A mass check alone does not
 establish good geometry. File size alone does not establish a phone memory
 limit. See [native publication](native_publication.md) for separate staging and
-binary comparisons of approximate packing.
+binary checks.
 
 Run `test/native_hierarchy.jl` with the example Julia project. Set
 `CONTINUITY_GPU_TEST=1` to also run the oneAPI checks. The binary export and

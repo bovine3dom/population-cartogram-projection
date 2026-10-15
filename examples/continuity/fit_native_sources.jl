@@ -19,12 +19,13 @@ function main()
     manifest=joinpath(out,"input.toml")
     if isfile(manifest)
         saved=TOML.parsefile(manifest)
-        saved["native_sha256"]==input_hash && saved["guide_sha256"]==guide_hash && saved["codes"]==sort(codes) || error("resume input differs")
+        saved["native_sha256"]==input_hash && saved["guide_sha256"]==guide_hash && saved["codes"]==sort(codes) &&
+            get(saved,"export_rows","")=="all-positive" || error("resume input or export policy differs")
     else
         open(manifest,"w") do io
             TOML.print(io,Dict("native_sha256"=>input_hash,"guide_sha256"=>guide_hash,"native_directory"=>abspath(native),
                 "guides"=>abspath(guides),"codes"=>sort(codes),"factor"=>1,"started_utc"=>string(now(UTC)),
-                "commit"=>run_commit,"model"=>"native source refinement of the sharp H3-5 map"))
+                "commit"=>run_commit,"export_rows"=>"all-positive","model"=>"native source refinement of the sharp H3-5 map"))
         end
     end
     sizes=Dict(code=>length(deserialize(joinpath(guides,"country-$code.jls")).meta.ids) for code in codes)
@@ -54,18 +55,10 @@ function main()
                 fit=NH.inherited(state,projection);status="inherited"
             end
             checkpoint(joinpath(dir,"fit.jls"),fit)
-            packed=nothing
-            for fraction in (.999,.9999,.99999,.999999,1.)
-                try
-                    packed=NH.pack_part(state,fit;fraction);break
-                catch err
-                    startswith(sprint(showerror,err),"packed country failed")||rethrow()
-                    fraction==1. && rethrow()
-                end
-            end
+            packed=NH.export_part(state,fit)
             report=(;code,status,reason,commit=run_commit,seconds=time()-started,sources=length(state.d.a),targets=length(state.d.b),
                 population=sum(state.d.source.value),rows=length(packed.part.weights),eta=fit.eta,
-                ratio995=packed.ratio995,retained=packed.retained,max_centre_shift_km=packed.max_centre_shift_km,
+                ratio995=packed.ratio995,
                 labels=length(packed.part.labels),label_fallbacks=packed.label_fallbacks,
                 coarse_edges=length(projection.weights),components=projection.components,
                 projection_method=projection.method,moved_mass=projection.moved_mass,packed.stats...)

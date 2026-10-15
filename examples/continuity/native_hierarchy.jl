@@ -17,22 +17,6 @@ function xyz(ids)
     result
 end
 
-function retain(source,target,w,n,m;fraction=1-1e-8)
-    keep=falses(length(w))
-    for (index,count) in ((source,n),(target,m))
-        ptr,rows=ME.group_rows(index,count)
-        for i in 1:count
-            r=view(rows,ptr[i]:ptr[i+1]-1);sort!(r;by=e->w[e],rev=true)
-            threshold=fraction*sum(e->w[e],r);mass=0.
-            for e in r
-                w[e]>0 || continue
-                keep[e]=true;mass+=w[e];mass>=threshold&&break
-            end
-        end
-    end
-    findall(keep)
-end
-
 function source_ratio(source,w,a)
     ptr,rows=ME.group_rows(source,length(a));count=0
     for i in eachindex(a)
@@ -122,7 +106,7 @@ function project(state,backend;radius=1,reserve=1e-8,deadline=Inf)
     end
     g=SR.graph(n,m,s,t,cost)
     result=SR.solve(g,a,d.b,backend;eta=1.,tolerance=1e-6,maxrelative=1e-4,maxiters=5000,deadline=min(deadline,time()+180))
-    keep=retain(g.source,g.target,result.weights,n,m)
+    keep=findall(>(0),result.weights)
     source=g.source[keep];target=g.target[keep];w=result.weights[keep]
     sums=zeros(n);for (i,v) in zip(source,w);sums[i]+=v;end
     w.*=a[source]./sums[source]
@@ -173,28 +157,13 @@ function inherited(state,projection)
     (;source,target,weights,eta=NaN,ratio=source_ratio(source,weights,state.d.a),records=NamedTuple[])
 end
 
-function moments(source,target,weights,xyz,m)
-    q=zeros(3,m);mass=zeros(m)
-    @inbounds for e in eachindex(weights)
-        i,j=source[e],target[e];w=weights[e];mass[j]+=w
-        for l in 1:3;q[l,j]+=w*xyz[l,i];end
-    end
-    all(>(0),mass)||error("missing target mass")
-    (;q=q./transpose(mass),mass)
-end
-
-function pack_part(state,fit;fraction=1-1e-5,max_shift_km=2.)
+function export_part(state,fit)
     (;d,guide,children,ids)=state;n=length(d.a);m=length(d.b)
-    keep=retain(fit.source,fit.target,fit.weights,n,m;fraction)
-    s=fit.source[keep];t=fit.target[keep];w=fit.weights[keep]
-    sums=zeros(n);for (i,v) in zip(s,w);sums[i]+=v;end
-    w.*=d.a[s]./sums[s]
+    # Zero-mass edges are not contributions. Keep every positive fitted edge.
+    keep=findall(>(0),fit.weights)
+    s=fit.source[keep];t=fit.target[keep];w=copy(fit.weights[keep])
     stats=SR.residual((;n,m,source=s,target=t),w,d.a,d.b)
-    stats.l1<=1e-4 && stats.relative<=.001 && stats.source<=1e-10 || error("packed country failed mass checks")
-    original=moments(fit.source,fit.target,fit.weights,d.xyz,m)
-    packed=moments(s,t,w,d.xyz,m)
-    shift=6371sqrt(maximum(sum(abs2,packed.q.-original.q;dims=1)))
-    shift<=max_shift_km || error("packed country failed centre check")
+    stats.l1<=1e-4 && stats.relative<=.001 && stats.source<=1e-10 || error("country failed mass checks")
     parent_lookup=Dict(id=>p for (p,id) in enumerate(ids));labels=Dict{Int32,String}();fallback=0
     for (old_i,name) in guide.meta.labels
         p=get(parent_lookup,guide.meta.ids[old_i],0)
@@ -211,6 +180,6 @@ function pack_part(state,fit;fraction=1-1e-5,max_shift_km=2.)
     end
     meta=(ids=d.source.id,population=d.source.value,codes=fill(d.code,n),targets=guide.meta.targets,xyz=d.xyz,labels)
     part=(;meta,source=s,target=t,weights=w,labels=anchors)
-    (;part,stats,label_fallbacks=fallback,ratio995=source_ratio(s,w,d.a),retained=fraction,max_centre_shift_km=shift)
+    (;part,stats,label_fallbacks=fallback,ratio995=source_ratio(s,w,d.a))
 end
 end

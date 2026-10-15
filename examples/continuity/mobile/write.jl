@@ -1,16 +1,6 @@
 module MobileWriter
 using Arrow, Serialization
 
-# Retain only selected indexes before loading the next country cache.
-function select_part(data,result)
-    length(result.rows)==length(result.weights) || error("invalid result")
-    anchors=Dict(data.index.source_rows[data.index.source_ptr[s]]=>name for (s,name) in data.meta.labels)
-    labels=Dict(k=>anchors[r] for (k,r) in enumerate(result.rows) if haskey(anchors,r))
-    length(labels)==length(anchors) || error("missing city anchor")
-    return (;meta=data.meta,source=data.index.source[result.rows],target=data.index.target[result.rows],
-        weights=result.weights,labels)
-end
-
 # Keep population in Float64. Shared target coordinates use one physical mass.
 function columns(parts;owners=Dict(),counts=nothing)
     count=sum(length(p.weights) for p in parts)
