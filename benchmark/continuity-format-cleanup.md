@@ -41,3 +41,42 @@ export instructions. The format reference is
 https://arrow.apache.org/docs/format/Columnar.html#ipc-file-format.
 IPC files do not permit replacement dictionaries; ordinary dictionaries remain
 valid. No installed dependency or server compression policy is changed.
+
+## Validation and completed migration
+
+The final CPU checks pass: 45 storage tests, 18 independent audit tests,
+10 fitted-mapping storage tests, 17 native binary tests, 20 hierarchy tests,
+and four local-transfer tests. The publisher tests pass, including five
+invalid-input cases. An intermediate hierarchy test found one remaining
+local-balance call to the deleted selector. Removed that call and repeated
+the tests successfully. Tiny positive contributions are retained; invalid
+negative weights are rejected. No GPU test competed with the unrelated fit.
+
+H3-MON passes 67 unit tests, the actual Arrow dictionary checks, and its build.
+Desktop and mobile rendering checks pass ordinary dictionaries and line probes.
+All four native datasets pass headless checks with the new loader, including
+three camera changes. The H3-5 compatibility map also passes. The existing
+legend warning remains; no new browser error was recorded.
+
+Installed the full saved native mappings as ordinary IPC files at the existing
+URLs. The factor-2 full-reference URL now has the same files as factor 2.
+
+| Native factor | Transport and density bytes |
+| --- | ---: |
+| 1 | 173,437,724 |
+| 2 | 192,856,532 |
+| 3 | 227,334,572 |
+| 5 | 337,722,660 |
+
+The files are larger. This is the cost of removing optional reduction and
+per-batch dictionaries. The large native geographic-layer memory cost remains.
+No mobile-memory safety claim is made. All input and publication hashes pass.
+The preferred sharp H3-5 directory is byte-for-byte unchanged. The older H3-5
+preview URL now serves a documented compatibility copy of that sharp map.
+
+Previous publications are preserved in
+`output/continuity-format-cleanup/archived-publications/`. The migration journal,
+full before-and-after hashes, test logs, export scripts, and browser reports
+are in `output/continuity-format-cleanup/`. No service was restarted. Production,
+regional, and automatic-cartogram datasets were not changed. The unrelated
+fit process was left running.
