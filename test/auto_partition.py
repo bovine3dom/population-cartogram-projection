@@ -14,7 +14,7 @@ import numpy as np
 import pyarrow as pa
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
-from partition_land import dual, partition, round_capacities, hierarchical_partition, contact_groups, run
+from partition_land import dual, partition, round_capacities, hierarchical_partition, contact_groups, exterior_coast, run
 from review_layout import load, viewport
 from repair_partition import Repair, run as repair
 from land_envelope import build, dock_parts
@@ -25,6 +25,18 @@ import relax_flow_areas
 
 
 class CapacityPartitionTests(unittest.TestCase):
+    def test_landlocked_coast_cost(self):
+        mask=np.zeros((7,7),dtype=bool);mask[1:6,1:6]=True;mask[3,3]=False
+        coast=exterior_coast(mask)
+        self.assertFalse(coast[3,2])
+        self.assertTrue(coast[1,2])
+        costs=np.column_stack((1000.*coast[mask],np.zeros(mask.sum())))
+        with contextlib.redirect_stdout(io.StringIO()):
+            assignment,_=partition(costs,[1,int(mask.sum())-1],40)
+        self.assertFalse(coast[mask][assignment==0].any())
+        with self.assertRaisesRegex(ValueError,'requires source coast'):
+            run(Path('unused'),Path('unused'),Path('nonexistent-coast-test-output'),landlocked_weight=1000)
+
     def test_protected_water(self):
         # A source bay has an opening to the north. Smoothing would fill it.
         cells={(x,y) for x in range(8,23) for y in range(8,23)

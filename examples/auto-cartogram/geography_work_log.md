@@ -159,3 +159,51 @@ Europe, Indonesia, and Japan. Hokkaido stays nearer northern Honshu than in the
 early trials, but the Indonesian arrangement is still not a clear improvement.
 Do not replace the baseline with v6. It is available beside the earlier trials
 in the geography review page.
+
+## 2026-10-15: first water results and stronger checks
+
+Both initial water trials finished. Their area budgets are exact and all
+individual components remain connected. That check was not sufficient:
+visually, Norway and Sweden become detached from the rest of the mainland.
+Added a separate source-landmass connectivity check. The baseline has no split
+source landmasses. Margins zero and one add respectively four and three parts
+across two source landmasses. These are regressions; neither trial is approved.
+
+The margin-one trial gives Estonia, Latvia, and Lithuania respectively two,
+one, and four edges beside exterior water. Paraguay has zero. Across the whole
+map, possible lost coasts fall from 21 to 14. Possible false coasts remain at
+seven: fixing Paraguay does not fix all landlocked components. Bolivia is among
+the remaining flags. Do not judge a candidate only by the named examples.
+
+Reviewed world, Europe, South America, and Japan images for margin one, and
+Europe and South America for margin zero. The sea mask restores real water but
+also changes regional shapes and land connections. Existing source holes must
+not automatically be called phantom holes. Review page:
+`results/geography/protected-water/index.html`.
+
+Two guide-weight-32 trials are running to test stronger shape guidance. The
+first completed European image is not acceptable: Norway moves to the east of
+Sweden. Fragment repair can discard the part that carries a useful geographic
+relationship even when the final country is connected.
+
+Added an optional soft cost for assigning exterior-coast cells to components
+with no sampled source coast. Enclosed lakes are excluded from this cost. The
+cost is general, not a Paraguay or Bolivia rule. It records the classification
+file hash and weight. Later repair can still change access, so this is not a
+final-position guarantee. Two weight-1000 trials are running. The partition
+suite passes 26 tests, including an interior-assignment fixture. The geography
+suite passes seven tests, including split source landmasses.
+
+## Restore island groups after the transport-coast trial
+
+Applied the existing source-proximity archipelago step after v6. It does not use
+country-membership links. Visually reviewed Japan, Indonesia, and New York.
+Japan's main islands are more coherent again. The New York relationship also
+improves: Long Island moves from northeast of Manhattan to southeast of it in
+tile-centroid terms. The shortest tile-centre distance stays two tiles, so the
+issue was not simply excess space between the closest cells. Ireland retains
+its earlier northward move because shared land-border groups are not moved by
+this last step. Indonesia still needs work.
+
+Saved the candidate and baseline New York images under
+`results/geography/coast-graph/v6-cohesion/`. No population map is replaced.

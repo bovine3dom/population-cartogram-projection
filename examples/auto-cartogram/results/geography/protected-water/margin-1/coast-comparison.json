@@ -1,0 +1,30 @@
+{
+  "lost_water_access": [
+    "AZE:0510388634a9edd9",
+    "BGD:042f51d8dc6403c1",
+    "BGD:f058ecaa7fb035b6",
+    "BRT:fef0fc6bba22ada7",
+    "CHN:4f018d125c727170",
+    "CHN:6758aa1ed075f43e",
+    "CHN:b0d6cdeb74633edd",
+    "CHN:fba815b612791d7c",
+    "GEO:d709e483cc2819fe",
+    "HRV:23be6296644271a5",
+    "MNE:52f7987265ed3935",
+    "ROU:8bc181463815c013",
+    "RUS:7e6e84c769819aed",
+    "TKM:ef25c6485f2078c2"
+  ],
+  "possible_false_coast": [
+    "AND:0923843c3687a75e",
+    "BLR:216ea6b406f5bc6c",
+    "BOL:1a7254807c71e166",
+    "ETH:38a05216b358b154",
+    "MKD:072da3322c97fa27",
+    "MNG:7ecd8e5b0a42fa66",
+    "SPI:47f581a247f875ae"
+  ],
+  "source_coast_sha256": "74b99a8e34ad48401ffacaa8729698370040acc1f95bf9ffee8667eaa4d14c97",
+  "cells_sha256": "4ef0a9bfe71115c749411c6cbaff080f8768e3e245046406a1fdb3035d680f2f",
+  "limit": "Reuses the sampled source-coast classification, not a source-water connectivity proof."
+}

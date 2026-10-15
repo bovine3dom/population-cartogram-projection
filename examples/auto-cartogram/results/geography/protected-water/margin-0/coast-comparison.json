@@ -1,0 +1,38 @@
+{
+  "lost_water_access": [
+    "AZE:0510388634a9edd9",
+    "BGD:f058ecaa7fb035b6",
+    "BGR:8a6e196d0e9089ee",
+    "BIH:76753bb1c9d6c52b",
+    "BRT:fef0fc6bba22ada7",
+    "CHN:1fe2d636aa152758",
+    "CHN:4f018d125c727170",
+    "ERI:b257cabcc1caab95",
+    "GEO:d709e483cc2819fe",
+    "GRC:4f20757287dcdf70",
+    "GRC:6f3829212fc06f4b",
+    "JOR:97289b5947dc77c2",
+    "LTU:4c2a60810b4196cd",
+    "LVA:ff14565ea5d338a5",
+    "MNE:52f7987265ed3935",
+    "PAN:04773d2112e86006",
+    "ROU:8bc181463815c013",
+    "RUS:7e6e84c769819aed",
+    "SDN:e4296cf2bfa47003",
+    "TKM:ef25c6485f2078c2",
+    "TUR:6fce5e1d91133e37",
+    "UKR:52622876ebf1ecb8"
+  ],
+  "possible_false_coast": [
+    "BLR:216ea6b406f5bc6c",
+    "BOL:1a7254807c71e166",
+    "ETH:38a05216b358b154",
+    "MKD:072da3322c97fa27",
+    "MNG:7ecd8e5b0a42fa66",
+    "SPI:47f581a247f875ae",
+    "SWZ:e315454282eb3136"
+  ],
+  "source_coast_sha256": "74b99a8e34ad48401ffacaa8729698370040acc1f95bf9ffee8667eaa4d14c97",
+  "cells_sha256": "7d9728a66c0cd8c9116a4a381263eb25b59ed404e67f0f6badf28027f6cbe3b2",
+  "limit": "Reuses the sampled source-coast classification, not a source-water connectivity proof."
+}
