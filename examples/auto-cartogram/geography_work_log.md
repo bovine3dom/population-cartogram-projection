@@ -455,3 +455,32 @@ are unchanged. Lake records remain separate for validation only.
 Updated the world and regional review images. Visually checked the Africa
 image. A regression check confirms that lake metadata adds no painted shapes
 and that a lake record cannot overlap a population tile. All 170 tests pass.
+
+## 2026-10-15, 20:32 UTC: selective border separation
+
+Started a separate experiment for the user's proposed eight-hour window.
+The current layout and H3-MON export remain unchanged. Details, sources,
+settings, and limits are in `sparse_borders.md`.
+
+Read the 2021 Gastner, Perrault, and Feng conference abstract on balancing shape
+and contiguity. It supports testing selective separation, but does not supply
+this population rule. Its connecting lines and fixed-size nodes are not used.
+
+Added a two-sided border-corridor population audit using existing H3-5 sources.
+The strict limits admit 74 of 348 component pairs. Wider limits admit 98.
+Kazakhstan–Russia and Mongolia–Russia pass the strict test. China–North Korea
+and China–Vietnam do not. China–Russia passes only the wider test.
+
+Added matched local-refinement tests with exact component budgets, protected
+non-eligible contacts, no new false contacts, a limited gap region and budget,
+and fixed lake cells and immediate shore labels. Independent islands stay
+fixed. A separate review measures native-outline overlap and newly enclosed
+blank cells. New blank gaps are not called geographic water.
+
+Ran a ten-round pilot and four 100-round tests. Visually inspected the input,
+the wider relaxed result, and its matched control in Eurasia. Both relaxed
+tests have slightly worse independent shape scores than their controls.
+The strict relaxed test loses Sweden–Finland. The wider test loses six
+contacts but does not provide a clear Russia/China improvement over its
+control. Do not promote these candidates or claim that separation has helped.
+Started matched 400-round tests to check whether short runs explain this result.
