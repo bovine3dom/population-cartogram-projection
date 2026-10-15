@@ -107,7 +107,7 @@ def viewport(owners, metrics, header=None):
     return xmin, xmax, ymin, ymax, scale, left, top, header
 
 
-def draw(path, shapes, tiles, owners, metrics, title, water=()):
+def draw(path, shapes, tiles, owners, metrics, title):
     width, height = 1800, 1120
     xmin, xmax, ymin, ymax, scale, left, top, header = viewport(owners, metrics)
     topology_warning = metrics['disconnected_regions'] or metrics['regions_with_holes']
@@ -142,12 +142,6 @@ def draw(path, shapes, tiles, owners, metrics, title, water=()):
         tip = f'{row["name"]} ({component}): {len(tiles[component])} tiles; {float(row["group_population"]):,.0f} people'
         parts.append(f'<path d="{" ".join(commands)}" fill="{country_color(row["country_id"])}">'
                      f'<title>{html.escape(tip)}</title></path>')
-    for row in water:
-        x, y = int(row['x']), int(row['y'])
-        if (x, y) in owners:
-            raise ValueError('Lake display cell overlaps population land')
-        parts.append(f'<path d="M{fmt(tx(x-.5))},{fmt(ty(y+.5))}h{fmt(scale)}v{fmt(scale)}h-{fmt(scale)}z" '
-                     f'fill="#75bedc"><title>{html.escape(row["name"])}</title></path>')
     # Draw only exposed edges or country borders, not all interior tile edges.
     edges = []
     for (x, y), owner in sorted(owners.items()):
@@ -187,7 +181,7 @@ def draw(path, shapes, tiles, owners, metrics, title, water=()):
         boxes.append(box)
         parts.append(f'<text x="{fmt(px)}" y="{fmt(py)}" text-anchor="middle" font-size="12" '
                      f'paint-order="stroke" stroke="#faf9f6" stroke-width="2" stroke-linejoin="round">{html.escape(label)}</text>')
-    methods={"mode=explicit-lake-vacancies":"Local lake insertion; blue cells are water, not population",
+    methods={"mode=explicit-lake-vacancies":"Local lake insertion; lakes are empty space, like the sea",
              "mode=geographic-baseline":"Separate geographic baseline",
              "mode=geographic-reposition":"Geographic placement of existing island shapes",
              "mode=geographic-border-repair":"Geographic baseline with border repair",
@@ -295,7 +289,7 @@ def run(inputs, layout, title):
     with (layout / "contact-errors.csv").open("w", newline="") as stream:
         writer = csv.writer(stream); writer.writerow(["kind", "a", "b"])
         writer.writerows((kind, a, b) for kind, pairs in [("missing", missing), ("false", false)] for a,b in sorted(pairs))
-    draw(layout / "review.svg", shapes, tiles, owners, metrics, title, water)
+    draw(layout / "review.svg", shapes, tiles, owners, metrics, title)
     print(json.dumps(metrics, indent=2))
     return metrics
 

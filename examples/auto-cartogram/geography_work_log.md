@@ -444,3 +444,14 @@ connectivity, protected sea, and an end-to-end cross-border lake fixture.
 All 170 Python automatic-cartogram tests pass. The renderer rejects lake cells
 that overlap population tiles. Lake-island population components and a new
 population mapping remain future work. The published H3-MON map is unchanged.
+
+## Lake display correction
+
+Removed the blue review overlay at the user's request. Lakes now show the same
+empty background as the sea. The overlay never used country tiles, but it made
+that distinction unclear. Land cells, lake positions, and population budgets
+are unchanged. Lake records remain separate for validation only.
+
+Updated the world and regional review images. Visually checked the Africa
+image. A regression check confirms that lake metadata adds no painted shapes
+and that a lake record cannot overlap a population tile. All 170 tests pass.

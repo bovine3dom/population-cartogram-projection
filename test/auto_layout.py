@@ -49,6 +49,16 @@ class ReviewTests(unittest.TestCase):
             self.assertAlmostEqual(metrics["country_uniform_tile_cross_group_lower_bound"],100/15)
             self.assertEqual(metrics["island_axis_order_errors"],0)
             self.assertIsNone(metrics["unmatched_source_population"])
+            original_svg = (layout/"review.svg").read_text()
+            water = layout/"lake-cells.csv"
+            water.write_text("lake_id,name,x,y\nlake,Test lake,2,0\n")
+            lake_metrics = review.run(inputs,layout,"Test")
+            self.assertEqual(lake_metrics["water_display_cells"], 1)
+            self.assertEqual((layout/"review.svg").read_text(), original_svg)
+            water.write_text("lake_id,name,x,y\nlake,Test lake,0,0\n")
+            with self.assertRaisesRegex(ValueError, "overlap with population land"):
+                review.run(inputs,layout,"Test")
+            water.unlink()
             (layout/"review.png").write_bytes(b"test image fixture")
             archive=Path(tmp)/"archive"
             publish.run(inputs,layout,archive)
