@@ -96,3 +96,20 @@ export tests and six transport tests also pass.
 At 00:19 UTC, calibration has completed 174 of 182 active groups. The remaining
 groups contain most of the target tiles. The queued pipeline has not started
 the border pass yet.
+
+## 01:38 UTC: long-running calibration checkpoint
+
+180 of 182 active groups have completed calibration. China and India remain.
+China passes the strict mass checks through eta 0.00001. The sharper 0.000005
+stage needs the solver's checked temperature continuation and is still running.
+Do not use the incomplete calibration as a border-aware result.
+
+The calibration process is 2753437, with Julia child 2753438. The queued pipeline
+process is 2753554. Both were checked as active. Logs are `tune.log` and
+`pipeline.log` in the log directory above. The pipeline starts only after the
+calibration completion marker exists. It then fits, extracts, balances, audits,
+exports, and captures browser images. It stops on a failed gate.
+
+No new border-aware Arrow files have been published at this checkpoint.
+Visual review remains pending. The earlier island dataset remains available.
+Implementation commit: `0e08558`.
