@@ -378,3 +378,13 @@ geometry, binary audits, and all-column stream comparisons. Three publisher
 tests pass, including modified-file rejection and refusal to overwrite. Four
 navigation-anchor tests pass. Approximate packing requires a separate actual
 binary comparison before publication. No H3-6 folder has been published yet.
+
+## 01:03 UTC: factor 2 has no uniform fallbacks
+
+The warm retry completes all 206 factor-2 countries with zero uniform cell
+fallbacks. Its 99.5% support ratio is 2.500; the low-population ratio is 2.254.
+The population-capacity lower bound is 1.044. Binary export and browser checks
+are running. Factor 3 fixes five of seven Australian fallback cells but two
+still fail after 30 seconds. A longer bounded retry will use a separate root.
+The runner now records the cell limit, deadline, and code commit for each run.
+All 19 subdivision checks pass again. The acceptance limits are unchanged.

@@ -32,7 +32,10 @@ A cell solve has a time limit. A time-limited candidate is kept only if all
 mass and physical-moment checks pass. It is marked nonoptimal in `cells.csv`.
 Geographic mean error must be at most `1e-7` in unit-sphere XYZ norm, and density
 mean relative error must be at most `1e-6`. The process also needs an external
-hard timeout because the crossover call is native code.
+hard timeout because the crossover call is native code. The runner accepts
+`H3_SUBDIVISION_CELL_SECONDS` from greater than zero through 300 seconds. It
+records each run's limit, deadline, and code commit in `solver-runs.csv`.
+Changing this limit does not change the acceptance checks.
 
 If the solve status or numerical check fails,
 the fallback distributes each old contribution equally among its fine cells.

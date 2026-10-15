@@ -28,6 +28,11 @@ function main()
         open(io->TOML.print(io,Dict(string(k)=>v for (k,v) in pairs(merge(input,(;commit,started_utc=string(now(UTC)),model="CPU moment projection after KA/oneAPI native-source fitting"))))),file,"w")
     end
     deadline=datetime2unix(DateTime(get(ENV,"H3_SUBDIVISION_DEADLINE","2026-10-15T04:20:00")))
+    limit=parse(Float64,get(ENV,"H3_SUBDIVISION_CELL_SECONDS",factor==5 ? "120" : "30"))
+    isfinite(limit)&&0<limit<=300||error("cell time limit must be in (0, 300]")
+    run=(;utc=string(now(UTC)),commit,cell_seconds=limit,deadline_utc=string(unix2datetime(deadline)))
+    CSV.write(joinpath(out,"solver-runs.csv"),[run];append=isfile(joinpath(out,"solver-runs.csv")))
+    println(run);flush(stdout)
     sizes=Dict(code=>length(deserialize(joinpath(coarse,"country-$code","part.jls")).weights) for code in codes)
     sort!(codes;by=code->sizes[code],rev=true)
     for code in codes
@@ -36,7 +41,7 @@ function main()
         mkpath(dir);println(now(UTC)," country=",code," factor=",factor);flush(stdout)
         try
             part=deserialize(joinpath(coarse,"country-$code","part.jls"))
-            seconds=@elapsed result=TS.subdivide(part,factor;deadline,limit=factor==5 ? 120. : 30.)
+            seconds=@elapsed result=TS.subdivide(part,factor;deadline,limit)
             CSV.write(joinpath(dir,"cells.csv"),result.records)
             report=(;code,factor,commit,seconds,sources=length(part.meta.ids),targets=length(result.part.meta.targets),
                 rows=length(result.part.weights),ratio995=support_ratio(result.part),
