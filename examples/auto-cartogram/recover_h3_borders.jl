@@ -37,19 +37,45 @@ function inspect(root,out)
     return state
 end
 
-function pilot(root,out,proximal)
+function pilot(root,out,proximal;backend=oneAPI.oneAPIBackend(),warm_stage=nothing)
     state=inspect(root,out)
-    oneAPI.functional() || error("oneAPI unavailable")
+    backend isa CE.KA.CPU || oneAPI.functional() || error("oneAPI unavailable")
     (;countries,seed,settings,edges,weights)=state
     k=state.order[state.completed+1];c=countries[k]
     eta=settings[:country_etas][c.code]
-    result=CE.compact_solve(c,state.forces[k],seed[k],oneAPI.oneAPIBackend();eta,proximal,
-        tolerance=settings[:inner_tolerance],cache_bytes=2*1024^3,retry_factor=256,
-        retry_after=200,maxiters=2000,
-        stage_callback=(factor,result)->begin
-            CE.checkpoint(joinpath(out,"stage-$factor.jls"),result)
-            println("Saved checked stage $factor");flush(stdout)
-        end)
+    save_stage=(factor,result)->begin
+        CE.checkpoint(joinpath(out,"stage-$factor.jls"),result)
+        println("Saved checked stage $factor");flush(stdout)
+    end
+    result=if isnothing(warm_stage)
+        CE.compact_solve(c,state.forces[k],seed[k],backend;eta,proximal,
+            tolerance=settings[:inner_tolerance],cache_bytes=2*1024^3,retry_factor=256,
+            retry_after=200,maxiters=2000,stage_callback=save_stage)
+    else
+        old=JSON.parsefile(joinpath(dirname(warm_stage),"inspection.json"))
+        current=JSON.parsefile(joinpath(out,"inspection.json"))
+        old["input_sha256"]==current["input_sha256"] && old["next_group_code"]==c.code || error("Warm-stage inputs differ")
+        r=deserialize(warm_stage);p=r.plan
+        factor=round(Int,inv(last(p.data.inverse_eta))/(eta+proximal))
+        ispow2(factor) && isapprox(last(p.data.inverse_eta),1/((eta+proximal)*factor);rtol=1e-12) || error("Wrong warm temperature")
+        isapprox(last(p.data.rho),proximal/((eta+proximal)*factor);rtol=1e-12) || error("Wrong warm proximal weight")
+        depth=length(seed[k].data.rho)
+        size(p)==size(seed[k]) && length(p.data.rho)==depth+1 || error("Wrong warm history")
+        p.data.u[:,1:depth]==seed[k].data.u && p.data.v[:,1:depth]==seed[k].data.v || error("Wrong warm prior")
+        p.data.geo==seed[k].data.geo || error("Wrong warm source geometry")
+        p.data.force[:,:,end]==state.forces[k].-CE.mean(state.forces[k];dims=2) || error("Wrong warm forces")
+        CE.compact_stats!(p,c)
+        maximum(abs.(p.stats.source./c.a.-1))<=1e-8 && sum(abs.(p.stats.target.-c.b))<=settings[:inner_tolerance] && maximum(abs.(p.stats.target./c.b.-1))<=.001 || error("Warm-stage mass check failed")
+        open(io->JSON.print(io,Dict("path"=>abspath(warm_stage),"sha256"=>bytes2hex(open(sha256,warm_stage)),"factor"=>factor),2),joinpath(out,"warm-start.json"),"w")
+        workspace=CE.compact_workspace(c,state.forces[k],seed[k],backend;proximal,cache_bytes=2*1024^3)
+        while factor>1
+            factor=div(factor,2)
+            r=CE.compact_sinkhorn(c,state.forces[k],seed[k],backend;eta=(eta+proximal)*factor-proximal,
+                proximal,initial_beta=r.beta,tolerance=settings[:inner_tolerance],maxiters=2000,cache_bytes=2*1024^3,workspace)
+            save_stage(Float64(factor),r)
+        end
+        r
+    end
     CE.checkpoint(joinpath(out,"proposal.jls"),result)
     temperatures=[settings[:country_etas][c.code] for c in countries]
     faces=CE.triangles(countries);base_cache=Dict()
@@ -73,9 +99,10 @@ function pilot(root,out,proximal)
     end
     CSV.write(joinpath(out,"trials.csv"),DataFrame(trials))
     println(last(trials));flush(stdout)
+    any(r.accepted for r in trials) || error("No recovery step passed the original objective and distortion checks")
 end
 
 if abspath(PROGRAM_FILE)==@__FILE__
-    length(ARGS) in (2,3) || error("Usage: recover_h3_borders.jl FAILED_FIT NEW_OUTPUT [PILOT_PROXIMAL]")
-    length(ARGS)==2 ? inspect(ARGS...) : pilot(ARGS[1],ARGS[2],parse(Float64,ARGS[3]))
+    length(ARGS) in (2,3,4) || error("Usage: recover_h3_borders.jl FAILED_FIT NEW_OUTPUT [PILOT_PROXIMAL [WARM_STAGE]]")
+    length(ARGS)==2 ? inspect(ARGS...) : pilot(ARGS[1],ARGS[2],parse(Float64,ARGS[3]);warm_stage=length(ARGS)==4 ? ARGS[4] : nothing)
 end
