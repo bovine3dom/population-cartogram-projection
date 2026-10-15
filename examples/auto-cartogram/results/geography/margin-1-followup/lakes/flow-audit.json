@@ -1,0 +1,190 @@
+{
+  "land_components": 481,
+  "water_regions": 48,
+  "invalid_source_geometries": {
+    "CAN:614ec007a6324298": "Self-intersection[727.240824887601 882.756858358845]",
+    "CAN:95c7ebac82699331": "Self-intersection[713.474886226915 884.094134561976]",
+    "CYN:3fa61972653460ef": "Self-intersection[966.162265134452 756.778491201984]",
+    "DNK:d3d12b2e248a600a": "Self-intersection[937.372232618463 891.466717213842]",
+    "EGY:f7cc24b776a75221": "Self-intersection[963.476518655185 619.585039018941]",
+    "GBR:241258080ec293c4": "Self-intersection[823.828198790535 886.82152629058]",
+    "ESB:432b2cb88c6056bf": "Self-intersection[966.162265134452 756.778491201984]",
+    "GRL:2a53232ea84e3e84": "Self-intersection[810.267307989553 907.958612171307]",
+    "IDN:7a59bb18e03f91d9": "Self-intersection[1494.72515038346 287.902333658749]",
+    "ISL:a7601b85cd746eec": "Self-intersection[794.032729501982 896.391874447601]",
+    "LAO:b4c511d27634a146": "Self-intersection[1282.91107484494 630.134092284535]",
+    "MMR:e9f27e99686071f9": "Self-intersection[1283.50246415011 611.357012120829]",
+    "MWI:7555dabddb4364d9": "Self-intersection[954.798782816368 381.004841109847]",
+    "MYS:0abe504273f2e4bd": "Self-intersection[1446.00455178518 396.861671204855]",
+    "NOW:a387a8ce67e0d957": "Self-intersection[920.480400938146 897.816551323112]",
+    "NZL:8f99f1c50259113a": "Self-intersection[1531.85044585857 192.76369565241]",
+    "RUS:b85c5bca1852870f": "Self-intersection[1369.93766719203 969.619790356376]",
+    "RUS:e5454b5f169f758a": "Self-intersection[1321.21707514845 956.402419038367]",
+    "SAU:11ac65250772b5d3": "Self-intersection[997.541923203846 679.342371980631]",
+    "SEN:fa5de3704b02f675": "Self-intersection[845.61272516327 591.559648380298]",
+    "SWE:1320ee42b8e1186c": "Self-intersection[963.755391284017 897.594943295044]",
+    "USA:13c14a072880aac5": "Self-intersection[567.134164278731 876.394295358622]",
+    "USA:90107a05206832e4": "Self-intersection[619.723380034395 725.138150614422]",
+    "VNM:749468814d903c2a": "Self-intersection[1282.91107484494 630.134092284535]",
+    "water:1159113127": "Self-intersection[1148.15391094206 936.644716602811]"
+  },
+  "diagnostic_repairs": true,
+  "approved": false,
+  "requested_land_tiles": 55000.0,
+  "requested_water_guide_tiles": 241.0,
+  "maximum_relative_area_error": 4.514656986400193,
+  "lake_relative_area_errors": {
+    "Lake Erie": 0.37874401135121305,
+    "Lake Ontario": 0.8383127664303842,
+    "Lago de Nicaragua": 0.09257071604998401,
+    "Lake Superior": -0.0017485050773095034,
+    "Lake Michigan": -0.0017509725656977837,
+    "Lake Huron": -0.0017843425561766546,
+    "Lake Ladoga": 4.514406836196538,
+    "Lake Baikal": 1.7604178662186842,
+    "Lake Albert": -0.001691682122286764,
+    "Lake Malawi": -0.001656163114391651,
+    "Lake Tanganyika": -0.0016744294161485929,
+    "Lake Victoria": -0.0017539217933117968,
+    "Lake Tana": -0.0017411883439450992,
+    "Lago Titicaca": 2.3957084904766126,
+    "Lake Saimaa": 2.886349914705249,
+    "Hongze Hu": -0.0018875489129211998,
+    "Lac Moeru": 1.1104957665354966,
+    "Lake Khanka": 0.6847757894716184,
+    "Tonl\u00e9 Sap": -0.0015646898730050651,
+    "Hulun Nuur": -0.0017402679585328817,
+    "Lake Kivu": -0.0019016437828268673,
+    "Lake Edward": -0.0017809249970756058,
+    "Tai Hu": -0.001688426323914527,
+    "Nam Co": -0.0017115004138431589,
+    "Bosten Hu": -0.0017558037342074728,
+    "Poyang Hu": -0.0018458530322804645,
+    "Siling Co": -0.0016131863239519095,
+    "Lake Kyoga": -0.0017907063138810075,
+    "water:1159115267": -0.0016734341968063227,
+    "Buhayrat ath Tharthar": -0.0019210438660931528,
+    "Kainji Reservoir": -0.0018336022414648934,
+    "Represa de Sobradinho": 0.8255185694443419,
+    "Lake Kariba": 0.9718645673645698,
+    "Lake Nasser": -0.0018815996834918858,
+    "Lake Volta": -0.0018838994030839773,
+    "Lac de Kossou": -0.0013974977990404147,
+    "Great Salt Lake": 0.7153635923326296,
+    "South Aral Sea": 0.4156195156678604,
+    "IJsselmeer": -0.001965561930829307,
+    "Syvash": -0.0015316407864036652,
+    "Issyk-Kul": 1.6097804193213547,
+    "Lake Turkana": -0.0018098931114964856,
+    "Qinghai Hu": -0.0018828445694205609,
+    "Lake Razazah": -0.0016330166723880213,
+    "Lake Urmia": -0.001890862525136705,
+    "Lake Tuz": -0.001752835756436144,
+    "Lake Van": -0.00170828997269179,
+    "Aydar Ko\u2018l": -0.001693515403004331
+  },
+  "overlap_pairs": 17,
+  "overlaps": [
+    {
+      "a": "BDI:b3ecb03d79bf1cb5",
+      "b": "water:1159113185",
+      "equivalent_tiles": 6.772763860153445e-06
+    },
+    {
+      "a": "BRT:fef0fc6bba22ada7",
+      "b": "SDN:e4296cf2bfa47003",
+      "equivalent_tiles": 0.00742907112878352
+    },
+    {
+      "a": "CAN:361131cc2ae1ac25",
+      "b": "CAN:614ec007a6324298",
+      "equivalent_tiles": 0.0016913595218222722
+    },
+    {
+      "a": "CAN:614ec007a6324298",
+      "b": "water:1159113021",
+      "equivalent_tiles": 1.2479634214756005e-07
+    },
+    {
+      "a": "CAN:614ec007a6324298",
+      "b": "CAN:c2f1e4e52d5cc0c3",
+      "equivalent_tiles": 8.90822117770064e-06
+    },
+    {
+      "a": "COD:34b7cfda818ccf80",
+      "b": "water:1159113595",
+      "equivalent_tiles": 4.406428409529336e-06
+    },
+    {
+      "a": "COD:34b7cfda818ccf80",
+      "b": "water:1159113577",
+      "equivalent_tiles": 1.359522986019129e-06
+    },
+    {
+      "a": "COD:34b7cfda818ccf80",
+      "b": "water:1159113145",
+      "equivalent_tiles": 0.000241929046140061
+    },
+    {
+      "a": "MOZ:0c9516b3b1958290",
+      "b": "water:1159113163",
+      "equivalent_tiles": 2.208172078818884e-05
+    },
+    {
+      "a": "MWI:7555dabddb4364d9",
+      "b": "water:1159113163",
+      "equivalent_tiles": 1.725844556100454e-05
+    },
+    {
+      "a": "RWA:11c3869510b66d95",
+      "b": "water:1159113577",
+      "equivalent_tiles": 7.1927661684136105e-06
+    },
+    {
+      "a": "TZA:88eb4141b8ee7ab7",
+      "b": "water:1159113163",
+      "equivalent_tiles": 0.0005218538283648588
+    },
+    {
+      "a": "TZA:88eb4141b8ee7ab7",
+      "b": "water:1159113185",
+      "equivalent_tiles": 1.3184360551020165e-05
+    },
+    {
+      "a": "UGA:c937c439d1615753",
+      "b": "water:1159113595",
+      "equivalent_tiles": 7.637337249542823e-06
+    },
+    {
+      "a": "UGA:c937c439d1615753",
+      "b": "water:1159113145",
+      "equivalent_tiles": 0.00022130496034668357
+    },
+    {
+      "a": "USA:90107a05206832e4",
+      "b": "water:1159113021",
+      "equivalent_tiles": 6.506916973144281e-08
+    },
+    {
+      "a": "UZB:448c5653f0be3548",
+      "b": "water:1159127033",
+      "equivalent_tiles": 2.2317393916610742e-07
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/geography-lake-guides-final/areas.csv": "dd4911d987fc550495bc3f609539964c776dd9b0c427eaedd9492f12443439ab",
+    "output/auto-cartogram/geography-lake-guides-final/geometry.geojson": "36fdfefb614d3b68295a48e6cb4793e8a3a620ac76879e80b291ffc55e57696b",
+    "output/auto-cartogram/geography-lake-guides-one-tile/flow-unsimplified/areas_cartogram.geojson": "29b7b72decc3e6fc351db67341829d19e3431225b085fec295788c54688650bf"
+  },
+  "scripts": {
+    "review_lake_flow.py": "a5cc24bb403689142071240e87e05811857b40e9f26442f8a9e51c663139c0eb",
+    "review_flow.py": "5dfdd764a0c8148642cef69be2db1120e30aceaaa5feb13312f6d659b3c9bad7"
+  },
+  "limits": [
+    "Continuous geometry only. No integer tile layout or population mapping is generated.",
+    "If diagnostic repairs are enabled, measurements and images use make_valid. This does not validate the original solver output.",
+    "Multipart land guides can include lake islands. Population components still need a separate review.",
+    "This is a separate experiment. It does not replace the preferred margin-one footprint."
+  ]
+}

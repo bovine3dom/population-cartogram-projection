@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/geography-lake-guides-one-tile/geometry.geojson",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/geography-lake-guides-one-tile/areas.csv",
+    "--skip_projection",
+    "--id",
+    "component_id",
+    "--area",
+    "tiles",
+    "--n_grid_rows_or_cols",
+    "256",
+    "--max_permitted_area_error",
+    ".01",
+    "--timeout",
+    "600",
+    "--export_preprocessed",
+    "--export_time_report",
+    "--disable_simplify_and_densify"
+  ],
+  "binary_sha256": "a7ee976eaf8a8efb774e26a9764644672bcb550d7ec523027f57aef3af39ccca",
+  "complete": true,
+  "approved": false,
+  "exit_code": 0,
+  "elapsed_seconds": 7.378589584957808
+}

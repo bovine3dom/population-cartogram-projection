@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Margin-one follow-up: mainland groups, islands, and lakes</title>
+<style>body{font:17px/1.5 system-ui;max-width:1400px;margin:auto;padding:24px;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#165a9e}table{border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #ccc}details{margin:24px 0}.source{max-width:750px}</style>
+<h1>Margin-one follow-up</h1>
+<p>The preferred <a href="../protected-water/margin-1/review.png">margin-one layout</a> is the reference.
+The published population map is unchanged. These are layout candidates, not new population exports.</p>
+<p><a href="../../../geography_work_log.md">Work log</a> · <a href="rejoined/review.png">Rejoined world image</a> · <a href="islands/review.png">Island trial world image</a></p>
+<h2>Mainland groups: all three breaks close</h2>
+<p>Norway/Sweden, Gibraltar, and the Honduras–Nicaragua connection now join the mainland.
+The method translates existing shapes. It adds no connector tiles and changes no component budget.
+Nearby islands move with their nearest source coast, not with their country ID.</p>
+<table><tr><th>Check</th><th>Reference</th><th>Rejoined candidate</th></tr>
+<tr><td>Land tiles</td><td>55,000</td><td>55,000</td></tr>
+<tr><td>Extra landmass parts</td><td>3</td><td>0</td></tr>
+<tr><td>Missing borders</td><td>66</td><td>63</td></tr>
+<tr><td>False borders</td><td>34</td><td>34</td></tr></table>
+<a href="rejoined/review.png"><img src="rejoined/review.png" alt="Margin-one world layout with the mainland breaks closed"></a>
+<p>The Baltic gap remains open. Existing narrow shapes and other border errors remain.
+<a href="rejoined/europe.png">Europe</a> · <a href="rejoined/south-america.png">South America</a> ·
+<a href="rejoined/docking.json.gz">Moves and settings</a> · <a href="rejoined/geography.json">Independent geography audit</a> · <a href="rejoined/cells.csv.gz">Tiles</a></p>
+<h2>Island trial: partial improvement</h2>
+<p>Ireland moves north. Long Island moves southeast of Manhattan. Japan remains on one side of Korea.
+But Java is still too far west. Do not treat this as a complete solution to island placement.</p>
+<img loading="lazy" src="islands/europe.png" alt="Island trial with Ireland farther north and the Baltic gap retained">
+<p><a href="islands/new-york-before.png">New York before</a> · <a href="islands/new-york.png">New York after</a> ·
+<a href="islands/indonesia.png">Indonesia</a> · <a href="islands/japan-korea.png">Japan and Korea</a> ·
+<a href="islands/geography.json">Geography audit</a> · <a href="islands/coasts.json">Coast audit</a></p>
+<h2>Inland lakes: the input needs an explicit water layer</h2>
+<p>The administrative country polygons cover the full area of Victoria, Tanganyika, Malawi, Superior,
+Baikal, and Titicaca. These polygons describe territory, not only dry land. Preserving their existing holes
+cannot restore these lakes.</p>
+<p>The audit checks 1,355 Natural Earth lake features. At the current thresholds, 48 lakes receive
+separate water-guide regions. These use 241 display-area units, while land budgets remain at 55,000.
+Water has no population budget. Lakes below the thresholds remain in the audit.</p>
+<p><strong>DR Congo–Tanzania is a lake border, not a land connection in these inputs.</strong>
+After Lake Tanganyika is subtracted, the source land polygons are separated by about 32 km.
+A physical-border constraint must not build a land path across that lake.</p>
+<h3>Source geometry with explicit lakes—not the tile cartogram</h3>
+<img class="source" loading="lazy" src="lakes/east-africa-source.png" alt="East African source polygons with lakes shown in blue">
+<p><a href="lakes/source-audit.json">Source audit and provenance</a> ·
+<a href="lakes/selected-lakes.csv">Selected lake list</a> · <a href="lakes/lake-audit.csv.gz">Full lake audit</a> ·
+<a href="https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-lakes/">Natural Earth source documentation</a></p>
+<details><summary>Rejected continuous lake-guide trial</summary>
+<p>The normal solver fails during polygon densification. With simplification and densification disabled,
+it writes an output, but the independent audit finds 25 invalid geometries and 17 overlap pairs.
+The maximum relative area error is about 451%. This is not a valid replacement layout.</p>
+<p>The diagnostic image uses repaired geometry for inspection only. It is not a square-tile map.
+The lakes are not yet restored in either 55,000-tile candidate above.</p>
+<img loading="lazy" src="lakes/east-africa-flow-rejected.png" alt="Rejected continuous East African lake guide, with validation failures stated">
+<p><a href="lakes/flow-audit.json">Flow audit</a> · <a href="lakes/failed-run.json">First solver run</a> ·
+<a href="lakes/invalid-run.json">Unsimplified solver run</a></p>
+</details>
+</html>

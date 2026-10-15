@@ -38,8 +38,10 @@ def draw(path, geometries, groups, title, caption, method='Flow method: Gastner,
         '<text x="40" y="70" font-size="17">Continuous deformation of separate components. Not yet a square-tile layout. Not a production map.</text>',
         f'<text x="40" y="96" font-size="15">{html.escape(caption)}</text>']
     for c,g in sorted(geometries.items()):
-        commands=ring(g.exterior)+''.join(ring(r) for r in g.interiors)
-        parts.append(f'<path d="{commands}" fill="{country_color(groups[c]["country_id"])}" fill-rule="evenodd" stroke="#444" stroke-width=".55"><title>{html.escape(c)}</title></path>')
+        polygons = list(g.geoms) if g.geom_type == 'MultiPolygon' else [g]
+        commands=''.join(ring(p.exterior)+''.join(ring(r) for r in p.interiors) for p in polygons)
+        colour = groups[c].get('fill', country_color(groups[c]['country_id']))
+        parts.append(f'<path d="{commands}" fill="{colour}" fill-rule="evenodd" stroke="#444" stroke-width=".55"><title>{html.escape(c)}</title></path>')
     largest={}
     for c in geometries:
         country=groups[c]['country_id']
@@ -51,7 +53,7 @@ def draw(path, geometries, groups, title, caption, method='Flow method: Gastner,
         p=g.representative_point();x,y=point(p.x,p.y);bounds=(x-17,y-9,x+17,y+6)
         if any(not(bounds[2]<b[0] or b[2]<bounds[0] or bounds[3]<b[1] or b[3]<bounds[1]) for b in boxes):continue
         boxes.append(bounds)
-        parts.append(f'<text x="{x:.3f}" y="{y:.3f}" text-anchor="middle" font-size="12" paint-order="stroke" stroke="#faf9f6" stroke-width="2">{html.escape(groups[c]["country_id"])}</text>')
+        parts.append(f'<text x="{x:.3f}" y="{y:.3f}" text-anchor="middle" font-size="12" paint-order="stroke" stroke="#faf9f6" stroke-width="2">{html.escape(groups[c].get("label", groups[c]["country_id"]))}</text>')
     parts.append(f'<text x="40" y="1094" font-size="13">Sources: Kontur population; Natural Earth. {html.escape(method)} Source year is unknown.</text></g></svg>')
     path.write_text('\n'.join(parts))
 

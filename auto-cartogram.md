@@ -669,6 +669,30 @@ supports treating important water features as constraints, not merely empty
 space. Their study uses Dorling-style and rectangular maps, not exact-budget
 world mosaics. It does not establish a solution to our raster topology problem.
 
+### Explicit inland lakes
+
+The country polygons describe administrative territory, not only dry land.
+An audit with Natural Earth's separate lake layer [9] finds that the polygons
+cover the full area of Victoria, Tanganyika, Malawi, Superior, Baikal, and
+Titicaca. Preserving polygon holes cannot restore these lakes.
+
+The prototype now audits 1,355 lake features. At the current display thresholds,
+48 lakes receive separate water-guide regions. These add 241 guide-area units;
+the land budgets remain 55,000 tiles. Water-area units are display constraints,
+not population. Small lakes remain in the audit even when they fall below the
+display threshold.
+
+Subtract lakes before determining physical land contacts. In these inputs,
+DR Congo and Tanzania share an administrative border through Lake Tanganyika,
+but no land connection remains after subtraction. Do not construct a land path
+for that border. Lake islands also need population-component checks.
+
+The first continuous lake-guide trial fails validation. Disabling the solver's
+simplification avoids its initial failure, but the output still has invalid
+geometry and overlaps. The diagnostic images do not establish a valid tile
+layout. Keep this work separate from the preferred margin-one map. See the
+[follow-up review](examples/auto-cartogram/results/geography/margin-1-followup/index.html).
+
 ## Decision
 
 Proceed with the island audit and a small GridMapPipeline prototype. Keep the
@@ -710,12 +734,19 @@ The issue and thread text were retrieved directly through their APIs.
 
 [7] [cartogram-cpp](https://github.com/mgastner/cartogram-cpp).
 Its README documents the flow-based method, GeoJSON/CSV interface, and licensing.
-It was inspected as a comparison candidate, not tested in this work.
+The initial research inspected it as a comparison candidate. Later experimental
+flow pipelines use a local build; it is not a production dependency.
 
 [8] C. Tong, L. McNabb, and R. S. Laramee (2018), **Cartograms with
 Topological Features**. [DOI](https://doi.org/10.2312/cgvc.20181217),
 [paper](https://diglib.eg.org/bitstream/handle/10.2312/cgvc20181217/127-134.pdf).
 Read the paper directly, including Sections 3.3 and 3.6–3.8. The authors leave
 an in-depth user feedback study to future work.
+
+[9] Natural Earth, [Lakes + Reservoirs](https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-lakes/),
+[GeoJSON source](https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_10m_lakes.geojson).
+The page and data were inspected directly. The local audit records the downloaded
+file hash. The standard lake layer includes natural lakes and reservoirs; the
+separate historic and pluvial layers were not used.
 
 [issue]: https://github.com/bovine3dom/population-cartogram-projection/issues/17
