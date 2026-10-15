@@ -47,6 +47,26 @@ class GuardTests(unittest.TestCase):
         self.assertEqual(state.edge(None, 'a'), 33)
         self.assertEqual(state.edge('a', 'b'), 2)
 
+    def test_contact_guard_and_rollback(self):
+        state = self.state()
+        state.preserve_contacts = True
+        before = dict(state.contacts)
+        self.assertFalse(state.exchange((3, 2), (2, 3)))
+        self.assertEqual(state.rejected_contacts, 1)
+        self.assertEqual(dict(state.contacts), before)
+        self.assertEqual(state.contacts[('a', 'b')], 1)
+
+    def test_steps_keep_contact_counts_consistent(self):
+        state = self.state()
+        state.preserve_contacts = True
+        for _ in range(10):
+            state.step(4)
+            actual = sum((x+dx, y+dy) in state.tiles['b']
+                         for x, y in state.tiles['a'] for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)])
+            self.assertEqual(state.contacts[('a', 'b')], actual)
+            self.assertGreater(actual, 0)
+            self.assertEqual(state.land[0], set(state.owners))
+
     def test_disconnected_initial_land_rejected(self):
         with self.assertRaisesRegex(ValueError, 'landmasses'):
             GuardedDeformation({'a': {(1, 1)}, 'b': {(3, 1)}}, set(),

@@ -2,15 +2,16 @@
 """Refine an existing layout without splitting source-connected landmasses."""
 import argparse
 import csv
+from collections import Counter
 import json
 import time
 from pathlib import Path
 
 import numpy as np
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import binary_closing, binary_dilation, distance_transform_edt
 from shapely import affinity, contains_xy
 
-from compact_regions import Deformation
+from compact_regions import Deformation, adjacent
 from geographic_baseline import simple_toggle
 from partition_land import contact_groups
 from review_flow import read_shapes
@@ -19,7 +20,7 @@ from save_review import digest
 
 
 class GuardedDeformation(Deformation):
-    def __init__(self, *args, groups, landlocked=(), coast_weight=0., **kwargs):
+    def __init__(self, *args, groups, landlocked=(), coast_weight=0., preserve_contacts=False, **kwargs):
         super().__init__(*args, **kwargs)
         self.group_for = {c: i for i, group in enumerate(groups) for c in group}
         if set(self.group_for) != set(self.tiles):
@@ -30,6 +31,15 @@ class GuardedDeformation(Deformation):
         self.landlocked = set(landlocked)
         self.coast_weight = coast_weight
         self.rejected_splits = 0
+        self.rejected_contacts = 0
+        self.contacts = Counter()
+        for p, owner in self.owners.items():
+            for q in adjacent(p):
+                other = self.owners.get(q)
+                if other is not None and other != owner and p < q:
+                    self.contacts[tuple(sorted((owner, other)))] += 1
+        self.preserve_contacts = preserve_contacts
+        self.protected_contacts = self.required & {pair for pair, count in self.contacts.items() if count}
 
     def edge(self, a, b):
         value = super().edge(a, b)
@@ -38,7 +48,15 @@ class GuardedDeformation(Deformation):
         return value
 
     def change(self, p, target):
-        owner = super().change(p, target)
+        owner = self.owners.get(p)
+        for q in adjacent(p):
+            other = self.owners.get(q)
+            if other is None:
+                continue
+            for c, delta in [(owner, -1), (target, 1)]:
+                if c is not None and c != other:
+                    self.contacts[tuple(sorted((c, other)))] += delta
+        super().change(p, target)
         a, b = self.group_for.get(owner), self.group_for.get(target)
         if a != b:
             if a is not None:
@@ -64,18 +82,27 @@ class GuardedDeformation(Deformation):
         if self.possible(q, a) and first+self.delta(q, a) < -1e-8:
             mark(q, b, a)
             self.change(q, a)
-            if all(connectivity(self.land[g]) == 1 for g in check):
+            lost_contact = self.preserve_contacts and any(self.contacts[pair] == 0 for pair in self.protected_contacts)
+            if lost_contact:
+                self.rejected_contacts += 1
+            elif all(connectivity(self.land[g]) == 1 for g in check):
+                if self.preserve_contacts:
+                    self.protected_contacts |= self.required & {pair for pair, count in self.contacts.items() if count}
                 return True
-            self.rejected_splits += 1
+            else:
+                self.rejected_splits += 1
             self.change(q, b)
         self.change(p, a)
         return False
 
 
 def run(inputs, layout, flow_record, source_coasts, output, rounds=1000, choices=16,
-        guide=1., coast_weight=32., minimum_landmass_tiles=550, checkpoint_rounds=25):
+        guide=1., coast_weight=32., minimum_landmass_tiles=550, checkpoint_rounds=25, preserve_contacts=False,
+        water_weight=0., water_radius=8, water_margin=1):
     if output.exists() or min(rounds, choices, minimum_landmass_tiles, checkpoint_rounds) < 1 or not np.isfinite([guide, coast_weight]).all() or min(guide, coast_weight) < 0:
         raise ValueError('Use a new output and valid settings')
+    if not np.isfinite(water_weight) or water_weight < 0 or water_radius < 1 or water_margin < 0:
+        raise ValueError('Invalid water cost settings')
     rows, tiles, owner = load(inputs, layout)
     if any(len(tiles[c]) != int(rows[c]['tiles']) for c in tiles):
         raise ValueError('Exact initial budgets required')
@@ -101,6 +128,7 @@ def run(inputs, layout, flow_record, source_coasts, output, rounds=1000, choices
     yy, xx = np.mgrid[lower[1]:upper[1]+1, lower[0]:upper[0]+1]
     zero = np.zeros(xx.shape, dtype=np.float32)
     costs = {c: zero for c in fixed}
+    raw_land = np.zeros(xx.shape, dtype=bool)
     for c in sorted(set(tiles)-fixed):
         g = affinity.scale(geometry[c], record['flow']['x_scale'], record['flow']['y_scale'], origin=(0, 0))
         mask = contains_xy(g, xx, yy)
@@ -110,21 +138,30 @@ def run(inputs, layout, flow_record, source_coasts, output, rounds=1000, choices
             if not (0 <= y < mask.shape[0] and 0 <= x < mask.shape[1]):
                 raise ValueError('Flow guide lies outside cost grid')
             mask[y, x] = True
+        raw_land |= mask
         costs[c] = (guide*distance_transform_edt(~mask)**2).astype(np.float32)
+    protected_water = binary_closing(raw_land, iterations=water_radius) & ~raw_land
+    if water_margin:
+        protected_water = binary_dilation(protected_water, iterations=water_margin)
+    for c in set(tiles)-fixed:
+        costs[c] += water_weight*protected_water
     state = GuardedDeformation(tiles, required, costs, origin, perimeter=1., false_contact=16.,
-                               allow_holes=True, groups=groups, landlocked=landlocked, coast_weight=coast_weight)
+                               allow_holes=True, groups=groups, landlocked=landlocked, coast_weight=coast_weight, preserve_contacts=preserve_contacts)
     state.fixed = fixed
     output.mkdir(parents=True)
     started = time.monotonic()
     history = []
     provenance = dict(method='Paired tile exchanges with component topology checks and source-landmass connectivity guards',
-        rounds=rounds, choices=choices, guide=guide, coast_weight=coast_weight,
+        rounds=rounds, choices=choices, guide=guide, coast_weight=coast_weight, preserve_contacts=preserve_contacts,
         minimum_landmass_tiles=minimum_landmass_tiles, checkpoint_rounds=checkpoint_rounds,
+        water_weight=water_weight, water_radius=water_radius, water_margin=water_margin,
+        protected_water_cells=int(protected_water.sum()),
         inputs={str(p): digest(p) for p in [inputs/'groups.csv', inputs/'geographic-contacts.csv', layout/'cells.csv', flow_record, geometry_file, source_coasts]},
         scripts={n: digest(Path(__file__).with_name(n)) for n in ['refine_geography.py', 'compact_regions.py', 'geographic_baseline.py', 'partition_land.py']},
         limits=['Local search can stop before water access improves.', 'No required-border paths are constructed.',
                 'The coast cost uses finite source samples and does not distinguish enclosed water.',
-                'Source landmass connectivity is required. Individual country adjacencies can change.',
+                'Source landmass connectivity is required. Optional contact guards retain existing true borders, not their positions.',
+                'Water costs use concavities in the raw flow raster, not named seas or a verified source-water topology.',
                 'Existing shape holes are allowed. No candidate is automatically approved.'])
     (output/'inputs.json').write_text(json.dumps(provenance, indent=2)+'\n')
     def save(name):
@@ -140,7 +177,7 @@ def run(inputs, layout, flow_record, source_coasts, output, rounds=1000, choices
             for c, cells in sorted(state.tiles.items()):
                 writer.writerows((c, x, y) for x, y in sorted(cells))
         (target/'complete.txt').write_text('mode=guarded-geography\ncounts=exact\nsource-landmasses=connected\napproval=none\n')
-        (target/'refinement.json').write_text(json.dumps(dict(history=history, rejected_splits=state.rejected_splits,
+        (target/'refinement.json').write_text(json.dumps(dict(history=history, rejected_splits=state.rejected_splits, rejected_contacts=state.rejected_contacts,
             elapsed_seconds=time.monotonic()-started, cells_sha256=digest(target/'cells.csv')), indent=2)+'\n')
     save('initial')
     previous = state.energy()
@@ -150,7 +187,7 @@ def run(inputs, layout, flow_record, source_coasts, output, rounds=1000, choices
         if energy > previous+1e-6:
             raise AssertionError('Energy increased')
         previous = energy
-        history.append(dict(round=iteration, changed=changed, energy=energy, rejected_splits=state.rejected_splits))
+        history.append(dict(round=iteration, changed=changed, energy=energy, rejected_splits=state.rejected_splits, rejected_contacts=state.rejected_contacts))
         print(json.dumps(history[-1]), flush=True)
         if iteration % checkpoint_rounds == 0:
             save(f'round-{iteration}')
@@ -164,8 +201,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ['inputs', 'layout', 'flow_record', 'source_coasts', 'output']:
         parser.add_argument(name, type=Path)
-    for name, default in [('rounds', 1000), ('choices', 16), ('minimum-landmass-tiles', 550), ('checkpoint-rounds', 25)]:
+    for name, default in [('rounds', 1000), ('choices', 16), ('minimum-landmass-tiles', 550), ('checkpoint-rounds', 25), ('water-radius', 8), ('water-margin', 1)]:
         parser.add_argument('--'+name, type=int, default=default)
+    parser.add_argument('--water-weight', type=float, default=0.)
+    parser.add_argument('--preserve-contacts', action='store_true')
     parser.add_argument('--guide', type=float, default=1.)
     parser.add_argument('--coast-weight', type=float, default=32.)
     print(json.dumps(run(**vars(parser.parse_args())), indent=2))
