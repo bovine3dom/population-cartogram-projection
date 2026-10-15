@@ -1,0 +1,48 @@
+{
+  "max_tiles": 550,
+  "radius": 64,
+  "rounds": 4,
+  "moves": [
+    {
+      "round": 1,
+      "components": [
+        "KAB:13532639e9546e01"
+      ],
+      "dx": 47,
+      "dy": 11,
+      "gained_true_contacts": [
+        [
+          "KAB:13532639e9546e01",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ]
+      ],
+      "old_false_contacts": [
+        [
+          "KAB:13532639e9546e01",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAB:13532639e9546e01",
+          "UZB:448c5653f0be3548"
+        ]
+      ],
+      "new_false_contacts": []
+    }
+  ],
+  "missing_before": 47,
+  "missing_after": 46,
+  "false_before": 43,
+  "false_after": 41,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/geography-native-after-dock/final/cells.csv": "3da2e9d94de54dba92c84022d2618cc30a332ca89a5da519267aa8f21d003c34"
+  },
+  "script_sha256": "6a0800b962ea2719817f1bb5a06e3be12be83225519e00610b4c4d24b2919c52",
+  "limits": [
+    "Rigid translations retain shapes and budgets. Border-neighbour axis guards use source bounding-box centres and a two-degree threshold.",
+    "Bounding-box centres are approximate and can be misleading across the antimeridian. Other neighbour orders are not guarded.",
+    "No new connector tiles are made. Existing narrow shapes are retained.",
+    "Source-connected landmasses stay connected. No result is automatically approved."
+  ]
+}

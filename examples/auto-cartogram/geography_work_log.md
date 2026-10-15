@@ -268,3 +268,46 @@ form a 99-tile group through true tile borders. Finland is a separate 37-tile
 group with no true tile border. Their apparent mainland connections are false
 contacts. Next test: translate small groups to true neighbouring groups. Use
 whole shapes, not connector paths, and reject overlaps or landmass splits.
+
+## 2026-10-15 17:43 UTC: true-border translations and native shapes
+
+Added `dock_true_borders.py`. It groups components by true borders that exist
+in the tile layout. Small groups can move as rigid shapes towards missing true
+neighbours. The largest true-border group in each source landmass stays fixed.
+Moves cannot increase the number of false contacts, lose existing true contacts,
+overlap other shapes, or split a source-connected landmass. No connector tiles are added.
+
+The first trial moved Finland towards Norway and Sweden but could not then
+join Russia. Giving the main group priority restored Finland's Russian border,
+but put Sweden northeast of Finland. Reviewed and rejected both arrangements.
+Added general axis guards from source component bounds. These keep Sweden west
+and south of Finland, but no rigid placement then joins all three countries.
+This is evidence that their shapes and positions must change together.
+
+The axis-guarded translation trial moves five groups. It also removes false
+contacts between Monaco and Lebanon/Syria, and between the UAE and Iran/Pakistan.
+These were errors between specific source components, not just country labels.
+Missing borders fall from 59 to 54; false borders fall from 55 to 44.
+Possible lost coasts fall from 21 to 18. This is not an approved replacement.
+
+Added optional native shape guidance to local exchanges. Each source outline
+is scaled to its tile area and centred on its starting tile group. Tested
+weight 10, flow weight zero, retained true borders, and 75 rounds after the
+translation trial. A second translation pass gives 46 missing and 41 false
+borders, 19 possible lost coasts, and three possible false coasts. The independent
+landmass audit confirms zero splits. Budgets remain exact.
+
+Visually reviewed the world, Europe, South America, Japan/Korea, and Indonesia.
+Chile and Italy have more useful outlines. The Baltic is still not satisfactory.
+A thin connection between North and South Korea is also visible. Thus this
+candidate is not ready for production, despite the better aggregate checks.
+The earlier island-only candidate is not merged into these mainland tests.
+
+The review page is `results/geography/guarded/index.html`. It includes a world
+image, regional images, compressed tile layouts, settings, and audits. Seven
+refinement tests, four translation tests, seven geography tests, and 26 partition
+tests pass. The published H3-MON map remains unchanged.
+
+The next algorithm needs joint movement and deformation of neighbouring groups.
+It must retain the correct side of water and allow false land connections to
+be replaced. Do not select a result from border totals alone.

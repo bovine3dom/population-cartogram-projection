@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Geography tests: local changes</title>
+<style>body{font:17px/1.5 system-ui;max-width:1400px;margin:auto;padding:24px;background:#faf9f6;color:#222}img{width:100%;height:auto}table{border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #ccc}a{color:#165a9e}details{margin:20px 0}</style>
+<h1>Geography tests: local changes</h1>
+<p><strong>No candidate on this page is approved.</strong> The published map is unchanged.
+All candidates retain 55,000 tiles and exact component budgets. They do not split source-connected landmasses.
+These checks do not prove that country positions or coasts are correct.</p>
+<p><a href="../../../geography_work_log.md">Work log</a> · <a href="../coast-graph/index.html">Island tests</a> · <a href="../protected-water/index.html">Full-rebuild water tests</a></p>
+<table>
+<tr><th>Layout</th><th>Missing borders</th><th>False borders</th><th>Possible lost coasts</th><th>Possible false coasts</th></tr>
+<tr><td>Baseline</td><td>59</td><td>55</td><td>21</td><td>7</td></tr>
+<tr><td>Rigid translations with axis guards</td><td>54</td><td>44</td><td>18</td><td>7</td></tr>
+<tr><td>Native shapes, then another translation pass</td><td>46</td><td>41</td><td>19</td><td>3</td></tr>
+</table>
+<p>Coast flags use 512 boundary samples per source component. They are review flags, not verified ocean-access tests.</p>
+<h2>Latest world view</h2>
+<p>Native shape guidance improves Chile's outline. But the Nordic relationships still fail.
+A thin connection between North and South Korea is also visible.
+The method must change positions and shapes together. Better border totals are not sufficient.</p>
+<a href="native-shapes/world.png"><img src="native-shapes/world.png" alt="Experimental world layout with native shape guidance"></a>
+<h2>Compare Europe</h2>
+<h3>Baseline</h3>
+<img loading="lazy" src="../../compact-landmass/fixed-coasts-55000/regions/europe.png" alt="Baseline Europe">
+<h3>Rigid translations with source-axis guards</h3>
+<p>Finland joins the correct Russian component. Norway and Sweden still touch the wrong neighbours.
+The rigid shapes cannot fit all the required relationships.</p>
+<img loading="lazy" src="translations/europe.png" alt="Europe after rigid translations">
+<h3>Native shape guidance and a second translation pass</h3>
+<img loading="lazy" src="native-shapes/europe.png" alt="Europe after native shape guidance">
+<h3>South America</h3>
+<img loading="lazy" src="native-shapes/south-america.png" alt="South America after native shape guidance">
+<p>Records: <a href="native-shapes/geography.json">geography audit</a>,
+<a href="native-shapes/coasts.json">coast audit</a>,
+<a href="native-shapes/refinement-inputs.json">refinement settings</a>,
+<a href="native-shapes/docking.json">final translations</a>,
+<a href="native-shapes/cells.csv.gz">tile layout</a>.
+This layout is not a new population export.</p>
+<details><summary>Rejected local-change tests</summary>
+<h3>Strong flow guide, round 50</h3><p>Uruguay gains a thin extension.</p>
+<img loading="lazy" src="guide1-south-america.png" alt="Rejected strong-guide South America">
+<h3>Weak flow guide, round 175</h3><p>The Baltic remains compressed.</p>
+<img loading="lazy" src="guide005-europe.png" alt="Rejected weak-guide Europe">
+<h3>Existing true borders retained</h3><p>Border totals improve, but water relationships do not.</p>
+<img loading="lazy" src="contacts-europe.png" alt="Europe with existing-border guards">
+<h3>Water cost added</h3><p>A wider Baltic gap comes with a thin Swedish connection towards Germany.</p>
+<img loading="lazy" src="water200-europe.png" alt="Rejected water-cost Europe">
+</details>
+</html>
