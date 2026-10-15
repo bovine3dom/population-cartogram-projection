@@ -284,3 +284,35 @@ factors 2 and 3 have ratios 2.444 and 2.760 with no fallback. Factor 5 has one
 20-second timeout, so its uniform fallback raises the ratio to 5.788. The
 factor-5 runner will allow 120 seconds per cell. These outputs are diagnostics,
 not published replacements. CPU LP projection follows the native KA/oneAPI fit.
+
+
+## 00:17 UTC: factor 2 complete; storage and browser limits
+
+Factor 2 completes all 206 countries. It has 219,768 country targets and a
+99.5% ratio of 2.500. There are 16 uniform cell fallbacks out of 54,942 coarse
+targets. Mean border separation is 646.615 km on 6,584 edges. Positive triangle
+area is 3.650 million square km, versus 3.350 million in the native factor-1
+map. The largest positive triangle is smaller. This is not a fold-free map.
+Its independent binary audit passes all native sources and city names.
+Factors 3 and 5 remain running, with a hard stop at 04:30 UTC.
+
+Added lossless per-batch dictionary packing. The native factor-1 files decrease
+from 174.0 MB to 125.8 MB with no row or value change. Python tests pass, and
+all columns pass independent JavaScript and Julia batch-reader comparisons.
+Arrow.jl 2.8.1 joins replacement dictionaries incorrectly with Arrow.Table;
+Arrow.Stream passes. The format and reader restriction are documented.
+The IPC data is uncompressed. Production zstd settings remain unchanged.
+
+Default-precision headless checks load the full native map and the packed
+stream without errors. They retain about 1.3 GB of backing storage plus 102 MB
+of JavaScript heap after collection. Turning off the existing high-precision
+flag does not reduce this result. File reduction alone does not make this
+two-million-cell geographic layer safe for a phone. No viewport feature was
+restored, and no native planet dataset is published yet.
+
+A bounded moment-packing diagnostic reduces US rows by 27% while preserving
+target mass, geographic XYZ, and density. Its maximum target total variation
+is 0.00814 and maximum forward mean shift is 0.142 coarse grid units. Some
+low-population source distributions change substantially. Stricter forward
+bounds and explicit city and navigation-anchor protection are under test.
+This is an approximate export experiment, not a change to the accepted fit.

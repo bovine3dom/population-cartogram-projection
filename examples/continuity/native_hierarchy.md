@@ -69,7 +69,8 @@ after Arrow serialization. It does not publish to H3-MON.
 The exporter uses dictionaries where they reduce the column size. Population
 remains Float64. Density uses Float32, with measured relative error at most
 `6e-8`. The H3 halves remain UInt32. Use a dictionary-capable Arrow reader.
-This changes storage, not the fitted transport. There is no HTTP compression
+This changes storage, not the fitted transport. For a smaller lossless output,
+see [stream packing](mobile/stream.md) and its reader limits. There is no HTTP compression
 setting in this exporter. The server keeps its existing compression policy.
 
 `native_quality.jl FIT GUIDES FACTOR BORDER_CSV NEW_OUTPUT` measures support,
