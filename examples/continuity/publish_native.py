@@ -68,7 +68,10 @@ def publish(raw, packed, quality, destination, packing_audit=None):
     (pending / "population_density_hilo.json").write_text(json.dumps(metadata, indent=2) + "\n")
     size = sum(c["stream_bytes"] for c in checks.values())
     final_audit = dict(audit, encoding="Arrow IPC stream with replacement dictionaries", total_bytes=size,
-                       geometry=geometry, files=checks)
+                       geometry=geometry, files=checks, unpacked_audit="unpacked-audit.toml")
+    for kind, check in checks.items():
+        final_audit[f"{kind}_bytes"] = check["stream_bytes"]
+        final_audit[f"{kind}_sha256"] = check["stream_sha256"]
     (pending / "audit.json").write_text(json.dumps(final_audit, indent=2) + "\n")
     approximate = (f"This export uses approximate moment packing. Protected target mass is {config['target_retained']:g}. "
                    f"The source-mean coordinate limit is {config['forward_tolerance']:g} coarse grid units. "

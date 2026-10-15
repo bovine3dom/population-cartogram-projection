@@ -388,3 +388,25 @@ are running. Factor 3 fixes five of seven Australian fallback cells but two
 still fail after 30 seconds. A longer bounded retry will use a separate root.
 The runner now records the cell limit, deadline, and code commit for each run.
 All 19 subdivision checks pass again. The acceptance limits are unchanged.
+
+## 01:17 UTC: factor comparison and binary metadata
+
+Factor 2 passes all-column stream checks and the headless browser test. Its
+files total 141,180,304 bytes. All 1,992,902 geographic cells, 219,724 target
+cells, and 1,715 displayed labels load without test errors. Retained browser
+backing storage is 1.381 GB; JavaScript heap is about 130 MB. This is not
+phone-safe evidence. The smaller approximate export is still running.
+
+The 120-second factor-3 retry removes the large Australian fallbacks. Four
+fallback cells remain, each with four source contributions. Separate feasible
+starts solve all four to an optimal zero guide amplitude and the same 36-row
+uniform plan. Thus those four fallback records do not explain excess blur.
+The full factor-3 ratio is 3.144. Export checks and bounded packing are running.
+
+Factor 5 completes the US in 3,154 seconds under the old cold solver. The
+monitor pauses after its saved country checkpoint. Stopped that process and
+resumed with the tested warm solver; no completed country was lost.
+
+Corrected final publication metadata to report the final stream hashes and
+byte counts at the top level. The unpacked audit remains a separate reference.
+All three publisher tests pass, including these final-file fields.

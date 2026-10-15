@@ -45,6 +45,9 @@ class Publication(unittest.TestCase):
             self.assertNotIn("viewportGeometry", metadata)
             self.assertEqual(metadata["trimFactor"], 0)
             self.assertTrue(metadata["cartogramLineProbe"])
+            audit = json.loads((args[-1] / "audit.json").read_text())
+            self.assertEqual(audit["transport_bytes"], 6)
+            self.assertEqual(audit["transport_sha256"], publisher.digest(args[-1] / publisher.FILES["transport"]))
             with self.assertRaises(ValueError):
                 publisher.publish(*args)
 
