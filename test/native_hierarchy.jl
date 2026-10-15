@@ -55,6 +55,7 @@ for backend in backends
         tiny=merge(fit,(;source=vcat(fit.source,fit.source[1]),target=vcat(fit.target,fit.target[1]),
             weights=vcat(weights,1e-12)))
         @test NH.export_part(state,tiny).part.weights==tiny.weights
+        @test_throws ErrorException NH.export_part(state,merge(tiny,(;weights=vcat(weights,-1e-12))))
         @test result.stats.source<1e-10
         @test result.stats.relative<=.001
         @test length(result.part.meta.ids)==4

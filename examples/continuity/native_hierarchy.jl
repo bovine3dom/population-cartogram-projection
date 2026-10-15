@@ -160,6 +160,7 @@ end
 function export_part(state,fit)
     (;d,guide,children,ids)=state;n=length(d.a);m=length(d.b)
     # Zero-mass edges are not contributions. Keep every positive fitted edge.
+    all(w->isfinite(w)&&w>=0,fit.weights)||error("invalid fitted weight")
     keep=findall(>(0),fit.weights)
     s=fit.source[keep];t=fit.target[keep];w=copy(fit.weights[keep])
     stats=SR.residual((;n,m,source=s,target=t),w,d.a,d.b)
