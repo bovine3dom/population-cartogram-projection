@@ -35,6 +35,7 @@ include("../examples/auto-cartogram/promote_h3_recovery.jl")
         promoted=joinpath(root,"promoted");promote(root,trial,promoted)
         @test isfile(joinpath(promoted,"research-fit-complete.txt"))
         @test nrow(CSV.read(joinpath(promoted,"fit","metrics.csv"),DataFrame))==3
+        @test last(deserialize(joinpath(promoted,"fit","pass-1.jls")).metrics).updated_country==2
         @test plan_digest(deserialize(joinpath(promoted,"fit","candidate.jls"))[1])==plan_digest(state.seed[1])
         rows.cross_rms_all[end]+=1;CSV.write(joinpath(fit,"metrics.csv"),rows)
         @test_throws ErrorException interrupted_state(root)

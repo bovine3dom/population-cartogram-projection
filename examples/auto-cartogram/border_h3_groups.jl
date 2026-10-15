@@ -60,6 +60,14 @@ end
 
 function extract_groups(original,out,fit)
     isfile(joinpath(fit,"research-fit-complete.txt")) || error("Border refit incomplete")
+    inputs=Dict(abspath(p)=>bytes2hex(open(sha256,p)) for p in [joinpath(out,"countries.jls"),joinpath(fit,"fit","candidate.jls")])
+    identity=joinpath(out,"extraction-inputs.json")
+    if isfile(identity)
+        JSON.parsefile(identity)==inputs || error("Extraction checkpoint changed; use a new output")
+    else
+        ispath(joinpath(out,"raw")) && !isempty(readdir(joinpath(out,"raw"))) && error("Raw shards have no checkpoint identity")
+        open(io->JSON.print(io,inputs,2),identity,"w")
+    end
     countries=deserialize(joinpath(out,"countries.jls"));plans=deserialize(joinpath(fit,"fit","candidate.jls"))
     code_groups=Dict(r.code=>String(r.group_id) for r in eachrow(CSV.read(joinpath(out,"group-codes.csv"),DataFrame)))
     active=Set(c.code for c in countries);raw=joinpath(out,"raw");mkpath(raw)

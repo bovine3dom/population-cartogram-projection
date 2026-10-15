@@ -39,5 +39,7 @@ include("../examples/auto-cartogram/audit_h3_borders.jl")
         @test !JSON.parsefile(joinpath(out,"border-audit.json"))["numerical_gate"]
         @test_throws ErrorException prepare_groups(original,contacts,out;expected_tiles=6)
         @test_throws ErrorException prepare_groups(original,contacts,joinpath(root,"bad");expected_tiles=7)
+        open(io->write(io,UInt8(0)),joinpath(fit,"fit","candidate.jls"),"a")
+        @test_throws ErrorException extract_groups(original,out,fit)
     end
 end
