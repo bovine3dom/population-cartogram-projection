@@ -453,3 +453,18 @@ No server configuration changed.
 The native quality test was first invoked with the mobile project, which lacks
 DataFrames. The repeat with the correct uk-h3 project passes all ten checks.
 Both stream-packing tests pass. No dependency was installed to mask the error.
+
+## 02:08 UTC: factor 3 published; factor-5 Australia repaired
+
+Published planet-h3-6-factor3-continuity-native after the full binary and
+headless browser checks. Both files total 151,958,912 bytes. This remains a
+larger experimental option, not a replacement for factors 1 or 2. Its actual
+binary comparison preserves city and navigation anchors. Maximum target
+variation is 0.07550; maximum source-coordinate shift is 0.100002 coarse
+units after serialization. Complete density and geographic means pass.
+
+A separate 300-second-per-cell Australian factor-5 retry completes without
+uniform fallback. It reduces that country from 1,099,211 to 249,488 rows and
+its 99.5% ratio from 13.27 to 2.845. The original planet root is unchanged;
+assembly will use a new root after all countries complete. A separate US
+retry now targets its one broad failed cell. The main factor-5 run continues.
