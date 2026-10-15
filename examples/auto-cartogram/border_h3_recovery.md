@@ -28,9 +28,13 @@ all original eta values, border weights, population constraints, and distortion
 limits. Hot continuation stages are warm starts only. A final-temperature
 proposal must pass the full checks before any line-search acceptance.
 
-The trial has passed temperature factors 256 through 4. This is progress, not
-an accepted China update. Final-temperature checks and the objective test are
-still pending.
+The first trial passed temperature factors 256 through 2, then reached its
+20-minute limit during the final stage. This is progress, not an accepted China
+update. Resume the checked factor-2 stage in a separate 20-minute process.
+Check its input hashes, group, temperature, proximal coefficient, prior,
+source geometry, force array, and full masses before reusing its dual vector.
+Do not repeat the earlier temperature stages or publish a hot-stage plan.
+Final-temperature checks and the objective test are still pending.
 
 The numerical context is consistent with the limitations described in
 [Schmitzer's scaling paper](https://arxiv.org/abs/1610.06519). Its abstract
@@ -52,7 +56,8 @@ marker. Sparse extraction, balancing, export audits, and visual review still
 follow. `BORDER_FIT_ROOT` selects this checked recovery checkpoint for the
 existing export pipeline.
 
-Ten CPU checks pass for interrupted-state inspection, duplicate output guards,
+CPU tests cover interrupted-state inspection, duplicate output guards,
 input-metric mismatch, update-order mismatch, stable plan hashes, and rejection
-of a proposal that does not improve the objective. No production code or data
+of a proposal that does not improve the objective. They also test a successful
+recovery, a checked warm start, and promotion of a complete two-group fixture. No production code or data
 has changed. Both user PDF files remain untracked.
