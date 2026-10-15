@@ -55,7 +55,7 @@ function promote(root,pilot_dir,out)
         "files"=>Dict(abspath(p)=>bytes2hex(open(sha256,p)) for p in [@__FILE__,joinpath(pilot_dir,"accepted.jls"),joinpath(pilot_dir,"inspection.json")]))
     open(io->JSON.print(io,provenance,2),joinpath(out,"recovery.json"),"w")
     if nrow(rows)-1==length(state.countries)
-        CE.checkpoint(joinpath(out,"fit","pass-1.jls"),(;iteration=1,step=length(state.countries),start_step=1,plans=accepted.plans,metrics=rows))
+        CE.checkpoint(joinpath(out,"fit","pass-1.jls"),(;iteration=1,step=length(state.countries),start_step=1,plans=accepted.plans,metrics=[NamedTuple(r) for r in eachrow(rows)]))
         write(joinpath(out,"research-fit-complete.txt"),"Complete first sweep; recovered updates pass the original objective, mass, and distortion checks. Export audit still required.\n")
     end
     println("Saved verified checkpoint with $(nrow(rows)-1) completed updates")

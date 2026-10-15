@@ -34,7 +34,13 @@ update. Resume the checked factor-2 stage in a separate 20-minute process.
 Check its input hashes, group, temperature, proximal coefficient, prior,
 source geometry, force array, and full masses before reusing its dual vector.
 Do not repeat the earlier temperature stages or publish a hot-stage plan.
-Final-temperature checks and the objective test are still pending.
+The resumed final stage passed. China accepted a full step under the original
+objective and distortion limits. The verified checkpoint has 181 completed
+updates. All other plans have unchanged hashes.
+
+The effect on global border RMS is very small: 674.3172 km to 674.3152 km.
+This recovers the failed solve; it is not a major border-quality improvement.
+India is now running with the same bounded recovery method.
 
 The numerical context is consistent with the limitations described in
 [Schmitzer's scaling paper](https://arxiv.org/abs/1610.06519). Its abstract
@@ -61,3 +67,9 @@ input-metric mismatch, update-order mismatch, stable plan hashes, and rejection
 of a proposal that does not improve the objective. They also test a successful
 recovery, a checked warm start, and promotion of a complete two-group fixture. No production code or data
 has changed. Both user PDF files remain untracked.
+
+The extended recovery suite passes 16 checks, including refusal of a warm
+stage with the wrong proximal weight and the complete-pass snapshot format. The component-border suite passes 17
+checks. Extraction now records the exact country and candidate file hashes.
+A changed checkpoint cannot silently reuse old raw shards. The final border
+audit checks that identity again.

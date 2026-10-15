@@ -20,6 +20,10 @@ end
 
 function audit_groups(original,out,fit)
     reportpath=joinpath(out,"border-audit.json");ispath(reportpath) && error("Audit exists")
+    inputs=JSON.parsefile(joinpath(out,"extraction-inputs.json"))
+    for path in [joinpath(out,"countries.jls"),joinpath(fit,"fit","candidate.jls")]
+        get(inputs,abspath(path),"")==bytes2hex(open(sha256,path)) || error("Extraction checkpoint identity differs")
+    end
     countries=deserialize(joinpath(out,"countries.jls"));borders=deserialize(joinpath(out,"borders.jls"))
     codes=Dict(r.code=>String(r.group_id) for r in eachrow(CSV.read(joinpath(out,"group-codes.csv"),DataFrame)))
     edges=CE.graph(countries;borders)
