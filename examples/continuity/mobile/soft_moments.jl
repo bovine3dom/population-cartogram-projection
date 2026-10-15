@@ -5,6 +5,7 @@ include("quality.jl")
 const ME=MobileExport
 const MQ=MobileQuality
 const H=HiGHS
+anchor_kept(value,original)=isfinite(value)&&value>0&&value>=original*(1-1e-10)
 function features(points)
  centered=points.-mean(points;dims=2);scale=max.(sqrt.(sum(abs2,centered;dims=2)./size(points,2)),eps())
  centered./=scale;centered.-=mean(centered;dims=2)
@@ -69,7 +70,7 @@ function reduce_block(data,rows,weights,target_mass;limit=10.,floors=nothing,tol
   dot(cost,solution)<=dot(cost,seed)+1e-7||error("soft moment objective increased")
   maximum(lower.-solution)<=1e-8||error("soft moment lower bound")
   w=solution.*totals[source]
-  all(!(r in data.protected)||w[k]>0&&w[k]>=weights[k]*(1-1e-10) for (k,r) in enumerate(rows))||error("soft moment anchor lost")
+  all(!(r in data.protected)||anchor_kept(w[k],weights[k]) for (k,r) in enumerate(rows))||error("soft moment anchor lost")
   keep=findall(>(0),w)
   (;rows=rows[keep],weights=w[keep],seconds,optimal=status==H.kHighsModelStatusOptimal)
  finally;H.Highs_destroy(h);end
@@ -121,7 +122,7 @@ function pack_country(part;factor=1,target_retained=.99,tolerance=.02,
     end
     order=sortperm(rows);rows=rows[order];values=values[order]
     positions=Dict(r=>i for (i,r) in enumerate(rows))
-    all(haskey(positions,r)&&values[positions[r]]>=weight[r]-1e-12 for r in protected)||error("protected anchor lost")
+    all(haskey(positions,r)&&anchor_kept(values[positions[r]],weight[r]) for r in protected)||error("protected anchor lost")
     summary=ME.evaluate(data,rows,reference;weights=values)
     summary.source_sum_error<=1e-10&&summary.target_mass_error_max<=1e-7||error("packed mass check failed")
     summary.inverse_km_max<=.001&&summary.forward_max<=sqrt(2)*tolerance*factor+1e-6||error("packed position check failed")

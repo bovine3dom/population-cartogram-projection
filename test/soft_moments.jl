@@ -2,6 +2,9 @@ using Test,H3
 include("../examples/continuity/mobile/soft_moments.jl")
 const SM=SoftMomentPacking
 @testset "Bounded moment packing" begin
+    @test SM.anchor_kept(1-1e-11,1.)
+    @test !SM.anchor_kept(1-1e-8,1.)
+    @test !SM.anchor_kept(0.,1e-30)
     ids=[H3.API.latLngToCell(H3.Lib.LatLng(.01i,.013i),6) for i in 1:6]
     xyz=hcat([[cos(g.lat)*cos(g.lng),cos(g.lat)*sin(g.lng),sin(g.lat)] for g in H3.API.cellToLatLng.(ids)]...)
     population=[10.,20.,30.,40.,50.,60.];a=population/sum(population)

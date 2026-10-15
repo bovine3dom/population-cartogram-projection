@@ -351,3 +351,17 @@ Recentered the scaled features and skipped blocks whose moment constraints
 already determine every source contribution. Added two-source and near-constant
 feature checks. All 20 packing checks pass. The packing jobs will resume from
 their unchanged inputs. No invalid candidate was published.
+
+## 00:53 UTC: consistent anchor checks and feasible subdivision starts
+
+The packing block and country checks used different rounding limits for
+protected anchors. Use the same relative limit in both checks. All 23 packing
+checks pass, including zero-weight rejection. Failed countries remain absent
+from the packed output and will be retried.
+
+All 206 factor-3 countries are complete. Uniform fallbacks still need repair.
+A feasible LP start solves the sampled Australian timeout cell in 28.7 seconds
+including compilation, with 10,867 rows instead of a broad uniform split.
+Physical-unit checks also accept the sampled US cell that failed a scaled
+residual check. All 19 subdivision tests pass. Time-limited solutions must
+pass the same mass, position, and density checks and are marked nonoptimal.
