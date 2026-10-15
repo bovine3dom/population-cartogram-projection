@@ -248,3 +248,23 @@ Images are in `results/geography/guarded/`.
 Next: preserve useful existing source contacts during exchanges. Add explicit
 water-side relationships rather than only a cost for empty cells. Keep the
 island placement tests separate until the mainland result passes review.
+
+## Contact guards and a local water-cost trial
+
+Added an optional guard that retains existing true borders. It also retains
+true borders gained during the run. Six tests pass, including contact-count
+rollback checks. The 75-round trial reduces missing contacts to 53 and false
+contacts to 44. Possible false coasts fall to two, but lost coasts rise to 26.
+Reviewed Europe and South America. The Baltic still fails, and a new gap appears
+in northern South America. This trial is not approved.
+
+Added a soft water cost from the raw flow raster. At weight 200, the Baltic gap
+opens further. But Sweden grows a thin connection towards Germany, and other
+coasts gain large notches. Reviewed both regions and rejected this result.
+Keeping a landmass connected can retain the wrong connection.
+
+A graph check explains the Nordic problem in the baseline. Norway and Sweden
+form a 99-tile group through true tile borders. Finland is a separate 37-tile
+group with no true tile border. Their apparent mainland connections are false
+contacts. Next test: translate small groups to true neighbouring groups. Use
+whole shapes, not connector paths, and reject overlaps or landmass splits.
