@@ -2,6 +2,10 @@ using Test,Arrow,H3,Serialization,CSV,TOML
 include("../examples/continuity/native_export.jl")
 const NE=NativeExport
 @testset "Native binary export" begin
+    @test NE.exact_population_column([1.,1949226.])==Float32[1,1949226]
+    @test eltype(NE.exact_population_column([1.,1949226.]))==Float32
+    @test eltype(NE.exact_population_column([16777217.]))==Float64
+    @test eltype(NE.exact_population_column([.1]))==Float64
     mktempdir() do dir
         fit,native,guides,out=[joinpath(dir,name) for name in ("fit","native","guides","export")]
         foreach(mkpath,(fit,native,guides));mkpath(joinpath(fit,"country-24"))
@@ -16,6 +20,8 @@ const NE=NativeExport
         write(joinpath(fit,"fit-complete.txt"),"complete");CSV.write(joinpath(fit,"summary.csv"),[(;code=24,status="optimized")])
         report=NE.export_native(fit,native,guides,out)
         @test report["sources"]==2
+        @test report["population_type"]=="Float32"
+        @test eltype(Arrow.Table(joinpath(out,"cartogram_weights_hilo.arrow")).population)==Float32
         @test report["labelled_sources"]==1
         @test report["source_error"]<1e-7
         @test report["density_relative_error"]<=6e-8

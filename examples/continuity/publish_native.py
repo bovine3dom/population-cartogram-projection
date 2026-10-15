@@ -105,8 +105,10 @@ status remains in the research fit. A time-limited LP result is not an optimum.
 
 The unpacked audit checks masses, source coverage, density, and city names.
 The two stream reports compare every binary column with that checked export.
-Dictionary packing changes no values or row order. Density uses Float32;
-source population uses Float64. File hashes are in sha256.json.
+Dictionary packing changes no values or row order. Density uses Float32.
+Source population uses {audit.get('population_type', 'Float64')}; a narrower
+population type is used only when every source value is exactly preserved.
+File hashes are in sha256.json.
 
 ## Reader and memory limits
 

@@ -6,6 +6,10 @@ const MA=MobileAudit
 const ME=MA.ME
 const MW=MobileWriter
 hash(path)=bytes2hex(open(sha256,path))
+function exact_population_column(values)
+    narrow=Float32.(values)
+    all(isequal(Float64(x),y) for (x,y) in zip(narrow,values)) ? narrow : values
+end
 
 function metadata(parts,native)
     ids=UInt64.(native.id);allunique(ids)||error("duplicate native source")
@@ -81,6 +85,7 @@ function export_native(root,native_dir,guides,out;factor=1)
     end
     mkpath(pending);counts=Ref((;dropped_rows=0,ownership_rows=0))
     table=MW.columns(parts;owners,counts)
+    table=merge(table,(;population=exact_population_column(table.population)))
     # Retain target navigation anchors before ordering the other rows by source.
     anchors=Int[];seen=Set{Tuple{Int16,Int16}}()
     for i in eachindex(table.weight)
@@ -135,7 +140,7 @@ function export_native(root,native_dir,guides,out;factor=1)
     report=Dict("resolution"=>6,"factor"=>factor,"sources"=>length(meta.ids),"country_targets"=>length(meta.targets),"physical_targets"=>length(seen),
         "countries"=>length(codes),"rows"=>length(table.weight),"labelled_sources"=>length(meta.labels),"population"=>sum(meta.population),
         "source_error"=>source_error,"physical_mean_error"=>checked.mean_error,"physical_mean_sum_error"=>checked.mean_sum_error,
-        "density_relative_error"=>density_error,"density_type"=>"Float32","transport_bytes"=>filesize(transport),"density_bytes"=>filesize(density_path),
+        "density_relative_error"=>density_error,"density_type"=>"Float32","population_type"=>string(eltype(table.population)),"transport_bytes"=>filesize(transport),"density_bytes"=>filesize(density_path),
         "native_sha256"=>input_hash,"parts_sha256"=>parts_hash,"transport_sha256"=>hash(transport),"density_sha256"=>hash(density_path),
         "ownership_rows"=>counts[].ownership_rows,"negligible_rows_dropped"=>counts[].dropped_rows,
         "root"=>abspath(root),"guides"=>abspath(guides),"commit"=>strip(read(`git rev-parse HEAD`,String)),"utc"=>string(now(UTC)),

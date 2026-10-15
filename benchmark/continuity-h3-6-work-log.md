@@ -410,3 +410,19 @@ resumed with the tested warm solver; no completed country was lost.
 Corrected final publication metadata to report the final stream hashes and
 byte counts at the top level. The unpacked audit remains a separate reference.
 All three publisher tests pass, including these final-file fields.
+
+## 01:37 UTC: exact population storage
+
+The factor-1 packed binary passes independent mass, position, density, city,
+and navigation-anchor checks. Its target variation is at most 0.00923. No
+target loses coverage in the tested half-missing query, but that query still
+has larger errors. All 21 sparse-solver checks and 16 hierarchy checks pass
+on both CPU and oneAPI; all four local-transfer checks pass.
+
+The native input has integer population values, all exactly representable in
+Float32; the maximum is 1,949,226. Added a native-export check that uses Float32
+only if every population value round-trips exactly. Otherwise it keeps
+Float64. This is not population quantization. All 15 binary tests pass,
+including nonrepresentable integers and fractions. The default mobile writer
+and other datasets still retain their existing population type. New native
+exports will measure this storage saving before publication.
