@@ -74,10 +74,12 @@ def solve_translations(labels, fixed, edges, retention):
     return result
 
 
-def mapped_coast_point(point, members, source, tiles):
+def mapped_coast_point(point, members, source, tiles, transport=None):
     """Map through the nearest component, not through a whole continent."""
     p = Point(point)
     member = min(members, key=lambda c: (source[c].distance(p), c))
+    if transport is not None:
+        return transport.point(member, point)
     cells = np.asarray(sorted(tiles[member]))
     centre = cells.mean(axis=0)
     factor = np.sqrt(len(cells)/source[member].area)
@@ -102,7 +104,7 @@ def order_constraints(native, bodies, pairs):
 
 
 def run(inputs, layout, polygons, output, neighbours=4, retention=.1,
-        maximum_area_fraction=.03, shift_scale=3., centroid_weight=0., preserve_order=False):
+        maximum_area_fraction=.03, shift_scale=3., centroid_weight=0., preserve_order=False, transport_root=None):
     if output.exists():
         raise ValueError('Use a new output')
     if neighbours < 1 or not np.isfinite([retention, maximum_area_fraction, shift_scale, centroid_weight]).all() or retention <= 0 or not 0 < maximum_area_fraction < 1 or shift_scale <= 0 or not 0 <= centroid_weight <= 1:
@@ -110,6 +112,10 @@ def run(inputs, layout, polygons, output, neighbours=4, retention=.1,
     rows, tiles, owner = load(inputs, layout)
     if any(len(tiles[c]) != int(rows[c]['tiles']) for c in tiles):
         raise ValueError('Exact tile budgets required')
+    transport = None
+    if transport_root is not None:
+        from transport_coast_frames import TransportCoastFrames
+        transport = TransportCoastFrames(transport_root, tiles)
     required = {tuple(sorted((r['a'], r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented'] == 'true'}
     before = tile_contacts(owner)
     groups = contact_groups(sorted(required | before))
@@ -142,8 +148,8 @@ def run(inputs, layout, polygons, output, neighbours=4, retention=.1,
         length = np.linalg.norm(gap)
         if length:
             gap *= ocean_length*np.arcsinh(length/ocean_length)/length
-        oa = mapped_coast_point(pa, members[a], component_source, tiles)-centres[a]
-        ob = mapped_coast_point(pb, members[b], component_source, tiles)-centres[b]
+        oa = mapped_coast_point(pa, members[a], component_source, tiles, transport)-centres[a]
+        ob = mapped_coast_point(pb, members[b], component_source, tiles, transport)-centres[b]
         coast_target = oa-ob+gap
         # A second target uses the regional centre direction. Its scale comes
         # from both bodies, rather than from the island alone.
@@ -189,11 +195,13 @@ def run(inputs, layout, polygons, output, neighbours=4, retention=.1,
     report = dict(neighbours=neighbours, retention=retention, maximum_area_fraction=maximum_area_fraction,
         shift_scale=shift_scale, centroid_weight=centroid_weight, source_simplification=1e-5,
         anchor_minimum_relative_area=.25, coast_frame='nearest represented component',
+        transport_root=str(transport_root) if transport_root else None,
+        transport_inputs=transport.hashes if transport else None,
         members=members, fixed=sorted(fixed),
         edges=edges, preserve_order=preserve_order, order_constraints=constraints,
         packing=packing, moved_components=sum(result[c] != tiles[c] for c in tiles),
         inputs={str(p): digest(p) for p in [inputs/'groups.csv', inputs/'geographic-contacts.csv', layout/'cells.csv', polygons]},
-        scripts={n: digest(Path(__file__).with_name(n)) for n in ['place_coast_graph.py', 'coast_anchors.py', 'partition_land.py', 'place_islands.py', 'prepare_flow.py', 'shape_placement.py']},
+        scripts={n: digest(Path(__file__).with_name(n)) for n in ['place_coast_graph.py', 'coast_anchors.py', 'transport_coast_frames.py', 'partition_land.py', 'place_islands.py', 'prepare_flow.py', 'shape_placement.py']},
         limits=['Experimental translations only. Fixed mainland shapes do not change.',
                 'Nearest coast targets approximate source-to-tile correspondence.',
                 'Area threshold selects fixed bodies; it is not an island classification.',
@@ -216,6 +224,7 @@ if __name__ == '__main__':
         parser.add_argument(name, type=Path)
     parser.add_argument('--neighbours', type=int, default=4)
     parser.add_argument('--preserve-order', action='store_true')
+    parser.add_argument('--transport-root', type=Path, help='Use a checked transport map for local coast positions')
     for name, default in [('retention', .1), ('maximum-area-fraction', .03), ('shift-scale', 3.), ('centroid-weight', 0.)]:
         parser.add_argument('--'+name, type=float, default=default)
     print(json.dumps(run(**vars(parser.parse_args())), indent=2))
