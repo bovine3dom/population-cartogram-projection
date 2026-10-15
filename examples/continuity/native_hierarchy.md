@@ -67,7 +67,8 @@ and physical target weights. It compares every transport column before and
 after Arrow serialization. It does not publish to H3-MON.
 
 The exporter uses dictionaries where they reduce the column size. Population
-remains Float64. Density uses Float32, with measured relative error at most
+uses Float32 only when every source value is exactly representable; otherwise
+it remains Float64. Density uses Float32, with measured relative error at most
 `6e-8`. The H3 halves remain UInt32. Use a dictionary-capable Arrow reader.
 This changes storage, not the fitted transport. For a smaller lossless output,
 see [stream packing](mobile/stream.md) and its reader limits. There is no HTTP compression
@@ -78,7 +79,8 @@ source spread, target-mean changes, triangle orientation, and edge separation.
 It excludes shared target positions and false country contacts from the edge
 graph. Compare these results before publication. A mass check alone does not
 establish good geometry. File size alone does not establish a phone memory
-limit.
+limit. See [native publication](native_publication.md) for separate staging and
+binary comparisons of approximate packing.
 
 Run `test/native_hierarchy.jl` with the example Julia project. Set
 `CONTINUITY_GPU_TEST=1` to also run the oneAPI checks. The binary export and
