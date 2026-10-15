@@ -1,6 +1,7 @@
 // Isolated headless check. This does not start the H3-MON service.
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
+import {createHash} from 'node:crypto';
 import {createReadStream} from 'node:fs';
 import {mkdir, readFile, stat, writeFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
@@ -8,6 +9,14 @@ import {resolve, join} from 'node:path';
 
 assert.equal(process.argv.length, 6, 'usage: browser.mjs H3_MON_ROOT TRANSPORT_ARROW DENSITY_ARROW OUTPUT');
 const [appRoot, transport, density, output] = process.argv.slice(2).map(path => resolve(path));
+async function digest(path) {
+    const hash = createHash('sha256');
+    for await (const chunk of createReadStream(path)) hash.update(chunk);
+    return hash.digest('hex');
+}
+const inputPaths = {transport, density, app: join(appRoot, 'www/app.js')};
+const inputHashes = Object.fromEntries(await Promise.all(Object.entries(inputPaths)
+    .map(async ([key, path]) => [key, await digest(path)])));
 const require = createRequire(join(appRoot, 'package.json'));
 const {chromium} = require('playwright');
 await mkdir(output, {recursive: true});
@@ -136,8 +145,11 @@ try {
     assert(render?.[1]?.rows > 0, 'missing cartogram render');
     data.targetCells = render[1].rows;
     data.targetLabels = labels?.[1]?.labels;
+    for (const [key, path] of Object.entries(inputPaths))
+        assert.equal(await digest(path), inputHashes[key], `Input changed during browser test: ${key}`);
     await writeFile(join(output, 'cells.json'), JSON.stringify(data));
     await writeFile(join(output, 'memory.json'), JSON.stringify({browser: browser.version(), loadMs, heapLimit,
+        inputHashes, metadata,
         throttle: Number(process.env.CPU_THROTTLE || 4), h3Precision: process.env.H3_PRECISION || 'default',
         beforeGC, afterGC, pans, samples, timings, resources, failures, warnings, requests}, null, 2));
     console.log(JSON.stringify({loadMs, ...data, beforeGC, afterGC, failures, warnings}));

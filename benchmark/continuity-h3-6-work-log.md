@@ -468,3 +468,13 @@ uniform fallback. It reduces that country from 1,099,211 to 249,488 rows and
 its 99.5% ratio from 13.27 to 2.845. The original planet root is unchanged;
 assembly will use a new root after all countries complete. A separate US
 retry now targets its one broad failed cell. The main factor-5 run continues.
+
+## 02:10 UTC: publication browser checks include input hashes
+
+The browser test now records SHA256 hashes of both Arrow files and the actual
+H3-MON JavaScript bundle. It rejects input changes during the test. The
+published factor-3 files pass this check with their actual metadata, all
+1,992,902 geographic cells, 494,379 target cells, and 1,715 displayed labels.
+Three map-camera changes, including the antimeridian and return view, preserve
+source coverage and produce no test errors. This does not establish phone
+performance. H3-MON code and its service remain unchanged.
