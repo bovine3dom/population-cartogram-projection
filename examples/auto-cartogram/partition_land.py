@@ -91,8 +91,10 @@ def contact_groups(pairs):
     return groups
 
 
-def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.,sites=None,float_islands=False,dock_landmasses=False,regions=None,sites_in_flow=False):
+def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.,sites=None,float_islands=False,dock_landmasses=False,regions=None,sites_in_flow=False,water_radius=0,water_margin=0):
     if output.exists():raise ValueError('Output already exists')
+    if (water_radius or water_margin) and not flow_geometry:raise ValueError('Water protection requires a continuous flow guide')
+    if water_radius and dock_landmasses:raise ValueError('Water protection cannot be combined with docking')
     if sites_in_flow and not (sites and flow_geometry):raise ValueError('Flow-coordinate sites require sites and flow geometry')
     if not np.isfinite([sigma,guide,anchor]).all() or sigma<=0 or min(guide,anchor)<0:raise ValueError('Invalid settings')
     if guide_layout and (flow_geometry or sites):raise ValueError('Choose either a guide layout or flow geometry/projected sites')
@@ -153,7 +155,7 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
         # Reserve other landmasses' starting cells and all earlier target cells.
         masks={c:points for c,points in tiles.items() if not (float_islands and c in fixed)}
         masks['__assigned__']=assigned
-        mask,envelope=build(masks,set(masks)-set(labels),origin,shape,sigma,count=sum(budgets[c] for c in labels),dock=dock_landmasses)
+        mask,envelope=build(masks,set(masks)-set(labels),origin,shape,sigma,count=sum(budgets[c] for c in labels),dock=dock_landmasses,water_radius=water_radius,water_margin=water_margin)
         if np.any(mask&target):raise AssertionError('Landmass targets overlap')
         target|=mask;yy,xx=np.nonzero(mask)
         positions=np.array([centres[c] if centres is not None else np.mean(list(tiles[c]),axis=0) for c in labels])
@@ -210,6 +212,8 @@ if __name__=='__main__':
     for name in ['inputs','layout','output']:parser.add_argument(name,type=Path)
     for name,default in [('sigma',8.),('guide',4.),('anchor',.05)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--iterations',type=int,default=300)
+    parser.add_argument('--water-radius',type=int,default=0,help='Protect concave water in the flow raster with this closing radius; zero disables protection')
+    parser.add_argument('--water-margin',type=int,default=0,help='Expand protected water by this many tiles')
     parser.add_argument('--guide-layout',type=Path)
     parser.add_argument('--sites',type=Path,help='CSV of projected component sites; align to the starting or flow raster by translation and positive uniform scale')
     parser.add_argument('--sites-in-flow',action='store_true',help='Sites already use flow geometry coordinates; apply only the raster scale and stretch')

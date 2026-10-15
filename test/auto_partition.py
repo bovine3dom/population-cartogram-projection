@@ -17,7 +17,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogr
 from partition_land import dual, partition, round_capacities, hierarchical_partition, contact_groups, run
 from review_layout import load, viewport
 from repair_partition import Repair, run as repair
-from land_envelope import dock_parts
+from land_envelope import build, dock_parts
 import population_sites
 import place_islands
 import run_compact_pipeline
@@ -25,6 +25,19 @@ import relax_flow_areas
 
 
 class CapacityPartitionTests(unittest.TestCase):
+    def test_protected_water(self):
+        # A source bay has an opening to the north. Smoothing would fill it.
+        cells={(x,y) for x in range(8,23) for y in range(8,23)
+               if not (13<=x<=17 and y>=13)}
+        plain,_=build({'a':cells},set(),(0,0),(32,32),3.)
+        protected,report=build({'a':cells},set(),(0,0),(32,32),3.,water_radius=5,water_margin=1)
+        self.assertEqual(int(protected.sum()),len(cells))
+        self.assertTrue(plain[16,15])
+        self.assertFalse(protected[16,15])
+        self.assertGreater(report['protected_water_cells'],0)
+        with self.assertRaises(ValueError):
+            build({'a':cells},set(),(0,0),(32,32),3.,water_margin=1)
+
     def test_cached_repair_topology(self):
         from repair_partition import pieces
         rng=np.random.default_rng(37)
