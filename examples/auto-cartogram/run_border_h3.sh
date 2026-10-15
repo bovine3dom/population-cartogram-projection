@@ -14,7 +14,7 @@ export ZE_ENABLE_ALT_DRIVERS=${ZE_ENABLE_ALT_DRIVERS:-/usr/lib/libze_intel_gpu_l
 export OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=1
 export CONTINUITY_OUTER_STEPS=1 CONTINUITY_PROXIMAL=.01 CONTINUITY_RETRY_FACTOR=256
 julia=(julia --threads=2 --project="$project")
-fit="$out/border-fit"
+fit=${BORDER_FIT_ROOT:-"$out/border-fit"}
 destination="$h3mon/www/data/planet-auto-55000-h3-5-islands-border"
 # Check the preparation inputs before any expensive work or publication.
 "$python" - "$out" <<'PY'
@@ -49,6 +49,7 @@ PY
   --title 'Population density — automatic 55,000 tiles, island groups and border cohesion'
 cp "$out/border-audit.json" "$out/contacts.csv" "$out/group-codes.csv" "$out/provenance.json" "$destination/"
 cp "$fit/fit/metrics.csv" "$fit/fit/settings.csv" "$fit/fit/country-etas.csv" "$destination/"
+if [ -f "$fit/recovery.json" ]; then cp "$fit/recovery.json" "$destination/"; fi
 node examples/auto-cartogram/review_h3_mon.mjs "$h3mon" "$out/review" \
   http://127.0.0.1:1983 planet-auto-55000-h3-5-islands-border
 date -u > "$out/numerical-export-complete.txt"
