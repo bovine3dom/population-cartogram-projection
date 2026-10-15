@@ -115,8 +115,6 @@ function balance(state)
   w=columns[j][p];w>1e-25||continue
   push!(source,p);push!(target,j);push!(weights,w)
  end
- keep=NH.retain(source,target,weights,n,m)
- source=source[keep];target=target[keep];weights=weights[keep]
  sums=zeros(n);for (p,w) in zip(source,weights);sums[p]+=w;end
  weights.*=a[source]./sums[source]
  check=NH.SR.residual((;n,m,source,target),weights,a,d.b)
