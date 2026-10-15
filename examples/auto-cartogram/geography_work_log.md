@@ -350,3 +350,47 @@ The independent audit of the island candidate confirms zero split source
 landmasses. It reports nine possible lost coasts and seven possible false
 coasts. Exact component budgets remain unchanged. Seven translation tests and
 seven coast-graph tests pass. No production layout or population export changes.
+
+## Explicit inland lakes: source audit and first guide trial
+
+Downloaded the standard Natural Earth 1:10m lake GeoJSON and inspected its
+source documentation. The audit records the file hash. Historic and pluvial
+lake layers are not used. The country polygons cover the full area of Victoria,
+Tanganyika, Malawi, Superior, Baikal, and Titicaca. This is administrative
+territory, not a dry-land mask. Existing polygon-hole preservation cannot
+recover these lakes.
+
+Added `prepare_lake_guides.py`. It audits all 1,355 lake features, subtracts
+selected lakes from the guide land, and exports separate water-guide regions.
+The final test selects 48 lakes at thresholds of 1,000 square kilometres and
+one estimated display tile. Their total target area is 241 guide units. Land
+budgets remain 55,000 tiles. Water has no population budget. Two invalid source
+lake rings are repaired and recorded. Smaller lakes remain in the audit.
+
+Lake subtraction also checks existing administrative contacts. DR Congo and
+Tanzania are separated by about 32 km after Lake Tanganyika is removed. Their
+administrative lake border must not become a required land connection. Fifteen
+land guides become multipart after subtraction. These include lake islands;
+they need population-component checks before a production mapping is possible.
+
+Ran the optional flow solver on the lake-aware guides. The normal run fails on
+Malawi during densification. Disabling simplification and densification writes
+an output, but independent validation rejects it: 25 invalid geometries,
+17 overlap pairs, and about 451% maximum relative area error. The output exit
+status alone is not an approval check.
+
+Added `review_lake_flow.py` with strict validation by default. An explicit
+invalid-review option permits diagnostic images only; the report lists each
+invalid source geometry and states that repairs do not validate solver output.
+Visually reviewed the East African source and diagnostic flow images. The lakes
+are visible, but the failed flow is not used to change the preferred layout.
+Four lake tests cover cross-border water, existing holes, unchanged land budgets,
+water-only contacts, and rejection of invalid solver geometry. The existing
+43 shape tests also pass.
+
+Review page: `results/geography/margin-1-followup/index.html`. The rejoined
+mainland candidate and the separate island trial are available there. Inland
+lakes are not yet restored in their tile layouts. Next, preserve explicit water
+regions during local tile allocation and distinguish physical land borders
+from borders through lakes. Do not replace margin-one with the failed global
+flow or paint lakes over population-bearing tiles.

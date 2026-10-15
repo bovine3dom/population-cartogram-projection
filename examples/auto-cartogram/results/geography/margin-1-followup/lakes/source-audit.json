@@ -1,0 +1,55 @@
+{
+  "source_lakes": 1355,
+  "selected_lakes": 48,
+  "repaired_lakes": [
+    "water:1159112221",
+    "water:1159125163"
+  ],
+  "minimum_area_km2": 1000.0,
+  "minimum_tiles": 1.0,
+  "land_tiles": 55000,
+  "water_guide_tiles": 241,
+  "split_guide_components": [
+    "BOL:1a7254807c71e166",
+    "BRA:c9a395c2d321cd60",
+    "CAN:614ec007a6324298",
+    "COD:34b7cfda818ccf80",
+    "FIN:9332a3268ae7c503",
+    "GHA:1beea30af91e217d",
+    "IRN:3c2b5bd7d999fbee",
+    "KEN:4b9b5a7ce90b0bb0",
+    "MWI:7555dabddb4364d9",
+    "NIC:99f10eccc73d03bc",
+    "NLX:8b9c3398a58bdb2a",
+    "RUS:b85c5bca1852870f",
+    "TZA:88eb4141b8ee7ab7",
+    "UGA:c937c439d1615753",
+    "USA:90107a05206832e4"
+  ],
+  "lake_separated_contacts": [
+    {
+      "a": "COD:34b7cfda818ccf80",
+      "b": "TZA:88eb4141b8ee7ab7",
+      "gap_km": 32.31599146555797
+    }
+  ],
+  "contact_distance_tolerance_km": 0.006371000000000001,
+  "large_lakes_covered_by_admin": 201,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "output/auto-cartogram/geography-lakes-research/ne_10m_lakes.geojson": "2d036f53dedec578001c5c30c2959ee7d4eebc1306900fa4367c49929ec8f2d9"
+  },
+  "script_sha256": "7ade650162167557b8f36ff372b3b084322bc6afebd716926846ed23a931e453",
+  "lake_source_url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_lakes.geojson",
+  "documentation_url": "https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-lakes/",
+  "limits": [
+    "This prepares flow guides. It does not change the tile layout or any population export.",
+    "Water guide areas estimate local display scale from administrative area and component tile budgets. Water has no population budget.",
+    "Administrative borders through lakes are not physical land contacts. Subtraction can make a guide component multipart.",
+    "Lake islands need separate population-component checks before these guides can enter a production mapping.",
+    "Lakes below the thresholds and lakes already outside administrative polygons are audited but not added to the guide.",
+    "Area estimates use a spherical Equal Earth projection. Seasonal and reservoir extents follow the source dataset."
+  ]
+}
