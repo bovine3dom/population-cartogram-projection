@@ -1,0 +1,25 @@
+{
+  "samples": 512,
+  "tolerance": 5e-06,
+  "source_components": 4274,
+  "represented_components": 481,
+  "lost_water_access": 14,
+  "possible_false_coast": 7,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/geography-margin1-lake-vacancies-final/cells.csv": "399530758e597a5262bd1d39af14783d40324d253423b9cc16f11054ba306a17",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "scripts": {
+    "review_source_coasts.py": "0c68d40f09246aac3a10447416eb630336697047ee79f11c2cc9e46a2bb8a79c",
+    "review_geography.py": "9737581a1635145e18212da3b6a9fc09eeb3140b6b7db1056fa24738320827c4",
+    "prepare_flow.py": "b794cd56bfcce5910034d405d600deb257dd01829425a0301c79a0b432678fc2"
+  },
+  "limits": [
+    "Source coasts are boundary samples not covered by another source component.",
+    "All source components are included, also those with no tiles.",
+    "Finite sampling can miss short coasts. Tolerance can hide narrow straits.",
+    "Exterior rings exclude internal lakes, but inter-component lakes can remain.",
+    "Source water connectivity is not tested. These are review flags, not proof."
+  ]
+}

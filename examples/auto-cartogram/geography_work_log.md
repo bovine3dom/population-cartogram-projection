@@ -434,8 +434,9 @@ position trial. The report records settings and input hashes.
 
 Visually checked Africa before and after, Europe, North America, and the world
 view. The Baltic gap remains open. Lake positions are approximate. The Great
-Lakes need joint relative-position checks; shoreline membership alone does not
-check the order of countries around a lake. Tanganyika needs local boundary
+Lakes need joint relative-position checks: Ontario is west of Huron in this
+trial, which is wrong. Shoreline membership alone does not check the order of
+countries around a lake. Tanganyika needs local boundary
 adjustment or template deformation. Do not force it through a thin land path.
 
 Seven new tests cover exact budgets, rollback, fixed islands, route limits,
