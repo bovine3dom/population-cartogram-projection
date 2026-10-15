@@ -2,6 +2,9 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+import sys
+
+sys.dont_write_bytecode = True
 
 import pyarrow as pa
 

@@ -1,4 +1,4 @@
-using Serialization,CSV,DataFrames,Statistics,LinearAlgebra,TOML
+using Serialization,CSV,DataFrames,Statistics,LinearAlgebra,TOML,SHA
 include("diagnostics.jl")
 include("mobile_export.jl")
 const ME=MobileExport
@@ -12,9 +12,12 @@ function part_stats(part,factor)
         for l in 1:3;q[l,j]+=w*meta.xyz[l,i];end
     end
     q./=transpose(mass)
-    count995=sum(searchsortedfirst(cumsum(sort!(groups[i];rev=true)),.995a[i]) for i in 1:n)
-    spread=sum(max.(second .- (sx.^2 .+ sy.^2)./a,0.))/(4factor^2)
-    (;q,ratio995=count995/n,spatial_rms_coarse=sqrt(spread/sum(a)),mass)
+    counts=[searchsortedfirst(cumsum(sort!(groups[i];rev=true)),.995a[i]) for i in 1:n]
+    variance=max.(second .- (sx.^2 .+ sy.^2)./a,0.)
+    small=a .<= maximum(mass);small_count=count(small)
+    (;q,ratio995=mean(counts),spatial_rms_coarse=sqrt(sum(variance)/(4factor^2*sum(a))),mass,
+        low_population_sources=small_count,low_population_ratio995=small_count==0 ? 0. : mean(counts[small]),
+        low_population_spatial_rms_coarse=small_count==0 ? 0. : sqrt(mean((variance./a)[small])/(4factor^2)))
 end
 function edges(countries,borders)
     lookup=Dict{Tuple{Int,Int},Tuple{Int,Int}}();mixed=Set{Tuple{Int,Int}}()
@@ -43,7 +46,11 @@ function main()
     root,guides,f,borderfile,out=ARGS;factor=parse(Int,f);ispath(out)&&error("output exists");mkpath(out)
     borders=Set(minmax(r.country_a,r.country_b) for r in eachrow(CSV.read(borderfile,DataFrame)))
     countries=NamedTuple[];references=NamedTuple[];reports=NamedTuple[]
-    for code in sort(deserialize(joinpath(guides,"codes.jls")))
+    codes=sort(deserialize(joinpath(guides,"codes.jls")))
+    paths=[joinpath(root,"country-$code","part.jls") for code in codes]
+    digest()=bytes2hex(sha256(join([bytes2hex(open(sha256,path)) for path in paths],"")))
+    parts_hash=digest()
+    for code in codes
         part=deserialize(joinpath(root,"country-$code","part.jls"));stats=part_stats(part,factor)
         guide=deserialize(joinpath(guides,"country-$code.jls"));reference=ME.reference_stats(guide)
         target=DataFrame(x=[x for (x,y,c) in part.meta.targets],y=[y for (x,y,c) in part.meta.targets])
@@ -57,16 +64,23 @@ function main()
         end
         shifts=6371sqrt.(vec(sum(abs2,coarse.-reference.target_xyz;dims=1)))
         push!(reports,(;code,sources=length(part.meta.ids),targets=length(part.meta.targets),rows=length(part.weights),
-            stats.ratio995,stats.spatial_rms_coarse,coarse_mean_rms_shift_km=sqrt(mean(abs2,shifts)),coarse_mean_max_shift_km=maximum(shifts)))
+            stats.ratio995,stats.spatial_rms_coarse,stats.low_population_sources,
+            stats.low_population_ratio995,stats.low_population_spatial_rms_coarse,
+            capacity_lower995=mean(max.(1.,ceil.(.995 .* part.meta.population./(maximum(stats.mass)*sum(part.meta.population)) .- 1e-9))),
+            coarse_mean_rms_shift_km=sqrt(mean(abs2,shifts)),coarse_mean_max_shift_km=maximum(shifts)))
     end
     CSV.write(joinpath(out,"countries.csv"),reports)
     for (name,cs) in (("native",countries),("reference",references))
         CSV.write(joinpath(out,"$name-orientation.csv"),ContinuityDiagnostics.orientations(cs,fill(nothing,length(cs));moments=(c,p)->c.xyz))
     end
-    report=Dict("factor"=>factor,"native"=>Dict(string(k)=>v for (k,v) in pairs(geometry(countries,borders))),
+    parts_hash==digest()||error("quality input changed")
+    report=Dict("factor"=>factor,"parts_sha256"=>parts_hash,"border_sha256"=>bytes2hex(open(sha256,borderfile)),"root"=>abspath(root),"native"=>Dict(string(k)=>v for (k,v) in pairs(geometry(countries,borders))),
         "reference"=>Dict(string(k)=>v for (k,v) in pairs(geometry(references,borders))),
         "sources"=>sum(r.sources for r in reports),"rows"=>sum(r.rows for r in reports),
-        "ratio995"=>sum(r.sources*r.ratio995 for r in reports)/sum(r.sources for r in reports))
+        "ratio995"=>sum(r.sources*r.ratio995 for r in reports)/sum(r.sources for r in reports),
+        "capacity_lower995"=>sum(r.sources*r.capacity_lower995 for r in reports)/sum(r.sources for r in reports),
+        "low_population_sources"=>sum(r.low_population_sources for r in reports),
+        "low_population_ratio995"=>sum(r.low_population_sources*r.low_population_ratio995 for r in reports)/max(1,sum(r.low_population_sources for r in reports)))
     open(io->TOML.print(io,report),joinpath(out,"geometry.toml"),"w");println(report)
 end
 if abspath(PROGRAM_FILE)==@__FILE__

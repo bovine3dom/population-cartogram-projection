@@ -14,6 +14,10 @@ include("../examples/continuity/native_quality.jl")
         source=fill(1,4),target=collect(1:4),weights=fill(.25,4))
     result=part_stats(part,2)
     @test result.ratio995==4
+    @test result.low_population_sources==0
+    small=merge(part,(;meta=(;ids=[1,2],targets=[(0,0,1)],xyz=repeat([1.,0.,0.],1,2)),
+        source=[1,2],target=[1,1],weights=[.01,.99]))
+    @test part_stats(small,1).low_population_ratio995==1
     @test result.spatial_rms_coarse≈sqrt(1/8)
     @test result.q≈repeat([1.,0.,0.],1,4)
 end

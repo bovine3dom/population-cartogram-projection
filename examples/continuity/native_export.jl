@@ -66,7 +66,9 @@ function export_native(root,native_dir,guides,out;factor=1)
     codes=sort(deserialize(joinpath(guides,"codes.jls")))
     native_path=joinpath(native_dir,"all-res6.arrow");input_hash=hash(native_path)
     native=Arrow.Table(native_path);sort(unique(Int.(native.country_code)))==codes||error("country coverage differs")
-    parts=[deserialize(joinpath(root,"country-$code","part.jls")) for code in codes]
+    part_paths=[joinpath(root,"country-$code","part.jls") for code in codes]
+    parts_hash=bytes2hex(sha256(join(hash.(part_paths),"")))
+    parts=deserialize.(part_paths)
     check_labels(parts,guides);meta=metadata(parts,native)
     owners=deserialize(joinpath(guides,"owners.jls"))
     if factor!=1
@@ -124,15 +126,22 @@ function export_native(root,native_dir,guides,out;factor=1)
     density_seen==Set(meta.ids)&&density_error<=6e-8||error("density check failed")
     CSV.write(joinpath(pending,"country-mass.csv"),reports)
     cp(joinpath(root,"summary.csv"),joinpath(pending,"fit-countries.csv"))
+    config=joinpath(root,"input.toml")
+    model="Native-source refinement of the sharp H3-5 continuity map; not a new global border pass"
+    if isfile(config)
+        model=get(TOML.parsefile(config),"model",model)
+        cp(config,joinpath(pending,"fit-input.toml"))
+    end
     report=Dict("resolution"=>6,"factor"=>factor,"sources"=>length(meta.ids),"country_targets"=>length(meta.targets),"physical_targets"=>length(seen),
         "countries"=>length(codes),"rows"=>length(table.weight),"labelled_sources"=>length(meta.labels),"population"=>sum(meta.population),
         "source_error"=>source_error,"physical_mean_error"=>checked.mean_error,"physical_mean_sum_error"=>checked.mean_sum_error,
         "density_relative_error"=>density_error,"density_type"=>"Float32","transport_bytes"=>filesize(transport),"density_bytes"=>filesize(density_path),
-        "native_sha256"=>input_hash,"transport_sha256"=>hash(transport),"density_sha256"=>hash(density_path),
+        "native_sha256"=>input_hash,"parts_sha256"=>parts_hash,"transport_sha256"=>hash(transport),"density_sha256"=>hash(density_path),
+        "ownership_rows"=>counts[].ownership_rows,"negligible_rows_dropped"=>counts[].dropped_rows,
         "root"=>abspath(root),"guides"=>abspath(guides),"commit"=>strip(read(`git rev-parse HEAD`,String)),"utc"=>string(now(UTC)),
-        "model"=>"Native-source refinement of the sharp H3-5 continuity map; not a new global border pass")
+        "model"=>model)
     open(io->TOML.print(io,report),joinpath(pending,"audit.toml"),"w")
-    hash(native_path)==input_hash||error("native input changed")
+    hash(native_path)==input_hash&&bytes2hex(sha256(join(hash.(part_paths),"")))==parts_hash||error("export input changed")
     mv(pending,out);report
 end
 end
