@@ -426,3 +426,30 @@ Float64. This is not population quantization. All 15 binary tests pass,
 including nonrepresentable integers and fractions. The default mobile writer
 and other datasets still retain their existing population type. New native
 exports will measure this storage saving before publication.
+
+## 01:51 UTC: first additional H3-6 maps published
+
+Published separate factor-1 and factor-2 datasets under H3-MON data, with
+adjacent JSON metadata and complete audit hashes. H3-5 is unchanged. The
+folders are planet-h3-6-factor1-continuity-native and
+planet-h3-6-factor2-continuity-native. A full, non-packed factor-2 reference
+is also available at planet-h3-6-factor2-continuity-native-full.
+
+Factor 1 uses 103,483,064 bytes in total, with a 99.5% ratio of 2.000.
+Factor 2 uses 115,993,184 bytes, with a ratio of 2.284 and a low-population
+ratio of 2.036. Both actual binary comparisons preserve city and navigation
+anchors. Their maximum target variations are 0.00923 and 0.08998. Factor 2
+loses 15 of 218,995 previously covered targets in the tested half-missing
+query. This approximate packing is not lossless and does not preserve every
+query. Complete density and geographic means remain within binary limits.
+
+Exact Float32 population storage saves about 2.1 MB in the factor-1 stream.
+An 8-bit upper-H3 dictionary trial saves only another 0.11 MB but needs 1,617
+batches. Retained the existing 16-bit format; the small gain is not useful.
+A local zstd level-3 sample totals 55.0 MB for factor 1 and 63.6 MB for factor 2.
+These are transfer-size samples, not production settings or browser memory.
+No server configuration changed.
+
+The native quality test was first invoked with the mobile project, which lacks
+DataFrames. The repeat with the correct uk-h3 project passes all ten checks.
+Both stream-packing tests pass. No dependency was installed to mask the error.
