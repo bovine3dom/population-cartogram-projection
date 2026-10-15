@@ -142,3 +142,20 @@ and margins zero and one. Each has a two-hour limit and must stop before the
 supplied UTC deadline. It records exit codes, renders regional images, and does
 not publish a map. The partition test suite passes 25 tests, including a new
 bay-protection fixture. Numerical and visual results are still pending.
+
+## Transport-based coast positions
+
+Trial v6 uses the existing island-group H3 mapping to estimate local coast
+positions. For each represented component, it interpolates nearby source
+fragments' mapped centres and selects a nearby tile boundary point. Source
+fragments assigned from other components are not used for that coast frame.
+The adapter checks every target coordinate against the starting layout and
+checks local source weight sums. It records all input hashes. It does not
+change any transport weights or population assignments.
+
+The adapter and coast-graph tests pass seven tests. They include rejection of
+a different target layout and incomplete source weights. Visually reviewed
+Europe, Indonesia, and Japan. Hokkaido stays nearer northern Honshu than in the
+early trials, but the Indonesian arrangement is still not a clear improvement.
+Do not replace the baseline with v6. It is available beside the earlier trials
+in the geography review page.
