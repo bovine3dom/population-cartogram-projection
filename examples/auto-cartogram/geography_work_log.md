@@ -59,3 +59,63 @@ with land borders fixed, which can restrict shared islands.
    budgets, separate island populations, and the existing Japan correction.
 
 No placement rule has changed in this first step.
+
+## 2026-10-15: coast checks and five island trials
+
+Added `review_source_coasts.py`. It uses all 4,274 source components, including
+those with no tiles. It samples exterior rings and checks whether another
+component covers each sample within a small tolerance. It does not prove source
+water connectivity. Tests at 512 and 1,024 samples give the same totals:
+21 possible lost-coast components and seven possible false-coast components.
+The Baltic states and Paraguay are among these flags. This test uses no country
+exceptions. Tests cover isolated, shared-border, and surrounded source shapes.
+
+Added `place_coast_graph.py` as a separate experiment. Shared land-border groups
+move as rigid bodies. Existing tile contacts are also kept within each body.
+Three large bodies stay fixed. Several nearby coast relations contribute to a
+joint translation solve. Exact-shape packing reserves the other bodies' current
+cells, including small islands not yet placed. This avoids consuming their only
+available space. Tile budgets, body shapes, and all existing contacts stay
+unchanged. Existing contact defects are not repaired by this experiment.
+
+Five completed trials:
+
+| Trial | Change | Island axis flags | Country axis flags |
+| --- | --- | ---: | ---: |
+| Baseline | Current published layout | 513 | 185 |
+| v1 | Four nearest bodies; coast and centre targets | 388 | 188 |
+| v2 | Keep selected source centre orders already present | 384 | 184 |
+| v3 | Prevent small islets from hiding larger anchors | 383 | 178 |
+| v4 | Remove whole-body centre targets | 383 | 178 |
+| v5 | Map coast points through individual components | 387 | 185 |
+
+All trials keep 55,000 tiles, zero count error, and connected components. The
+baseline's 59 missing contacts, 55 false contacts, and two regions with holes
+remain. These counts do not establish geographic quality.
+
+Visually checked Europe, Indonesia, and Japan for all five trials. Reject all
+five as replacements. Ireland moves north, but the early trials scatter parts
+of Japan. The later trials still place Sumatra too far west and weaken the
+Japanese island arrangement. Lower axis-flag counts do not justify these
+regressions. Whole-continent centre targets are unsuitable for local coasts.
+Component-level coast frames reduce that problem but are not sufficient.
+
+The regional-anchor search initially exceeded its 180-second limit. A stack
+trace located repeated detailed geometry distance tests. Cache pair distances,
+skip searches from fixed continents, and simplify projected source geometry at
+0.00001 unit radius. The later runs finish within the limit. This tolerance and
+the anchor area threshold are recorded in each completed run.
+
+Manhattan and Long Island are separate represented components. Point-in-polygon
+checks identify `USA:cc58c4c14d03150e` (10 tiles) and
+`USA:c78710e5bfb7f314` (52 tiles). Their relative placement can be changed without
+combining their populations.
+
+Review files: `results/geography/coast-graph/`. Full runs:
+`output/auto-cartogram/geography-coast-graph-v1/` through `v5/`.
+No new layout or population mapping is published.
+
+Next: test local coast correspondence and limits on changes in island-to-island
+distance. For mainland seas, the current fixed footprint cannot restore lost
+water. The footprint builder must retain source water passages before it assigns
+country cells. Do not cut arbitrary one-cell paths through the final layout.

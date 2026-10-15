@@ -4,10 +4,12 @@ import unittest
 from pathlib import Path
 
 import numpy as np
-from shapely.geometry import box
+from shapely import STRtree
+from shapely.geometry import box, Polygon
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from review_geography import exterior_water, water_edges, separated_axes
+from review_source_coasts import uncovered_samples
 
 
 class GeographyTests(unittest.TestCase):
@@ -33,6 +35,13 @@ class GeographyTests(unittest.TestCase):
         self.assertEqual(separated_axes(a, b, left, right), [])
         self.assertEqual(separated_axes(a, b, right, left), ['east'])
         self.assertEqual(separated_axes(b, a, left, right), ['west'])
+
+    def test_source_coast(self):
+        a, b = box(0, 0, 1, 1), box(1, 0, 2, 1)
+        self.assertEqual(uncovered_samples(a, 0, STRtree([a]), 128, 1e-6), 128)
+        self.assertEqual(uncovered_samples(a, 0, STRtree([a, b]), 128, 1e-6), 96)
+        surround = Polygon([(-1, -1), (2, -1), (2, 2), (-1, 2)], [list(a.exterior.coords)])
+        self.assertEqual(uncovered_samples(a, 0, STRtree([a, surround]), 128, 1e-6), 0)
 
     def test_empty(self):
         with self.assertRaises(ValueError):

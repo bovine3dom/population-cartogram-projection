@@ -191,6 +191,7 @@ def draw(path, shapes, tiles, owners, metrics, title):
              "mode=partition-relocation":"Fragment swaps and compact relocation; coasts can change",
              "mode=shape-placement":"Intact source shapes; translated without border paths",
              "mode=island-placement":"Islands translated; mainland shapes unchanged in this stage",
+             "mode=coast-graph":"Joint coast targets; rigid island translations; experimental",
              "mode=shared-island-templates":"Shared-island templates; unselected components unchanged",
              "mode=shared-island-positions":"Shared islands translated as rigid bodies; other components unchanged",
              "mode=archipelago-placement":"Nearby island groups translated; mainland unchanged",
