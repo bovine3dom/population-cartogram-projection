@@ -24,6 +24,12 @@ const SM=SoftMomentPacking
     exact=SM.pack_country(part;target_retained=1.,tolerance=0.)
     @test exact.report.target_tv_max<1e-7
     @test exact.report.forward_max<1e-7
+    @test size(SM.features([1. nextfloat(1.); 1. 1.]),1)<=2
+    small=merge(part,(;meta=merge(meta,(;ids=ids[1:2],population=population[1:2],codes=[24,24],xyz=xyz[:,1:2])),
+        source=source[1:8],target=target[1:8],weights=repeat([1/3,2/3];inner=4)./4))
+    small_result=SM.pack_country(small;target_retained=0.)
+    @test small_result.report.failed_blocks==0
+    @test small_result.part.weights≈small.weights
     @test_throws ErrorException SM.pack_country(part;deadline=time()-1)
     @test_throws ErrorException SM.pack_country(part;target_retained=1.1)
     @test_throws ErrorException SM.pack_country(part;tolerance=-1.)

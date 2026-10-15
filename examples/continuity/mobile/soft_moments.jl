@@ -7,7 +7,8 @@ const MQ=MobileQuality
 const H=HiGHS
 function features(points)
  centered=points.-mean(points;dims=2);scale=max.(sqrt.(sum(abs2,centered;dims=2)./size(points,2)),eps())
- f=svd(centered./scale;full=false);active=findall(>(maximum(f.S;init=0.)*1e-12),f.S)
+ centered./=scale;centered.-=mean(centered;dims=2)
+ f=svd(centered;full=false);active=findall(>(maximum(f.S;init=0.)*1e-12),f.S)
  vcat(ones(1,size(points,2)),sqrt(size(points,2)).*f.Vt[active,:])
 end
 function reduce_block(data,rows,weights,target_mass;limit=10.,floors=nothing,tolerance=.02)
@@ -24,6 +25,7 @@ function reduce_block(data,rows,weights,target_mass;limit=10.,floors=nothing,tol
  mx./=totals;my./=totals
  density=meta.population[sources]./H3.API.cellAreaKm2.(meta.ids[sources])
  f=features(vcat(meta.xyz[:,sources],transpose(density)));nf=size(f,1)
+ ns<=nf&&return (;rows,weights,seconds=0.,optimal=true)
  nr=3ns+nf*nt;ri=Int32[];ci=Int32[];va=Float64[];cost=zeros(nc);lower=zeros(nc)
  seed=weights./totals[source]
  for k in eachindex(rows)

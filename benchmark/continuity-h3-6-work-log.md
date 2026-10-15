@@ -338,3 +338,16 @@ The factor-3 run is still active. Several large Australian cells reach their
 LP time limit and use broad uniform fallbacks. A separate diagnostic tests
 feasible LP starts and physical-unit checks before those cells can be repaired.
 No incomplete or unchecked cell is installed in the running fit.
+
+
+## 00:44 UTC: small-block rank guard
+
+The first whole-planet packing jobs exposed a two-source block with three
+numerically detected affine features. The pivot selection exceeded the source
+count. No country from those packing jobs was accepted. Stopped both jobs;
+the native fits and subdivision jobs remain intact.
+
+Recentered the scaled features and skipped blocks whose moment constraints
+already determine every source contribution. Added two-source and near-constant
+feature checks. All 20 packing checks pass. The packing jobs will resume from
+their unchanged inputs. No invalid candidate was published.
