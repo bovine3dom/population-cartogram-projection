@@ -6,6 +6,9 @@ Investigated on 2026-10-15 without running a solver. No fitting code, H3-MON
 code, metadata, or published dataset was changed. The audit reads saved
 country parts, manifests, cell reports, and publication hashes.
 
+The later [code correction](continuity-factor-fix-work-log.md) removes this
+subdivision path. The findings below describe the old code and unchanged data.
+
 ## Finding
 
 The user's observation is correct. The published native H3-6 factors 2, 3,

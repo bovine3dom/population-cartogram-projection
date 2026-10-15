@@ -8,6 +8,8 @@ support measurements, see [sharpness findings](../../benchmark/continuity-sharpn
 For current H3-6 exports and the removal of optional row reduction, see
 [format cleanup](../../benchmark/continuity-format-cleanup.md). The earlier
 [native results](../../benchmark/continuity-h3-6-results.md) are historical measurements.
+For higher target factors, use [fine-grid fitting](target_subdivision.md).
+The constrained per-cell subdivision solver was removed.
 The sections below record the initial trials.
 
 This experiment keeps every OWID target cell in place. It does not identify

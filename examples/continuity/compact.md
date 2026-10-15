@@ -53,8 +53,8 @@ concentration or border quality.
 
 Pass `country_etas=Dict(code => eta, ...)` to `run_case` to use fixed per-country
 temperatures in both solves and objective scores. Other countries use the scalar
-`eta`. The runner writes the complete table to `country-etas.csv`; checkpoint
-loading and grid refinement preserve it. Do not change eta during a fit while
+`eta`. The runner writes the complete table to `country-etas.csv`. Checkpoint
+loading preserves it. Grid refinement selects a new table on the fine grid. Do not change eta during a fit while
 comparing objective values as if they belonged to the same objective. The
 planet runner still uses its existing fixed eta unless explicitly adapted.
 

@@ -184,21 +184,18 @@ separate; `seed-metrics.csv` records the starting point for each fit.
 
 ## Coarse-to-fine starting fields
 
-`refine_grid.jl COARSE_STUDY COARSE_TRIAL SOURCE_DIRECTORY NEW_OUTPUT RESOLUTION FACTOR`
-interpolates a fitted coarse geographic field to finer target cells. It uses
-continuous affine interpolation on coarse grid triangles within each country.
-Near the edge it uses the nearest complete grid block. Thin parts with no complete
-block use local finite differences. Edge extrapolation can still create folds;
-the field and the balanced seed therefore have separate orientation reports. A new Sinkhorn solve assigns the
-same source population to those geographic starting positions. A fresh standard
-baseline is calculated at the same resolution and entropy. The final fit again
-uses the original cost and fixed OWID targets. The source IDs and normalized
-populations must match the coarse input.
+`refine_grid.jl COARSE_STUDY COARSE_TRIAL SOURCE_DIRECTORY NEW_OUTPUT RESOLUTION RELATIVE_FACTOR`
+creates fine targets before fitting. It tunes eta on compact fine-grid
+baselines, then uses the coarse geographic field only to initialize a balanced
+plan. The final optimizer uses the fine distance cost and continuity graph.
+It does not fix source-to-parent contributions or coarse moments. Source IDs
+and populations can change, for example from H3-5 to native H3-6.
 
-This test is for the selected mainland cases. It does not define which internal
-island cuts must remain. Do not apply its interpolation across such cuts without
-an explicit mask. The script records baseline and seed metrics before it tests
-the seed against the distortion guards. Failed seeds are not accepted fits.
+The relative factor multiplies the saved target grid, not the original artwork.
+Shared-cell cuts are scaled with that grid. Other internal island cuts still
+need an explicit model. The saved distortion guards can reject the starting
+plan. The output is a research checkpoint, not a published dataset.
+See [fine-grid fitting](target_subdivision.md) for commands and checks.
 
 `continue_fit.jl STUDY_DIRECTORY TRIAL_NAME NEW_OUTPUT_DIRECTORY` continues a
 valid checkpoint while retaining its original baseline. `CONTINUITY_OUTER_STEPS`

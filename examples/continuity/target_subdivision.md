@@ -1,67 +1,64 @@
-# Moment-constrained target subdivision
+# Fine-grid fitting replaces constrained subdivision
 
-Run the native-source fit first. It uses KernelAbstractions and oneAPI.
-This separate CPU projection then divides each target into `factor^2` cells.
-It uses the existing HiGHS dependency in `examples/continuity/mobile`.
-It is not a new global border-optimization pass.
+The per-cell moment solver and its tests were removed. The old
+`subdivide_native.jl` command now stops with an error before writing output.
+It must not produce another apparent higher-factor fit.
 
-## Constraints and limits
+The old method fixed each source-to-parent contribution and constrained fine
+moments to an interpolated coarse field. It could not fit independent fine
+structure. See the [investigation](../../benchmark/continuity-factor-investigation.md).
+Existing published files have not changed.
 
-Each old source-to-target flow is fixed in total. The fine target cells have
-equal mass within their old target. The solver constrains four target means:
-raw geographic XYZ and source population density. A local linear guide gives
-the desired changes. The solver attempts to find the largest feasible guide
-amplitude from zero to one for each old target. All offsets sum to zero, so the old
-coarse means remain fixed.
+## Run a real fine-grid fit
 
-The LP has no entropy term. A basic solution is sparse, but there is no fixed
-bound on the number of target cells per source. More target cells can require
-more contributions. The LP does not constrain other query fields. Do not claim
-that all fine-scale queries equal an independent population extraction.
-
-Each source uses conditional variables. This prevents small source populations
-from disappearing at an absolute LP tolerance. For at least 128 sources, a
-feasible uniform plan first supplies a sparse basis through crossover. Primal
-simplex then improves the guide amplitude. Small cells use the direct solve.
-The checks use the actual masses and physical moments, not a tolerance on
-scaled coordinates with very small variance. Source relative error must be at most `1e-10`. Fine target
-relative error, against the old target's divided mass, must be at most `1e-6`.
-The native exporter also checks the final country masses and physical weights.
-
-A cell solve has a time limit. A time-limited candidate is kept only if all
-mass and physical-moment checks pass. It is marked nonoptimal in `cells.csv`.
-Geographic mean error must be at most `1e-7` in unit-sphere XYZ norm, and density
-mean relative error must be at most `1e-6`. The process also needs an external
-hard timeout because the crossover call is native code. The runner accepts
-`H3_SUBDIVISION_CELL_SECONDS` from greater than zero through 300 seconds. It
-records each run's limit, deadline, and code commit in `solver-runs.csv`.
-Changing this limit does not change the acceptance checks.
-
-If the solve status or numerical check fails,
-the fallback distributes each old contribution equally among its fine cells.
-This preserves coarse mass and means, but can be broad. `cells.csv` records
-its reason and zero amplitude. Do not hide these fallbacks in quality reports.
-A city remains within its original coarse target and on the same native source.
-
-There is no fold penalty in this LP. The moment constraints reduce the geometry
-changes seen with simple geographic OT, but they do not guarantee valid fine
-grid orientation. Compare orientation, border separation, density, and support
-before publication. Keep the old H3-5 map and the native factor-1 map separate.
-
-## Run
+Use a saved continuity study, not a native `part.jls` export directory. The
+study must contain `countries.jls`. Its trial must contain `candidate.jls`,
+`settings.csv`, and the saved border mask and weights. Supply source Arrow
+files named `country-CODE-resRESOLUTION.arrow` for all study countries.
 
 ```sh
-H3_SUBDIVISION_DEADLINE=2026-10-15T04:20:00 \
-  OPENBLAS_NUM_THREADS=1 julia --threads=2 \
-  --project=examples/continuity/mobile \
-  examples/continuity/subdivide_native.jl COARSE_FIT FACTOR NEW_OUTPUT
+CONTINUITY_OUTER_STEPS=4 julia --threads=8 --project=examples/uk-h3 \
+  examples/continuity/refine_grid.jl \
+  COARSE_STUDY COARSE_TRIAL SOURCE_DIRECTORY NEW_OUTPUT 6 5
 ```
 
-The deadline is UTC. Optional country codes after `NEW_OUTPUT` limit a pilot.
-The runner checks the coarse input hash on resume. It saves each accepted
-country before it starts the next one. The completion marker covers only the
-requested country list. The independent native exporter must check planet
-coverage before publication.
+The last argument is a factor relative to the saved target grid. For example,
+use 5 with a factor-1 study to get factor 5. The source resolution is separate.
+Native H3-6 sources can replace the coarse H3-5 sources. No source-to-parent
+flow is retained as a constraint. Use a new output directory. The command
+requires oneAPI and does not resume or publish files.
 
-Run `test/target_subdivision.jl` with the mobile example project.
-The HiGHS interface reference is <https://github.com/jump-dev/HiGHS.jl>.
+## Method and checks
+
+1. Divide the target geometry before fitting. Each country gets equal fine
+   target capacities and its supplied source population. Scale explicit shared
+   cell cuts to the fine grid. Keep the saved country border mask and weights.
+2. Tune eta on the actual fine-grid baseline with `compact_tune`. Use compact
+   all-pair plans and KA kernels. Keep the calibration and stage records.
+   Reject a selected baseline above 1.25 times the support target.
+3. Interpolate the coarse geographic means. Fit a balanced starting plan with
+   the original fine distance cost plus the soft guide cost `-xyz' * centres`.
+   This guide is only for initialization. It is not a final constraint.
+4. Run the continuity optimizer on the fine grid with the selected country
+   etas. Use the original fine distance cost, continuity terms, and fold terms.
+   There is no fixed coarse flow, coarse moment, or coarse support mask.
+
+Internal and fold strengths scale by the relative factor squared. Border
+scale increases by the factor. Fold smoothing area decreases by the factor
+squared. Eta is selected again, not copied from the coarse country table.
+The optimizer starts at step 1, not the coarse checkpoint's resume step.
+
+Source and target mass checks and the saved distortion guards remain active.
+A failed seed stops the run; it does not trigger a constrained subdivision.
+The runner writes compact checkpoints and final orientation diagnostics. It
+writes `research-fit-complete.txt`, not a publication marker or native export
+parts. Audit sharpness, folds, borders, and labels before a separate export.
+A completed run does not certify visual quality or a global optimum.
+
+The all-pair method can be expensive at planet scale. No planet run was made
+to test this correction. Small CPU and oneAPI tests check that a fine fit can
+change coarse allocations and create previously absent source-to-parent links:
+
+```sh
+CONTINUITY_GPU_TEST=1 julia --threads=8 --project=examples/uk-h3 test/refine_grid.jl
+```
