@@ -316,3 +316,25 @@ is 0.00814 and maximum forward mean shift is 0.142 coarse grid units. Some
 low-population source distributions change substantially. Stricter forward
 bounds and explicit city and navigation-anchor protection are under test.
 This is an approximate export experiment, not a change to the accepted fit.
+
+
+## 00:39 UTC: checked approximate packing
+
+Added a bounded moment-packing runner. Seventeen checks pass, including city
+and navigation anchors, strict mass and density checks, source position bounds,
+and invalid-input rejection. Protected anchor contributions cannot decrease.
+The final country check compares ten query fields and records missing-data
+coverage loss. A failed block retains its original plan. A valid time-limited
+solution is marked nonoptimal rather than being called converged.
+
+A stricter US diagnostic keeps 453,587 of 581,553 rows. Its maximum source-mean
+shift is 0.0283 coarse grid units and maximum target variation is 0.00731.
+A factor-2 diagnostic keeps 435,682 of 613,744 rows with a wider 0.1-coordinate
+box and 90% protected target mass. Its maximum measured target variation is
+0.0667. Geographic and density means remain fixed. These are different quality
+settings; do not report the smaller file as a lossless change.
+
+The factor-3 run is still active. Several large Australian cells reach their
+LP time limit and use broad uniform fallbacks. A separate diagnostic tests
+feasible LP starts and physical-unit checks before those cells can be repaired.
+No incomplete or unchecked cell is installed in the running fit.
