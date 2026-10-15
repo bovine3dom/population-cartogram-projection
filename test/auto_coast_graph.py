@@ -50,6 +50,10 @@ class CoastGraphTests(unittest.TestCase):
             frame = TransportCoastFrames(root, {'a': {(5, 6)}})
             point = frame.point('a', [0, 0])
             self.assertAlmostEqual(np.linalg.norm(point-[5, 6]), .5)
+            moved = TransportCoastFrames(root, {'a': {(7, 6)}}, {'a': {(5, 6)}})
+            np.testing.assert_allclose(moved.point('a', [0, 0])-point, [2, 0])
+            with self.assertRaisesRegex(ValueError, 'budgets'):
+                TransportCoastFrames(root, {'a': {(7, 6), (8, 6)}}, {'a': {(5, 6)}})
             with self.assertRaises(ValueError):
                 TransportCoastFrames(root, {'a': {(7, 6)}})
             mapping.write_text('x,y,id,weight,weight_mean\n5,6,s,.5,1\n')

@@ -311,3 +311,42 @@ tests pass. The published H3-MON map remains unchanged.
 The next algorithm needs joint movement and deformation of neighbouring groups.
 It must retain the correct side of water and allow false land connections to
 be replaced. Do not select a result from border totals alone.
+
+## 2026-10-15: work from the preferred margin-one layout
+
+The user selected `protected-water/margin-1/review.png` as the most promising
+layout. Keep this footprint as the reference. Its detached groups are Norway
+with Sweden, Gibraltar, and the Americas across Honduras/Nicaragua. Finland
+remains attached. These are not disconnected pieces within a country.
+
+Added detached-only mode to `dock_true_borders.py`. It moves whole disconnected
+landmass parts, not just groups of existing true borders. Every accepted move
+must reduce the number of landmass parts. It retains all existing true borders,
+does not increase false-border totals, and rejects overlaps.
+
+The first pass joined Norway/Sweden and Gibraltar. A two-tile Peruvian island
+blocked the South American move. Added a general rule: independent islands
+within 500 km of a source land component move with that component. The nearest
+source coast selects the parent; country membership does not. This also moves
+nearby Nordic islands with Norway/Sweden.
+
+All three breaks then close. Norway/Sweden move 11 tiles east and two north;
+the southern Americas group moves 17 west and nine north; Gibraltar moves four
+west and nine north. No connector cells are added. Every component retains its
+shape and tile count. Missing borders fall from 66 to 63; false borders stay at
+34. Visually checked the world and Europe. The Baltic gap remains open.
+
+Tested island placement separately on this repaired layout. The previous
+transport map supplies local coast directions, translated to current component
+centres and snapped to current coasts. This is only a placement guide: no old
+population weights are transferred to the new layout. Source-proximity island
+groups are then restored. Ireland moves north. Long Island moves southeast of
+Manhattan: the centroid difference changes from (6.83, 8.05) to (3.83, -3.95).
+Reviewed Europe, New York, Indonesia, and Japan/Korea. Japan is not bisected by
+Korea. Java is still too far west; this island candidate needs further work.
+A ten-percent centre-target mixture did not resolve that problem.
+
+The independent audit of the island candidate confirms zero split source
+landmasses. It reports nine possible lost coasts and seven possible false
+coasts. Exact component budgets remain unchanged. Seven translation tests and
+seven coast-graph tests pass. No production layout or population export changes.

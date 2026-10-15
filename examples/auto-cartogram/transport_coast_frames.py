@@ -10,7 +10,10 @@ from save_review import digest
 
 
 class TransportCoastFrames:
-    def __init__(self, root, tiles):
+    def __init__(self, root, tiles, reference_tiles=None):
+        reference_tiles = tiles if reference_tiles is None else reference_tiles
+        if set(reference_tiles) != set(tiles) or any(len(reference_tiles[c]) != len(tiles[c]) for c in tiles):
+            raise ValueError('Reference transport component budgets differ')
         sources = defaultdict(dict)
         source_file = root/'sources.csv'
         self.hashes = {str(source_file): digest(source_file)}
@@ -40,9 +43,12 @@ class TransportCoastFrames:
                     if i is not None:
                         weights[i] += w
                         mapped[i] += np.array([x, y])*w
-            if targets != cells or not np.allclose(weights, 1., atol=1e-8, rtol=0):
+            if targets != reference_tiles[c] or not np.allclose(weights, 1., atol=1e-8, rtol=0):
                 raise ValueError('Transport layout or local source weights differ: '+c)
             mapped /= weights[:, None]
+            # Translate the old local frame, then snap queries to the current
+            # coast. This is a placement guide, not a new population mapping.
+            mapped += np.mean(sorted(cells), axis=0)-np.mean(sorted(reference_tiles[c]), axis=0)
             boundary = sorted({(x+dx*.5, y+dy*.5) for x, y in cells for dx, dy in NEIGHBOURS
                                if (x+dx, y+dy) not in cells})
             self.frames[c] = (cKDTree([sources[c][identifier] for identifier in ids]),
