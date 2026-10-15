@@ -484,3 +484,41 @@ The strict relaxed test loses Sweden–Finland. The wider test loses six
 contacts but does not provide a clear Russia/China improvement over its
 control. Do not promote these candidates or claim that separation has helped.
 Started matched 400-round tests to check whether short runs explain this result.
+
+## 2026-10-15, 21:20 UTC: longer runs and opening trials
+
+Both 400-round runs completed. The wider relaxed run still scores slightly
+worse than its matched control: 0.40038 versus 0.39997. It loses seven existing
+contacts. Inspected both Eurasian views. The native-outline score improves,
+but some regional relationships become less clear. Do not use that score alone.
+
+Added a bounded opening phase before normal refinement. It tests whether a
+short-term energy barrier prevents useful separation. Failed openings restore
+all changes. Successful openings retain exact budgets and all other existing
+true contacts. Refinement may close the opened border again.
+
+Ran three 100-round opening trials and a new matched small-gap control.
+The large-component trial opens China–Russia and slightly improves Russia's
+outline against the wider control. However, it creates 100 newly enclosed
+empty cells, versus 35 in that control. Rejected this trade-off.
+
+A smaller gap allowance reduces the opening trial to 28 new enclosed empty
+cells, versus 24 in its matched control. It temporarily opens Kazakhstan–Russia;
+that border reconnects during refinement. Russia improves slightly more, but
+China is unchanged and the total shape score remains slightly worse.
+Visually inspected the opening trials and the small-gap comparison.
+
+A 50 km corridor audit admits 67 pairs instead of 74 under the strict limits.
+Kazakhstan–Russia and Mongolia–Russia remain eligible. China–Kazakhstan does
+not. The threshold decision depends on the corridor scale.
+
+Independent geography checks found an additional problem: even the protected
+400-round control has a detached UAE after a false contact is removed. Its
+true contacts were already missing. Existing-contact guards alone do not
+preserve all current landmass connections. This is recorded, not hidden by the
+new permission to separate sparse borders.
+
+All 182 tests pass. No trial replaces the current layout or population export.
+The next method needs source-segment population constraints, joint regional
+moves, and relative-position checks. Further local iterations alone are not
+a supported improvement. Review gallery: `results/geography/sparse-borders/`.

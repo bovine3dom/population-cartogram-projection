@@ -111,6 +111,63 @@ poor local solutions. Longer matched tests are the next check. After that,
 test larger regional moves and source-segment population constraints rather
 than simply increasing the number of optional borders.
 
+## Longer runs and deliberate opening trials
+
+Both wider runs completed 400 rounds. The protected control scores 0.39997;
+the relaxed run scores 0.40038 and loses seven existing contacts. More rounds
+do not reverse the result. Their newly enclosed empty-cell counts are 38 and
+39. Neither candidate is approved.
+
+Added an optional opening phase in `seed_sparse_borders.py`. It ranks eligible
+contacts by their current guide cost. It moves boundary tiles to other empty
+positions while retaining component counts, connectivity, other existing true
+contacts, and the gap limits. A complete opening can temporarily increase the
+search objective by at most 500 units. Failed openings are rolled back.
+Ordinary downhill refinement follows. An opened border may close again.
+
+This tests whether a short-term energy barrier prevents useful separation.
+It does not assume that a forced opening is an improvement. An optional
+500-tile minimum restricts the opening moves to larger components. The density
+rule still applies globally; there are no named-country overrides.
+
+| Additional 100-round test | Shape error | New enclosed empty cells |
+| --- | ---: | ---: |
+| Three openings, no size minimum | 0.40999 | 37 |
+| Three openings, 500-tile minimum | 0.40989 | 100 |
+| Small-gap protected control | 0.41228 | 24 |
+| Small-gap opening trial | 0.41246 | 28 |
+
+The large-component trial opens China–Russia. Russia's error is 0.38727,
+compared with 0.39105 in the matched wider control. China's error is slightly
+worse. The small Russia gain does not justify 100 newly enclosed empty cells.
+
+The small-gap pair uses gap cost 16, a two-cell nearest-gap setting, and a
+64-cell interior-gap budget. The opening trial temporarily separates
+Kazakhstan–Russia, but refinement restores that contact. Russia's error is
+0.41919 versus 0.42379 in its matched control. China is unchanged between the
+two runs. The world score remains slightly worse in the opening trial.
+
+Visual checks covered Eurasia in both 400-round runs and both opening variants,
+the small-gap pair, Europe, and a world view. Longer runs can worsen regional
+relationships even while native-outline overlap improves. Thus this overlap
+score cannot be the sole acceptance test.
+
+The independent geography audit also finds one extra source-landmass part in
+the 400-round protected control. The UAE separates when an existing false
+contact is removed; its true contacts were already missing in the input.
+Protecting existing true contacts is not the same as preserving every current
+landmass connection. The wider relaxed run adds four parts across two source
+landmasses. This is another reason not to replace the current layout.
+
+A 50 km corridor sensitivity check admits 67 pairs under the strict limits.
+Kazakhstan–Russia and Mongolia–Russia still pass. China–Kazakhstan no longer
+passes. Border classification must retain its scale and uncertainty.
+
+Next, combine source-segment population measurements with joint regional
+moves and relative-position checks. Review inherited coast constraints too:
+protecting every old concavity can preserve an already distorted coastline.
+Do not infer that all of China's eastern distortion comes from land borders.
+
 ## Reproduction
 
 Use `output/auto-cartogram/geometry-env/bin/python`.
@@ -123,4 +180,7 @@ Each script has positional input paths and a `--help` command.
 - Audits: `output/auto-cartogram/sparse-border-audit-25` and `sparse-border-audit-25-wide`.
 - Trials: `output/auto-cartogram/sparse-border-{control,strict,wide,wide-control}-100`.
 
-Reports record settings and input hashes. The published H3-MON map is unchanged.
+For opening trials, add `--seed-borders 3`, optionally with
+`--seed-minimum-tiles 500`. The default has no opening phase.
+All 182 automatic-cartogram tests pass. Reports record settings and input
+hashes. The published H3-MON map is unchanged.
