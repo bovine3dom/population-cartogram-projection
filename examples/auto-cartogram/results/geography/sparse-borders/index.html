@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Selective border separation: review</title>
+<style>body{font:17px/1.5 system-ui;max-width:1400px;margin:auto;padding:24px;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#165a9e}table{border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #ccc}details{margin:24px 0}.warning{border-left:5px solid #a54;padding-left:16px}</style>
+<h1>Selective border separation</h1>
+<p class="warning"><strong>Experiment, not a replacement map.</strong> The first tests do not show a benefit
+from allowing sparse borders to separate. The published H3-MON map is unchanged.</p>
+<p><a href="../../../sparse_borders.md">Method, research, and limits</a> ·
+<a href="../../../geography_work_log.md">Work log</a> ·
+<a href="../margin-1-followup/index.html#local-lakes">Starting layout with lakes</a></p>
+<h2>What changes?</h2>
+<p>The audit measures population in a corridor on both sides of each border. It does not use country-average
+density. A border is eligible only when both its mean density and its 90th-percentile segment density
+fall below the test limits. There are no Russia or China exceptions.</p>
+<p>The strict limits admit 74 of 348 component pairs. Wider limits admit 98.
+Kazakhstan–Russia and Mongolia–Russia pass the strict test. China–Russia passes only the wider test.
+China–North Korea and China–Vietnam do not pass either test.</p>
+<p>All runs keep 55,000 population tiles and exact component budgets. Lake cells and immediate shore labels
+stay fixed. Lakes remain empty space. Independent islands stay fixed. New blank border gaps are experimental
+separations, <strong>not geographic seas or lakes</strong>.</p>
+<h2>Matched 100-round tests</h2>
+<p>Each relaxed run has a control with all existing true contacts protected. Other settings are identical
+within each pair. Lower shape error is better. This score measures outline overlap after equal-area scaling
+and centroid alignment; it does not measure relative position.</p>
+<table><tr><th>Test</th><th>Lost existing contacts</th><th>Shape error</th><th>New enclosed empty cells</th></tr>
+<tr><td>Input</td><td>0</td><td>0.42690</td><td>0</td></tr>
+<tr><td><a href="control-100/review.png">Strict control</a></td><td>0</td><td>0.41934</td><td>23</td></tr>
+<tr><td><a href="strict-100/review.png">Strict relaxed</a></td><td>1</td><td>0.41971</td><td>24</td></tr>
+<tr><td><a href="wide-control-100/review.png">Wider control</a></td><td>0</td><td>0.40985</td><td>35</td></tr>
+<tr><td><a href="wide-100/review.png">Wider relaxed</a></td><td>6</td><td>0.41016</td><td>37</td></tr></table>
+<p>Both relaxed runs score slightly worse than their controls. Russia improves in both controls without
+losing an existing contact. China changes little. This is not evidence that border separation helped.</p>
+<h3>Input: Eurasia</h3>
+<img src="baseline-eurasia.png" alt="Starting Eurasian layout before the border experiment">
+<h3>Wider test: existing contacts protected</h3>
+<img loading="lazy" src="wide-control-100/eurasia.png" alt="Matched control with existing contacts protected">
+<h3>Wider test: sparse contacts may separate</h3>
+<img loading="lazy" src="wide-100/eurasia.png" alt="Relaxed border trial, with little extra improvement in Russia or China">
+<p>The strict relaxed test also opens Sweden–Finland. This partly undoes the earlier mainland repair.
+<a href="strict-100/europe.png">Inspect Europe</a>.</p>
+<h2 id="opening-trials">Longer runs and deliberate opening trials</h2>
+<p>The 400-round relaxed run still scores slightly worse than its matched control. Extra rounds alone
+do not establish a benefit from separation.</p>
+<table><tr><th>Test</th><th>Lost existing contacts</th><th>Shape error</th><th>New enclosed empty cells</th></tr>
+<tr><td><a href="wide-control-400/review.png">400-round control</a></td><td>0</td><td>0.39997</td><td>38</td></tr>
+<tr><td><a href="wide-400/review.png">400-round relaxed</a></td><td>7</td><td>0.40038</td><td>39</td></tr>
+<tr><td><a href="large-seeded-100/review.png">Large-component openings, 100 rounds</a></td><td>8</td><td>0.40989</td><td>100</td></tr>
+<tr><td><a href="small-gaps-control-100/review.png">Small-gap control, 100 rounds</a></td><td>0</td><td>0.41228</td><td>24</td></tr>
+<tr><td><a href="small-gaps-seeded-100/review.png">Small-gap openings, 100 rounds</a></td><td>3</td><td>0.41246</td><td>28</td></tr></table>
+<p>The opening phase permits a bounded short-term cost increase before normal refinement. Failed openings
+restore all changes. This tests a possible search barrier; it does not assume that an opening is useful.
+These opening trials move only components with at least 500 tiles, but still apply the same population rule.</p>
+<h3>China–Russia opens, but the extra blank space is not justified</h3>
+<img loading="lazy" src="large-seeded-100/eurasia.png" alt="Trial with an opened China–Russia contact and unwanted extra blank space">
+<p>Russia's outline error falls to 0.38727, versus 0.39105 in the matched wider 100-round control.
+China is slightly worse. The small Russia gain does not justify 100 newly enclosed empty cells.</p>
+<h3>Smaller gaps: modest local gain, no overall win</h3>
+<img loading="lazy" src="small-gaps-seeded-100/eurasia.png" alt="Small-gap opening trial with a smaller amount of extra blank space">
+<p><a href="small-gaps-control-100/eurasia.png">Matched small-gap control</a>.
+Kazakhstan–Russia opens during the initial phase, then reconnects during refinement. Russia's shape score
+improves slightly more than in the control. China's score is identical. The world score is still slightly worse.</p>
+<p class="warning">The independent geography audit also finds a detached UAE in the 400-round protected
+control. An existing false contact is removed, while its true contacts were already missing.
+Protecting existing true borders does not preserve every current landmass connection. None of these trials
+replaces the current map.</p>
+<details><summary>Long-run and opening-trial reports</summary>
+<p>400-round control: <a href="wide-control-400/sparse-borders.json.gz">run</a> ·
+<a href="wide-control-400/shape-comparison.json.gz">shapes</a> · <a href="wide-control-400/geography.json">geography</a>.</p>
+<p>400-round relaxed: <a href="wide-400/sparse-borders.json.gz">run</a> ·
+<a href="wide-400/shape-comparison.json.gz">shapes</a> · <a href="wide-400/geography.json">geography</a>.</p>
+<p>Large-component openings: <a href="large-seeded-100/sparse-borders.json.gz">run</a> ·
+<a href="large-seeded-100/shape-comparison.json.gz">shapes</a> · <a href="large-seeded-100/geography.json">geography</a>.</p>
+<p>Small-gap control: <a href="small-gaps-control-100/sparse-borders.json.gz">run</a> ·
+<a href="small-gaps-control-100/shape-comparison.json.gz">shapes</a>.</p>
+<p>Small-gap openings: <a href="small-gaps-seeded-100/sparse-borders.json.gz">run</a> ·
+<a href="small-gaps-seeded-100/shape-comparison.json.gz">shapes</a> · <a href="small-gaps-seeded-100/geography.json">geography</a>.</p>
+</details>
+<h2>Limits and next checks</h2>
+<p>The density rule currently applies to a whole component pair, not to the exact source segment represented
+by each tile edge. Equal Earth gives approximate distances. H3 centre sampling and short borders add error.
+With a 50 km corridor, the strict rule admits 67 pairs rather than 74. China–Kazakhstan no longer passes;
+Kazakhstan–Russia and Mongolia–Russia still pass.</p>
+<p>The search uses small local exchanges and fixed guide centres. Larger joint regional moves,
+source-segment population constraints, and relative-position checks are the next method changes.
+Also review inherited coast constraints: protecting every old concavity can retain a distorted coastline.
+Do not increase the number of optional borders merely to force a visible gap.</p>
+<details><summary>Reports and reproducible data</summary>
+<p>Population audits: <a href="strict-25-audit.json.gz">strict, 25 km</a> ·
+<a href="wide-25-audit.json.gz">wider limits, 25 km</a> · <a href="strict-50-audit.json.gz">strict, 50 km</a>.</p>
+<p>Strict control: <a href="control-100/sparse-borders.json.gz">run report</a> ·
+<a href="control-100/shape-comparison.json.gz">shape review</a> · <a href="control-100/cells.csv.gz">land cells</a>.</p>
+<p>Strict relaxed: <a href="strict-100/sparse-borders.json.gz">run report</a> ·
+<a href="strict-100/shape-comparison.json.gz">shape review</a> · <a href="strict-100/cells.csv.gz">land cells</a>.</p>
+<p>Wider control: <a href="wide-control-100/sparse-borders.json.gz">run report</a> ·
+<a href="wide-control-100/shape-comparison.json.gz">shape review</a> · <a href="wide-control-100/cells.csv.gz">land cells</a>.</p>
+<p>Wider relaxed: <a href="wide-100/sparse-borders.json.gz">run report</a> ·
+<a href="wide-100/shape-comparison.json.gz">shape review</a> · <a href="wide-100/cells.csv.gz">land cells</a>.</p>
+</details>
+</html>

@@ -1,0 +1,22 @@
+{
+  "neighbours": 4,
+  "pairs": 1315,
+  "source_landmasses_split": 1,
+  "extra_landmass_parts": 1,
+  "pairs_with_lost_separation": 174,
+  "components_without_exterior_water": 55,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/sparse-border-wide-control-400/cells.csv": "75362ce7281f7869cae829698fbb7b2174429aece859adb85c4a0bb0f813d121",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "script_sha256": "9737581a1635145e18212da3b6a9fc09eeb3140b6b7db1056fa24738320827c4",
+  "limits": [
+    "Exterior water is a tile-grid measurement, not a source coastline classification.",
+    "Enclosed water can be a real lake or a layout defect.",
+    "Nearest neighbours use Equal Earth planar distance, not geodesic distance.",
+    "Lost box separation is a review flag, not proof of incorrect geography.",
+    "The source antimeridian can affect neighbour distances."
+  ]
+}
