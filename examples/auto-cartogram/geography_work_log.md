@@ -207,3 +207,44 @@ this last step. Indonesia still needs work.
 
 Saved the candidate and baseline New York images under
 `results/geography/coast-graph/v6-cohesion/`. No population map is replaced.
+
+## 2026-10-15 17:15 UTC: local changes instead of a full rebuild
+
+The stronger-guide and inland-cost trials have finished. None is approved.
+The inland-cost, margin-one trial reduces possible lost coasts to 13 and
+possible false coasts to five. But it still adds three landmass parts.
+The near-raw-footprint trial has 29 possible lost coasts and four possible
+false coasts. It adds two landmass parts. Reviewed its Europe and South America
+images: the northern connection is thin and Chile moves south of Argentina.
+
+Added an optional flow-centres test. This keeps continuous-flow centres instead
+of fitting native population centres with a global linear transform. The
+partition suite passes 26 tests. The world trial still produces detached Nordic
+regions in the Europe image. This option alone is not a solution.
+
+Confirmed a repair failure in the stronger-guide trial: the repair step removed
+13 western Norway tiles and added 13 tiles beside the eastern fragment. Do not
+use final component connectivity as proof of geographic accuracy.
+
+Added `refine_geography.py` to test paired tile exchanges on the good baseline.
+It keeps exact component counts, checks component topology, and rejects moves
+that split a source-connected landmass. Isolated islands and small landmasses
+stay fixed. No required-border paths are built. Four tests cover accepted
+moves, split rejection, rollback, fixed regions, and coast costs.
+
+Reviewed Europe and South America at guide weight one, round 50, and guide
+weight 0.05, round 175. Both remain experiments. The stronger guide creates a
+thin Uruguay extension. The weaker guide removes that extension but does not
+restore the Baltic. It also makes some countries too rectangular. General
+landmass connectivity cannot ensure that the right countries share a border.
+
+The round-50 audit confirms zero split source landmasses and exact counts.
+Possible false coasts fall from seven to four, but possible lost coasts rise
+from 21 to 23. Missing contacts rise from 59 to 65. Do not select this result.
+The two bounded runs stopped at their time limits after rounds 64 and 182;
+the reviewed checkpoints are complete, but the requested 200-round runs are not.
+Images are in `results/geography/guarded/`.
+
+Next: preserve useful existing source contacts during exchanges. Add explicit
+water-side relationships rather than only a cost for empty cells. Keep the
+island placement tests separate until the mainland result passes review.
