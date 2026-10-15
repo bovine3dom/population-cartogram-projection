@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 # Run from the repository root. Do not publish these layouts.
 set -euo pipefail
-if [ "$#" -ne 2 ]; then
-  echo 'Usage: run_water_trials.sh NEW_OUTPUT_ROOT DEADLINE_UTC' >&2
+if [ "$#" -lt 2 ] || [ "$#" -gt 4 ]; then
+  echo 'Usage: run_water_trials.sh NEW_OUTPUT_ROOT DEADLINE_UTC [FLOW_GUIDE_WEIGHT [LANDLOCKED_WEIGHT]]' >&2
   exit 2
 fi
 out=$1
+guide=${3:-8}
+coast_weight=${4:-0}
+coast_args=()
+if [ "$coast_weight" != 0 ]; then
+  coast_args=(--source-coasts output/auto-cartogram/geography-source-coasts-55000/source-coasts.csv)
+fi
 deadline=$(date -u -d "$2" +%s)
 [ ! -e "$out" ] || { echo 'Output already exists' >&2; exit 2; }
 mkdir -p "$out"
@@ -25,10 +31,10 @@ for margin in 0 1; do
     "$out/margin-$margin" \
     --flow-geometry output/auto-cartogram/world-55000-mainland-flow/flow/areas_cartogram.geojson \
     --sites output/auto-cartogram/world-55000-population-sites/sites.csv \
-    --stretch 1.2 --flow-guide-weight 8 --sigma 4 --iterations 300 \
+    --stretch 1.2 --flow-guide-weight "$guide" --sigma 4 --iterations 300 \
     --mainland-only --float-islands --borrow-coast --fixed-border-rounds 16 \
     --shared-islands --fixed-land-anchors --archipelagos --bridge-groups \
-    --water-radius 8 --water-margin "$margin" > "$out/margin-$margin.log" 2>&1 || code=$?
+    --water-radius 8 --water-margin "$margin" --landlocked-weight "$coast_weight" "${coast_args[@]}" > "$out/margin-$margin.log" 2>&1 || code=$?
   printf '%s\t%s\t%s\n' "$margin" "$started" "$code" >> "$out/status.tsv"
 done
 echo 'Trials finished. Check the logs, water access, and images. No layout is approved.'

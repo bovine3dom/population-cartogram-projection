@@ -22,7 +22,7 @@ import review_regions
 from save_review import digest
 
 
-def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,stretch=1.5,flow_guide_weight=0.,sigma=None,iterations=300,flow_grid=256,flow_area_error=.01,sites=None,float_islands=False,dock_landmasses=False,borrow_coast=False,mainland_only=False,sites_in_flow=False,fixed_border_rounds=0,shared_islands=False,archipelagos=False,archipelago_gap_fraction=.2,fixed_land_anchors=False,bridge_groups=False,water_radius=0,water_margin=0):
+def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,stretch=1.5,flow_guide_weight=0.,sigma=None,iterations=300,flow_grid=256,flow_area_error=.01,sites=None,float_islands=False,dock_landmasses=False,borrow_coast=False,mainland_only=False,sites_in_flow=False,fixed_border_rounds=0,shared_islands=False,archipelagos=False,archipelago_gap_fraction=.2,fixed_land_anchors=False,bridge_groups=False,water_radius=0,water_margin=0,source_coasts=None,landlocked_weight=0.):
     if output.exists():raise ValueError('Output already exists')
     if bridge_groups and not archipelagos:raise ValueError('Group merging requires archipelago placement')
     if (mainland_only or sites_in_flow) and not sites:raise ValueError('Mainland-only or flow-coordinate mode requires sites')
@@ -37,7 +37,8 @@ def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,str
     if not math.isfinite(flow_area_error) or not 0<flow_area_error<1:raise ValueError('Invalid flow area tolerance')
     files=[inputs/'groups.csv',inputs/'manifest.json',inputs/'validated.wkt',inputs/'geographic-contacts.csv',templates/'cells.csv',polygons,flow_geometry if flow_geometry else flow_binary]+([sites] if sites else [])
     def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
-    record=dict(started_at_utc=now(),complete=False,approved_for_production=False,tile_budget=budget,stretch=stretch,flow_guide_weight=flow_guide_weight,sigma=sigma,iterations=iterations,flow_grid=flow_grid,flow_area_error=flow_area_error,sites=str(sites) if sites else None,float_islands=float_islands,dock_landmasses=dock_landmasses,borrow_coast=borrow_coast,mainland_only=mainland_only,sites_in_flow=sites_in_flow,fixed_border_rounds=fixed_border_rounds,shared_islands=shared_islands,archipelagos=archipelagos,archipelago_gap_fraction=archipelago_gap_fraction,fixed_land_anchors=fixed_land_anchors,bridge_groups=bridge_groups,water_radius=water_radius,water_margin=water_margin,
+    if source_coasts:files.append(source_coasts)
+    record=dict(started_at_utc=now(),complete=False,approved_for_production=False,tile_budget=budget,stretch=stretch,flow_guide_weight=flow_guide_weight,sigma=sigma,iterations=iterations,flow_grid=flow_grid,flow_area_error=flow_area_error,sites=str(sites) if sites else None,float_islands=float_islands,dock_landmasses=dock_landmasses,borrow_coast=borrow_coast,mainland_only=mainland_only,sites_in_flow=sites_in_flow,fixed_border_rounds=fixed_border_rounds,shared_islands=shared_islands,archipelagos=archipelagos,archipelago_gap_fraction=archipelago_gap_fraction,fixed_land_anchors=fixed_land_anchors,bridge_groups=bridge_groups,water_radius=water_radius,water_margin=water_margin,source_coasts=str(source_coasts) if source_coasts else None,landlocked_weight=landlocked_weight,
         inputs={str(p):digest(p) for p in files},scripts={p.name:digest(p) for p in sorted(Path(__file__).parent.glob('*.py'))},steps=[],limit='Experimental layouts only. Exact counts do not prove geographic or border accuracy. Review images and failures before selection. The optional external flow binary has an AGPL-3.0 licence and remains outside production dependencies.')
     output.mkdir(parents=True)
     def save():(output/'pipeline.json').write_text(json.dumps(record,indent=2)+'\n')
@@ -65,7 +66,7 @@ def run(inputs,templates,polygons,output,flow_binary=None,flow_geometry=None,str
         raw=stage('check-flow',lambda:review_flow.run(inputs,flow_geometry,output/'flow-review',allow_isolated_missing=mainland_only,method='Guide supplied by caller; see its source records.' if supplied else None))
         if raw['overlap_pairs']:raise ValueError('Continuous flow has overlaps')
         record['flow_geometry_sha256']=digest(flow_geometry)
-        stage('partition',lambda:partition_land.run(inputs,templates,output/'partition',sigma=sigma,iterations=iterations,power=True,by_landmass=True,flow_geometry=flow_geometry,flow_stretch=stretch,flow_guide_weight=flow_guide_weight,sites=sites,float_islands=float_islands,dock_landmasses=dock_landmasses,sites_in_flow=sites_in_flow,water_radius=water_radius,water_margin=water_margin))
+        stage('partition',lambda:partition_land.run(inputs,templates,output/'partition',sigma=sigma,iterations=iterations,power=True,by_landmass=True,flow_geometry=flow_geometry,flow_stretch=stretch,flow_guide_weight=flow_guide_weight,sites=sites,float_islands=float_islands,dock_landmasses=dock_landmasses,sites_in_flow=sites_in_flow,water_radius=water_radius,water_margin=water_margin,source_coasts=source_coasts,landlocked_weight=landlocked_weight))
         stage('repair',lambda:repair_partition.run(inputs,output/'partition',output/'repaired',relocate_fragments=True,borrow_coast=borrow_coast))
         current=output/('islands' if fixed_border_rounds or shared_islands or archipelagos or fixed_land_anchors else 'layout')
         stage('islands',lambda:place_islands.run(inputs,output/'repaired',polygons,current,preserve_mainland_defects=True))
@@ -110,6 +111,8 @@ if __name__=='__main__':
     parser.add_argument('--sigma',type=float);parser.add_argument('--iterations',type=int,default=300)
     parser.add_argument('--sites',type=Path)
     parser.add_argument('--fixed-border-rounds',type=int,default=0,help='Optional fixed-footprint boundary refinement with false-border cost 16')
+    parser.add_argument('--source-coasts',type=Path)
+    parser.add_argument('--landlocked-weight',type=float,default=0.)
     parser.add_argument('--water-radius',type=int,default=0)
     parser.add_argument('--water-margin',type=int,default=0)
     parser.add_argument('--archipelago-gap-fraction',type=float,default=.2)

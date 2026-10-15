@@ -8,7 +8,7 @@ from shapely import STRtree
 from shapely.geometry import box, Polygon
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
-from review_geography import exterior_water, water_edges, separated_axes
+from review_geography import exterior_water, water_edges, separated_axes, landmass_connectivity
 from review_source_coasts import uncovered_samples
 
 
@@ -42,6 +42,12 @@ class GeographyTests(unittest.TestCase):
         self.assertEqual(uncovered_samples(a, 0, STRtree([a, b]), 128, 1e-6), 96)
         surround = Polygon([(-1, -1), (2, -1), (2, 2), (-1, 2)], [list(a.exterior.coords)])
         self.assertEqual(uncovered_samples(a, 0, STRtree([a, surround]), 128, 1e-6), 0)
+
+    def test_shared_landmass_connectivity(self):
+        self.assertEqual(landmass_connectivity({'a': {(0, 0)}, 'b': {(1, 0)}}, [('a', 'b')]),
+                         [dict(components=['a', 'b'], parts=1)])
+        self.assertEqual(landmass_connectivity({'a': {(0, 0)}, 'b': {(2, 0)}}, [('a', 'b')]),
+                         [dict(components=['a', 'b'], parts=2)])
 
     def test_empty(self):
         with self.assertRaises(ValueError):

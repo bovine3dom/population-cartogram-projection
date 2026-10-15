@@ -10,7 +10,7 @@ import time
 
 import numpy as np
 from scipy.optimize import minimize
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import binary_dilation, binary_fill_holes, distance_transform_edt
 from scipy.special import logsumexp
 
 from compact_regions import guide_costs, fit_guide_centres
@@ -78,6 +78,11 @@ def hierarchical_partition(costs,points,sites,budgets,regions,iterations):
     return assignment,dict(method='Regional power partition, followed by component partitions',regional_solver=record,regions=children)
 
 
+def exterior_coast(mask):
+    """Mark land cells beside exterior water, not enclosed lakes."""
+    return binary_dilation(~binary_fill_holes(mask))&mask
+
+
 def contact_groups(pairs):
     neighbours={c:set() for pair in pairs for c in pair}
     for a,b in pairs:neighbours[a].add(b);neighbours[b].add(a)
@@ -91,8 +96,9 @@ def contact_groups(pairs):
     return groups
 
 
-def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.,sites=None,float_islands=False,dock_landmasses=False,regions=None,sites_in_flow=False,water_radius=0,water_margin=0):
+def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_layout=None,power=False,by_landmass=False,flow_geometry=None,flow_stretch=1.,flow_guide_weight=0.,sites=None,float_islands=False,dock_landmasses=False,regions=None,sites_in_flow=False,water_radius=0,water_margin=0,source_coasts=None,landlocked_weight=0.):
     if output.exists():raise ValueError('Output already exists')
+    if not np.isfinite(landlocked_weight) or landlocked_weight<0 or (landlocked_weight and not source_coasts):raise ValueError('Landlocked coast cost requires source coast checks')
     if (water_radius or water_margin) and not flow_geometry:raise ValueError('Water protection requires a continuous flow guide')
     if water_radius and dock_landmasses:raise ValueError('Water protection cannot be combined with docking')
     if sites_in_flow and not (sites and flow_geometry):raise ValueError('Flow-coordinate sites require sites and flow geometry')
@@ -113,6 +119,13 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
         source_hashes[str(flow_geometry)]=digest(flow_geometry)
         for name in ['flow_footprint.py','review_flow.py','shape_placement.py']:script_hashes[name]=digest(Path(__file__).with_name(name))
     shapes,tiles,_=load(inputs,layout)
+    landlocked=set()
+    if source_coasts:
+        coast_rows=read_csv(source_coasts)
+        if len(coast_rows)!=len(tiles) or {r['component_id'] for r in coast_rows}!=set(tiles):raise ValueError('Source coast labels differ')
+        if any(not 0<=int(r['uncovered_samples'])<=int(r['samples']) or int(r['samples'])<1 for r in coast_rows):raise ValueError('Invalid coast sampling counts')
+        landlocked={r['component_id'] for r in coast_rows if int(r['uncovered_samples'])==0}
+        source_hashes[str(source_coasts)]=digest(source_coasts)
     region_ids=None
     if regions:
         rows=read_csv(regions);region_ids={r['component_id']:r['region'] for r in rows}
@@ -169,6 +182,10 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
                     distance=distance_transform_edt(~guide_mask)
                     matrix[:,i]+=flow_guide_weight*distance[yy,xx]**2
         else:matrix=np.column_stack([costs[c][yy,xx] for c in labels])
+        if landlocked_weight:
+            coast=exterior_coast(mask)[yy,xx]
+            for i,c in enumerate(labels):
+                if c in landlocked:matrix[:,i]+=landlocked_weight*coast
         counts=[budgets[c] for c in labels]
         if region_ids:assignment,solver=hierarchical_partition(matrix,points,positions,counts,[region_ids[c] for c in labels],iterations)
         else:assignment,solver=partition(matrix,counts,iterations)
@@ -192,6 +209,8 @@ def run(inputs,layout,output,sigma=8.,guide=4.,anchor=.05,iterations=300,guide_l
     disconnected={c:n for c,points in result.items() if (n:=connectivity(points))!=1}
     holed={c:n for c,points in result.items() if (n:=holes(points))}
     record=dict(method='Capacity partition of a shared footprint; entropy-smoothed dual then greedy residual correction',sigma=sigma,guide=guide if not power else None,anchor=anchor if not power else None,cost='uniform squared centre distance' if power else 'outline and area-normalized centre distance',guide_layout=str(guide_layout) if guide_layout else None,guide_alignment=alignment,sites=str(sites) if sites else None,sites_in_flow=sites_in_flow,maximum_iterations_per_stage=iterations,by_landmass=by_landmass,dock_landmasses=dock_landmasses,regions=str(regions) if regions else None,flow_geometry=str(flow_geometry) if flow_geometry else None,flow=flow,flow_guide_weight=flow_guide_weight,flow_guide_cost='Weighted squared distance from the raw flow-region raster, added to uniform squared site distance' if flow_guide_weight else None,partitions=records,fixed_components=0 if float_islands else len(fixed),translated_islands=island_shifts,float_islands=float_islands,disconnected_components=disconnected,components_with_holes=holed,inputs=source_hashes,scripts=script_hashes,elapsed_seconds=time.monotonic()-started,limit='Diagnostic only. No connectivity, border, or hole constraint. Exact counts and footprint occupancy are not approval. Residual correction is greedy, not an optimality certificate. The footprint can remove real coasts or fill real water.')
+    record.update(source_coasts=str(source_coasts) if source_coasts else None,landlocked_weight=landlocked_weight,
+        sampled_landlocked_components=sorted(landlocked),coast_cost_limit='Soft cost on the exterior of each target landmass. Source coasts use finite samples. Later stages can change access. No guarantee of an inland final position.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -212,6 +231,8 @@ if __name__=='__main__':
     for name in ['inputs','layout','output']:parser.add_argument(name,type=Path)
     for name,default in [('sigma',8.),('guide',4.),('anchor',.05)]:parser.add_argument('--'+name,type=float,default=default)
     parser.add_argument('--iterations',type=int,default=300)
+    parser.add_argument('--source-coasts',type=Path)
+    parser.add_argument('--landlocked-weight',type=float,default=0.)
     parser.add_argument('--water-radius',type=int,default=0,help='Protect concave water in the flow raster with this closing radius; zero disables protection')
     parser.add_argument('--water-margin',type=int,default=0,help='Expand protected water by this many tiles')
     parser.add_argument('--guide-layout',type=Path)

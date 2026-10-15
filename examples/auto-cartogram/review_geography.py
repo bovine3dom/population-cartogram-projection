@@ -11,7 +11,8 @@ from shapely import STRtree, transform
 from shapely.geometry import shape
 
 from prepare_flow import equal_earth
-from review_layout import load, NEIGHBOURS
+from review_layout import load, read_csv, connectivity, NEIGHBOURS
+from partition_land import contact_groups
 from save_review import digest
 
 
@@ -59,6 +60,11 @@ def separated_axes(a, b, ta, tb):
     return errors
 
 
+def landmass_connectivity(tiles, pairs):
+    return [dict(components=group, parts=connectivity(set().union(*(tiles[c] for c in group))))
+            for group in contact_groups(pairs)]
+
+
 def run(inputs, layout, polygons, output, neighbours=4):
     if output.exists() or neighbours < 1:
         raise ValueError('Use a new output and a positive neighbour count')
@@ -89,10 +95,14 @@ def run(inputs, layout, polygons, output, neighbours=4):
         relations.append(dict(a=a, b=b, country_a=rows[a]['country_id'], country_b=rows[b]['country_id'],
             source_gap_projected=source[a].distance(source[b]),
             lost_box_separations=separated_axes(source[a], source[b], points[a], points[b])))
+    contacts = read_csv(inputs/'geographic-contacts.csv')
+    landmass_parts = landmass_connectivity(tiles, [(r['a'], r['b']) for r in contacts if r['both_represented'] == 'true'])
     report = dict(neighbours=neighbours, pairs=len(relations),
+        source_landmasses_split=sum(r['parts'] > 1 for r in landmass_parts),
+        extra_landmass_parts=sum(r['parts']-1 for r in landmass_parts),
         pairs_with_lost_separation=sum(bool(r['lost_box_separations']) for r in relations),
         components_without_exterior_water=sum(not r['exterior_water_edges'] for r in access.values()),
-        inputs={str(p): digest(p) for p in [inputs/'groups.csv', layout/'cells.csv', polygons]},
+        inputs={str(p): digest(p) for p in [inputs/'groups.csv', inputs/'geographic-contacts.csv', layout/'cells.csv', polygons]},
         script_sha256=digest(Path(__file__)),
         limits=['Exterior water is a tile-grid measurement, not a source coastline classification.',
                 'Enclosed water can be a real lake or a layout defect.',
@@ -105,6 +115,7 @@ def run(inputs, layout, polygons, output, neighbours=4):
         writer.writeheader()
         for c in sorted(tiles):
             writer.writerow(dict(component_id=c, country_id=rows[c]['country_id'], name=rows[c]['name'], tiles=len(tiles[c]), **access[c]))
+    (output/'landmass-parts.json').write_text(json.dumps(landmass_parts, indent=2)+'\n')
     (output/'nearby-relations.json').write_text(json.dumps(relations, indent=2)+'\n')
     (output/'summary.json').write_text(json.dumps(report, indent=2)+'\n')
     return report
