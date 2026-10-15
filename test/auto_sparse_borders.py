@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'examples/auto-cartog
 from audit_border_population import measure
 from relax_sparse_borders import SparseDeformation, gap_distance
 from review_sparse_borders import shape_error
+from seed_sparse_borders import try_transfer, undo, seed
 
 
 class ShapeReviewTests(unittest.TestCase):
@@ -89,6 +90,35 @@ class SparseBorderTests(unittest.TestCase):
             self.assertFalse(state.exchange((2, 1), (0, 3)))
             self.assertEqual(state.owners, original)
             self.assertEqual(state.gaps, set())
+
+    def test_seed_can_cross_energy_barrier_and_undo(self):
+        state = self.state()
+        state.costs['a'][5, 6] = -100
+        before, energy = dict(state.owners), state.energy()
+        self.assertFalse(state.exchange((2, 1), (0, 3)))
+        action = try_transfer(state, (2, 1), (0, 3), ('a', 'b'))
+        self.assertIsNotNone(action)
+        self.assertGreater(action['energy_change'], 0)
+        undo(state, action)
+        self.assertEqual(state.owners, before)
+        self.assertEqual(state.energy(), energy)
+        protected = self.state(soft=False)
+        self.assertIsNone(try_transfer(protected, (2, 1), (0, 3), ('a', 'b')))
+
+    def test_seed_budget_and_count_checks(self):
+        self.assertEqual(seed(self.state(), minimum_tiles=500), [])
+        state = self.state()
+        before = {c: len(p) for c, p in state.tiles.items()}
+        result = seed(state, maximum_borders=1)
+        self.assertTrue(result[0]['opened'])
+        self.assertEqual({c: len(p) for c, p in state.tiles.items()}, before)
+        state = self.state()
+        state.costs['a'][5, 6] = -100
+        state.costs['b'][5, 7] = -100
+        original = dict(state.owners)
+        result = seed(state, maximum_increase=0)
+        self.assertFalse(result[0]['opened'])
+        self.assertEqual(state.owners, original)
 
     def test_lake_shore_and_protected_water_are_fixed(self):
         for kwargs in [dict(locked={(2, 1)}), dict(protected_water={(0, 3)})]:

@@ -37,7 +37,6 @@ class SparseDeformation(GuardedDeformation):
         self.locked = set(locked)
         self.protected_water = set(protected_water)
         self.gap_band = set(gap_band)
-        self.original_land = set(self.owners)
         self.interior = {p for p in self.owners if all(q in self.owners for q in adjacent(p))}
         self.gaps = set()
         self.gap_budget = gap_budget
@@ -84,9 +83,11 @@ class SparseDeformation(GuardedDeformation):
 
 
 def run(inputs, layout, audit, output, rounds=100, choices=8, maximum_gap=3, gap_budget=300,
-        guide=4., gap_cost=4., preserve_all=False):
+        guide=4., gap_cost=4., preserve_all=False, seed_borders=0, seed_maximum_increase=500., seed_minimum_tiles=0):
     if output.exists() or min(rounds, choices, maximum_gap, gap_budget) < 1 or not np.isfinite([guide, gap_cost]).all() or min(guide, gap_cost) < 0:
         raise ValueError('Use a new output and valid settings')
+    if min(seed_borders, seed_minimum_tiles) < 0 or not np.isfinite(seed_maximum_increase) or seed_maximum_increase < 0 or (preserve_all and seed_borders):
+        raise ValueError('Invalid border-opening seed settings')
     rows, tiles, owners = load(inputs, layout)
     if any(len(p) != int(rows[c]['tiles']) for c, p in tiles.items()):
         raise ValueError('Exact starting budgets required')
@@ -146,8 +147,14 @@ def run(inputs, layout, audit, output, rounds=100, choices=8, maximum_gap=3, gap
                               maximum_gap, gap_budget, perimeter=1., false_contact=16.)
     initial_contacts = {k for k, n in state.contacts.items() if n > 0}
     initial_energy = state.energy()
-    history, previous = [], initial_energy
     started = time.monotonic()
+    seeds = []
+    if seed_borders:
+        from seed_sparse_borders import seed
+        seeds = seed(state, maximum_borders=seed_borders, maximum_increase=seed_maximum_increase, minimum_tiles=seed_minimum_tiles)
+        print(json.dumps(dict(seed_openings=seeds)), flush=True)
+    after_seed_energy = state.energy()
+    history, previous = [], after_seed_energy
     output.mkdir(parents=True)
     for turn in range(1, rounds+1):
         changed = state.step(choices)
@@ -175,18 +182,23 @@ def run(inputs, layout, audit, output, rounds=100, choices=8, maximum_gap=3, gap
         shutil.copyfile(lake_file, output/'lake-cells.csv')
     report = dict(rounds=rounds, choices=choices, maximum_gap=maximum_gap, gap_budget=gap_budget,
         guide=guide, gap_cost=gap_cost, preserve_all=preserve_all, eligible_borders=len(eligible), movable_components=len(movable),
-        initial_energy=initial_energy, final_energy=previous, history=history, lost_borders=sorted(lost),
+        initial_energy=initial_energy, after_seed_energy=after_seed_energy, final_energy=previous,
+        seed_borders=seed_borders, seed_maximum_increase=seed_maximum_increase,
+        seed_minimum_tiles=seed_minimum_tiles, seed_openings=seeds,
+        history=history, lost_borders=sorted(lost),
         interior_gap_cells=len(state.gaps), changed_land_cells=len(set(owners)^set(state.owners)),
         rejected_policy=state.rejected_policy, rejected_contacts=state.rejected_contacts,
         gap_distances=[dict(a=a, b=b, before=gap_distance(tiles[a], tiles[b]), after=gap_distance(state.tiles[a], state.tiles[b])) for a, b in sorted(eligible)],
         elapsed_seconds=time.monotonic()-started, inputs={str(p): digest(p) for p in [inputs/'groups.csv', inputs/'validated.wkt', inputs/'geographic-contacts.csv', layout/'cells.csv', audit]+([lake_file] if lake_file.exists() else [])},
-        scripts={n: digest(Path(__file__).with_name(n)) for n in ['relax_sparse_borders.py', 'refine_geography.py', 'compact_regions.py', 'place_lake_regions.py']},
+        scripts={n: digest(Path(__file__).with_name(n)) for n in ['relax_sparse_borders.py', 'refine_geography.py', 'compact_regions.py', 'place_lake_regions.py']+(['seed_sparse_borders.py'] if seed_borders else [])},
         limits=['Experimental blank separations are not geographic seas or lakes.',
                 'Every component keeps its count and stays connected. Source landmasses may split.',
                 'Only borders below both population thresholds may lose an existing contact. Already missing borders are not repaired by force.',
                 'The gap limit measures nearest component distance, not the width of every point along a border.',
                 'Interior gaps are limited to a band around initially touching eligible borders and a total cell budget.',
                 'Native outlines are fitted at fixed current centroids. Lower energy alone does not prove better geography.',
+                'Optional seeds open sparse contacts with a bounded energy increase before downhill refinement. A seed is a trial, not evidence of improvement.',
+                'Population eligibility applies to whole component pairs, not the exact source segment at each opened tile edge.',
                 'Lake cells and their immediate shore labels are fixed. Independent islands are fixed. No population export is made.'])
     (output/'sparse-borders.json').write_text(json.dumps(report, indent=2)+'\n')
     (output/'complete.txt').write_text('mode=sparse-border-relaxation\ncounts=exact\napproval=none\n')
@@ -202,4 +214,7 @@ if __name__ == '__main__':
     parser.add_argument('--guide', type=float, default=4.)
     parser.add_argument('--gap-cost', type=float, default=4.)
     parser.add_argument('--preserve-all', action='store_true')
+    parser.add_argument('--seed-borders', type=int, default=0)
+    parser.add_argument('--seed-maximum-increase', type=float, default=500.)
+    parser.add_argument('--seed-minimum-tiles', type=int, default=0)
     print(json.dumps(run(**vars(parser.parse_args())), indent=2))
