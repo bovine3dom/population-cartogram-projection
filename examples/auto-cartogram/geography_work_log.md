@@ -394,3 +394,52 @@ lakes are not yet restored in their tile layouts. Next, preserve explicit water
 regions during local tile allocation and distinguish physical land borders
 from borders through lakes. Do not replace margin-one with the failed global
 flow or paint lakes over population-bearing tiles.
+
+## 2026-10-15: local lake insertion on the repaired margin-one layout
+
+Added `lake_vacancies.py` and `place_lake_regions.py`. A move shifts tile labels
+along a short route to the outer coast. The first cell becomes water. A new
+land cell at the route end keeps each component budget exact. Intermediate
+cells remain land. No empty channel remains along the route.
+
+Each move must keep components connected and retain existing physical land
+contacts. False-contact totals cannot increase. Landlocked components cannot
+gain ocean edges. Independent islands stay fixed. Concave sea areas are
+protected from new land cells. Each complete lake must touch its main source
+shore components. A failed lake trial restores all its changes.
+
+The first three-lake pilot placed no complete lakes. A wider search placed
+Victoria and Malawi. The first 48-lake run with that search placed 45 lakes,
+but visual inspection found narrow boundary extensions. Added a route cost
+that favours boundary corners over one-cell extensions. This removes the most
+obvious new extensions in the East African view. It is a preference, not a
+proof that all narrow shapes are absent.
+
+Final trial: `output/auto-cartogram/geography-margin1-lake-vacancies-final/`.
+Use `--placement-attempts 128 --path-attempts 256`; other settings are defaults.
+The input layout is `geography-margin1-rejoined-final`, not the separate island
+position trial. The report records settings and input hashes.
+
+- 45 of 48 selected lakes fit, with 220 water display cells.
+- Victoria, Malawi, the five Great Lakes, Baikal, and Titicaca are present.
+- Tanganyika, Khanka, and the South Aral Sea do not fit. No partial lake remains.
+- All 55,000 land tiles and all 481 component budgets remain exact.
+- No component is disconnected. The independent audit finds no split source
+  landmass. Administrative border counts remain 63 missing and 34 false.
+- The source-coast audit reports 14 possible lost coasts and seven possible
+  false coasts, unchanged from the repaired mainland base.
+- All newly empty cells have a named lake. Original holes remain unchanged.
+  The generic region-hole count rises from seven to 25 because it includes
+  real lakes. It is not a count of new phantom holes.
+
+Visually checked Africa before and after, Europe, North America, and the world
+view. The Baltic gap remains open. Lake positions are approximate. The Great
+Lakes need joint relative-position checks; shoreline membership alone does not
+check the order of countries around a lake. Tanganyika needs local boundary
+adjustment or template deformation. Do not force it through a thin land path.
+
+Seven new tests cover exact budgets, rollback, fixed islands, route limits,
+connectivity, protected sea, and an end-to-end cross-border lake fixture.
+All 170 Python automatic-cartogram tests pass. The renderer rejects lake cells
+that overlap population tiles. Lake-island population components and a new
+population mapping remain future work. The published H3-MON map is unchanged.
