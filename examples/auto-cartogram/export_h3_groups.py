@@ -29,7 +29,7 @@ def csv_file(path, records):
         writer=csv.DictWriter(stream,fieldnames=list(records[0]));writer.writeheader();writer.writerows(records)
 
 
-def export(directory, polygons_path, iso_path, output):
+def export(directory, polygons_path, iso_path, output, title='Population density — automatic 55,000-tile island cartogram'):
     if output.exists():raise ValueError('Output already exists')
     if not (directory/'balance-complete.json').exists():raise ValueError('Balance is not complete')
     groups={r['component_id']:r for r in rows(directory/'groups.csv')}
@@ -105,7 +105,7 @@ def export(directory, polygons_path, iso_path, output):
         mapping_name='cartogram_weights_auto_55000_h3_5_hilo.arrow'
         arrow(temp/mapping_name,data,types)
         arrow(temp/'population_density_hilo.arrow',density,dict(index_lower=pa.uint32(),index_upper=pa.uint32(),value=pa.float64()))
-        metadata=dict(t='Population density — automatic 55,000-tile island cartogram',c='Kontur population; Natural Earth components; GeoNames cities. Experimental layout. Source population year not verified.',cartogram=f'{output.name}/{mapping_name}',colourScheme='interpolateViridis',colourScale='quantile',quantileSource='cartogram')
+        metadata=dict(t=title,c='Kontur population; Natural Earth components; GeoNames cities. Experimental layout. Source population year not verified.',cartogram=f'{output.name}/{mapping_name}',colourScheme='interpolateViridis',colourScale='quantile',quantileSource='cartogram')
         (temp/'population_density_hilo.json').write_text(json.dumps(metadata,indent=2)+'\n')
         csv_file(temp/'cities.csv',city_audit)
         csv_file(temp/'country-codes.csv',[dict(country_id=c,code=codes[c],kind='special categorical code' if c in special else 'ISO 3166-1 numeric') for c in countries])
@@ -152,4 +152,5 @@ These codes are not ISO codes. See `country-codes.csv`.
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ['directory','polygons','iso','output']:parser.add_argument(name,type=Path)
-    args=parser.parse_args();print(json.dumps(export(args.directory,args.polygons,args.iso,args.output),indent=2))
+    parser.add_argument('--title',default='Population density — automatic 55,000-tile island cartogram')
+    args=parser.parse_args();print(json.dumps(export(args.directory,args.polygons,args.iso,args.output,args.title),indent=2))
