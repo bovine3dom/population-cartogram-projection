@@ -6,11 +6,20 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
-from refine_geography import GuardedDeformation
+from refine_geography import GuardedDeformation, raster
+from shapely.geometry import box
 from review_layout import connectivity
 
 
 class GuardTests(unittest.TestCase):
+    def test_small_shape_raster_and_bounds(self):
+        yy, xx = np.mgrid[:5, :5]
+        mask = raster(box(1.1, 1.1, 1.2, 1.2), xx, yy, (0, 0))
+        self.assertEqual(mask.sum(), 1)
+        self.assertTrue(mask[1, 1])
+        with self.assertRaisesRegex(ValueError, 'outside'):
+            raster(box(10, 10, 11, 11), xx, yy, (0, 0))
+
     def state(self):
         tiles = {'a': {(2, 2), (3, 2)}, 'b': {(4, 2), (5, 2)}}
         costs = {c: np.zeros((9, 9)) for c in tiles}

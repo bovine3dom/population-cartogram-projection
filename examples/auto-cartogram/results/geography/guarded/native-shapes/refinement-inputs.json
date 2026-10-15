@@ -1,0 +1,38 @@
+{
+  "method": "Paired tile exchanges with component topology checks and source-landmass connectivity guards",
+  "rounds": 75,
+  "choices": 16,
+  "guide": 0.0,
+  "coast_weight": 32.0,
+  "preserve_contacts": true,
+  "minimum_landmass_tiles": 550,
+  "checkpoint_rounds": 25,
+  "water_weight": 0.0,
+  "water_radius": 8,
+  "water_margin": 1,
+  "native_shape_weight": 10.0,
+  "protected_water_cells": 7129,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-55000-dissolved-input/validated.wkt": "589853d20b8d9edab48ff17b8077595e03f3b6e991c7a5e9945841601fa59509",
+    "output/auto-cartogram/geography-true-dock-reviewed/cells.csv": "8cc3a185e034a0712f8c77dde02fbf6a52d5d0d010202863c02cb9ff15080532",
+    "output/auto-cartogram/world-55000-mainland-guide8/partition.json": "eb3c90a413d013a18e3047651de7519353b3834d13a92650503858d34fa249f2",
+    "output/auto-cartogram/world-55000-mainland-flow/flow/areas_cartogram.geojson": "f2a07dd37f4a9af04c44c1a62c661073c56b9c19d762bea7d580ad0ebdf4544c",
+    "output/auto-cartogram/geography-source-coasts-55000/source-coasts.csv": "74b99a8e34ad48401ffacaa8729698370040acc1f95bf9ffee8667eaa4d14c97"
+  },
+  "scripts": {
+    "refine_geography.py": "335bedfaf9894c272449329ae7d27b7d2f14e9bf9180b245af0253811b671265",
+    "compact_regions.py": "5ae618071bbbfde5f29656d41d574e1da1389850d83fd9d348cb50e50b1cc338",
+    "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+    "partition_land.py": "50f7ded33bf66486eeec9ffee5002a0cfc15ea40e1e96f973701e56b703e7f1b"
+  },
+  "limits": [
+    "Local search can stop before water access improves.",
+    "No required-border paths are constructed.",
+    "The coast cost uses finite source samples and does not distinguish enclosed water.",
+    "Source landmass connectivity is required. Optional contact guards retain existing true borders, not their positions.",
+    "Water costs use concavities in the raw flow raster, not named seas or a verified source-water topology.",
+    "Existing shape holes are allowed. No candidate is automatically approved."
+  ]
+}

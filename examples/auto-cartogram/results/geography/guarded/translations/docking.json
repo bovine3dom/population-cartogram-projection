@@ -1,0 +1,152 @@
+{
+  "max_tiles": 550,
+  "radius": 64,
+  "rounds": 4,
+  "moves": [
+    {
+      "round": 1,
+      "components": [
+        "GIB:71de83b149a1d32c"
+      ],
+      "dx": -2,
+      "dy": 11,
+      "gained_true_contacts": [
+        [
+          "ESP:ff9451038f1a27e4",
+          "GIB:71de83b149a1d32c"
+        ]
+      ],
+      "old_false_contacts": [
+        [
+          "ESP:94551cac3165236f",
+          "GIB:71de83b149a1d32c"
+        ],
+        [
+          "GIB:71de83b149a1d32c",
+          "MAR:41e7d86fdd4b2365"
+        ]
+      ],
+      "new_false_contacts": []
+    },
+    {
+      "round": 1,
+      "components": [
+        "MCO:8f146e45080f16d1"
+      ],
+      "dx": -61,
+      "dy": 7,
+      "gained_true_contacts": [
+        [
+          "FXX:f023db15990ca569",
+          "MCO:8f146e45080f16d1"
+        ]
+      ],
+      "old_false_contacts": [
+        [
+          "LBN:8d427f2407db4cf0",
+          "MCO:8f146e45080f16d1"
+        ],
+        [
+          "MCO:8f146e45080f16d1",
+          "SYR:bb46c77ee43515e0"
+        ]
+      ],
+      "new_false_contacts": []
+    },
+    {
+      "round": 1,
+      "components": [
+        "USA:13c14a072880aac5"
+      ],
+      "dx": 44,
+      "dy": 9,
+      "gained_true_contacts": [
+        [
+          "CAN:614ec007a6324298",
+          "USA:13c14a072880aac5"
+        ]
+      ],
+      "old_false_contacts": [
+        [
+          "USA:13c14a072880aac5",
+          "USA:90107a05206832e4"
+        ]
+      ],
+      "new_false_contacts": []
+    },
+    {
+      "round": 1,
+      "components": [
+        "FIN:9332a3268ae7c503"
+      ],
+      "dx": 16,
+      "dy": 5,
+      "gained_true_contacts": [
+        [
+          "FIN:9332a3268ae7c503",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "old_false_contacts": [
+        [
+          "BLR:216ea6b406f5bc6c",
+          "FIN:9332a3268ae7c503"
+        ],
+        [
+          "EST:50bd04ff06509a99",
+          "FIN:9332a3268ae7c503"
+        ],
+        [
+          "FIN:9332a3268ae7c503",
+          "LVA:ff14565ea5d338a5"
+        ],
+        [
+          "FIN:9332a3268ae7c503",
+          "RUS:8afd88fb65e5e555"
+        ]
+      ],
+      "new_false_contacts": []
+    },
+    {
+      "round": 1,
+      "components": [
+        "ARE:6af70f4330c4f4bf"
+      ],
+      "dx": -11,
+      "dy": -1,
+      "gained_true_contacts": [
+        [
+          "ARE:6af70f4330c4f4bf",
+          "SAU:11ac65250772b5d3"
+        ]
+      ],
+      "old_false_contacts": [
+        [
+          "ARE:6af70f4330c4f4bf",
+          "IRN:3c2b5bd7d999fbee"
+        ],
+        [
+          "ARE:6af70f4330c4f4bf",
+          "PAK:447ed1858f7b7a5d"
+        ]
+      ],
+      "new_false_contacts": []
+    }
+  ],
+  "missing_before": 59,
+  "missing_after": 54,
+  "false_before": 55,
+  "false_after": 44,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-55000-fixed-coast-bridged-v2/final/cells.csv": "9f0c734b0fab4f18e732dbed9339863b7662a46b46478f0520e31156bcb5be7a"
+  },
+  "script_sha256": "6a0800b962ea2719817f1bb5a06e3be12be83225519e00610b4c4d24b2919c52",
+  "limits": [
+    "Rigid translations retain shapes and budgets. Border-neighbour axis guards use source bounding-box centres and a two-degree threshold.",
+    "Bounding-box centres are approximate and can be misleading across the antimeridian. Other neighbour orders are not guarded.",
+    "No new connector tiles are made. Existing narrow shapes are retained.",
+    "Source-connected landmasses stay connected. No result is automatically approved."
+  ]
+}
