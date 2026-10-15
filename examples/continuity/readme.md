@@ -5,6 +5,8 @@ For the later compact solver, see [compact plans](compact.md),
 [planet instructions](planet.md). For smaller browser files, see
 [mobile exports](mobile/readme.md). For the restored eta tuning and matched
 support measurements, see [sharpness findings](../../benchmark/continuity-sharpness.md).
+For the additional H3-6 maps at factors 1, 2, 3, and 5, see
+[native results and browser limits](../../benchmark/continuity-h3-6-results.md).
 The sections below record the initial trials.
 
 This experiment keeps every OWID target cell in place. It does not identify

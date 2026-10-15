@@ -499,3 +499,29 @@ The approximate factor-5 packing is still running. It must pass a separate
 actual-binary comparison before publication. No incomplete packed result
 will be installed. Published factors 1, 2, and 3 pass their hash manifests,
 metadata path checks, and three browser camera changes.
+
+## 03:38 UTC: final publication and stop
+
+Published planet-h3-6-factor5-continuity-native with the full checked factor-5
+transport, not the approximate packed trial. Both files total 244,237,736
+bytes. Packing saves only 3.20 MB but permits target variation up to 0.07352
+and loses seven targets in the tested half-missing query. Kept the full
+version to avoid that extra approximation. Its published-file browser check
+passes all source and target counts, labels, hashes, and camera changes.
+
+All four published primary datasets pass their hash manifests. Their density
+files are identical. The H3-MON tracked tree is clean at bfbd50e. Its code,
+service, defaults, and compression settings are unchanged. A final dictionary
+trial found mostly unique weight values; encoding those values would increase
+file size. No such format change was made.
+
+The final measurements, query limits, dataset links, and reproduction notes
+are in continuity-h3-6-results.md. Factors 1, 2, 3, and 5 are separate options;
+H3-5 remains available. Factor 2 is the first recommended H3-6 comparison.
+None is established as phone-safe. Browser backing storage remains the main
+limit, not only transfer size.
+
+All fitting, packing, audit, browser, and monitor jobs from this six-hour task
+have stopped before the deadline. An unrelated refit under output/auto-cartogram
+is running in another process tree. It was left untouched. Diagnostic files
+and rejected trials remain available. No core solver file changed.
