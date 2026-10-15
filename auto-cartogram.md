@@ -641,6 +641,34 @@ can find Java, recognize Britain, compare populations, and identify land
 neighbours. The survey supports evaluating these tasks separately. Numerical
 success does not establish readability.
 
+## Geographic relationships: October 2026 follow-up
+
+The current 55,000-tile map exposes a separate layout problem. Exact island
+budgets and correct population transport do not preserve seas or coastal access.
+The Baltic states lose water access, and Paraguay gains a coast.
+
+Check land and water together:
+
+- Compare sampled source coasts with tile water connected to the outer frame.
+- Check connected source landmasses, not only individual country components.
+- Preserve the relative positions of nearby islands across country boundaries.
+- Check which side of a water feature each region occupies.
+- Keep real lakes, bays, and straits distinct from phantom holes.
+
+Initial water-mask trials restore Baltic access and put Paraguay inland, but
+can split Scandinavia from the mainland. They are not approved. Island trials
+show that several coast anchors can improve Ireland and New York, but require
+separate checks for archipelago cohesion. See the
+[work log](examples/auto-cartogram/geography_work_log.md) and
+[visual comparisons](examples/auto-cartogram/results/geography/protected-water/index.html).
+
+Tong, McNabb, and Laramee [8] provide a useful design precedent. Their cartogram
+keeps region centres on their original side of an explicit river feature.
+A crossing causes the move to be reversed; overlap removal then resumes. This
+supports treating important water features as constraints, not merely empty
+space. Their study uses Dorling-style and rectangular maps, not exact-budget
+world mosaics. It does not establish a solution to our raster topology problem.
+
 ## Decision
 
 Proceed with the island audit and a small GridMapPipeline prototype. Keep the
@@ -683,5 +711,11 @@ The issue and thread text were retrieved directly through their APIs.
 [7] [cartogram-cpp](https://github.com/mgastner/cartogram-cpp).
 Its README documents the flow-based method, GeoJSON/CSV interface, and licensing.
 It was inspected as a comparison candidate, not tested in this work.
+
+[8] C. Tong, L. McNabb, and R. S. Laramee (2018), **Cartograms with
+Topological Features**. [DOI](https://doi.org/10.2312/cgvc.20181217),
+[paper](https://diglib.eg.org/bitstream/handle/10.2312/cgvc20181217/127-134.pdf).
+Read the paper directly, including Sections 3.3 and 3.6–3.8. The authors leave
+an in-depth user feedback study to future work.
 
 [issue]: https://github.com/bovine3dom/population-cartogram-projection/issues/17

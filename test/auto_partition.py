@@ -304,6 +304,12 @@ class CapacityPartitionTests(unittest.TestCase):
             self.assertTrue(fixed['borrow_coast'])
             self.assertLessEqual(fixed['after']['fragment_cells'],fixed['before']['fragment_cells'])
             self.assertTrue((root/'repaired/parent-partition.json').exists())
+            with contextlib.redirect_stdout(io.StringIO()):
+                centred=run(inputs,layout,root/'centred-flow',sigma=1,iterations=20,power=True,by_landmass=True,flow_geometry=geometry,sites=sites,flow_centres=True)
+            self.assertTrue(centred['flow_centres'])
+            self.assertIsNone(centred['guide_alignment'])
+            with self.assertRaisesRegex(ValueError,'Flow centres require'):
+                run(inputs,layout,root/'bad-centres',flow_centres=True)
             with self.assertRaisesRegex(ValueError,'either'):run(inputs,layout,root/'bad-flow',flow_geometry=geometry,guide_layout=layout)
             geometry.write_text(json.dumps(dict(type='FeatureCollection',features=features[:-1])))
             with self.assertRaisesRegex(ValueError,'projected sites'):run(inputs,layout,root/'missing-sites',flow_geometry=geometry,power=True)
