@@ -40,7 +40,23 @@ updates. All other plans have unchanged hashes.
 
 The effect on global border RMS is very small: 674.3172 km to 674.3152 km.
 This recovers the failed solve; it is not a major border-quality improvement.
-India is now running with the same bounded recovery method.
+India also passed with the same bounded recovery method. The complete
+checkpoint contains all 182 updates. Final sparse extraction and balancing
+passed. Border RMS changed from 716.3550 km to 674.4078 km, a 5.9% reduction.
+The export has 1,471,064 mapping rows. The maximum relative target error is
+0.000099998. No population crosses an island group.
+
+The separate H3-MON dataset is `planet-auto-55000-h3-5-islands-border`.
+The earlier dataset is unchanged. Headless browser checks found no page errors
+or failed requests. Reviewed the world, Europe, Japan, and Indonesia images.
+Density and city labels render. Japan remains east of Korea. Europe's missing
+Baltic and Ireland's southern position remain visible. This fit changes the
+population mapping, not the tile layout. These images do not prove that all
+local map folds are absent.
+
+The screenshots and browser report are in
+`results/compact-landmass/fixed-coasts-55000-border-density/`. Full numerical
+checks are in `output/auto-cartogram/world-55000-h3-5-border/border-audit.json`.
 
 The numerical context is consistent with the limitations described in
 [Schmitzer's scaling paper](https://arxiv.org/abs/1610.06519). Its abstract
