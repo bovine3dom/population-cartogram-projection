@@ -478,3 +478,24 @@ published factor-3 files pass this check with their actual metadata, all
 Three map-camera changes, including the antimeridian and return view, preserve
 source coverage and produce no test errors. This does not establish phone
 performance. H3-MON code and its service remain unchanged.
+
+## 03:02 UTC: factor 5 complete and checked before packing
+
+The factor-5 planet completes all 206 countries. A new assembled root uses
+the separately checked Australia and US parts. Input hashes and metadata
+match the same native coarse fit. Both repaired countries have zero fallback.
+The US warm retry takes 738 seconds, versus 3,154 seconds for the earlier
+cold attempt; the cell budgets differ, so this is not a paired benchmark.
+
+The assembled fit has 12,725,686 rows, 1,373,275 physical targets, and four
+small numerical fallbacks. Its 99.5% ratio is 5.197; the low-population ratio
+is 2.588. Its population-capacity lower bound is 1.522. Factor 5 therefore
+needs substantially more contributions than factors 1 and 2; do not describe
+it as equally sharp by row count. The lossless files total 244,237,736 bytes.
+All source, mass, label, dictionary, and browser checks pass. The browser
+retains 1.561 GB of backing storage plus 348 MB of JavaScript heap.
+
+The approximate factor-5 packing is still running. It must pass a separate
+actual-binary comparison before publication. No incomplete packed result
+will be installed. Published factors 1, 2, and 3 pass their hash manifests,
+metadata path checks, and three browser camera changes.
