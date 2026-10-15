@@ -365,3 +365,16 @@ including compilation, with 10,867 rows instead of a broad uniform split.
 Physical-unit checks also accept the sampled US cell that failed a scaled
 residual check. All 19 subdivision tests pass. Time-limited solutions must
 pass the same mass, position, and density checks and are marked nonoptimal.
+
+## 00:56 UTC: independent publication checks
+
+Started new factor-2 and factor-3 roots that retry countries with uniform
+fallbacks. All other country checkpoints are copied without changes. The old
+roots remain intact. Factor 5 still runs its original US solve; a monitor will
+pause it only after its atomic country checkpoint is complete.
+
+Added a native publication path with a hash chain from fitted parts through
+geometry, binary audits, and all-column stream comparisons. Three publisher
+tests pass, including modified-file rejection and refusal to overwrite. Four
+navigation-anchor tests pass. Approximate packing requires a separate actual
+binary comparison before publication. No H3-6 folder has been published yet.
