@@ -28,6 +28,27 @@ But Java is still too far west. Do not treat this as a complete solution to isla
 <p><a href="islands/new-york-before.png">New York before</a> · <a href="islands/new-york.png">New York after</a> ·
 <a href="islands/indonesia.png">Indonesia</a> · <a href="islands/japan-korea.png">Japan and Korea</a> ·
 <a href="islands/geography.json">Geography audit</a> · <a href="islands/coasts.json">Coast audit</a></p>
+<h2 id="local-lakes">Local lake trial: 45 lakes, unchanged land budgets</h2>
+<p>This separate trial starts from the repaired mainland layout above. It adds 220 water cells for
+45 of the 48 selected lakes. All 55,000 population tiles remain. Each component keeps its exact budget.
+Water cells are empty land cells, not blue paint over population tiles.</p>
+<p>Victoria, Malawi, the five Great Lakes, Baikal, and Titicaca are present.
+Tanganyika, Khanka, and the South Aral Sea still fail the placement checks. Failed trials leave no partial lake.</p>
+<img loading="lazy" src="local-lakes/africa.png" alt="Local lake trial in Africa, with Victoria and Malawi in blue; Tanganyika is still absent">
+<p><a href="local-lakes/africa-before.png">Africa before</a> · <a href="local-lakes/review.png">World</a> ·
+<a href="local-lakes/europe.png">Europe</a> · <a href="local-lakes/north-america.png">North America</a></p>
+<p>The independent audit finds no split source landmass. The Baltic gap stays open. Existing border
+errors remain: 63 missing and 34 false contacts. The region-hole count includes the new real lakes;
+it is not a count of new phantom holes. All newly empty land cells belong to named lakes.</p>
+<p><strong>This is not a population export or a final layout.</strong> Lake positions need further checks.
+The method checks shore membership, but not the order of countries around each lake. Ontario is west
+of Huron in this trial; that order is wrong. Lakes need joint position constraints, not separate targets.
+Lake-island population components remain unresolved. This trial does not
+include the separate island position changes above.</p>
+<p><a href="local-lakes/lake-placement.json.gz">Settings, lake results, and input hashes</a> ·
+<a href="local-lakes/metrics.json">Tile metrics</a> · <a href="local-lakes/geography.json">Geography audit</a> ·
+<a href="local-lakes/coasts.json">Coast audit</a> · <a href="local-lakes/cells.csv.gz">Land cells</a> ·
+<a href="local-lakes/lake-cells.csv.gz">Water cells</a></p>
 <h2>Inland lakes: the input needs an explicit water layer</h2>
 <p>The administrative country polygons cover the full area of Victoria, Tanganyika, Malawi, Superior,
 Baikal, and Titicaca. These polygons describe territory, not only dry land. Preserving their existing holes
