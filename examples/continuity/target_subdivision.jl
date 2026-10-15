@@ -5,7 +5,7 @@ const H=HiGHS
 
 function split_cell(points,mass,delta;limit=20.)
     n=length(mass);dimensions=size(points,1);cells=size(delta,2)
-    size(points,2)==n&&size(delta,1)==dimensions||error("moment dimensions differ")
+    1<=dimensions<=4&&size(points,2)==n&&size(delta,1)==dimensions||error("moment dimensions differ")
     all(isfinite,points)&&all(isfinite,delta)&&all(x->isfinite(x)&&x>0,mass)||error("invalid cell input")
     maximum(abs.(sum(delta;dims=2)))<=1e-10*max(1.,maximum(abs,delta))||error("offsets must sum to zero")
     n*cells<=2_000_000&&limit>0||error("cell solve budget exceeded")
@@ -37,20 +37,43 @@ function split_cell(points,mass,delta;limit=20.)
         check(H.Highs_setIntOptionValue(handle,"threads",1))
         check(H.Highs_setDoubleOptionValue(handle,"time_limit",limit))
         check(H.Highs_setDoubleOptionValue(handle,"primal_feasibility_tolerance",1e-9))
+        check(H.Highs_setDoubleOptionValue(handle,"small_matrix_value",1e-12))
+        warm=n>=128;started=time()
         check(H.Highs_passLp(handle,nc,nr,nnz(matrix),H.kHighsMatrixFormatColwise,H.kHighsObjSenseMinimize,0.,
-            cost,zeros(nc),vcat(fill(Inf,nc-1),1.),rhs,rhs,Int32.(matrix.colptr.-1),Int32.(matrix.rowval.-1),matrix.nzval))
+            warm ? zeros(nc) : cost,zeros(nc),vcat(fill(Inf,nc-1),warm ? 0. : 1.),rhs,rhs,
+            Int32.(matrix.colptr.-1),Int32.(matrix.rowval.-1),matrix.nzval))
+        if warm
+            # A feasible uniform plan gives a sparse basis before optimization.
+            # The zero-iteration run initializes the HiGHS worker scheduler.
+            check(H.Highs_setStringOptionValue(handle,"presolve","off"))
+            check(H.Highs_setIntOptionValue(handle,"simplex_iteration_limit",0))
+            check(H.Highs_run(handle))
+            check(H.Highs_setIntOptionValue(handle,"simplex_iteration_limit",typemax(Cint)))
+            seed=vcat(fill(1/cells,n*cells),0.)
+            check(H.Highs_crossover(handle,nc,nr,seed,zeros(nc),zeros(nr)))
+            H.Highs_getModelStatus(handle)==H.kHighsModelStatusOptimal||error("cell warm start residual")
+            check(H.Highs_changeColCost(handle,nc-1,-1.))
+            check(H.Highs_changeColBounds(handle,nc-1,0.,1.))
+            check(H.Highs_setIntOptionValue(handle,"simplex_strategy",4))
+            check(H.Highs_setDoubleOptionValue(handle,"time_limit",max(.001,limit-(time()-started))))
+        end
         check(H.Highs_run(handle));status=H.Highs_getModelStatus(handle)
-        status==H.kHighsModelStatusOptimal||error("cell subdivision status $status")
+        status in (H.kHighsModelStatusOptimal,H.kHighsModelStatusTimeLimit)||error("cell subdivision status $status")
         solution=zeros(nc);check(H.Highs_getSolution(handle,solution,C_NULL,C_NULL,C_NULL))
-        minimum(solution)>=-1e-8&&maximum(abs.(matrix*solution-rhs))<1e-7||error("cell LP residual")
+        minimum(solution)>=-1e-8&&solution[end]<=1+1e-8||error("cell LP residual")
         weights=reshape(max.(solution[1:end-1],0.),n,cells).*mass
         for i in 1:n
             total=sum(view(weights,i,:))
-            if total>0;weights[i,:].*=mass[i]/total;else;weights[i,:].=mass[i]/cells;end
+            total>0||error("cell source residual")
+            weights[i,:].*=mass[i]/total
         end
-        maximum(abs.(sum(weights;dims=1).*cells.-1))<1e-6||error("cell target residual")
-        maximum(abs.(z*weights.*cells.-solution[end].*dz))<1e-7||error("cell moment residual")
-        return (;weights,amplitude=clamp(solution[end],0.,1.))
+        column_mass=sum(weights;dims=1)
+        maximum(abs.(column_mass.*cells.-1))<1e-6||error("cell target residual")
+        amplitude=clamp(solution[end],0.,1.);expected=centre.+amplitude.*delta
+        actual=points*weights./column_mass;spatial=1:min(3,dimensions)
+        maximum(sqrt.(sum(abs2,actual[spatial,:].-expected[spatial,:];dims=1)))<=1e-7||error("cell geographic residual")
+        dimensions<4||all(>(0),expected[4,:])&&maximum(abs.(actual[4,:]./expected[4,:].-1))<=1e-6||error("cell density residual")
+        return (;weights,amplitude,optimal=status==H.kHighsModelStatusOptimal,status=Int(status))
     finally
         H.Highs_destroy(handle)
     end
@@ -84,9 +107,9 @@ function subdivide(part,factor;density=true,limit=20.,deadline=Inf)
             reason=sprint(showerror,err)
             # The fallback changes no coarse mass or moment, but is not sharp.
             (startswith(reason,"cell subdivision status")||startswith(reason,"cell ")&&endswith(reason,"residual"))||rethrow()
-            result=(;weights=repeat(mass./sum(mass),1,factor^2)./factor^2,amplitude=0.)
+            result=(;weights=repeat(mass./sum(mass),1,factor^2)./factor^2,amplitude=0.,optimal=false,status=-1)
         end
-        push!(records,(;target=j,seconds=elapsed,amplitude=result.amplitude,reason))
+        push!(records,(;target=j,seconds=elapsed,amplitude=result.amplitude,optimal=result.optimal,solver_status=result.status,reason))
         for (k,(dx,dy)) in enumerate(offsets)
             position=(factor*x+dx,factor*y+dy,code)
             all(v->typemin(Int16)<=v<=typemax(Int16),position[1:2])||error("target coordinate overflow")

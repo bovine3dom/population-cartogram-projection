@@ -10,8 +10,8 @@ It is not a new global border-optimization pass.
 Each old source-to-target flow is fixed in total. The fine target cells have
 equal mass within their old target. The solver constrains four target means:
 raw geographic XYZ and source population density. A local linear guide gives
-the desired changes. The solver finds the largest feasible guide amplitude
-from zero to one for each old target. All offsets sum to zero, so the old
+the desired changes. The solver attempts to find the largest feasible guide
+amplitude from zero to one for each old target. All offsets sum to zero, so the old
 coarse means remain fixed.
 
 The LP has no entropy term. A basic solution is sparse, but there is no fixed
@@ -20,12 +20,21 @@ more contributions. The LP does not constrain other query fields. Do not claim
 that all fine-scale queries equal an independent population extraction.
 
 Each source uses conditional variables. This prevents small source populations
-from disappearing at an absolute LP tolerance. The checks then use the actual
-masses and moments. Source relative error must be at most `1e-10`. Fine target
+from disappearing at an absolute LP tolerance. For at least 128 sources, a
+feasible uniform plan first supplies a sparse basis through crossover. Primal
+simplex then improves the guide amplitude. Small cells use the direct solve.
+The checks use the actual masses and physical moments, not a tolerance on
+scaled coordinates with very small variance. Source relative error must be at most `1e-10`. Fine target
 relative error, against the old target's divided mass, must be at most `1e-6`.
 The native exporter also checks the final country masses and physical weights.
 
-A cell solve has a time limit. If its solve status or numerical check fails,
+A cell solve has a time limit. A time-limited candidate is kept only if all
+mass and physical-moment checks pass. It is marked nonoptimal in `cells.csv`.
+Geographic mean error must be at most `1e-7` in unit-sphere XYZ norm, and density
+mean relative error must be at most `1e-6`. The process also needs an external
+hard timeout because the crossover call is native code.
+
+If the solve status or numerical check fails,
 the fallback distributes each old contribution equally among its fine cells.
 This preserves coarse mass and means, but can be broad. `cells.csv` records
 its reason and zero amplitude. Do not hide these fallbacks in quality reports.

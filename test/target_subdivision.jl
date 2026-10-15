@@ -5,6 +5,14 @@ const TS=TargetSubdivision
     points=reshape([-1.,0.,1.],1,3);mass=fill(1/3,3);delta=reshape([-.5,.5],1,2)
     split=TS.split_cell(points,mass,delta)
     @test split.amplitude≈1
+    @test split.optimal
+    theta=2pi.*(0:159)./160
+    circle=vcat(transpose(cos.(theta)),transpose(sin.(theta)))
+    offsets=[-.1 -.1 .1 .1;-.1 .1 -.1 .1]
+    warm=TS.split_cell(circle,fill(1/160,160),offsets;limit=5.)
+    @test warm.optimal&&warm.amplitude≈1
+    @test vec(sum(warm.weights;dims=2))≈fill(1/160,160)
+    @test circle*warm.weights.*4≈offsets atol=1e-7
     @test vec(sum(split.weights;dims=2))≈mass
     @test vec(sum(split.weights;dims=1))≈[.5,.5]
     @test points*split.weights.*2≈delta atol=1e-7
