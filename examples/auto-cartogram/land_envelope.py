@@ -7,7 +7,7 @@ import math
 from pathlib import Path
 
 import numpy as np
-from scipy.ndimage import binary_dilation, gaussian_filter, label
+from scipy.ndimage import binary_closing, binary_dilation, gaussian_filter, label
 from scipy.signal import fftconvolve
 
 from review_layout import load, read_csv
@@ -37,7 +37,7 @@ def dock_parts(target,blocked):
     return result,moves
 
 
-def build(tiles,fixed,origin,shape,sigma,count=None,dock=False):
+def build(tiles,fixed,origin,shape,sigma,count=None,dock=False,water_radius=0,water_margin=0):
     if not math.isfinite(sigma) or sigma<=0:raise ValueError('Use a positive envelope scale')
     land=np.zeros(shape,dtype=bool);blocked=np.zeros(shape,dtype=bool)
     for c,points in tiles.items():
@@ -51,6 +51,12 @@ def build(tiles,fixed,origin,shape,sigma,count=None,dock=False):
     if not sampled:raise ValueError('No movable land cells')
     if count is None:count=sampled
     if not isinstance(count,(int,np.integer)) or count<1 or count>land.size:raise ValueError('Invalid target area')
+    if not isinstance(water_radius,int) or not isinstance(water_margin,int) or min(water_radius,water_margin)<0 or (water_margin and not water_radius):raise ValueError('Invalid water protection settings')
+    protected=np.zeros(shape,dtype=bool)
+    if water_radius:
+        protected=binary_closing(land,iterations=water_radius)&~land
+        if water_margin:protected=binary_dilation(protected,iterations=water_margin)
+        blocked|=protected
     score=gaussian_filter(land.astype(float),sigma=sigma,mode='constant');score[blocked]=-np.inf
     order=np.lexsort((np.arange(score.size),-score.ravel()))[:count]
     if not np.isfinite(score.ravel()[order]).all():raise ValueError('Insufficient unblocked target cells')
@@ -58,7 +64,7 @@ def build(tiles,fixed,origin,shape,sigma,count=None,dock=False):
     original_parts=int(label(target)[1]);moves=[]
     if dock:target,moves=dock_parts(target,blocked)
     return target,dict(dock_parts=dock,original_connected_parts=original_parts,part_translations=moves,target_cells=count,sampled_land_cells=sampled,initial_empty_target_cells=int((target&~land).sum()),
-        target_connected_parts=int(label(target)[1]),sigma_tiles=sigma,
+        target_connected_parts=int(label(target)[1]),sigma_tiles=sigma,water_radius=water_radius,water_margin=water_margin,protected_water_cells=int(protected.sum()),
         limit='A fixed experimental occupancy target, not a source coastline. Gaussian smoothing and an area quota move the outer boundary as well as filling gaps. The target can have several parts. Fixed islands and their side-neighbour cells are excluded. Countries keep separate budgets in the deformation solver.')
 
 

@@ -119,3 +119,26 @@ Next: test local coast correspondence and limits on changes in island-to-island
 distance. For mainland seas, the current fixed footprint cannot restore lost
 water. The footprint builder must retain source water passages before it assigns
 country cells. Do not cut arbitrary one-cell paths through the final layout.
+
+## 2026-10-15: locate water loss in the pipeline
+
+Checked the raw continuous-flow raster at the baseline scale and stretch.
+Estonia, Latvia, and Lithuania have zero exterior-water edges, but respectively
+seven, eight, and two edges beside enclosed water. The Baltic still has water
+in this raster, but the strait is not resolved. The later smoothing step removes
+that water. Paraguay has zero water edges in the raw raster. Its false coast
+appears later.
+
+Added optional water protection to the footprint builder. A morphological
+closing identifies concave water in the raw flow raster. Exclude that water
+from the land target. An optional margin widens the excluded area. Keep the
+original area quota and place the displaced land elsewhere. The default remains
+off. Protection requires a flow guide and cannot be combined with docking.
+This is an experiment, not a source-water connectivity proof. Later repair and
+island stages can still affect water and must be checked.
+
+`run_water_trials.sh` runs two 55,000-tile candidates with closing radius eight
+and margins zero and one. Each has a two-hour limit and must stop before the
+supplied UTC deadline. It records exit codes, renders regional images, and does
+not publish a map. The partition test suite passes 25 tests, including a new
+bay-protection fixture. Numerical and visual results are still pending.
