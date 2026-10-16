@@ -52,6 +52,16 @@ class IndependentAssemblyTest(unittest.TestCase):
         self.assertEqual(state.required, {('b','c')})
         self.assertAlmostEqual(state.terms(state.start)['contact'], 9.)
 
+    def test_containment_has_an_escape_penalty(self):
+        shapes = {'a': box(-10,-10,10,10), 'b': box(-1,-1,1,1)}
+        state = Assembly(shapes, self.centres, set())
+        near = state.start.reshape(-1,4).copy()
+        near[1,0] = 8.
+        far = state.terms(state.start)
+        close = state.terms(near.ravel())
+        self.assertAlmostEqual(far['overlap'], close['overlap'])
+        self.assertGreater(far['penetration'], close['penetration'])
+
     def test_cache_does_not_change_pair_values(self):
         state = Assembly(self.shapes, self.centres, {('a','b')})
         expected = state.terms(state.start)
