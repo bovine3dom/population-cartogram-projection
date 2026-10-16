@@ -54,6 +54,20 @@ def merge_small(cells, minimum_area):
     return cells
 
 
+def merge_density(cells, mass, budget, strengths, minimum_target):
+    cells, mass = list(cells), list(mass)
+    while len(cells) > 1:
+        smallest = np.min([targets([g.area for g in cells], mass, budget, s) for s in strengths], axis=0)
+        i = int(np.argmin(smallest))
+        if smallest[i] > minimum_target:
+            break
+        small, value = cells.pop(i), mass.pop(i)
+        j = max(range(len(cells)), key=lambda j: (small.boundary.intersection(cells[j].boundary).length, -small.distance(cells[j])))
+        cells[j] = union_all([small, cells[j]])
+        mass[j] += value
+    return cells, np.asarray(mass)
+
+
 def run(root, output, cell_size=200., strengths=(0., .5, .9), grid=256, timeout=180):
     if (output.exists() or not np.isfinite(cell_size) or cell_size <= 0 or grid < 16 or timeout < 1
             or not strengths or len(set(strengths)) != len(strengths) or any(not 0 <= s < 1 for s in strengths)):
@@ -71,6 +85,9 @@ def run(root, output, cell_size=200., strengths=(0., .5, .9), grid=256, timeout=
                 samples[row['group_id']].append((float(row['x'])*1000, float(row['y'])*1000, float(row['value'])))
     output.mkdir(parents=True)
     features, data, reassigned, population = [], [], [], 0.
+    # cartogram-cpp constants.hpp raises targets below 0.0001 of total area.
+    # Use one shared partition that clears this floor in every density variant.
+    minimum_target = sum(int(groups[c]['tiles']) for c in native)*.0001*1.01
     for c, g in sorted(native.items()):
         budget = int(groups[c]['tiles'])
         cells = merge_small(patches(g, cell_size), g.area/budget) if budget >= 16 else [g]
@@ -86,6 +103,7 @@ def run(root, output, cell_size=200., strengths=(0., .5, .9), grid=256, timeout=
             raise AssertionError('Population lost during patch assignment')
         reassigned.append(dict(component=c, centres=int((distances > 1e-8).sum()),
                                population=float(p[indices[0][distances > 1e-8], 2].sum())))
+        cells, masses = merge_density(cells, masses, budget, strengths, minimum_target)
         population += float(masses.sum())
         for i, (cell, mass) in enumerate(zip(cells, masses)):
             label = c+'@'+str(i)
@@ -96,9 +114,10 @@ def run(root, output, cell_size=200., strengths=(0., .5, .9), grid=256, timeout=
     report = dict(cell_size=cell_size, nominal_km=cell_size*6.371, grid=grid,
                   components=len(native), patches=len(features), population=population,
                   minimum_split_component_tiles=16, minimum_uniform_patch_tiles=1,
-                  maximum_solver_grid=2048,
+                  maximum_solver_grid=2048, minimum_patch_target=minimum_target,
+                  small_target_rule='Merge patches until every tested blend exceeds the solver floor, unless only one patch remains.',
                   reassigned_outside_centres=reassigned, runs=[],
-                  inputs={str(p): digest(p) for p in [geometry_path, source_path, inputs/'groups.csv', binary]},
+                  inputs={str(p): digest(p) for p in [geometry_path, source_path, inputs/'groups.csv', binary, root/'vendor/cartogram-cpp/include/constants.hpp']},
                   script_sha256=digest(Path(__file__)),
                   limits=['Continuous mainland experiment only. No tiles, islands, lake insertion, or population exports are changed.',
                           'The control has the same artificial subdivision as density runs, but uniform density within each original component.',

@@ -1,0 +1,290 @@
+[
+  {
+    "cell_size": 200,
+    "patches": 369,
+    "strength": 0.0,
+    "solver_success": true,
+    "seconds": 10.030685983132571,
+    "complete": true,
+    "error": null,
+    "mainlands": {
+      "RUS": {
+        "component": "RUS:b85c5bca1852870f",
+        "country": "RUS",
+        "shape_error": 0.8799352169138551,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0008919527263746563
+      },
+      "CHN": {
+        "component": "CHN:72cd37e37e634df7",
+        "country": "CHN",
+        "shape_error": 0.44413731937664014,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0003422819455509707
+      },
+      "IND": {
+        "component": "IND:3f0bb94d859b2064",
+        "country": "IND",
+        "shape_error": 0.37974226769910546,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0002807578774863817
+      },
+      "KAZ": {
+        "component": "KAZ:5d6f63a9b9f3c9f9",
+        "country": "KAZ",
+        "shape_error": 0.6982779525176988,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.00026197756530754734
+      }
+    },
+    "overlap_share": 8.251972034902702e-07,
+    "invalid_components": 0,
+    "split_components": 0,
+    "maximum_component_area_error": 3.9881680479808264,
+    "maximum_patch_area_error": 3.9881680479808246
+  },
+  {
+    "cell_size": 200,
+    "patches": 369,
+    "strength": 0.5,
+    "solver_success": true,
+    "seconds": 9.881384444888681,
+    "complete": true,
+    "error": null,
+    "mainlands": {
+      "RUS": {
+        "component": "RUS:b85c5bca1852870f",
+        "country": "RUS",
+        "shape_error": 0.8712919168155614,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0006621227138775554
+      },
+      "CHN": {
+        "component": "CHN:72cd37e37e634df7",
+        "country": "CHN",
+        "shape_error": 0.6022294944127227,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0003137770529643147
+      },
+      "IND": {
+        "component": "IND:3f0bb94d859b2064",
+        "country": "IND",
+        "shape_error": 0.4044471575023846,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0002907710512679573
+      },
+      "KAZ": {
+        "component": "KAZ:5d6f63a9b9f3c9f9",
+        "country": "KAZ",
+        "shape_error": 0.7488418465978338,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0025337172639748884
+      }
+    },
+    "overlap_share": 6.418093445223721e-09,
+    "invalid_components": 0,
+    "split_components": 0,
+    "maximum_component_area_error": 4.003364610732029,
+    "maximum_patch_area_error": 4.003364610732027
+  },
+  {
+    "cell_size": 200,
+    "patches": 369,
+    "strength": 0.9,
+    "solver_success": true,
+    "seconds": 13.26385007891804,
+    "complete": true,
+    "error": null,
+    "mainlands": {
+      "RUS": {
+        "component": "RUS:b85c5bca1852870f",
+        "country": "RUS",
+        "shape_error": 0.7279532213084664,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.00016725771309789028
+      },
+      "CHN": {
+        "component": "CHN:72cd37e37e634df7",
+        "country": "CHN",
+        "shape_error": 0.670331977799162,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.000272857924075498
+      },
+      "IND": {
+        "component": "IND:3f0bb94d859b2064",
+        "country": "IND",
+        "shape_error": 0.44397599890031114,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0003109816597314241
+      },
+      "KAZ": {
+        "component": "KAZ:5d6f63a9b9f3c9f9",
+        "country": "KAZ",
+        "shape_error": 0.787353281295134,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.000374823020907189
+      }
+    },
+    "overlap_share": 9.689133421443017e-09,
+    "invalid_components": 0,
+    "split_components": 0,
+    "maximum_component_area_error": 3.9882876929484574,
+    "maximum_patch_area_error": 3.9882876929484574
+  },
+  {
+    "cell_size": 100,
+    "patches": 603,
+    "strength": 0.0,
+    "solver_success": true,
+    "seconds": 11.009925541002303,
+    "complete": true,
+    "error": null,
+    "mainlands": {
+      "RUS": {
+        "component": "RUS:b85c5bca1852870f",
+        "country": "RUS",
+        "shape_error": 0.8959350774432511,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0004376433320133488
+      },
+      "CHN": {
+        "component": "CHN:72cd37e37e634df7",
+        "country": "CHN",
+        "shape_error": 0.43561665777571046,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0003334020085525857
+      },
+      "IND": {
+        "component": "IND:3f0bb94d859b2064",
+        "country": "IND",
+        "shape_error": 0.3822591442176686,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0002942521884803373
+      },
+      "KAZ": {
+        "component": "KAZ:5d6f63a9b9f3c9f9",
+        "country": "KAZ",
+        "shape_error": 0.669188057736362,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0004332418011124828
+      }
+    },
+    "overlap_share": 3.347698121645084e-07,
+    "invalid_components": 0,
+    "split_components": 0,
+    "maximum_component_area_error": 3.988986347289348,
+    "maximum_patch_area_error": 3.988986347289348
+  },
+  {
+    "cell_size": 100,
+    "patches": 603,
+    "strength": 0.5,
+    "solver_success": true,
+    "seconds": 13.027317534666508,
+    "complete": true,
+    "error": null,
+    "mainlands": {
+      "RUS": {
+        "component": "RUS:b85c5bca1852870f",
+        "country": "RUS",
+        "shape_error": 0.8493518139395816,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.00041803955017649663
+      },
+      "CHN": {
+        "component": "CHN:72cd37e37e634df7",
+        "country": "CHN",
+        "shape_error": 0.6036194670802336,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0003188336675928882
+      },
+      "IND": {
+        "component": "IND:3f0bb94d859b2064",
+        "country": "IND",
+        "shape_error": 0.4099783937306972,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0002967383825515091
+      },
+      "KAZ": {
+        "component": "KAZ:5d6f63a9b9f3c9f9",
+        "country": "KAZ",
+        "shape_error": 0.732189832930625,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.00013664403394242353
+      }
+    },
+    "overlap_share": 4.2982960081595564e-07,
+    "invalid_components": 0,
+    "split_components": 0,
+    "maximum_component_area_error": 3.988035577179515,
+    "maximum_patch_area_error": 3.988035577179515
+  },
+  {
+    "cell_size": 100,
+    "patches": 603,
+    "strength": 0.9,
+    "solver_success": true,
+    "seconds": 15.841883069835603,
+    "complete": true,
+    "error": null,
+    "mainlands": {
+      "RUS": {
+        "component": "RUS:b85c5bca1852870f",
+        "country": "RUS",
+        "shape_error": 0.6123295639053172,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.00023105903944664608
+      },
+      "CHN": {
+        "component": "CHN:72cd37e37e634df7",
+        "country": "CHN",
+        "shape_error": 0.6914758171810098,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.00029410348976710576
+      },
+      "IND": {
+        "component": "IND:3f0bb94d859b2064",
+        "country": "IND",
+        "shape_error": 0.4627610814791595,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.000302613757471093
+      },
+      "KAZ": {
+        "component": "KAZ:5d6f63a9b9f3c9f9",
+        "country": "KAZ",
+        "shape_error": 0.8224709720761199,
+        "parts": 1,
+        "valid": true,
+        "relative_area_error": -0.0004128716963982537
+      }
+    },
+    "overlap_share": 6.554710885293254e-09,
+    "invalid_components": 0,
+    "split_components": 0,
+    "maximum_component_area_error": 3.9885075964263583,
+    "maximum_patch_area_error": 3.9885075964263583
+  }
+]

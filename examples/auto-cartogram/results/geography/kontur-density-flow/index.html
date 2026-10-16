@@ -1,0 +1,107 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Coarse Kontur density inside country shapes</title>
+<style>body{font:18px/1.5 system-ui;max-width:1300px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}figure{margin:0}td,th{border:1px solid #bbb;padding:.4rem}table{border-collapse:collapse}pre{overflow:auto}a{color:#245b92}@media(max-width:800px){.grid{grid-template-columns:1fr}}</style>
+<h1>Coarse Kontur density inside country shapes</h1>
+<p><strong>Six continuous-fit experiments completed. These are not replacement tile maps.</strong>
+The existing <a href="../islands-lakes-integrated/index.html">island-and-lake layout</a>
+and H3-MON population exports are unchanged.</p>
+<h2>What changed</h2>
+<p>The old flow input specifies a population total per component, but no internal
+density. These tests divide each mainland component into coarse patches and give
+each patch its own target area from Kontur H3-5 population. The patches remain
+part of the same continuous fit. We then remove the artificial internal borders
+for display.</p>
+<p>Each resolution has three runs on identical patch geometry:</p>
+<ul><li><strong>0%:</strong> uniform density within each component. This is the
+control, not a map with no population weighting. Country totals still determine area.</li>
+<li><strong>50%:</strong> half the internal target follows population share;
+half follows geographic area share.</li>
+<li><strong>90%:</strong> 90% follows population; 10% follows area. The positive
+area share limits collapse of empty patches.</li></ul>
+<p>The supplied patch targets sum to the existing component target. Population
+stays within its assigned component. This test does not pool overseas islands
+with their countries. The fit covers the same 189 components as the earlier
+mainland flow: 7,221,236,218 people. Isolated landmasses, including Australia and
+Japan, are outside this experiment. It is not a complete world tile layout.</p>
+<h2>Finer grid: nominal 637 km, 603 patches after merging</h2>
+<p>Click an image for full resolution. Each panel is scaled to fit.</p>
+<div class="grid">
+<figure><figcaption>Uniform control</figcaption><a href="100/blend-0/eurasia.png"><img src="100/blend-0/eurasia.png" alt="Finer-grid uniform density control"></a><a href="100/blend-0/world.png">Global mainland view</a></figure>
+<figure><figcaption>50% Kontur</figcaption><a href="100/blend-0.5/eurasia.png"><img src="100/blend-0.5/eurasia.png" alt="Finer-grid half population density blend"></a><a href="100/blend-0.5/world.png">Global mainland view</a></figure>
+<figure><figcaption>90% Kontur</figcaption><a href="100/blend-0.9/eurasia.png"><img src="100/blend-0.9/eurasia.png" alt="Finer-grid strong population density blend"></a><a href="100/blend-0.9/world.png">Global mainland view</a></figure>
+</div>
+<h2>Coarser grid: nominal 1,274 km, 369 patches after merging</h2>
+<div class="grid">
+<figure><figcaption>Uniform control</figcaption><a href="200/blend-0/eurasia.png"><img src="200/blend-0/eurasia.png" alt="Coarser-grid uniform density control"></a><a href="200/blend-0/world.png">Global mainland view</a></figure>
+<figure><figcaption>50% Kontur</figcaption><a href="200/blend-0.5/eurasia.png"><img src="200/blend-0.5/eurasia.png" alt="Coarser-grid half population density blend"></a><a href="200/blend-0.5/world.png">Global mainland view</a></figure>
+<figure><figcaption>90% Kontur</figcaption><a href="200/blend-0.9/eurasia.png"><img src="200/blend-0.9/eurasia.png" alt="Coarser-grid strong population density blend"></a><a href="200/blend-0.9/world.png">Global mainland view</a></figure>
+</div>
+<h2>Result</h2>
+<p>The method works: western Russia gains area and sparsely populated eastern
+Russia becomes thinner. The strong finer-grid run improves Russia's outline
+score substantially. But China becomes more vertical, and the Kazakhstan
+compression remains. India also loses outline similarity. All six Eurasia panels
+and the strong finer-grid global view were checked visually.</p>
+<p><strong>Internal population detail is useful, but it does not by itself solve
+the geographic problem.</strong> Continuous adjacency still leaves long thin
+parts where population is sparse. No sparse borders were cut in these tests.</p>
+<table><tr><th>Grid / Kontur share</th><th>Russia</th><th>China</th><th>India</th><th>Kazakhstan</th></tr>
+<tr><td>Coarser / 0%</td><td>0.880</td><td>0.444</td><td>0.380</td><td>0.698</td></tr>
+<tr><td>Coarser / 50%</td><td>0.871</td><td>0.602</td><td>0.404</td><td>0.749</td></tr>
+<tr><td>Coarser / 90%</td><td>0.728</td><td>0.670</td><td>0.444</td><td>0.787</td></tr>
+<tr><td>Finer / 0%</td><td>0.896</td><td>0.436</td><td>0.382</td><td>0.669</td></tr>
+<tr><td>Finer / 50%</td><td>0.849</td><td>0.604</td><td>0.410</td><td>0.732</td></tr>
+<tr><td>Finer / 90%</td><td>0.612</td><td>0.691</td><td>0.463</td><td>0.822</td></tr></table>
+<p>Scores are one minus outline intersection-over-union with the original Equal
+Earth outline, after area scaling and centroid alignment. Lower is better.
+These measure outline similarity, not whether population is represented faithfully.
+The added internal boundaries can change numerical behaviour. Compare each density
+run with its own subdivided control, not only with the old unsplit flow.</p>
+<h2>Checks and limits</h2>
+<ul><li>All six final solver runs returned success. Each took about 10–16 seconds,
+including review output, after input preparation.</li>
+<li>All 189 merged component geometries are valid and connected in each final run.
+Small numerical overlaps remain; the largest total overlap share is below
+0.0001%. Border-contact preservation has not been certified.</li>
+<li>The four main components in the table have output area errors below 0.3%.
+However, the solver still enlarges some tiny unsplit components. The largest
+relative component error is about 400% for a one-tile Western Sahara component.
+These outputs therefore do not satisfy exact tile budgets.</li>
+<li>Grid widths are projected Equal Earth units, not constant ground distances.
+Some patches are merged, so the final resolution is adaptive.</li>
+<li>The density treatment is coarse aggregation plus an area floor, not a
+Gaussian filter. There are no zero-area targets.</li>
+<li>2,748 source centres, containing 21,856,019 people, lie outside their assigned
+component outline. Each uses the nearest patch within that same component.
+This preserves totals but introduces local approximation near coasts.</li>
+<li>No downstream tile allocation, fragment repair, island placement, lake
+insertion, or H3 mapping was run.</li></ul>
+<h2>Implementation findings</h2>
+<p>The installed solver raises very small target areas below 0.0001 of the total.
+Uncorrected subdivision therefore inflated some component areas. The final
+experiments use one shared patch geometry per resolution, merged until every
+blend clears that floor where possible. Entire components below the floor remain
+unsplit. Early trials also exposed a CSV parser restriction: area values must use
+fixed-point notation, not scientific notation.</p>
+<p>The prototype is small because the existing solver already accepts a target
+area for each GeoJSON region. A production version needs more work: exact tile
+budgets, shape limits, border checks, and the existing island-and-lake rules.
+The next useful test is to combine coarse density with shape constraints and
+selective sparse-border release upstream, rather than use these outlines unchanged.</p>
+<h2>Reproduction and records</h2>
+<pre>PYTHONDONTWRITEBYTECODE=1 output/auto-cartogram/geometry-env/bin/python \
+ examples/auto-cartogram/kontur_subregion_flow.py \
+ output/auto-cartogram NEW_OUTPUT --cell-size 100
+# Repeat with --cell-size 200.</pre>
+<p><a href="summary.json">Comparison and geometry checks</a> · <a href="checksums.json">Artifact hashes</a></p>
+<ul><li>Finer: <a href="100/experiment.json.gz">settings, input hashes, and all scores</a>,
+<a href="100/patches.geojson.gz">input patch geometry</a>, <a href="100/patch-data.json.gz">patch population</a>.</li>
+<li>Coarser: <a href="200/experiment.json.gz">settings, input hashes, and all scores</a>,
+<a href="200/patches.geojson.gz">input patch geometry</a>, <a href="200/patch-data.json.gz">patch population</a>.</li></ul>
+<p>Each blend directory also contains compressed <code>areas.csv</code>,
+<code>areas_input_processed.csv</code>, <code>components.geojson</code>, and
+<code>solver.log</code> files. They record both requested areas and solver adjustments.</p>
+<p>Method reference: <a href="https://github.com/mgastner/cartogram-cpp">cartogram-cpp documentation</a>.
+The input format was checked against its current README and the installed CLI help.
+See also the <a href="../kazakhstan-origin/index.html">original pinch-point investigation</a>.</p>

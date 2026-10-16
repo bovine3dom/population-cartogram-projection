@@ -6,7 +6,7 @@ import numpy as np
 from shapely import box, union_all
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
-from kontur_subregion_flow import patches, targets, merge_small
+from kontur_subregion_flow import patches, targets, merge_small, merge_density
 
 
 class KonturFlowTest(unittest.TestCase):
@@ -36,6 +36,14 @@ class KonturFlowTest(unittest.TestCase):
         self.assertEqual(len(merged), 2)
         self.assertTrue(all(g.area >= .5 for g in merged))
         self.assertLess(union_all(cells).symmetric_difference(union_all(merged)).area, 1e-9)
+
+    def test_density_merge_clears_floor_for_all_variants(self):
+        cells = [box(i, 0, i+1, 1) for i in range(4)]
+        merged, mass = merge_density(cells, [100, 0, 100, 0], 40, [0, .9], 2)
+        self.assertEqual(mass.sum(), 200)
+        self.assertLess(union_all(cells).symmetric_difference(union_all(merged)).area, 1e-9)
+        for strength in [0, .9]:
+            self.assertTrue(np.all(targets([g.area for g in merged], mass, 40, strength) > 2))
 
     def test_cell_size_must_be_positive(self):
         with self.assertRaises(ValueError):
