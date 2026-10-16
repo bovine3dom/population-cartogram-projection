@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Equal Earth margin-one: improved islands and empty lakes</title>
+<style>body{font:17px/1.5 system-ui;max-width:1600px;margin:auto;padding:24px;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#165a9e}details{margin:24px 0}</style>
+<h1>Improved islands and empty lakes, together</h1>
+<p>This combines the saved <a href="../margin-1-followup/islands/europe.png">island-placement candidate</a>
+with the existing local lake-insertion stage. It does not rerun the mainland fit or change the projection.
+Equal Earth remains the basis. No sparse-border cuts are included in this saved layout.</p>
+<p><strong>All 208 moved components retain their exact island-candidate positions.</strong>
+The same 45 named lakes retain their water budgets: 220 empty cells, separate from 55,000 land tiles.
+Lake positions and nearby mainland cells can change during insertion. The contact graph is exactly the
+same as in the island candidate: 63 missing and 34 false administrative contacts.</p>
+<p>All 481 component budgets are exact. Every component is connected. No source landmass is split.
+This is the combined development baseline; no new H3-MON population mapping has been published.</p>
+<p><a href="review.png">World</a> · <a href="europe.png">Europe</a> · <a href="new-york.png">New York</a> ·
+<a href="africa.png">Africa and lakes</a> · <a href="japan-korea.png">Japan and Korea</a> ·
+<a href="indonesia.png">Indonesia</a> · <a href="eurasia.png">Eurasia</a></p>
+<a href="review.png"><img src="review.png" alt="Combined Equal Earth layout with improved island positions and empty inland lakes"></a>
+<h2>Ireland's improved position is retained</h2>
+<a href="europe.png"><img loading="lazy" src="europe.png" alt="Ireland north of its old position, with the saved island arrangement intact"></a>
+<p><a href="../margin-1-followup/local-lakes/europe.png">Previous lakes-only view</a> ·
+<a href="../margin-1-followup/islands/europe.png">Saved islands-only view</a></p>
+<h2>Empty inland lakes</h2>
+<a href="africa.png"><img loading="lazy" src="africa.png" alt="African lakes as empty cells in the combined layout"></a>
+<details><summary>New York and nearby islands</summary><img loading="lazy" src="new-york.png" alt="Saved Long Island and Manhattan relationship retained after lake insertion"></details>
+<details><summary>Japan and Korea</summary><img loading="lazy" src="japan-korea.png" alt="Japanese islands remain on the same side of Korea"></details>
+<details><summary>Indonesia: placement still needs work</summary><img loading="lazy" src="indonesia.png" alt="Indonesian islands in the saved island candidate's positions"></details>
+<h2>Checks and reproduction</h2>
+<p><a href="integration.json">Exact island and lake checks</a> · <a href="geography.json">Landmass audit</a> ·
+<a href="metrics.json">Layout metrics</a> · <a href="lake-placement.json.gz">Lake insertion report</a> ·
+<a href="cells.csv.gz">Tiles</a> · <a href="lake-cells.csv.gz">Empty lake cells</a> · <a href="checksums.json">Checksums</a></p>
+<pre>PY=output/auto-cartogram/geometry-env/bin/python
+$PY examples/auto-cartogram/place_lake_regions.py \
+  output/auto-cartogram/world-55000-dissolved-input \
+  output/auto-cartogram/geography-margin1-cohesion \
+  output/auto-cartogram/world-dissolved/polygons.geojson \
+  output/auto-cartogram/geography-lake-guides-final \
+  output/auto-cartogram/geography-source-coasts-55000/source-coasts.csv \
+  output/auto-cartogram/islands-lakes-new \
+  --placement-attempts 128 --path-attempts 256</pre>
+<p>Use a new output directory. <code>check_island_lake_integration.py</code> checks the result against
+the original mainland, saved island candidate, and reference lake budgets.
+The input island cells match the published island archive byte for byte.</p>
+<h2>Next experiment: the Kazakhstan pinch point</h2>
+<p>Use this combined layout, not a new separate-country fit. Test sparse-border releases against a
+contact-preserving control. Judge shape recovery as well as gaps. Use the archived
+<a href="../../compact-landmass/owid/layout.png">OWID layout</a> as the visual gap reference.
+Do not overwrite this baseline with an experiment.</p>
+</html>
