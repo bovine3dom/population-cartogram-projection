@@ -1276,3 +1276,40 @@ mapping. This supports transporting whole clipped patch pieces rather than only
 moving their original vertices. It does not establish that our cut layout will
 improve. Checked the geometry repair API at
 https://shapely.readthedocs.io/en/stable/reference/shapely.make_valid.html.
+
+### 14:38 UTC: wide source cuts and gradual area changes
+
+Tested 100, 250, 500, and 1,000 km source cuts before patch construction.
+The four-border policy rejects the wider cuts because they remove the retained
+Russia–North Korea border. Added a separate research policy for short bypass
+borders: at most 50 km long, with at most 500,000 people in the audited corridor.
+It selects Russia–North Korea. This border fails the original density rule.
+The alternative policy is not approved for production.
+
+The 100, 250, and 500 km alternatives completed both population-flow variants.
+All 7,221,236,218 people remain in their original components. Source land is
+removed, not population. The 500 km cut removes 45% of Kazakhstan's source area
+and 16% of Russia's. This large source change is an explicit diagnostic, not an
+acceptable default. The 1,000 km strict trial also removes other unselected
+borders and fails before flow. The original contact checks remain active.
+
+Visually checked the 100 and 500 km Eurasia panels. Gaps become visible, but
+Russia remains a long strip above China. Kazakhstan becomes thinner. These
+results do not give the requested shape recovery. The solver's area floor still
+inflates tiny components; a successful process exit is not an exact-area fit.
+
+Started a different test: gradually change the original geographic areas and
+contours toward the population targets. The cuts exist before the first step.
+Uncut borders retain all their shared vertices. Both three-country and
+12-country cases are running, with finer and coarser source contours. A stage
+with more than 10% area error stops the sequence. Final reports always measure
+against the final population targets, not the intermediate stage targets.
+
+Also tested source openings with all unrelated country vertices fixed. This
+removes distant coast failures from the opening calculation. The strict overlap
+and triangle checks remain active. A direct boundary transport method replaces
+the triangle-piece union method in a separate experiment. Its small tests pass,
+but the world identity test still fails at Egypt. Bounded precision repair did
+not resolve that failure. No failed transport is used for flow or a tile fit.
+
+All 279 tests pass at this checkpoint. Current best and H3-MON are unchanged.

@@ -9,7 +9,7 @@ from shapely.geometry import Polygon, mapping, shape
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from early_gap_flow import advect_patches, simplify_patches
 from independent_kontur_flow import normalized
-from welded_boundary_fit import WeldedMesh, seed_cut_gap
+from welded_boundary_fit import WeldedMesh, seed_cut_gap, continuation_fit
 
 
 class EarlyGapTest(unittest.TestCase):
@@ -27,6 +27,25 @@ class EarlyGapTest(unittest.TestCase):
         self.assertGreater(g['A'].boundary.intersection(g['B'].boundary).length,1.)
         self.assertTrue(mesh.checks(mesh.initial)['valid'])
         self.assertLess(mesh.checks(mesh.initial)['overlap'],1e-8)
+
+    def test_local_seed_keeps_unrelated_country_fixed(self):
+        mesh = self.mesh()
+        before = mesh.polygons(mesh.initial)['A']
+        seed_cut_gap(mesh,1.,local=True)
+        self.assertTrue(before.equals_exact(mesh.polygons(mesh.initial)['A'],0.))
+        with self.assertRaises(ValueError):
+            seed_cut_gap(self.mesh(),1.,steps=1,local=True)
+
+    def test_continuation_restores_final_area_targets(self):
+        source = {'A':box(0,0,4,4)}
+        mesh = WeldedMesh(source,{'A':normalized(source['A'],15.)},{'A':15.},set())
+        flat,history = continuation_fit(mesh,2,10)
+        self.assertEqual(len(history),2)
+        self.assertEqual(mesh.budgets.tolist(),[15.])
+        self.assertTrue(mesh.checks(flat)['valid'])
+        self.assertLess(mesh.checks(flat)['maximum_area_error'],.001)
+        with self.assertRaises(ValueError):
+            continuation_fit(mesh,0,1)
 
     def test_zero_gap_is_identity_and_invalid_gap_fails(self):
         mesh = self.mesh()
