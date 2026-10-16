@@ -1313,3 +1313,54 @@ but the world identity test still fails at Egypt. Bounded precision repair did
 not resolve that failure. No failed transport is used for flow or a tile fit.
 
 All 279 tests pass at this checkpoint. Current best and H3-MON are unchanged.
+
+### 15:00 UTC: separate flow domains show a visible change
+
+The gradual-area fits stop before they reach the population targets. Coarse
+three-country and 12-country fits reach 28% and 30% of the sequence. Their final
+area errors remain too large. An extra self-contact constraint did not improve
+progress. It remains optional and off by default. The full-world opening solve
+was stopped after repeated tiny steps at the same Egypt coast defect.
+
+Found a larger structural limit. For independent connected-group flow, the cuts
+must split the retained border graph. The four earlier cuts do not do this.
+Russia still has routes to China through North Korea and through the Caucasus.
+A complete separator is impossible under the original density limits.
+
+Added a separate relaxed-policy test. It permits mean corridor density up to
+75 people/km² and segment p90 up to 150, or the earlier short-border alternative.
+A minimum cut then selects Russia's borders with Azerbaijan, China, Georgia,
+Kazakhstan, Mongolia, and North Korea. Azerbaijan and North Korea fail the
+original rule. The new policy is explicit and is not approved for production.
+The sum of corridor populations is 6,761,887. This is a graph cost, not a count
+of unique affected people; corridors can overlap.
+
+The original 143-component connected land group becomes two flow domains:
+46 components in Europe and Russia, and 97 in Asia and Africa. Each domain
+retains its complete internal borders. The saved Kontur patches and target rows
+are unchanged. No source land is removed. Assembly translates whole domains;
+it does not fit each country independently.
+
+At grid 512, all 287 uncut regional contacts remain. The no-cut control has 293.
+Russia's outline error falls from 0.7132 to 0.5839; China's from 0.6053 to 0.5249;
+India's from 0.4368 to 0.4097. Kazakhstan worsens from 0.7242 to 0.7707.
+Grid 256 and 1024 repeats show the same improvement directions. Tiny components
+still have area-floor errors. The six-cut guide has small numeric overlaps,
+which must pass the existing bounded cleanup before any tile fit.
+
+Visually checked the regional two-domain map and the assembled world guide.
+Russia no longer follows the full top edge of China. Europe remains joined
+internally. This is a visible partial release, not a complete solution:
+Kazakhstan and Mongolia remain thin, and Nordic shapes need work.
+
+Started a 55,000-tile preview with the same island and empty-lake stages as the
+current best. All stages receive a separate contact file with only the six cuts
+removed. The original contact file and production exports are unchanged.
+A second diagnostic tests a complete China–India separation as well. It requires
+15 extra cuts under the relaxed rule, so its policy cost is substantially higher.
+Do not treat more empty space alone as an improvement.
+
+Published the failed wide-strip comparison at
+`results/geography/wide-early-cuts/index.html`. It includes the four completed
+flow cases, the rejected cuts, population totals, and area-error warnings.
+All 283 tests pass after adding graph-policy and optional self-contact tests.

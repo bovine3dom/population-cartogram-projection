@@ -47,6 +47,16 @@ class EarlyGapTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             continuation_fit(mesh,0,1)
 
+    def test_optional_self_contact_constraints_keep_current_mesh_feasible(self):
+        source = {'A':box(0,0,4,.2)}
+        args = source,{'A':normalized(source['A'],.8)},{'A':.8},set()
+        normal = WeldedMesh(*args,edge_length=8.)
+        protected = WeldedMesh(*args,edge_length=8.,self_contact=True)
+        _,before = normal.inequalities(normal.initial)
+        _,after = protected.inequalities(protected.initial)
+        self.assertGreater(len(after),len(before))
+        self.assertLessEqual(after.max(),1e-8)
+
     def test_zero_gap_is_identity_and_invalid_gap_fails(self):
         mesh = self.mesh()
         before = mesh.initial.copy()

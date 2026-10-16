@@ -18,6 +18,7 @@ def replay(fixture):
     """Restore only the geometry needed to evaluate collision constraints."""
     mesh = WeldedMesh.__new__(WeldedMesh)
     mesh.contact_clearance = 0.
+    mesh.self_contact = False
     mesh.labels = sorted(fixture['rings'])
     mesh.rings = {c:[np.array(r) for r in rings] for c,rings in fixture['rings'].items()}
     current,step = np.array(fixture['current']),np.array(fixture['step'])
