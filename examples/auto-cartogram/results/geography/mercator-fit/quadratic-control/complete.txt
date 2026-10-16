@@ -1,0 +1,3 @@
+mode=mercator-regional-fit
+counts=exact
+approval=none

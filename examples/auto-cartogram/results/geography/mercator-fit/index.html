@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mercator: fresh-shape regional fit</title>
+<style>body{font:17px/1.5 system-ui;max-width:1600px;margin:auto;padding:24px;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#165a9e}table{border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #ccc}.warning{border-left:5px solid #a54;padding-left:16px}details{margin:24px 0}</style>
+<h1>Mercator: fresh-shape regional fit</h1>
+<p><strong>These shapes start from the original Mercator outlines.</strong> They are not the old distorted
+shapes moved apart. Each component keeps its existing population tile budget.</p>
+<p class="warning">Regional mainland test, not a replacement world map. Named lakes and secondary islands
+are not included. The existing lake-aware world layout and H3-MON export are unchanged.
+Blank gaps are not geographic seas.</p>
+<p><a href="../../../mercator_fit.md">Method, failures, and commands</a> ·
+<a href="../../../geography_work_log.md">Work log</a> ·
+<a href="../projection-shapes/index.html">Mercator and Equal Earth outlines</a> ·
+<a href="summary.json">Independent archive checks</a></p>
+<h2>Population-centred Eurasia fit</h2>
+<p>Russia stays near Europe. China sits farther east. India keeps its peninsula and northeastern extension.
+Mongolia stays north of China's centre. There are no connector paths around Kazakhstan.</p>
+<a href="eurasia/review.png"><img src="eurasia/review.png" alt="Fresh recognizable Russia, China, and India shapes fitted around population centres"></a>
+<p><a href="eurasia/fit.json">Fit report and lost borders</a> ·
+<a href="eurasia/cells.csv.gz">Placed tiles</a> · <a href="eurasia/templates.csv.gz">Fresh templates</a></p>
+<p>This test has 26 components and 25,845 tiles, taken from the 55,000-tile world budget.
+The fit uses Mercator population centres, population-weighted border preferences, collision penalties,
+and broad direction constraints. Final packing changes no component shape or count and adds no false contact.</p>
+<p><strong>Only four of 46 source contacts remain.</strong> Nineteen removed contacts fail the earlier
+sparse-border test. Thus this is a useful shape-preserving reference, not an approved choice of border losses.
+Canada and the Americas are outside this Eurasia test. Secondary islands, including Sri Lanka, are absent.</p>
+<p>For 22 of the 46 border pairs, the nearest tile centres are at most three tile spacings apart.
+This includes the four retained contacts. These short gaps are candidates for limited deformation;
+proximity alone does not count as a retained border.</p>
+<p>The largest final packing move is 1.41 tiles from the continuous solution. No extra spacing expansion is
+needed. There are no measured broad centre-order violations, but that does not prove correct coast relationships.</p>
+<h2>North America diagnostic</h2>
+<p>Canada's mainland keeps Hudson Bay. The United States and Mexico also keep their fresh shapes.
+Neither land border touches. This three-component test has 3,317 tiles. Alaska, the Arctic islands,
+and the Great Lakes are not included.</p>
+<a href="north-america/review.png"><img loading="lazy" src="north-america/review.png" alt="Fresh Canadian, United States, and Mexican mainland shapes"></a>
+<p><a href="north-america/fit.json">Fit report</a> · <a href="north-america/cells.csv.gz">Placed tiles</a></p>
+<h2>Comparison runs</h2>
+<table><tr><th>Test</th><th>Solver converged?</th><th>Final packing expansion</th><th>Contacts retained</th></tr>
+<tr><td>Release scale 8</td><td>Yes</td><td>1.0</td><td>4 / 46</td></tr>
+<tr><td>Release scale 24</td><td>Yes</td><td>1.6</td><td>0 / 46</td></tr>
+<tr><td>Quadratic control</td><td>No</td><td>1.6</td><td>1 / 46</td></tr>
+<tr><td>North America, scale 8</td><td>Yes</td><td>1.0</td><td>0 / 2</td></tr></table>
+<p>The release scale controls how strongly distant border anchors pull together. It is not a maximum gap.
+The quadratic control has no reduction in long-distance force. Neither comparison improves the packed layout.</p>
+<details><summary>Stronger border force: excessive gaps after packing</summary>
+<img loading="lazy" src="stronger-borders/review.png" alt="Rejected wider arrangement after stronger border forces">
+<p>Final packing moves a component by up to 117.75 tiles from the continuous solution. Its packed energy is
+higher than its starting energy. Continuous convergence does not make this a good layout.
+<a href="stronger-borders/fit.json">Report</a></p></details>
+<details><summary>Quadratic control: solver did not converge</summary>
+<img loading="lazy" src="quadratic-control/review.png" alt="Failed quadratic-control iterate, not a converged fit">
+<p>SLSQP reports a positive directional derivative. This is a rendered failed iterate, not a successful
+control. <a href="quadratic-control/fit.json">Report</a></p></details>
+<h2>What changed after visual review?</h2>
+<p>The first fit used geometric centres and put Mongolia south of China. Soft direction penalties did not
+prevent this. Hard direction checks fixed that error but left large gaps. Population-centred placement then
+moved Russia west without a named-country position rule. Population source coordinates were converted from
+Equal Earth to longitude and latitude, then to Mercator; they were not reused as Mercator coordinates.</p>
+<h2>Next step</h2>
+<p>Keep Mercator shape targets. Add bounded deformation to close small gaps along populated borders without
+recreating the Kazakhstan pinch point. Include empty-lake and island constraints before a whole-world fit.
+Do not copy old lake cells into the new coordinate frame.</p>
+<p>All 198 tests pass. Every placed component is an exact translation of its fresh template.
+Saved archives include counts, input hashes, solver status, packing shifts, and lost-border records.</p>
+</html>

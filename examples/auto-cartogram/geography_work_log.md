@@ -622,3 +622,11 @@ costs for losses along populated border segments, not more rigid separation.
 
 All 198 tests pass. Method and commands: `mercator_fit.md`.
 Review gallery: `results/geography/mercator-fit/index.html`.
+
+Independent archive checks confirm exact budgets, connected components,
+unchanged fresh template shapes, and zero false contacts in all four outputs.
+The failed control remains labelled as non-converged. In the scale-8 Eurasia
+fit, 22 border pairs have nearest tile centres within three tile spacings,
+including the four retained contacts. Both North America border pairs also
+pass that distance check. These are possible targets for limited deformation,
+not additional retained borders. Saved tiles and reports include checksums.

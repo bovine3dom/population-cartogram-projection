@@ -1,0 +1,93 @@
+{
+  "projection": "Spherical Mercator; fresh independently scaled outlines",
+  "countries": [
+    "CAN",
+    "USA",
+    "MEX"
+  ],
+  "neighbours": 0,
+  "position_basis": "population centres",
+  "release": 8.0,
+  "border_weight": "clip(log1p(corridor_population / 100000), 0.05, 5)",
+  "tiles": 3317,
+  "components": 3,
+  "required_contacts": 2,
+  "retained_contacts": 0,
+  "lost_non_sparse": 2,
+  "seed_expansion": 1.0,
+  "packing_expansion": 1.0,
+  "initial_energy": 757.0005314659486,
+  "continuous_energy": 93.29273814241289,
+  "packed_energy": 98.55230663636972,
+  "success": true,
+  "message": "Optimization terminated successfully",
+  "iterations": 34,
+  "order_energy": 0.0,
+  "records": [
+    {
+      "component": "CAN:614ec007a6324298",
+      "country": "CAN",
+      "tiles": 203,
+      "outline_iou": 0.8889571508813832,
+      "packing_shift": 0.5137773084536376
+    },
+    {
+      "component": "MEX:aa67baf61acd20f3",
+      "country": "MEX",
+      "tiles": 884,
+      "outline_iou": 0.9309823719721259,
+      "packing_shift": 0.15930088593019096
+    },
+    {
+      "component": "USA:90107a05206832e4",
+      "country": "USA",
+      "tiles": 2230,
+      "outline_iou": 0.9669788550776944,
+      "packing_shift": 0.15942327959527663
+    }
+  ],
+  "borders": [
+    {
+      "a": "CAN:614ec007a6324298",
+      "b": "USA:90107a05206832e4",
+      "countries": "CAN\u2013USA",
+      "nearest_tile_distance": 2.23606797749979,
+      "retained": false,
+      "corridor_population": 6358136.0,
+      "sparse": false
+    },
+    {
+      "a": "MEX:aa67baf61acd20f3",
+      "b": "USA:90107a05206832e4",
+      "countries": "MEX\u2013USA",
+      "nearest_tile_distance": 1.4142135623730951,
+      "retained": false,
+      "corridor_population": 11767046.0,
+      "sparse": false
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "output/auto-cartogram/sparse-border-audit-25-wide/border-population.json": "550eb1329221c7401a2f4699f7785520eb7c05adaa3a749e870bce18acabac58",
+    "output/auto-cartogram/world-55000-h3-5-density/sources.csv": "63e91c75919b75a9397ae0dc8032164b6c2d3ebc91dbe82a2b52d4cddf04b960"
+  },
+  "scripts": {
+    "fit_mercator_shapes.py": "b2406282dedebc2c669502f5915cd2ac4bbb8dbb7682c30db046b6063c7407ac",
+    "review_projection_shapes.py": "bced5375a4b6113286b3250ea2a2abc0a8c5c50a66c50dfe86fc7443b336e973",
+    "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+    "smooth_raster_stress.py": "a02adb8aa54a45f0222659b60cc6f9595850aba08d1a1e9780fd0831a3dc9659",
+    "raster_stress.py": "9da4a14905f50dfc2d9bc2e6c15b395494f454c5e948a87952ca0f56992af29e",
+    "shape_stress.py": "73c56542a1a81a5219b924998d3ea6a57a11f641c66beb349f0b318eb1c50155",
+    "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3",
+    "geographic_order.py": "d7e38c2e568b296146964d3de213ff2cb024a0bd978fb23dfdaaf63fc96a5ca3"
+  },
+  "limits": [
+    "Regional largest-component test only; no world fit or new population mapping.",
+    "Named lakes and secondary islands are not included. Not a replacement for the lake-aware map.",
+    "Fresh shapes remain rigid. Border losses are soft preferences, not permission restricted to sparse borders.",
+    "Final packing can change the continuous solution. Inspect order and packing shifts.",
+    "Blank gaps are not geographic seas. A smaller objective is not proof of better geography."
+  ]
+}
