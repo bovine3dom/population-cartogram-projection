@@ -999,3 +999,16 @@ first stage has exactly the same objective (2683.466266071664) and iteration
 count, but takes 19 seconds instead of 97 seconds. A seventh unit test checks
 cache reuse and changing coordinates. Started paired runs with shape weights
 0.1 and 1. Each pair has identical settings except for the four removed contacts.
+
+Both initial pairs failed feasibility checks. In the 0.1 pair, residual overlaps
+were about 29–32 tile areas and maximum required gaps were about 24–25 tile
+widths. Mongolia remained inside China. Intersection area alone is flat under
+translation when one polygon is wholly inside another. Added an interior-centre
+depth penalty to supply an escape direction, with a unit test for this case.
+This general collision term also applies to cut pairs.
+
+Started corrected paired runs, then a version with translations scaled to typical
+country size for better numerical conditioning. Also started an SLSQP comparison
+with the same corrected objective and initial states. No failed trial is promoted.
+These are solver and contact-model tests, not evidence that sparse cuts cannot
+work with a full boundary deformation model.

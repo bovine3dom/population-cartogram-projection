@@ -59,7 +59,14 @@ class Assembly:
         direction = self.centres[j]-self.centres[i]
         axis = int(np.argmax(np.abs(direction)))
         signed = np.sign(direction[axis])*(right[axis]-left[axis])
-        return gap**2, overlap, max(0., -signed)**2
+        # Intersection area is flat when one country is wholly inside another.
+        # Interior-centre depth supplies an escape direction in that case.
+        penetration = 0.
+        if overlap > 0:
+            for outer, inner in [(ga,gb), (gb,ga)]:
+                if outer.contains(inner.centroid):
+                    penetration += outer.boundary.distance(inner.centroid)**2
+        return gap**2, overlap, max(0., -signed)**2, penetration
 
     def terms(self, flat):
         state = flat.reshape(-1, 4)
@@ -69,18 +76,19 @@ class Assembly:
         shape_cost = sum(r*np.sum((matrix(a,s)-np.eye(2))**2)
                          for r, (_,_,a,s) in zip(self.radii, state))
         anchor = float(np.sum((state[:, :2]-self.centres)**2))
-        contact, overlap, order = 0., 0., 0.
+        contact, overlap, order, penetration = 0., 0., 0., 0.
         for i,j in self.pairs:
-            gap, area, inversion = self.pair(i, j, positions[i], positions[j])
+            gap, area, inversion, depth = self.pair(i, j, positions[i], positions[j])
             contact += gap
             overlap += area
             order += inversion
+            penetration += depth
         return dict(shape=float(shape_cost), anchor=anchor, contact=float(contact),
-                    overlap=float(overlap), order=float(order))
+                    overlap=float(overlap), order=float(order), penetration=float(penetration))
 
     def objective(self, flat, contact_weight, collision_weight, shape_weight):
         t = self.terms(flat)
-        return shape_weight*t['shape']+.002*t['anchor']+contact_weight*t['contact']+collision_weight*t['overlap']+10*t['order']
+        return shape_weight*t['shape']+.002*t['anchor']+contact_weight*t['contact']+collision_weight*(t['overlap']+t['penetration'])+10*t['order']
 
 
 def metrics(state, flat, native, preferred, all_contacts, cuts):
@@ -106,8 +114,9 @@ def metrics(state, flat, native, preferred, all_contacts, cuts):
                         full_border_fit=False)
 
 
-def run(root, output, iterations=250, shape_weight=.1):
-    if output.exists() or iterations < 1 or not math.isfinite(shape_weight) or shape_weight <= 0:
+def run(root, output, iterations=250, shape_weight=.1, optimizer='L-BFGS-B'):
+    if (output.exists() or iterations < 1 or not math.isfinite(shape_weight) or shape_weight <= 0
+            or optimizer not in ['L-BFGS-B', 'SLSQP']):
         raise ValueError('Use a new output and positive settings')
     inputs = root/'world-55000-dissolved-input'
     source = root/'world-55000-mainland-flow/input/geometry.geojson'
@@ -149,7 +158,7 @@ def run(root, output, iterations=250, shape_weight=.1):
     centres = {c:p-origin for c,p in centres.items()}
     output.mkdir(parents=True)
     report = dict(cuts=sorted(cuts), retained_control_contacts=sorted(all_contacts), iterations=iterations,
-                  shape_weight=shape_weight, simplification=simplification, cases=[],
+                  shape_weight=shape_weight, optimizer=optimizer, simplification=simplification, cases=[],
                   inputs={str(p):digest(p) for p in paths}, script_sha256=digest(Path(__file__)),
                   limits=['Regional diagnostic, not a world layout. External neighbours are omitted.',
                           'Per-country area-preserving affine stretch and shear, plus translation. No shared flow field.',
@@ -166,13 +175,20 @@ def run(root, output, iterations=250, shape_weight=.1):
         flat = state.start.copy()
         case = dict(name=name, required=sorted(required), stages=[], initial_parameters=state.start.reshape(-1,4).tolist())
         report['cases'].append(case)
+        # Scale translations to the same order as the deformation variables.
+        translation_scale = math.sqrt(np.median([g.area for g in preferred.values()]))
+        parameter_scale = np.tile([translation_scale, translation_scale, 1., 1.], len(state.labels))
+        case['optimizer_translation_scale'] = translation_scale
         # Identical initial positions, shape weights, and penalty schedule in both cases.
         for contact, collision in [(1.,20.), (10.,200.), (100.,2000.)]:
             start = time.monotonic()
-            result = minimize(state.objective, flat, args=(contact, collision, shape_weight), method='L-BFGS-B',
+            options = (dict(maxiter=iterations, maxfun=iterations*100, maxls=40, ftol=1e-10, gtol=1e-5)
+                       if optimizer == 'L-BFGS-B' else dict(maxiter=iterations, ftol=1e-8, eps=1e-6))
+            result = minimize(lambda p: state.objective(p*parameter_scale, contact, collision, shape_weight),
+                              flat/parameter_scale, method=optimizer,
                               bounds=[b for _ in state.labels for b in [(None,None),(None,None),(-.7,.7),(-.7,.7)]],
-                              options=dict(maxiter=iterations, maxfun=iterations*100, maxls=40, ftol=1e-10, gtol=1e-5))
-            flat = result.x
+                              options=options)
+            flat = result.x*parameter_scale
             case['stages'].append(dict(contact_weight=contact, collision_weight=collision, objective=float(result.fun),
                                        success=bool(result.success), message=str(result.message), iterations=int(result.nit),
                                        seconds=time.monotonic()-start))
@@ -200,4 +216,5 @@ if __name__ == '__main__':
     parser.add_argument('output', type=Path)
     parser.add_argument('--iterations', type=int, default=250)
     parser.add_argument('--shape-weight', type=float, default=.1)
+    parser.add_argument('--optimizer', choices=['L-BFGS-B', 'SLSQP'], default='L-BFGS-B')
     run(**vars(parser.parse_args()))
