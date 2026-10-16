@@ -1591,3 +1591,19 @@ Published `results/geography/coarse90-repairs/paraguay-v1/index.html` with data,
 checks, stage records, and rejected-trial records. No promotion: Argentina's
 shape and coast orientation still need review. All 337 tests pass. No trial
 jobs remain. The current best and H3-MON exports are unchanged.
+
+## Pacific coast correction after user review
+
+Rejected the Paraguay trial: it extends Argentina's false Pacific coast.
+Added source coast-section checks and balanced Chile coastal cover.
+Snapshots 30 and 31 move 72 and 54 Chile tiles respectively. The second
+trial restores Chile–Peru and Chile–Bolivia. Bolivia and Paraguay are inland.
+Counts, connectivity, enclosed water, and shore labels pass. No old true
+contact is lost and no false pair is added. World totals: 65 missing, 34 false.
+
+Checked the enlarged South America image. Chile is still thin, and Paraguay
+is too far west. Country-axis errors rise by one. No production approval.
+All 344 tests pass. Current-best and H3-MON data are unchanged.
+See [the repair report](coarse90-repairs.md#pacific-coast-correction-after-user-review)
+for the stage diagnosis, limits, and next fit. Published
+`results/geography/coarse90-repairs/pacific-v1/index.html`.
