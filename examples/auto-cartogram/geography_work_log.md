@@ -630,3 +630,28 @@ fit, 22 border pairs have nearest tile centres within three tile spacings,
 including the four retained contacts. Both North America border pairs also
 pass that distance check. These are possible targets for limited deformation,
 not additional retained borders. Saved tiles and reports include checksums.
+
+## 2026-10-16: correct the Mercator experiment
+
+The user clarified that the reference is
+`results/geography/margin-1-followup/local-lakes/review.png`. The regional
+shape-first solver was the wrong method. Return to the existing margin-one
+fit, mainland repair, and lake insertion. Change only the starting mainland
+flow projection. Do not add new border-release rules.
+
+Added an optional Mercator projection to `prepare_flow.py`, with Equal Earth
+still the default. Reused the tested Mercator formula instead of duplicating
+it. Added `run_margin1_projection.py`, which reads the exact reference settings
+and validates their input hashes. It leaves all downstream fitting, island,
+border, and lake rules unchanged. No production file changes.
+
+Started matched Equal Earth and Mercator runs. Both continuous flow guides
+passed the pipeline checks and reached partitioning. The Equal Earth starting
+geometry matches the archived input byte for byte. Both projections have
+identical tile-area tables. The fresh Equal Earth solved geometry differs from
+the archive; compare both new runs with the preferred reference rather than
+attributing all changes to projection. All 201 tests pass.
+
+Method: `margin1_projection.md`. Jobs and logs:
+`output/auto-cartogram/margin1-projection-jobs/`. Outputs:
+`output/auto-cartogram/margin1-{equal-earth,mercator}-start/`.

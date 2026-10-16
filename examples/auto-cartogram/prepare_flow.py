@@ -24,8 +24,18 @@ def equal_earth(points):
     return np.column_stack((x,y))*1000
 
 
-def run(inputs, polygons, output, mainland_only=False):
+def mercator(points):
+    points = np.asarray(points, dtype=float)
+    if not np.isfinite(points).all() or np.any(np.abs(points[:, 1]) >= 90):
+        raise ValueError('Mercator requires finite coordinates and latitudes inside the poles')
+    lon, lat = np.deg2rad(points).T
+    return np.column_stack((lon, np.arcsinh(np.tan(lat))))*1000
+
+
+def run(inputs, polygons, output, mainland_only=False, projection='equal-earth'):
     if output.exists(): raise ValueError('Output already exists')
+    project = {'equal-earth': equal_earth, 'mercator': mercator}[projection]
+    projection_name = 'Equal Earth' if projection == 'equal-earth' else 'Spherical Mercator'
     groups={r['component_id']:r for r in read_csv(inputs/'groups.csv') if int(r['tiles'])>0}
     excluded=[]
     if mainland_only:
@@ -37,7 +47,7 @@ def run(inputs, polygons, output, mainland_only=False):
     for feature in json.loads(polygons.read_text())['features']:
         component=feature['properties']['component_id']
         if component not in groups:continue
-        row=groups[component]; original=shape(feature['geometry']); geometry=transform(original,equal_earth)
+        row=groups[component]; original=shape(feature['geometry']); geometry=transform(original,project)
         if not geometry.is_valid or geometry.is_empty or geometry.geom_type!='Polygon' or geometry.area<=0:
             raise ValueError(f'Invalid projected component: {component}')
         properties=dict(component_id=component,country_id=row['country_id'],name=row['name'])
@@ -55,10 +65,10 @@ def run(inputs, polygons, output, mainland_only=False):
             writer.writerows((r['component_id'],r['tiles']) for r in summary)
         with (temp/'components.csv').open('w',newline='') as stream:
             writer=csv.DictWriter(stream,fieldnames=list(summary[0]));writer.writeheader();writer.writerows(summary)
-        metadata=dict(method='Equal Earth projection of individual represented components; target areas are requested tile counts',
+        metadata=dict(method=f'{projection_name} projection of individual represented components; target areas are requested tile counts',
             components=len(summary),tiles=sum(r['tiles'] for r in summary),holes=sum(r['holes'] for r in summary),
             mainland_only=mainland_only,excluded_isolated_components=excluded,
-            projection='Equal Earth, EPSG method 1078; arbitrary Cartesian scale 1000. Pass --skip_projection to cartogram-cpp.',
+            projection=('Equal Earth, EPSG method 1078' if projection == 'equal-earth' else 'Spherical Mercator, no latitude clipping; poles rejected')+'; arbitrary Cartesian scale 1000. Pass --skip_projection to cartogram-cpp.',
             component_rule='No country-level union of islands. Zero-budget population uses the existing group table; no new geometry joins.',
             inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'manifest.json',polygons]+([inputs/'geographic-contacts.csv'] if mainland_only else [])},script_sha256=digest(Path(__file__)))
         (temp/'manifest.json').write_text(json.dumps(metadata,indent=2)+'\n')
@@ -72,4 +82,5 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ['inputs','polygons','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--mainland-only',action='store_true',help='Exclude isolated components from the flow guide, not from final population budgets')
+    parser.add_argument('--projection', choices=['equal-earth', 'mercator'], default='equal-earth')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
