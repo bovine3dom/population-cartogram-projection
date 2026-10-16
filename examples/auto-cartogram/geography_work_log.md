@@ -1523,3 +1523,16 @@ extension. Published comparisons at
 `results/geography/coarse90-repairs/nordic-v1/index.html`. No promotion.
 The two expanded Paraguay trials time out without a feasible incumbent. Its
 false coast remains. All 317 tests pass. No trial jobs remain active.
+
+### Lake placement and enclosed-water checks
+
+Tested small interior lake exchanges before the Nordic shape refinement.
+The exchange moves empty water, not extra land tiles. It preserves lake shape,
+component budgets, country borders, and other lake shores. Shared-shore lakes
+cannot move with this method. Two Saimaa positions give valid local fits and
+remove Finland's long lake extension. They do not establish correct source
+placement. Checked enlarged Nordic images for both positions.
+Added optional sea flow to the local model. Non-lake empty cells must connect
+to exterior water. A final flood fill also checks for newly enclosed water.
+This tests the unnamed holes found between Norway and Sweden and near Åland.
+All 325 tests pass. The sea-flow trial is in progress. No current-best change.

@@ -97,6 +97,29 @@ class LocalCoastTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             fit({'a': {(0, 0)}}, set(), set(), 'a', expansion=-1)
 
+    def test_sea_flow_removes_an_unnamed_hole(self):
+        tiles = {'a': {(x, y) for x in range(3) for y in range(3)}-{(1, 1)}}
+        result, attempts = fit(tiles, set(), set(), 'a', expansion=1,
+                               sea_connected=True, seconds=10)
+        self.assertIsNotNone(result, attempts)
+        owner = {p: 'a' for p in result['a']}
+        ocean = exterior_water(owner)
+        self.assertEqual(len(owner), 8)
+        self.assertFalse({(x, y) for x in range(min(p[0] for p in owner), max(p[0] for p in owner)+1)
+                          for y in range(min(p[1] for p in owner), max(p[1] for p in owner)+1)
+                          if (x, y) not in owner and (x, y) not in ocean})
+        self.assertEqual(len(pieces(result['a'])), 1)
+
+    def test_sea_flow_retains_a_named_lake(self):
+        from compact_regions import adjacent
+        lake = {(1, 1)}
+        tiles = {'a': {(x, y) for x in range(3) for y in range(3)}-lake}
+        result, attempts = fit(tiles, set(), set(), 'a', expansion=1, seconds=10,
+                               sea_connected=True, protected_water=lake,
+                               fixed_cells=set(adjacent((1, 1))))
+        self.assertIsNotNone(result, attempts)
+        self.assertEqual(result, tiles)
+
     def test_invalid_shape_weights_are_rejected(self):
         for name in ('distance_weight', 'perimeter_weight'):
             for value in (-1, float('nan'), float('inf')):
