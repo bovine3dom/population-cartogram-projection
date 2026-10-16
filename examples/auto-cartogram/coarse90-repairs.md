@@ -358,3 +358,46 @@ review. The last smoothing fits return feasible solutions at their time limits;
 they do not prove optimality. Do not promote this result on border counts alone.
 Snapshots `coarse90-repair-code-24` through `coarse90-repair-code-29` retain the
 trial code. All 337 tests pass. The current best and H3-MON exports are unchanged.
+
+## Pacific coast correction after user review
+
+Rejected `coarse90-paraguay-water-v1`. It makes Paraguay inland by extending
+Argentina's false Pacific coast. A country-level sea-access check cannot
+detect this error. The public page now states this rejection.
+
+Added `audit_coast_arcs.py`. It compares the land neighbours at each end of
+a sea-coast section. Argentina's main source coast ends at Chile and Uruguay.
+The rejected trial adds a coast between Bolivia and Chile. Source sampling
+at 8,192 and 32,768 points gives the same source endpoints. Enclosed water is
+not sea in the tile check. Source sampling remains approximate.
+
+The initial partition has one Chile tile beside Peru and Bolivia. Fragment
+repair removes it. Most Chile tiles are already too far south in the
+partition. Keeping that fragment alone would not correct the mass placement.
+
+Added `shield_coast.py`. It extends the source coastal neighbour along the
+wrong coast, then removes the same number of its original coastal tiles.
+No other component moves. It retains all previous true contacts, enclosed
+water, and shore labels. It rejects new false contact pairs.
+
+The first trial moves 72 Chile tiles. Routing that first minimizes extra
+water cells reduces this to 54 in `coarse90-pacific-shield-v2`.
+Chile retains 133 tiles. It touches Peru and Bolivia again. Bolivia and
+Paraguay have zero sea edges. Argentina's unsupported Bolivia–Chile sea
+section is gone. Other coast-section mismatches remain near enclosed water
+and the southern SPI component.
+
+All 55,000 component budgets are exact. All 481 components are connected.
+The 45 lakes retain 220 empty cells. World border totals are 65 missing and
+34 false. Island-axis errors stay at 392. Country-axis errors rise from
+218 to 219: Chile versus South Africa is a new error.
+
+Checked the enlarged South America image. The coastal order is better.
+Chile is still thin. Paraguay is too far west. Moving 54 of 133 Chile tiles
+can also distort internal population placement. Do not promote this trial.
+The next fit must handle Chile, Argentina, Bolivia, and Paraguay together,
+with source coast order as a constraint, not only country sea access.
+
+Published `results/geography/coarse90-repairs/pacific-v1/index.html`.
+Snapshots 30 and 31 retain the trial code. All 344 tests pass. The current
+best layout hash and H3-MON exports are unchanged.

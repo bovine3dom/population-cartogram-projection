@@ -1,0 +1,212 @@
+{
+  "approved": false,
+  "layout": "output/auto-cartogram/coarse90-pacific-shield-v2",
+  "known_defects": {
+    "cells_sha256": "f0f2758208a60539798e0d5745b1db20c8756cbb31fbac97eda5d91d43861ff4",
+    "long_island_minus_manhattan": [
+      7.830769230769249,
+      -0.9461538461538908
+    ],
+    "sweden_germany_contact": false,
+    "malaysia_thailand_contact": true,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 2,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "baseline_defects": {
+    "cells_sha256": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+    "long_island_minus_manhattan": [
+      4.830769230769249,
+      6.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "gained_true": [
+    [
+      "ARG:7462ff4f8b49993a",
+      "BOL:1a7254807c71e166"
+    ],
+    [
+      "BOL:1a7254807c71e166",
+      "CHL:150a87c1995fb5ad"
+    ],
+    [
+      "CHL:150a87c1995fb5ad",
+      "PER:d420f75fe20c6a02"
+    ],
+    [
+      "FIN:9332a3268ae7c503",
+      "SWE:1320ee42b8e1186c"
+    ],
+    [
+      "ISR:7ab28b88983e2128",
+      "WEB:8660f88c9871d216"
+    ],
+    [
+      "LTU:4c2a60810b4196cd",
+      "RUS:8afd88fb65e5e555"
+    ],
+    [
+      "MYS:4035fe8bf71b03f5",
+      "THA:2d2e3dd6e4f6c675"
+    ],
+    [
+      "NOW:a387a8ce67e0d957",
+      "SWE:1320ee42b8e1186c"
+    ]
+  ],
+  "lost_true": [],
+  "added_false": [],
+  "removed_false": [
+    [
+      "DEU:0b0480fae55fd996",
+      "SWE:1320ee42b8e1186c"
+    ],
+    [
+      "EST:50bd04ff06509a99",
+      "FIN:9332a3268ae7c503"
+    ],
+    [
+      "EST:50bd04ff06509a99",
+      "POL:1980df7ed9d16d12"
+    ],
+    [
+      "EST:50bd04ff06509a99",
+      "RUS:8afd88fb65e5e555"
+    ],
+    [
+      "FIN:9332a3268ae7c503",
+      "LVA:ff14565ea5d338a5"
+    ],
+    [
+      "GIB:71de83b149a1d32c",
+      "MAR:41e7d86fdd4b2365"
+    ],
+    [
+      "ITA:7d6868fd136c6c11",
+      "MCO:8f146e45080f16d1"
+    ],
+    [
+      "KAS:b7c84d817c090062",
+      "KAZ:5d6f63a9b9f3c9f9"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "NPL:c1885306c87c4123"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "PAK:447ed1858f7b7a5d"
+    ],
+    [
+      "LBN:8d427f2407db4cf0",
+      "WEB:8660f88c9871d216"
+    ],
+    [
+      "POL:1980df7ed9d16d12",
+      "SWE:1320ee42b8e1186c"
+    ],
+    [
+      "SYR:bb46c77ee43515e0",
+      "WEB:8660f88c9871d216"
+    ],
+    [
+      "USA:13c14a072880aac5",
+      "USA:90107a05206832e4"
+    ]
+  ],
+  "lake_count": 45,
+  "empty_lake_cells": 220,
+  "inputs": {
+    "output/auto-cartogram/planet-kontur-coarse90/layout/cells.csv": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+    "output/auto-cartogram/coarse90-pacific-shield-v2/cells.csv": "f0f2758208a60539798e0d5745b1db20c8756cbb31fbac97eda5d91d43861ff4",
+    "output/auto-cartogram/coarse90-pacific-shield-v2/lake-cells.csv": "b9fcc87b65209a0fdf5f01c20ebde714e879ab8e6c37dd507d0ff155cf240ea9",
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2"
+  },
+  "metrics": {
+    "tile_budget": 55000,
+    "population_total": 7954677990.0,
+    "represented_population": 7954677990.0,
+    "grouped_population": 10133200.0,
+    "omitted_population": 0.0,
+    "holes_not_encoded_in_wkt": 19,
+    "policy": "group",
+    "review_script_sha256": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+    "tiles": 55000,
+    "countries": 250,
+    "absolute_tile_error": 0,
+    "disconnected_regions": 0,
+    "regions_with_holes": 26,
+    "unmatched_source_population": 77246034.0,
+    "required_contacts": 348,
+    "missing_contacts": 65,
+    "false_contacts": 34,
+    "contacts_with_unrepresented_components": 31,
+    "actual_contacts": 317,
+    "generation": [
+      "mode=source-coastal-cover",
+      "counts=exact",
+      "approval=none"
+    ],
+    "occupied_fraction": 0.22296453647699815,
+    "country_uniform_tile_cross_group_lower_bound": 5979286.023201256,
+    "country_absolute_area_error_tiles": 108.42557727971565,
+    "maximum_country_relative_area_error": 36156.62722727273,
+    "country_axis_comparisons": 7496,
+    "country_axis_order_errors": 219,
+    "country_axis_population_threshold": 10000000,
+    "country_axis_degree_threshold": 5,
+    "population_weighted_compactness": 0.25668703123133696,
+    "island_axis_comparisons": 3702,
+    "island_axis_order_errors": 392,
+    "passes_represented_constraints": false,
+    "named_lakes": 45,
+    "water_display_cells": 220
+  },
+  "files": {
+    "africa.png": "bf5a30064c4ea24b7f25c7b642dcdd92cb620f3c9904fdc70fb3c785d802b95d",
+    "cells.csv.gz": "cb9a517795dd4a550db8ed162b9ce3864b05cb2d38570b4a8910686808b01108",
+    "coarse90-pacific-after-v2.json": "b611b27a170d280bbc419e17540928d58c3c37626be8f32374224708e3c7a966",
+    "coarse90-pacific-audit-v2.json": "75d0e7032ac833a5c7415941af98ef3d2bbcfe8755a69aa7a6b0a65d7f6e464b",
+    "coast-shield.json": "0c17031ec723bcccbac3f8a2688aaf08d57e6781ac789a7fa725743468d9ce34",
+    "europe.png": "f152d7adb0c004ce3ceec57186fdc0b9879965590f6554a44940bd794e077b1f",
+    "geography/landmass-parts.json.gz": "c1b3b09c4175ed144ccb909fe6fd07389d5cf524d7663f5f17f8b36ef7b4609f",
+    "geography/nearby-relations.json.gz": "4653577091de500674592ec2057eb34d2f95c65ee6e8bcfd73ffddee55bada08",
+    "geography/summary.json": "40131164c55a8ec7dcbfe8a8a681b04f96d288e967eadde1740ba5c6d2bc49e3",
+    "geography/water-access.csv.gz": "f661c0017e57a9e299854ede5814dca24c58e34a63d489ceb1773333d5cf831c",
+    "indonesia.png": "450b740c9cb82612fc72674d57355c2309114a6092c81cdef2707790d1c5eac0",
+    "japan-korea.png": "b1b5857f83f577a6414c8877532e7433ad82679afebd3b64793a42ff4bab88bf",
+    "lake-cells.csv.gz": "e45a31ec39e00a43fcc0bc066cc80a3b1cf5459f8d9520dee1ca662aee54f037",
+    "lake-placement.json.gz": "be5e0b4f4b170cf03eeebc64834d08ca415b6359ba21e2b13752ca9bb7bed1b8",
+    "metrics.json": "f179193753b6202df203fd3b2f11d532593f719fb60ef2b67d94a189fe5c8057",
+    "new-york.png": "f94ef52861f25e7965e47b40736f08c349ad16f90be28465f6e05651b4b574c4",
+    "pacific-detail.png": "f6da7808634d6353c4c3db57cd627b2f46e6d2151a914f6e2a72e8bc44e371c8",
+    "review.png": "b172bcaac7f4910ec0963efee8ce24b4dc9b50706311818484641c1cc3eaab96",
+    "south-america.png": "2df2bbc1c071a042aeee1a0ff13466ec498aef00ee7f63b9dd48701ceefc2276"
+  },
+  "limitations": [
+    "Chile remains thin. Paraguay is too far west.",
+    "54 of 133 Chile tiles move; internal population placement needs review.",
+    "Country-axis errors rise from 218 to 219 (Chile versus South Africa).",
+    "Other source coast-section mismatches remain."
+  ]
+}
