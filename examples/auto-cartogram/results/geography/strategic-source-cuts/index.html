@@ -1,0 +1,30 @@
+<!doctype html><meta charset="utf-8">
+<title>Strategic cuts before flow</title>
+<style>body{font:17px system-ui;max-width:1500px;margin:32px auto;padding:0 20px}img{width:100%}table{border-collapse:collapse}td,th{padding:8px;border:1px solid #aaa}.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr))}</style>
+<h1>Strategic cuts before flow</h1>
+<p><a href="../planet-kontur-coarse90/index.html">Current best: unchanged</a></p>
+<p><b>Result: no useful large-scale shape change.</b> These cuts precede patch construction and all fitting.
+Russia still forms a thin strip above China. Kazakhstan changes slightly. A single continuous flow still moves both sides together.
+Do not replace the current best with these experiments. No new tile fit or H3-MON export was made.</p>
+<p>All panels use the coarse 90% Kontur blend. Each trial also ran 0% and 50% blends with the same patches.
+All seven trials retain 189 components, 369 patches, and 7,221,236,218 people. Component population and target tile budgets are unchanged.
+The regional panels omit other countries. Islands and lakes have not been added at this stage.</p>
+<p>Two-border trials cut Russia–Kazakhstan and China–Kazakhstan. Four-border trials also cut Russia–China and Russia–Mongolia.
+Names give nominal source seam width in kilometres, not final gap width. These are artificial gaps, not seas.
+The 25 km corridor audit permits these borders, but does not prove that every border segment is sparse.</p>
+<p>Source cuts retain all unselected contacts. Wider cuts may remove small fragments, with an explicit limit of 0.01% of component source area.
+All population stays in its original component. The four-border 25 km and 50 km trials were rejected before fitting:
+they also remove Russia–North Korea. No contact guard was disabled.</p>
+<h2>Shape error against the original geographic outline</h2>
+<p>Lower is better. The score aligns area and centre, but does not rotate shapes.
+Compare both fresh controls: repeated solver runs vary. The saved current-best guide is not replaced by either control.
+Small score changes alone are not evidence of a better layout.</p>
+<table><tr><th>Trial</th><th>Russia</th><th>China</th><th>India</th><th>Kazakhstan</th></tr><tr><td>control</td><td>0.7319</td><td>0.6747</td><td>0.4478</td><td>0.8039</td></tr><tr><td>control-repeat</td><td>0.7281</td><td>0.6742</td><td>0.4436</td><td>0.7965</td></tr><tr><td>flow-1</td><td>0.7308</td><td>0.6747</td><td>0.4487</td><td>0.7817</td></tr><tr><td>flow-25</td><td>0.7292</td><td>0.6695</td><td>0.4431</td><td>0.7615</td></tr><tr><td>flow-50</td><td>0.7287</td><td>0.6716</td><td>0.4409</td><td>0.7429</td></tr><tr><td>flow-four-1</td><td>0.7285</td><td>0.6714</td><td>0.4424</td><td>0.7774</td></tr><tr><td>flow-four-5</td><td>0.7266</td><td>0.6699</td><td>0.4443</td><td>0.7592</td></tr></table>
+<p><a href="summary.json">Measured results</a> include minimum polygon distances in target-tile units.
+A minimum distance is not an average gap width. Solver area floors still inflate some tiny components;
+solver success does not mean exact tile budgets. No fit output is approved as a tile guide.</p>
+<h2>Next experiment</h2>
+<p>Test a deformation model that permits different movement on each side of selected borders.
+Keep dense borders constrained. Penalize shape change and excessive separation, rather than merely adding empty strips.
+Any later tile fit must exclude the selected cuts from its required-contact policy and check whether they return.</p>
+<div class="panels"><section><h2>control</h2><p><a href="control/world.png">World</a> · <a href="control/experiment.json">Settings and checks</a> · <a href="control/components.geojson.gz">Flow geometry</a></p><a href="control/eurasia.png"><img src="control/eurasia.png" alt="Eurasia: control"></a></section><section><h2>control-repeat</h2><p><a href="control-repeat/world.png">World</a> · <a href="control-repeat/experiment.json">Settings and checks</a> · <a href="control-repeat/components.geojson.gz">Flow geometry</a></p><a href="control-repeat/eurasia.png"><img src="control-repeat/eurasia.png" alt="Eurasia: control-repeat"></a></section><section><h2>flow-1</h2><p><a href="flow-1/world.png">World</a> · <a href="flow-1/experiment.json">Settings and checks</a> · <a href="flow-1/components.geojson.gz">Flow geometry</a></p><a href="flow-1/eurasia.png"><img src="flow-1/eurasia.png" alt="Eurasia: flow-1"></a></section><section><h2>flow-25</h2><p><a href="flow-25/world.png">World</a> · <a href="flow-25/experiment.json">Settings and checks</a> · <a href="flow-25/components.geojson.gz">Flow geometry</a></p><a href="flow-25/eurasia.png"><img src="flow-25/eurasia.png" alt="Eurasia: flow-25"></a></section><section><h2>flow-50</h2><p><a href="flow-50/world.png">World</a> · <a href="flow-50/experiment.json">Settings and checks</a> · <a href="flow-50/components.geojson.gz">Flow geometry</a></p><a href="flow-50/eurasia.png"><img src="flow-50/eurasia.png" alt="Eurasia: flow-50"></a></section><section><h2>flow-four-1</h2><p><a href="flow-four-1/world.png">World</a> · <a href="flow-four-1/experiment.json">Settings and checks</a> · <a href="flow-four-1/components.geojson.gz">Flow geometry</a></p><a href="flow-four-1/eurasia.png"><img src="flow-four-1/eurasia.png" alt="Eurasia: flow-four-1"></a></section><section><h2>flow-four-5</h2><p><a href="flow-four-5/world.png">World</a> · <a href="flow-four-5/experiment.json">Settings and checks</a> · <a href="flow-four-5/components.geojson.gz">Flow geometry</a></p><a href="flow-four-5/eurasia.png"><img src="flow-four-5/eurasia.png" alt="Eurasia: flow-four-5"></a></section></div>

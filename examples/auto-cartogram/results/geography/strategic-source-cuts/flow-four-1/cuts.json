@@ -1,0 +1,117 @@
+{
+  "width_km": 1.0,
+  "cuts": [
+    [
+      "CHN:72cd37e37e634df7",
+      "KAZ:5d6f63a9b9f3c9f9"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "MNG:7ecd8e5b0a42fa66",
+      "RUS:b85c5bca1852870f"
+    ]
+  ],
+  "removed": [
+    {
+      "component": "CHN:72cd37e37e634df7",
+      "source_area_fraction": 0.00028658791372582204
+    },
+    {
+      "component": "KAZ:5d6f63a9b9f3c9f9",
+      "source_area_fraction": 0.0015885274458142806
+    },
+    {
+      "component": "MNG:7ecd8e5b0a42fa66",
+      "source_area_fraction": 0.0010052048524775703
+    },
+    {
+      "component": "RUS:b85c5bca1852870f",
+      "source_area_fraction": 0.0004273449862726153
+    }
+  ],
+  "eligible_borders": [
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "KAZ:5d6f63a9b9f3c9f9",
+      "countries": "CHN\u2013KAZ",
+      "eligible": true,
+      "length_km": 1521.3519430899355,
+      "corridor_area_km2": 69730.35777587086,
+      "corridor_population": 621598.0,
+      "mean_density": 8.914309632512666,
+      "p90_segment_density": 24.204794781420738,
+      "maximum_segment_density": 81.95285643547138,
+      "source_centres": 292,
+      "segments": 61,
+      "reason": "Below both density limits"
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "CHN\u2013RUS",
+      "eligible": true,
+      "length_km": 3753.679793666849,
+      "corridor_area_km2": 170504.47059981732,
+      "corridor_population": 2899267.0,
+      "mean_density": 17.004052678505584,
+      "p90_segment_density": 34.43543112851983,
+      "maximum_segment_density": 325.0894319394823,
+      "source_centres": 764,
+      "segments": 151,
+      "reason": "Below both density limits"
+    },
+    {
+      "a": "KAZ:5d6f63a9b9f3c9f9",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "KAZ\u2013RUS",
+      "eligible": true,
+      "length_km": 7088.855347115375,
+      "corridor_area_km2": 292523.65384675,
+      "corridor_population": 2082918.0,
+      "mean_density": 7.12051135902746,
+      "p90_segment_density": 14.78039790336099,
+      "maximum_segment_density": 216.5856441585122,
+      "source_centres": 1265,
+      "segments": 284,
+      "reason": "Below both density limits"
+    },
+    {
+      "a": "MNG:7ecd8e5b0a42fa66",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "MNG\u2013RUS",
+      "eligible": true,
+      "length_km": 3138.407754896218,
+      "corridor_area_km2": 149830.9442921699,
+      "corridor_population": 187501.0,
+      "mean_density": 1.2514170613139406,
+      "p90_segment_density": 1.8803592364112425,
+      "maximum_segment_density": 43.84449441358361,
+      "source_centres": 533,
+      "segments": 126,
+      "reason": "Below both density limits"
+    }
+  ],
+  "geometry_sha256": "6efa4acbf7dbd9ef60f089d635629f5c86199ed1fe533a7bf36df2a5987d11f7",
+  "script_sha256": "305015af4b6ac47485c868d26967e4d9cc0adb7bff1515bf3f667ad46dcb3bb8",
+  "inputs": {
+    "output/auto-cartogram/world-55000-mainland-flow/input/geometry.geojson": "4cc7e51c0d38456e6ed53fb0b8ee448c34b6d5244521ca0d5f673adc8aee4564",
+    "output/auto-cartogram/sparse-border-audit-25-wide/border-population.json": "550eb1329221c7401a2f4699f7785520eb7c05adaa3a749e870bce18acabac58",
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2"
+  },
+  "limits": [
+    "Artificial source-space seams, not real seas. Widths are Equal Earth approximations.",
+    "All source components stay connected. No unselected source contact may disappear.",
+    "This changes source geometry only, before any fit. Population and tile budgets are not edited.",
+    "The density builder must retain every source population in its original component, including points inside removed seams.",
+    "A single continuous deformation may still compress the seam. Shape improvement is not guaranteed.",
+    "Any downstream tile fit must use a contact policy that excludes these selected pairs."
+  ]
+}

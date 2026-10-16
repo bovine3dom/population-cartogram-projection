@@ -1,0 +1,5607 @@
+{
+  "cell_size": 200.0,
+  "nominal_km": 1274.2,
+  "grid": 256,
+  "components": 189,
+  "patches": 369,
+  "population": 7221236218.0,
+  "minimum_split_component_tiles": 16,
+  "minimum_uniform_patch_tiles": 1,
+  "maximum_solver_grid": 2048,
+  "minimum_patch_target": 5.039294,
+  "small_target_rule": "Merge patches until every tested blend exceeds the solver floor, unless only one patch remains.",
+  "reassigned_outside_centres": [
+    {
+      "component": "AFG:cda2af5bb6ea22f0",
+      "centres": 6,
+      "population": 54635.0
+    },
+    {
+      "component": "AGO:2b9c8d9b36ed1f1d",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "AGO:704113b148b7974b",
+      "centres": 2,
+      "population": 351.0
+    },
+    {
+      "component": "ALB:c931cc5315aed954",
+      "centres": 3,
+      "population": 2148.0
+    },
+    {
+      "component": "AND:0923843c3687a75e",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "ARE:6af70f4330c4f4bf",
+      "centres": 15,
+      "population": 38537.0
+    },
+    {
+      "component": "ARG:7462ff4f8b49993a",
+      "centres": 14,
+      "population": 11965.0
+    },
+    {
+      "component": "ARM:433ac98029e5a761",
+      "centres": 3,
+      "population": 763.0
+    },
+    {
+      "component": "AUT:709fdd785650b149",
+      "centres": 2,
+      "population": 831.0
+    },
+    {
+      "component": "AZE:0510388634a9edd9",
+      "centres": 4,
+      "population": 3566.0
+    },
+    {
+      "component": "AZE:e5af19283650a3e3",
+      "centres": 4,
+      "population": 823.0
+    },
+    {
+      "component": "BDI:b3ecb03d79bf1cb5",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "BEL:b124863414a6dcdb",
+      "centres": 4,
+      "population": 39372.0
+    },
+    {
+      "component": "BEN:5911ab4fd3e84cb1",
+      "centres": 3,
+      "population": 14682.0
+    },
+    {
+      "component": "BFA:9c8f06c312ed722e",
+      "centres": 2,
+      "population": 6524.0
+    },
+    {
+      "component": "BGD:d6d0c7df0b40a187",
+      "centres": 8,
+      "population": 411955.0
+    },
+    {
+      "component": "BGR:8a6e196d0e9089ee",
+      "centres": 1,
+      "population": 23.0
+    },
+    {
+      "component": "BIH:76753bb1c9d6c52b",
+      "centres": 2,
+      "population": 7108.0
+    },
+    {
+      "component": "BLR:216ea6b406f5bc6c",
+      "centres": 2,
+      "population": 501.0
+    },
+    {
+      "component": "BLZ:4f146436bd0251b5",
+      "centres": 4,
+      "population": 3136.0
+    },
+    {
+      "component": "BOL:1a7254807c71e166",
+      "centres": 4,
+      "population": 4201.0
+    },
+    {
+      "component": "BRA:c9a395c2d321cd60",
+      "centres": 32,
+      "population": 1595471.0
+    },
+    {
+      "component": "BRN:72e2eec83e114e7f",
+      "centres": 11,
+      "population": 16255.0
+    },
+    {
+      "component": "BRT:fef0fc6bba22ada7",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "BTN:fe4a4d07e153ef17",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "BWA:41766e3f9df3a4d1",
+      "centres": 5,
+      "population": 1307.0
+    },
+    {
+      "component": "CAF:1f15d49e1132c1f3",
+      "centres": 4,
+      "population": 5870.0
+    },
+    {
+      "component": "CAN:614ec007a6324298",
+      "centres": 102,
+      "population": 263519.0
+    },
+    {
+      "component": "CAN:c2f1e4e52d5cc0c3",
+      "centres": 37,
+      "population": 75527.0
+    },
+    {
+      "component": "CHE:b37ef58a1d6dee0a",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "CHL:150a87c1995fb5ad",
+      "centres": 23,
+      "population": 15840.0
+    },
+    {
+      "component": "CHN:72cd37e37e634df7",
+      "centres": 48,
+      "population": 3500192.0
+    },
+    {
+      "component": "CIV:1c18880d4492d85c",
+      "centres": 10,
+      "population": 355116.0
+    },
+    {
+      "component": "CMR:35df8c314c8ef083",
+      "centres": 6,
+      "population": 10951.0
+    },
+    {
+      "component": "CNM:85db95ef4bf8489c",
+      "centres": 5,
+      "population": 12344.0
+    },
+    {
+      "component": "COD:34b7cfda818ccf80",
+      "centres": 7,
+      "population": 4500.0
+    },
+    {
+      "component": "COG:c5650e58e144375b",
+      "centres": 1,
+      "population": 3458.0
+    },
+    {
+      "component": "COL:08d1c79f212fc17e",
+      "centres": 25,
+      "population": 58605.0
+    },
+    {
+      "component": "CRI:5a22dcdd3a44dc5b",
+      "centres": 12,
+      "population": 13161.0
+    },
+    {
+      "component": "CUB:a203a2643a40db9f",
+      "centres": 18,
+      "population": 41635.0
+    },
+    {
+      "component": "CYN:3fa61972653460ef",
+      "centres": 3,
+      "population": 34880.0
+    },
+    {
+      "component": "CYP:0e9f924ff6746fe5",
+      "centres": 7,
+      "population": 68002.0
+    },
+    {
+      "component": "CZE:bf3969a8b4fbfc04",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "DEU:0b0480fae55fd996",
+      "centres": 16,
+      "population": 162270.0
+    },
+    {
+      "component": "DJI:8814228594ff16f1",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "DNK:d4951f6fa8360f9a",
+      "centres": 21,
+      "population": 58467.0
+    },
+    {
+      "component": "DOM:1493e296a532a3a2",
+      "centres": 3,
+      "population": 483.0
+    },
+    {
+      "component": "DZA:704d2c59e6450910",
+      "centres": 2,
+      "population": 17.0
+    },
+    {
+      "component": "ECU:ef48f29c8aa10327",
+      "centres": 33,
+      "population": 111218.0
+    },
+    {
+      "component": "EGY:f7cc24b776a75221",
+      "centres": 9,
+      "population": 11016.0
+    },
+    {
+      "component": "ERI:b257cabcc1caab95",
+      "centres": 10,
+      "population": 9045.0
+    },
+    {
+      "component": "ESB:432b2cb88c6056bf",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "ESP:7dc2b5da1e2aaae9",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "ESP:94551cac3165236f",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "ESP:ff9451038f1a27e4",
+      "centres": 12,
+      "population": 760199.0
+    },
+    {
+      "component": "EST:50bd04ff06509a99",
+      "centres": 51,
+      "population": 29520.0
+    },
+    {
+      "component": "ETH:38a05216b358b154",
+      "centres": 4,
+      "population": 844.0
+    },
+    {
+      "component": "FIN:9332a3268ae7c503",
+      "centres": 103,
+      "population": 48870.0
+    },
+    {
+      "component": "FXX:f023db15990ca569",
+      "centres": 36,
+      "population": 573000.0
+    },
+    {
+      "component": "GAB:9b0fa4569aef69bd",
+      "centres": 4,
+      "population": 105221.0
+    },
+    {
+      "component": "GAZ:0cd9171edc8ff269",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "GEO:d709e483cc2819fe",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "GHA:1beea30af91e217d",
+      "centres": 2,
+      "population": 27963.0
+    },
+    {
+      "component": "GIB:71de83b149a1d32c",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "GIN:eb019150f12e3d47",
+      "centres": 5,
+      "population": 10433.0
+    },
+    {
+      "component": "GMB:e5cba77f98187ac4",
+      "centres": 1,
+      "population": 7955.0
+    },
+    {
+      "component": "GNB:06bb5bdc3716e8ff",
+      "centres": 31,
+      "population": 60114.0
+    },
+    {
+      "component": "GNQ:703503e059bb9243",
+      "centres": 2,
+      "population": 1845.0
+    },
+    {
+      "component": "GRC:70edd41aef80d178",
+      "centres": 30,
+      "population": 157125.0
+    },
+    {
+      "component": "GTM:304e3cb8ddf6bb44",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "GUF:4acf8ebf720d2a5f",
+      "centres": 2,
+      "population": 4306.0
+    },
+    {
+      "component": "GUY:5aec9f8c07eb9159",
+      "centres": 4,
+      "population": 3645.0
+    },
+    {
+      "component": "HKG:a4b1c1ec313ba36c",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "HND:177f117072fa67d2",
+      "centres": 8,
+      "population": 21658.0
+    },
+    {
+      "component": "HRV:23be6296644271a5",
+      "centres": 53,
+      "population": 164241.0
+    },
+    {
+      "component": "HRV:2a6ba7505aec5af9",
+      "centres": 30,
+      "population": 37095.0
+    },
+    {
+      "component": "HTI:a3ce6059435c00f9",
+      "centres": 7,
+      "population": 42211.0
+    },
+    {
+      "component": "HUN:9f803be1643ca956",
+      "centres": 1,
+      "population": 10306.0
+    },
+    {
+      "component": "IDN:41ba51e85ddbb728",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "IDN:51a10640dee7162b",
+      "centres": 11,
+      "population": 8512.0
+    },
+    {
+      "component": "IDN:91fa24efd9a13b2f",
+      "centres": 123,
+      "population": 160569.0
+    },
+    {
+      "component": "IND:3f0bb94d859b2064",
+      "centres": 39,
+      "population": 2851790.0
+    },
+    {
+      "component": "IRL:9661cba0fca9f89c",
+      "centres": 32,
+      "population": 38866.0
+    },
+    {
+      "component": "IRN:3c2b5bd7d999fbee",
+      "centres": 13,
+      "population": 42315.0
+    },
+    {
+      "component": "IRQ:741e7a31e643a8a8",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "ISR:7ab28b88983e2128",
+      "centres": 2,
+      "population": 22904.0
+    },
+    {
+      "component": "ITA:7d6868fd136c6c11",
+      "centres": 26,
+      "population": 260221.0
+    },
+    {
+      "component": "JOR:97289b5947dc77c2",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "KAB:13532639e9546e01",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "KAS:b7c84d817c090062",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "KAZ:5d6f63a9b9f3c9f9",
+      "centres": 11,
+      "population": 34427.0
+    },
+    {
+      "component": "KEN:4b9b5a7ce90b0bb0",
+      "centres": 2,
+      "population": 17147.0
+    },
+    {
+      "component": "KGZ:401b8fcdc0eef69c",
+      "centres": 11,
+      "population": 127619.0
+    },
+    {
+      "component": "KHM:299a58dab837de1b",
+      "centres": 12,
+      "population": 61642.0
+    },
+    {
+      "component": "KOR:1a1881fe9e034788",
+      "centres": 19,
+      "population": 258579.0
+    },
+    {
+      "component": "KOS:e68a710dbd926c28",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "KWT:575b7c67b7a3657d",
+      "centres": 10,
+      "population": 10532.0
+    },
+    {
+      "component": "LAO:b4c511d27634a146",
+      "centres": 8,
+      "population": 16892.0
+    },
+    {
+      "component": "LBN:8d427f2407db4cf0",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "LBR:791c4a2bdad8b682",
+      "centres": 2,
+      "population": 4063.0
+    },
+    {
+      "component": "LBY:7ca6524733c4cc0b",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "LIE:452f33c4300c02b9",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "LSO:085148348451b82a",
+      "centres": 1,
+      "population": 95.0
+    },
+    {
+      "component": "LTU:4c2a60810b4196cd",
+      "centres": 6,
+      "population": 1921.0
+    },
+    {
+      "component": "LUX:2287a57343a7d085",
+      "centres": 1,
+      "population": 1058.0
+    },
+    {
+      "component": "LVA:ff14565ea5d338a5",
+      "centres": 1,
+      "population": 51836.0
+    },
+    {
+      "component": "MAF:8903408c5624c48e",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "MAR:41e7d86fdd4b2365",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "MCO:8f146e45080f16d1",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "MDA:c11ef650966bdfca",
+      "centres": 2,
+      "population": 14992.0
+    },
+    {
+      "component": "MEX:aa67baf61acd20f3",
+      "centres": 38,
+      "population": 84207.0
+    },
+    {
+      "component": "MKD:072da3322c97fa27",
+      "centres": 1,
+      "population": 716.0
+    },
+    {
+      "component": "MLI:cfb1983a0687bf5c",
+      "centres": 3,
+      "population": 3241.0
+    },
+    {
+      "component": "MMR:e9f27e99686071f9",
+      "centres": 27,
+      "population": 228855.0
+    },
+    {
+      "component": "MNE:52f7987265ed3935",
+      "centres": 1,
+      "population": 14132.0
+    },
+    {
+      "component": "MNG:7ecd8e5b0a42fa66",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "MOZ:0c9516b3b1958290",
+      "centres": 20,
+      "population": 500311.0
+    },
+    {
+      "component": "MRT:93e93b11bab4502c",
+      "centres": 7,
+      "population": 16065.0
+    },
+    {
+      "component": "MWI:7555dabddb4364d9",
+      "centres": 4,
+      "population": 17446.0
+    },
+    {
+      "component": "MYS:0abe504273f2e4bd",
+      "centres": 11,
+      "population": 18670.0
+    },
+    {
+      "component": "MYS:4035fe8bf71b03f5",
+      "centres": 7,
+      "population": 2402.0
+    },
+    {
+      "component": "NAM:d67affdeafffe7f2",
+      "centres": 2,
+      "population": 14.0
+    },
+    {
+      "component": "NER:225f284b6e95d815",
+      "centres": 2,
+      "population": 3907.0
+    },
+    {
+      "component": "NGA:edcdec1fdf6fb5c7",
+      "centres": 9,
+      "population": 608638.0
+    },
+    {
+      "component": "NIC:99f10eccc73d03bc",
+      "centres": 11,
+      "population": 10283.0
+    },
+    {
+      "component": "NIR:69fa50e543fa7c66",
+      "centres": 124,
+      "population": 57358.0
+    },
+    {
+      "component": "NLX:5daa52b59ba80d17",
+      "centres": 13,
+      "population": 58310.0
+    },
+    {
+      "component": "NLX:8b9c3398a58bdb2a",
+      "centres": 15,
+      "population": 37907.0
+    },
+    {
+      "component": "NOW:a387a8ce67e0d957",
+      "centres": 436,
+      "population": 306682.0
+    },
+    {
+      "component": "NPL:c1885306c87c4123",
+      "centres": 4,
+      "population": 133128.0
+    },
+    {
+      "component": "OMN:21af2c17fe172531",
+      "centres": 28,
+      "population": 60608.0
+    },
+    {
+      "component": "PAK:447ed1858f7b7a5d",
+      "centres": 2,
+      "population": 93.0
+    },
+    {
+      "component": "PAN:04773d2112e86006",
+      "centres": 30,
+      "population": 26952.0
+    },
+    {
+      "component": "PER:d420f75fe20c6a02",
+      "centres": 10,
+      "population": 115569.0
+    },
+    {
+      "component": "PNX:cd0b182a6ff3f568",
+      "centres": 11,
+      "population": 32162.0
+    },
+    {
+      "component": "POL:1980df7ed9d16d12",
+      "centres": 9,
+      "population": 23216.0
+    },
+    {
+      "component": "PRK:443ac4e48c09b5a9",
+      "centres": 18,
+      "population": 98225.0
+    },
+    {
+      "component": "PRX:31cd60a8869cd87c",
+      "centres": 9,
+      "population": 365733.0
+    },
+    {
+      "component": "PRY:8be730e7955b0934",
+      "centres": 1,
+      "population": 5616.0
+    },
+    {
+      "component": "QAT:f6210114a7fc4646",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "ROU:8bc181463815c013",
+      "centres": 4,
+      "population": 9831.0
+    },
+    {
+      "component": "RUS:7e6e84c769819aed",
+      "centres": 2,
+      "population": 123.0
+    },
+    {
+      "component": "RUS:8afd88fb65e5e555",
+      "centres": 58,
+      "population": 52343.0
+    },
+    {
+      "component": "RUS:b85c5bca1852870f",
+      "centres": 104,
+      "population": 101948.0
+    },
+    {
+      "component": "RWA:11c3869510b66d95",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SAH:c067a975f328d956",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SAU:11ac65250772b5d3",
+      "centres": 16,
+      "population": 257898.0
+    },
+    {
+      "component": "SDN:e4296cf2bfa47003",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SDS:9ecb0b566ac02a31",
+      "centres": 1,
+      "population": 1618.0
+    },
+    {
+      "component": "SEN:fa5de3704b02f675",
+      "centres": 3,
+      "population": 47019.0
+    },
+    {
+      "component": "SLE:aeb8476c9a2c5e10",
+      "centres": 15,
+      "population": 235161.0
+    },
+    {
+      "component": "SLV:6884a91b71669fb2",
+      "centres": 5,
+      "population": 2119.0
+    },
+    {
+      "component": "SMR:65f777115cf6c77c",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SOL:e03433706d8873bb",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SOM:b94bcf137ecd6275",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SPI:47f581a247f875ae",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SRB:334f04d632601018",
+      "centres": 4,
+      "population": 9456.0
+    },
+    {
+      "component": "SUR:1d7cda681e299b07",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SVK:1f440da2e10fbb82",
+      "centres": 1,
+      "population": 825.0
+    },
+    {
+      "component": "SVN:e8f334b689926950",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SWE:1320ee42b8e1186c",
+      "centres": 49,
+      "population": 155811.0
+    },
+    {
+      "component": "SWZ:e315454282eb3136",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SXM:09188f4114a598b9",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "SYR:bb46c77ee43515e0",
+      "centres": 3,
+      "population": 24014.0
+    },
+    {
+      "component": "TCD:a34f6ca4b3bd052d",
+      "centres": 8,
+      "population": 33843.0
+    },
+    {
+      "component": "TGO:f7afd783bdbbc052",
+      "centres": 0,
+      "population": 0.0
+    },
+    {
+      "component": "THA:2d2e3dd6e4f6c675",
+      "centres": 14,
+      "population": 118689.0
+    },
+    {
+      "component": "TJK:d6e62d7f585e085c",
+      "centres": 7,
+      "population": 89465.0
+    },
+    {
+      "component": "TKM:ef25c6485f2078c2",
+      "centres": 2,
+      "population": 594.0
+    },
+    {
+      "component": "TLS:e102fc60287c6426",
+      "centres": 12,
+      "population": 63195.0
+    },
+    {
+      "component": "TUN:9e23ed3c89bdb2f6",
+      "centres": 2,
+      "population": 45604.0
+    },
+    {
+      "component": "TUR:3b553df250ebf332",
+      "centres": 9,
+      "population": 285140.0
+    },
+    {
+      "component": "TUR:6fce5e1d91133e37",
+      "centres": 14,
+      "population": 184220.0
+    },
+    {
+      "component": "TZA:88eb4141b8ee7ab7",
+      "centres": 3,
+      "population": 7540.0
+    },
+    {
+      "component": "UGA:c937c439d1615753",
+      "centres": 5,
+      "population": 33742.0
+    },
+    {
+      "component": "UKR:52622876ebf1ecb8",
+      "centres": 15,
+      "population": 13799.0
+    },
+    {
+      "component": "URY:a93a37d95dfce9bb",
+      "centres": 2,
+      "population": 194.0
+    },
+    {
+      "component": "USA:13c14a072880aac5",
+      "centres": 135,
+      "population": 12365.0
+    },
+    {
+      "component": "USA:90107a05206832e4",
+      "centres": 89,
+      "population": 2845525.0
+    },
+    {
+      "component": "USG:4318b9af790790b9",
+      "centres": 1,
+      "population": 122.0
+    },
+    {
+      "component": "UZB:448c5653f0be3548",
+      "centres": 17,
+      "population": 84573.0
+    },
+    {
+      "component": "VEN:301beeea27f4cccb",
+      "centres": 5,
+      "population": 102498.0
+    },
+    {
+      "component": "VNM:749468814d903c2a",
+      "centres": 16,
+      "population": 840510.0
+    },
+    {
+      "component": "WEB:8660f88c9871d216",
+      "centres": 1,
+      "population": 235379.0
+    },
+    {
+      "component": "WSB:50ca0205ee67e049",
+      "centres": 1,
+      "population": 6555.0
+    },
+    {
+      "component": "YEM:64d271dfdccb3847",
+      "centres": 6,
+      "population": 8270.0
+    },
+    {
+      "component": "ZAF:eb3d29c8e7d957f4",
+      "centres": 8,
+      "population": 11916.0
+    },
+    {
+      "component": "ZMB:583491139c8eb3b0",
+      "centres": 6,
+      "population": 20697.0
+    },
+    {
+      "component": "ZWE:241a07c809723778",
+      "centres": 1,
+      "population": 171.0
+    }
+  ],
+  "runs": [
+    {
+      "strength": 0.0,
+      "command": [
+        "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+        "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/strategic-source-cuts/control-repeat/patches.geojson",
+        "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/strategic-source-cuts/control-repeat/blend-0/areas.csv",
+        "--skip_projection",
+        "--id",
+        "patch_id",
+        "--area",
+        "tiles",
+        "--n_grid_rows_or_cols",
+        "256",
+        "--max_allowed_autoscale_grid_length",
+        "2048",
+        "--timeout",
+        "180",
+        "--export_preprocessed"
+      ],
+      "complete": true,
+      "target_sha256": "0a4e27b0b0e6b5c741ddd5260442fba6e531f819f43ba6617bea587c2af499a7",
+      "exit_code": 0,
+      "solver_success": true,
+      "records": [
+        {
+          "component": "AFG:cda2af5bb6ea22f0",
+          "country": "AFG",
+          "shape_error": 0.6902672450623724,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027914433073572553
+        },
+        {
+          "component": "AGO:2b9c8d9b36ed1f1d",
+          "country": "AGO",
+          "shape_error": 0.7712397525862326,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003000234370017507
+        },
+        {
+          "component": "AGO:704113b148b7974b",
+          "country": "AGO",
+          "shape_error": 0.4963501614046619,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025661953623024036
+        },
+        {
+          "component": "ALB:c931cc5315aed954",
+          "country": "ALB",
+          "shape_error": 0.71268233541165,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000584752234797592
+        },
+        {
+          "component": "AND:0923843c3687a75e",
+          "country": "AND",
+          "shape_error": 0.5418179715413196,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0007051031006755082
+        },
+        {
+          "component": "ARE:6af70f4330c4f4bf",
+          "country": "ARE",
+          "shape_error": 0.9567296157438482,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002459204905690404
+        },
+        {
+          "component": "ARG:7462ff4f8b49993a",
+          "country": "ARG",
+          "shape_error": 0.5750315082631081,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -2.6339591587931643e-05
+        },
+        {
+          "component": "ARM:433ac98029e5a761",
+          "country": "ARM",
+          "shape_error": 0.4650825260722179,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024786681399013855
+        },
+        {
+          "component": "AUT:709fdd785650b149",
+          "country": "AUT",
+          "shape_error": 0.6963058040582346,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002695876473685077
+        },
+        {
+          "component": "AZE:0510388634a9edd9",
+          "country": "AZE",
+          "shape_error": 0.44257622100376715,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00022218302928045386
+        },
+        {
+          "component": "AZE:e5af19283650a3e3",
+          "country": "AZE",
+          "shape_error": 0.30723965477837833,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0001989137677586017
+        },
+        {
+          "component": "BDI:b3ecb03d79bf1cb5",
+          "country": "BDI",
+          "shape_error": 0.4006240807672068,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002508506847037628
+        },
+        {
+          "component": "BEL:b124863414a6dcdb",
+          "country": "BEL",
+          "shape_error": 0.4067233045281051,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027257574990835476
+        },
+        {
+          "component": "BEN:5911ab4fd3e84cb1",
+          "country": "BEN",
+          "shape_error": 0.5748338993080232,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002026738973820441
+        },
+        {
+          "component": "BFA:9c8f06c312ed722e",
+          "country": "BFA",
+          "shape_error": 0.42251313707547167,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025186658572273757
+        },
+        {
+          "component": "BGD:d6d0c7df0b40a187",
+          "country": "BGD",
+          "shape_error": 0.4477594303032103,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026041354490535795
+        },
+        {
+          "component": "BGR:8a6e196d0e9089ee",
+          "country": "BGR",
+          "shape_error": 0.7480253878881866,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00038521052727902294
+        },
+        {
+          "component": "BIH:76753bb1c9d6c52b",
+          "country": "BIH",
+          "shape_error": 0.5810977075082157,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0012282997751201785
+        },
+        {
+          "component": "BLR:216ea6b406f5bc6c",
+          "country": "BLR",
+          "shape_error": 0.35891421612737495,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00014031824151572447
+        },
+        {
+          "component": "BLZ:4f146436bd0251b5",
+          "country": "BLZ",
+          "shape_error": 0.7738017601699793,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 1.494349153956061
+        },
+        {
+          "component": "BOL:1a7254807c71e166",
+          "country": "BOL",
+          "shape_error": 0.5533090382135533,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0006687436288815851
+        },
+        {
+          "component": "BRA:c9a395c2d321cd60",
+          "country": "BRA",
+          "shape_error": 0.23043413778320576,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002785054247175234
+        },
+        {
+          "component": "BRN:72e2eec83e114e7f",
+          "country": "BRN",
+          "shape_error": 0.7078285922861998,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003267573160075088
+        },
+        {
+          "component": "BRT:fef0fc6bba22ada7",
+          "country": "BRT",
+          "shape_error": 0.25673148035937643,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00048478071284163704
+        },
+        {
+          "component": "BTN:fe4a4d07e153ef17",
+          "country": "BTN",
+          "shape_error": 0.7387472999722082,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025961018326381424
+        },
+        {
+          "component": "BWA:41766e3f9df3a4d1",
+          "country": "BWA",
+          "shape_error": 0.7008595055868028,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002527020439900829
+        },
+        {
+          "component": "CAF:1f15d49e1132c1f3",
+          "country": "CAF",
+          "shape_error": 0.7332154623400957,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025794434934423016
+        },
+        {
+          "component": "CAN:614ec007a6324298",
+          "country": "CAN",
+          "shape_error": 0.78730023411665,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000994728688579638
+        },
+        {
+          "component": "CAN:c2f1e4e52d5cc0c3",
+          "country": "CAN",
+          "shape_error": 0.7820460057084601,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003203394701040141
+        },
+        {
+          "component": "CHE:b37ef58a1d6dee0a",
+          "country": "CHE",
+          "shape_error": 0.41317147544529775,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002633819220559941
+        },
+        {
+          "component": "CHL:150a87c1995fb5ad",
+          "country": "CHL",
+          "shape_error": 0.8940476929948624,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003599543677972328
+        },
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "country": "CHN",
+          "shape_error": 0.4432166362461848,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034583038720659154
+        },
+        {
+          "component": "CIV:1c18880d4492d85c",
+          "country": "CIV",
+          "shape_error": 0.43844725077716495,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002566854024531606
+        },
+        {
+          "component": "CMR:35df8c314c8ef083",
+          "country": "CMR",
+          "shape_error": 0.7411119492555798,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028181641489699594
+        },
+        {
+          "component": "CNM:85db95ef4bf8489c",
+          "country": "CNM",
+          "shape_error": 0.9120934364201893,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.003553594518281855
+        },
+        {
+          "component": "COD:34b7cfda818ccf80",
+          "country": "COD",
+          "shape_error": 0.39631596965447,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002845814820853221
+        },
+        {
+          "component": "COG:c5650e58e144375b",
+          "country": "COG",
+          "shape_error": 0.6315103031053358,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000292838653259464
+        },
+        {
+          "component": "COL:08d1c79f212fc17e",
+          "country": "COL",
+          "shape_error": 0.3189075245495957,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002550638264869898
+        },
+        {
+          "component": "CRI:5a22dcdd3a44dc5b",
+          "country": "CRI",
+          "shape_error": 0.3913038581309044,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002471434860422672
+        },
+        {
+          "component": "CUB:a203a2643a40db9f",
+          "country": "CUB",
+          "shape_error": 0.6957426382965259,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027139516499252725
+        },
+        {
+          "component": "CYN:3fa61972653460ef",
+          "country": "CYN",
+          "shape_error": 0.8364308596905247,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.0025283218419349662
+        },
+        {
+          "component": "CYP:0e9f924ff6746fe5",
+          "country": "CYP",
+          "shape_error": 0.6213557780352632,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.0018870558075729793
+        },
+        {
+          "component": "CZE:bf3969a8b4fbfc04",
+          "country": "CZE",
+          "shape_error": 0.4082501471610418,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000238217973271726
+        },
+        {
+          "component": "DEU:0b0480fae55fd996",
+          "country": "DEU",
+          "shape_error": 0.3040686277760001,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002650066199748613
+        },
+        {
+          "component": "DJI:8814228594ff16f1",
+          "country": "DJI",
+          "shape_error": 0.44503785703967225,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00018876771291709282
+        },
+        {
+          "component": "DNK:d4951f6fa8360f9a",
+          "country": "DNK",
+          "shape_error": 0.41827853295130424,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031470653347698274
+        },
+        {
+          "component": "DOM:1493e296a532a3a2",
+          "country": "DOM",
+          "shape_error": 0.7311812578447371,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002608308920478697
+        },
+        {
+          "component": "DZA:704d2c59e6450910",
+          "country": "DZA",
+          "shape_error": 0.5371304197766249,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -8.02199766141154e-05
+        },
+        {
+          "component": "ECU:ef48f29c8aa10327",
+          "country": "ECU",
+          "shape_error": 0.342447134276185,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002218503389100901
+        },
+        {
+          "component": "EGY:f7cc24b776a75221",
+          "country": "EGY",
+          "shape_error": 0.5356913203049747,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0001954475401287903
+        },
+        {
+          "component": "ERI:b257cabcc1caab95",
+          "country": "ERI",
+          "shape_error": 0.8021023267265288,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00022537209860074015
+        },
+        {
+          "component": "ESB:432b2cb88c6056bf",
+          "country": "ESB",
+          "shape_error": 0.759900489087249,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.00968350974997989
+        },
+        {
+          "component": "ESP:7dc2b5da1e2aaae9",
+          "country": "ESP",
+          "shape_error": 0.5116090902826544,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00039298845519653014
+        },
+        {
+          "component": "ESP:94551cac3165236f",
+          "country": "ESP",
+          "shape_error": 0.727683656040613,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0009659064813651863
+        },
+        {
+          "component": "ESP:ff9451038f1a27e4",
+          "country": "ESP",
+          "shape_error": 0.25150000509981096,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002558353344749298
+        },
+        {
+          "component": "EST:50bd04ff06509a99",
+          "country": "EST",
+          "shape_error": 0.49479334207634584,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000209081346712936
+        },
+        {
+          "component": "ETH:38a05216b358b154",
+          "country": "ETH",
+          "shape_error": 0.29999800114748754,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002635784525245599
+        },
+        {
+          "component": "FIN:9332a3268ae7c503",
+          "country": "FIN",
+          "shape_error": 0.6511400368967282,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002639587138285604
+        },
+        {
+          "component": "FXX:f023db15990ca569",
+          "country": "FRA",
+          "shape_error": 0.29482852472059984,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002654089868622256
+        },
+        {
+          "component": "GAB:9b0fa4569aef69bd",
+          "country": "GAB",
+          "shape_error": 0.5631336309619647,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003539166888877343
+        },
+        {
+          "component": "GAZ:0cd9171edc8ff269",
+          "country": "PSX",
+          "shape_error": 0.4721315207909612,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002613222035020568
+        },
+        {
+          "component": "GEO:d709e483cc2819fe",
+          "country": "GEO",
+          "shape_error": 0.788599224149146,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00015991103309531685
+        },
+        {
+          "component": "GHA:1beea30af91e217d",
+          "country": "GHA",
+          "shape_error": 0.309484308755945,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025037630235180686
+        },
+        {
+          "component": "GIB:71de83b149a1d32c",
+          "country": "GIB",
+          "shape_error": 0.4236342685467107,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0004055239156215418
+        },
+        {
+          "component": "GIN:eb019150f12e3d47",
+          "country": "GIN",
+          "shape_error": 0.5501471855568767,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024455312118543127
+        },
+        {
+          "component": "GMB:e5cba77f98187ac4",
+          "country": "GMB",
+          "shape_error": 0.8385104200143672,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025535996478665
+        },
+        {
+          "component": "GNB:06bb5bdc3716e8ff",
+          "country": "GNB",
+          "shape_error": 0.4948906274843614,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024868989714932344
+        },
+        {
+          "component": "GNQ:703503e059bb9243",
+          "country": "GNQ",
+          "shape_error": 0.2451232735585943,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003409580003304047
+        },
+        {
+          "component": "GRC:70edd41aef80d178",
+          "country": "GRC",
+          "shape_error": 0.7810781290412869,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0004235098809065585
+        },
+        {
+          "component": "GTM:304e3cb8ddf6bb44",
+          "country": "GTM",
+          "shape_error": 0.348298112678892,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026851762440172067
+        },
+        {
+          "component": "GUF:4acf8ebf720d2a5f",
+          "country": "FRA",
+          "shape_error": 0.14976181771251218,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 1.4942891389550925
+        },
+        {
+          "component": "GUY:5aec9f8c07eb9159",
+          "country": "GUY",
+          "shape_error": 0.6477230561301957,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -7.84521707393182e-05
+        },
+        {
+          "component": "HKG:a4b1c1ec313ba36c",
+          "country": "HKG",
+          "shape_error": 0.4350684079910063,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002960125799061908
+        },
+        {
+          "component": "HND:177f117072fa67d2",
+          "country": "HND",
+          "shape_error": 0.5815818131411246,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002809381873607464
+        },
+        {
+          "component": "HRV:23be6296644271a5",
+          "country": "HRV",
+          "shape_error": 0.7809039969499342,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0009696751389416391
+        },
+        {
+          "component": "HRV:2a6ba7505aec5af9",
+          "country": "HRV",
+          "shape_error": 0.8673598639370808,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0013821846102348712
+        },
+        {
+          "component": "HTI:a3ce6059435c00f9",
+          "country": "HTI",
+          "shape_error": 0.6250884553558421,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026506006727500253
+        },
+        {
+          "component": "HUN:9f803be1643ca956",
+          "country": "HUN",
+          "shape_error": 0.51680870307412,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003387198881354969
+        },
+        {
+          "component": "IDN:41ba51e85ddbb728",
+          "country": "IDN",
+          "shape_error": 0.23949668512544153,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003378753473095575
+        },
+        {
+          "component": "IDN:51a10640dee7162b",
+          "country": "IDN",
+          "shape_error": 0.5848735120985953,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002371398701145333
+        },
+        {
+          "component": "IDN:91fa24efd9a13b2f",
+          "country": "IDN",
+          "shape_error": 0.5342347244782717,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002559024306215685
+        },
+        {
+          "component": "IND:3f0bb94d859b2064",
+          "country": "IND",
+          "shape_error": 0.3808466547179723,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002627645919870414
+        },
+        {
+          "component": "IRL:9661cba0fca9f89c",
+          "country": "IRL",
+          "shape_error": 0.23042920556573365,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00020297608416441904
+        },
+        {
+          "component": "IRN:3c2b5bd7d999fbee",
+          "country": "IRN",
+          "shape_error": 0.7641811748212002,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026345203351163526
+        },
+        {
+          "component": "IRQ:741e7a31e643a8a8",
+          "country": "IRQ",
+          "shape_error": 0.6282535735245266,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002714203167181184
+        },
+        {
+          "component": "ISR:7ab28b88983e2128",
+          "country": "ISR",
+          "shape_error": 0.7186952172511936,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002950807028219149
+        },
+        {
+          "component": "ITA:7d6868fd136c6c11",
+          "country": "ITA",
+          "shape_error": 0.5973587179388022,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002540977140360612
+        },
+        {
+          "component": "JOR:97289b5947dc77c2",
+          "country": "JOR",
+          "shape_error": 0.6546260783206814,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0001372185538803805
+        },
+        {
+          "component": "KAB:13532639e9546e01",
+          "country": "KAB",
+          "shape_error": 0.43007705103717253,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 1.7215725732088907
+        },
+        {
+          "component": "KAS:b7c84d817c090062",
+          "country": "KAS",
+          "shape_error": 0.5480608638645539,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -9.387385216663713e-05
+        },
+        {
+          "component": "KAZ:5d6f63a9b9f3c9f9",
+          "country": "KAZ",
+          "shape_error": 0.6900510227157663,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002687658506403956
+        },
+        {
+          "component": "KEN:4b9b5a7ce90b0bb0",
+          "country": "KEN",
+          "shape_error": 0.3804946623716373,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002573305251881708
+        },
+        {
+          "component": "KGZ:401b8fcdc0eef69c",
+          "country": "KGZ",
+          "shape_error": 0.3510531264775911,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000340894959166671
+        },
+        {
+          "component": "KHM:299a58dab837de1b",
+          "country": "KHM",
+          "shape_error": 0.3418680481684512,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002948878563959756
+        },
+        {
+          "component": "KOR:1a1881fe9e034788",
+          "country": "KOR",
+          "shape_error": 0.18187214253480866,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002688533354403555
+        },
+        {
+          "component": "KOS:e68a710dbd926c28",
+          "country": "KOS",
+          "shape_error": 0.4622641388994264,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0007898202034176682
+        },
+        {
+          "component": "KWT:575b7c67b7a3657d",
+          "country": "KWT",
+          "shape_error": 0.7520349283601964,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000176286659270386
+        },
+        {
+          "component": "LAO:b4c511d27634a146",
+          "country": "LAO",
+          "shape_error": 0.8032718048880909,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027507547451399716
+        },
+        {
+          "component": "LBN:8d427f2407db4cf0",
+          "country": "LBN",
+          "shape_error": 0.39832909414749595,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003253169765010666
+        },
+        {
+          "component": "LBR:791c4a2bdad8b682",
+          "country": "LBR",
+          "shape_error": 0.5587672758135747,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00021984512107542376
+        },
+        {
+          "component": "LBY:7ca6524733c4cc0b",
+          "country": "LBY",
+          "shape_error": 0.9281861322579451,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.0005971566657894112
+        },
+        {
+          "component": "LIE:452f33c4300c02b9",
+          "country": "LIE",
+          "shape_error": 0.7853205680374458,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003430093268648182
+        },
+        {
+          "component": "LSO:085148348451b82a",
+          "country": "LSO",
+          "shape_error": 0.3791777143515904,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029857511868336406
+        },
+        {
+          "component": "LTU:4c2a60810b4196cd",
+          "country": "LTU",
+          "shape_error": 0.2928240595431634,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00019245891854968722
+        },
+        {
+          "component": "LUX:2287a57343a7d085",
+          "country": "LUX",
+          "shape_error": 0.6193984428713772,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00019917735143548665
+        },
+        {
+          "component": "LVA:ff14565ea5d338a5",
+          "country": "LVA",
+          "shape_error": 0.6952852353333268,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034326950944330026
+        },
+        {
+          "component": "MAF:8903408c5624c48e",
+          "country": "MAF",
+          "shape_error": 0.6767311959010873,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0016314290988637126
+        },
+        {
+          "component": "MAR:41e7d86fdd4b2365",
+          "country": "MAR",
+          "shape_error": 0.49713746435066886,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024188273711267527
+        },
+        {
+          "component": "MCO:8f146e45080f16d1",
+          "country": "MCO",
+          "shape_error": 0.32053344048408683,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034194044368385246
+        },
+        {
+          "component": "MDA:c11ef650966bdfca",
+          "country": "MDA",
+          "shape_error": 0.6603080919012547,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -5.0414738766213496e-05
+        },
+        {
+          "component": "MEX:aa67baf61acd20f3",
+          "country": "MEX",
+          "shape_error": 0.5049468315174004,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025829157364987143
+        },
+        {
+          "component": "MKD:072da3322c97fa27",
+          "country": "MKD",
+          "shape_error": 0.6052378300813195,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0006363702838431129
+        },
+        {
+          "component": "MLI:cfb1983a0687bf5c",
+          "country": "MLI",
+          "shape_error": 0.6558124844124733,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002378566455121245
+        },
+        {
+          "component": "MMR:e9f27e99686071f9",
+          "country": "MMR",
+          "shape_error": 0.8596592554927512,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002482911920503872
+        },
+        {
+          "component": "MNE:52f7987265ed3935",
+          "country": "MNE",
+          "shape_error": 0.6884063357500907,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.24598872207098887
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "country": "MNG",
+          "shape_error": 0.8630836533322165,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00254488053531865
+        },
+        {
+          "component": "MOZ:0c9516b3b1958290",
+          "country": "MOZ",
+          "shape_error": 0.591533646167197,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002612311218999075
+        },
+        {
+          "component": "MRT:93e93b11bab4502c",
+          "country": "MRT",
+          "shape_error": 0.3437759816390543,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024735137091647097
+        },
+        {
+          "component": "MWI:7555dabddb4364d9",
+          "country": "MWI",
+          "shape_error": 0.5399437165730998,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028213766584284095
+        },
+        {
+          "component": "MYS:0abe504273f2e4bd",
+          "country": "MYS",
+          "shape_error": 0.6548216993276966,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034228885285214616
+        },
+        {
+          "component": "MYS:4035fe8bf71b03f5",
+          "country": "MYS",
+          "shape_error": 0.3769705273022129,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026059340002848597
+        },
+        {
+          "component": "NAM:d67affdeafffe7f2",
+          "country": "NAM",
+          "shape_error": 0.4677516669016938,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002586524823683378
+        },
+        {
+          "component": "NER:225f284b6e95d815",
+          "country": "NER",
+          "shape_error": 0.48807537183263316,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00021318153801963557
+        },
+        {
+          "component": "NGA:edcdec1fdf6fb5c7",
+          "country": "NGA",
+          "shape_error": 0.23110551390781642,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002730360965534917
+        },
+        {
+          "component": "NIC:99f10eccc73d03bc",
+          "country": "NIC",
+          "shape_error": 0.4254063900480617,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030470822838035705
+        },
+        {
+          "component": "NIR:69fa50e543fa7c66",
+          "country": "GBR",
+          "shape_error": 0.28806323327694205,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00021075578863549715
+        },
+        {
+          "component": "NLX:5daa52b59ba80d17",
+          "country": "NLD",
+          "shape_error": 0.69521798209678,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0001853783899528061
+        },
+        {
+          "component": "NLX:8b9c3398a58bdb2a",
+          "country": "NLD",
+          "shape_error": 0.39397415606883746,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026350148190423806
+        },
+        {
+          "component": "NOW:a387a8ce67e0d957",
+          "country": "NOR",
+          "shape_error": 0.8728472673036374,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024408871496617301
+        },
+        {
+          "component": "NPL:c1885306c87c4123",
+          "country": "NPL",
+          "shape_error": 0.3776035732094032,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002428296009100439
+        },
+        {
+          "component": "OMN:21af2c17fe172531",
+          "country": "OMN",
+          "shape_error": 0.7998547659781436,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000247530692285336
+        },
+        {
+          "component": "PAK:447ed1858f7b7a5d",
+          "country": "PAK",
+          "shape_error": 0.45293752427858625,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026197647548664715
+        },
+        {
+          "component": "PAN:04773d2112e86006",
+          "country": "PAN",
+          "shape_error": 0.7978690216341048,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026843390254893684
+        },
+        {
+          "component": "PER:d420f75fe20c6a02",
+          "country": "PER",
+          "shape_error": 0.265102900070036,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002441014342748904
+        },
+        {
+          "component": "PNX:cd0b182a6ff3f568",
+          "country": "PNG",
+          "shape_error": 0.3881597431690519,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024506710647220764
+        },
+        {
+          "component": "POL:1980df7ed9d16d12",
+          "country": "POL",
+          "shape_error": 0.24300246402205417,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00022095414038303396
+        },
+        {
+          "component": "PRK:443ac4e48c09b5a9",
+          "country": "PRK",
+          "shape_error": 0.43836479909602344,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026042580192064957
+        },
+        {
+          "component": "PRX:31cd60a8869cd87c",
+          "country": "PRT",
+          "shape_error": 0.3338375081698033,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002711311782337411
+        },
+        {
+          "component": "PRY:8be730e7955b0934",
+          "country": "PRY",
+          "shape_error": 0.4519795551846839,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00038865981289637475
+        },
+        {
+          "component": "QAT:f6210114a7fc4646",
+          "country": "QAT",
+          "shape_error": 0.8184230270229316,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029489090272738494
+        },
+        {
+          "component": "ROU:8bc181463815c013",
+          "country": "ROU",
+          "shape_error": 0.5615495367041148,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002197273868744798
+        },
+        {
+          "component": "RUS:7e6e84c769819aed",
+          "country": "RUS",
+          "shape_error": 0.5561403930872029,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030489535586786243
+        },
+        {
+          "component": "RUS:8afd88fb65e5e555",
+          "country": "RUS",
+          "shape_error": 0.424001149931968,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003060399295976568
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "country": "RUS",
+          "shape_error": 0.877167747355361,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0008004363362912326
+        },
+        {
+          "component": "RWA:11c3869510b66d95",
+          "country": "RWA",
+          "shape_error": 0.38699582764384644,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025094871118047646
+        },
+        {
+          "component": "SAH:c067a975f328d956",
+          "country": "SAH",
+          "shape_error": 0.9608212683039734,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 3.9886327409451576
+        },
+        {
+          "component": "SAU:11ac65250772b5d3",
+          "country": "SAU",
+          "shape_error": 0.9059047660507711,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027263794180842904
+        },
+        {
+          "component": "SDN:e4296cf2bfa47003",
+          "country": "SDN",
+          "shape_error": 0.6401754400614608,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00021729465160891248
+        },
+        {
+          "component": "SDS:9ecb0b566ac02a31",
+          "country": "SDS",
+          "shape_error": 0.7663819846879432,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000256969069038937
+        },
+        {
+          "component": "SEN:fa5de3704b02f675",
+          "country": "SEN",
+          "shape_error": 0.45534711549601425,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00020903542856243185
+        },
+        {
+          "component": "SLE:aeb8476c9a2c5e10",
+          "country": "SLE",
+          "shape_error": 0.2522822467196112,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027397474832957514
+        },
+        {
+          "component": "SLV:6884a91b71669fb2",
+          "country": "SLV",
+          "shape_error": 0.21353237170798345,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0001780558542761046
+        },
+        {
+          "component": "SMR:65f777115cf6c77c",
+          "country": "SMR",
+          "shape_error": 0.7361413300278856,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0005042591742907554
+        },
+        {
+          "component": "SOL:e03433706d8873bb",
+          "country": "SOL",
+          "shape_error": 0.6999220248074314,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026689058084761186
+        },
+        {
+          "component": "SOM:b94bcf137ecd6275",
+          "country": "SOM",
+          "shape_error": 0.7779084761435964,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003082755298240425
+        },
+        {
+          "component": "SPI:47f581a247f875ae",
+          "country": "SPI",
+          "shape_error": 0.45975024789216345,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0023978817569360045
+        },
+        {
+          "component": "SRB:334f04d632601018",
+          "country": "SRB",
+          "shape_error": 0.6582669138510174,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0007951385050646298
+        },
+        {
+          "component": "SUR:1d7cda681e299b07",
+          "country": "SUR",
+          "shape_error": 0.27773968787227876,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.24714134838737745
+        },
+        {
+          "component": "SVK:1f440da2e10fbb82",
+          "country": "SVK",
+          "shape_error": 0.5950853331081263,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00022252380512477465
+        },
+        {
+          "component": "SVN:e8f334b689926950",
+          "country": "SVN",
+          "shape_error": 0.5932255167957363,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0006798714939630912
+        },
+        {
+          "component": "SWE:1320ee42b8e1186c",
+          "country": "SWE",
+          "shape_error": 0.6139154623566347,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002615865239190551
+        },
+        {
+          "component": "SWZ:e315454282eb3136",
+          "country": "SWZ",
+          "shape_error": 0.4639867113187619,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003257821200244315
+        },
+        {
+          "component": "SXM:09188f4114a598b9",
+          "country": "SXM",
+          "shape_error": 0.4823469201563051,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.0014035607293116925
+        },
+        {
+          "component": "SYR:bb46c77ee43515e0",
+          "country": "SYR",
+          "shape_error": 0.5533161902181383,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025519458395117933
+        },
+        {
+          "component": "TCD:a34f6ca4b3bd052d",
+          "country": "TCD",
+          "shape_error": 0.9670886282706439,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000144597826690962
+        },
+        {
+          "component": "TGO:f7afd783bdbbc052",
+          "country": "TGO",
+          "shape_error": 0.41012178914329844,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003151400356017353
+        },
+        {
+          "component": "THA:2d2e3dd6e4f6c675",
+          "country": "THA",
+          "shape_error": 0.5045033475306127,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002838880153441803
+        },
+        {
+          "component": "TJK:d6e62d7f585e085c",
+          "country": "TJK",
+          "shape_error": 0.5527544589532314,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030020920166506926
+        },
+        {
+          "component": "TKM:ef25c6485f2078c2",
+          "country": "TKM",
+          "shape_error": 0.4292654864461932,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00023851767958471548
+        },
+        {
+          "component": "TLS:e102fc60287c6426",
+          "country": "TLS",
+          "shape_error": 0.16317057517464983,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029459583119317845
+        },
+        {
+          "component": "TUN:9e23ed3c89bdb2f6",
+          "country": "TUN",
+          "shape_error": 0.4802918619227837,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -8.689495922953316e-05
+        },
+        {
+          "component": "TUR:3b553df250ebf332",
+          "country": "TUR",
+          "shape_error": 0.6508569525474033,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002879610177460856
+        },
+        {
+          "component": "TUR:6fce5e1d91133e37",
+          "country": "TUR",
+          "shape_error": 0.41482284012654336,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030443888977738087
+        },
+        {
+          "component": "TZA:88eb4141b8ee7ab7",
+          "country": "TZA",
+          "shape_error": 0.35894781296085765,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002684877599506974
+        },
+        {
+          "component": "UGA:c937c439d1615753",
+          "country": "UGA",
+          "shape_error": 0.44636593965626425,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002688114392849217
+        },
+        {
+          "component": "UKR:52622876ebf1ecb8",
+          "country": "UKR",
+          "shape_error": 0.5770758395782147,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00010756227832986465
+        },
+        {
+          "component": "URY:a93a37d95dfce9bb",
+          "country": "URY",
+          "shape_error": 0.41144302836290236,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 3.118817912839411e-05
+        },
+        {
+          "component": "USA:13c14a072880aac5",
+          "country": "USA",
+          "shape_error": 0.9562633666070292,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.24515323718171822
+        },
+        {
+          "component": "USA:90107a05206832e4",
+          "country": "USA",
+          "shape_error": 0.2924201916470508,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00032764084656433656
+        },
+        {
+          "component": "USG:4318b9af790790b9",
+          "country": "USG",
+          "shape_error": 0.7234142023950647,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0004572596186254163
+        },
+        {
+          "component": "UZB:448c5653f0be3548",
+          "country": "UZB",
+          "shape_error": 0.5872584518338337,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029687554287205487
+        },
+        {
+          "component": "VEN:301beeea27f4cccb",
+          "country": "VEN",
+          "shape_error": 0.4863109624420623,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002354178735597401
+        },
+        {
+          "component": "VNM:749468814d903c2a",
+          "country": "VNM",
+          "shape_error": 0.6648423422202815,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002704994035538366
+        },
+        {
+          "component": "WEB:8660f88c9871d216",
+          "country": "PSX",
+          "shape_error": 0.36136967338563963,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034713403547170785
+        },
+        {
+          "component": "WSB:50ca0205ee67e049",
+          "country": "WSB",
+          "shape_error": 0.7525075659205853,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002471292380479273
+        },
+        {
+          "component": "YEM:64d271dfdccb3847",
+          "country": "YEM",
+          "shape_error": 0.4566081559521137,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027043659177217183
+        },
+        {
+          "component": "ZAF:eb3d29c8e7d957f4",
+          "country": "ZAF",
+          "shape_error": 0.44430779676340215,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003093128864454231
+        },
+        {
+          "component": "ZMB:583491139c8eb3b0",
+          "country": "ZMB",
+          "shape_error": 0.44581234035250905,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003066910118966204
+        },
+        {
+          "component": "ZWE:241a07c809723778",
+          "country": "ZWE",
+          "shape_error": 0.43817801382616184,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027804432332667606
+        }
+      ],
+      "maximum_patch_relative_area_error": 3.9886327409451576,
+      "approved": false,
+      "geometry_sha256": "1d36462bd6bb3797293d4e1d05a6ac4971da9b8e23bd115e45270ed9b576a8b2",
+      "seconds": 9.573146669194102
+    },
+    {
+      "strength": 0.5,
+      "command": [
+        "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+        "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/strategic-source-cuts/control-repeat/patches.geojson",
+        "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/strategic-source-cuts/control-repeat/blend-0.5/areas.csv",
+        "--skip_projection",
+        "--id",
+        "patch_id",
+        "--area",
+        "tiles",
+        "--n_grid_rows_or_cols",
+        "256",
+        "--max_allowed_autoscale_grid_length",
+        "2048",
+        "--timeout",
+        "180",
+        "--export_preprocessed"
+      ],
+      "complete": true,
+      "target_sha256": "233c68679da7f18bd85984ab6b5e059740bccc6221d33bfa1877480c4ec958c0",
+      "exit_code": 0,
+      "solver_success": true,
+      "records": [
+        {
+          "component": "AFG:cda2af5bb6ea22f0",
+          "country": "AFG",
+          "shape_error": 0.6753627166201852,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002082593458891946
+        },
+        {
+          "component": "AGO:2b9c8d9b36ed1f1d",
+          "country": "AGO",
+          "shape_error": 0.7513618446203035,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025441433218609255
+        },
+        {
+          "component": "AGO:704113b148b7974b",
+          "country": "AGO",
+          "shape_error": 0.46202923328395995,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026507647209605967
+        },
+        {
+          "component": "ALB:c931cc5315aed954",
+          "country": "ALB",
+          "shape_error": 0.6297527304343569,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00022682087816916496
+        },
+        {
+          "component": "AND:0923843c3687a75e",
+          "country": "AND",
+          "shape_error": 0.3783640279348135,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00048265054012042174
+        },
+        {
+          "component": "ARE:6af70f4330c4f4bf",
+          "country": "ARE",
+          "shape_error": 0.9650619750160049,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002405400533087576
+        },
+        {
+          "component": "ARG:7462ff4f8b49993a",
+          "country": "ARG",
+          "shape_error": 0.578514228611718,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00021815138917957722
+        },
+        {
+          "component": "ARM:433ac98029e5a761",
+          "country": "ARM",
+          "shape_error": 0.4846745818264663,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025633257200474713
+        },
+        {
+          "component": "AUT:709fdd785650b149",
+          "country": "AUT",
+          "shape_error": 0.6832590842227382,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029022032736547576
+        },
+        {
+          "component": "AZE:0510388634a9edd9",
+          "country": "AZE",
+          "shape_error": 0.4179762028624501,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003025717258319238
+        },
+        {
+          "component": "AZE:e5af19283650a3e3",
+          "country": "AZE",
+          "shape_error": 0.49015966761211327,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026748000909193603
+        },
+        {
+          "component": "BDI:b3ecb03d79bf1cb5",
+          "country": "BDI",
+          "shape_error": 0.31629127291445325,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024415949718259444
+        },
+        {
+          "component": "BEL:b124863414a6dcdb",
+          "country": "BEL",
+          "shape_error": 0.3876519425699996,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002957764638867877
+        },
+        {
+          "component": "BEN:5911ab4fd3e84cb1",
+          "country": "BEN",
+          "shape_error": 0.7133377565388506,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002520141597895931
+        },
+        {
+          "component": "BFA:9c8f06c312ed722e",
+          "country": "BFA",
+          "shape_error": 0.4658892654267116,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027071270893141985
+        },
+        {
+          "component": "BGD:d6d0c7df0b40a187",
+          "country": "BGD",
+          "shape_error": 0.5309745150626963,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030194467057098606
+        },
+        {
+          "component": "BGR:8a6e196d0e9089ee",
+          "country": "BGR",
+          "shape_error": 0.7059629688698905,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00036297254213235597
+        },
+        {
+          "component": "BIH:76753bb1c9d6c52b",
+          "country": "BIH",
+          "shape_error": 0.6686792638155505,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031535549755756787
+        },
+        {
+          "component": "BLR:216ea6b406f5bc6c",
+          "country": "BLR",
+          "shape_error": 0.3276169997666909,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002928102618109385
+        },
+        {
+          "component": "BLZ:4f146436bd0251b5",
+          "country": "BLZ",
+          "shape_error": 0.7424155890400685,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 1.4937877152306465
+        },
+        {
+          "component": "BOL:1a7254807c71e166",
+          "country": "BOL",
+          "shape_error": 0.5537192439017198,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00023949635035458439
+        },
+        {
+          "component": "BRA:c9a395c2d321cd60",
+          "country": "BRA",
+          "shape_error": 0.3921449978202154,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027816542372904873
+        },
+        {
+          "component": "BRN:72e2eec83e114e7f",
+          "country": "BRN",
+          "shape_error": 0.6240554769009063,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0001554420402660739
+        },
+        {
+          "component": "BRT:fef0fc6bba22ada7",
+          "country": "BRT",
+          "shape_error": 0.6901975037898895,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00015204322774142742
+        },
+        {
+          "component": "BTN:fe4a4d07e153ef17",
+          "country": "BTN",
+          "shape_error": 0.7677530259036746,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00018721518118780534
+        },
+        {
+          "component": "BWA:41766e3f9df3a4d1",
+          "country": "BWA",
+          "shape_error": 0.4701830262152693,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028901808946157903
+        },
+        {
+          "component": "CAF:1f15d49e1132c1f3",
+          "country": "CAF",
+          "shape_error": 0.848959729951397,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00012572031119162386
+        },
+        {
+          "component": "CAN:614ec007a6324298",
+          "country": "CAN",
+          "shape_error": 0.7630844725165616,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003366291846713665
+        },
+        {
+          "component": "CAN:c2f1e4e52d5cc0c3",
+          "country": "CAN",
+          "shape_error": 0.7102708714700705,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00022399021020924614
+        },
+        {
+          "component": "CHE:b37ef58a1d6dee0a",
+          "country": "CHE",
+          "shape_error": 0.46719488637434325,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002853076572664204
+        },
+        {
+          "component": "CHL:150a87c1995fb5ad",
+          "country": "CHL",
+          "shape_error": 0.7157757442156669,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00020906154170041713
+        },
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "country": "CHN",
+          "shape_error": 0.6040735146352512,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028326880383156006
+        },
+        {
+          "component": "CIV:1c18880d4492d85c",
+          "country": "CIV",
+          "shape_error": 0.4575469298766367,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026949958338751134
+        },
+        {
+          "component": "CMR:35df8c314c8ef083",
+          "country": "CMR",
+          "shape_error": 0.7948321081956924,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024283453613338501
+        },
+        {
+          "component": "CNM:85db95ef4bf8489c",
+          "country": "CNM",
+          "shape_error": 0.9161666632051672,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.0003329142075949587
+        },
+        {
+          "component": "COD:34b7cfda818ccf80",
+          "country": "COD",
+          "shape_error": 0.4360166334060295,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002893129032468522
+        },
+        {
+          "component": "COG:c5650e58e144375b",
+          "country": "COG",
+          "shape_error": 0.6195059046476725,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00020612571810108005
+        },
+        {
+          "component": "COL:08d1c79f212fc17e",
+          "country": "COL",
+          "shape_error": 0.47662662499951713,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000285995231175562
+        },
+        {
+          "component": "CRI:5a22dcdd3a44dc5b",
+          "country": "CRI",
+          "shape_error": 0.4688098779991535,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0007389496898136949
+        },
+        {
+          "component": "CUB:a203a2643a40db9f",
+          "country": "CUB",
+          "shape_error": 0.6319504855053257,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002959627537135745
+        },
+        {
+          "component": "CYN:3fa61972653460ef",
+          "country": "CYN",
+          "shape_error": 0.6900703239445662,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.003367347433202994
+        },
+        {
+          "component": "CYP:0e9f924ff6746fe5",
+          "country": "CYP",
+          "shape_error": 0.5184162152002346,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.0018228901939654207
+        },
+        {
+          "component": "CZE:bf3969a8b4fbfc04",
+          "country": "CZE",
+          "shape_error": 0.46839479036829834,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028980614967188956
+        },
+        {
+          "component": "DEU:0b0480fae55fd996",
+          "country": "DEU",
+          "shape_error": 0.2841787373031428,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029504169642702305
+        },
+        {
+          "component": "DJI:8814228594ff16f1",
+          "country": "DJI",
+          "shape_error": 0.669561174106647,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003267565087783364
+        },
+        {
+          "component": "DNK:d4951f6fa8360f9a",
+          "country": "DNK",
+          "shape_error": 0.34606373259244405,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002853470592406593
+        },
+        {
+          "component": "DOM:1493e296a532a3a2",
+          "country": "DOM",
+          "shape_error": 0.6700137162461941,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029089232737455895
+        },
+        {
+          "component": "DZA:704d2c59e6450910",
+          "country": "DZA",
+          "shape_error": 0.5954748506795682,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002969970539505873
+        },
+        {
+          "component": "ECU:ef48f29c8aa10327",
+          "country": "ECU",
+          "shape_error": 0.40906588038509795,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00041741148355167734
+        },
+        {
+          "component": "EGY:f7cc24b776a75221",
+          "country": "EGY",
+          "shape_error": 0.5316667294260474,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034079225694538806
+        },
+        {
+          "component": "ERI:b257cabcc1caab95",
+          "country": "ERI",
+          "shape_error": 0.9356541266265335,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003405667622691233
+        },
+        {
+          "component": "ESB:432b2cb88c6056bf",
+          "country": "ESB",
+          "shape_error": 0.62473594926217,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.0016849580732323233
+        },
+        {
+          "component": "ESP:7dc2b5da1e2aaae9",
+          "country": "ESP",
+          "shape_error": 0.32312236312744336,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029314084841847166
+        },
+        {
+          "component": "ESP:94551cac3165236f",
+          "country": "ESP",
+          "shape_error": 0.5599781795849332,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000372840491267179
+        },
+        {
+          "component": "ESP:ff9451038f1a27e4",
+          "country": "ESP",
+          "shape_error": 0.3524866530874069,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028303597109147205
+        },
+        {
+          "component": "EST:50bd04ff06509a99",
+          "country": "EST",
+          "shape_error": 0.423624392921247,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00032423820351845656
+        },
+        {
+          "component": "ETH:38a05216b358b154",
+          "country": "ETH",
+          "shape_error": 0.2528707335655055,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003062967341359579
+        },
+        {
+          "component": "FIN:9332a3268ae7c503",
+          "country": "FIN",
+          "shape_error": 0.5744155591628723,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030897979037913803
+        },
+        {
+          "component": "FXX:f023db15990ca569",
+          "country": "FRA",
+          "shape_error": 0.27779373478999936,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002822168402931702
+        },
+        {
+          "component": "GAB:9b0fa4569aef69bd",
+          "country": "GAB",
+          "shape_error": 0.700511449341695,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0001339550022833036
+        },
+        {
+          "component": "GAZ:0cd9171edc8ff269",
+          "country": "PSX",
+          "shape_error": 0.5472553436385339,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.00020017876981692773
+        },
+        {
+          "component": "GEO:d709e483cc2819fe",
+          "country": "GEO",
+          "shape_error": 0.7724760218718782,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002790509904235794
+        },
+        {
+          "component": "GHA:1beea30af91e217d",
+          "country": "GHA",
+          "shape_error": 0.31481773928679024,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025161447927335434
+        },
+        {
+          "component": "GIB:71de83b149a1d32c",
+          "country": "GIB",
+          "shape_error": 0.5296047568153976,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0004419992282808094
+        },
+        {
+          "component": "GIN:eb019150f12e3d47",
+          "country": "GIN",
+          "shape_error": 0.5118722600637573,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0006525133239039249
+        },
+        {
+          "component": "GMB:e5cba77f98187ac4",
+          "country": "GMB",
+          "shape_error": 0.7039207502346638,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000317254855098259
+        },
+        {
+          "component": "GNB:06bb5bdc3716e8ff",
+          "country": "GNB",
+          "shape_error": 0.5296067311845962,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0004659702435693136
+        },
+        {
+          "component": "GNQ:703503e059bb9243",
+          "country": "GNQ",
+          "shape_error": 0.33747218059030415,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00023495529956962802
+        },
+        {
+          "component": "GRC:70edd41aef80d178",
+          "country": "GRC",
+          "shape_error": 0.7579152388065237,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00016442795827831258
+        },
+        {
+          "component": "GTM:304e3cb8ddf6bb44",
+          "country": "GTM",
+          "shape_error": 0.38244810287049147,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002942173581302887
+        },
+        {
+          "component": "GUF:4acf8ebf720d2a5f",
+          "country": "FRA",
+          "shape_error": 0.33420109249009744,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 1.4939413267626374
+        },
+        {
+          "component": "GUY:5aec9f8c07eb9159",
+          "country": "GUY",
+          "shape_error": 0.6701007714252292,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002967427111404408
+        },
+        {
+          "component": "HKG:a4b1c1ec313ba36c",
+          "country": "HKG",
+          "shape_error": 0.44368280225736123,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00036314217297295226
+        },
+        {
+          "component": "HND:177f117072fa67d2",
+          "country": "HND",
+          "shape_error": 0.6147574498610548,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003132551952599316
+        },
+        {
+          "component": "HRV:23be6296644271a5",
+          "country": "HRV",
+          "shape_error": 0.8520734114376495,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003134853601975962
+        },
+        {
+          "component": "HRV:2a6ba7505aec5af9",
+          "country": "HRV",
+          "shape_error": 0.7713765545218851,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00022443010309636247
+        },
+        {
+          "component": "HTI:a3ce6059435c00f9",
+          "country": "HTI",
+          "shape_error": 0.5502409672668118,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029452417443320833
+        },
+        {
+          "component": "HUN:9f803be1643ca956",
+          "country": "HUN",
+          "shape_error": 0.5143564614415599,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034620807757146377
+        },
+        {
+          "component": "IDN:41ba51e85ddbb728",
+          "country": "IDN",
+          "shape_error": 0.27881505947760243,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003102602260972587
+        },
+        {
+          "component": "IDN:51a10640dee7162b",
+          "country": "IDN",
+          "shape_error": 0.5482156865572605,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028230810852380994
+        },
+        {
+          "component": "IDN:91fa24efd9a13b2f",
+          "country": "IDN",
+          "shape_error": 0.4770627007592909,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029303567951444176
+        },
+        {
+          "component": "IND:3f0bb94d859b2064",
+          "country": "IND",
+          "shape_error": 0.40532140350122703,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002964839395409591
+        },
+        {
+          "component": "IRL:9661cba0fca9f89c",
+          "country": "IRL",
+          "shape_error": 0.25396478172833525,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002869905286497776
+        },
+        {
+          "component": "IRN:3c2b5bd7d999fbee",
+          "country": "IRN",
+          "shape_error": 0.7461592072054513,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00018995115945685814
+        },
+        {
+          "component": "IRQ:741e7a31e643a8a8",
+          "country": "IRQ",
+          "shape_error": 0.5889187128392548,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030269604592358945
+        },
+        {
+          "component": "ISR:7ab28b88983e2128",
+          "country": "ISR",
+          "shape_error": 0.8123170487222623,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -6.042887162138744e-05
+        },
+        {
+          "component": "ITA:7d6868fd136c6c11",
+          "country": "ITA",
+          "shape_error": 0.5791748772499394,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026272899646939685
+        },
+        {
+          "component": "JOR:97289b5947dc77c2",
+          "country": "JOR",
+          "shape_error": 0.7702024795195999,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002457198296730301
+        },
+        {
+          "component": "KAB:13532639e9546e01",
+          "country": "KAB",
+          "shape_error": 0.6395496222013435,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 1.7220683173742963
+        },
+        {
+          "component": "KAS:b7c84d817c090062",
+          "country": "KAS",
+          "shape_error": 0.5641579531532063,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00021072538529687268
+        },
+        {
+          "component": "KAZ:5d6f63a9b9f3c9f9",
+          "country": "KAZ",
+          "shape_error": 0.7318254155474978,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00018820892306892212
+        },
+        {
+          "component": "KEN:4b9b5a7ce90b0bb0",
+          "country": "KEN",
+          "shape_error": 0.24609215289931174,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0006203335009027366
+        },
+        {
+          "component": "KGZ:401b8fcdc0eef69c",
+          "country": "KGZ",
+          "shape_error": 0.625226569225579,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002244251882248527
+        },
+        {
+          "component": "KHM:299a58dab837de1b",
+          "country": "KHM",
+          "shape_error": 0.2420896343714607,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029163922712682755
+        },
+        {
+          "component": "KOR:1a1881fe9e034788",
+          "country": "KOR",
+          "shape_error": 0.5213827008584383,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00018624851074655613
+        },
+        {
+          "component": "KOS:e68a710dbd926c28",
+          "country": "KOS",
+          "shape_error": 0.5557518676751465,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003270831785665562
+        },
+        {
+          "component": "KWT:575b7c67b7a3657d",
+          "country": "KWT",
+          "shape_error": 0.635327141948232,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003271679442993225
+        },
+        {
+          "component": "LAO:b4c511d27634a146",
+          "country": "LAO",
+          "shape_error": 0.9678912746536477,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00023170073284106696
+        },
+        {
+          "component": "LBN:8d427f2407db4cf0",
+          "country": "LBN",
+          "shape_error": 0.4009673191117974,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003190199427834939
+        },
+        {
+          "component": "LBR:791c4a2bdad8b682",
+          "country": "LBR",
+          "shape_error": 0.5737533269731623,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0006593719581619029
+        },
+        {
+          "component": "LBY:7ca6524733c4cc0b",
+          "country": "LBY",
+          "shape_error": 0.8660283863308886,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00035508697283870294
+        },
+        {
+          "component": "LIE:452f33c4300c02b9",
+          "country": "LIE",
+          "shape_error": 0.7664727750622716,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00038106177440511146
+        },
+        {
+          "component": "LSO:085148348451b82a",
+          "country": "LSO",
+          "shape_error": 0.25378837047042957,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002911177683483368
+        },
+        {
+          "component": "LTU:4c2a60810b4196cd",
+          "country": "LTU",
+          "shape_error": 0.26372832053974427,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027069563502402083
+        },
+        {
+          "component": "LUX:2287a57343a7d085",
+          "country": "LUX",
+          "shape_error": 0.621553618131498,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031470177364012475
+        },
+        {
+          "component": "LVA:ff14565ea5d338a5",
+          "country": "LVA",
+          "shape_error": 0.5012487252717872,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024123169174794512
+        },
+        {
+          "component": "MAF:8903408c5624c48e",
+          "country": "MAF",
+          "shape_error": 0.7086418586337371,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00023606867600600712
+        },
+        {
+          "component": "MAR:41e7d86fdd4b2365",
+          "country": "MAR",
+          "shape_error": 0.6387138579955589,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029107416824680765
+        },
+        {
+          "component": "MCO:8f146e45080f16d1",
+          "country": "MCO",
+          "shape_error": 0.33230048405501134,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003572630053954029
+        },
+        {
+          "component": "MDA:c11ef650966bdfca",
+          "country": "MDA",
+          "shape_error": 0.5471571330529328,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003222604855513955
+        },
+        {
+          "component": "MEX:aa67baf61acd20f3",
+          "country": "MEX",
+          "shape_error": 0.49372748363058905,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002615973797246429
+        },
+        {
+          "component": "MKD:072da3322c97fa27",
+          "country": "MKD",
+          "shape_error": 0.620858337617018,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026920099953831045
+        },
+        {
+          "component": "MLI:cfb1983a0687bf5c",
+          "country": "MLI",
+          "shape_error": 0.6462375291531501,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003236014829235412
+        },
+        {
+          "component": "MMR:e9f27e99686071f9",
+          "country": "MMR",
+          "shape_error": 0.8969347230839321,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00040470972440553865
+        },
+        {
+          "component": "MNE:52f7987265ed3935",
+          "country": "MNE",
+          "shape_error": 0.7618894225312478,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.2469741818026383
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "country": "MNG",
+          "shape_error": 0.8650549132424612,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -1.4547015863008994e-05
+        },
+        {
+          "component": "MOZ:0c9516b3b1958290",
+          "country": "MOZ",
+          "shape_error": 0.6303412578157559,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002868908019734162
+        },
+        {
+          "component": "MRT:93e93b11bab4502c",
+          "country": "MRT",
+          "shape_error": 0.2467218356578884,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028316872826839035
+        },
+        {
+          "component": "MWI:7555dabddb4364d9",
+          "country": "MWI",
+          "shape_error": 0.608253368852663,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028643738173861344
+        },
+        {
+          "component": "MYS:0abe504273f2e4bd",
+          "country": "MYS",
+          "shape_error": 0.7163181751438181,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003296773645081741
+        },
+        {
+          "component": "MYS:4035fe8bf71b03f5",
+          "country": "MYS",
+          "shape_error": 0.4366833473272377,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028764105164003073
+        },
+        {
+          "component": "NAM:d67affdeafffe7f2",
+          "country": "NAM",
+          "shape_error": 0.64850726255162,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002543707202169454
+        },
+        {
+          "component": "NER:225f284b6e95d815",
+          "country": "NER",
+          "shape_error": 0.5652832391640674,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028419913672139696
+        },
+        {
+          "component": "NGA:edcdec1fdf6fb5c7",
+          "country": "NGA",
+          "shape_error": 0.32848584983922957,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029157744588315104
+        },
+        {
+          "component": "NIC:99f10eccc73d03bc",
+          "country": "NIC",
+          "shape_error": 0.5534550069640769,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00042508405442232
+        },
+        {
+          "component": "NIR:69fa50e543fa7c66",
+          "country": "GBR",
+          "shape_error": 0.42043116773149125,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000324908802522228
+        },
+        {
+          "component": "NLX:5daa52b59ba80d17",
+          "country": "NLD",
+          "shape_error": 0.7072791082532552,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002566493547434545
+        },
+        {
+          "component": "NLX:8b9c3398a58bdb2a",
+          "country": "NLD",
+          "shape_error": 0.35189282833298674,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002922970102571254
+        },
+        {
+          "component": "NOW:a387a8ce67e0d957",
+          "country": "NOR",
+          "shape_error": 0.8323812820522707,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0004038314943672905
+        },
+        {
+          "component": "NPL:c1885306c87c4123",
+          "country": "NPL",
+          "shape_error": 0.39649650548523696,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003394740217451675
+        },
+        {
+          "component": "OMN:21af2c17fe172531",
+          "country": "OMN",
+          "shape_error": 0.7766048359934223,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002801698071679404
+        },
+        {
+          "component": "PAK:447ed1858f7b7a5d",
+          "country": "PAK",
+          "shape_error": 0.46659557038384103,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027483846625897534
+        },
+        {
+          "component": "PAN:04773d2112e86006",
+          "country": "PAN",
+          "shape_error": 0.7168363061850661,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00023341704337220825
+        },
+        {
+          "component": "PER:d420f75fe20c6a02",
+          "country": "PER",
+          "shape_error": 0.36332274013969146,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027040825207647057
+        },
+        {
+          "component": "PNX:cd0b182a6ff3f568",
+          "country": "PNG",
+          "shape_error": 0.3093036635929095,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002513153645872235
+        },
+        {
+          "component": "POL:1980df7ed9d16d12",
+          "country": "POL",
+          "shape_error": 0.2975223119350723,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029350910786218876
+        },
+        {
+          "component": "PRK:443ac4e48c09b5a9",
+          "country": "PRK",
+          "shape_error": 0.548954978144746,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031185278657586135
+        },
+        {
+          "component": "PRX:31cd60a8869cd87c",
+          "country": "PRT",
+          "shape_error": 0.23819132674176768,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030978851738605595
+        },
+        {
+          "component": "PRY:8be730e7955b0934",
+          "country": "PRY",
+          "shape_error": 0.7163496947336345,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002858286322352521
+        },
+        {
+          "component": "QAT:f6210114a7fc4646",
+          "country": "QAT",
+          "shape_error": 0.8876998014407657,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026206519095239855
+        },
+        {
+          "component": "ROU:8bc181463815c013",
+          "country": "ROU",
+          "shape_error": 0.5019185171767269,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003642638153737998
+        },
+        {
+          "component": "RUS:7e6e84c769819aed",
+          "country": "RUS",
+          "shape_error": 0.562588637848445,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002649415530167065
+        },
+        {
+          "component": "RUS:8afd88fb65e5e555",
+          "country": "RUS",
+          "shape_error": 0.30772788341099555,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003082922791753928
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "country": "RUS",
+          "shape_error": 0.872799781144162,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002783145609793758
+        },
+        {
+          "component": "RWA:11c3869510b66d95",
+          "country": "RWA",
+          "shape_error": 0.3012165210432426,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00037918045241081
+        },
+        {
+          "component": "SAH:c067a975f328d956",
+          "country": "SAH",
+          "shape_error": 0.7394569558668307,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 3.987415086637771
+        },
+        {
+          "component": "SAU:11ac65250772b5d3",
+          "country": "SAU",
+          "shape_error": 0.8838362556489839,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030464359318349565
+        },
+        {
+          "component": "SDN:e4296cf2bfa47003",
+          "country": "SDN",
+          "shape_error": 0.5367674063569456,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003135830950555807
+        },
+        {
+          "component": "SDS:9ecb0b566ac02a31",
+          "country": "SDS",
+          "shape_error": 0.8543778942398516,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003095670173325349
+        },
+        {
+          "component": "SEN:fa5de3704b02f675",
+          "country": "SEN",
+          "shape_error": 0.4271495444052261,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003191181509585306
+        },
+        {
+          "component": "SLE:aeb8476c9a2c5e10",
+          "country": "SLE",
+          "shape_error": 0.25817006727500624,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0007643663339187423
+        },
+        {
+          "component": "SLV:6884a91b71669fb2",
+          "country": "SLV",
+          "shape_error": 0.32126020435327285,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002905742694871982
+        },
+        {
+          "component": "SMR:65f777115cf6c77c",
+          "country": "SMR",
+          "shape_error": 0.6669216534286626,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00047643281606701837
+        },
+        {
+          "component": "SOL:e03433706d8873bb",
+          "country": "SOL",
+          "shape_error": 0.5775628919925592,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003732718773469257
+        },
+        {
+          "component": "SOM:b94bcf137ecd6275",
+          "country": "SOM",
+          "shape_error": 0.6995834138195389,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0005440401358501878
+        },
+        {
+          "component": "SPI:47f581a247f875ae",
+          "country": "SPI",
+          "shape_error": 0.46206608828725915,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0007086501386955879
+        },
+        {
+          "component": "SRB:334f04d632601018",
+          "country": "SRB",
+          "shape_error": 0.6298283668221647,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00039677078495703455
+        },
+        {
+          "component": "SUR:1d7cda681e299b07",
+          "country": "SUR",
+          "shape_error": 0.3067063702347975,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.24692756636862878
+        },
+        {
+          "component": "SVK:1f440da2e10fbb82",
+          "country": "SVK",
+          "shape_error": 0.6195448458220074,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031679234875992
+        },
+        {
+          "component": "SVN:e8f334b689926950",
+          "country": "SVN",
+          "shape_error": 0.5392016385749248,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031925936715848646
+        },
+        {
+          "component": "SWE:1320ee42b8e1186c",
+          "country": "SWE",
+          "shape_error": 0.5452055062523935,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00043171731590585516
+        },
+        {
+          "component": "SWZ:e315454282eb3136",
+          "country": "SWZ",
+          "shape_error": 0.4083279943845729,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000258605082997021
+        },
+        {
+          "component": "SXM:09188f4114a598b9",
+          "country": "SXM",
+          "shape_error": 0.58060554558414,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003533840319198678
+        },
+        {
+          "component": "SYR:bb46c77ee43515e0",
+          "country": "SYR",
+          "shape_error": 0.6001554153434323,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027428793518580186
+        },
+        {
+          "component": "TCD:a34f6ca4b3bd052d",
+          "country": "TCD",
+          "shape_error": 0.9624746925756343,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000269994473588997
+        },
+        {
+          "component": "TGO:f7afd783bdbbc052",
+          "country": "TGO",
+          "shape_error": 0.4259563080247021,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003298307698336167
+        },
+        {
+          "component": "THA:2d2e3dd6e4f6c675",
+          "country": "THA",
+          "shape_error": 0.4115183509436485,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028250026080445245
+        },
+        {
+          "component": "TJK:d6e62d7f585e085c",
+          "country": "TJK",
+          "shape_error": 0.6677409105456991,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002447760710528879
+        },
+        {
+          "component": "TKM:ef25c6485f2078c2",
+          "country": "TKM",
+          "shape_error": 0.4861668134680105,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00014725134708226673
+        },
+        {
+          "component": "TLS:e102fc60287c6426",
+          "country": "TLS",
+          "shape_error": 0.29266449239921133,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00023953458344772027
+        },
+        {
+          "component": "TUN:9e23ed3c89bdb2f6",
+          "country": "TUN",
+          "shape_error": 0.5209212050519147,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002763396631191295
+        },
+        {
+          "component": "TUR:3b553df250ebf332",
+          "country": "TUR",
+          "shape_error": 0.6545444757015465,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002942608983412809
+        },
+        {
+          "component": "TUR:6fce5e1d91133e37",
+          "country": "TUR",
+          "shape_error": 0.4035235303221294,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003405000992074969
+        },
+        {
+          "component": "TZA:88eb4141b8ee7ab7",
+          "country": "TZA",
+          "shape_error": 0.4183025925512085,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00021225432911897713
+        },
+        {
+          "component": "UGA:c937c439d1615753",
+          "country": "UGA",
+          "shape_error": 0.33080466572096745,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0006802501350514634
+        },
+        {
+          "component": "UKR:52622876ebf1ecb8",
+          "country": "UKR",
+          "shape_error": 0.5693176281663932,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029875033328585765
+        },
+        {
+          "component": "URY:a93a37d95dfce9bb",
+          "country": "URY",
+          "shape_error": 0.3606417424727735,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003003203344327243
+        },
+        {
+          "component": "USA:13c14a072880aac5",
+          "country": "USA",
+          "shape_error": 1.0,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.24744630950845337
+        },
+        {
+          "component": "USA:90107a05206832e4",
+          "country": "USA",
+          "shape_error": 0.39962677184984097,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003014646870803661
+        },
+        {
+          "component": "USG:4318b9af790790b9",
+          "country": "USG",
+          "shape_error": 0.6941584755179966,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00042115743852999543
+        },
+        {
+          "component": "UZB:448c5653f0be3548",
+          "country": "UZB",
+          "shape_error": 0.6470107962448566,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002124444177724616
+        },
+        {
+          "component": "VEN:301beeea27f4cccb",
+          "country": "VEN",
+          "shape_error": 0.583389483344372,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002902895623254631
+        },
+        {
+          "component": "VNM:749468814d903c2a",
+          "country": "VNM",
+          "shape_error": 0.6500955172973439,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002956885526944619
+        },
+        {
+          "component": "WEB:8660f88c9871d216",
+          "country": "PSX",
+          "shape_error": 0.30172321196816887,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00014718543626002223
+        },
+        {
+          "component": "WSB:50ca0205ee67e049",
+          "country": "WSB",
+          "shape_error": 0.6892081953691673,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034057294077483036
+        },
+        {
+          "component": "YEM:64d271dfdccb3847",
+          "country": "YEM",
+          "shape_error": 0.4262907691899187,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029652623736242667
+        },
+        {
+          "component": "ZAF:eb3d29c8e7d957f4",
+          "country": "ZAF",
+          "shape_error": 0.42881427164276165,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029246365259261164
+        },
+        {
+          "component": "ZMB:583491139c8eb3b0",
+          "country": "ZMB",
+          "shape_error": 0.5010474374872479,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024659957512329633
+        },
+        {
+          "component": "ZWE:241a07c809723778",
+          "country": "ZWE",
+          "shape_error": 0.4898400668138565,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029056162156204657
+        }
+      ],
+      "maximum_patch_relative_area_error": 3.9874150866377702,
+      "approved": false,
+      "geometry_sha256": "71d203d927e04a3885d141aeb8598d83d88dc317f78de878b3590ca621ce64b4",
+      "seconds": 12.93086457112804
+    },
+    {
+      "strength": 0.9,
+      "command": [
+        "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+        "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/strategic-source-cuts/control-repeat/patches.geojson",
+        "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/strategic-source-cuts/control-repeat/blend-0.9/areas.csv",
+        "--skip_projection",
+        "--id",
+        "patch_id",
+        "--area",
+        "tiles",
+        "--n_grid_rows_or_cols",
+        "256",
+        "--max_allowed_autoscale_grid_length",
+        "2048",
+        "--timeout",
+        "180",
+        "--export_preprocessed"
+      ],
+      "complete": true,
+      "target_sha256": "82bca69d42e8be3963f902b091374cb2922a0398b3ccad7af76ba0ea105a6c3b",
+      "exit_code": 0,
+      "solver_success": true,
+      "records": [
+        {
+          "component": "AFG:cda2af5bb6ea22f0",
+          "country": "AFG",
+          "shape_error": 0.6938548372933422,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025957908761409243
+        },
+        {
+          "component": "AGO:2b9c8d9b36ed1f1d",
+          "country": "AGO",
+          "shape_error": 0.324241320573036,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00023018494402349265
+        },
+        {
+          "component": "AGO:704113b148b7974b",
+          "country": "AGO",
+          "shape_error": 0.5236659823825134,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003083402684708192
+        },
+        {
+          "component": "ALB:c931cc5315aed954",
+          "country": "ALB",
+          "shape_error": 0.7065685583306174,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030110087740486957
+        },
+        {
+          "component": "AND:0923843c3687a75e",
+          "country": "AND",
+          "shape_error": 0.4835869325338321,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003777281213155348
+        },
+        {
+          "component": "ARE:6af70f4330c4f4bf",
+          "country": "ARE",
+          "shape_error": 0.932878644790931,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003217173037032284
+        },
+        {
+          "component": "ARG:7462ff4f8b49993a",
+          "country": "ARG",
+          "shape_error": 0.693271428537847,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002417684694546729
+        },
+        {
+          "component": "ARM:433ac98029e5a761",
+          "country": "ARM",
+          "shape_error": 0.4434903125977382,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029195601265075144
+        },
+        {
+          "component": "AUT:709fdd785650b149",
+          "country": "AUT",
+          "shape_error": 0.6699698749221241,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030111720327408165
+        },
+        {
+          "component": "AZE:0510388634a9edd9",
+          "country": "AZE",
+          "shape_error": 0.5558174191819134,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029507612230683655
+        },
+        {
+          "component": "AZE:e5af19283650a3e3",
+          "country": "AZE",
+          "shape_error": 0.4560276993322616,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031358858040275717
+        },
+        {
+          "component": "BDI:b3ecb03d79bf1cb5",
+          "country": "BDI",
+          "shape_error": 0.33668615944865476,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002685103833833802
+        },
+        {
+          "component": "BEL:b124863414a6dcdb",
+          "country": "BEL",
+          "shape_error": 0.2752703418280059,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002942464979710513
+        },
+        {
+          "component": "BEN:5911ab4fd3e84cb1",
+          "country": "BEN",
+          "shape_error": 0.7982792713861209,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028039320837713877
+        },
+        {
+          "component": "BFA:9c8f06c312ed722e",
+          "country": "BFA",
+          "shape_error": 0.5758855754704633,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029247617674887927
+        },
+        {
+          "component": "BGD:d6d0c7df0b40a187",
+          "country": "BGD",
+          "shape_error": 0.5359951743064386,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031222087145110766
+        },
+        {
+          "component": "BGR:8a6e196d0e9089ee",
+          "country": "BGR",
+          "shape_error": 0.8256879934706836,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003108258851550749
+        },
+        {
+          "component": "BIH:76753bb1c9d6c52b",
+          "country": "BIH",
+          "shape_error": 0.6626162498326906,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003190028847287474
+        },
+        {
+          "component": "BLR:216ea6b406f5bc6c",
+          "country": "BLR",
+          "shape_error": 0.2887761524017052,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029457982575753494
+        },
+        {
+          "component": "BLZ:4f146436bd0251b5",
+          "country": "BLZ",
+          "shape_error": 0.7291687715810775,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 1.4939799195058256
+        },
+        {
+          "component": "BOL:1a7254807c71e166",
+          "country": "BOL",
+          "shape_error": 0.634008826282433,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002932290881696442
+        },
+        {
+          "component": "BRA:c9a395c2d321cd60",
+          "country": "BRA",
+          "shape_error": 0.5322621748339903,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028996113213730634
+        },
+        {
+          "component": "BRN:72e2eec83e114e7f",
+          "country": "BRN",
+          "shape_error": 0.5674214291242025,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002635715644334624
+        },
+        {
+          "component": "BRT:fef0fc6bba22ada7",
+          "country": "BRT",
+          "shape_error": 0.7506148955710024,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00035304202199071266
+        },
+        {
+          "component": "BTN:fe4a4d07e153ef17",
+          "country": "BTN",
+          "shape_error": 0.9642734009820142,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003452730740881593
+        },
+        {
+          "component": "BWA:41766e3f9df3a4d1",
+          "country": "BWA",
+          "shape_error": 0.36840638604572484,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003078108302039251
+        },
+        {
+          "component": "CAF:1f15d49e1132c1f3",
+          "country": "CAF",
+          "shape_error": 0.8923480707200175,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002735190038850588
+        },
+        {
+          "component": "CAN:614ec007a6324298",
+          "country": "CAN",
+          "shape_error": 0.7590245671154539,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025123875526245065
+        },
+        {
+          "component": "CAN:c2f1e4e52d5cc0c3",
+          "country": "CAN",
+          "shape_error": 0.6767547541174386,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027756963978475824
+        },
+        {
+          "component": "CHE:b37ef58a1d6dee0a",
+          "country": "CHE",
+          "shape_error": 0.4933588415900608,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002982219859299917
+        },
+        {
+          "component": "CHL:150a87c1995fb5ad",
+          "country": "CHL",
+          "shape_error": 0.8717169764163575,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002049091933782332
+        },
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "country": "CHN",
+          "shape_error": 0.6741911301536903,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029139252903220836
+        },
+        {
+          "component": "CIV:1c18880d4492d85c",
+          "country": "CIV",
+          "shape_error": 0.44551720147997387,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028694159306319467
+        },
+        {
+          "component": "CMR:35df8c314c8ef083",
+          "country": "CMR",
+          "shape_error": 0.8049220928543207,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030345939777365327
+        },
+        {
+          "component": "CNM:85db95ef4bf8489c",
+          "country": "CNM",
+          "shape_error": 0.9024762461233001,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0001669788574081288
+        },
+        {
+          "component": "COD:34b7cfda818ccf80",
+          "country": "COD",
+          "shape_error": 0.48108976918314195,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002971099309649894
+        },
+        {
+          "component": "COG:c5650e58e144375b",
+          "country": "COG",
+          "shape_error": 0.5600199468752067,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00045834151278534296
+        },
+        {
+          "component": "COL:08d1c79f212fc17e",
+          "country": "COL",
+          "shape_error": 0.5268264253216715,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028893078133040984
+        },
+        {
+          "component": "CRI:5a22dcdd3a44dc5b",
+          "country": "CRI",
+          "shape_error": 0.58250403735903,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002857319114686341
+        },
+        {
+          "component": "CUB:a203a2643a40db9f",
+          "country": "CUB",
+          "shape_error": 0.7075895984705938,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029545454919588376
+        },
+        {
+          "component": "CYN:3fa61972653460ef",
+          "country": "CYN",
+          "shape_error": 0.7584387108101849,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0009654567164066874
+        },
+        {
+          "component": "CYP:0e9f924ff6746fe5",
+          "country": "CYP",
+          "shape_error": 0.6098505689023688,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0004931136294847871
+        },
+        {
+          "component": "CZE:bf3969a8b4fbfc04",
+          "country": "CZE",
+          "shape_error": 0.42034182333951786,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003001110440236099
+        },
+        {
+          "component": "DEU:0b0480fae55fd996",
+          "country": "DEU",
+          "shape_error": 0.3535558228027875,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000297775983710058
+        },
+        {
+          "component": "DJI:8814228594ff16f1",
+          "country": "DJI",
+          "shape_error": 0.7482261180865808,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002301857360624826
+        },
+        {
+          "component": "DNK:d4951f6fa8360f9a",
+          "country": "DNK",
+          "shape_error": 0.3143595497581132,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029895146530289907
+        },
+        {
+          "component": "DOM:1493e296a532a3a2",
+          "country": "DOM",
+          "shape_error": 0.6636744744884808,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002998834992719024
+        },
+        {
+          "component": "DZA:704d2c59e6450910",
+          "country": "DZA",
+          "shape_error": 0.48755030820972767,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002911781414280945
+        },
+        {
+          "component": "ECU:ef48f29c8aa10327",
+          "country": "ECU",
+          "shape_error": 0.5171987142774191,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029454484265623027
+        },
+        {
+          "component": "EGY:f7cc24b776a75221",
+          "country": "EGY",
+          "shape_error": 0.5071910520689249,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002771916216998127
+        },
+        {
+          "component": "ERI:b257cabcc1caab95",
+          "country": "ERI",
+          "shape_error": 0.8228769739088468,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00047740134782092714
+        },
+        {
+          "component": "ESB:432b2cb88c6056bf",
+          "country": "ESB",
+          "shape_error": 0.7569304710376639,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0005834585034226736
+        },
+        {
+          "component": "ESP:7dc2b5da1e2aaae9",
+          "country": "ESP",
+          "shape_error": 0.2645301667817076,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034632082760033267
+        },
+        {
+          "component": "ESP:94551cac3165236f",
+          "country": "ESP",
+          "shape_error": 0.6149136073207648,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00032394389791867706
+        },
+        {
+          "component": "ESP:ff9451038f1a27e4",
+          "country": "ESP",
+          "shape_error": 0.4534026603567951,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027334024910474763
+        },
+        {
+          "component": "EST:50bd04ff06509a99",
+          "country": "EST",
+          "shape_error": 0.4040338226567455,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030250920128216396
+        },
+        {
+          "component": "ETH:38a05216b358b154",
+          "country": "ETH",
+          "shape_error": 0.33109369762958507,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003096621564890878
+        },
+        {
+          "component": "FIN:9332a3268ae7c503",
+          "country": "FIN",
+          "shape_error": 0.44077979117824173,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030189852923323546
+        },
+        {
+          "component": "FXX:f023db15990ca569",
+          "country": "FRA",
+          "shape_error": 0.2829216163440058,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002967777829284701
+        },
+        {
+          "component": "GAB:9b0fa4569aef69bd",
+          "country": "GAB",
+          "shape_error": 0.6824790356997649,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00041224038340970104
+        },
+        {
+          "component": "GAZ:0cd9171edc8ff269",
+          "country": "PSX",
+          "shape_error": 0.6187374447635317,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028407257050233614
+        },
+        {
+          "component": "GEO:d709e483cc2819fe",
+          "country": "GEO",
+          "shape_error": 0.7064285699243931,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002877879284471918
+        },
+        {
+          "component": "GHA:1beea30af91e217d",
+          "country": "GHA",
+          "shape_error": 0.3331092320221416,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002928117037124256
+        },
+        {
+          "component": "GIB:71de83b149a1d32c",
+          "country": "GIB",
+          "shape_error": 0.4011755232005664,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030633382232103656
+        },
+        {
+          "component": "GIN:eb019150f12e3d47",
+          "country": "GIN",
+          "shape_error": 0.4411977315879533,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029498450490350603
+        },
+        {
+          "component": "GMB:e5cba77f98187ac4",
+          "country": "GMB",
+          "shape_error": 0.6654583948587309,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028732465960545905
+        },
+        {
+          "component": "GNB:06bb5bdc3716e8ff",
+          "country": "GNB",
+          "shape_error": 0.4522918248897746,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028961768860713555
+        },
+        {
+          "component": "GNQ:703503e059bb9243",
+          "country": "GNQ",
+          "shape_error": 0.5536086603688288,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002722311731738758
+        },
+        {
+          "component": "GRC:70edd41aef80d178",
+          "country": "GRC",
+          "shape_error": 0.8770026149263395,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002776215289939099
+        },
+        {
+          "component": "GTM:304e3cb8ddf6bb44",
+          "country": "GTM",
+          "shape_error": 0.4401829586950302,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029499828111556603
+        },
+        {
+          "component": "GUF:4acf8ebf720d2a5f",
+          "country": "FRA",
+          "shape_error": 0.38015379973700214,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 1.4939681353686964
+        },
+        {
+          "component": "GUY:5aec9f8c07eb9159",
+          "country": "GUY",
+          "shape_error": 0.43674519038193504,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029651266771268947
+        },
+        {
+          "component": "HKG:a4b1c1ec313ba36c",
+          "country": "HKG",
+          "shape_error": 0.34087882153981364,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027610451651483015
+        },
+        {
+          "component": "HND:177f117072fa67d2",
+          "country": "HND",
+          "shape_error": 0.6674121926703307,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002856062595021358
+        },
+        {
+          "component": "HRV:23be6296644271a5",
+          "country": "HRV",
+          "shape_error": 0.8762003954045449,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003053286052724369
+        },
+        {
+          "component": "HRV:2a6ba7505aec5af9",
+          "country": "HRV",
+          "shape_error": 0.7966584760381065,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031820291015982605
+        },
+        {
+          "component": "HTI:a3ce6059435c00f9",
+          "country": "HTI",
+          "shape_error": 0.6770062099682479,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002842359399581884
+        },
+        {
+          "component": "HUN:9f803be1643ca956",
+          "country": "HUN",
+          "shape_error": 0.5328396199716883,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002993266832013175
+        },
+        {
+          "component": "IDN:41ba51e85ddbb728",
+          "country": "IDN",
+          "shape_error": 0.27667407719996784,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003080639524952744
+        },
+        {
+          "component": "IDN:51a10640dee7162b",
+          "country": "IDN",
+          "shape_error": 0.5048126730481932,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003066046200538297
+        },
+        {
+          "component": "IDN:91fa24efd9a13b2f",
+          "country": "IDN",
+          "shape_error": 0.41371179011303916,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00034342393927477843
+        },
+        {
+          "component": "IND:3f0bb94d859b2064",
+          "country": "IND",
+          "shape_error": 0.44356959849693567,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030322905615765006
+        },
+        {
+          "component": "IRL:9661cba0fca9f89c",
+          "country": "IRL",
+          "shape_error": 0.28875532915518154,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028675630626195936
+        },
+        {
+          "component": "IRN:3c2b5bd7d999fbee",
+          "country": "IRN",
+          "shape_error": 0.6888328572608216,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028149985648961984
+        },
+        {
+          "component": "IRQ:741e7a31e643a8a8",
+          "country": "IRQ",
+          "shape_error": 0.5007566775907254,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029909670664529653
+        },
+        {
+          "component": "ISR:7ab28b88983e2128",
+          "country": "ISR",
+          "shape_error": 0.7131684163252064,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002907500208760849
+        },
+        {
+          "component": "ITA:7d6868fd136c6c11",
+          "country": "ITA",
+          "shape_error": 0.5436855582319722,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002974594847016121
+        },
+        {
+          "component": "JOR:97289b5947dc77c2",
+          "country": "JOR",
+          "shape_error": 0.8063981231733819,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027748950452632926
+        },
+        {
+          "component": "KAB:13532639e9546e01",
+          "country": "KAB",
+          "shape_error": 0.5915798979187938,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 1.7218587858908565
+        },
+        {
+          "component": "KAS:b7c84d817c090062",
+          "country": "KAS",
+          "shape_error": 0.5349547972617379,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000245348228563369
+        },
+        {
+          "component": "KAZ:5d6f63a9b9f3c9f9",
+          "country": "KAZ",
+          "shape_error": 0.7965335404881663,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002204825735434568
+        },
+        {
+          "component": "KEN:4b9b5a7ce90b0bb0",
+          "country": "KEN",
+          "shape_error": 0.3494725046426733,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002888052886496073
+        },
+        {
+          "component": "KGZ:401b8fcdc0eef69c",
+          "country": "KGZ",
+          "shape_error": 0.5083508178426941,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002618725803722466
+        },
+        {
+          "component": "KHM:299a58dab837de1b",
+          "country": "KHM",
+          "shape_error": 0.36287409414572214,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002993992895411468
+        },
+        {
+          "component": "KOR:1a1881fe9e034788",
+          "country": "KOR",
+          "shape_error": 0.5817273619896723,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025656855968658743
+        },
+        {
+          "component": "KOS:e68a710dbd926c28",
+          "country": "KOS",
+          "shape_error": 0.5859398412403571,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003091320349849491
+        },
+        {
+          "component": "KWT:575b7c67b7a3657d",
+          "country": "KWT",
+          "shape_error": 0.6368240613082395,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002999020059973878
+        },
+        {
+          "component": "LAO:b4c511d27634a146",
+          "country": "LAO",
+          "shape_error": 0.9423622775911694,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002814062238010173
+        },
+        {
+          "component": "LBN:8d427f2407db4cf0",
+          "country": "LBN",
+          "shape_error": 0.6021423338110763,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002942827487714128
+        },
+        {
+          "component": "LBR:791c4a2bdad8b682",
+          "country": "LBR",
+          "shape_error": 0.6007439333683855,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028967493569986846
+        },
+        {
+          "component": "LBY:7ca6524733c4cc0b",
+          "country": "LBY",
+          "shape_error": 0.8118588434349483,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002611887649905942
+        },
+        {
+          "component": "LIE:452f33c4300c02b9",
+          "country": "LIE",
+          "shape_error": 0.8614526330753063,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00038249295813874706
+        },
+        {
+          "component": "LSO:085148348451b82a",
+          "country": "LSO",
+          "shape_error": 0.40082528583787624,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00024128055118466385
+        },
+        {
+          "component": "LTU:4c2a60810b4196cd",
+          "country": "LTU",
+          "shape_error": 0.28055270867728077,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002801194111370364
+        },
+        {
+          "component": "LUX:2287a57343a7d085",
+          "country": "LUX",
+          "shape_error": 0.48563411614187046,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003073334496108693
+        },
+        {
+          "component": "LVA:ff14565ea5d338a5",
+          "country": "LVA",
+          "shape_error": 0.6010197930490854,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029499760051854285
+        },
+        {
+          "component": "MAF:8903408c5624c48e",
+          "country": "MAF",
+          "shape_error": 0.7843582283780873,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0006904069103511601
+        },
+        {
+          "component": "MAR:41e7d86fdd4b2365",
+          "country": "MAR",
+          "shape_error": 0.7047925109395001,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002922189385349272
+        },
+        {
+          "component": "MCO:8f146e45080f16d1",
+          "country": "MCO",
+          "shape_error": 0.29849859817656443,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003304522675898758
+        },
+        {
+          "component": "MDA:c11ef650966bdfca",
+          "country": "MDA",
+          "shape_error": 0.48792215420190577,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002787121226284217
+        },
+        {
+          "component": "MEX:aa67baf61acd20f3",
+          "country": "MEX",
+          "shape_error": 0.5024176004557492,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029500814346761217
+        },
+        {
+          "component": "MKD:072da3322c97fa27",
+          "country": "MKD",
+          "shape_error": 0.6212337457820485,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029566045536255636
+        },
+        {
+          "component": "MLI:cfb1983a0687bf5c",
+          "country": "MLI",
+          "shape_error": 0.6668038175221039,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029420279895264745
+        },
+        {
+          "component": "MMR:e9f27e99686071f9",
+          "country": "MMR",
+          "shape_error": 0.9010306530134191,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00041223983536919917
+        },
+        {
+          "component": "MNE:52f7987265ed3935",
+          "country": "MNE",
+          "shape_error": 0.8179242481682925,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.24698270166920988
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "country": "MNG",
+          "shape_error": 0.8666852361065438,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.00043816385189865414
+        },
+        {
+          "component": "MOZ:0c9516b3b1958290",
+          "country": "MOZ",
+          "shape_error": 0.6008719337147461,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000289866968119723
+        },
+        {
+          "component": "MRT:93e93b11bab4502c",
+          "country": "MRT",
+          "shape_error": 0.40499206852343206,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029592580572468385
+        },
+        {
+          "component": "MWI:7555dabddb4364d9",
+          "country": "MWI",
+          "shape_error": 0.5935091256442945,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003087608964961186
+        },
+        {
+          "component": "MYS:0abe504273f2e4bd",
+          "country": "MYS",
+          "shape_error": 0.6921646402438206,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002955813240167471
+        },
+        {
+          "component": "MYS:4035fe8bf71b03f5",
+          "country": "MYS",
+          "shape_error": 0.5484948803367511,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002972071549156574
+        },
+        {
+          "component": "NAM:d67affdeafffe7f2",
+          "country": "NAM",
+          "shape_error": 0.6656350252214519,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029138748879931065
+        },
+        {
+          "component": "NER:225f284b6e95d815",
+          "country": "NER",
+          "shape_error": 0.6421005740578014,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029656402027244955
+        },
+        {
+          "component": "NGA:edcdec1fdf6fb5c7",
+          "country": "NGA",
+          "shape_error": 0.40587218253542856,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029345134580094356
+        },
+        {
+          "component": "NIC:99f10eccc73d03bc",
+          "country": "NIC",
+          "shape_error": 0.5667731584882358,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003192573144404909
+        },
+        {
+          "component": "NIR:69fa50e543fa7c66",
+          "country": "GBR",
+          "shape_error": 0.35184295101902563,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025874619260723986
+        },
+        {
+          "component": "NLX:5daa52b59ba80d17",
+          "country": "NLD",
+          "shape_error": 0.5872357882423689,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025624719343475544
+        },
+        {
+          "component": "NLX:8b9c3398a58bdb2a",
+          "country": "NLD",
+          "shape_error": 0.37792760862112185,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029433964888780917
+        },
+        {
+          "component": "NOW:a387a8ce67e0d957",
+          "country": "NOR",
+          "shape_error": 0.8028696704294156,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002646449757395253
+        },
+        {
+          "component": "NPL:c1885306c87c4123",
+          "country": "NPL",
+          "shape_error": 0.6060826293162848,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003082573790710308
+        },
+        {
+          "component": "OMN:21af2c17fe172531",
+          "country": "OMN",
+          "shape_error": 0.801351063687465,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029617163381712164
+        },
+        {
+          "component": "PAK:447ed1858f7b7a5d",
+          "country": "PAK",
+          "shape_error": 0.4670472121514172,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029321892416345197
+        },
+        {
+          "component": "PAN:04773d2112e86006",
+          "country": "PAN",
+          "shape_error": 0.7066865702920724,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00027428991245492806
+        },
+        {
+          "component": "PER:d420f75fe20c6a02",
+          "country": "PER",
+          "shape_error": 0.3848755571847129,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029284867182255425
+        },
+        {
+          "component": "PNX:cd0b182a6ff3f568",
+          "country": "PNG",
+          "shape_error": 0.19821771583881076,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00033644827084422513
+        },
+        {
+          "component": "POL:1980df7ed9d16d12",
+          "country": "POL",
+          "shape_error": 0.28885453294907404,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002947469031279182
+        },
+        {
+          "component": "PRK:443ac4e48c09b5a9",
+          "country": "PRK",
+          "shape_error": 0.5189805729503345,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002945020521100128
+        },
+        {
+          "component": "PRX:31cd60a8869cd87c",
+          "country": "PRT",
+          "shape_error": 0.33723164733827793,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002967367614838956
+        },
+        {
+          "component": "PRY:8be730e7955b0934",
+          "country": "PRY",
+          "shape_error": 0.7574515508635098,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002754058689288241
+        },
+        {
+          "component": "QAT:f6210114a7fc4646",
+          "country": "QAT",
+          "shape_error": 0.7134003300819087,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002973981667042658
+        },
+        {
+          "component": "ROU:8bc181463815c013",
+          "country": "ROU",
+          "shape_error": 0.4452056451402835,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029431360729148537
+        },
+        {
+          "component": "RUS:7e6e84c769819aed",
+          "country": "RUS",
+          "shape_error": 0.47649819373528723,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029773298173263463
+        },
+        {
+          "component": "RUS:8afd88fb65e5e555",
+          "country": "RUS",
+          "shape_error": 0.44407567676695336,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003014336939247686
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "country": "RUS",
+          "shape_error": 0.7280583041025623,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00022590115582776793
+        },
+        {
+          "component": "RWA:11c3869510b66d95",
+          "country": "RWA",
+          "shape_error": 0.36884300535741654,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002682289968807261
+        },
+        {
+          "component": "SAH:c067a975f328d956",
+          "country": "SAH",
+          "shape_error": 0.857641013608319,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 3.9880487861726266
+        },
+        {
+          "component": "SAU:11ac65250772b5d3",
+          "country": "SAU",
+          "shape_error": 0.8532976427269097,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002920199034200932
+        },
+        {
+          "component": "SDN:e4296cf2bfa47003",
+          "country": "SDN",
+          "shape_error": 0.3746363255117424,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00025741591422523413
+        },
+        {
+          "component": "SDS:9ecb0b566ac02a31",
+          "country": "SDS",
+          "shape_error": 0.7371960150351371,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002869252722143001
+        },
+        {
+          "component": "SEN:fa5de3704b02f675",
+          "country": "SEN",
+          "shape_error": 0.5004169931548188,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003057562204057396
+        },
+        {
+          "component": "SLE:aeb8476c9a2c5e10",
+          "country": "SLE",
+          "shape_error": 0.32220564076421254,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029866303996928245
+        },
+        {
+          "component": "SLV:6884a91b71669fb2",
+          "country": "SLV",
+          "shape_error": 0.36257867136788113,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029038702853689813
+        },
+        {
+          "component": "SMR:65f777115cf6c77c",
+          "country": "SMR",
+          "shape_error": 0.691713087939957,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0004372424438044975
+        },
+        {
+          "component": "SOL:e03433706d8873bb",
+          "country": "SOL",
+          "shape_error": 0.6720102092030192,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00031162540601403776
+        },
+        {
+          "component": "SOM:b94bcf137ecd6275",
+          "country": "SOM",
+          "shape_error": 0.7464312335017815,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002978996568097081
+        },
+        {
+          "component": "SPI:47f581a247f875ae",
+          "country": "SPI",
+          "shape_error": 0.5969015293178127,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.00015594783065897566
+        },
+        {
+          "component": "SRB:334f04d632601018",
+          "country": "SRB",
+          "shape_error": 0.6549091312825608,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002961958249032559
+        },
+        {
+          "component": "SUR:1d7cda681e299b07",
+          "country": "SUR",
+          "shape_error": 0.2352415506883525,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.24697868236332332
+        },
+        {
+          "component": "SVK:1f440da2e10fbb82",
+          "country": "SVK",
+          "shape_error": 0.6026170200322297,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003051459360936537
+        },
+        {
+          "component": "SVN:e8f334b689926950",
+          "country": "SVN",
+          "shape_error": 0.5846684185726443,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00032919202377346135
+        },
+        {
+          "component": "SWE:1320ee42b8e1186c",
+          "country": "SWE",
+          "shape_error": 0.5539079724438809,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002956312517619075
+        },
+        {
+          "component": "SWZ:e315454282eb3136",
+          "country": "SWZ",
+          "shape_error": 0.291694373210199,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002607373661509538
+        },
+        {
+          "component": "SXM:09188f4114a598b9",
+          "country": "SXM",
+          "shape_error": 0.7259570556430508,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0024894454275986577
+        },
+        {
+          "component": "SYR:bb46c77ee43515e0",
+          "country": "SYR",
+          "shape_error": 0.6737594038751527,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028171566925483393
+        },
+        {
+          "component": "TCD:a34f6ca4b3bd052d",
+          "country": "TCD",
+          "shape_error": 0.9292599342648098,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002887248789876784
+        },
+        {
+          "component": "TGO:f7afd783bdbbc052",
+          "country": "TGO",
+          "shape_error": 0.5250414646141999,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003242672877658004
+        },
+        {
+          "component": "THA:2d2e3dd6e4f6c675",
+          "country": "THA",
+          "shape_error": 0.40134626163448184,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002927000583733408
+        },
+        {
+          "component": "TJK:d6e62d7f585e085c",
+          "country": "TJK",
+          "shape_error": 0.7257650911501095,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003123042553266897
+        },
+        {
+          "component": "TKM:ef25c6485f2078c2",
+          "country": "TKM",
+          "shape_error": 0.5935661301388545,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00026131215718283585
+        },
+        {
+          "component": "TLS:e102fc60287c6426",
+          "country": "TLS",
+          "shape_error": 0.16815562981568144,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002616193501130404
+        },
+        {
+          "component": "TUN:9e23ed3c89bdb2f6",
+          "country": "TUN",
+          "shape_error": 0.7071415410985991,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030948624170812344
+        },
+        {
+          "component": "TUR:3b553df250ebf332",
+          "country": "TUR",
+          "shape_error": 0.6434906101182629,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029105586536770645
+        },
+        {
+          "component": "TUR:6fce5e1d91133e37",
+          "country": "TUR",
+          "shape_error": 0.47952244875246364,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002980931974591039
+        },
+        {
+          "component": "TZA:88eb4141b8ee7ab7",
+          "country": "TZA",
+          "shape_error": 0.424326282796161,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002852015061043378
+        },
+        {
+          "component": "UGA:c937c439d1615753",
+          "country": "UGA",
+          "shape_error": 0.38447224625869647,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.000287334464654343
+        },
+        {
+          "component": "UKR:52622876ebf1ecb8",
+          "country": "UKR",
+          "shape_error": 0.510329219810779,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002899885157576776
+        },
+        {
+          "component": "URY:a93a37d95dfce9bb",
+          "country": "URY",
+          "shape_error": 0.4558942478396477,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002752758925623766
+        },
+        {
+          "component": "USA:13c14a072880aac5",
+          "country": "USA",
+          "shape_error": 0.9133574649254774,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": 0.24690966885554455
+        },
+        {
+          "component": "USA:90107a05206832e4",
+          "country": "USA",
+          "shape_error": 0.38992784704059713,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00030079618923373186
+        },
+        {
+          "component": "USG:4318b9af790790b9",
+          "country": "USG",
+          "shape_error": 0.7251346404517642,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003141799816755997
+        },
+        {
+          "component": "UZB:448c5653f0be3548",
+          "country": "UZB",
+          "shape_error": 0.6921370765142636,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00028595654789931313
+        },
+        {
+          "component": "VEN:301beeea27f4cccb",
+          "country": "VEN",
+          "shape_error": 0.59132989661866,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002897041755560714
+        },
+        {
+          "component": "VNM:749468814d903c2a",
+          "country": "VNM",
+          "shape_error": 0.7513067177905293,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0003104874801087565
+        },
+        {
+          "component": "WEB:8660f88c9871d216",
+          "country": "PSX",
+          "shape_error": 0.2956904552760331,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029545632233141106
+        },
+        {
+          "component": "WSB:50ca0205ee67e049",
+          "country": "WSB",
+          "shape_error": 0.7422274621735918,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0007616204213106714
+        },
+        {
+          "component": "YEM:64d271dfdccb3847",
+          "country": "YEM",
+          "shape_error": 0.2776470227137715,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029889539156680023
+        },
+        {
+          "component": "ZAF:eb3d29c8e7d957f4",
+          "country": "ZAF",
+          "shape_error": 0.44562909544009144,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002951651344708095
+        },
+        {
+          "component": "ZMB:583491139c8eb3b0",
+          "country": "ZMB",
+          "shape_error": 0.5789997684097279,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.0002807808398482825
+        },
+        {
+          "component": "ZWE:241a07c809723778",
+          "country": "ZWE",
+          "shape_error": 0.4937284274375531,
+          "parts": 1,
+          "valid": true,
+          "relative_area_error": -0.00029923806042320145
+        }
+      ],
+      "maximum_patch_relative_area_error": 3.9880487861726266,
+      "approved": false,
+      "geometry_sha256": "e8122acb937a9d68f00404cc5b9278a8a668a78572d440eaf0281f05c02b8e72",
+      "seconds": 12.190943805035204
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-mainland-flow/input/geometry.geojson": "4cc7e51c0d38456e6ed53fb0b8ee448c34b6d5244521ca0d5f673adc8aee4564",
+    "output/auto-cartogram/world-55000-h3-5-density/sources.csv": "63e91c75919b75a9397ae0dc8032164b6c2d3ebc91dbe82a2b52d4cddf04b960",
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram": "a7ee976eaf8a8efb774e26a9764644672bcb550d7ec523027f57aef3af39ccca",
+    "output/auto-cartogram/vendor/cartogram-cpp/include/constants.hpp": "738c7144ccf229f0c9e0532a3e307431b6e845ad48a0c0047247108e3681ec84"
+  },
+  "script_sha256": "973a528b5712f6333631496328b2eb1cc893caf265f17d5c6e0523ec31cd113e",
+  "limits": [
+    "Continuous mainland experiment only. No tiles, islands, lake insertion, or population exports are changed.",
+    "The control has the same artificial subdivision as density runs, but uniform density within each original component.",
+    "Patch targets blend population share and geographic area share within each component. Component tile-area targets remain unchanged.",
+    "Kontur H3-5 cells place their population at their centres. Outside centres use the nearest patch of the same component.",
+    "The equal-area grid is not an equal-distance grid. Nominal kilometres use radius 6371 km.",
+    "The uniform share is a positive density floor, not Gaussian smoothing. Grid aggregation removes fine detail.",
+    "Extra internal boundaries and solver preprocessing can affect the result. Compare with the subdivided control.",
+    "Complete means that review artifacts were produced, not solver convergence or approval. Check solver_success and measured area errors.",
+    "Solver output needs validity, area, and topology checks before use as a tile guide."
+  ]
+}
