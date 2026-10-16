@@ -57,6 +57,90 @@ review. It does not use country-specific rules.
 
 ## Validation
 
-All 301 tests pass. Saved code is in
-`output/auto-cartogram/coarse90-repair-code-1/` through `coarse90-repair-code-3/`.
+All 308 tests pass. Saved code is in
+`output/auto-cartogram/coarse90-repair-code-1/` through `coarse90-repair-code-10/`.
 No result is approved for production.
+
+## Published mainland trial
+
+[Review the world and regions](results/geography/coarse90-repairs/mainland-v1/index.html).
+The land layout is `output/auto-cartogram/coarse90-lithuania-lakes-v1/`.
+
+This trial has 69 missing and 34 false contacts, compared with 73 and 48 in the
+current best. It gains five true contacts, loses Finland–Norway, removes 14
+false contacts, and adds no false contact. Thus, the lower total is not enough
+for production approval.
+
+- Malaysia touches Thailand.
+- Sweden no longer touches Germany or Poland. It touches Norway and Finland.
+- Lithuania has two exterior-water edges, compared with zero before.
+- Manhattan remains beside the western end of Long Island.
+- Colombia still touches Panama. A preliminary trial broke this connection;
+  the two-stage docking pass restores it.
+- Paraguay still has 16 exterior-water edges. This remains a defect.
+
+Checked the world, Europe, Africa, Indonesia, Japan/Korea, South America, and
+New York images. The Nordic outlines remain weak. The Nordic group also lacks
+its mainland connections. The new Finland–Norway loss is a regression. A local
+fixed-footprint test could not restore that border within its constraints.
+
+The final publication check verifies 55,000 exact tiles, 481 connected
+components, 45 lakes, and 220 empty lake cells. It checks every lake's required
+and allowed shores. The current best and production data are unchanged.
+
+### Lake regression found and corrected
+
+A short Finland translation opened Lake Saimaa to the sea. Checking only the
+set of country labels beside a lake did not detect the missing shore cells.
+The stricter separation pass fixes all cells next to a lake. The local integer
+fit can also fix these cells.
+
+For the published trial, `transport_moved_lakes.py` moves empty lake cells by
+the recorded common translation of their shore countries. Lake Saimaa moves
+one tile east and two north. No land tile changes. The lake remains enclosed
+by Finland. All original lake shore checks pass. A mixed shore translation or
+an occupied destination is rejected if the final shore constraints fail.
+
+### Local coast solver
+
+The first integer model added connectivity constraints after each solve. It
+used too much time on disconnected solutions. The revised model sends a
+continuous flow from a fixed root through each country's assigned cells.
+Unchanged exterior pieces are compressed into fixed nodes. This enforces
+connectivity in the first solve. Independent checks still reject splits,
+count errors, false borders, and missing required contacts.
+
+A three-tile reach limit finds an optimal local repair for Lithuania. Wider
+Paraguay tests reach their time limits without a valid solution. Tests with a
+shorter reach are infeasible. These results apply only to the tested windows,
+fixed roots, and retained-contact constraints.
+
+### Why Paraguay remains on the coast
+
+In the 1,000-unit coast-penalty partition, Paraguay has zero exterior-water
+edges. Repair raises this to 15; border fitting leaves 14. The partition uses
+small Chilean and Brazilian pieces as coastal cover. Some Chilean pieces touch
+Paraguay, which is itself a false border. Repair removes these pieces. It also
+exchanges five Paraguayan cells with neighbouring fragments.
+
+Repeating source-border fragment selection on this partition does not solve
+the problem. The resulting map has 75 missing and 50 false contacts. Rejected.
+The next useful test must preserve a valid coastal cover during region
+assignment and fragment repair, rather than only penalize inland coast cells.
+
+### Reproduction sequence
+
+Use the geometry environment's Python executable. Each output must be new.
+
+1. Run `repair_coarse90_mainland.py` from the saved current-best partition.
+2. Run `separate_false_contacts.py`. For the published exploratory candidate,
+   the saved pre-strict-shore separation is `coarse90-separated-v3`.
+3. Run `fit_local_coasts.py` with a five-tile margin, a three-tile reach, and
+   Lithuania as the target. The saved successful run is `coarse90-local-coasts-v6`.
+4. Run `transport_moved_lakes.py` with the recorded separation and its reference
+   layout. This gives `coarse90-lithuania-lakes-v1` without changing land cells.
+5. Run `review_coarse90_repairs.py`. It rejects invalid lake shores before
+   publication.
+
+The saved snapshots retain the exact code for these trials. Current defaults
+use stricter shore guards. They need not reproduce the earlier trial's moves.

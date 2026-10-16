@@ -44,6 +44,20 @@ class VacancyTests(unittest.TestCase):
         self.assertEqual(state.exterior, ocean)
         self.assertEqual({k: v for k, v in state.contacts.items() if v}, contacts)
 
+    def test_coastal_vacancy_opens_exterior_water_and_can_be_undone(self):
+        state = VacancyLayout(self.rectangle(), {('a', 'b')})
+        owners, ocean = dict(state.owners), set(state.exterior)
+        path = [(x, 0) for x in range(4, 13)]
+        self.assertIsNone(state.attempt(path))
+        action = state.attempt(path, coastal=True)
+        self.assertIsNotNone(action)
+        self.assertIn((4, 0), state.exterior)
+        self.assertTrue(state.exterior <= exterior_water(state.owners))
+        self.assertEqual({c:len(p) for c,p in state.tiles.items()}, {'a':48, 'b':48})
+        state.undo(action)
+        self.assertEqual(state.owners, owners)
+        self.assertEqual(state.exterior, ocean)
+
     def test_country_split_is_rejected(self):
         a = ({(x, y) for x in [0, 1, 5, 6] for y in range(3)} |
              {(2, 1), (3, 1), (4, 1)})

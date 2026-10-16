@@ -46,6 +46,13 @@ class CoarseRepairTests(unittest.TestCase):
         self.assertTrue(required <= contacts(owner))
         self.assertEqual({c:len(p) for c,p in result.items()}, {c:len(p) for c,p in tiles.items()})
 
+    def test_separation_cannot_open_a_lake_to_the_sea(self):
+        tiles = {'a': {(x,y) for x in range(3) for y in range(3)}-{(1,1)},
+                 'b': {(x,y) for x in range(301) for y in (-2,-1)}}
+        result, moves = separate(tiles, set(), blocked={(1,1)})
+        self.assertFalse(moves)
+        self.assertEqual(result, tiles)
+
     def test_template_restore_keeps_existing_true_borders(self):
         tiles = {'a': {(0, 0)}, 'b': {(1, 0), (2, 0)}}
         result, moves = restore(tiles, tiles, {('a', 'b')}, {'a': (0, 0), 'b': (1, 0)})
