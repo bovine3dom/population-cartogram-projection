@@ -1475,5 +1475,6 @@ edges in the partition and 16 after repair. These defects remain open.
 
 Published the candidate, comparisons, audit, records, and cell downloads at
 `results/geography/coarse90-repairs/index.html`. No strategic cuts or H3-MON
-changes. The current-best cell SHA256 remains
+changes. Continued mainland experiments are recorded in `coarse90-repairs.md`.
+The current-best cell SHA256 remains
 `3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e`.

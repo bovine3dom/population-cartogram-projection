@@ -6,6 +6,8 @@ from pathlib import Path
 import subprocess
 
 import audit_coarse90
+import dock_true_borders
+import place_coast_graph
 import place_lake_regions
 import restore_archipelagos
 import review_layout
@@ -14,7 +16,7 @@ from run_margin1_projection import ROOT, INPUTS, POLYGONS, LAKES
 from save_review import digest
 
 
-def run(output):
+def run(output, dock=False):
     parent = ROOT/'planet-kontur-coarse90'
     saved = json.loads((parent/'run.json').read_text())
     if not saved['complete'] or digest(parent/'layout/cells.csv') != saved['cells_sha256']:
@@ -22,12 +24,20 @@ def run(output):
     if output.exists():
         raise ValueError('Use a new output directory')
     output.mkdir(parents=True)
-    record = dict(complete=False, approved=False, parent=str(parent),
+    record = dict(complete=False, approved=False, parent=str(parent), dock=dock,
                   inputs={str(p): digest(p) for p in [parent/'run.json', parent/'layout/cells.csv',
                       parent/'coast-islands/cells.csv', INPUTS/'groups.csv', INPUTS/'geographic-contacts.csv',
                       POLYGONS, LAKES]}, script_sha256=digest(Path(__file__)))
     try:
-        restore_archipelagos.run(INPUTS, parent/'coast-islands', POLYGONS, output/'islands',
+        island_input = parent/'coast-islands'
+        if dock:
+            dock_true_borders.run(INPUTS, parent/'docked', output/'rejoined', max_tiles=550,
+                                  radius=64, detached_only=True, no_new_false=True)
+            dock_true_borders.run(INPUTS, output/'rejoined', output/'borders', max_tiles=550,
+                                  radius=64, no_new_false=True)
+            place_coast_graph.run(INPUTS, output/'borders', POLYGONS, output/'coast-islands', preserve_order=True)
+            island_input = output/'coast-islands'
+        restore_archipelagos.run(INPUTS, island_input, POLYGONS, output/'islands',
                                   bridge_groups=True, coastal_groups=True)
         lakes = json.loads(LAKES.read_text())
         settings = {k: lakes[k] for k in ['maximum_lakes', 'search_radius', 'placement_attempts',
@@ -48,4 +58,5 @@ def run(output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--dock', action='store_true')
     run(**vars(parser.parse_args()))

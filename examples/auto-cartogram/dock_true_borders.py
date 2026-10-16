@@ -41,7 +41,7 @@ def candidates(body, tiles, owners, required, radius):
     return shifts
 
 
-def place(tiles, required, max_tiles=550, radius=32, rounds=4, positions=None, axis_degrees=2., detached_only=False, dependents=None):
+def place(tiles, required, max_tiles=550, radius=32, rounds=4, positions=None, axis_degrees=2., detached_only=False, dependents=None, no_new_false=False):
     tiles = {c: set(points) for c, points in tiles.items()}
     owners = {p: c for c, points in tiles.items() for p in points}
     landmasses = groups_for(tiles, required)
@@ -97,7 +97,7 @@ def place(tiles, required, max_tiles=550, radius=32, rounds=4, positions=None, a
                 boundary = {tuple(sorted((c, outside[q]))) for p, c in shifted.items()
                             for q in adjacent(p) if q in outside}
                 gained = boundary & required
-                if not gained or len(boundary-required) > len(current-required):
+                if not gained or len(boundary-required) > len(current-required) or (no_new_false and boundary-required-current):
                     continue
                 core_gains = sum(a in anchor or b in anchor for a, b in gained)
                 ranked.append(((-core_gains, -len(gained), len(boundary-required), dx*dx+dy*dy, dx, dy), shifted, boundary))
@@ -140,7 +140,7 @@ def coastal_dependents(polygons, tiles, required, radius_km):
     return dependents
 
 
-def run(inputs, layout, output, max_tiles=550, radius=32, rounds=4, detached_only=False, polygons=None, coastal_islands_km=500.):
+def run(inputs, layout, output, max_tiles=550, radius=32, rounds=4, detached_only=False, polygons=None, coastal_islands_km=500., no_new_false=False):
     if output.exists() or min(max_tiles, radius, rounds) < 1 or not math.isfinite(coastal_islands_km) or coastal_islands_km <= 0:
         raise ValueError('Use a new output and positive settings')
     rows, original, owners = load(inputs, layout)
@@ -149,7 +149,7 @@ def run(inputs, layout, output, max_tiles=550, radius=32, rounds=4, detached_onl
     required = {tuple(sorted((r['a'], r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented'] == 'true'}
     positions = {c: ((float(r['west'])+float(r['east']))/2, (float(r['south'])+float(r['north']))/2) for c, r in rows.items()}
     dependents = coastal_dependents(polygons, original, required, coastal_islands_km) if polygons else {}
-    tiles, moves = place(original, required, max_tiles, radius, rounds, positions=positions, detached_only=detached_only, dependents=dependents)
+    tiles, moves = place(original, required, max_tiles, radius, rounds, positions=positions, detached_only=detached_only, dependents=dependents, no_new_false=no_new_false)
     after = contacts({p: c for c, points in tiles.items() for p in points})
     before = contacts(owners)
     if (before & required)-after or len(after-required) > len(before-required):
@@ -160,7 +160,7 @@ def run(inputs, layout, output, max_tiles=550, radius=32, rounds=4, detached_onl
         writer.writerow(['component_id', 'x', 'y'])
         for c, points in sorted(tiles.items()):
             writer.writerows((c, x, y) for x, y in sorted(points))
-    report = dict(max_tiles=max_tiles, radius=radius, rounds=rounds, detached_only=detached_only,
+    report = dict(max_tiles=max_tiles, radius=radius, rounds=rounds, detached_only=detached_only, no_new_false=no_new_false,
                   coastal_islands_km=coastal_islands_km, dependent_islands=dependents, moves=moves,
                   missing_before=len(required-before), missing_after=len(required-after),
                   false_before=len(before-required), false_after=len(after-required),
@@ -184,6 +184,7 @@ if __name__ == '__main__':
     parser.add_argument('--polygons', type=Path, help='Move nearby independent islands with their nearest source land component')
     parser.add_argument('--coastal-islands-km', type=float, default=500.)
     parser.add_argument('--detached-only', action='store_true')
+    parser.add_argument('--no-new-false', action='store_true', help='Do not exchange an old false contact for a new one')
     for name, default in [('max-tiles', 550), ('radius', 32), ('rounds', 4)]:
         parser.add_argument('--'+name, type=int, default=default)
     print(json.dumps(run(**vars(parser.parse_args())), indent=2))

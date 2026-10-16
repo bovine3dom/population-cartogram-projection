@@ -27,6 +27,14 @@ def pieces(points):
     return sorted(result,key=lambda p:(-len(p),min(p)))
 
 
+def preferred_piece(parts, component, owners, required):
+    def support(part):
+        neighbours={owners[q] for p in part for q in adjacent(p) if q in owners and owners[q]!=component}
+        return sum(tuple(sorted((component,d))) in required for d in neighbours)
+    best=max(parts,key=lambda p:(support(p),len(p),min(p)))
+    return best if support(best)>support(parts[0]) else None
+
+
 class Repair:
     def __init__(self,tiles,fixed=()):
         self.tiles={c:set(p) for c,p in tiles.items()};self.fixed=set(fixed)
@@ -149,16 +157,28 @@ class Repair:
         return dict(component=c,removed=sorted(removed),added=sorted(added))
 
 
-def run(inputs,layout,output,rounds=2000,choices=16,relocate_fragments=False,borrow_coast=False):
+def run(inputs,layout,output,rounds=2000,choices=16,relocate_fragments=False,borrow_coast=False,prefer_true_borders=False):
     if output.exists():raise ValueError('Output already exists')
     if rounds<1 or choices<1:raise ValueError('Use positive search limits')
-    if borrow_coast and not relocate_fragments:raise ValueError('Coast borrowing requires fragment relocation')
+    if (borrow_coast or prefer_true_borders) and not relocate_fragments:raise ValueError('Coast borrowing and border preference require fragment relocation')
     hashes={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',layout/'cells.csv',layout/'complete.txt']}
     scripts={name:digest(Path(__file__).with_name(name)) for name in ['repair_partition.py','review_layout.py']}
     shapes,tiles,owners=load(inputs,layout)
     if any(len(tiles[c])!=int(shapes[c]['tiles']) for c in tiles):raise ValueError('Exact starting budgets required')
     movable={r[k] for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true' for k in ['a','b']}
     fixed=set(tiles)-movable;state=Repair(tiles,fixed);before=state.report();history=[];started=time.monotonic()
+    preferred=[]
+    if prefer_true_borders:
+        required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
+        for c in sorted(movable):
+            parts=state.parts[c]
+            if len(parts)<2:continue
+            best=preferred_piece(parts,c,state.owners,required)
+            if best is None:continue
+            state.parts[c]=[best]+[p for p in parts if p is not best]
+            moved=state.relocate(c,borrow_coast)
+            if moved is None:state.parts[c]=parts
+            else:preferred.append(moved)
     for turn in range(rounds):
         move=state.step(choices)
         if move is None:break
@@ -172,7 +192,7 @@ def run(inputs,layout,output,rounds=2000,choices=16,relocate_fragments=False,bor
     if not relocate_fragments and set(state.owners)!=set(owners):raise AssertionError('Footprint changed')
     if any(len(state.tiles[c])!=len(tiles[c]) for c in tiles):raise AssertionError('Budgets changed')
     if any(state.tiles[c]!=tiles[c] for c in fixed):raise AssertionError('Fixed island changed')
-    record=dict(method='Count-preserving fragment swaps, with optional compact relocation of secondary pieces',before=before,after=state.report(),swaps=len(history),maximum_rounds=rounds,choices=choices,relocate_fragments=relocate_fragments,borrow_coast=borrow_coast,borrow_limit_cells=32 if borrow_coast else None,borrow_choices=64 if borrow_coast else None,borrow_maximum_depth=4 if borrow_coast else None,relocated_components=len(relocations),removed_land_cells=len(set(owners)-set(state.owners)),added_land_cells=len(set(state.owners)-set(owners)),fixed_components=len(fixed),elapsed_seconds=time.monotonic()-started,inputs=hashes,scripts=scripts,limit='Swaps leave the footprint unchanged and reduce cells outside the largest connected pieces without increasing region component counts. Optional relocation removes secondary pieces and grows the main piece into empty neighbour cells; it never connects to the discarded pieces. Relocation can change coasts and empty spaces. Optional coast borrowing replaces a blocked fragment through a bounded chain of adjacent donor-cell transfers; the final donor grows into empty space. It is limited to 32 fragment cells, 64 donor-cell choices per step, and four regions in a compensation chain. Some fragments can remain if growth is blocked. Occupied holes are allowed; borders and geographic positions are not guaranteed.')
+    record=dict(prefer_true_borders=prefer_true_borders,preferred_relocations=preferred,method='Count-preserving fragment swaps, with optional compact relocation of secondary pieces',before=before,after=state.report(),swaps=len(history),maximum_rounds=rounds,choices=choices,relocate_fragments=relocate_fragments,borrow_coast=borrow_coast,borrow_limit_cells=32 if borrow_coast else None,borrow_choices=64 if borrow_coast else None,borrow_maximum_depth=4 if borrow_coast else None,relocated_components=len(relocations),removed_land_cells=len(set(owners)-set(state.owners)),added_land_cells=len(set(state.owners)-set(owners)),fixed_components=len(fixed),elapsed_seconds=time.monotonic()-started,inputs=hashes,scripts=scripts,limit='Swaps leave the footprint unchanged and reduce cells outside the largest connected pieces without increasing region component counts. Optional relocation removes secondary pieces and grows the main piece into empty neighbour cells; it never connects to the discarded pieces. Relocation can change coasts and empty spaces. Optional coast borrowing replaces a blocked fragment through a bounded chain of adjacent donor-cell transfers; the final donor grows into empty space. It is limited to 32 fragment cells, 64 donor-cell choices per step, and four regions in a compensation chain. Some fragments can remain if growth is blocked. Occupied holes are allowed; borders and geographic positions are not guaranteed.')
     output.parent.mkdir(parents=True,exist_ok=True);temp=Path(tempfile.mkdtemp(prefix='repair-partition-',dir=output.parent))
     try:
         with (temp/'cells.csv').open('w',newline='') as stream:
@@ -196,5 +216,6 @@ if __name__=='__main__':
     for name in ['inputs','layout','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--rounds',type=int,default=2000);parser.add_argument('--choices',type=int,default=16)
     parser.add_argument('--relocate-fragments',action='store_true',help='Remove remaining secondary pieces and grow the main piece; changes the footprint')
+    parser.add_argument('--prefer-true-borders',action='store_true',help='First keep a fragment with more real border neighbours, rather than the largest fragment')
     parser.add_argument('--borrow-coast',action='store_true',help='For up to 32 blocked fragment cells, use bounded neighbour chains that end at empty space; no connector paths')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))
