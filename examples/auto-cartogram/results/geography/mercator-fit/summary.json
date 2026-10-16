@@ -1,0 +1,54 @@
+[
+  {
+    "variant": "eurasia",
+    "tiles": 25845,
+    "components": 26,
+    "exact_budgets": true,
+    "unchanged_fresh_shapes": true,
+    "false_contacts": 0,
+    "retained_contacts": 4,
+    "all_components_connected": true,
+    "solver_converged": true,
+    "packing_expansion": 1.0,
+    "borders_with_nearest_tile_centres_within_3": 22
+  },
+  {
+    "variant": "north-america",
+    "tiles": 3317,
+    "components": 3,
+    "exact_budgets": true,
+    "unchanged_fresh_shapes": true,
+    "false_contacts": 0,
+    "retained_contacts": 0,
+    "all_components_connected": true,
+    "solver_converged": true,
+    "packing_expansion": 1.0,
+    "borders_with_nearest_tile_centres_within_3": 2
+  },
+  {
+    "variant": "quadratic-control",
+    "tiles": 25845,
+    "components": 26,
+    "exact_budgets": true,
+    "unchanged_fresh_shapes": true,
+    "false_contacts": 0,
+    "retained_contacts": 1,
+    "all_components_connected": true,
+    "solver_converged": false,
+    "packing_expansion": 1.6,
+    "borders_with_nearest_tile_centres_within_3": 1
+  },
+  {
+    "variant": "stronger-borders",
+    "tiles": 25845,
+    "components": 26,
+    "exact_budgets": true,
+    "unchanged_fresh_shapes": true,
+    "false_contacts": 0,
+    "retained_contacts": 0,
+    "all_components_connected": true,
+    "solver_converged": true,
+    "packing_expansion": 1.6,
+    "borders_with_nearest_tile_centres_within_3": 1
+  }
+]

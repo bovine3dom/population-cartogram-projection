@@ -1,0 +1,650 @@
+{
+  "projection": "Spherical Mercator; fresh independently scaled outlines",
+  "countries": [
+    "RUS",
+    "CHN",
+    "IND"
+  ],
+  "neighbours": 1,
+  "position_basis": "population centres",
+  "release": 24.0,
+  "border_weight": "clip(log1p(corridor_population / 100000), 0.05, 5)",
+  "tiles": 25845,
+  "components": 26,
+  "required_contacts": 46,
+  "retained_contacts": 0,
+  "lost_non_sparse": 22,
+  "seed_expansion": 3.0,
+  "packing_expansion": 1.6,
+  "initial_energy": 49329.6000857866,
+  "continuous_energy": 21327.5114487282,
+  "packed_energy": 50279.39371866791,
+  "success": true,
+  "message": "Optimization terminated successfully",
+  "iterations": 144,
+  "order_energy": 0.0,
+  "records": [
+    {
+      "component": "AFG:cda2af5bb6ea22f0",
+      "country": "AFG",
+      "tiles": 291,
+      "outline_iou": 0.8956561541414568,
+      "packing_shift": 37.57932201241691
+    },
+    {
+      "component": "AZE:0510388634a9edd9",
+      "country": "AZE",
+      "tiles": 69,
+      "outline_iou": 0.8278543876263234,
+      "packing_shift": 47.103361241182895
+    },
+    {
+      "component": "BGD:d6d0c7df0b40a187",
+      "country": "BGD",
+      "tiles": 1152,
+      "outline_iou": 0.9196342661149657,
+      "packing_shift": 72.33879318408236
+    },
+    {
+      "component": "BLR:216ea6b406f5bc6c",
+      "country": "BLR",
+      "tiles": 65,
+      "outline_iou": 0.8628929779264438,
+      "packing_shift": 65.8732527508534
+    },
+    {
+      "component": "BTN:fe4a4d07e153ef17",
+      "country": "BTN",
+      "tiles": 6,
+      "outline_iou": 0.7151819109797017,
+      "packing_shift": 40.65383099643973
+    },
+    {
+      "component": "CHN:72cd37e37e634df7",
+      "country": "CHN",
+      "tiles": 9632,
+      "outline_iou": 0.9803938112308208,
+      "packing_shift": 77.08056988909844
+    },
+    {
+      "component": "EST:50bd04ff06509a99",
+      "country": "EST",
+      "tiles": 9,
+      "outline_iou": 0.7517719229317463,
+      "packing_shift": 69.33806193099026
+    },
+    {
+      "component": "FIN:9332a3268ae7c503",
+      "country": "FIN",
+      "tiles": 37,
+      "outline_iou": 0.8127037865322253,
+      "packing_shift": 68.07455445881934
+    },
+    {
+      "component": "GEO:d709e483cc2819fe",
+      "country": "GEO",
+      "tiles": 25,
+      "outline_iou": 0.7553628080081772,
+      "packing_shift": 53.589205298490064
+    },
+    {
+      "component": "HKG:a4b1c1ec313ba36c",
+      "country": "HKG",
+      "tiles": 35,
+      "outline_iou": 0.7085947086357662,
+      "packing_shift": 98.39257758448322
+    },
+    {
+      "component": "IND:3f0bb94d859b2064",
+      "country": "IND",
+      "tiles": 9838,
+      "outline_iou": 0.9761969290818147,
+      "packing_shift": 39.298814758213126
+    },
+    {
+      "component": "KAS:b7c84d817c090062",
+      "country": "KAS",
+      "tiles": 1,
+      "outline_iou": 0.5931340473961112,
+      "packing_shift": 9.715547350821529
+    },
+    {
+      "component": "KAZ:5d6f63a9b9f3c9f9",
+      "country": "KAZ",
+      "tiles": 134,
+      "outline_iou": 0.8771903141090108,
+      "packing_shift": 43.120438110588864
+    },
+    {
+      "component": "KGZ:401b8fcdc0eef69c",
+      "country": "KGZ",
+      "tiles": 45,
+      "outline_iou": 0.7825847904856207,
+      "packing_shift": 36.02139495628692
+    },
+    {
+      "component": "LAO:b4c511d27634a146",
+      "country": "LAO",
+      "tiles": 52,
+      "outline_iou": 0.7862541424138515,
+      "packing_shift": 92.57013885541103
+    },
+    {
+      "component": "LVA:ff14565ea5d338a5",
+      "country": "LVA",
+      "tiles": 12,
+      "outline_iou": 0.756402745127662,
+      "packing_shift": 69.8242053706995
+    },
+    {
+      "component": "MMR:e9f27e99686071f9",
+      "country": "MMR",
+      "tiles": 366,
+      "outline_iou": 0.8971570912417021,
+      "packing_shift": 85.74421246715326
+    },
+    {
+      "component": "MNG:7ecd8e5b0a42fa66",
+      "country": "MNG",
+      "tiles": 24,
+      "outline_iou": 0.8014241868995344,
+      "packing_shift": 70.75675236941461
+    },
+    {
+      "component": "NOW:a387a8ce67e0d957",
+      "country": "NOR",
+      "tiles": 30,
+      "outline_iou": 0.2688599543159466,
+      "packing_shift": 73.36628153038245
+    },
+    {
+      "component": "NPL:c1885306c87c4123",
+      "country": "NPL",
+      "tiles": 221,
+      "outline_iou": 0.902714771324892,
+      "packing_shift": 28.67591499073127
+    },
+    {
+      "component": "PAK:447ed1858f7b7a5d",
+      "country": "PAK",
+      "tiles": 1663,
+      "outline_iou": 0.9543349743476394,
+      "packing_shift": 33.870494985041056
+    },
+    {
+      "component": "PRK:443ac4e48c09b5a9",
+      "country": "PRK",
+      "tiles": 178,
+      "outline_iou": 0.8818165062513834,
+      "packing_shift": 117.74303512197278
+    },
+    {
+      "component": "RUS:b85c5bca1852870f",
+      "country": "RUS",
+      "tiles": 978,
+      "outline_iou": 0.9099756396474935,
+      "packing_shift": 50.17565916415457
+    },
+    {
+      "component": "TJK:d6e62d7f585e085c",
+      "country": "TJK",
+      "tiles": 71,
+      "outline_iou": 0.7773035176071451,
+      "packing_shift": 36.41751737890223
+    },
+    {
+      "component": "UKR:52622876ebf1ecb8",
+      "country": "UKR",
+      "tiles": 246,
+      "outline_iou": 0.9119647300300749,
+      "packing_shift": 61.33397045953452
+    },
+    {
+      "component": "VNM:749468814d903c2a",
+      "country": "VNM",
+      "tiles": 665,
+      "outline_iou": 0.8947223642975188,
+      "packing_shift": 93.72790046993855
+    }
+  ],
+  "borders": [
+    {
+      "a": "AFG:cda2af5bb6ea22f0",
+      "b": "CHN:72cd37e37e634df7",
+      "countries": "AFG\u2013CHN",
+      "nearest_tile_distance": 208.0,
+      "retained": false,
+      "corridor_population": 665.0,
+      "sparse": true
+    },
+    {
+      "a": "AFG:cda2af5bb6ea22f0",
+      "b": "PAK:447ed1858f7b7a5d",
+      "countries": "AFG\u2013PAK",
+      "nearest_tile_distance": 8.94427190999916,
+      "retained": false,
+      "corridor_population": 7664523.0,
+      "sparse": false
+    },
+    {
+      "a": "AFG:cda2af5bb6ea22f0",
+      "b": "TJK:d6e62d7f585e085c",
+      "countries": "AFG\u2013TJK",
+      "nearest_tile_distance": 10.0,
+      "retained": false,
+      "corridor_population": 2332109.0,
+      "sparse": false
+    },
+    {
+      "a": "AZE:0510388634a9edd9",
+      "b": "GEO:d709e483cc2819fe",
+      "countries": "AZE\u2013GEO",
+      "nearest_tile_distance": 7.211102550927978,
+      "retained": false,
+      "corridor_population": 648164.0,
+      "sparse": false
+    },
+    {
+      "a": "AZE:0510388634a9edd9",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "AZE\u2013RUS",
+      "nearest_tile_distance": 33.06055050963308,
+      "retained": false,
+      "corridor_population": 848162.0,
+      "sparse": false
+    },
+    {
+      "a": "BGD:d6d0c7df0b40a187",
+      "b": "IND:3f0bb94d859b2064",
+      "countries": "BGD\u2013IND",
+      "nearest_tile_distance": 25.059928172283335,
+      "retained": false,
+      "corridor_population": 87257793.0,
+      "sparse": false
+    },
+    {
+      "a": "BGD:d6d0c7df0b40a187",
+      "b": "MMR:e9f27e99686071f9",
+      "countries": "BGD\u2013MMR",
+      "nearest_tile_distance": 17.26267650163207,
+      "retained": false,
+      "corridor_population": 1742245.0,
+      "sparse": false
+    },
+    {
+      "a": "BLR:216ea6b406f5bc6c",
+      "b": "LVA:ff14565ea5d338a5",
+      "countries": "BLR\u2013LVA",
+      "nearest_tile_distance": 5.385164807134504,
+      "retained": false,
+      "corridor_population": 165149.0,
+      "sparse": false
+    },
+    {
+      "a": "BLR:216ea6b406f5bc6c",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "BLR\u2013RUS",
+      "nearest_tile_distance": 24.515301344262525,
+      "retained": false,
+      "corridor_population": 505442.0,
+      "sparse": true
+    },
+    {
+      "a": "BLR:216ea6b406f5bc6c",
+      "b": "UKR:52622876ebf1ecb8",
+      "countries": "BLR\u2013UKR",
+      "nearest_tile_distance": 8.54400374531753,
+      "retained": false,
+      "corridor_population": 721557.0,
+      "sparse": true
+    },
+    {
+      "a": "BTN:fe4a4d07e153ef17",
+      "b": "CHN:72cd37e37e634df7",
+      "countries": "BTN\u2013CHN",
+      "nearest_tile_distance": 75.07329751649384,
+      "retained": false,
+      "corridor_population": 65457.0,
+      "sparse": true
+    },
+    {
+      "a": "BTN:fe4a4d07e153ef17",
+      "b": "IND:3f0bb94d859b2064",
+      "countries": "BTN\u2013IND",
+      "nearest_tile_distance": 3.605551275463989,
+      "retained": false,
+      "corridor_population": 4028451.0,
+      "sparse": false
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "HKG:a4b1c1ec313ba36c",
+      "countries": "CHN\u2013HKG",
+      "nearest_tile_distance": 36.68787265568828,
+      "retained": false,
+      "corridor_population": 12603525.0,
+      "sparse": false
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "IND:3f0bb94d859b2064",
+      "countries": "CHN\u2013IND",
+      "nearest_tile_distance": 61.61168720299745,
+      "retained": false,
+      "corridor_population": 639255.0,
+      "sparse": true
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "KAS:b7c84d817c090062",
+      "countries": "CHN\u2013KAS",
+      "nearest_tile_distance": 138.03260484392808,
+      "retained": false,
+      "corridor_population": 2211.0,
+      "sparse": true
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "KAZ:5d6f63a9b9f3c9f9",
+      "countries": "CHN\u2013KAZ",
+      "nearest_tile_distance": 213.37759957408838,
+      "retained": false,
+      "corridor_population": 621598.0,
+      "sparse": true
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "KGZ:401b8fcdc0eef69c",
+      "countries": "CHN\u2013KGZ",
+      "nearest_tile_distance": 199.58206332233365,
+      "retained": false,
+      "corridor_population": 54881.0,
+      "sparse": true
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "LAO:b4c511d27634a146",
+      "countries": "CHN\u2013LAO",
+      "nearest_tile_distance": 97.02061636580135,
+      "retained": false,
+      "corridor_population": 475832.0,
+      "sparse": false
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "MMR:e9f27e99686071f9",
+      "countries": "CHN\u2013MMR",
+      "nearest_tile_distance": 85.14693182963201,
+      "retained": false,
+      "corridor_population": 3464194.0,
+      "sparse": false
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "MNG:7ecd8e5b0a42fa66",
+      "countries": "CHN\u2013MNG",
+      "nearest_tile_distance": 11.704699910719626,
+      "retained": false,
+      "corridor_population": 278317.0,
+      "sparse": true
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "NPL:c1885306c87c4123",
+      "countries": "CHN\u2013NPL",
+      "nearest_tile_distance": 78.81624198095213,
+      "retained": false,
+      "corridor_population": 363143.0,
+      "sparse": true
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "PAK:447ed1858f7b7a5d",
+      "countries": "CHN\u2013PAK",
+      "nearest_tile_distance": 177.0706073858674,
+      "retained": false,
+      "corridor_population": 19082.0,
+      "sparse": true
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "PRK:443ac4e48c09b5a9",
+      "countries": "CHN\u2013PRK",
+      "nearest_tile_distance": 24.596747752497688,
+      "retained": false,
+      "corridor_population": 5324350.0,
+      "sparse": false
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "CHN\u2013RUS",
+      "nearest_tile_distance": 203.18464508914053,
+      "retained": false,
+      "corridor_population": 2899267.0,
+      "sparse": true
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "TJK:d6e62d7f585e085c",
+      "countries": "CHN\u2013TJK",
+      "nearest_tile_distance": 204.79257799051214,
+      "retained": false,
+      "corridor_population": 36160.0,
+      "sparse": true
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "VNM:749468814d903c2a",
+      "countries": "CHN\u2013VNM",
+      "nearest_tile_distance": 70.0,
+      "retained": false,
+      "corridor_population": 4667555.0,
+      "sparse": false
+    },
+    {
+      "a": "EST:50bd04ff06509a99",
+      "b": "LVA:ff14565ea5d338a5",
+      "countries": "EST\u2013LVA",
+      "nearest_tile_distance": 5.385164807134504,
+      "retained": false,
+      "corridor_population": 112955.0,
+      "sparse": true
+    },
+    {
+      "a": "EST:50bd04ff06509a99",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "EST\u2013RUS",
+      "nearest_tile_distance": 32.0,
+      "retained": false,
+      "corridor_population": 152823.0,
+      "sparse": true
+    },
+    {
+      "a": "FIN:9332a3268ae7c503",
+      "b": "NOW:a387a8ce67e0d957",
+      "countries": "FIN\u2013NOR",
+      "nearest_tile_distance": 13.0,
+      "retained": false,
+      "corridor_population": 15441.0,
+      "sparse": true
+    },
+    {
+      "a": "FIN:9332a3268ae7c503",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "FIN\u2013RUS",
+      "nearest_tile_distance": 24.0,
+      "retained": false,
+      "corridor_population": 258603.0,
+      "sparse": true
+    },
+    {
+      "a": "GEO:d709e483cc2819fe",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "GEO\u2013RUS",
+      "nearest_tile_distance": 28.231188426986208,
+      "retained": false,
+      "corridor_population": 429689.0,
+      "sparse": true
+    },
+    {
+      "a": "IND:3f0bb94d859b2064",
+      "b": "KAS:b7c84d817c090062",
+      "countries": "IND\u2013KAS",
+      "nearest_tile_distance": 46.8187996428785,
+      "retained": false,
+      "corridor_population": 5288.0,
+      "sparse": true
+    },
+    {
+      "a": "IND:3f0bb94d859b2064",
+      "b": "MMR:e9f27e99686071f9",
+      "countries": "IND\u2013MMR",
+      "nearest_tile_distance": 83.86894538504703,
+      "retained": false,
+      "corridor_population": 1838207.0,
+      "sparse": false
+    },
+    {
+      "a": "IND:3f0bb94d859b2064",
+      "b": "NPL:c1885306c87c4123",
+      "countries": "IND\u2013NPL",
+      "nearest_tile_distance": 13.0,
+      "retained": false,
+      "corridor_population": 46119279.0,
+      "sparse": false
+    },
+    {
+      "a": "IND:3f0bb94d859b2064",
+      "b": "PAK:447ed1858f7b7a5d",
+      "countries": "IND\u2013PAK",
+      "nearest_tile_distance": 47.41307836451879,
+      "retained": false,
+      "corridor_population": 39896235.0,
+      "sparse": false
+    },
+    {
+      "a": "KAS:b7c84d817c090062",
+      "b": "PAK:447ed1858f7b7a5d",
+      "countries": "KAS\u2013PAK",
+      "nearest_tile_distance": 40.26164427839479,
+      "retained": false,
+      "corridor_population": 14394.0,
+      "sparse": true
+    },
+    {
+      "a": "KAZ:5d6f63a9b9f3c9f9",
+      "b": "KGZ:401b8fcdc0eef69c",
+      "countries": "KAZ\u2013KGZ",
+      "nearest_tile_distance": 8.48528137423857,
+      "retained": false,
+      "corridor_population": 2697285.0,
+      "sparse": false
+    },
+    {
+      "a": "KAZ:5d6f63a9b9f3c9f9",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "KAZ\u2013RUS",
+      "nearest_tile_distance": 9.848857801796104,
+      "retained": false,
+      "corridor_population": 2082918.0,
+      "sparse": true
+    },
+    {
+      "a": "KGZ:401b8fcdc0eef69c",
+      "b": "TJK:d6e62d7f585e085c",
+      "countries": "KGZ\u2013TJK",
+      "nearest_tile_distance": 4.47213595499958,
+      "retained": false,
+      "corridor_population": 2116699.0,
+      "sparse": false
+    },
+    {
+      "a": "LAO:b4c511d27634a146",
+      "b": "MMR:e9f27e99686071f9",
+      "countries": "LAO\u2013MMR",
+      "nearest_tile_distance": 8.06225774829855,
+      "retained": false,
+      "corridor_population": 348640.0,
+      "sparse": false
+    },
+    {
+      "a": "LAO:b4c511d27634a146",
+      "b": "VNM:749468814d903c2a",
+      "countries": "LAO\u2013VNM",
+      "nearest_tile_distance": 2.23606797749979,
+      "retained": false,
+      "corridor_population": 2525651.0,
+      "sparse": false
+    },
+    {
+      "a": "LVA:ff14565ea5d338a5",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "LVA\u2013RUS",
+      "nearest_tile_distance": 36.0,
+      "retained": false,
+      "corridor_population": 105826.0,
+      "sparse": true
+    },
+    {
+      "a": "MNG:7ecd8e5b0a42fa66",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "MNG\u2013RUS",
+      "nearest_tile_distance": 251.88290930509754,
+      "retained": false,
+      "corridor_population": 187501.0,
+      "sparse": true
+    },
+    {
+      "a": "NOW:a387a8ce67e0d957",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "NOR\u2013RUS",
+      "nearest_tile_distance": 40.44749683231337,
+      "retained": false,
+      "corridor_population": 41363.0,
+      "sparse": true
+    },
+    {
+      "a": "PRK:443ac4e48c09b5a9",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "PRK\u2013RUS",
+      "nearest_tile_distance": 380.3117142555564,
+      "retained": false,
+      "corridor_population": 314350.0,
+      "sparse": false
+    },
+    {
+      "a": "RUS:b85c5bca1852870f",
+      "b": "UKR:52622876ebf1ecb8",
+      "countries": "RUS\u2013UKR",
+      "nearest_tile_distance": 21.213203435596427,
+      "retained": false,
+      "corridor_population": 2542872.0,
+      "sparse": false
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "output/auto-cartogram/sparse-border-audit-25-wide/border-population.json": "550eb1329221c7401a2f4699f7785520eb7c05adaa3a749e870bce18acabac58",
+    "output/auto-cartogram/world-55000-h3-5-density/sources.csv": "63e91c75919b75a9397ae0dc8032164b6c2d3ebc91dbe82a2b52d4cddf04b960"
+  },
+  "scripts": {
+    "fit_mercator_shapes.py": "b2406282dedebc2c669502f5915cd2ac4bbb8dbb7682c30db046b6063c7407ac",
+    "review_projection_shapes.py": "bced5375a4b6113286b3250ea2a2abc0a8c5c50a66c50dfe86fc7443b336e973",
+    "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+    "smooth_raster_stress.py": "a02adb8aa54a45f0222659b60cc6f9595850aba08d1a1e9780fd0831a3dc9659",
+    "raster_stress.py": "9da4a14905f50dfc2d9bc2e6c15b395494f454c5e948a87952ca0f56992af29e",
+    "shape_stress.py": "73c56542a1a81a5219b924998d3ea6a57a11f641c66beb349f0b318eb1c50155",
+    "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3",
+    "geographic_order.py": "d7e38c2e568b296146964d3de213ff2cb024a0bd978fb23dfdaaf63fc96a5ca3"
+  },
+  "limits": [
+    "Regional largest-component test only; no world fit or new population mapping.",
+    "Named lakes and secondary islands are not included. Not a replacement for the lake-aware map.",
+    "Fresh shapes remain rigid. Border losses are soft preferences, not permission restricted to sparse borders.",
+    "Final packing can change the continuous solution. Inspect order and packing shifts.",
+    "Blank gaps are not geographic seas. A smaller objective is not proof of better geography."
+  ]
+}
