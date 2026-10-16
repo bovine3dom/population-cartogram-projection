@@ -24,11 +24,12 @@ def key(p):
     return tuple(np.round(p, 8))
 
 
-def sample_ring(ring, maximum_edge=2.):
+def sample_ring(ring, maximum_edge=2., shared_edges=frozenset()):
     xy = np.asarray(ring.coords)
     result = []
     for a,b in zip(xy[:-1],xy[1:]):
-        count = max(2, math.ceil(np.linalg.norm(b-a)/maximum_edge))
+        minimum = 2 if tuple(sorted((key(a),key(b)))) in shared_edges else 1
+        count = max(minimum, math.ceil(np.linalg.norm(b-a)/maximum_edge))
         result.extend(a+(b-a)*i/count for i in range(count))
     return np.array([key(p) for p in result])
 
@@ -56,9 +57,16 @@ def area_gradient(p):
 
 
 class WeldedMesh:
-    def __init__(self, source, preferred, budgets, cuts):
+    def __init__(self, source, preferred, budgets, cuts, edge_length=2., mappers=None):
         self.labels = sorted(source)
         self.budgets = np.array([budgets[c] for c in self.labels])
+        edge_counts = {}
+        for g in source.values():
+            for ring in [g.exterior,*g.interiors]:
+                for a,b in zip(list(ring.coords)[:-1],list(ring.coords)[1:]):
+                    edge = tuple(sorted((key(a),key(b))))
+                    edge_counts[edge] = edge_counts.get(edge,0)+1
+        shared_edges = {e for e,n in edge_counts.items() if n == 2}
         local, targets, country_rings, owners = [], [], {}, {}
         edge_owners = {}
         for c in self.labels:
@@ -68,9 +76,14 @@ class WeldedMesh:
             if len(src_rings) != len(ref_rings):
                 raise ValueError('Reference hole count differs: '+c)
             country_rings[c] = []
-            for ring, ref in zip(src_rings,ref_rings):
-                xy = sample_ring(ring)
-                wanted = target_ring(xy, ref, np.array([g.centroid.x,g.centroid.y]))
+            for ri,(ring,ref) in enumerate(zip(src_rings,ref_rings)):
+                xy = sample_ring(ring,edge_length,shared_edges)
+                mapper = mappers[c][ri] if mappers else None
+                try:
+                    wanted = (mapper.map(xy) if mapper and len(mapper.source['labels']) > 1 else
+                              target_ring(xy, ref, np.array([g.centroid.x,g.centroid.y])))
+                except ValueError as error:
+                    raise ValueError(f'{c}, ring {ri}: {error}') from error
                 ids = list(range(len(local),len(local)+len(xy)))
                 local.extend(xy)
                 targets.extend(wanted)
@@ -298,7 +311,7 @@ def fit(mesh, iterations=60, trust=2.):
                      verbose=False,eps_abs=1e-6,eps_rel=1e-6,max_iter=30000,polishing=True)
         solver.warm_start(x=np.r_[np.zeros(mesh.size),-rhs])
         solution = solver.solve(raise_error=False)
-        entry = dict(iteration=iteration,status=solution.info.status,qp_iterations=int(solution.info.iter),
+        entry = dict(iteration=iteration,trust=trust,status=solution.info.status,qp_iterations=int(solution.info.iter),
                      primal_residual=float(solution.info.prim_res),dual_residual=float(solution.info.dual_res))
         if solution.info.status_val not in (1,2):
             history.append(entry)
@@ -322,37 +335,61 @@ def fit(mesh, iterations=60, trust=2.):
                 break
         history.append(entry)
         print(json.dumps(entry),flush=True)
-        if not accepted or np.max(np.abs(alpha*step)) < 1e-6:
+        if not accepted:
+            if trust > .02:
+                trust = max(.02,trust/2)
+                continue
             break
+        if np.max(np.abs(alpha*step)) < 1e-6:
+            break
+        if alpha < .25:
+            trust = max(.02,trust/2)
+        elif alpha == 1:
+            trust = min(2.,trust*1.25)
     return current,history
 
 
-def run(root, output, iterations=60):
+def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False):
     import osqp
-    if output.exists() or iterations < 1:
+    if (output.exists() or iterations < 1 or not math.isfinite(source_simplify) or source_simplify < 0
+            or not math.isfinite(edge_length) or edge_length <= 0):
         raise ValueError('Use a new output directory and positive iteration limit')
     groups_path = root/'world-55000-dissolved-input/groups.csv'
     rows = {r['component_id']:r for r in read_csv(groups_path)}
     guide_path = root/'kontur-patch-flow-200-floor/blend-0.9/components.geojson'
     guide = read_shapes(guide_path)
+    guide_report = guide_path.parent.parent/'experiment.json'
+    saved = next(r for r in json.loads(guide_report.read_text())['runs'] if r['strength'] == .9)
+    if not saved['solver_success'] or saved['geometry_sha256'] != digest(guide_path):
+        raise ValueError('Saved guide differs')
     scale = math.sqrt(sum(int(rows[c]['tiles']) for c in guide)/sum(g.area for g in guide.values()))
     main = {code:max((c for c in guide if c[:3]==code),key=lambda c:int(rows[c]['tiles'])) for code in COUNTRIES}
     from shapely import affinity
     source = {c:affinity.scale(guide[c],scale,scale,origin=(0,0)) for c in main.values()}
     origin = union_all(list(source.values())).centroid
     source = {c:affinity.translate(g,-origin.x,-origin.y) for c,g in source.items()}
-    simplified = coverage_simplify(list(source.values()),.05)
+    simplified = coverage_simplify(list(source.values()),source_simplify)
     simplification = {c:outline_error(g,source[c]) for c,g in zip(source,simplified)}
     source = dict(zip(source,simplified))
-    preferred,paths = {},[groups_path,guide_path]
+    preferred,paths = {},[groups_path,guide_path,guide_report]
     for code,c in main.items():
         folder = root/('independent-kontur-flow' if code in ['RUS','CHN','IND','KAZ'] else 'independent-eurasia-neighbours')
         path = folder/code/'blend-0.9/component.geojson'
+        details = folder/'experiment.json'
+        saved_country = next(r for r in json.loads(details.read_text())['countries'] if r['component'] == c)
+        saved_run = next(r for r in saved_country['runs'] if r['strength'] == .9)
+        if not saved_run['complete'] or saved_run['exit_code'] or saved_run['output_sha256'] != digest(path):
+            raise ValueError('Independent guide differs')
         preferred[c] = normalized(read_shapes(path)[c],int(rows[c]['tiles']))
-        paths.append(path)
+        paths.extend([path,details])
     cuts = {tuple(sorted((main[a],main[b]))) for a,b in CUTS}
     audit_path = root/'sparse-border-audit-25-wide/border-population.json'
     audit = json.loads(audit_path.read_text())
+    contacts_path = root/'world-55000-dissolved-input/geographic-contacts.csv'
+    for path in [groups_path,contacts_path]:
+        if audit['inputs'].get(str(path)) != digest(path):
+            raise ValueError('Population audit inputs differ')
+    paths.append(contacts_path)
     eligible = {tuple(sorted((r['a'],r['b']))) for r in audit['borders'] if r['eligible']}
     if not cuts <= eligible:
         raise ValueError('Unaudited cut')
@@ -361,16 +398,25 @@ def run(root, output, iterations=60):
     native = read_shapes(native_path)
     paths.append(native_path)
     budgets = {c:int(rows[c]['tiles']) for c in source}
+    mappers,matching = None,[]
+    if patch_guides:
+        from kontur_boundary_map import build
+        mappers,extra,matching = build(root,main,scale,(origin.x,origin.y),budgets)
+        paths.extend(extra)
+        paths.append(Path(__file__).with_name('kontur_boundary_map.py'))
     output.mkdir(parents=True)
-    report = dict(cuts=sorted(cuts),simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
+    report = dict(cuts=sorted(cuts),patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
                   script_sha256=digest(Path(__file__)),osqp_version=osqp.__version__,
                   limits=['Shared vertices preserve entire retained border polylines, not only point contacts.',
                           'Selected cuts duplicate boundary degrees of freedom. General geometric collision checks still apply.',
                           'The reference shapes use ordered arclength matching, not exact population-point correspondence.',
                           'Areas use penalized slack variables and sequential linearization. Actual area errors are reported.',
                           'This is a regional continuous-boundary experiment, not a tile map. External neighbours, islands, and lakes are omitted.'])
-    for name,policy in [('all-borders',set()),('sparse-cuts',cuts)]:
-        mesh = WeldedMesh(source,preferred,budgets,policy)
+    for name in cases:
+        if name not in ('all-borders','sparse-cuts'):
+            raise ValueError('Unknown case')
+        policy = cuts if name == 'sparse-cuts' else set()
+        mesh = WeldedMesh(source,preferred,budgets,policy,edge_length,mappers)
         initial_checks = mesh.checks(mesh.initial)
         print(name,'initial',json.dumps(initial_checks),flush=True)
         if not initial_checks['valid'] or initial_checks['overlap'] > 1e-6:
@@ -405,4 +451,8 @@ if __name__ == '__main__':
     parser.add_argument('root',type=Path)
     parser.add_argument('output',type=Path)
     parser.add_argument('--iterations',type=int,default=60)
+    parser.add_argument('--source-simplify',type=float,default=.05)
+    parser.add_argument('--edge-length',type=float,default=2.)
+    parser.add_argument('--cases',nargs='+',choices=['all-borders','sparse-cuts'],default=['all-borders','sparse-cuts'])
+    parser.add_argument('--patch-guides',action='store_true')
     run(**vars(parser.parse_args()))

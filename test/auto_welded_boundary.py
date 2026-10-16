@@ -1,4 +1,6 @@
 import importlib.util
+import contextlib
+import io
 from pathlib import Path
 import sys
 import unittest
@@ -44,7 +46,7 @@ class WeldedBoundaryTest(unittest.TestCase):
         self.assertAlmostEqual(g['b'].area,16)
 
     def test_incomplete_edge_matching_is_not_silently_accepted(self):
-        self.source['a'] = Polygon([(0,0),(4,0),(4,2),(4,4),(0,4)])
+        self.source['a'] = Polygon([(0,0),(4,0),(4,1),(4,4),(0,4)])
         with self.assertRaisesRegex(ValueError,'misses part'):
             WeldedMesh(self.source,self.preferred,self.budgets,set())
 
@@ -75,6 +77,20 @@ class WeldedBoundaryTest(unittest.TestCase):
         jac,lower = mesh.inequalities(mesh.initial)
         self.assertGreater(jac.shape[0],8*len(mesh.triangles))
         self.assertLessEqual(float(lower.max()),1e-8)
+
+    @unittest.skipUnless(importlib.util.find_spec('osqp'),'Install mesh-requirements.txt for the QP test')
+    def test_cut_releases_shape_without_breaking_other_border(self):
+        source = {'a':box(0,0,4,4), 'b':Polygon([(4,0),(8,0),(8,2),(8,4),(4,4)]), 'c':box(8,0,16,2)}
+        preferred = {c:normalized(box(0,0,4,4),16) for c in source}
+        mesh = WeldedMesh(source,preferred,{c:16 for c in source},{('b','c')})
+        with contextlib.redirect_stdout(io.StringIO()):
+            flat,_ = fit(mesh,iterations=40)
+        g = mesh.polygons(flat)
+        self.assertGreater(g['a'].boundary.intersection(g['b'].boundary).length,3.9)
+        self.assertGreater(g['b'].distance(g['c']),1.)
+        self.assertLess(mesh.checks(flat)['maximum_area_error'],1e-4)
+        self.assertLess(mesh.checks(flat)['overlap'],1e-8)
+        self.assertLess((g['c'].bounds[2]-g['c'].bounds[0])/(g['c'].bounds[3]-g['c'].bounds[1]),1.5)
 
     @unittest.skipUnless(importlib.util.find_spec('osqp'),'Install mesh-requirements.txt for the QP test')
     def test_rectangle_fit_preserves_full_contact(self):

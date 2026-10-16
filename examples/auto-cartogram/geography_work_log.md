@@ -1072,3 +1072,38 @@ Interrupted diagnostic runs are not candidates. Current best is unchanged.
 Eight new tests cover full-edge welding, cut independence, incomplete edge
 matching, area derivatives, collision feasibility, narrow water gaps, and a
 small quadratic-program fit.
+
+### Shared-border checkpoint and contour correspondence checks
+
+Added adaptive step limits and saved a paired eight-iteration regional check in
+`output/auto-cartogram/welded-boundary-checkpoint`. All 23 control borders and
+all 19 retained cut-case borders have zero gap and positive shared length.
+Polygons are valid, overlap is below 0.000001 tile-area units, and maximum
+country area error is below 0.2%. However, shape movement is too small to count
+as an improvement. A temporary clearance initializer failed and was removed.
+There is no prescribed gap across a cut.
+
+Added a three-region test. A-B remains a complete shared edge while a B-C cut
+lets C change from a long rectangle toward a square and separate. Visually
+checked both synthetic panels and the regional cut panel. The synthetic test
+shows that release works. The regional image still has the Kazakhstan pinch
+and the narrow Russian strip. It is not a new candidate planet layout.
+
+Published the checks at `results/geography/welded-boundary/index.html`. The old
+point-contact gallery now has an explicit rejection notice and a link to these
+checks. See `welded-boundary.md` for the method, limits, and repeat commands.
+
+Audited the ordered Kontur patch labels along the source and preferred outlines.
+The label cycles agree for Russia (54 runs), China (23), India (16), and
+Kazakhstan (four outer runs and one hole run). Added an optional label-based
+contour mapper with explicit fallback records for ambiguous label cycles.
+This mode is not used in the published pair. It rejects China's sampled target
+contour because it intersects itself, including at a finer one-tile sampling
+limit. A diagnostic found five crossing edge pairs among 1,355 sampled points.
+Thus matching label order alone does not establish valid sampled contours.
+Do not remove the validity check to accept this result. The next task is
+contour correspondence and sampling with shared refinement on retained edges.
+
+All 261 automatic-cartogram tests pass. The current-best cell file retains
+SHA-256 `3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e`.
+No production layout or population mapping was replaced.
