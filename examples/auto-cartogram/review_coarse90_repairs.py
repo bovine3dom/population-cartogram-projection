@@ -65,7 +65,9 @@ def publish(layout, output):
     (output/'checks.json').write_text(json.dumps(record,indent=2)+'\n')
     d=record['known_defects'];b=record['baseline_defects']
     def coast(data,country):return sum(v['exterior_water_edges'] for c,v in data['coasts'].items() if c.startswith(country+':'))
-    checks=[('Malaysia touches Thailand',b['malaysia_thailand_contact'],d['malaysia_thailand_contact']),
+    nordic_pair=tuple(sorted(('FIN:9332a3268ae7c503','NOW:a387a8ce67e0d957')))
+    checks=[('Finland touches Norway',nordic_pair in old,nordic_pair in new),
+            ('Malaysia touches Thailand',b['malaysia_thailand_contact'],d['malaysia_thailand_contact']),
             ('Sweden touches Germany',b['sweden_germany_contact'],d['sweden_germany_contact']),
             ('Lithuania exterior-water edges',coast(b,'LTU'),coast(d,'LTU')),
             ('Paraguay exterior-water edges',coast(b,'PRY'),coast(d,'PRY'))]
@@ -78,7 +80,7 @@ def publish(layout, output):
 <p>All 55,000 tiles retain exact component budgets. All 481 components are connected. The {len(water)} lakes use {sum(map(len,water.values()))} empty cells. Lake shore checks pass.</p>
 <table><tr><th>Check</th><th>Current best</th><th>Candidate</th></tr>{table}</table>
 <p>There are {metrics['missing_contacts']} missing and {metrics['false_contacts']} false contacts. The current best has 73 and 48. The candidate gains {len(record['gained_true'])} true contacts and loses {len(record['lost_true'])}. It removes {len(record['removed_false'])} false contacts and adds {len(record['added_false'])}. These totals do not prove correct geography.</p>
-<p>Open issues include Paraguay's false coast, the missing Finland–Norway border, the Nordic shapes, and missing mainland connections. A coast can be mathematically valid but visually poor. Do not use this as a production map.</p>
+<p>Open issues include Paraguay's false coast, the Nordic shapes, and missing mainland connections. A coast can be mathematically valid but visually poor. Do not use this as a production map.</p>
 <p><a href="checks.json">Checks and exact contact changes</a> · <a href="cells.csv.gz">Land tiles</a> · <a href="lake-cells.csv.gz">Empty lake cells</a> · <a href="geography/summary.json">Geographic audit</a></p>
 <h2>World</h2><img src="review.png" alt="World trial">{regions}</html>\n''')
     return record
