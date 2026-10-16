@@ -17,6 +17,7 @@ from welded_boundary_fit import WeldedMesh
 def replay(fixture):
     """Restore only the geometry needed to evaluate collision constraints."""
     mesh = WeldedMesh.__new__(WeldedMesh)
+    mesh.contact_clearance = 0.
     mesh.labels = sorted(fixture['rings'])
     mesh.rings = {c:[np.array(r) for r in rings] for c,rings in fixture['rings'].items()}
     current,step = np.array(fixture['current']),np.array(fixture['step'])
@@ -91,6 +92,12 @@ The separating direction pointed inward. The correction uses a negative clearanc
 <div class="pair"><section><h2>Before the rejected move</h2><img src="current.png" alt="Current border close-up"></section>
 <section><h2>Rejected move</h2><img src="proposed.png" alt="Rejected border move with overlap in dark red"></section></div>
 <p>The images use the same crop. The corrected constraints reject this captured move. This does not by itself prove that a new fit succeeds.</p>
+<h2>Follow-up fits</h2>
+<p><a href="../three-country-signed/index.html">Signed-clearance fit</a> · <a href="../three-country-collision/index.html">Optional 0.0001-tile numerical clearance</a></p>
+<p>Both tests retain the complete China–Mongolia border and release Russia's borders with those two countries.
+Neither gives a useful visible release of the pinch. The numerical-clearance cut case has negligible overlap and 0.020% maximum area error,
+but stops at the solver iteration limit. Its iteration budget differs from the signed-only test; this is not a controlled timing comparison.
+The full-planet current best is unchanged.</p>
 <p><a href="checks.json">Replay checks</a> · <a href="fixture.json.gz">Two-country regression fixture</a> · <a href="trace.json.gz">Original full-mesh trace</a> · <a href="checksums.json">Checksums</a></p>
 ''')
     (output/'checksums.json').write_text(json.dumps({p.name:digest(p) for p in sorted(output.iterdir()) if p.name!='checksums.json'},indent=2)+'\n')

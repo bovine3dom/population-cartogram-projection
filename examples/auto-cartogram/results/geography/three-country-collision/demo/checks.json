@@ -1,0 +1,72 @@
+[
+  {
+    "name": "retained",
+    "retained_length": 3.9819134807011425,
+    "released_gap": 0.0,
+    "iterations": 40,
+    "last_step": {
+      "iteration": 39,
+      "trust": 2.0,
+      "status": "solved",
+      "qp_iterations": 25,
+      "primal_residual": 4.186904870045536e-19,
+      "dual_residual": 1.0762738199881674e-17,
+      "full_step_checks": {
+        "valid": true,
+        "polygon_valid": true,
+        "triangles_valid": true,
+        "overlap": 0.0,
+        "maximum_area_error": 5.119384310914299e-07
+      },
+      "full_step_merit": 0.046480789792873664,
+      "initial_merit": 0.046530805560257696,
+      "alpha": 1.0,
+      "energy": 0.04648075690864802,
+      "valid": true,
+      "polygon_valid": true,
+      "triangles_valid": true,
+      "overlap": 0.0,
+      "maximum_area_error": 5.119384310914299e-07
+    },
+    "valid": true,
+    "polygon_valid": true,
+    "triangles_valid": true,
+    "overlap": 0.0,
+    "maximum_area_error": 5.119384310914299e-07
+  },
+  {
+    "name": "cut",
+    "retained_length": 4.000000001135682,
+    "released_gap": 1.8989689262004597,
+    "iterations": 40,
+    "last_step": {
+      "iteration": 39,
+      "trust": 1.1641532182693481,
+      "status": "solved",
+      "qp_iterations": 25,
+      "primal_residual": 3.126241766687744e-20,
+      "dual_residual": 2.844277073802929e-18,
+      "full_step_checks": {
+        "valid": true,
+        "polygon_valid": true,
+        "triangles_valid": true,
+        "overlap": 0.0,
+        "maximum_area_error": 7.498998116917122e-07
+      },
+      "full_step_merit": 0.022516798289045313,
+      "initial_merit": 0.02251708763418113,
+      "alpha": 1.0,
+      "energy": 0.022516742054072555,
+      "valid": true,
+      "polygon_valid": true,
+      "triangles_valid": true,
+      "overlap": 0.0,
+      "maximum_area_error": 7.498998116917122e-07
+    },
+    "valid": true,
+    "polygon_valid": true,
+    "triangles_valid": true,
+    "overlap": 0.0,
+    "maximum_area_error": 7.498998116917122e-07
+  }
+]

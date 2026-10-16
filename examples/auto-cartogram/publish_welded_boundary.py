@@ -46,6 +46,11 @@ def run(source, output):
     report = json.loads((source/'experiment.json').read_text())
     if {c['name'] for c in report['cases']} != {'all-borders','sparse-cuts'}:
         raise ValueError('Need both completed regional cases')
+    control = next(c for c in report['cases'] if c['name'] == 'all-borders')
+    pairs = {(p['a'],p['b']) for p in control['contacts']}
+    cuts = {tuple(p) for p in report['cuts']}
+    if not cuts <= pairs:
+        raise ValueError('Cut missing from control contacts')
     output.mkdir(parents=True,exist_ok=True)
     shutil.copyfile(source/'experiment.json',output/'experiment.json')
     rows,panels = [],[]
@@ -55,9 +60,10 @@ def run(source, output):
         if (case['welded_edge_mismatches'] or not case['valid'] or case['overlap'] > 1e-6
                 or any(p['gap'] > 1e-8 or p['shared_length'] <= 1e-6 for p in retained)):
             raise ValueError('Retained border or validity check failed')
-        expected = 23 if name == 'all-borders' else 19
-        if len(retained) != expected:
-            raise ValueError('Unexpected retained border count')
+        selected_cuts = set() if name == 'all-borders' else cuts
+        if ({(p['a'],p['b']) for p in case['contacts']} != pairs
+                or {(p['a'],p['b']) for p in case['contacts'] if p['cut']} != selected_cuts):
+            raise ValueError('Contact set or cut policy differs between cases')
         folder = output/name
         folder.mkdir(exist_ok=True)
         path = source/name/'components.geojson'
@@ -78,6 +84,10 @@ Single-label rings and ambiguous label cycles still use whole-outline matching. 
                       if report.get('patch_guides') else '''<p>This pair uses whole-outline arclength matching.
 A later patch-guided experiment repairs crossing target chords with shared-edge subdivision.</p>''')
     settings = f'<p>Source simplification: {report["source_simplify"]} tile units. Maximum initial edge length: {report["edge_length"]}. Iteration limit: {report.get("iterations","not recorded")}.</p>'
+    cut_names = ', '.join(a[:3]+'–'+b[:3] for a,b in sorted(cuts))
+    scope = f'<p>This {len(control["countries"])}-country test releases {cut_names}. '
+    scope += f'Numerical contact clearance: {report.get("contact_clearance",0.)} tile units. '
+    scope += 'A nonzero clearance is an experimental numerical buffer at nearby non-welded edges, not a required visible gap. It never separates welded edges.</p>'
     (output/'index.html').write_text('''<!doctype html><meta charset="utf-8"><title>Shared-boundary fit: border checks</title>
 <style>body{font:18px system-ui;max-width:1800px;margin:32px auto;padding:0 20px}img{width:100%}.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:16px}table{border-collapse:collapse}td,th{padding:9px;border:1px solid #aaa}</style>
 <h1>Retained borders now share complete edges</h1>
@@ -91,10 +101,10 @@ Do not mistake an intact starting layout for a successful new layout. The full-p
 The mesh also checks that no source border segment was omitted during vertex matching.
 Overlap is in tile-area units. Country areas are approximate continuous areas; these are not tile layouts.</p>
 <table><tr><th>Case</th><th>Complete retained borders</th><th>Border gaps</th><th>Overlap</th><th>Maximum area error</th><th>Accepted steps / attempts</th><th>Last solver status</th></tr>'''+''.join(rows)+'''</table>
-<p>The same four audited borders are released: Russia–Kazakhstan, China–Kazakhstan, Russia–China, and Russia–Mongolia.
-There is no cut-specific attraction or gap target. General collision checks still apply.
+'''+scope+'''
+<p>There is no cut-specific attraction. General collision checks still apply.
 A cut allows separation; it does not require a visible gap.</p>
-<p>The 12-country test starts from the saved continuous guide to obtain valid border topology.
+<p>The test starts from the saved continuous guide to obtain valid border topology.
 Independent Kontur shapes supply the preferred outlines. The regional panels omit other countries, islands, and lakes.
 White areas must not be read as a new sea map.</p>
 <div class="pair">'''+''.join(panels)+'''</div>

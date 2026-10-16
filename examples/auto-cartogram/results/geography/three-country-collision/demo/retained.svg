@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120">
+<rect width="1800" height="1120" fill="#faf9f6"/>
+<g font-family="sans-serif" fill="#242424">
+<text x="40" y="40" font-size="27">Three-region test: retained</text>
+<text x="40" y="70" font-size="17">Continuous deformation of separate components. Not yet a square-tile layout. Not a production map.</text>
+<text x="40" y="96" font-size="15">A-B remains a complete shared edge. C prefers a square, with the same area as its initial long rectangle.</text>
+<path d="M603.634,794.888L604.131,520.515L603.632,246.140L325.017,246.127L50.000,245.455L50.650,520.402L50.000,795.349L325.017,794.681L603.634,794.888Z" fill="#80b1d3" fill-rule="evenodd" stroke="#444" stroke-width=".55"><title>A</title></path>
+<path d="M603.634,794.888L881.836,792.387L1165.174,786.276L1166.720,658.385L1163.996,529.648L1155.723,247.120L881.682,248.661L603.632,246.140L604.131,520.515L603.634,794.888Z" fill="#8dd3c7" fill-rule="evenodd" stroke="#444" stroke-width=".55"><title>B</title></path>
+<path d="M1750.000,761.723L1749.440,527.743L1673.951,374.805L1454.616,368.590L1235.358,374.924L1163.996,529.648L1166.720,658.385L1165.174,786.276L1249.024,928.756L1468.409,934.545L1687.615,927.755L1750.000,761.723Z" fill="#fb8072" fill-rule="evenodd" stroke="#444" stroke-width=".55"><title>C</title></path>
+<text x="881.816" y="384.588" text-anchor="middle" font-size="12" paint-order="stroke" stroke="#faf9f6" stroke-width="2">B</text>
+<text x="327.390" y="520.459" text-anchor="middle" font-size="12" paint-order="stroke" stroke="#faf9f6" stroke-width="2">A</text>
+<text x="1457.478" y="594.016" text-anchor="middle" font-size="12" paint-order="stroke" stroke="#faf9f6" stroke-width="2">C</text>
+<text x="40" y="1094" font-size="13">Sources: synthetic rectangles. Synthetic solver test; no geographic data in this panel. Source year is unknown.</text></g></svg>

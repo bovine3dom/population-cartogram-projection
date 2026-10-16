@@ -112,7 +112,10 @@ def area_gradient(p):
 
 
 class WeldedMesh:
-    def __init__(self, source, preferred, budgets, cuts, edge_length=2., mappers=None):
+    def __init__(self, source, preferred, budgets, cuts, edge_length=2., mappers=None, contact_clearance=0.):
+        if not math.isfinite(contact_clearance) or not 0 <= contact_clearance <= .001:
+            raise ValueError('Numerical contact clearance must be between zero and 0.001 tile units')
+        self.contact_clearance = contact_clearance
         self.labels = sorted(source)
         self.budgets = np.array([budgets[c] for c in self.labels])
         edge_counts = {}
@@ -311,15 +314,20 @@ class WeldedMesh:
                     distance = np.linalg.norm(separation)
                     if distance > 1e-8:
                         # A nearby finite edge is not a global half-plane.
-                        # Use the actual separating vector so every valid
-                        # current configuration admits the zero displacement.
+                        # For disjoint polygons this vector points outward.
+                        # Correct its sign below if the point is inside.
                         normal = separation/distance
                         if d != c and polygons[c].contains(Point(point)):
                             # A small accepted overlap is penetration, not a
                             # positive clearance pointing into the neighbour.
                             normal = -normal
                     gap = np.dot(separation,normal)
-                    row([(u,(1-t)*normal),(v,t*normal),(a,-(1-fraction)*normal),(b,-fraction*normal)],-gap)
+                    clearance = self.contact_clearance if d != c and not {a,b}&{u,v} else 0.
+                    if distance <= 1e-8 and not 1e-6 < fraction < 1-1e-6:
+                        # Coincident corners have no unique separating side.
+                        # Opposing positive offsets there can be infeasible.
+                        clearance = 0.
+                    row([(u,(1-t)*normal),(v,t*normal),(a,-(1-fraction)*normal),(b,-fraction*normal)],clearance-gap)
         jac = sparse.coo_matrix((vv,(rr,cc)),shape=(len(lower),self.size)).tocsc()
         return jac,np.array(lower)
 
@@ -351,7 +359,7 @@ def save_collision_trace(mesh, current, step, directory, entry, inequality, lowe
                 overlaps.append(dict(a=a,b=b,area=intersection.area,cut=tuple(sorted((a,b))) in mesh.cuts))
                 features.append(dict(type='Feature',properties=dict(stage='overlap',a=a,b=b),geometry=mapping(intersection)))
     residual = inequality@step-lower
-    report = dict(step=entry,overlaps=sorted(overlaps,key=lambda p:-p['area']),
+    report = dict(step=entry,contact_clearance=mesh.contact_clearance,overlaps=sorted(overlaps,key=lambda p:-p['area']),
                   maximum_linear_violation=max(0.,float(-residual.min())),
                   current_checks=mesh.checks(current),proposed_checks=mesh.checks(current+step),
                   rings={c:[r.tolist() for r in rings] for c,rings in mesh.rings.items()},
@@ -371,7 +379,7 @@ def fit(mesh, iterations=60, trust=2., trace_directory=None):
     for iteration in range(iterations):
         eq,rhs = mesh.equalities(current)
         inequality,lower = mesh.inequalities(current)
-        if lower.max(initial=-np.inf) > 1e-7:
+        if lower.max(initial=-np.inf) > mesh.contact_clearance+1e-7:
             checks = mesh.checks(current)
             # An accepted tolerance-sized overlap needs a corrective step;
             # zero displacement must not be required to remain feasible.
@@ -436,7 +444,7 @@ def fit(mesh, iterations=60, trust=2., trace_directory=None):
     return current,history
 
 
-def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False, trace_collisions=False, countries=COUNTRIES):
+def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False, trace_collisions=False, countries=COUNTRIES, contact_clearance=0.):
     import osqp
     if (output.exists() or iterations < 1 or not math.isfinite(source_simplify) or source_simplify < 0
             or not math.isfinite(edge_length) or edge_length <= 0):
@@ -494,7 +502,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         paths.extend(extra)
         paths.append(Path(__file__).with_name('kontur_boundary_map.py'))
     output.mkdir(parents=True)
-    report = dict(countries=list(countries),cuts=sorted(cuts),trace_collisions=trace_collisions,patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
+    report = dict(countries=list(countries),contact_clearance=contact_clearance,cuts=sorted(cuts),trace_collisions=trace_collisions,patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
                   script_sha256=digest(Path(__file__)),osqp_version=osqp.__version__,
                   limits=['Shared vertices preserve entire retained border polylines, not only point contacts.',
                           'Selected cuts duplicate boundary degrees of freedom. General geometric collision checks still apply.',
@@ -505,7 +513,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         if name not in ('all-borders','sparse-cuts'):
             raise ValueError('Unknown case')
         policy = cuts if name == 'sparse-cuts' else set()
-        mesh = WeldedMesh(source,preferred,budgets,policy,edge_length,mappers)
+        mesh = WeldedMesh(source,preferred,budgets,policy,edge_length,mappers,contact_clearance)
         initial_checks = mesh.checks(mesh.initial)
         print(name,'initial',json.dumps(initial_checks),flush=True)
         if not initial_checks['valid'] or initial_checks['overlap'] > 1e-6:
@@ -547,4 +555,5 @@ if __name__ == '__main__':
     parser.add_argument('--patch-guides',action='store_true')
     parser.add_argument('--trace-collisions',action='store_true')
     parser.add_argument('--countries',nargs='+',choices=COUNTRIES,default=COUNTRIES)
+    parser.add_argument('--contact-clearance',type=float,default=0.)
     run(**vars(parser.parse_args()))

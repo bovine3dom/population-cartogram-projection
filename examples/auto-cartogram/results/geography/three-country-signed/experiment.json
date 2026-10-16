@@ -1,0 +1,1370 @@
+{
+  "countries": [
+    "RUS",
+    "MNG",
+    "CHN"
+  ],
+  "cuts": [
+    [
+      "CHN:72cd37e37e634df7",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "MNG:7ecd8e5b0a42fa66",
+      "RUS:b85c5bca1852870f"
+    ]
+  ],
+  "trace_collisions": true,
+  "patch_guides": true,
+  "boundary_matching": [
+    {
+      "component": "RUS:b85c5bca1852870f",
+      "runs": [
+        54
+      ],
+      "shifts": [
+        0
+      ],
+      "fallbacks": [
+        null
+      ]
+    },
+    {
+      "component": "MNG:7ecd8e5b0a42fa66",
+      "runs": [
+        1
+      ],
+      "shifts": [
+        0
+      ],
+      "fallbacks": [
+        null
+      ]
+    },
+    {
+      "component": "CHN:72cd37e37e634df7",
+      "runs": [
+        23
+      ],
+      "shifts": [
+        21
+      ],
+      "fallbacks": [
+        null
+      ]
+    }
+  ],
+  "iterations": 24,
+  "source_simplify": 0.3,
+  "edge_length": 6.0,
+  "simplification": {
+    "RUS:b85c5bca1852870f": 0.005845849944280279,
+    "MNG:7ecd8e5b0a42fa66": 0.016582550810067098,
+    "CHN:72cd37e37e634df7": 0.00029053053369243464
+  },
+  "cases": [
+    {
+      "name": "all-borders",
+      "nodes": 678,
+      "triangles": 746,
+      "contour_refinement": [
+        {
+          "round": 0,
+          "split_edges": 6
+        }
+      ],
+      "initial_checks": {
+        "valid": true,
+        "polygon_valid": true,
+        "triangles_valid": true,
+        "overlap": 0.0,
+        "maximum_area_error": 0.0007875507517572933
+      },
+      "history": [
+        {
+          "iteration": 0,
+          "trust": 2.0,
+          "status": "solved",
+          "qp_iterations": 3325,
+          "primal_residual": 9.776356082012027e-07,
+          "dual_residual": 1.3448021992256178e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[51.2781872329134 -24.8669125037469]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-55.6550230796432 54.1444766043562]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.031086427571736408
+          },
+          "full_step_merit": 1732.81434569636,
+          "initial_merit": 1850.9609319706256,
+          "alpha": 0.5,
+          "energy": 1739.4894737325692,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 7.275957614183426e-12,
+          "maximum_area_error": 0.008164491869081303
+        },
+        {
+          "iteration": 1,
+          "trust": 2.0,
+          "status": "solved",
+          "qp_iterations": 2475,
+          "primal_residual": 2.412912536501818e-06,
+          "dual_residual": 1.4111735865345647e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[51.6215239835691 -23.8715310322255]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-52.8202298188981 53.6284061932077]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.035991667636594116
+          },
+          "full_step_merit": 1669.5295228492691,
+          "initial_merit": 1746.1684351735712,
+          "alpha": 0.5,
+          "energy": 1636.5093150072205,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.094947017729282e-12,
+          "maximum_area_error": 0.013079430174859907
+        },
+        {
+          "iteration": 2,
+          "trust": 2.0,
+          "status": "solved",
+          "qp_iterations": 2600,
+          "primal_residual": 1.6839957062643041e-06,
+          "dual_residual": 3.4430794485869245e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0,
+            "maximum_area_error": 0.03385731760156341
+          },
+          "full_step_merit": 1564.1952317300197,
+          "initial_merit": 1653.629731967182,
+          "alpha": 1.0,
+          "energy": 1449.377760834569,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.03385731760156341
+        },
+        {
+          "iteration": 3,
+          "trust": 2.0,
+          "status": "maximum iterations reached",
+          "qp_iterations": 30000,
+          "primal_residual": 0.00011427150010809588,
+          "dual_residual": 0.0035146132244361274
+        },
+        {
+          "iteration": 4,
+          "trust": 1.0,
+          "status": "maximum iterations reached",
+          "qp_iterations": 30000,
+          "primal_residual": 5.729087256598085e-05,
+          "dual_residual": 0.0006134026905555302
+        },
+        {
+          "iteration": 5,
+          "trust": 0.5,
+          "status": "solved",
+          "qp_iterations": 2750,
+          "primal_residual": 7.520630005909725e-07,
+          "dual_residual": 2.218253721814609e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[52.3392161658657 -22.3756321608022]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.2018028820216 52.7824972269285]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.008605103774722012
+          },
+          "full_step_merit": 1411.6509646984234,
+          "initial_merit": 1564.1952317300197,
+          "alpha": 0.5,
+          "energy": 1426.6150840375485,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.0190788725978166
+        },
+        {
+          "iteration": 6,
+          "trust": 0.5,
+          "status": "maximum iterations reached",
+          "qp_iterations": 30000,
+          "primal_residual": 6.878713487858905e-06,
+          "dual_residual": 0.0007324628055328734
+        },
+        {
+          "iteration": 7,
+          "trust": 0.25,
+          "status": "maximum iterations reached",
+          "qp_iterations": 30000,
+          "primal_residual": 1.987170681437233e-05,
+          "dual_residual": 1.7421790397948016e-06
+        },
+        {
+          "iteration": 8,
+          "trust": 0.125,
+          "status": "solved",
+          "qp_iterations": 2800,
+          "primal_residual": 1.5003411782156211e-15,
+          "dual_residual": 3.2947511546017485e-12,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.4048865305087 57.7502309755881]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.2687289037937 52.897920121669]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0005732461212820672
+          },
+          "full_step_merit": 1415.2448273553537,
+          "initial_merit": 1463.0568727082161,
+          "alpha": 0.5,
+          "energy": 1420.8983471163383,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.00968156592614855
+        },
+        {
+          "iteration": 9,
+          "trust": 0.125,
+          "status": "solved",
+          "qp_iterations": 3000,
+          "primal_residual": 3.5100066157186916e-15,
+          "dual_residual": 3.247278088168223e-11,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.3424337948297 57.6877309052731]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.3303698450819 52.8377973962447]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0006206872756470139
+          },
+          "full_step_merit": 1409.6045700826628,
+          "initial_merit": 1430.279329446067,
+          "alpha": 0.5,
+          "energy": 1415.216674874654,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 1.8189894035458565e-12,
+          "maximum_area_error": 0.004994756113726795
+        },
+        {
+          "iteration": 10,
+          "trust": 0.125,
+          "status": "solved",
+          "qp_iterations": 3300,
+          "primal_residual": 4.939784776562288e-15,
+          "dual_residual": 1.1381288618334448e-09,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.2799788351734 57.6252308700904]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.3919550199665 52.7780580352629]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0007390379440153083
+          },
+          "full_step_merit": 1404.0040445946947,
+          "initial_merit": 1417.7125420458524,
+          "alpha": 0.25,
+          "energy": 1412.3885120828368,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 5.4569682106375694e-12,
+          "maximum_area_error": 0.0037913542805180223
+        },
+        {
+          "iteration": 11,
+          "trust": 0.125,
+          "status": "solved",
+          "qp_iterations": 3050,
+          "primal_residual": 1.3400706725240714e-14,
+          "dual_residual": 9.258666048564007e-10,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.2487503115677 57.5939808612939]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.4242021963215 52.7467530125778]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0007178178328549611
+          },
+          "full_step_merit": 1401.2037931657483,
+          "initial_merit": 1413.8266549916232,
+          "alpha": 0.25,
+          "energy": 1409.56814411499,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.0028874762458362957
+        },
+        {
+          "iteration": 12,
+          "trust": 0.125,
+          "status": "solved",
+          "qp_iterations": 3400,
+          "primal_residual": 1.0553851328314664e-15,
+          "dual_residual": 7.165342768395399e-10,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.2175212942514 57.5627308546955]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.4560010527178 52.7153588178326]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0006920377620787121
+          },
+          "full_step_merit": 1398.4099283578787,
+          "initial_merit": 1410.4027574013915,
+          "alpha": 0.25,
+          "energy": 1406.7554139930837,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 1.4551915228366852e-11,
+          "maximum_area_error": 0.002207956388455501
+        },
+        {
+          "iteration": 13,
+          "trust": 0.125,
+          "status": "solved",
+          "qp_iterations": 3775,
+          "primal_residual": 1.9960425147521663e-14,
+          "dual_residual": 5.679307879659195e-12,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.1866272978014 57.5314808421603]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.4871654885669 52.6848542580726]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0007346721583161298
+          },
+          "full_step_merit": 1395.6324936040498,
+          "initial_merit": 1407.2441787386695,
+          "alpha": 0.125,
+          "energy": 1405.3519489337693,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.0019429122962199008
+        },
+        {
+          "iteration": 14,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 3250,
+          "primal_residual": 1.908244329731156e-15,
+          "dual_residual": 3.917087014194074e-09,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.2332187420753 57.5783558478902]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.00026683711053954173
+          },
+          "full_step_merit": 1399.7543085398956,
+          "initial_merit": 1405.7309050260358,
+          "alpha": 0.5,
+          "energy": 1402.5442050436825,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.0010369815413421302
+        },
+        {
+          "iteration": 15,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 4525,
+          "primal_residual": 3.5202924527129398e-15,
+          "dual_residual": 2.5394138771154545e-09,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.2020083434119 57.5471058413928]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.00028433585026732544
+          },
+          "full_step_merit": 1396.9640724531127,
+          "initial_merit": 1402.654093970545,
+          "alpha": 0.5,
+          "energy": 1399.7447484616146,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.0005883919736598964
+        },
+        {
+          "iteration": 16,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 7625,
+          "primal_residual": 1.3789099706012704e-14,
+          "dual_residual": 1.3549871057152146e-09,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.1710970811849 57.5158558367515]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0002786110376433726
+          },
+          "full_step_merit": 1394.179878159009,
+          "initial_merit": 1399.7824051102314,
+          "alpha": 0.5,
+          "energy": 1396.9531614874998,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.0003626605556424911
+        },
+        {
+          "iteration": 17,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 7025,
+          "primal_residual": 1.1735259948232611e-14,
+          "dual_residual": 8.153260496664387e-09,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.1399927298917 57.4846058360629]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0002580756566743503
+          },
+          "full_step_merit": 1391.4017904518385,
+          "initial_merit": 1396.9697629006089,
+          "alpha": 0.5,
+          "energy": 1394.1689102994221,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 7.275957614183426e-12,
+          "maximum_area_error": 0.00024465771157622385
+        },
+        {
+          "iteration": 18,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 8775,
+          "primal_residual": 8.01503432189176e-15,
+          "dual_residual": 1.9941996801076016e-08,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.1088708669322 57.4533558356626]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.00023999221272197335
+          },
+          "full_step_merit": 1388.630704957376,
+          "initial_merit": 1394.178582381885,
+          "alpha": 0.5,
+          "energy": 1391.3917092108888,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.00019520724490895702
+        },
+        {
+          "iteration": 19,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 16650,
+          "primal_residual": 2.9758715879707465e-07,
+          "dual_residual": 2.428558576644994e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.07773141938 57.4221058354024]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.5971194365428 52.5734171473744]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0002269198523237037
+          },
+          "full_step_merit": 1385.866655673922,
+          "initial_merit": 1391.398811751658,
+          "alpha": 0.5,
+          "energy": 1388.621399232468,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.0001971227836889966
+        },
+        {
+          "iteration": 20,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 8500,
+          "primal_residual": 1.885970595388864e-07,
+          "dual_residual": 2.402358946598373e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.0465771746269 57.3908558352192]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.6283694205981 52.5421671485947]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.00021735289454249962
+          },
+          "full_step_merit": 1383.1094870060188,
+          "initial_merit": 1388.627433518087,
+          "alpha": 0.5,
+          "energy": 1385.857880325689,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 1.8189894035458565e-12,
+          "maximum_area_error": 0.00019819650824426382
+        },
+        {
+          "iteration": 21,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 7450,
+          "primal_residual": 1.1947726482469667e-07,
+          "dual_residual": 2.4170469224181713e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[38.0154108569367 57.3596058351243]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-53.659619428809 52.5109171489218]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.00021031862472875584
+          },
+          "full_step_merit": 1380.3591399384711,
+          "initial_merit": 1385.8634169594097,
+          "alpha": 0.5,
+          "energy": 1383.1011005676648,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.0001989047978956382
+        },
+        {
+          "iteration": 22,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 6600,
+          "primal_residual": 2.177854609153671e-07,
+          "dual_residual": 2.4049373860054076e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[37.9842341386137 57.3283558350481]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.0002049703704614103
+          },
+          "full_step_merit": 1377.6155869798451,
+          "initial_merit": 1383.1063847815742,
+          "alpha": 0.5,
+          "energy": 1380.3510576302544,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 7.275957614183426e-12,
+          "maximum_area_error": 0.0001993797700092781
+        },
+        {
+          "iteration": 23,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 9550,
+          "primal_residual": 1.447287056355868e-07,
+          "dual_residual": 2.410882956982969e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[37.953048452286 57.2971058350105]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.00020165272550798363
+          },
+          "full_step_merit": 1374.878737170628,
+          "initial_merit": 1380.356202493389,
+          "alpha": 0.5,
+          "energy": 1377.6077063354653,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 0.0,
+          "maximum_area_error": 0.0001997358883367717
+        }
+      ],
+      "valid": true,
+      "polygon_valid": true,
+      "triangles_valid": true,
+      "overlap": 0.0,
+      "maximum_area_error": 0.0001997358883367717,
+      "countries": [
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "country": "CHN",
+          "geographic_error": 0.5925744918169742,
+          "preferred_error": 0.49949668033575534,
+          "area_error": 0.0001997358883367717
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "country": "MNG",
+          "geographic_error": 0.6277431486801635,
+          "preferred_error": 0.6277431486800253,
+          "area_error": -0.00010285738757043195
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "country": "RUS",
+          "geographic_error": 0.6274067326164903,
+          "preferred_error": 0.6076980134219638,
+          "area_error": 1.424474213229665e-05
+        }
+      ],
+      "contacts": [
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "cut": false,
+          "gap": 0.0,
+          "shared_length": 51.11983618797201
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "RUS:b85c5bca1852870f",
+          "cut": false,
+          "gap": 0.0,
+          "shared_length": 98.87530331760529
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "RUS:b85c5bca1852870f",
+          "cut": false,
+          "gap": 0.0,
+          "shared_length": 28.29907479956082
+        }
+      ],
+      "welded_edge_mismatches": 0,
+      "geometry_sha256": "acc9b6fbf1ffa16af444252a2efb18ebfbad30a37a04f11408518a785cb60d1d"
+    },
+    {
+      "name": "sparse-cuts",
+      "nodes": 733,
+      "triangles": 746,
+      "contour_refinement": [
+        {
+          "round": 0,
+          "split_edges": 6
+        }
+      ],
+      "initial_checks": {
+        "valid": true,
+        "polygon_valid": true,
+        "triangles_valid": true,
+        "overlap": 0.0,
+        "maximum_area_error": 0.0007875507517572933
+      },
+      "history": [
+        {
+          "iteration": 0,
+          "trust": 2.0,
+          "status": "solved",
+          "qp_iterations": 7475,
+          "primal_residual": 1.892183291472796e-06,
+          "dual_residual": 1.966548961339645e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[51.336697633833 -24.8616858304593]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-57.4165694927769 54.0999256430758]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.020201575610528266
+          },
+          "full_step_merit": 1668.5001267813705,
+          "initial_merit": 1850.9609319706256,
+          "alpha": 0.000244140625,
+          "energy": 1850.8144228374692,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 2.783745003398508e-07,
+          "maximum_area_error": 0.0007873596188261445
+        },
+        {
+          "iteration": 1,
+          "trust": 1.0,
+          "status": "solved",
+          "qp_iterations": 8200,
+          "primal_residual": 2.385666798739578e-06,
+          "dual_residual": 1.3934850536870367e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "CHN:72cd37e37e634df7": "Self-intersection[51.0544142626254 -25.8732946884584]",
+              "RUS:b85c5bca1852870f": "Self-intersection[-57.3886563212329 54.3161084261431]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.005294158078418376
+          },
+          "full_step_merit": 1735.2022293349012,
+          "initial_merit": 1850.9022028729091,
+          "alpha": 0.00048828125,
+          "energy": 1850.75420503909,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 6.137197487987578e-07,
+          "maximum_area_error": 0.0007869751537820102
+        },
+        {
+          "iteration": 2,
+          "trust": 0.5,
+          "status": "solved",
+          "qp_iterations": 8450,
+          "primal_residual": 1.9007921528332424e-06,
+          "dual_residual": 4.8569952606042444e-05,
+          "full_step_checks": {
+            "valid": false,
+            "polygon_valid": false,
+            "invalid": {
+              "RUS:b85c5bca1852870f": "Self-intersection[-55.9174222539868 54.4780214745237]"
+            },
+            "overlap": null,
+            "maximum_area_error": 0.004749471226782931
+          },
+          "full_step_merit": 1791.951973523068,
+          "initial_merit": 1850.841882191325,
+          "alpha": 0.00048828125,
+          "energy": 1850.723645364485,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 7.146863936213776e-07,
+          "maximum_area_error": 0.0007865905770785275
+        },
+        {
+          "iteration": 3,
+          "trust": 0.25,
+          "status": "maximum iterations reached",
+          "qp_iterations": 30000,
+          "primal_residual": 0.0007827325451209011,
+          "dual_residual": 0.03835320011447834
+        },
+        {
+          "iteration": 4,
+          "trust": 0.125,
+          "status": "solved",
+          "qp_iterations": 14600,
+          "primal_residual": 1.2471243894252027e-06,
+          "dual_residual": 2.0611479563028966e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.03368109989060031,
+            "maximum_area_error": 0.00029486964124059156
+          },
+          "full_step_merit": 1835.0490388532503,
+          "initial_merit": 1850.8112203137762,
+          "alpha": 0.0078125,
+          "energy": 1850.6003440283725,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 2.4327164283022285e-08,
+          "maximum_area_error": 0.0007804089196620234
+        },
+        {
+          "iteration": 5,
+          "trust": 0.0625,
+          "status": "solved",
+          "qp_iterations": 9825,
+          "primal_residual": 4.864372031426756e-07,
+          "dual_residual": 2.8716506252260464e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0045664258032047655,
+            "maximum_area_error": 0.00013714995115332584
+          },
+          "full_step_merit": 1842.7152227235038,
+          "initial_merit": 1850.6863837386545,
+          "alpha": 0.03125,
+          "energy": 1850.3530566918682,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 2.173674147343263e-07,
+          "maximum_area_error": 0.0007558734917552101
+        },
+        {
+          "iteration": 6,
+          "trust": 0.03125,
+          "status": "solved",
+          "qp_iterations": 6750,
+          "primal_residual": 1.0918837050769654e-06,
+          "dual_residual": 2.8857695600320073e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.004077477939063101,
+            "maximum_area_error": 1.9913767898005474e-05
+          },
+          "full_step_merit": 1846.395813107349,
+          "initial_merit": 1850.433473208333,
+          "alpha": 0.0625,
+          "energy": 1850.105300738047,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 7.575363270007074e-07,
+          "maximum_area_error": 0.000708457323871925
+        },
+        {
+          "iteration": 7,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 5325,
+          "primal_residual": 1.0483323563078332e-06,
+          "dual_residual": 1.5016713401014718e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016899107886274578,
+            "maximum_area_error": 6.168562016983792e-05
+          },
+          "full_step_merit": 1847.5697117153861,
+          "initial_merit": 1850.175841370626,
+          "alpha": 0.03125,
+          "energy": 1850.0259591599222,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 8.376773621421307e-07,
+          "maximum_area_error": 0.000686220795704684
+        },
+        {
+          "iteration": 8,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 7725,
+          "primal_residual": 1.6415966086411384e-07,
+          "dual_residual": 2.769083736131429e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016893560532480478,
+            "maximum_area_error": 5.508111377838798e-05
+          },
+          "full_step_merit": 1847.490503065423,
+          "initial_merit": 1850.0922483913319,
+          "alpha": 0.03125,
+          "energy": 1849.9466241632294,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.003197192214429e-07,
+          "maximum_area_error": 0.00066467874955356
+        },
+        {
+          "iteration": 9,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 7700,
+          "primal_residual": 5.136664051063169e-07,
+          "dual_residual": 2.0504599964876258e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016894083037186647,
+            "maximum_area_error": 4.80063866706848e-05
+          },
+          "full_step_merit": 1847.4113084247492,
+          "initial_merit": 1850.00890872092,
+          "alpha": 0.03125,
+          "energy": 1849.867295845867,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.612576832296327e-07,
+          "maximum_area_error": 0.0006438095558252144
+        },
+        {
+          "iteration": 10,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 5575,
+          "primal_residual": 1.035919452459076e-06,
+          "dual_residual": 2.269429613230143e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016898521680559497,
+            "maximum_area_error": 4.091231960579034e-05
+          },
+          "full_step_merit": 1847.332130367403,
+          "initial_merit": 1849.9258073086105,
+          "alpha": 0.015625,
+          "energy": 1849.8276342755921,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.72175257629715e-07,
+          "maximum_area_error": 0.000633700027402484
+        },
+        {
+          "iteration": 11,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 5800,
+          "primal_residual": 1.0784349115452997e-06,
+          "dual_residual": 2.292313865155149e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016899274141906062,
+            "maximum_area_error": 3.7574978962173766e-05
+          },
+          "full_step_merit": 1847.2925488803091,
+          "initial_merit": 1849.884354100071,
+          "alpha": 0.015625,
+          "energy": 1849.7879743727185,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.831819625105709e-07,
+          "maximum_area_error": 0.0006237483878474004
+        },
+        {
+          "iteration": 12,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 6350,
+          "primal_residual": 1.070320731785798e-06,
+          "dual_residual": 2.884180835238866e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016899389229365624,
+            "maximum_area_error": 3.43488838442374e-05
+          },
+          "full_step_merit": 1847.2529718115163,
+          "initial_merit": 1849.8429548478678,
+          "alpha": 0.015625,
+          "energy": 1849.7483161349169,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.94192305370234e-07,
+          "maximum_area_error": 0.0006139521720504026
+        },
+        {
+          "iteration": 13,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 6450,
+          "primal_residual": 8.524192519576846e-07,
+          "dual_residual": 2.5230823264352158e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.001689846034423681,
+            "maximum_area_error": 3.1395734061523406e-05
+          },
+          "full_step_merit": 1847.2133997806372,
+          "initial_merit": 1849.8016081059022,
+          "alpha": 0.0078125,
+          "energy": 1849.7284876614608,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.928899089572951e-07,
+          "maximum_area_error": 0.0006091303521600366
+        },
+        {
+          "iteration": 14,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 6625,
+          "primal_residual": 8.657632775914832e-07,
+          "dual_residual": 2.601894566591669e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016898645571927773,
+            "maximum_area_error": 2.9867323474874752e-05
+          },
+          "full_step_merit": 1847.1936151102634,
+          "initial_merit": 1849.7809569316807,
+          "alpha": 0.0078125,
+          "energy": 1849.7086596077822,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.916075214277953e-07,
+          "maximum_area_error": 0.0006043461743511225
+        },
+        {
+          "iteration": 15,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 6825,
+          "primal_residual": 3.3683777037370337e-07,
+          "dual_residual": 1.9225747366975974e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016896064043976367,
+            "maximum_area_error": 2.8348011700707332e-05
+          },
+          "full_step_merit": 1847.173831457668,
+          "initial_merit": 1849.7603182460655,
+          "alpha": 0.015625,
+          "energy": 1849.6690047134002,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.958148439181969e-07,
+          "maximum_area_error": 0.000594852940812074
+        },
+        {
+          "iteration": 16,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 7325,
+          "primal_residual": 4.0141514275407464e-07,
+          "dual_residual": 1.3990720915049069e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.001689615326540661,
+            "maximum_area_error": 2.5320815295382104e-05
+          },
+          "full_step_merit": 1847.134266662818,
+          "initial_merit": 1849.7190721864401,
+          "alpha": 0.0078125,
+          "energy": 1849.6491779188161,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.9193312053103e-07,
+          "maximum_area_error": 0.000590180230091164
+        },
+        {
+          "iteration": 17,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 7550,
+          "primal_residual": 3.27959632056005e-07,
+          "dual_residual": 1.849938410516607e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016896299785003066,
+            "maximum_area_error": 2.385755527900546e-05
+          },
+          "full_step_merit": 1847.1144856722567,
+          "initial_merit": 1849.6984700307432,
+          "alpha": 0.015625,
+          "energy": 1849.6095255354635,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.961058822227642e-07,
+          "maximum_area_error": 0.0005809082070081795
+        },
+        {
+          "iteration": 18,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 8000,
+          "primal_residual": 2.141771217617214e-07,
+          "dual_residual": 1.8242369973961385e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016896733086468885,
+            "maximum_area_error": 2.0952366290183377e-05
+          },
+          "full_step_merit": 1847.0749263078667,
+          "initial_merit": 1849.6572958149052,
+          "alpha": 0.0078125,
+          "energy": 1849.5896999909942,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.922168828779832e-07,
+          "maximum_area_error": 0.0005763443977334637
+        },
+        {
+          "iteration": 19,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 8250,
+          "primal_residual": 1.668235530975805e-07,
+          "dual_residual": 1.7925687073256825e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.001689677232207032,
+            "maximum_area_error": 1.9504028975436682e-05
+          },
+          "full_step_merit": 1847.0551478862678,
+          "initial_merit": 1849.6367287849753,
+          "alpha": 0.015625,
+          "energy": 1849.5500501058443,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.964205673895776e-07,
+          "maximum_area_error": 0.0005672884765838271
+        },
+        {
+          "iteration": 20,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 8775,
+          "primal_residual": 2.139916228333062e-07,
+          "dual_residual": 1.3264461641483956e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016897288824111456,
+            "maximum_area_error": 1.6613202889925738e-05
+          },
+          "full_step_merit": 1847.0155935039538,
+          "initial_merit": 1849.5956235834678,
+          "alpha": 0.0078125,
+          "energy": 1849.530225808462,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.925370250130072e-07,
+          "maximum_area_error": 0.0005628310315918261
+        },
+        {
+          "iteration": 21,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 9075,
+          "primal_residual": 1.8511164799882275e-07,
+          "dual_residual": 1.1981192343510259e-05,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016897349323699018,
+            "maximum_area_error": 1.517176795284847e-05
+          },
+          "full_step_merit": 1846.9958175664678,
+          "initial_merit": 1849.5750902055695,
+          "alpha": 0.015625,
+          "energy": 1849.4905784154282,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.967698133550584e-07,
+          "maximum_area_error": 0.0005539861746797214
+        },
+        {
+          "iteration": 22,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 9700,
+          "primal_residual": 2.652298803189346e-07,
+          "dual_residual": 2.4354913198180193e-06,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.0016897796667763032,
+            "maximum_area_error": 1.2294234630338963e-05
+          },
+          "full_step_merit": 1846.956268141367,
+          "initial_merit": 1849.5340511132908,
+          "alpha": 0.0078125,
+          "energy": 1849.4707553622895,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.928990039043128e-07,
+          "maximum_area_error": 0.0005496326143941133
+        },
+        {
+          "iteration": 23,
+          "trust": 0.02,
+          "status": "solved",
+          "qp_iterations": 10075,
+          "primal_residual": 2.2051894234788812e-07,
+          "dual_residual": 3.085093938804871e-06,
+          "full_step_checks": {
+            "valid": true,
+            "polygon_valid": true,
+            "triangles_valid": true,
+            "overlap": 0.001689798511506524,
+            "maximum_area_error": 1.085923172017278e-05
+          },
+          "full_step_merit": 1846.936494674586,
+          "initial_merit": 1849.5135499733865,
+          "alpha": 0.015625,
+          "energy": 1849.4311104558915,
+          "valid": true,
+          "polygon_valid": true,
+          "triangles_valid": true,
+          "overlap": 9.970608516596258e-07,
+          "maximum_area_error": 0.0005409939014763276
+        }
+      ],
+      "valid": true,
+      "polygon_valid": true,
+      "triangles_valid": true,
+      "overlap": 9.970608516596258e-07,
+      "maximum_area_error": 0.0005409939014763276,
+      "countries": [
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "country": "CHN",
+          "geographic_error": 0.6701208764754252,
+          "preferred_error": 0.5879737079430022,
+          "area_error": -0.00023969139673685191
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "country": "MNG",
+          "geographic_error": 0.8091370711003065,
+          "preferred_error": 0.8091370711003193,
+          "area_error": -0.0005409939014823228
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "country": "RUS",
+          "geographic_error": 0.7272099986442567,
+          "preferred_error": 0.7286860435911345,
+          "area_error": -0.0002539906192596808
+        }
+      ],
+      "contacts": [
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "cut": false,
+          "gap": 0.0,
+          "shared_length": 58.78012804810088
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "RUS:b85c5bca1852870f",
+          "cut": true,
+          "gap": 0.0,
+          "shared_length": 0.0
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "RUS:b85c5bca1852870f",
+          "cut": true,
+          "gap": 0.0,
+          "shared_length": 0.0
+        }
+      ],
+      "welded_edge_mismatches": 0,
+      "geometry_sha256": "dac480f1cc998f4903807a94a3674fe16207d1bfeac3d1725ef974e831d37ddb"
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/blend-0.9/components.geojson": "cc74d38c2365289dec534b518d23a4cb10552c86c318bfdc44166d1b5c11da21",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/experiment.json": "b4571df8f639c2e7296e2d203cf950e8eec30c5ecadc6a51e8f7e56c2b4f4d80",
+    "output/auto-cartogram/independent-kontur-flow/RUS/blend-0.9/component.geojson": "cbbb6bfe5842ed8e2fc69e0d9c61675f186e18d57551c840aabfe797b89ff282",
+    "output/auto-cartogram/independent-kontur-flow/experiment.json": "c63d6e44428c0c4e08c3d9ff804ec5c62bc64ea3b1039fe4f4247c643173c329",
+    "output/auto-cartogram/independent-eurasia-neighbours/MNG/blend-0.9/component.geojson": "01e5f9402f6ee874b4132643abf6c3b54fe8f6576571f39641c6d779951900aa",
+    "output/auto-cartogram/independent-eurasia-neighbours/experiment.json": "f47d58c88ab68f18f709b9c57a7d59a4c5bcc261964d407dea242ad88850e913",
+    "output/auto-cartogram/independent-kontur-flow/CHN/blend-0.9/component.geojson": "806dd5b4fe00da5801c8cbb468e8ae49e84001a1337b5171fbb3cf7b60cc721f",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/sparse-border-audit-25-wide/border-population.json": "550eb1329221c7401a2f4699f7785520eb7c05adaa3a749e870bce18acabac58",
+    "output/auto-cartogram/world-55000-mainland-flow/input/geometry.geojson": "4cc7e51c0d38456e6ed53fb0b8ee448c34b6d5244521ca0d5f673adc8aee4564",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/blend-0.9/areas_cartogram.geojson": "f5769e8d56cc87dac9b7400c50ce4dfa45fd1d286bdffb46043e7f0b522a0080",
+    "output/auto-cartogram/independent-kontur-flow/RUS/blend-0.9/areas_cartogram.geojson": "445599a5572ac4f7506f6e1c2a227418839fe721c939db042c2e9b986df8b607",
+    "output/auto-cartogram/independent-eurasia-neighbours/MNG/blend-0.9/areas_cartogram.geojson": "a1b12a856b819265c5cb417baac537da1962e5a4f5c9077f85e08930f56f61ff",
+    "output/auto-cartogram/independent-kontur-flow/CHN/blend-0.9/areas_cartogram.geojson": "424905db2a53816aef2d89570b3f256618e53e0fecccfb01af6ec18f5378e7dd",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/kontur_boundary_map.py": "068e229778935091b316b2187816c5441ee371894cbe6aca549a947138e3756b"
+  },
+  "script_sha256": "c9bcb2e19bffcb71c112de29e866b3641aad747862111642819494f38cc9ed16",
+  "osqp_version": "1.0.5",
+  "limits": [
+    "Shared vertices preserve entire retained border polylines, not only point contacts.",
+    "Selected cuts duplicate boundary degrees of freedom. General geometric collision checks still apply.",
+    "The reference shapes use ordered arclength matching, not exact population-point correspondence.",
+    "Areas use penalized slack variables and sequential linearization. Actual area errors are reported.",
+    "This is a regional continuous-boundary experiment, not a tile map. External neighbours, islands, and lakes are omitted."
+  ]
+}

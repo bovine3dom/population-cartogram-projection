@@ -80,6 +80,37 @@ The next task is the collision model at released borders and solver convergence.
 Valid target contours are necessary, but they do not ensure a valid deformation
 path. Keep the whole-border, polygon validity, and overlap checks active.
 
+## Collision replay and correction
+
+[The collision replay](results/geography/collision-replay/index.html) identifies
+a sign error at Russia–Mongolia. It accounts for more than 99% of a rejected
+proposal's overlap. Points just inside the neighbour were treated as having
+positive clearance. The correction uses negative clearance and an outward
+separating direction. A fixture from the actual geometry tests this case.
+
+The numerical overlap tolerance can admit a very small penetration. A recovery
+step must be permitted to remove it; zero displacement need not remain feasible.
+The overlap and polygon validity checks still apply to every accepted step.
+
+`--countries RUS MNG CHN` selects a smaller real-geometry test. The cut case
+retains the complete China–Mongolia border and releases Russia's two borders.
+The signed-clearance fix improves constraint handling, but does not give a
+useful visible shape change in this test.
+
+`--contact-clearance .0001` tests a small numerical buffer at nearby non-welded
+edges. The default is zero. The option is limited to at most 0.001 tile units.
+It never separates welded edges. Coincident edge endpoints are excluded from
+the offset because they have no unique separating side. The offset is not a
+requested visible gap between countries.
+
+The buffered cut test accepts ten steps in twelve attempts, then reaches the
+solver iteration limit. Overlap is about 0.000000000011 tile-area units and
+maximum area error is 0.020%. The control accepts 34 steps in 40 attempts.
+Visual review still shows Russia as a thin strip. Neither test replaces the
+current-best planet. More valid steps are not sufficient evidence of useful
+shape improvement. Initialization and the remaining numerical constraints need
+further tests; increasing the gap is not an established solution.
+
 ## Repeat the checks
 
 Use the experimental geometry environment with `mesh-requirements.txt`.
@@ -100,6 +131,12 @@ $PY -m unittest discover -s test -p 'auto_*.py'
 
 To repeat the contour refinement test, use a new output directory and add
 `--patch-guides`. Set `--iterations 24 --source-simplify .3 --edge-length 6`.
+
+For a collision trace, add `--trace-collisions`. The first rejected proposal
+with valid polygons and excessive overlap is saved in the case's
+`collision-trace` directory. Use `review_cut_collision.py SOURCE OUTPUT` to
+publish the largest collision and a two-country regression fixture. The output
+directory must be new. The review page links to the saved three-country tests.
 
 The publisher checks border counts, shared lengths, gaps, overlap, polygon
 validity, and geometry hashes. Its table reports accepted steps and solver
