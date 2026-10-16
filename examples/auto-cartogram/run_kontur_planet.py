@@ -62,6 +62,9 @@ def run(output, legacy_centres=False, guide=None, guide_record=None, inputs=INPU
         if any(digest(Path(p)) != expected for p,expected in selected['inputs'].items()):
             raise ValueError('Custom guide inputs differ')
         cuts = selected['cuts']
+        required = {tuple(sorted((r['a'],r['b']))) for r in review_layout.read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
+        if {tuple(sorted(p)) for p in cuts} & required:
+            raise ValueError('The contact policy still requires a selected cut')
     base, dock, lakes = [json.loads(p.read_text()) for p in [BASE, DOCK, LAKES]]
     settings = {k: base[k] for k in ['stretch', 'flow_guide_weight', 'sigma', 'iterations', 'flow_grid', 'flow_area_error',
         'float_islands', 'dock_landmasses', 'borrow_coast', 'mainland_only', 'sites_in_flow', 'fixed_border_rounds',
@@ -72,7 +75,7 @@ def run(output, legacy_centres=False, guide=None, guide_record=None, inputs=INPU
     clean_path = output/'guide.geojson'
     clean_path.write_text(json.dumps(dict(type='FeatureCollection', features=[dict(type='Feature', properties=dict(component_id=c), geometry=mapping(g)) for c,g in sorted(cleaned.items())]), separators=(',', ':'))+'\n')
     record = dict(complete=False, approved=False, cuts=cuts, settings=settings, overlap_cleanup=changes,
-        inputs={str(p): digest(p) for p in [BASE, DOCK, LAKES, guide, guide_record, clean_path, inputs/'geographic-contacts.csv']},
+        inputs={str(p): digest(p) for p in [BASE, DOCK, LAKES, guide, guide_record, clean_path, inputs/'geographic-contacts.csv', inputs/'groups.csv']},
         script_sha256=digest(Path(__file__)),
         limits=['Research candidate only. Cut pairs, if any, are explicit and use a separate contact policy.',
                 'Flow centres retain the selected guide. The legacy option uses unwarped population centres.',
