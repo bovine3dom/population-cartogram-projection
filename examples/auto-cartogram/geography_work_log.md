@@ -1107,3 +1107,24 @@ contour correspondence and sampling with shared refinement on retained edges.
 All 261 automatic-cartogram tests pass. The current-best cell file retains
 SHA-256 `3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e`.
 No production layout or population mapping was replaced.
+
+### Contour sampling repair
+
+The rejected mapped contour joined valid points with straight chords that
+skipped bends. Added bounded adaptive subdivision at crossing target chords.
+Each split source edge receives the same midpoint on both sides. Retained
+borders therefore keep identical variables after refinement.
+
+Repeated nearest-point projection during subdivision did not converge. A
+coarse source contour also caused projection to jump across narrow bays.
+Changed correspondence to project original source vertices only. Initial
+samples interpolate their target parameters along each source edge. Further
+refinement bisects those fixed parameters instead of projecting again.
+A cycle check requires the target parameters to wind exactly once.
+Self-intersection checks remain active; unresolved refinement fails closed.
+
+Added regression tests for crossing chords, shared refinement, fixed parameters,
+cyclic interpolation, and invalid parameter winding. All 264 tests pass.
+The coarse patch-guided run now builds valid target contours after one round
+of eight edge splits. Paired regional shape tests are in progress. This is
+not yet evidence of a better layout. Current best is unchanged.

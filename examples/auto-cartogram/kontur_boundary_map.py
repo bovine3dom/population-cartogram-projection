@@ -3,7 +3,7 @@ import json
 import math
 
 import numpy as np
-from shapely import STRtree, points, union_all
+from shapely import STRtree, linestrings, points, union_all
 from shapely.geometry import LinearRing, Point, shape
 from shapely.geometry.polygon import orient
 
@@ -34,6 +34,17 @@ def labelled_arcs(features):
     return country,result
 
 
+class ContourSamplingError(ValueError):
+    """A valid target curve needs more samples to avoid crossing chords."""
+    def __init__(self, xy):
+        edges = linestrings(np.stack([xy,np.roll(xy,-1,axis=0)],axis=1))
+        pairs = STRtree(edges).query(edges,predicate='intersects').T
+        self.edges = sorted({int(i) for a,b in pairs
+                             if a != b and (a-b)%len(xy) not in (1,len(xy)-1)
+                             for i in (a,b)})
+        super().__init__('Mapped reference ring self-intersects')
+
+
 class BoundaryMap:
     def __init__(self, source, target, source_scale=1., source_origin=(0.,0.), target_scale=1., target_origin=(0.,0.)):
         left,right = source['labels'],target['labels']
@@ -47,7 +58,8 @@ class BoundaryMap:
         self.target_scale,self.target_origin = target_scale,np.asarray(target_origin)
         self.maximum_order_correction = 0.
 
-    def map(self, xy):
+    def locations(self, xy):
+        """Find ordered target parameters once, before shared-edge refinement."""
         raw = (xy+self.source_origin)/self.source_scale
         source_ring = self.source['ring']
         projected = np.array([source_ring.project(Point(p),normalized=True) for p in raw])
@@ -72,12 +84,30 @@ class BoundaryMap:
         target_lengths = (np.roll(target_starts,-1)-target_starts)%1
         if len(target_lengths) == 1:
             target_lengths[0] = 1.
-        locations = (target_starts[selected]+fractions*target_lengths[selected])%1
+        return (target_starts[selected]+fractions*target_lengths[selected])%1
+
+    def locations_on_ring(self, ring, xy):
+        # Project only original contour vertices. Projecting points on a
+        # simplified chord can jump to the opposite shore of a narrow bay.
+        vertices = np.asarray(ring.coords)
+        anchors = self.locations(vertices[:-1])
+        increments = (np.roll(anchors,-1)-anchors)%1
+        if not np.isclose(increments.sum(),1.,atol=1e-8):
+            raise ValueError('Target parameter cycle does not wind exactly once')
+        unwrapped = anchors[0]+np.r_[0.,np.cumsum(increments)]
+        lengths = np.r_[0.,np.cumsum(np.linalg.norm(np.diff(vertices,axis=0),axis=1))]
+        projected = [ring.project(Point(p)) for p in xy]
+        return np.interp(projected,lengths,unwrapped)%1
+
+    def sample(self, locations):
         result = np.array([self.target['ring'].interpolate(t,normalized=True).coords[0] for t in locations])
         result = (result-self.target_origin)*self.target_scale
         if not LinearRing(result).is_simple:
-            raise ValueError('Mapped reference ring self-intersects')
+            raise ContourSamplingError(result)
         return result
+
+    def map(self, xy):
+        return self.sample(self.locations(xy))
 
 
 def build(root, main, source_scale, source_origin, budgets):

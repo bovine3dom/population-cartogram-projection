@@ -1,10 +1,11 @@
 import sys
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 from shapely import box
-from shapely.geometry import mapping
+from shapely.geometry import LinearRing, mapping
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from kontur_boundary_map import BoundaryMap, labelled_arcs
@@ -25,6 +26,24 @@ class KonturBoundaryMapTest(unittest.TestCase):
         for original,wanted in [([2,0],[1,0]),([2,2],[1,4])]:
             i = np.flatnonzero(np.all(xy == original,axis=1))[0]
             np.testing.assert_allclose(mapped[i],wanted,atol=1e-8)
+
+    def test_initial_subdivision_interpolates_vertex_parameters(self):
+        ring = LinearRing([(0,0),(4,0),(4,4),(0,4)])
+        arc = dict(ring=ring,labels=['a','b'],starts=np.array([0.,.5]))
+        mapper = BoundaryMap(arc,arc)
+        xy = np.array([(0,0),(2,0),(4,0),(4,4),(0,4)])
+        with patch.object(mapper,'locations',return_value=np.array([.9,.1,.4,.7])) as locate:
+            result = mapper.locations_on_ring(ring,xy)
+        np.testing.assert_allclose(result,[.9,0.,.1,.4,.7],atol=1e-8)
+        np.testing.assert_array_equal(locate.call_args.args[0],np.asarray(ring.coords)[:-1])
+
+    def test_multiple_parameter_windings_are_rejected(self):
+        ring = LinearRing([(0,0),(4,0),(4,4),(0,4)])
+        arc = dict(ring=ring,labels=['a','b'],starts=np.array([0.,.5]))
+        mapper = BoundaryMap(arc,arc)
+        with patch.object(mapper,'locations',return_value=np.array([0.,.8,.2,.4])):
+            with self.assertRaisesRegex(ValueError,'exactly once'):
+                mapper.locations_on_ring(ring,np.asarray(ring.coords)[:-1])
 
     def test_missing_and_ambiguous_labels_fail(self):
         for left,right in [(['a','b'],['a','c']),(['a','b','a','b'],['a','b','a','b'])]:

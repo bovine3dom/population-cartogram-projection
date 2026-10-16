@@ -47,6 +47,61 @@ def target_ring(source, target, centre):
     return min(candidates, key=lambda p: float(np.mean(np.sum((source-centre-p)**2,axis=1))))
 
 
+def sample_guides(source, preferred, edge_length, shared_edges, mappers=None):
+    """Refine crossing target chords on both sides of each source edge."""
+    from kontur_boundary_map import ContourSamplingError
+    samples, references, parameters = {}, {}, {}
+    for c,g in source.items():
+        g,reference = orient(g),orient(preferred[c])
+        rings,targets = [g.exterior,*g.interiors],[reference.exterior,*reference.interiors]
+        if len(rings) != len(targets):
+            raise ValueError('Reference hole count differs: '+c)
+        for ri,(ring,target) in enumerate(zip(rings,targets)):
+            samples[c,ri] = sample_ring(ring,edge_length,shared_edges)
+            references[c,ri] = target
+            mapper = mappers[c][ri] if mappers else None
+            if mapper and len(mapper.source['labels']) > 1:
+                parameters[c,ri] = mapper.locations_on_ring(ring,samples[c,ri])
+    history = []
+    for iteration in range(17):
+        wanted, split = {}, set()
+        for (c,ri),xy in samples.items():
+            mapper = mappers[c][ri] if mappers else None
+            try:
+                wanted[c,ri] = (mapper.sample(parameters[c,ri]) if (c,ri) in parameters else
+                                target_ring(xy,references[c,ri],np.array(source[c].centroid.coords[0])))
+            except ContourSamplingError as error:
+                if not error.edges:
+                    raise ValueError(f'{c}, ring {ri}: degenerate target contour') from error
+                for i in error.edges:
+                    split.add(tuple(sorted((key(xy[i]),key(xy[(i+1)%len(xy)])))))
+            except ValueError as error:
+                raise ValueError(f'{c}, ring {ri}: {error}') from error
+        if not split:
+            return samples,wanted,history
+        if iteration == 16:
+            raise ValueError('Target contour refinement did not converge')
+        history.append(dict(round=iteration,split_edges=len(split)))
+        for label,xy in samples.items():
+            refined, refined_parameters = [], []
+            ts = parameters.get(label)
+            for i,(a,b) in enumerate(zip(xy,np.roll(xy,-1,axis=0))):
+                refined.append(a)
+                if ts is not None:
+                    refined_parameters.append(ts[i])
+                if tuple(sorted((key(a),key(b)))) in split:
+                    midpoint = key((a+b)/2)
+                    if midpoint in (key(a),key(b)):
+                        raise ValueError('Contour refinement reached coordinate precision')
+                    refined.append(midpoint)
+                    if ts is not None:
+                        refined_parameters.append((ts[i]+.5*((ts[(i+1)%len(ts)]-ts[i])%1))%1)
+            samples[label] = np.asarray(refined)
+            if ts is not None:
+                parameters[label] = np.asarray(refined_parameters)
+    raise AssertionError('Unreachable')
+
+
 def signed_area(p):
     return .5*np.sum(p[:,0]*np.roll(p[:,1],-1)-p[:,1]*np.roll(p[:,0],-1))
 
@@ -67,23 +122,13 @@ class WeldedMesh:
                     edge = tuple(sorted((key(a),key(b))))
                     edge_counts[edge] = edge_counts.get(edge,0)+1
         shared_edges = {e for e,n in edge_counts.items() if n == 2}
+        samples, wanted_rings, self.refinement = sample_guides(source,preferred,edge_length,shared_edges,mappers)
         local, targets, country_rings, owners = [], [], {}, {}
         edge_owners = {}
         for c in self.labels:
-            g, reference = orient(source[c]), orient(preferred[c])
-            src_rings = [g.exterior, *g.interiors]
-            ref_rings = [reference.exterior, *reference.interiors]
-            if len(src_rings) != len(ref_rings):
-                raise ValueError('Reference hole count differs: '+c)
             country_rings[c] = []
-            for ri,(ring,ref) in enumerate(zip(src_rings,ref_rings)):
-                xy = sample_ring(ring,edge_length,shared_edges)
-                mapper = mappers[c][ri] if mappers else None
-                try:
-                    wanted = (mapper.map(xy) if mapper and len(mapper.source['labels']) > 1 else
-                              target_ring(xy, ref, np.array([g.centroid.x,g.centroid.y])))
-                except ValueError as error:
-                    raise ValueError(f'{c}, ring {ri}: {error}') from error
+            for ri in range(1+len(source[c].interiors)):
+                xy, wanted = samples[c,ri], wanted_rings[c,ri]
                 ids = list(range(len(local),len(local)+len(xy)))
                 local.extend(xy)
                 targets.extend(wanted)
@@ -425,7 +470,8 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         geometries = mesh.polygons(flat)
         folder = output/name
         folder.mkdir()
-        case = dict(name=name,nodes=mesh.n,triangles=len(mesh.triangles),initial_checks=initial_checks,history=history,**mesh.checks(flat))
+        case = dict(name=name,nodes=mesh.n,triangles=len(mesh.triangles),contour_refinement=mesh.refinement,
+                    initial_checks=initial_checks,history=history,**mesh.checks(flat))
         case['countries'] = [dict(component=c,country=c[:3],geographic_error=outline_error(geometries[c],native[c]),
                                   preferred_error=outline_error(geometries[c],preferred[c]),area_error=geometries[c].area/budgets[c]-1) for c in mesh.labels]
         case['contacts'] = [dict(a=a,b=b,cut=(a,b) in policy,gap=geometries[a].distance(geometries[b]),
