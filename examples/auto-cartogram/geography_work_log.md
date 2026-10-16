@@ -744,3 +744,39 @@ and images at `results/geography/kazakhstan-scoped/index.html`. Raw runs are in
 `output/auto-cartogram/kazakhstan-scoped/`. All four runs have stopped. Added
 nine tests for scope selection, mainland selection, and graph cuts. All 215
 tests pass. No production layout or population mapping changed.
+
+## Trace the Kazakhstan pinch through saved stages
+
+Added `trace_kazakhstan.py` and a gallery at
+`results/geography/kazakhstan-origin/index.html`. No new layout was fitted.
+The source, continuous fit, partition, and repaired images were checked visually.
+
+The main distortion is already present in the continuous fit. Russia forms a
+thin strip above China. Kazakhstan is compressed near its western end. Input
+preprocessing changes outline error by only 0.01–0.02 for the four main countries.
+The population target shares strongly contract Russia, Kazakhstan, and Mongolia,
+while expanding China and India. This explains the pressure, but does not prove
+that the specific distorted result is necessary.
+
+The partition then combines the flow footprint and a weight-eight flow-outline
+penalty with unwarped population sites. Its fitted Russian site is 113 tiles from
+the flow centroid, mostly west; Kazakhstan's site is 29 tiles away, mostly east.
+Kazakhstan moves from x=553.76 in the scaled flow to x=600.20 in the partition.
+A matched test is needed to separate the centre rule from the other costs.
+
+Kazakhstan is already one connected 134-tile piece at this stage. Fragment repair
+then makes 170 Russia–Kazakhstan swaps, all initiated to repair Russia. These move
+Kazakhstan about 13 tiles further east, to x=613.53. The repair objective reduces
+fragment counts but does not protect the neighbour's geographic position.
+Later margin-one, docking, island, and lake stages largely retain this result.
+
+Stop treating this as only a final contact-graph problem. First compare centre
+rules on the saved flow and measure pre-repair fragments. Then test a bound on
+connected-neighbour displacement during repair. Test larger shape changes and
+sparse cuts upstream, with a matched no-cut control. Independent Russia/China
+landmasses are not required for shape improvement. These tests are not yet run.
+
+Added three tests for the outline metric. The original flow-input outline is
+the reference here, not the later lake guide, so scores differ slightly from
+the sparse-border study. All 218 tests pass. The gallery returns HTTP 200.
+The baseline and production mapping remain unchanged.
