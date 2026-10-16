@@ -1,0 +1,231 @@
+{
+  "countries": [
+    {
+      "country": "RUS",
+      "component": "RUS:b85c5bca1852870f",
+      "tiles": 978,
+      "population": 141549580.0,
+      "runs": [
+        {
+          "strength": 0.0,
+          "patches": 15,
+          "command": [
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/RUS/blend-0/patches.geojson",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/RUS/blend-0/areas.csv",
+            "--skip_projection",
+            "--id",
+            "patch_id",
+            "--area",
+            "tiles",
+            "--n_grid_rows_or_cols",
+            "512",
+            "--max_allowed_autoscale_grid_length",
+            "2048",
+            "--timeout",
+            "180",
+            "--export_preprocessed"
+          ],
+          "complete": true,
+          "geometry_sha256": "0ce3fd4cb57176c6b57ec426c56134d9efe37b0d2e5ef0b22fd31d956789c339",
+          "targets_sha256": "cf6650181d0287f000b722ee58a058767b37cd6bbabb64c895e12e291a21b496",
+          "exit_code": 0,
+          "shape_error": 0.0005512321144711674,
+          "maximum_patch_relative_area_error": 0.00010676456869129769,
+          "overlap_share": 2.199254328963885e-16,
+          "normalized_area": 978.0000000000033,
+          "output_sha256": "38ead8d8c13b58ac2f7285b5b0b64ca4747c422c4d1d694e5f28005da9280fe8"
+        },
+        {
+          "strength": 0.9,
+          "patches": 15,
+          "command": [
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/RUS/blend-0.9/patches.geojson",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/RUS/blend-0.9/areas.csv",
+            "--skip_projection",
+            "--id",
+            "patch_id",
+            "--area",
+            "tiles",
+            "--n_grid_rows_or_cols",
+            "512",
+            "--max_allowed_autoscale_grid_length",
+            "2048",
+            "--timeout",
+            "180",
+            "--export_preprocessed"
+          ],
+          "complete": true,
+          "geometry_sha256": "0ce3fd4cb57176c6b57ec426c56134d9efe37b0d2e5ef0b22fd31d956789c339",
+          "targets_sha256": "a5128a88dd1b54d8c68a8deee24fc3ba4dddfaa38f1b36db3e4147276ccbe565",
+          "exit_code": 0,
+          "shape_error": 0.5309054051459254,
+          "maximum_patch_relative_area_error": 0.00608620945094307,
+          "overlap_share": 2.637612190210921e-15,
+          "normalized_area": 978.000000000005,
+          "output_sha256": "93b5ae6db4ec0a4d6d54d107b5ecfed2b8dd5aa6a04bad69b7292dcb6aaac258"
+        }
+      ],
+      "shared_shape_error": 0.7279532213084664
+    },
+    {
+      "country": "CHN",
+      "component": "CHN:72cd37e37e634df7",
+      "tiles": 9632,
+      "population": 1393191304.0,
+      "runs": [
+        {
+          "strength": 0.0,
+          "patches": 11,
+          "command": [
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/CHN/blend-0/patches.geojson",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/CHN/blend-0/areas.csv",
+            "--skip_projection",
+            "--id",
+            "patch_id",
+            "--area",
+            "tiles",
+            "--n_grid_rows_or_cols",
+            "512",
+            "--max_allowed_autoscale_grid_length",
+            "2048",
+            "--timeout",
+            "180",
+            "--export_preprocessed"
+          ],
+          "complete": true,
+          "geometry_sha256": "a4c1879fc32d7a348fb558c4eac0567c2de7e87dff3953f7e75ba8b5a2f00d7d",
+          "targets_sha256": "46b6bbee7d3169ca759124be035f6cdd0a4cfcd007039a798b2269dbd12ce2ee",
+          "exit_code": 0,
+          "shape_error": 3.344722770448616e-05,
+          "maximum_patch_relative_area_error": 3.4905928503858874e-05,
+          "overlap_share": 2.372875177634368e-15,
+          "normalized_area": 9632.000000000038,
+          "output_sha256": "098aafdac773fd879213f5fcfdb8da02d7ae611805f1b91198626008972db120"
+        },
+        {
+          "strength": 0.9,
+          "patches": 11,
+          "command": [
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/CHN/blend-0.9/patches.geojson",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/CHN/blend-0.9/areas.csv",
+            "--skip_projection",
+            "--id",
+            "patch_id",
+            "--area",
+            "tiles",
+            "--n_grid_rows_or_cols",
+            "512",
+            "--max_allowed_autoscale_grid_length",
+            "2048",
+            "--timeout",
+            "180",
+            "--export_preprocessed"
+          ],
+          "complete": true,
+          "geometry_sha256": "a4c1879fc32d7a348fb558c4eac0567c2de7e87dff3953f7e75ba8b5a2f00d7d",
+          "targets_sha256": "2e08c851441da055dc1556ed50fddad8f64311fdad643dc2495bd7bb3c1560b3",
+          "exit_code": 0,
+          "shape_error": 0.3818438975324039,
+          "maximum_patch_relative_area_error": 0.008236063546439798,
+          "overlap_share": 4.745978022235223e-15,
+          "normalized_area": 9632.00000000004,
+          "output_sha256": "8c48e4611e9b0edf9ec55f6cfd2722bb2834244a679fcb7cd7e8bcb0c11e990f"
+        }
+      ],
+      "shared_shape_error": 0.670331977799162
+    },
+    {
+      "country": "CAN",
+      "component": "CAN:614ec007a6324298",
+      "tiles": 203,
+      "population": 29447781.0,
+      "runs": [
+        {
+          "strength": 0.0,
+          "patches": 6,
+          "command": [
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/CAN/blend-0/patches.geojson",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/CAN/blend-0/areas.csv",
+            "--skip_projection",
+            "--id",
+            "patch_id",
+            "--area",
+            "tiles",
+            "--n_grid_rows_or_cols",
+            "512",
+            "--max_allowed_autoscale_grid_length",
+            "2048",
+            "--timeout",
+            "180",
+            "--export_preprocessed"
+          ],
+          "complete": true,
+          "geometry_sha256": "f1ce73cd6fe99c5bcc4178eb16abdf232c3f846520410eb7f0a92ad1784c8a4c",
+          "targets_sha256": "c94a6cc6c51180c46bf0b9b17aa131c6d8c017e9061174b7962549c4f5f9be80",
+          "exit_code": 0,
+          "shape_error": 0.000509323408783513,
+          "maximum_patch_relative_area_error": 9.514597036341943e-05,
+          "overlap_share": 1.05897725589757e-15,
+          "normalized_area": 202.99999999999977,
+          "output_sha256": "cdf80032d28a40b3a2b61828d857e2d2af628960687cafa466364c73af6b3372"
+        },
+        {
+          "strength": 0.9,
+          "patches": 6,
+          "command": [
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/CAN/blend-0.9/patches.geojson",
+            "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/independent-kontur-flow-512/CAN/blend-0.9/areas.csv",
+            "--skip_projection",
+            "--id",
+            "patch_id",
+            "--area",
+            "tiles",
+            "--n_grid_rows_or_cols",
+            "512",
+            "--max_allowed_autoscale_grid_length",
+            "2048",
+            "--timeout",
+            "180",
+            "--export_preprocessed"
+          ],
+          "complete": true,
+          "geometry_sha256": "f1ce73cd6fe99c5bcc4178eb16abdf232c3f846520410eb7f0a92ad1784c8a4c",
+          "targets_sha256": "e23d6930ff6ab98c8ee84409ce694b4f2c76e5f8c60574f36a8bc3e60e3b797f",
+          "exit_code": 0,
+          "shape_error": 0.20160228275365422,
+          "maximum_patch_relative_area_error": 0.008416887836752318,
+          "overlap_share": 2.647061192417683e-16,
+          "normalized_area": 202.9999999999999,
+          "output_sha256": "a53f4495caa1c8abcd7d48cc3a43e65b99c1d5f06cf31dff73534f18b6d1e4b7"
+        }
+      ],
+      "shared_shape_error": 0.7689187044085753
+    }
+  ],
+  "grid": 512,
+  "inputs": {
+    "output/auto-cartogram/world-55000-mainland-flow/input/geometry.geojson": "4cc7e51c0d38456e6ed53fb0b8ee448c34b6d5244521ca0d5f673adc8aee4564",
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram": "a7ee976eaf8a8efb774e26a9764644672bcb550d7ec523027f57aef3af39ccca",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/patches.geojson": "8a90dc9de9db7eb7fbe07a16ad5da52450623b35e820ddee317c91c9f60f02ce",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/patch-data.json": "07cd98f17543fd48b500b19871ba002773c2460532c02a289b25863a26907a7d",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/experiment.json": "b4571df8f639c2e7296e2d203cf950e8eec30c5ecadc6a51e8f7e56c2b4f4d80",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/blend-0.9/components.geojson": "cc74d38c2365289dec534b518d23a4cb10552c86c318bfdc44166d1b5c11da21",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/blend-0/areas.csv": "0a4e27b0b0e6b5c741ddd5260442fba6e531f819f43ba6617bea587c2af499a7",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/blend-0.9/areas.csv": "82bca69d42e8be3963f902b091374cb2922a0398b3ccad7af76ba0ea105a6c3b"
+  },
+  "script_sha256": "33bcdf6dfe33a22276853e6c0ad3f0eb736963ba6520a47371cf89a22c20a02a",
+  "limits": [
+    "Mainland components only. This is not a world layout.",
+    "Reuse exact saved patches and target rows. Each solver call has one component and no neighbours.",
+    "The solver domain and effective spatial resolution change when neighbours are removed.",
+    "Normalize each output to its component tile-area budget after solving. No tile partition is made.",
+    "Equal-area comparison panels do not show relative country size or placement."
+  ]
+}
