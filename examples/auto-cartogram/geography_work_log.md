@@ -969,3 +969,26 @@ geometry, solver inputs, logs, hashes, and images. See `independent-flow.md`.
 These results justify a regional assembly experiment with independent reference
 shapes and selected border constraints. They do not justify replacing the world
 layout. All 238 tests pass. All jobs have stopped.
+
+### Regional assembly with released direct contacts
+
+Started a 12-country Eurasian assembly test. Both cases use identical independent
+90% Kontur shapes, geographic initial positions, deformation bounds, and penalty
+schedules. The cut case removes the Russia–Kazakhstan, China–Kazakhstan,
+Russia–China, and Russia–Mongolia contact terms. All four pass the existing
+population audit. No cut-specific spring, target gap, or boundary term remains.
+General collision, geographic ordering, and position penalties apply in both cases.
+
+The region includes Azerbaijan, Iran, Afghanistan, Pakistan, and India. Thus,
+Russia and China still have an indirect route through retained regional borders.
+This avoids testing only a region in which the cuts isolate Russia completely.
+The eight additional independent neighbour fits all succeeded.
+
+This first implementation is an affine, contact-only prototype. It permits
+area-preserving stretch, shear, and translation. Retained contacts use soft
+nearest-boundary distance penalties, not matching full-border curves. It does
+not yet implement the full boundary constraint proposed above. Exact residual
+gaps and overlaps must be reported, not hidden by a successful optimizer return.
+Six new unit tests check area preservation, removal of the direct contact term,
+no cut-specific gap target, unchanged collision handling, and retained contacts.
+Current best and production mappings remain unchanged.
