@@ -32,3 +32,11 @@ bash examples/auto-cartogram/run_layout_h3.sh \
 The previous layout and H3-MON exports remain unchanged. No Arrow export or
 visual approval is claimed at setup. Shell syntax checks, two export tests,
 and six transport tests pass.
+
+## 20:58 UTC: fit started
+
+The oneAPI fit is running. India is the first group: 12,595 source fragments
+and 9,838 target tiles. Runner PID: 2849301. Julia PID: 2849310.
+Log: `output/auto-cartogram/pacific-h3-logs/run-v1.log`.
+The runner will balance, export, and capture browser images after the fit.
+No border-aware stage is queued. The Arrow files are not ready yet.
