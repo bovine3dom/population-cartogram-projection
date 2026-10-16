@@ -1,4 +1,7 @@
 import importlib.util
+import gzip
+import json
+import tempfile
 import contextlib
 import io
 from pathlib import Path
@@ -14,7 +17,8 @@ from shapely.geometry import Point, Polygon
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from kontur_boundary_map import BoundaryMap, ContourSamplingError
 from independent_kontur_flow import normalized
-from welded_boundary_fit import WeldedMesh, area_gradient, signed_area, fit
+from welded_boundary_fit import WeldedMesh, area_gradient, signed_area, fit, save_collision_trace
+from review_cut_collision import replay
 
 
 class WeldedBoundaryTest(unittest.TestCase):
@@ -95,6 +99,44 @@ class WeldedBoundaryTest(unittest.TestCase):
             mesh = WeldedMesh(self.source,self.preferred,self.budgets,cuts)
             _,lower = mesh.inequalities(mesh.initial)
             self.assertLessEqual(float(lower.max()),1e-8)
+
+    def test_real_russia_mongolia_step_is_rejected_by_signed_clearance(self):
+        path = Path(__file__).resolve().parents[1]/'examples/auto-cartogram/results/geography/collision-replay/fixture.json.gz'
+        fixture = json.loads(gzip.decompress(path.read_bytes()))
+        mesh,current,step,violation = replay(fixture)
+        self.assertLess(fixture['original_full_mesh_violation'],1e-5)
+        self.assertGreater(violation,.05)
+        self.assertLess(mesh.checks(current)['overlap'],1e-6)
+        self.assertGreater(mesh.checks(current+step)['overlap'],.2)
+
+    def test_trace_keeps_rejected_move_separate_from_current_geometry(self):
+        mesh = WeldedMesh(self.source,self.preferred,self.budgets,{('a','b')})
+        step = np.zeros_like(mesh.initial).reshape(-1,2)
+        ids = np.unique(np.concatenate(mesh.rings['b']))
+        step[ids,0] = -.01
+        jac,lower = mesh.inequalities(mesh.initial)
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)/'trace'
+            save_collision_trace(mesh,mesh.initial,step.ravel(),output,{'iteration':0},jac,lower)
+            report = json.loads((output/'trace.json').read_text())
+            arrays = np.load(output/'step.npz')
+            np.testing.assert_array_equal(arrays['current'],mesh.initial)
+            self.assertAlmostEqual(report['overlaps'][0]['area'],.04)
+            self.assertTrue(report['overlaps'][0]['cut'])
+            self.assertEqual(report['current_checks']['overlap'],0)
+
+    @unittest.skipUnless(importlib.util.find_spec('osqp'),'Install mesh-requirements.txt for the QP test')
+    def test_tolerance_sized_penetration_can_take_a_recovery_step(self):
+        mesh = WeldedMesh(self.source,self.preferred,self.budgets,{('a','b')})
+        xy = mesh.initial.reshape(-1,2)
+        ids = np.unique(np.concatenate(mesh.rings['b']))
+        xy[ids,0] -= 1.5e-7
+        _,lower = mesh.inequalities(mesh.initial)
+        self.assertGreater(lower.max(),1e-7)
+        before = mesh.checks(mesh.initial)['overlap']
+        with contextlib.redirect_stdout(io.StringIO()):
+            flat,_ = fit(mesh,iterations=2)
+        self.assertLess(mesh.checks(flat)['overlap'],before)
 
     def test_narrow_water_gap_gets_self_collision_constraints(self):
         g = Polygon([(0,0),(4,0),(4,4),(2.1,4),(2.1,1),(1.9,1),(1.9,4),(0,4)])

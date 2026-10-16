@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120">
+<rect width="1800" height="1120" fill="#faf9f6"/>
+<g font-family="sans-serif" fill="#242424">
+<text x="40" y="40" font-size="27">Actual cut-border collision: current</text>
+<text x="40" y="70" font-size="17">Continuous deformation of separate components. Not yet a square-tile layout. Not a production map.</text>
+<text x="40" y="96" font-size="15">Russia–Mongolia close-up. Dark red marks overlap. The proposed move was rejected.</text>
+<path d="M220.105,671.206L151.001,671.177L81.896,671.147L900.027,589.981L1718.104,508.807L1750.000,505.641L1750.000,702.500L1742.534,703.089L135.125,703.089L220.105,671.206Z" fill="#80b1d3" fill-rule="evenodd" stroke="#444" stroke-width=".55"><title>MNG:7ecd8e5b0a42fa66</title></path>
+<path d="M1718.017,508.816L899.865,589.997L81.712,671.165L150.817,671.198L219.923,671.230L135.014,703.089L50.000,703.089L50.000,476.911L1750.000,476.911L1750.000,505.641L1718.017,508.816Z" fill="#fb8072" fill-rule="evenodd" stroke="#444" stroke-width=".55"><title>RUS:b85c5bca1852870f</title></path>
+<path d="M81.896,671.147L900.027,589.981L1718.104,508.807L1750.000,505.641L1750.000,505.641L1718.017,508.816L899.865,589.997L81.896,671.147L81.896,671.147Z" fill="#b00020" fill-rule="evenodd" stroke="#444" stroke-width=".55"><title>zzz-overlap</title></path>
+<text x="270.394" y="630.581" text-anchor="middle" font-size="12" paint-order="stroke" stroke="#faf9f6" stroke-width="2">RUS</text>
+<text x="1120.481" y="630.564" text-anchor="middle" font-size="12" paint-order="stroke" stroke="#faf9f6" stroke-width="2">MNG</text>
+<text x="40" y="1094" font-size="13">Sources: Kontur population; Natural Earth. Replay of a rejected solver step; not a layout. Source year is unknown.</text></g></svg>

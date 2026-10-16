@@ -1171,3 +1171,31 @@ The table now distinguishes accepted steps and solver status from valid final
 geometry. Updated `welded-boundary.md` and linked the previous checkpoint.
 All 265 tests pass. No fit jobs remain active. Current best and H3-MON exports
 are unchanged.
+
+### Actual cut-border collision and signed-clearance repair
+
+Captured a rejected proposal from the coarse cut fit. Russia–Mongolia accounts
+for 0.210361 of its 0.211175 tile-area overlap, more than 99%. The current mesh
+has only 0.000000501 overlap, within the existing numerical tolerance.
+Some sampled points are therefore just inside the neighbour. The old radial
+separation vector points inward at those points, but treats their depth as
+positive clearance. This is a sign error, not a desired border relationship.
+
+Corrected the direction and the signed clearance for interior points. The saved
+proposal violated the old full-mesh constraints by only about 0.00000104 in row
+units. It violates the corrected two-country constraints by 0.0560. Added a
+compressed Russia–Mongolia fixture from the actual mesh and a regression test.
+The recovery check now permits correction of an accepted tolerance-sized overlap
+instead of requiring zero movement to remain feasible.
+
+Added `--trace-collisions` to save current geometry and rejected proposals
+separately. Added `--countries` for smaller tests with the same inputs and cut
+policy. Published and visually checked the close-up at
+`results/geography/collision-replay/index.html`. Red marks the rejected overlap;
+it is not an accepted map. All retained border variables remain shared.
+
+The signed-clearance fit accepts more steps but still makes little movement.
+Its later proposed overlap drops to about 0.00172 tile-area units, but the
+accepted steps become small near the numerical overlap limit. A three-country
+Russia–Mongolia–China comparison is also running. The sign fix is necessary,
+but it is not yet a successful release of the pinch.

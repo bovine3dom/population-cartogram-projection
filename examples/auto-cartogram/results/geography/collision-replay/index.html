@@ -1,0 +1,10 @@
+<!doctype html><meta charset="utf-8"><title>Cut-border collision replay</title>
+<style>body{font:18px system-ui;max-width:1500px;margin:30px auto;padding:20px}img{width:100%}.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}</style>
+<h1>Russia–Mongolia collision: a sign error</h1>
+<p>This is a rejected movement, not a new layout. Russia–Mongolia accounts for more than 99% of this proposal's overlap.</p>
+<p>A small overlap passed the geometric tolerance. At the next step, some points inside the neighbouring country were treated as having positive clearance.
+The separating direction pointed inward. The correction uses a negative clearance for these points and an outward direction.</p>
+<div class="pair"><section><h2>Before the rejected move</h2><img src="current.png" alt="Current border close-up"></section>
+<section><h2>Rejected move</h2><img src="proposed.png" alt="Rejected border move with overlap in dark red"></section></div>
+<p>The images use the same crop. The corrected constraints reject this captured move. This does not by itself prove that a new fit succeeds.</p>
+<p><a href="checks.json">Replay checks</a> · <a href="fixture.json.gz">Two-country regression fixture</a> · <a href="trace.json.gz">Original full-mesh trace</a> · <a href="checksums.json">Checksums</a></p>
