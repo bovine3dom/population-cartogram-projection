@@ -37,7 +37,7 @@ def run(source,output):
                             removed=case['removed'],population=details['population'],patches=details['patches']))
         target = output/name
         target.mkdir()
-        shutil.copyfile(folder/'experiment.json',target/'experiment.json')
+        (target/'experiment.json').write_text(json.dumps(details,separators=(',',':'))+'\n')
         for region in ['world','eurasia']:
             shutil.copyfile(folder/'blend-0.9'/(region+'.png'),target/(region+'.png'))
         (target/'components.geojson.gz').write_bytes(gzip.compress(geometry.read_bytes(),mtime=0))
