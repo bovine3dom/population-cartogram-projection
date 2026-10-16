@@ -71,7 +71,13 @@ def separation_bounds(local,tiles,rows,source,land,radius_km):
     return np.array([lower,upper]),constraints
 
 
-def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimum_tiles=16,maximum_shift_scale=2.,bridge_groups=False):
+def displacement_cost(shift,bounds,repair_separation=False):
+    """Optionally allow the minimum shift needed to repair source ordering."""
+    minimum=np.clip(np.zeros(2),bounds[0],bounds[1]) if repair_separation else np.zeros(2)
+    return float(np.linalg.norm(np.asarray(shift)-minimum))
+
+
+def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimum_tiles=16,maximum_shift_scale=2.,bridge_groups=False,repair_separation=False):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([gap_fraction,land_radius_km,maximum_shift_scale]).all() or min(gap_fraction,land_radius_km,maximum_shift_scale)<=0 or minimum_tiles<1:raise ValueError('Invalid archipelago settings')
     rows,tiles,owner=load(inputs,layout)
@@ -99,8 +105,10 @@ def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimu
         shift=np.asarray(min(moved))-np.asarray(min(union))
         if {(x+int(shift[0]),y+int(shift[1])) for x,y in union}!=moved:raise AssertionError('Group placement is not a translation')
         limit=maximum_shift_scale*np.sqrt(sum(len(tiles[c]) for c in members))
-        record.update(proposed_translation=shift.tolist(),maximum_translation=limit)
-        if np.linalg.norm(shift)>limit:record['not_moved']='Group translation exceeds displacement limit';continue
+        cost=displacement_cost(shift,bounds,repair_separation)
+        record.update(proposed_translation=shift.tolist(),maximum_translation=limit,
+                      minimum_required_translation=np.clip(np.zeros(2),bounds[0],bounds[1]).tolist(),checked_displacement=cost)
+        if cost>limit:record['not_moved']='Group translation exceeds displacement limit';continue
         for c,points in local.items():result[c]={(x+int(shift[0]),y+int(shift[1])) for x,y in points}
         record['group_translation']=shift.tolist()
     for c,points in result.items():
@@ -109,7 +117,7 @@ def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimu
     if any(result[c]!=tiles[c] for c in land):raise AssertionError('Mainland moved')
     after_owner={p:c for c,points in result.items() for p in points};after=tile_contacts(after_owner)
     if len(after_owner)!=total or after-required-before or after&required!=before&required:raise AssertionError('Overlap or source contacts changed')
-    report=dict(method='Nearby island groups placed together with source-axis separation from nearby land; no country-identity links',gap_fraction=gap_fraction,land_radius_km=land_radius_km,minimum_tiles=minimum_tiles,maximum_shift_scale=maximum_shift_scale,bridge_groups=bridge_groups,cluster_edges=edges,groups=records,moved_components=sum(result[c]!=tiles[c] for c in tiles),failed_groups=sum('not_moved' in r for r in records),inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]},scripts={name:digest(Path(__file__).with_name(name)) for name in ['restore_archipelagos.py','place_islands.py','shape_placement.py','prepare_flow.py']},limit='Proximity groups can cross country IDs. No cells join separate islands. Nearby-land distances use Equal Earth planar distance times Earth radius, not geodesic distance. Inconsistent or blocked groups remain unchanged and are reported. Preserving axis separation does not prove good geographic placement.')
+    report=dict(repair_separation=repair_separation,method='Nearby island groups placed together with source-axis separation from nearby land; no country-identity links',gap_fraction=gap_fraction,land_radius_km=land_radius_km,minimum_tiles=minimum_tiles,maximum_shift_scale=maximum_shift_scale,bridge_groups=bridge_groups,cluster_edges=edges,groups=records,moved_components=sum(result[c]!=tiles[c] for c in tiles),failed_groups=sum('not_moved' in r for r in records),inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]},scripts={name:digest(Path(__file__).with_name(name)) for name in ['restore_archipelagos.py','place_islands.py','shape_placement.py','prepare_flow.py']},limit='Proximity groups can cross country IDs. No cells join separate islands. Nearby-land distances use Equal Earth planar distance times Earth radius, not geodesic distance. Inconsistent or blocked groups remain unchanged and are reported. Preserving axis separation does not prove good geographic placement. With repair_separation, the displacement limit applies beyond the minimum translation needed to satisfy source separation bounds.')
     output.mkdir(parents=True)
     with (output/'cells.csv').open('w',newline='') as stream:
         writer=csv.writer(stream);writer.writerow(['component_id','x','y'])
@@ -126,5 +134,6 @@ if __name__=='__main__':
     parser.add_argument('--land-radius-km',type=float,default=500.)
     parser.add_argument('--minimum-tiles',type=int,default=16)
     parser.add_argument('--maximum-shift-scale',type=float,default=2.)
+    parser.add_argument('--repair-separation',action='store_true')
     parser.add_argument('--bridge-groups',action='store_true',help='Merge nearby groups along existing larger-island parent choices; retain roots attached to land')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

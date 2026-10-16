@@ -28,8 +28,8 @@ def short_closures(primary, borders, maximum_length=50., maximum_population=5000
             edges = [tuple(sorted((a,c))),tuple(sorted((b,c)))]
             if any(e in primary for e in edges):
                 continue
-            allowed = [e for e in edges if records[e]['length_km'] <= maximum_length
-                       and records[e]['corridor_population'] <= maximum_population]
+            allowed = [e for e in edges if records[e].get('length_km',float('inf')) <= maximum_length
+                       and records[e].get('corridor_population',float('inf')) <= maximum_population]
             if allowed:
                 additions.add(min(allowed,key=lambda e:records[e]['corridor_population']))
     return additions
