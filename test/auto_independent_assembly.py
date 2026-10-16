@@ -52,6 +52,16 @@ class IndependentAssemblyTest(unittest.TestCase):
         self.assertEqual(state.required, {('b','c')})
         self.assertAlmostEqual(state.terms(state.start)['contact'], 9.)
 
+    def test_cache_does_not_change_pair_values(self):
+        state = Assembly(self.shapes, self.centres, {('a','b')})
+        expected = state.terms(state.start)
+        self.assertEqual(state.terms(state.start), expected)
+        self.assertGreater(state.pair.cache_info().hits, 0)
+        flat = state.start.reshape(-1,4).copy()
+        flat[1,0] = 4.
+        self.assertAlmostEqual(state.terms(flat.ravel())['contact'], 4.)
+        self.assertEqual(state.terms(state.start), expected)
+
     def test_rejects_unknown_contact(self):
         with self.assertRaises(ValueError):
             Assembly(self.shapes, self.centres, {('a','unknown')})
