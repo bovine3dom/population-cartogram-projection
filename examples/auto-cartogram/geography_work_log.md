@@ -586,3 +586,39 @@ including four projection tests. Production maps are unchanged.
 
 Gallery: `results/geography/projection-shapes/index.html`. It includes source
 outlines, fresh tiles, current shapes, exact tile archives, and input hashes.
+
+## 2026-10-16: fit fresh Mercator shapes
+
+Added `fit_mercator_shapes.py`. It starts from original projected outlines,
+not the old tile shapes. Component budgets stay exact. The first test covers
+26 Eurasian mainland components and 25,845 tiles. A second test covers the
+largest Canadian, United States, and Mexican components with 3,317 tiles.
+Named lakes and secondary islands are explicitly outside this diagnostic.
+No production layout or mapping changed.
+
+The first geometric-centre fit put Mongolia south of China. Soft position
+penalties did not prevent this. Exact ordered packing then failed in some
+trials. Added hard linear direction constraints during fitting and explicit
+spacing retries during final packing. These failures remain recorded in
+`mercator_fit.md`; they are not successful candidates.
+
+Population-centred positions work better in the checked regional fit. The
+source coordinates are inverted from Equal Earth and projected into Mercator
+before their population-weighted means are computed. Russia moves west near
+Europe without a named-country placement rule. All fresh shapes stay intact.
+
+At border release scale 8, final packing requires no expansion. The largest
+packing displacement is 1.41 tiles. Russia, China, and India retain recognizable
+outlines, and Mongolia is on the correct side of China's centre. However, only
+four of 46 true contacts remain. Nineteen removed contacts fail the earlier
+sparse-border test. This is not an acceptable final topology.
+
+Release scale 24 creates excessive gaps after 1.6-fold packing expansion.
+The quadratic control fails to converge and is labelled as a failed iterate.
+The North America test retains Hudson Bay but neither shared land border.
+Visually reviewed all four fits. Empty lakes and island relationships must
+return before a whole-world trial. Next: bounded shape deformation and stronger
+costs for losses along populated border segments, not more rigid separation.
+
+All 198 tests pass. Method and commands: `mercator_fit.md`.
+Review gallery: `results/geography/mercator-fit/index.html`.
