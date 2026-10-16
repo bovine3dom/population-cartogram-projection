@@ -552,3 +552,9 @@ All 187 tests pass. No production layout or H3-MON mapping changed.
 Method and commands: `regional_release.md`. Next: joint regional placement
 with explicit costs for lost populated borders and nearby coast errors.
 
+Published four world layouts and regional details in
+`results/geography/regional-release/index.html`. The gallery includes exact
+tile archives, reports, and checksums. Independent archive checks confirm all
+budgets and empty lake cells. The refined mainland Russia–China distance is
+56.92 tile spacings. The widest rigid trial reaches 158.90, but its excessive
+empty space makes it a poor candidate.

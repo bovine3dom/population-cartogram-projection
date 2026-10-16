@@ -1,0 +1,4836 @@
+{
+  "tiles": 55000,
+  "components": 481,
+  "before_tile_weighted_shape_error": 0.4269034942079149,
+  "after_tile_weighted_shape_error": 0.40371638414100036,
+  "newly_empty_cells": 1029,
+  "new_enclosed_empty_cells": 6,
+  "named_lake_cells": 220,
+  "records": [
+    {
+      "component_id": "ABW:0d999085fdb95914",
+      "country_id": "ABW",
+      "tiles": 1,
+      "before_error": 0.5462323083402187,
+      "after_error": 0.5462323083402187,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ACA:cb08ec7461da4063",
+      "country_id": "ATG",
+      "tiles": 1,
+      "before_error": 0.28238373908038383,
+      "after_error": 0.28238373908038383,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "AFG:cda2af5bb6ea22f0",
+      "country_id": "AFG",
+      "tiles": 291,
+      "before_error": 0.45097125323059073,
+      "after_error": 0.28503995861779075,
+      "improvement": 0.16593129461279998,
+      "before_perimeter": 134,
+      "after_perimeter": 98
+    },
+    {
+      "component_id": "AGO:2b9c8d9b36ed1f1d",
+      "country_id": "AGO",
+      "tiles": 9,
+      "before_error": 0.6334676075281018,
+      "after_error": 0.6334676075281018,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "AGO:704113b148b7974b",
+      "country_id": "AGO",
+      "tiles": 242,
+      "before_error": 0.28265725443213197,
+      "after_error": 0.23957193673027422,
+      "improvement": 0.04308531770185775,
+      "before_perimeter": 82,
+      "after_perimeter": 80
+    },
+    {
+      "component_id": "AIA:09a59ce4723b5dc9",
+      "country_id": "AIA",
+      "tiles": 1,
+      "before_error": 0.6378351380637003,
+      "after_error": 0.6378351380637003,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ALB:c931cc5315aed954",
+      "country_id": "ALB",
+      "tiles": 19,
+      "before_error": 0.5547528940104811,
+      "after_error": 0.5547528940104811,
+      "improvement": 0.0,
+      "before_perimeter": 28,
+      "after_perimeter": 28
+    },
+    {
+      "component_id": "ALD:47f8615cf1330e71",
+      "country_id": "ALD",
+      "tiles": 1,
+      "before_error": 0.5054890331432595,
+      "after_error": 0.5054890331432595,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "AND:0923843c3687a75e",
+      "country_id": "AND",
+      "tiles": 1,
+      "before_error": 0.2506708723091434,
+      "after_error": 0.2506708723091434,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ARE:2a921eedd33e22f9",
+      "country_id": "ARE",
+      "tiles": 1,
+      "before_error": 0.5115866345331861,
+      "after_error": 0.5115866345331861,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ARE:6af70f4330c4f4bf",
+      "country_id": "ARE",
+      "tiles": 61,
+      "before_error": 0.44829732750114504,
+      "after_error": 0.32377091613133335,
+      "improvement": 0.12452641136981168,
+      "before_perimeter": 38,
+      "after_perimeter": 48
+    },
+    {
+      "component_id": "ARG:7462ff4f8b49993a",
+      "country_id": "ARG",
+      "tiles": 315,
+      "before_error": 0.36439984076702603,
+      "after_error": 0.3152015197004212,
+      "improvement": 0.04919832106660482,
+      "before_perimeter": 140,
+      "after_perimeter": 130
+    },
+    {
+      "component_id": "ARG:b42dd8a02e55c90b",
+      "country_id": "ARG",
+      "tiles": 1,
+      "before_error": 0.6042235223571222,
+      "after_error": 0.6042235223571222,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ARM:433ac98029e5a761",
+      "country_id": "ARM",
+      "tiles": 19,
+      "before_error": 0.5370446297239486,
+      "after_error": 0.5370446297239486,
+      "improvement": 0.0,
+      "before_perimeter": 22,
+      "after_perimeter": 22
+    },
+    {
+      "component_id": "ASM:7f40f5358bbd2440",
+      "country_id": "ASM",
+      "tiles": 1,
+      "before_error": 0.5335333298462428,
+      "after_error": 0.5335333298462428,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ATA:a3f793773cb0a0b5",
+      "country_id": "ATA",
+      "tiles": 1,
+      "before_error": 0.8282762442851359,
+      "after_error": 0.8282762442851359,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ATF:466bffce003497f7",
+      "country_id": "ATF",
+      "tiles": 1,
+      "before_error": 0.5910455455361504,
+      "after_error": 0.5910455455361504,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "AUS:6a36c6fd1db93bf9",
+      "country_id": "AUS",
+      "tiles": 4,
+      "before_error": 0.33783353173530994,
+      "after_error": 0.33783353173530994,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "AUS:adfd7567b2399535",
+      "country_id": "AUS",
+      "tiles": 175,
+      "before_error": 0.0957273696271258,
+      "after_error": 0.0957273696271258,
+      "improvement": 0.0,
+      "before_perimeter": 82,
+      "after_perimeter": 82
+    },
+    {
+      "component_id": "AUT:709fdd785650b149",
+      "country_id": "AUT",
+      "tiles": 62,
+      "before_error": 0.6026097165877325,
+      "after_error": 0.6026097165877325,
+      "improvement": 0.0,
+      "before_perimeter": 72,
+      "after_perimeter": 72
+    },
+    {
+      "component_id": "AZE:0510388634a9edd9",
+      "country_id": "AZE",
+      "tiles": 69,
+      "before_error": 0.6814885459764553,
+      "after_error": 0.6814885459764553,
+      "improvement": 0.0,
+      "before_perimeter": 54,
+      "after_perimeter": 54
+    },
+    {
+      "component_id": "AZE:e5af19283650a3e3",
+      "country_id": "AZE",
+      "tiles": 3,
+      "before_error": 0.4485715198635527,
+      "after_error": 0.4485715198635527,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "BDI:b3ecb03d79bf1cb5",
+      "country_id": "BDI",
+      "tiles": 91,
+      "before_error": 0.3434068778278313,
+      "after_error": 0.3434068778278313,
+      "improvement": 0.0,
+      "before_perimeter": 44,
+      "after_perimeter": 44
+    },
+    {
+      "component_id": "BEL:b124863414a6dcdb",
+      "country_id": "BEL",
+      "tiles": 81,
+      "before_error": 0.3539361110714202,
+      "after_error": 0.3539361110714202,
+      "improvement": 0.0,
+      "before_perimeter": 58,
+      "after_perimeter": 58
+    },
+    {
+      "component_id": "BEN:5911ab4fd3e84cb1",
+      "country_id": "BEN",
+      "tiles": 95,
+      "before_error": 0.6146032107732766,
+      "after_error": 0.6146032107732766,
+      "improvement": 0.0,
+      "before_perimeter": 74,
+      "after_perimeter": 74
+    },
+    {
+      "component_id": "BFA:9c8f06c312ed722e",
+      "country_id": "BFA",
+      "tiles": 161,
+      "before_error": 0.35180480253443214,
+      "after_error": 0.35180480253443214,
+      "improvement": 0.0,
+      "before_perimeter": 62,
+      "after_perimeter": 62
+    },
+    {
+      "component_id": "BGD:042f51d8dc6403c1",
+      "country_id": "BGD",
+      "tiles": 1,
+      "before_error": 0.4980411097832049,
+      "after_error": 0.4980411097832049,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "BGD:19954db53276f45c",
+      "country_id": "BGD",
+      "tiles": 1,
+      "before_error": 0.7209960107666173,
+      "after_error": 0.7209960107666173,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "BGD:31f73d0e612038c5",
+      "country_id": "BGD",
+      "tiles": 4,
+      "before_error": 0.3164599031828691,
+      "after_error": 0.3164599031828691,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "BGD:938be7fc0dcd9e43",
+      "country_id": "BGD",
+      "tiles": 11,
+      "before_error": 0.48446923466812475,
+      "after_error": 0.48446923466812475,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "BGD:9d4073b87fe90ca9",
+      "country_id": "BGD",
+      "tiles": 1,
+      "before_error": 0.4806392473795599,
+      "after_error": 0.4806392473795599,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "BGD:d6d0c7df0b40a187",
+      "country_id": "BGD",
+      "tiles": 1152,
+      "before_error": 0.45092228145131574,
+      "after_error": 0.45092228145131574,
+      "improvement": 0.0,
+      "before_perimeter": 236,
+      "after_perimeter": 236
+    },
+    {
+      "component_id": "BGD:ee4951d7c5e4344f",
+      "country_id": "BGD",
+      "tiles": 3,
+      "before_error": 0.44998466609209975,
+      "after_error": 0.44998466609209975,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "BGD:f058ecaa7fb035b6",
+      "country_id": "BGD",
+      "tiles": 1,
+      "before_error": 0.3660980479449336,
+      "after_error": 0.3660980479449336,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "BGD:f25678f67bf11d4f",
+      "country_id": "BGD",
+      "tiles": 2,
+      "before_error": 0.46930609972413706,
+      "after_error": 0.46930609972413706,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "BGR:8a6e196d0e9089ee",
+      "country_id": "BGR",
+      "tiles": 46,
+      "before_error": 0.705159054670661,
+      "after_error": 0.705159054670661,
+      "improvement": 0.0,
+      "before_perimeter": 62,
+      "after_perimeter": 62
+    },
+    {
+      "component_id": "BHR:7a146d25b735f173",
+      "country_id": "BHR",
+      "tiles": 8,
+      "before_error": 0.4168384624898548,
+      "after_error": 0.4168384624898548,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "BHR:d53271f1e46354e7",
+      "country_id": "BHR",
+      "tiles": 1,
+      "before_error": 0.5665749775034912,
+      "after_error": 0.5665749775034912,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "BHS:d03207e09866ed23",
+      "country_id": "BHS",
+      "tiles": 2,
+      "before_error": 0.3057033673080274,
+      "after_error": 0.3057033673080274,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "BIH:76753bb1c9d6c52b",
+      "country_id": "BIH",
+      "tiles": 23,
+      "before_error": 0.5666646245833453,
+      "after_error": 0.5666646245833453,
+      "improvement": 0.0,
+      "before_perimeter": 28,
+      "after_perimeter": 28
+    },
+    {
+      "component_id": "BLM:827ad9ed4c2f6184",
+      "country_id": "BLM",
+      "tiles": 1,
+      "before_error": 0.2825600662069654,
+      "after_error": 0.2825600662069654,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "BLR:216ea6b406f5bc6c",
+      "country_id": "BLR",
+      "tiles": 65,
+      "before_error": 0.45972833818847203,
+      "after_error": 0.40713557271989564,
+      "improvement": 0.052592765468576386,
+      "before_perimeter": 54,
+      "after_perimeter": 56
+    },
+    {
+      "component_id": "BLZ:4f146436bd0251b5",
+      "country_id": "BLZ",
+      "tiles": 2,
+      "before_error": 0.7524440415082922,
+      "after_error": 0.7524440415082922,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "BMU:4a0d97b264a07eaa",
+      "country_id": "BMU",
+      "tiles": 1,
+      "before_error": 0.810762951432439,
+      "after_error": 0.810762951432439,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "BOL:1a7254807c71e166",
+      "country_id": "BOL",
+      "tiles": 85,
+      "before_error": 0.41389038615401263,
+      "after_error": 0.4097600540945149,
+      "improvement": 0.004130332059497754,
+      "before_perimeter": 44,
+      "after_perimeter": 46
+    },
+    {
+      "component_id": "BRA:1e30221c7873119b",
+      "country_id": "BRA",
+      "tiles": 1,
+      "before_error": 0.6363538110841599,
+      "after_error": 0.6363538110841599,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "BRA:c9a395c2d321cd60",
+      "country_id": "BRA",
+      "tiles": 1465,
+      "before_error": 0.31050616589444935,
+      "after_error": 0.27812953944587826,
+      "improvement": 0.03237662644857109,
+      "before_perimeter": 254,
+      "after_perimeter": 246
+    },
+    {
+      "component_id": "BRA:eff3200271a767a0",
+      "country_id": "BRA",
+      "tiles": 3,
+      "before_error": 0.38017928789269895,
+      "after_error": 0.38017928789269895,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "BRA:f3313e497cca50c7",
+      "country_id": "BRA",
+      "tiles": 4,
+      "before_error": 0.418325275241591,
+      "after_error": 0.418325275241591,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "BRA:f5c11e45059562b8",
+      "country_id": "BRA",
+      "tiles": 3,
+      "before_error": 0.2500598233705481,
+      "after_error": 0.2500598233705481,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "BRB:18a3b038d121e1b6",
+      "country_id": "BRB",
+      "tiles": 2,
+      "before_error": 0.3320546654558084,
+      "after_error": 0.3320546654558084,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "BRN:72e2eec83e114e7f",
+      "country_id": "BRN",
+      "tiles": 3,
+      "before_error": 0.5318519199603948,
+      "after_error": 0.5318519199603948,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "BRT:fef0fc6bba22ada7",
+      "country_id": "BRT",
+      "tiles": 1,
+      "before_error": 0.4581209973387603,
+      "after_error": 0.4581209973387603,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "BTN:fe4a4d07e153ef17",
+      "country_id": "BTN",
+      "tiles": 6,
+      "before_error": 0.2347199342422569,
+      "after_error": 0.2347199342422569,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "BWA:41766e3f9df3a4d1",
+      "country_id": "BWA",
+      "tiles": 18,
+      "before_error": 0.5417593569694137,
+      "after_error": 0.4950261152181157,
+      "improvement": 0.046733241751298005,
+      "before_perimeter": 22,
+      "after_perimeter": 22
+    },
+    {
+      "component_id": "CAF:1f15d49e1132c1f3",
+      "country_id": "CAF",
+      "tiles": 39,
+      "before_error": 0.7099238138236947,
+      "after_error": 0.5782060675211105,
+      "improvement": 0.13171774630258426,
+      "before_perimeter": 58,
+      "after_perimeter": 54
+    },
+    {
+      "component_id": "CAN:150d768b31d42278",
+      "country_id": "CAN",
+      "tiles": 1,
+      "before_error": 0.7145664553992552,
+      "after_error": 0.7145664553992552,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CAN:2f9cda75c78586e5",
+      "country_id": "CAN",
+      "tiles": 6,
+      "before_error": 0.37604111010517893,
+      "after_error": 0.37604111010517893,
+      "improvement": 0.0,
+      "before_perimeter": 14,
+      "after_perimeter": 14
+    },
+    {
+      "component_id": "CAN:361131cc2ae1ac25",
+      "country_id": "CAN",
+      "tiles": 2,
+      "before_error": 0.5739522917132927,
+      "after_error": 0.5739522917132927,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "CAN:614ec007a6324298",
+      "country_id": "CAN",
+      "tiles": 203,
+      "before_error": 0.49244034061764896,
+      "after_error": 0.4734769233216233,
+      "improvement": 0.018963417296025686,
+      "before_perimeter": 132,
+      "after_perimeter": 128
+    },
+    {
+      "component_id": "CAN:9076c2432c64faec",
+      "country_id": "CAN",
+      "tiles": 13,
+      "before_error": 0.3271969752167875,
+      "after_error": 0.3271969752167875,
+      "improvement": 0.0,
+      "before_perimeter": 24,
+      "after_perimeter": 24
+    },
+    {
+      "component_id": "CAN:95c7ebac82699331",
+      "country_id": "CAN",
+      "tiles": 3,
+      "before_error": 0.49056842781800336,
+      "after_error": 0.49056842781800336,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "CAN:c2f1e4e52d5cc0c3",
+      "country_id": "CAN",
+      "tiles": 30,
+      "before_error": 0.6723936486385432,
+      "after_error": 0.688003748873547,
+      "improvement": -0.015610100235003754,
+      "before_perimeter": 32,
+      "after_perimeter": 32
+    },
+    {
+      "component_id": "CAN:d18c57e4ac8eb9d4",
+      "country_id": "CAN",
+      "tiles": 1,
+      "before_error": 0.4926920014613855,
+      "after_error": 0.4926920014613855,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHE:b37ef58a1d6dee0a",
+      "country_id": "CHE",
+      "tiles": 61,
+      "before_error": 0.4483991517856628,
+      "after_error": 0.4483991517856628,
+      "improvement": 0.0,
+      "before_perimeter": 48,
+      "after_perimeter": 48
+    },
+    {
+      "component_id": "CHL:150a87c1995fb5ad",
+      "country_id": "CHL",
+      "tiles": 133,
+      "before_error": 0.8983275801565949,
+      "after_error": 0.8453885410979759,
+      "improvement": 0.052939039058618964,
+      "before_perimeter": 92,
+      "after_perimeter": 106
+    },
+    {
+      "component_id": "CHL:c7e83ec3b56ed34a",
+      "country_id": "CHL",
+      "tiles": 1,
+      "before_error": 0.6542943577831355,
+      "after_error": 0.6542943577831355,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:1fe2d636aa152758",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.704360500827194,
+      "after_error": 0.704360500827194,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:2719f4f324178f96",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.4159570819217908,
+      "after_error": 0.4159570819217908,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:4f018d125c727170",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.6565338357280504,
+      "after_error": 0.6565338357280504,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:614315231acdc665",
+      "country_id": "CHN",
+      "tiles": 63,
+      "before_error": 0.11406880598663227,
+      "after_error": 0.11406880598663227,
+      "improvement": 0.0,
+      "before_perimeter": 36,
+      "after_perimeter": 36
+    },
+    {
+      "component_id": "CHN:6758aa1ed075f43e",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.3427693214350538,
+      "after_error": 0.3427693214350538,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:68d9459587b3e328",
+      "country_id": "CHN",
+      "tiles": 3,
+      "before_error": 0.5814113023948055,
+      "after_error": 0.5814113023948055,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "CHN:72cd37e37e634df7",
+      "country_id": "CHN",
+      "tiles": 9632,
+      "before_error": 0.4710094809361648,
+      "after_error": 0.4568114818074682,
+      "improvement": 0.01419799912869657,
+      "before_perimeter": 1034,
+      "after_perimeter": 992
+    },
+    {
+      "component_id": "CHN:7331c80e6a0aeaf6",
+      "country_id": "CHN",
+      "tiles": 5,
+      "before_error": 0.4266716659687707,
+      "after_error": 0.4266716659687707,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "CHN:8a7084ca793e108f",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.555978877487334,
+      "after_error": 0.555978877487334,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:92b6e2946d6e9cf2",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.32548392556660233,
+      "after_error": 0.32548392556660233,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:9a10ed80b028fd43",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.6313450925238677,
+      "after_error": 0.6313450925238677,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:a1d8a1f7255ae4e3",
+      "country_id": "CHN",
+      "tiles": 2,
+      "before_error": 0.6823957564587497,
+      "after_error": 0.6823957564587497,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "CHN:a7b54b9567d1bd7a",
+      "country_id": "CHN",
+      "tiles": 3,
+      "before_error": 0.6651660694313286,
+      "after_error": 0.6651660694313286,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "CHN:b0d6cdeb74633edd",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.5167919853794466,
+      "after_error": 0.5167919853794466,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:b6f6968952ede1bd",
+      "country_id": "CHN",
+      "tiles": 10,
+      "before_error": 0.26369154316441445,
+      "after_error": 0.26369154316441445,
+      "improvement": 0.0,
+      "before_perimeter": 16,
+      "after_perimeter": 16
+    },
+    {
+      "component_id": "CHN:b8cc67f79ad103ff",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.4694026509683541,
+      "after_error": 0.4694026509683541,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CHN:bc6aa9717e94f769",
+      "country_id": "CHN",
+      "tiles": 2,
+      "before_error": 0.47106992809240633,
+      "after_error": 0.47106992809240633,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "CHN:da91019566ae5d0e",
+      "country_id": "CHN",
+      "tiles": 5,
+      "before_error": 0.47518230366205927,
+      "after_error": 0.47518230366205927,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "CHN:e959a445c659f4ad",
+      "country_id": "CHN",
+      "tiles": 3,
+      "before_error": 0.3693867446675898,
+      "after_error": 0.3693867446675898,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "CHN:fba815b612791d7c",
+      "country_id": "CHN",
+      "tiles": 1,
+      "before_error": 0.640004331742942,
+      "after_error": 0.640004331742942,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CIV:1c18880d4492d85c",
+      "country_id": "CIV",
+      "tiles": 195,
+      "before_error": 0.3353566190192456,
+      "after_error": 0.3353566190192456,
+      "improvement": 0.0,
+      "before_perimeter": 72,
+      "after_perimeter": 72
+    },
+    {
+      "component_id": "CMR:35df8c314c8ef083",
+      "country_id": "CMR",
+      "tiles": 197,
+      "before_error": 0.5420586946593333,
+      "after_error": 0.4507459029148072,
+      "improvement": 0.09131279174452611,
+      "before_perimeter": 94,
+      "after_perimeter": 102
+    },
+    {
+      "component_id": "CNM:85db95ef4bf8489c",
+      "country_id": "CNM",
+      "tiles": 1,
+      "before_error": 0.8974605220628514,
+      "after_error": 0.8974605220628514,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "COD:34b7cfda818ccf80",
+      "country_id": "COD",
+      "tiles": 702,
+      "before_error": 0.3019182267151935,
+      "after_error": 0.3019182267151935,
+      "improvement": 0.0,
+      "before_perimeter": 154,
+      "after_perimeter": 154
+    },
+    {
+      "component_id": "COG:c5650e58e144375b",
+      "country_id": "COG",
+      "tiles": 43,
+      "before_error": 0.7394685677937717,
+      "after_error": 0.6357250846599404,
+      "improvement": 0.1037434831338313,
+      "before_perimeter": 58,
+      "after_perimeter": 64
+    },
+    {
+      "component_id": "COK:59fe00fd93eed20c",
+      "country_id": "COK",
+      "tiles": 1,
+      "before_error": 0.29537784830132396,
+      "after_error": 0.29537784830132396,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "COL:08d1c79f212fc17e",
+      "country_id": "COL",
+      "tiles": 357,
+      "before_error": 0.4084712263479352,
+      "after_error": 0.3131239637429981,
+      "improvement": 0.09534726260493709,
+      "before_perimeter": 98,
+      "after_perimeter": 118
+    },
+    {
+      "component_id": "COM:1fe8ef77b8d7172f",
+      "country_id": "COM",
+      "tiles": 2,
+      "before_error": 0.44027369130341976,
+      "after_error": 0.44027369130341976,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "COM:306e297809981428",
+      "country_id": "COM",
+      "tiles": 3,
+      "before_error": 0.33828628238975345,
+      "after_error": 0.33828628238975345,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "CPV:35fe8ce92e3d94c5",
+      "country_id": "CPV",
+      "tiles": 1,
+      "before_error": 0.30074390352563274,
+      "after_error": 0.30074390352563274,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CPV:ba70bc183d52ff1a",
+      "country_id": "CPV",
+      "tiles": 2,
+      "before_error": 0.3416050298053416,
+      "after_error": 0.3416050298053416,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "CRI:5a22dcdd3a44dc5b",
+      "country_id": "CRI",
+      "tiles": 36,
+      "before_error": 0.6022945455206735,
+      "after_error": 0.6022945455206735,
+      "improvement": 0.0,
+      "before_perimeter": 36,
+      "after_perimeter": 36
+    },
+    {
+      "component_id": "CUB:1617e1799612bc7d",
+      "country_id": "CUB",
+      "tiles": 1,
+      "before_error": 0.32223435665407685,
+      "after_error": 0.32223435665407685,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CUB:a203a2643a40db9f",
+      "country_id": "CUB",
+      "tiles": 75,
+      "before_error": 0.19443154775636273,
+      "after_error": 0.19443154775636273,
+      "improvement": 0.0,
+      "before_perimeter": 80,
+      "after_perimeter": 80
+    },
+    {
+      "component_id": "CUW:2dc808a8cf441409",
+      "country_id": "CUW",
+      "tiles": 1,
+      "before_error": 0.6878538336100193,
+      "after_error": 0.6878538336100193,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CXR:810b3572fd4f37bc",
+      "country_id": "IOA",
+      "tiles": 1,
+      "before_error": 0.4545754762380969,
+      "after_error": 0.4545754762380969,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CYM:98d679f5360c472c",
+      "country_id": "CYM",
+      "tiles": 1,
+      "before_error": 0.6681303452872863,
+      "after_error": 0.6681303452872863,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "CYN:3fa61972653460ef",
+      "country_id": "CYN",
+      "tiles": 2,
+      "before_error": 0.5436374049965209,
+      "after_error": 0.5436374049965209,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "CYP:0e9f924ff6746fe5",
+      "country_id": "CYP",
+      "tiles": 5,
+      "before_error": 0.40234882646239933,
+      "after_error": 0.40234882646239933,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "CZE:bf3969a8b4fbfc04",
+      "country_id": "CZE",
+      "tiles": 72,
+      "before_error": 0.39741084031889096,
+      "after_error": 0.39741084031889096,
+      "improvement": 0.0,
+      "before_perimeter": 38,
+      "after_perimeter": 38
+    },
+    {
+      "component_id": "DEU:0b0480fae55fd996",
+      "country_id": "DEU",
+      "tiles": 574,
+      "before_error": 0.303199417741567,
+      "after_error": 0.303199417741567,
+      "improvement": 0.0,
+      "before_perimeter": 122,
+      "after_perimeter": 122
+    },
+    {
+      "component_id": "DEU:783c67ca6ea7bf74",
+      "country_id": "DEU",
+      "tiles": 1,
+      "before_error": 0.4239349274071458,
+      "after_error": 0.4239349274071458,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "DJI:8814228594ff16f1",
+      "country_id": "DJI",
+      "tiles": 7,
+      "before_error": 0.7615492871340213,
+      "after_error": 0.7615492871340213,
+      "improvement": 0.0,
+      "before_perimeter": 14,
+      "after_perimeter": 14
+    },
+    {
+      "component_id": "DMA:5371714512bc2530",
+      "country_id": "DMA",
+      "tiles": 1,
+      "before_error": 0.5451090449000426,
+      "after_error": 0.5451090449000426,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "DNK:6ca9994f5cea019a",
+      "country_id": "DNK",
+      "tiles": 2,
+      "before_error": 0.39859239567104143,
+      "after_error": 0.39859239567104143,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "DNK:856510ae70f04d27",
+      "country_id": "DNK",
+      "tiles": 3,
+      "before_error": 0.4539259358801133,
+      "after_error": 0.4539259358801133,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "DNK:d3d12b2e248a600a",
+      "country_id": "DNK",
+      "tiles": 15,
+      "before_error": 0.3385141985830282,
+      "after_error": 0.3385141985830282,
+      "improvement": 0.0,
+      "before_perimeter": 20,
+      "after_perimeter": 20
+    },
+    {
+      "component_id": "DNK:d4951f6fa8360f9a",
+      "country_id": "DNK",
+      "tiles": 16,
+      "before_error": 0.37909088944449465,
+      "after_error": 0.37909088944449465,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "DNK:daf481ed6e2f79e2",
+      "country_id": "DNK",
+      "tiles": 1,
+      "before_error": 0.5855580691392022,
+      "after_error": 0.5855580691392022,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "DOM:1493e296a532a3a2",
+      "country_id": "DOM",
+      "tiles": 76,
+      "before_error": 0.23459623523666406,
+      "after_error": 0.23459623523666406,
+      "improvement": 0.0,
+      "before_perimeter": 54,
+      "after_perimeter": 54
+    },
+    {
+      "component_id": "DZA:704d2c59e6450910",
+      "country_id": "DZA",
+      "tiles": 313,
+      "before_error": 0.4436839608300085,
+      "after_error": 0.26561925181462187,
+      "improvement": 0.17806470901538662,
+      "before_perimeter": 148,
+      "after_perimeter": 104
+    },
+    {
+      "component_id": "ECU:ef48f29c8aa10327",
+      "country_id": "ECU",
+      "tiles": 121,
+      "before_error": 0.41782565085134704,
+      "after_error": 0.3750031821300537,
+      "improvement": 0.04282246872129336,
+      "before_perimeter": 64,
+      "after_perimeter": 64
+    },
+    {
+      "component_id": "EGY:f7cc24b776a75221",
+      "country_id": "EGY",
+      "tiles": 774,
+      "before_error": 0.44186600910822604,
+      "after_error": 0.32971893059884627,
+      "improvement": 0.11214707850937977,
+      "before_perimeter": 200,
+      "after_perimeter": 180
+    },
+    {
+      "component_id": "ENG:bf2fff53240de3db",
+      "country_id": "GBR",
+      "tiles": 1,
+      "before_error": 0.39166202674135553,
+      "after_error": 0.39166202674135553,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ERI:b257cabcc1caab95",
+      "country_id": "ERI",
+      "tiles": 25,
+      "before_error": 0.5375932056470081,
+      "after_error": 0.48678915842994863,
+      "improvement": 0.050804047217059445,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "ESB:432b2cb88c6056bf",
+      "country_id": "ESB",
+      "tiles": 1,
+      "before_error": 0.6124010215263214,
+      "after_error": 0.6124010215263214,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ESP:1b9f595463c4150a",
+      "country_id": "ESP",
+      "tiles": 1,
+      "before_error": 0.36158363882699884,
+      "after_error": 0.36158363882699884,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ESP:3705469b3ef783dc",
+      "country_id": "ESP",
+      "tiles": 1,
+      "before_error": 0.49389195987926715,
+      "after_error": 0.49389195987926715,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ESP:65533d41ead559e6",
+      "country_id": "ESP",
+      "tiles": 1,
+      "before_error": 0.5595441846699916,
+      "after_error": 0.5595441846699916,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ESP:791b8810feaa4071",
+      "country_id": "ESP",
+      "tiles": 6,
+      "before_error": 0.3319633335624731,
+      "after_error": 0.3319633335624731,
+      "improvement": 0.0,
+      "before_perimeter": 14,
+      "after_perimeter": 14
+    },
+    {
+      "component_id": "ESP:7dc2b5da1e2aaae9",
+      "country_id": "ESP",
+      "tiles": 1,
+      "before_error": 0.37939899116910303,
+      "after_error": 0.37939899116910303,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ESP:94551cac3165236f",
+      "country_id": "ESP",
+      "tiles": 1,
+      "before_error": 0.39864898653215075,
+      "after_error": 0.39864898653215075,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ESP:d0884f530f40b0fb",
+      "country_id": "ESP",
+      "tiles": 7,
+      "before_error": 0.37605871504288524,
+      "after_error": 0.37605871504288524,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "ESP:d5030a8f162b4ff0",
+      "country_id": "ESP",
+      "tiles": 6,
+      "before_error": 0.2981194784184543,
+      "after_error": 0.2981194784184543,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "ESP:e886baf081d9b038",
+      "country_id": "ESP",
+      "tiles": 1,
+      "before_error": 0.4295423170720747,
+      "after_error": 0.4295423170720747,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ESP:ff9451038f1a27e4",
+      "country_id": "ESP",
+      "tiles": 297,
+      "before_error": 0.47521650610635424,
+      "after_error": 0.47521650610635424,
+      "improvement": 0.0,
+      "before_perimeter": 88,
+      "after_perimeter": 88
+    },
+    {
+      "component_id": "EST:50bd04ff06509a99",
+      "country_id": "EST",
+      "tiles": 9,
+      "before_error": 0.482405272984624,
+      "after_error": 0.482405272984624,
+      "improvement": 0.0,
+      "before_perimeter": 14,
+      "after_perimeter": 14
+    },
+    {
+      "component_id": "ETH:38a05216b358b154",
+      "country_id": "ETH",
+      "tiles": 874,
+      "before_error": 0.47687932055450843,
+      "after_error": 0.47687932055450843,
+      "improvement": 0.0,
+      "before_perimeter": 168,
+      "after_perimeter": 168
+    },
+    {
+      "component_id": "FIN:9332a3268ae7c503",
+      "country_id": "FIN",
+      "tiles": 37,
+      "before_error": 0.6519243628374356,
+      "after_error": 0.36412558824330243,
+      "improvement": 0.28779877459413317,
+      "before_perimeter": 36,
+      "after_perimeter": 36
+    },
+    {
+      "component_id": "FJI:02cc1c9fbbc8a320",
+      "country_id": "FJI",
+      "tiles": 1,
+      "before_error": 0.6242292977154131,
+      "after_error": 0.6242292977154131,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "FJI:3dd1a1f7bfb548f8",
+      "country_id": "FJI",
+      "tiles": 5,
+      "before_error": 0.4214895342467264,
+      "after_error": 0.4214895342467264,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "FLK:881178e659639c79",
+      "country_id": "FLK",
+      "tiles": 1,
+      "before_error": 0.433107170633774,
+      "after_error": 0.433107170633774,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "FRO:0f77e91ccf10bf9d",
+      "country_id": "FRO",
+      "tiles": 1,
+      "before_error": 0.6365231474680769,
+      "after_error": 0.6365231474680769,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "FSM:446beaaeecdff78b",
+      "country_id": "FSM",
+      "tiles": 1,
+      "before_error": 0.2829057321995935,
+      "after_error": 0.2829057321995935,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "FXX:b04574696bff21bc",
+      "country_id": "FRA",
+      "tiles": 2,
+      "before_error": 0.2691083752058503,
+      "after_error": 0.2691083752058503,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "FXX:f023db15990ca569",
+      "country_id": "FRA",
+      "tiles": 440,
+      "before_error": 0.3189976702651799,
+      "after_error": 0.3189976702651799,
+      "improvement": 0.0,
+      "before_perimeter": 154,
+      "after_perimeter": 154
+    },
+    {
+      "component_id": "GAB:9b0fa4569aef69bd",
+      "country_id": "GAB",
+      "tiles": 16,
+      "before_error": 0.5300616052864575,
+      "after_error": 0.4529973658471492,
+      "improvement": 0.07706423943930829,
+      "before_perimeter": 22,
+      "after_perimeter": 22
+    },
+    {
+      "component_id": "GAZ:0cd9171edc8ff269",
+      "country_id": "PSX",
+      "tiles": 14,
+      "before_error": 0.7944521262153592,
+      "after_error": 0.7944521262153592,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "GBR:241258080ec293c4",
+      "country_id": "GBR",
+      "tiles": 447,
+      "before_error": 0.10887865598289082,
+      "after_error": 0.10887865598289082,
+      "improvement": 0.0,
+      "before_perimeter": 186,
+      "after_perimeter": 186
+    },
+    {
+      "component_id": "GEO:d709e483cc2819fe",
+      "country_id": "GEO",
+      "tiles": 25,
+      "before_error": 0.5946871797432767,
+      "after_error": 0.5946871797432767,
+      "improvement": 0.0,
+      "before_perimeter": 24,
+      "after_perimeter": 24
+    },
+    {
+      "component_id": "GGY:a7d1dc6a309f18d0",
+      "country_id": "GGY",
+      "tiles": 1,
+      "before_error": 0.40294031400418884,
+      "after_error": 0.40294031400418884,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GHA:1beea30af91e217d",
+      "country_id": "GHA",
+      "tiles": 233,
+      "before_error": 0.35165119962542135,
+      "after_error": 0.35165119962542135,
+      "improvement": 0.0,
+      "before_perimeter": 94,
+      "after_perimeter": 94
+    },
+    {
+      "component_id": "GIB:71de83b149a1d32c",
+      "country_id": "GIB",
+      "tiles": 1,
+      "before_error": 0.5090830780597976,
+      "after_error": 0.5090830780597976,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GIN:eb019150f12e3d47",
+      "country_id": "GIN",
+      "tiles": 97,
+      "before_error": 0.4656120886876205,
+      "after_error": 0.4656120886876205,
+      "improvement": 0.0,
+      "before_perimeter": 58,
+      "after_perimeter": 58
+    },
+    {
+      "component_id": "GLP:53697300cc251789",
+      "country_id": "FRA",
+      "tiles": 1,
+      "before_error": 0.43022521665586877,
+      "after_error": 0.43022521665586877,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GLP:6d7ccc1850ff782c",
+      "country_id": "FRA",
+      "tiles": 1,
+      "before_error": 0.4807026375004818,
+      "after_error": 0.4807026375004818,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GMB:e5cba77f98187ac4",
+      "country_id": "GMB",
+      "tiles": 18,
+      "before_error": 0.8469923204583545,
+      "after_error": 0.8469923204583545,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "GNB:06bb5bdc3716e8ff",
+      "country_id": "GNB",
+      "tiles": 14,
+      "before_error": 0.5570529997118328,
+      "after_error": 0.5570529997118328,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "GNQ:703503e059bb9243",
+      "country_id": "GNQ",
+      "tiles": 7,
+      "before_error": 0.2856392998908547,
+      "after_error": 0.2856392998908547,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "GNQ:c49e160563316bbb",
+      "country_id": "GNQ",
+      "tiles": 3,
+      "before_error": 0.4703355676964188,
+      "after_error": 0.4703355676964188,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "GRC:4194034da182d040",
+      "country_id": "GRC",
+      "tiles": 1,
+      "before_error": 0.3980728836031636,
+      "after_error": 0.3980728836031636,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GRC:4f20757287dcdf70",
+      "country_id": "GRC",
+      "tiles": 1,
+      "before_error": 0.5649643589477267,
+      "after_error": 0.5649643589477267,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GRC:6f3829212fc06f4b",
+      "country_id": "GRC",
+      "tiles": 1,
+      "before_error": 0.44481474922528874,
+      "after_error": 0.44481474922528874,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GRC:70edd41aef80d178",
+      "country_id": "GRC",
+      "tiles": 57,
+      "before_error": 0.47438190687596327,
+      "after_error": 0.47438190687596327,
+      "improvement": 0.0,
+      "before_perimeter": 40,
+      "after_perimeter": 40
+    },
+    {
+      "component_id": "GRC:7f7de33444a506e9",
+      "country_id": "GRC",
+      "tiles": 4,
+      "before_error": 0.5044168241513262,
+      "after_error": 0.5044168241513262,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "GRC:91167024ef538ce0",
+      "country_id": "GRC",
+      "tiles": 1,
+      "before_error": 0.43946050490031896,
+      "after_error": 0.43946050490031896,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GRC:c215c5157cd86f15",
+      "country_id": "GRC",
+      "tiles": 1,
+      "before_error": 0.7027363150423214,
+      "after_error": 0.7027363150423214,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GRC:edfec97267c5f3af",
+      "country_id": "GRC",
+      "tiles": 1,
+      "before_error": 0.6609485255555881,
+      "after_error": 0.6609485255555881,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GRD:5c44dc268d11bb57",
+      "country_id": "GRD",
+      "tiles": 1,
+      "before_error": 0.4769993225485999,
+      "after_error": 0.4769993225485999,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GRL:2a53232ea84e3e84",
+      "country_id": "GRL",
+      "tiles": 1,
+      "before_error": 0.5159189778053821,
+      "after_error": 0.5159189778053821,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GTM:304e3cb8ddf6bb44",
+      "country_id": "GTM",
+      "tiles": 125,
+      "before_error": 0.504971819060686,
+      "after_error": 0.4761428556311921,
+      "improvement": 0.028828963429493926,
+      "before_perimeter": 58,
+      "after_perimeter": 56
+    },
+    {
+      "component_id": "GUF:4acf8ebf720d2a5f",
+      "country_id": "FRA",
+      "tiles": 2,
+      "before_error": 0.22623417712369465,
+      "after_error": 0.22623417712369465,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "GUM:97ae1edcd71bddbc",
+      "country_id": "GUM",
+      "tiles": 1,
+      "before_error": 0.6365357219745407,
+      "after_error": 0.6365357219745407,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "GUY:5aec9f8c07eb9159",
+      "country_id": "GUY",
+      "tiles": 5,
+      "before_error": 0.5418409815069107,
+      "after_error": 0.5418409815069107,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "HKG:0dbdf00bf060cdf0",
+      "country_id": "HKG",
+      "tiles": 6,
+      "before_error": 0.46443937970155535,
+      "after_error": 0.46443937970155535,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "HKG:69095e2cb57de445",
+      "country_id": "HKG",
+      "tiles": 1,
+      "before_error": 0.3918658158420897,
+      "after_error": 0.3918658158420897,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "HKG:a4b1c1ec313ba36c",
+      "country_id": "HKG",
+      "tiles": 35,
+      "before_error": 0.5399216318445986,
+      "after_error": 0.5399216318445986,
+      "improvement": 0.0,
+      "before_perimeter": 32,
+      "after_perimeter": 32
+    },
+    {
+      "component_id": "HMD:68b90fe1c7cf90ee",
+      "country_id": "HMD",
+      "tiles": 1,
+      "before_error": 0.3281184014272298,
+      "after_error": 0.3281184014272298,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "HND:0269c68ccb526298",
+      "country_id": "HND",
+      "tiles": 1,
+      "before_error": 0.7632977095093876,
+      "after_error": 0.7632977095093876,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "HND:177f117072fa67d2",
+      "country_id": "HND",
+      "tiles": 72,
+      "before_error": 0.7054730659876298,
+      "after_error": 0.7054730659876298,
+      "improvement": 0.0,
+      "before_perimeter": 50,
+      "after_perimeter": 50
+    },
+    {
+      "component_id": "HRV:23be6296644271a5",
+      "country_id": "HRV",
+      "tiles": 24,
+      "before_error": 0.681922807027294,
+      "after_error": 0.681922807027294,
+      "improvement": 0.0,
+      "before_perimeter": 28,
+      "after_perimeter": 28
+    },
+    {
+      "component_id": "HRV:2a6ba7505aec5af9",
+      "country_id": "HRV",
+      "tiles": 1,
+      "before_error": 0.8387531632408427,
+      "after_error": 0.8387531632408427,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "HTI:1d6ad8a3ef07a04f",
+      "country_id": "HTI",
+      "tiles": 2,
+      "before_error": 0.4577738523503334,
+      "after_error": 0.4577738523503334,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "HTI:a3ce6059435c00f9",
+      "country_id": "HTI",
+      "tiles": 75,
+      "before_error": 0.4651860085202326,
+      "after_error": 0.4651860085202326,
+      "improvement": 0.0,
+      "before_perimeter": 66,
+      "after_perimeter": 66
+    },
+    {
+      "component_id": "HUN:9f803be1643ca956",
+      "country_id": "HUN",
+      "tiles": 66,
+      "before_error": 0.3101955619765002,
+      "after_error": 0.3101955619765002,
+      "improvement": 0.0,
+      "before_perimeter": 54,
+      "after_perimeter": 54
+    },
+    {
+      "component_id": "IDN:022bfe9dad3f0890",
+      "country_id": "IDN",
+      "tiles": 3,
+      "before_error": 0.2632183326014894,
+      "after_error": 0.2632183326014894,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "IDN:0b4d32f4b9727f82",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.48963772088695545,
+      "after_error": 0.48963772088695545,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:1675c019d412853f",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.29968809390737017,
+      "after_error": 0.29968809390737017,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:17180a9338137fd2",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.19352424200541574,
+      "after_error": 0.19352424200541574,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:1882fc741812bb99",
+      "country_id": "IDN",
+      "tiles": 8,
+      "before_error": 0.48759240660510816,
+      "after_error": 0.48759240660510816,
+      "improvement": 0.0,
+      "before_perimeter": 14,
+      "after_perimeter": 14
+    },
+    {
+      "component_id": "IDN:2342a73d6e3d4204",
+      "country_id": "IDN",
+      "tiles": 13,
+      "before_error": 0.3915877306656733,
+      "after_error": 0.3915877306656733,
+      "improvement": 0.0,
+      "before_perimeter": 24,
+      "after_perimeter": 24
+    },
+    {
+      "component_id": "IDN:241c829edbe9ddf3",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.7987416996316405,
+      "after_error": 0.7987416996316405,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:2f668109d000a646",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.5496424083228482,
+      "after_error": 0.5496424083228482,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:323211ce84279d17",
+      "country_id": "IDN",
+      "tiles": 6,
+      "before_error": 0.3428871946832769,
+      "after_error": 0.3428871946832769,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "IDN:3302be3ad51214b8",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.6085879637681485,
+      "after_error": 0.6085879637681485,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:3f7b064a42d6c495",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.5278946439661434,
+      "after_error": 0.5278946439661434,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:41ba51e85ddbb728",
+      "country_id": "IDN",
+      "tiles": 13,
+      "before_error": 0.39636602397068765,
+      "after_error": 0.39636602397068765,
+      "improvement": 0.0,
+      "before_perimeter": 22,
+      "after_perimeter": 22
+    },
+    {
+      "component_id": "IDN:43eb860ae00ba2ae",
+      "country_id": "IDN",
+      "tiles": 22,
+      "before_error": 0.22042641228389326,
+      "after_error": 0.22042641228389326,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "IDN:461e2601656ce574",
+      "country_id": "IDN",
+      "tiles": 5,
+      "before_error": 0.4700250911540629,
+      "after_error": 0.4700250911540629,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "IDN:49b2a8a33d2211b5",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.5582069528898845,
+      "after_error": 0.5582069528898845,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:4d155ba9803cf6be",
+      "country_id": "IDN",
+      "tiles": 25,
+      "before_error": 0.16755686537884906,
+      "after_error": 0.16755686537884906,
+      "improvement": 0.0,
+      "before_perimeter": 28,
+      "after_perimeter": 28
+    },
+    {
+      "component_id": "IDN:51a10640dee7162b",
+      "country_id": "IDN",
+      "tiles": 114,
+      "before_error": 0.2442123883417866,
+      "after_error": 0.15644882480063116,
+      "improvement": 0.08776356354115544,
+      "before_perimeter": 58,
+      "after_perimeter": 60
+    },
+    {
+      "component_id": "IDN:563e4c39826b9ed6",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.3043518123768508,
+      "after_error": 0.3043518123768508,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:58f5fb574eea3969",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.23914855380036193,
+      "after_error": 0.23914855380036193,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:602ec010d55b1aa4",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.5021815928463911,
+      "after_error": 0.5021815928463911,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:676455c554852bce",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.6262288186109823,
+      "after_error": 0.6262288186109823,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:6f7a11314a3b7af3",
+      "country_id": "IDN",
+      "tiles": 20,
+      "before_error": 0.21845955862353095,
+      "after_error": 0.21845955862353095,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "IDN:735932740a80f252",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.6763954335465162,
+      "after_error": 0.6763954335465162,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:746e7e525dfc90c5",
+      "country_id": "IDN",
+      "tiles": 2,
+      "before_error": 0.3709094978014489,
+      "after_error": 0.3709094978014489,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "IDN:7930308e19fa0905",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.43012759898492803,
+      "after_error": 0.43012759898492803,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:7a59bb18e03f91d9",
+      "country_id": "IDN",
+      "tiles": 4,
+      "before_error": 0.4294129244409679,
+      "after_error": 0.4294129244409679,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "IDN:7c3797a36dd1a69b",
+      "country_id": "IDN",
+      "tiles": 128,
+      "before_error": 0.5884563136252507,
+      "after_error": 0.5884563136252507,
+      "improvement": 0.0,
+      "before_perimeter": 100,
+      "after_perimeter": 100
+    },
+    {
+      "component_id": "IDN:7cb96e5a2c123f8f",
+      "country_id": "IDN",
+      "tiles": 10,
+      "before_error": 0.28201252969412616,
+      "after_error": 0.28201252969412616,
+      "improvement": 0.0,
+      "before_perimeter": 16,
+      "after_perimeter": 16
+    },
+    {
+      "component_id": "IDN:7d68fcb39519952c",
+      "country_id": "IDN",
+      "tiles": 4,
+      "before_error": 0.5539609635149159,
+      "after_error": 0.5539609635149159,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "IDN:829c07ff03d97c10",
+      "country_id": "IDN",
+      "tiles": 369,
+      "before_error": 0.08093170695044494,
+      "after_error": 0.08093170695044494,
+      "improvement": 0.0,
+      "before_perimeter": 152,
+      "after_perimeter": 152
+    },
+    {
+      "component_id": "IDN:88a8321cb31b5225",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.4127040320483355,
+      "after_error": 0.4127040320483355,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:8b7b64d2940fb8dc",
+      "country_id": "IDN",
+      "tiles": 8,
+      "before_error": 0.4436511247579543,
+      "after_error": 0.4436511247579543,
+      "improvement": 0.0,
+      "before_perimeter": 16,
+      "after_perimeter": 16
+    },
+    {
+      "component_id": "IDN:902a51c01c39bc1e",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.5549501534939654,
+      "after_error": 0.5549501534939654,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:9053dfc21a705bd2",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.4321407891329274,
+      "after_error": 0.4321407891329274,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:91fa24efd9a13b2f",
+      "country_id": "IDN",
+      "tiles": 50,
+      "before_error": 0.306396588019878,
+      "after_error": 0.2331992637144339,
+      "improvement": 0.07319732430544412,
+      "before_perimeter": 52,
+      "after_perimeter": 50
+    },
+    {
+      "component_id": "IDN:9736be9cd3e2b4ff",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.47063426025053867,
+      "after_error": 0.47063426025053867,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:a2e8d108d88be94f",
+      "country_id": "IDN",
+      "tiles": 4,
+      "before_error": 0.5221984577120986,
+      "after_error": 0.5221984577120986,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "IDN:a3f93df7f6853469",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.4882074909519244,
+      "after_error": 0.4882074909519244,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:a6a2a921eb1e80b9",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.5562767591565905,
+      "after_error": 0.5562767591565905,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:a9a80def964512c2",
+      "country_id": "IDN",
+      "tiles": 2,
+      "before_error": 0.2963990632809945,
+      "after_error": 0.2963990632809945,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "IDN:b212698e7fc50989",
+      "country_id": "IDN",
+      "tiles": 2,
+      "before_error": 0.6217992482106742,
+      "after_error": 0.6217992482106742,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "IDN:b9a02107a9d8774f",
+      "country_id": "IDN",
+      "tiles": 2,
+      "before_error": 0.32563455441614053,
+      "after_error": 0.32563455441614053,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "IDN:bbe17f60e9fb07dc",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.30570035289331454,
+      "after_error": 0.30570035289331454,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:cae0ccf851b4aa17",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.7595580243623816,
+      "after_error": 0.7595580243623816,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:e03a8d3be0282f36",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.555445668807609,
+      "after_error": 0.555445668807609,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:e0b729a0e374c21c",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.6513297641137066,
+      "after_error": 0.6513297641137066,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:fd97b33af0678261",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.3892110197873936,
+      "after_error": 0.3892110197873936,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IDN:fecb2bac3d81ef76",
+      "country_id": "IDN",
+      "tiles": 1027,
+      "before_error": 0.05556279039901102,
+      "after_error": 0.05556279039901102,
+      "improvement": 0.0,
+      "before_perimeter": 266,
+      "after_perimeter": 266
+    },
+    {
+      "component_id": "IDN:ffd26863a64545a3",
+      "country_id": "IDN",
+      "tiles": 1,
+      "before_error": 0.546209655773227,
+      "after_error": 0.546209655773227,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IMN:e2108479644de92c",
+      "country_id": "IMN",
+      "tiles": 1,
+      "before_error": 0.4381603931327235,
+      "after_error": 0.4381603931327235,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IND:2b0aafcf1d6a984f",
+      "country_id": "IND",
+      "tiles": 2,
+      "before_error": 0.7508259015981497,
+      "after_error": 0.7508259015981497,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "IND:3f0bb94d859b2064",
+      "country_id": "IND",
+      "tiles": 9838,
+      "before_error": 0.4503183237809749,
+      "after_error": 0.45401900933857864,
+      "improvement": -0.0037006855576037223,
+      "before_perimeter": 724,
+      "after_perimeter": 772
+    },
+    {
+      "component_id": "IND:a01bf6ca67fb03d1",
+      "country_id": "IND",
+      "tiles": 2,
+      "before_error": 0.3063532805839536,
+      "after_error": 0.3063532805839536,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "IOT:c99e174898a000d0",
+      "country_id": "IOT",
+      "tiles": 1,
+      "before_error": 0.9378543159990821,
+      "after_error": 0.9378543159990821,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IRL:9661cba0fca9f89c",
+      "country_id": "IRL",
+      "tiles": 34,
+      "before_error": 0.31451162971088475,
+      "after_error": 0.31451162971088475,
+      "improvement": 0.0,
+      "before_perimeter": 34,
+      "after_perimeter": 34
+    },
+    {
+      "component_id": "IRN:3c2b5bd7d999fbee",
+      "country_id": "IRN",
+      "tiles": 611,
+      "before_error": 0.6538232047405617,
+      "after_error": 0.4862011607718981,
+      "improvement": 0.16762204396866354,
+      "before_perimeter": 168,
+      "after_perimeter": 182
+    },
+    {
+      "component_id": "IRN:83939dedc8d53abc",
+      "country_id": "IRN",
+      "tiles": 1,
+      "before_error": 0.6116883414132441,
+      "after_error": 0.6116883414132441,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "IRQ:741e7a31e643a8a8",
+      "country_id": "IRQ",
+      "tiles": 314,
+      "before_error": 0.5780973333581891,
+      "after_error": 0.42792937268427467,
+      "improvement": 0.15016796067391447,
+      "before_perimeter": 124,
+      "after_perimeter": 154
+    },
+    {
+      "component_id": "ISL:a7601b85cd746eec",
+      "country_id": "ISL",
+      "tiles": 2,
+      "before_error": 0.38017128855420335,
+      "after_error": 0.38017128855420335,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "ISR:7ab28b88983e2128",
+      "country_id": "ISR",
+      "tiles": 63,
+      "before_error": 0.7416831878025416,
+      "after_error": 0.7416831878025416,
+      "improvement": 0.0,
+      "before_perimeter": 88,
+      "after_perimeter": 88
+    },
+    {
+      "component_id": "ITA:73444d4331e5f7cd",
+      "country_id": "ITA",
+      "tiles": 1,
+      "before_error": 0.30011268127570523,
+      "after_error": 0.30011268127570523,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ITA:7d6868fd136c6c11",
+      "country_id": "ITA",
+      "tiles": 356,
+      "before_error": 0.7150474574957912,
+      "after_error": 0.7150474574957912,
+      "improvement": 0.0,
+      "before_perimeter": 128,
+      "after_perimeter": 128
+    },
+    {
+      "component_id": "ITA:e7ab63898f24eb00",
+      "country_id": "ITA",
+      "tiles": 33,
+      "before_error": 0.19247663562176287,
+      "after_error": 0.19247663562176287,
+      "improvement": 0.0,
+      "before_perimeter": 34,
+      "after_perimeter": 34
+    },
+    {
+      "component_id": "ITA:ebecacbac755556c",
+      "country_id": "ITA",
+      "tiles": 11,
+      "before_error": 0.3415581530910351,
+      "after_error": 0.3415581530910351,
+      "improvement": 0.0,
+      "before_perimeter": 16,
+      "after_perimeter": 16
+    },
+    {
+      "component_id": "JAM:64623d7d4c4ecdba",
+      "country_id": "JAM",
+      "tiles": 19,
+      "before_error": 0.2241689034945341,
+      "after_error": 0.2241689034945341,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "JEY:2e82dcf9ab1c8905",
+      "country_id": "JEY",
+      "tiles": 1,
+      "before_error": 0.5324040019641584,
+      "after_error": 0.5324040019641584,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "JOR:97289b5947dc77c2",
+      "country_id": "JOR",
+      "tiles": 78,
+      "before_error": 0.7369999140487501,
+      "after_error": 0.5988733627328686,
+      "improvement": 0.13812655131588147,
+      "before_perimeter": 76,
+      "after_perimeter": 74
+    },
+    {
+      "component_id": "JPN:3876400cea5031e2",
+      "country_id": "JPN",
+      "tiles": 81,
+      "before_error": 0.20023611310083866,
+      "after_error": 0.20023611310083866,
+      "improvement": 0.0,
+      "before_perimeter": 72,
+      "after_perimeter": 72
+    },
+    {
+      "component_id": "JPN:44be296f191b30d1",
+      "country_id": "JPN",
+      "tiles": 1,
+      "before_error": 0.46363923340656354,
+      "after_error": 0.46363923340656354,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "JPN:6703a8f8d1682ec9",
+      "country_id": "JPN",
+      "tiles": 1,
+      "before_error": 0.46483951033260584,
+      "after_error": 0.46483951033260584,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "JPN:c1b6e25b62179c19",
+      "country_id": "JPN",
+      "tiles": 34,
+      "before_error": 0.28773942100593775,
+      "after_error": 0.28773942100593775,
+      "improvement": 0.0,
+      "before_perimeter": 36,
+      "after_perimeter": 36
+    },
+    {
+      "component_id": "JPN:ccbb1b73257464db",
+      "country_id": "JPN",
+      "tiles": 1,
+      "before_error": 0.534333735471733,
+      "after_error": 0.534333735471733,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "JPN:dd1f679d5c572195",
+      "country_id": "JPN",
+      "tiles": 9,
+      "before_error": 0.6344148693329756,
+      "after_error": 0.6344148693329756,
+      "improvement": 0.0,
+      "before_perimeter": 20,
+      "after_perimeter": 20
+    },
+    {
+      "component_id": "JPN:e121bcc962504d09",
+      "country_id": "JPN",
+      "tiles": 1,
+      "before_error": 0.5441540368037707,
+      "after_error": 0.5441540368037707,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "JPN:ec0a7dcff3300192",
+      "country_id": "JPN",
+      "tiles": 24,
+      "before_error": 0.22536617489512822,
+      "after_error": 0.22536617489512822,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "JPN:f07fed45233efce3",
+      "country_id": "JPN",
+      "tiles": 689,
+      "before_error": 0.09962526160318419,
+      "after_error": 0.09962526160318419,
+      "improvement": 0.0,
+      "before_perimeter": 244,
+      "after_perimeter": 244
+    },
+    {
+      "component_id": "KAB:13532639e9546e01",
+      "country_id": "KAB",
+      "tiles": 1,
+      "before_error": 0.22059240028294191,
+      "after_error": 0.22059240028294191,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "KAS:b7c84d817c090062",
+      "country_id": "KAS",
+      "tiles": 1,
+      "before_error": 0.43853734898439667,
+      "after_error": 0.43853734898439667,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "KAZ:5d6f63a9b9f3c9f9",
+      "country_id": "KAZ",
+      "tiles": 134,
+      "before_error": 0.50423639272132,
+      "after_error": 0.5015891388257572,
+      "improvement": 0.002647253895562862,
+      "before_perimeter": 48,
+      "after_perimeter": 48
+    },
+    {
+      "component_id": "KEN:4b9b5a7ce90b0bb0",
+      "country_id": "KEN",
+      "tiles": 379,
+      "before_error": 0.47658595702028417,
+      "after_error": 0.4752774146878135,
+      "improvement": 0.0013085423324706857,
+      "before_perimeter": 184,
+      "after_perimeter": 188
+    },
+    {
+      "component_id": "KGZ:401b8fcdc0eef69c",
+      "country_id": "KGZ",
+      "tiles": 45,
+      "before_error": 0.465355705837041,
+      "after_error": 0.43896941033717163,
+      "improvement": 0.026386295499869372,
+      "before_perimeter": 34,
+      "after_perimeter": 40
+    },
+    {
+      "component_id": "KHM:299a58dab837de1b",
+      "country_id": "KHM",
+      "tiles": 117,
+      "before_error": 0.4436239289720241,
+      "after_error": 0.4436239289720241,
+      "improvement": 0.0,
+      "before_perimeter": 82,
+      "after_perimeter": 82
+    },
+    {
+      "component_id": "KIR:a4942b8cdd492ae9",
+      "country_id": "KIR",
+      "tiles": 1,
+      "before_error": 0.8663521442456957,
+      "after_error": 0.8663521442456957,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "KNA:ab73693bbdf69270",
+      "country_id": "KNA",
+      "tiles": 1,
+      "before_error": 0.4578103313968037,
+      "after_error": 0.4578103313968037,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "KOR:1a1881fe9e034788",
+      "country_id": "KOR",
+      "tiles": 343,
+      "before_error": 0.3420561767974847,
+      "after_error": 0.3420561767974847,
+      "improvement": 0.0,
+      "before_perimeter": 142,
+      "after_perimeter": 142
+    },
+    {
+      "component_id": "KOR:1fefdd99c987e9c9",
+      "country_id": "KOR",
+      "tiles": 1,
+      "before_error": 0.4004512066119912,
+      "after_error": 0.4004512066119912,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "KOR:dc7ca58831c8b415",
+      "country_id": "KOR",
+      "tiles": 2,
+      "before_error": 0.49531233775318717,
+      "after_error": 0.49531233775318717,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "KOR:ee0f5a0f2f25a339",
+      "country_id": "KOR",
+      "tiles": 4,
+      "before_error": 0.33992227215841353,
+      "after_error": 0.33992227215841353,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "KOS:e68a710dbd926c28",
+      "country_id": "KOS",
+      "tiles": 11,
+      "before_error": 0.4649292449357757,
+      "after_error": 0.4649292449357757,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "KWT:575b7c67b7a3657d",
+      "country_id": "KWT",
+      "tiles": 29,
+      "before_error": 0.5124089566108128,
+      "after_error": 0.5124089566108128,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "LAO:b4c511d27634a146",
+      "country_id": "LAO",
+      "tiles": 52,
+      "before_error": 0.7738068406877041,
+      "after_error": 0.7738068406877041,
+      "improvement": 0.0,
+      "before_perimeter": 60,
+      "after_perimeter": 60
+    },
+    {
+      "component_id": "LBN:8d427f2407db4cf0",
+      "country_id": "LBN",
+      "tiles": 36,
+      "before_error": 0.5382729990245522,
+      "after_error": 0.5382729990245522,
+      "improvement": 0.0,
+      "before_perimeter": 28,
+      "after_perimeter": 28
+    },
+    {
+      "component_id": "LBR:791c4a2bdad8b682",
+      "country_id": "LBR",
+      "tiles": 36,
+      "before_error": 0.44997308315205564,
+      "after_error": 0.44997308315205564,
+      "improvement": 0.0,
+      "before_perimeter": 34,
+      "after_perimeter": 34
+    },
+    {
+      "component_id": "LBY:7ca6524733c4cc0b",
+      "country_id": "LBY",
+      "tiles": 47,
+      "before_error": 0.6093156072851693,
+      "after_error": 0.3418315109469072,
+      "improvement": 0.2674840963382621,
+      "before_perimeter": 34,
+      "after_perimeter": 36
+    },
+    {
+      "component_id": "LCA:5f3167c756c94e88",
+      "country_id": "LCA",
+      "tiles": 1,
+      "before_error": 0.5169988279448213,
+      "after_error": 0.5169988279448213,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "LIE:452f33c4300c02b9",
+      "country_id": "LIE",
+      "tiles": 1,
+      "before_error": 0.5523556101382507,
+      "after_error": 0.5523556101382507,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "LKA:1e8de9d1844ab756",
+      "country_id": "LKA",
+      "tiles": 148,
+      "before_error": 0.10363983007228483,
+      "after_error": 0.10363983007228483,
+      "improvement": 0.0,
+      "before_perimeter": 68,
+      "after_perimeter": 68
+    },
+    {
+      "component_id": "LKA:9bc04c56a9e8bd7a",
+      "country_id": "LKA",
+      "tiles": 1,
+      "before_error": 0.8541077441556039,
+      "after_error": 0.8541077441556039,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "LSO:085148348451b82a",
+      "country_id": "LSO",
+      "tiles": 16,
+      "before_error": 0.3116329409483185,
+      "after_error": 0.3116329409483185,
+      "improvement": 0.0,
+      "before_perimeter": 16,
+      "after_perimeter": 16
+    },
+    {
+      "component_id": "LTU:4c2a60810b4196cd",
+      "country_id": "LTU",
+      "tiles": 19,
+      "before_error": 0.31941686654139656,
+      "after_error": 0.31941686654139656,
+      "improvement": 0.0,
+      "before_perimeter": 22,
+      "after_perimeter": 22
+    },
+    {
+      "component_id": "LUX:2287a57343a7d085",
+      "country_id": "LUX",
+      "tiles": 4,
+      "before_error": 0.34414960426567676,
+      "after_error": 0.34414960426567676,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "LVA:ff14565ea5d338a5",
+      "country_id": "LVA",
+      "tiles": 12,
+      "before_error": 0.6917155750856872,
+      "after_error": 0.6917155750856872,
+      "improvement": 0.0,
+      "before_perimeter": 20,
+      "after_perimeter": 20
+    },
+    {
+      "component_id": "MAC:59c43825d5da45fb",
+      "country_id": "MAC",
+      "tiles": 3,
+      "before_error": 0.4828100764733092,
+      "after_error": 0.4828100764733092,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "MAF:8903408c5624c48e",
+      "country_id": "MAF",
+      "tiles": 1,
+      "before_error": 0.3421555535802707,
+      "after_error": 0.3421555535802707,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MAR:41e7d86fdd4b2365",
+      "country_id": "MAR",
+      "tiles": 257,
+      "before_error": 0.6904323981320795,
+      "after_error": 0.5748632913352554,
+      "improvement": 0.11556910679682408,
+      "before_perimeter": 96,
+      "after_perimeter": 112
+    },
+    {
+      "component_id": "MCO:8f146e45080f16d1",
+      "country_id": "MCO",
+      "tiles": 1,
+      "before_error": 0.2471082772410893,
+      "after_error": 0.2471082772410893,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MDA:c11ef650966bdfca",
+      "country_id": "MDA",
+      "tiles": 23,
+      "before_error": 0.49856753395813147,
+      "after_error": 0.49856753395813147,
+      "improvement": 0.0,
+      "before_perimeter": 24,
+      "after_perimeter": 24
+    },
+    {
+      "component_id": "MDG:4bc42083f90d1ae9",
+      "country_id": "MDG",
+      "tiles": 206,
+      "before_error": 0.10929879500292239,
+      "after_error": 0.10929879500292239,
+      "improvement": 0.0,
+      "before_perimeter": 86,
+      "after_perimeter": 86
+    },
+    {
+      "component_id": "MDG:d395cac872ab71a8",
+      "country_id": "MDG",
+      "tiles": 1,
+      "before_error": 0.39131634078558875,
+      "after_error": 0.39131634078558875,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MDV:71a3bda6017f731e",
+      "country_id": "MDV",
+      "tiles": 1,
+      "before_error": 0.6428827874043924,
+      "after_error": 0.6428827874043924,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MEX:aa67baf61acd20f3",
+      "country_id": "MEX",
+      "tiles": 884,
+      "before_error": 0.42015959530638647,
+      "after_error": 0.42015959530638647,
+      "improvement": 0.0,
+      "before_perimeter": 264,
+      "after_perimeter": 264
+    },
+    {
+      "component_id": "MEX:af154dcbd399bd79",
+      "country_id": "MEX",
+      "tiles": 1,
+      "before_error": 0.5088402191604688,
+      "after_error": 0.5088402191604688,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MHL:df7cdd8f2cbda575",
+      "country_id": "MHL",
+      "tiles": 1,
+      "before_error": 0.4447347113609652,
+      "after_error": 0.4447347113609652,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MKD:072da3322c97fa27",
+      "country_id": "MKD",
+      "tiles": 14,
+      "before_error": 0.43521159597210957,
+      "after_error": 0.43521159597210957,
+      "improvement": 0.0,
+      "before_perimeter": 22,
+      "after_perimeter": 22
+    },
+    {
+      "component_id": "MLI:cfb1983a0687bf5c",
+      "country_id": "MLI",
+      "tiles": 162,
+      "before_error": 0.5315690505705803,
+      "after_error": 0.4825626676957693,
+      "improvement": 0.04900638287481107,
+      "before_perimeter": 70,
+      "after_perimeter": 74
+    },
+    {
+      "component_id": "MLT:1209f8ef697868f9",
+      "country_id": "MLT",
+      "tiles": 3,
+      "before_error": 0.38212554467531146,
+      "after_error": 0.38212554467531146,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "MMR:00bfaa2932dfddb9",
+      "country_id": "MMR",
+      "tiles": 1,
+      "before_error": 0.5618572663828163,
+      "after_error": 0.5618572663828163,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MMR:14246adefd082a60",
+      "country_id": "MMR",
+      "tiles": 1,
+      "before_error": 0.5900268140936219,
+      "after_error": 0.5900268140936219,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MMR:e9f27e99686071f9",
+      "country_id": "MMR",
+      "tiles": 366,
+      "before_error": 0.5137704364380398,
+      "after_error": 0.5137704364380398,
+      "improvement": 0.0,
+      "before_perimeter": 204,
+      "after_perimeter": 204
+    },
+    {
+      "component_id": "MNE:52f7987265ed3935",
+      "country_id": "MNE",
+      "tiles": 4,
+      "before_error": 0.47538724772079866,
+      "after_error": 0.47538724772079866,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "MNG:7ecd8e5b0a42fa66",
+      "country_id": "MNG",
+      "tiles": 24,
+      "before_error": 0.5542993868822726,
+      "after_error": 0.22454647030069042,
+      "improvement": 0.32975291658158223,
+      "before_perimeter": 22,
+      "after_perimeter": 24
+    },
+    {
+      "component_id": "MNP:d5d7b61494f517b6",
+      "country_id": "MNP",
+      "tiles": 1,
+      "before_error": 0.5657064290583154,
+      "after_error": 0.5657064290583154,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MOZ:0c9516b3b1958290",
+      "country_id": "MOZ",
+      "tiles": 232,
+      "before_error": 0.7477300145776107,
+      "after_error": 0.7477300145776107,
+      "improvement": 0.0,
+      "before_perimeter": 136,
+      "after_perimeter": 136
+    },
+    {
+      "component_id": "MQI:3f3d9ac1758dd787",
+      "country_id": "UMI",
+      "tiles": 1,
+      "before_error": 0.5652303189746231,
+      "after_error": 0.5652303189746231,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MRT:93e93b11bab4502c",
+      "country_id": "MRT",
+      "tiles": 33,
+      "before_error": 0.4681687906996843,
+      "after_error": 0.33959651304847804,
+      "improvement": 0.12857227765120627,
+      "before_perimeter": 28,
+      "after_perimeter": 32
+    },
+    {
+      "component_id": "MSR:b4f63de1ac80f565",
+      "country_id": "MSR",
+      "tiles": 1,
+      "before_error": 0.4732495484930237,
+      "after_error": 0.4732495484930237,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MTQ:b687db533c81cb97",
+      "country_id": "FRA",
+      "tiles": 3,
+      "before_error": 0.46384601339562215,
+      "after_error": 0.46384601339562215,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "MUS:241a4096fe3cf2e9",
+      "country_id": "MUS",
+      "tiles": 9,
+      "before_error": 0.3026802380898225,
+      "after_error": 0.3026802380898225,
+      "improvement": 0.0,
+      "before_perimeter": 16,
+      "after_perimeter": 16
+    },
+    {
+      "component_id": "MWI:7555dabddb4364d9",
+      "country_id": "MWI",
+      "tiles": 145,
+      "before_error": 0.733019085908535,
+      "after_error": 0.733019085908535,
+      "improvement": 0.0,
+      "before_perimeter": 56,
+      "after_perimeter": 56
+    },
+    {
+      "component_id": "MYS:03f858a579d3b26b",
+      "country_id": "MYS",
+      "tiles": 1,
+      "before_error": 0.3803254146638436,
+      "after_error": 0.3803254146638436,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MYS:0abe504273f2e4bd",
+      "country_id": "MYS",
+      "tiles": 44,
+      "before_error": 0.460807607186825,
+      "after_error": 0.3332585064637068,
+      "improvement": 0.1275491007231182,
+      "before_perimeter": 44,
+      "after_perimeter": 50
+    },
+    {
+      "component_id": "MYS:38845839aa7557f7",
+      "country_id": "MYS",
+      "tiles": 6,
+      "before_error": 0.40163764386226286,
+      "after_error": 0.40163764386226286,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "MYS:4035fe8bf71b03f5",
+      "country_id": "MYS",
+      "tiles": 178,
+      "before_error": 0.5976232929429344,
+      "after_error": 0.5976232929429344,
+      "improvement": 0.0,
+      "before_perimeter": 66,
+      "after_perimeter": 66
+    },
+    {
+      "component_id": "MYS:e044f0d14c5194e9",
+      "country_id": "MYS",
+      "tiles": 1,
+      "before_error": 0.3579627182413082,
+      "after_error": 0.3579627182413082,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "MYT:36f0323f642f2bbb",
+      "country_id": "FRA",
+      "tiles": 2,
+      "before_error": 0.4408461551014362,
+      "after_error": 0.4408461551014362,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "NAM:d67affdeafffe7f2",
+      "country_id": "NAM",
+      "tiles": 18,
+      "before_error": 0.7341344628733714,
+      "after_error": 0.6603192497862376,
+      "improvement": 0.07381521308713379,
+      "before_perimeter": 30,
+      "after_perimeter": 24
+    },
+    {
+      "component_id": "NCL:9e9b31b5b9879e1e",
+      "country_id": "NCL",
+      "tiles": 2,
+      "before_error": 0.6075714397311505,
+      "after_error": 0.6075714397311505,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "NER:225f284b6e95d815",
+      "country_id": "NER",
+      "tiles": 188,
+      "before_error": 0.6278647950886204,
+      "after_error": 0.5308421649698787,
+      "improvement": 0.09702263011874168,
+      "before_perimeter": 94,
+      "after_perimeter": 88
+    },
+    {
+      "component_id": "NFK:8bd0b8fb2f7ee228",
+      "country_id": "NFK",
+      "tiles": 1,
+      "before_error": 0.35862271034873827,
+      "after_error": 0.35862271034873827,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "NGA:3c88882c2e580374",
+      "country_id": "NGA",
+      "tiles": 2,
+      "before_error": 0.462583669977055,
+      "after_error": 0.462583669977055,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "NGA:edcdec1fdf6fb5c7",
+      "country_id": "NGA",
+      "tiles": 1533,
+      "before_error": 0.3092471897215575,
+      "after_error": 0.3092471897215575,
+      "improvement": 0.0,
+      "before_perimeter": 216,
+      "after_perimeter": 216
+    },
+    {
+      "component_id": "NGA:fdfbab60e4bd69a7",
+      "country_id": "NGA",
+      "tiles": 1,
+      "before_error": 0.6454435137958274,
+      "after_error": 0.6454435137958274,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "NIC:99f10eccc73d03bc",
+      "country_id": "NIC",
+      "tiles": 48,
+      "before_error": 0.5207529773406643,
+      "after_error": 0.5207529773406643,
+      "improvement": 0.0,
+      "before_perimeter": 48,
+      "after_perimeter": 48
+    },
+    {
+      "component_id": "NIR:69fa50e543fa7c66",
+      "country_id": "GBR",
+      "tiles": 14,
+      "before_error": 0.39320728426838514,
+      "after_error": 0.39320728426838514,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "NIU:833bfd21210ac56a",
+      "country_id": "NIU",
+      "tiles": 1,
+      "before_error": 0.3414104782435602,
+      "after_error": 0.3414104782435602,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "NLX:5daa52b59ba80d17",
+      "country_id": "NLD",
+      "tiles": 1,
+      "before_error": 0.741873843641055,
+      "after_error": 0.741873843641055,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "NLX:8b9c3398a58bdb2a",
+      "country_id": "NLD",
+      "tiles": 118,
+      "before_error": 0.4168241779921734,
+      "after_error": 0.4168241779921734,
+      "improvement": 0.0,
+      "before_perimeter": 72,
+      "after_perimeter": 72
+    },
+    {
+      "component_id": "NOW:a387a8ce67e0d957",
+      "country_id": "NOR",
+      "tiles": 30,
+      "before_error": 0.8037568710233742,
+      "after_error": 0.8037568710233742,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "NOW:ec082e7601ce6831",
+      "country_id": "NOR",
+      "tiles": 1,
+      "before_error": 0.469212858711787,
+      "after_error": 0.469212858711787,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "NPL:c1885306c87c4123",
+      "country_id": "NPL",
+      "tiles": 221,
+      "before_error": 0.6168094409434322,
+      "after_error": 0.6010925084302718,
+      "improvement": 0.01571693251316031,
+      "before_perimeter": 70,
+      "after_perimeter": 98
+    },
+    {
+      "component_id": "NRU:caeaede682b2e6af",
+      "country_id": "NRU",
+      "tiles": 1,
+      "before_error": 0.3265525071574392,
+      "after_error": 0.3265525071574392,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "NZL:8f99f1c50259113a",
+      "country_id": "NZL",
+      "tiles": 24,
+      "before_error": 0.37021972091843147,
+      "after_error": 0.37021972091843147,
+      "improvement": 0.0,
+      "before_perimeter": 32,
+      "after_perimeter": 32
+    },
+    {
+      "component_id": "NZL:979ee6939c934325",
+      "country_id": "NZL",
+      "tiles": 8,
+      "before_error": 0.5346405285067407,
+      "after_error": 0.5346405285067407,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "OMN:21af2c17fe172531",
+      "country_id": "OMN",
+      "tiles": 32,
+      "before_error": 0.4767209147021879,
+      "after_error": 0.33355676825806835,
+      "improvement": 0.14316414644411957,
+      "before_perimeter": 26,
+      "after_perimeter": 30
+    },
+    {
+      "component_id": "PAK:447ed1858f7b7a5d",
+      "country_id": "PAK",
+      "tiles": 1663,
+      "before_error": 0.40716184487318396,
+      "after_error": 0.2802253463601899,
+      "improvement": 0.12693649851299404,
+      "before_perimeter": 262,
+      "after_perimeter": 256
+    },
+    {
+      "component_id": "PAN:04773d2112e86006",
+      "country_id": "PAN",
+      "tiles": 30,
+      "before_error": 0.7527255284247935,
+      "after_error": 0.6906875471055195,
+      "improvement": 0.06203798131927396,
+      "before_perimeter": 32,
+      "after_perimeter": 34
+    },
+    {
+      "component_id": "PAZ:982ece08e8ced750",
+      "country_id": "PRT",
+      "tiles": 1,
+      "before_error": 0.6900766694883906,
+      "after_error": 0.6900766694883906,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PCN:9f1762b21c5a6e6d",
+      "country_id": "PCN",
+      "tiles": 1,
+      "before_error": 0.4381269259212881,
+      "after_error": 0.4381269259212881,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PER:5a1c843bf55d41e0",
+      "country_id": "PER",
+      "tiles": 2,
+      "before_error": 0.6392752843014269,
+      "after_error": 0.6392752843014269,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "PER:d420f75fe20c6a02",
+      "country_id": "PER",
+      "tiles": 224,
+      "before_error": 0.575181448701848,
+      "after_error": 0.4387135702767869,
+      "improvement": 0.13646787842506103,
+      "before_perimeter": 78,
+      "after_perimeter": 84
+    },
+    {
+      "component_id": "PGA:9843ae99694c2ecf",
+      "country_id": "PGA",
+      "tiles": 1,
+      "before_error": 0.4100586227057481,
+      "after_error": 0.4100586227057481,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:09326678e2013608",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.6341638305786508,
+      "after_error": 0.6341638305786508,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:124f53ed2a9a90b2",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.45242614452290053,
+      "after_error": 0.45242614452290053,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:13c5d331c2b85fff",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.7776264663704857,
+      "after_error": 0.7776264663704857,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:1657f9a811dfa613",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.37075475903729327,
+      "after_error": 0.37075475903729327,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:21362b5a399c84c0",
+      "country_id": "PHL",
+      "tiles": 3,
+      "before_error": 0.5023211799497012,
+      "after_error": 0.5023211799497012,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "PHL:27694b49fed5e295",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.2835808272306237,
+      "after_error": 0.2835808272306237,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:2ce786cb39ab6f61",
+      "country_id": "PHL",
+      "tiles": 2,
+      "before_error": 0.38737938112138925,
+      "after_error": 0.38737938112138925,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "PHL:36cbb2fd3e6f6374",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.49500677211029,
+      "after_error": 0.49500677211029,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:3dde36a3deef9e30",
+      "country_id": "PHL",
+      "tiles": 26,
+      "before_error": 0.3399402362024022,
+      "after_error": 0.3399402362024022,
+      "improvement": 0.0,
+      "before_perimeter": 42,
+      "after_perimeter": 42
+    },
+    {
+      "component_id": "PHL:4c8567135848a850",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.6218043070725183,
+      "after_error": 0.6218043070725183,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:55f4748ebb0e9d7b",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.6741012419934588,
+      "after_error": 0.6741012419934588,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:565bea380f2a8f38",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.26625835327682124,
+      "after_error": 0.26625835327682124,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:6db0873e452de6c9",
+      "country_id": "PHL",
+      "tiles": 15,
+      "before_error": 0.3471230743170619,
+      "after_error": 0.3471230743170619,
+      "improvement": 0.0,
+      "before_perimeter": 28,
+      "after_perimeter": 28
+    },
+    {
+      "component_id": "PHL:6f9539ae2d2e4af7",
+      "country_id": "PHL",
+      "tiles": 29,
+      "before_error": 0.25483015730112635,
+      "after_error": 0.25483015730112635,
+      "improvement": 0.0,
+      "before_perimeter": 38,
+      "after_perimeter": 38
+    },
+    {
+      "component_id": "PHL:726d0196a803e063",
+      "country_id": "PHL",
+      "tiles": 7,
+      "before_error": 0.23073478264644143,
+      "after_error": 0.23073478264644143,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "PHL:7516d4fddea7755b",
+      "country_id": "PHL",
+      "tiles": 169,
+      "before_error": 0.1547399615960724,
+      "after_error": 0.1547399615960724,
+      "improvement": 0.0,
+      "before_perimeter": 118,
+      "after_perimeter": 118
+    },
+    {
+      "component_id": "PHL:8bf898d20852a1e2",
+      "country_id": "PHL",
+      "tiles": 4,
+      "before_error": 0.5138333750164414,
+      "after_error": 0.5138333750164414,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "PHL:8cc353e906e9a7ba",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.6338150783957999,
+      "after_error": 0.6338150783957999,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:90b293ce7c82f783",
+      "country_id": "PHL",
+      "tiles": 5,
+      "before_error": 0.44946176341181365,
+      "after_error": 0.44946176341181365,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "PHL:9f45a34a40c23d0d",
+      "country_id": "PHL",
+      "tiles": 10,
+      "before_error": 0.3142770867196968,
+      "after_error": 0.3142770867196968,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "PHL:a054fd0f49fb86bb",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.30159675869005353,
+      "after_error": 0.30159675869005353,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:b8fbb9d4a0a4d4fc",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.6530540958442514,
+      "after_error": 0.6530540958442514,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:c20794a54eb22900",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.2593888817128357,
+      "after_error": 0.2593888817128357,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:d37f189e16094fe0",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.3311072588194852,
+      "after_error": 0.3311072588194852,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:d3c6f6bf47091a8d",
+      "country_id": "PHL",
+      "tiles": 11,
+      "before_error": 0.3516383232063315,
+      "after_error": 0.3516383232063315,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "PHL:d9dc6d8657118070",
+      "country_id": "PHL",
+      "tiles": 31,
+      "before_error": 0.2595669241848576,
+      "after_error": 0.2595669241848576,
+      "improvement": 0.0,
+      "before_perimeter": 34,
+      "after_perimeter": 34
+    },
+    {
+      "component_id": "PHL:dab4eac01b067017",
+      "country_id": "PHL",
+      "tiles": 6,
+      "before_error": 0.7091354176231416,
+      "after_error": 0.7091354176231416,
+      "improvement": 0.0,
+      "before_perimeter": 14,
+      "after_perimeter": 14
+    },
+    {
+      "component_id": "PHL:e9207a07dbe16607",
+      "country_id": "PHL",
+      "tiles": 1,
+      "before_error": 0.5272436735665742,
+      "after_error": 0.5272436735665742,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PHL:eb1fb8d27ecf0027",
+      "country_id": "PHL",
+      "tiles": 414,
+      "before_error": 0.20055663827430315,
+      "after_error": 0.20055663827430315,
+      "improvement": 0.0,
+      "before_perimeter": 186,
+      "after_perimeter": 186
+    },
+    {
+      "component_id": "PHL:f6d8e393f979d3c4",
+      "country_id": "PHL",
+      "tiles": 2,
+      "before_error": 0.30186106444285987,
+      "after_error": 0.30186106444285987,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "PLW:c1d57327f74beca7",
+      "country_id": "PLW",
+      "tiles": 1,
+      "before_error": 0.6080095250416486,
+      "after_error": 0.6080095250416486,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PMD:d0ef99f5c34da522",
+      "country_id": "PRT",
+      "tiles": 2,
+      "before_error": 0.2901864577330655,
+      "after_error": 0.2901864577330655,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "PNB:965650135f10f84e",
+      "country_id": "PNG",
+      "tiles": 2,
+      "before_error": 0.5301189262283865,
+      "after_error": 0.5301189262283865,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "PNB:aad6c9a8a176c962",
+      "country_id": "PNG",
+      "tiles": 1,
+      "before_error": 0.6431897306316561,
+      "after_error": 0.6431897306316561,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PNX:64fcdde643ac8285",
+      "country_id": "PNG",
+      "tiles": 1,
+      "before_error": 0.33542317584995873,
+      "after_error": 0.33542317584995873,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PNX:7cc333b69cac4996",
+      "country_id": "PNG",
+      "tiles": 5,
+      "before_error": 0.575198346140406,
+      "after_error": 0.575198346140406,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "PNX:ac8508505c0cde6d",
+      "country_id": "PNG",
+      "tiles": 1,
+      "before_error": 0.9015350541590044,
+      "after_error": 0.9015350541590044,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "PNX:cd0b182a6ff3f568",
+      "country_id": "PNG",
+      "tiles": 57,
+      "before_error": 0.24552713345745036,
+      "after_error": 0.1840179167656414,
+      "improvement": 0.06150921669180898,
+      "before_perimeter": 48,
+      "after_perimeter": 46
+    },
+    {
+      "component_id": "POL:1980df7ed9d16d12",
+      "country_id": "POL",
+      "tiles": 284,
+      "before_error": 0.2785070254136208,
+      "after_error": 0.2785070254136208,
+      "improvement": 0.0,
+      "before_perimeter": 84,
+      "after_perimeter": 84
+    },
+    {
+      "component_id": "PRI:e9799df54353f02b",
+      "country_id": "PRI",
+      "tiles": 22,
+      "before_error": 0.19096537808107983,
+      "after_error": 0.19096537808107983,
+      "improvement": 0.0,
+      "before_perimeter": 22,
+      "after_perimeter": 22
+    },
+    {
+      "component_id": "PRK:443ac4e48c09b5a9",
+      "country_id": "PRK",
+      "tiles": 178,
+      "before_error": 0.6276790541807135,
+      "after_error": 0.6276790541807135,
+      "improvement": 0.0,
+      "before_perimeter": 86,
+      "after_perimeter": 86
+    },
+    {
+      "component_id": "PRX:31cd60a8869cd87c",
+      "country_id": "PRT",
+      "tiles": 67,
+      "before_error": 0.4481096920598533,
+      "after_error": 0.4481096920598533,
+      "improvement": 0.0,
+      "before_perimeter": 56,
+      "after_perimeter": 56
+    },
+    {
+      "component_id": "PRY:8be730e7955b0934",
+      "country_id": "PRY",
+      "tiles": 48,
+      "before_error": 0.5422835871549895,
+      "after_error": 0.33921353021534273,
+      "improvement": 0.20307005693964675,
+      "before_perimeter": 40,
+      "after_perimeter": 42
+    },
+    {
+      "component_id": "PYF:3da92f8d77dc4ec9",
+      "country_id": "PYF",
+      "tiles": 1,
+      "before_error": 0.5413398240359117,
+      "after_error": 0.5413398240359117,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "QAT:f6210114a7fc4646",
+      "country_id": "QAT",
+      "tiles": 18,
+      "before_error": 0.5855032090140222,
+      "after_error": 0.5853239508224586,
+      "improvement": 0.00017925819156361378,
+      "before_perimeter": 22,
+      "after_perimeter": 20
+    },
+    {
+      "component_id": "REU:50209727462df21b",
+      "country_id": "FRA",
+      "tiles": 6,
+      "before_error": 0.28093180180232213,
+      "after_error": 0.28093180180232213,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "ROU:8bc181463815c013",
+      "country_id": "ROU",
+      "tiles": 136,
+      "before_error": 0.36224072826454834,
+      "after_error": 0.36224072826454834,
+      "improvement": 0.0,
+      "before_perimeter": 60,
+      "after_perimeter": 60
+    },
+    {
+      "component_id": "RUS:7e6e84c769819aed",
+      "country_id": "RUS",
+      "tiles": 14,
+      "before_error": 0.5355587636923038,
+      "after_error": 0.5355587636923038,
+      "improvement": 0.0,
+      "before_perimeter": 20,
+      "after_perimeter": 20
+    },
+    {
+      "component_id": "RUS:8afd88fb65e5e555",
+      "country_id": "RUS",
+      "tiles": 7,
+      "before_error": 0.5575907727545697,
+      "after_error": 0.5575907727545697,
+      "improvement": 0.0,
+      "before_perimeter": 14,
+      "after_perimeter": 14
+    },
+    {
+      "component_id": "RUS:b85c5bca1852870f",
+      "country_id": "RUS",
+      "tiles": 978,
+      "before_error": 0.46915189846241934,
+      "after_error": 0.38404756408785834,
+      "improvement": 0.085104334374561,
+      "before_perimeter": 318,
+      "after_perimeter": 296
+    },
+    {
+      "component_id": "RUS:e5454b5f169f758a",
+      "country_id": "RUS",
+      "tiles": 3,
+      "before_error": 0.7254836833597891,
+      "after_error": 0.7254836833597891,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "RWA:11c3869510b66d95",
+      "country_id": "RWA",
+      "tiles": 98,
+      "before_error": 0.5092680809992105,
+      "after_error": 0.5092680809992105,
+      "improvement": 0.0,
+      "before_perimeter": 58,
+      "after_perimeter": 58
+    },
+    {
+      "component_id": "SAH:c067a975f328d956",
+      "country_id": "SAH",
+      "tiles": 1,
+      "before_error": 0.8183773565070136,
+      "after_error": 0.8183773565070136,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SAU:11ac65250772b5d3",
+      "country_id": "SAU",
+      "tiles": 251,
+      "before_error": 0.48351124486298136,
+      "after_error": 0.364264230359853,
+      "improvement": 0.11924701450312836,
+      "before_perimeter": 152,
+      "after_perimeter": 142
+    },
+    {
+      "component_id": "SDN:e4296cf2bfa47003",
+      "country_id": "SDN",
+      "tiles": 332,
+      "before_error": 0.36280347025451054,
+      "after_error": 0.3100814693249333,
+      "improvement": 0.05272200092957724,
+      "before_perimeter": 114,
+      "after_perimeter": 92
+    },
+    {
+      "component_id": "SDS:9ecb0b566ac02a31",
+      "country_id": "SDS",
+      "tiles": 76,
+      "before_error": 0.4863460164561091,
+      "after_error": 0.4865083996198998,
+      "improvement": -0.0001623831637906914,
+      "before_perimeter": 58,
+      "after_perimeter": 60
+    },
+    {
+      "component_id": "SEN:fa5de3704b02f675",
+      "country_id": "SEN",
+      "tiles": 121,
+      "before_error": 0.3721277279610995,
+      "after_error": 0.3721277279610995,
+      "improvement": 0.0,
+      "before_perimeter": 64,
+      "after_perimeter": 64
+    },
+    {
+      "component_id": "SGP:860d04320dbb7b18",
+      "country_id": "SGP",
+      "tiles": 38,
+      "before_error": 0.1846789262705295,
+      "after_error": 0.1846789262705295,
+      "improvement": 0.0,
+      "before_perimeter": 32,
+      "after_perimeter": 32
+    },
+    {
+      "component_id": "SGS:f72252273c93ccac",
+      "country_id": "SGS",
+      "tiles": 1,
+      "before_error": 0.7336157134388244,
+      "after_error": 0.7336157134388244,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SHN:cea4236cc2d14354",
+      "country_id": "SHN",
+      "tiles": 1,
+      "before_error": 0.2471303169001111,
+      "after_error": 0.2471303169001111,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SLB:89ab665da4011bf7",
+      "country_id": "SLB",
+      "tiles": 1,
+      "before_error": 0.6774692874171806,
+      "after_error": 0.6774692874171806,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SLB:c3b8559867bbf650",
+      "country_id": "SLB",
+      "tiles": 2,
+      "before_error": 0.29183522589319677,
+      "after_error": 0.29183522589319677,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "SLE:aeb8476c9a2c5e10",
+      "country_id": "SLE",
+      "tiles": 58,
+      "before_error": 0.33944700157123897,
+      "after_error": 0.33944700157123897,
+      "improvement": 0.0,
+      "before_perimeter": 42,
+      "after_perimeter": 42
+    },
+    {
+      "component_id": "SLV:6884a91b71669fb2",
+      "country_id": "SLV",
+      "tiles": 41,
+      "before_error": 0.6587459880506051,
+      "after_error": 0.6587459880506051,
+      "improvement": 0.0,
+      "before_perimeter": 40,
+      "after_perimeter": 40
+    },
+    {
+      "component_id": "SMR:65f777115cf6c77c",
+      "country_id": "SMR",
+      "tiles": 1,
+      "before_error": 0.220609688867889,
+      "after_error": 0.220609688867889,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SOL:e03433706d8873bb",
+      "country_id": "SOL",
+      "tiles": 29,
+      "before_error": 0.5678009516940866,
+      "after_error": 0.5678009516940866,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "SOM:b94bcf137ecd6275",
+      "country_id": "SOM",
+      "tiles": 94,
+      "before_error": 0.6581999339857538,
+      "after_error": 0.6581999339857538,
+      "improvement": 0.0,
+      "before_perimeter": 50,
+      "after_perimeter": 50
+    },
+    {
+      "component_id": "SPI:47f581a247f875ae",
+      "country_id": "SPI",
+      "tiles": 1,
+      "before_error": 0.24803840005950195,
+      "after_error": 0.24803840005950195,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SPM:82efd5ba4ffee3ed",
+      "country_id": "SPM",
+      "tiles": 1,
+      "before_error": 0.3575253035446446,
+      "after_error": 0.3575253035446446,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SRB:334f04d632601018",
+      "country_id": "SRB",
+      "tiles": 50,
+      "before_error": 0.48438315326665016,
+      "after_error": 0.48438315326665016,
+      "improvement": 0.0,
+      "before_perimeter": 38,
+      "after_perimeter": 38
+    },
+    {
+      "component_id": "STP:6eeda55e5e762902",
+      "country_id": "STP",
+      "tiles": 1,
+      "before_error": 0.350374611751475,
+      "after_error": 0.350374611751475,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SUR:1d7cda681e299b07",
+      "country_id": "SUR",
+      "tiles": 4,
+      "before_error": 0.48518618185388485,
+      "after_error": 0.48518618185388485,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "SVK:1f440da2e10fbb82",
+      "country_id": "SVK",
+      "tiles": 40,
+      "before_error": 0.37762973771314645,
+      "after_error": 0.37762973771314645,
+      "improvement": 0.0,
+      "before_perimeter": 38,
+      "after_perimeter": 38
+    },
+    {
+      "component_id": "SVN:e8f334b689926950",
+      "country_id": "SVN",
+      "tiles": 14,
+      "before_error": 0.5409056624328484,
+      "after_error": 0.5409056624328484,
+      "improvement": 0.0,
+      "before_perimeter": 26,
+      "after_perimeter": 26
+    },
+    {
+      "component_id": "SWE:1320ee42b8e1186c",
+      "country_id": "SWE",
+      "tiles": 69,
+      "before_error": 0.6049874889460898,
+      "after_error": 0.5240596338537267,
+      "improvement": 0.08092785509236311,
+      "before_perimeter": 38,
+      "after_perimeter": 42
+    },
+    {
+      "component_id": "SWE:45e6e69fa38b3e06",
+      "country_id": "SWE",
+      "tiles": 1,
+      "before_error": 0.3709981159452935,
+      "after_error": 0.3709981159452935,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SWZ:e315454282eb3136",
+      "country_id": "SWZ",
+      "tiles": 8,
+      "before_error": 0.3560745971623024,
+      "after_error": 0.3560745971623024,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "SXM:09188f4114a598b9",
+      "country_id": "SXM",
+      "tiles": 1,
+      "before_error": 0.5314353132369458,
+      "after_error": 0.5314353132369458,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SYC:06e7b337bf21f107",
+      "country_id": "SYC",
+      "tiles": 1,
+      "before_error": 0.6295472197317373,
+      "after_error": 0.6295472197317373,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "SYR:bb46c77ee43515e0",
+      "country_id": "SYR",
+      "tiles": 159,
+      "before_error": 0.336542243267946,
+      "after_error": 0.336542243267946,
+      "improvement": 0.0,
+      "before_perimeter": 58,
+      "after_perimeter": 58
+    },
+    {
+      "component_id": "TCA:8f132c5885c6ed3e",
+      "country_id": "TCA",
+      "tiles": 1,
+      "before_error": 0.632882400834144,
+      "after_error": 0.632882400834144,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "TCD:a34f6ca4b3bd052d",
+      "country_id": "TCD",
+      "tiles": 127,
+      "before_error": 0.44264338726266794,
+      "after_error": 0.3946181375718123,
+      "improvement": 0.04802524969085564,
+      "before_perimeter": 80,
+      "after_perimeter": 78
+    },
+    {
+      "component_id": "TGO:f7afd783bdbbc052",
+      "country_id": "TGO",
+      "tiles": 63,
+      "before_error": 0.7217254792488761,
+      "after_error": 0.7217254792488761,
+      "improvement": 0.0,
+      "before_perimeter": 58,
+      "after_perimeter": 58
+    },
+    {
+      "component_id": "THA:121007cc8c8eb751",
+      "country_id": "THA",
+      "tiles": 7,
+      "before_error": 0.39907466734224073,
+      "after_error": 0.39907466734224073,
+      "improvement": 0.0,
+      "before_perimeter": 14,
+      "after_perimeter": 14
+    },
+    {
+      "component_id": "THA:2d2e3dd6e4f6c675",
+      "country_id": "THA",
+      "tiles": 487,
+      "before_error": 0.5467004527515376,
+      "after_error": 0.5467004527515376,
+      "improvement": 0.0,
+      "before_perimeter": 194,
+      "after_perimeter": 194
+    },
+    {
+      "component_id": "TJK:d6e62d7f585e085c",
+      "country_id": "TJK",
+      "tiles": 71,
+      "before_error": 0.5935082721048583,
+      "after_error": 0.5255182524598706,
+      "improvement": 0.06799001964498774,
+      "before_perimeter": 40,
+      "after_perimeter": 48
+    },
+    {
+      "component_id": "TKM:ef25c6485f2078c2",
+      "country_id": "TKM",
+      "tiles": 46,
+      "before_error": 0.5920288266668758,
+      "after_error": 0.5179875088496464,
+      "improvement": 0.07404131781722945,
+      "before_perimeter": 34,
+      "after_perimeter": 38
+    },
+    {
+      "component_id": "TLS:e102fc60287c6426",
+      "country_id": "TLS",
+      "tiles": 9,
+      "before_error": 0.3885393899045335,
+      "after_error": 0.3885393899045335,
+      "improvement": 0.0,
+      "before_perimeter": 18,
+      "after_perimeter": 18
+    },
+    {
+      "component_id": "TON:f2fc3e28996a68cf",
+      "country_id": "TON",
+      "tiles": 1,
+      "before_error": 0.6685548677935718,
+      "after_error": 0.6685548677935718,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "TTO:c755d5dbf151e3d4",
+      "country_id": "TTO",
+      "tiles": 10,
+      "before_error": 0.3009149164938556,
+      "after_error": 0.3009149164938556,
+      "improvement": 0.0,
+      "before_perimeter": 16,
+      "after_perimeter": 16
+    },
+    {
+      "component_id": "TUN:2d14cf8d637899d4",
+      "country_id": "TUN",
+      "tiles": 1,
+      "before_error": 0.24290580837444942,
+      "after_error": 0.24290580837444942,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "TUN:9e23ed3c89bdb2f6",
+      "country_id": "TUN",
+      "tiles": 83,
+      "before_error": 0.534594873080513,
+      "after_error": 0.4017984937130882,
+      "improvement": 0.13279637936742483,
+      "before_perimeter": 44,
+      "after_perimeter": 42
+    },
+    {
+      "component_id": "TUR:3b553df250ebf332",
+      "country_id": "TUR",
+      "tiles": 493,
+      "before_error": 0.5509298960455206,
+      "after_error": 0.5509298960455206,
+      "improvement": 0.0,
+      "before_perimeter": 192,
+      "after_perimeter": 192
+    },
+    {
+      "component_id": "TUR:6fce5e1d91133e37",
+      "country_id": "TUR",
+      "tiles": 90,
+      "before_error": 0.5322015733851655,
+      "after_error": 0.5322015733851655,
+      "improvement": 0.0,
+      "before_perimeter": 58,
+      "after_perimeter": 58
+    },
+    {
+      "component_id": "TUV:3dbb41c9aa575d81",
+      "country_id": "TUV",
+      "tiles": 1,
+      "before_error": 0.5809901964789255,
+      "after_error": 0.5809901964789255,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "TWN:0e5b45704eef8ddd",
+      "country_id": "TWN",
+      "tiles": 161,
+      "before_error": 0.10899320299074122,
+      "after_error": 0.10899320299074122,
+      "improvement": 0.0,
+      "before_perimeter": 68,
+      "after_perimeter": 68
+    },
+    {
+      "component_id": "TWN:7e4004ddd1829f26",
+      "country_id": "TWN",
+      "tiles": 1,
+      "before_error": 0.46073691099295677,
+      "after_error": 0.46073691099295677,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "TZA:331225b62136622a",
+      "country_id": "TZA",
+      "tiles": 1,
+      "before_error": 0.5712425467659199,
+      "after_error": 0.5712425467659199,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "TZA:88eb4141b8ee7ab7",
+      "country_id": "TZA",
+      "tiles": 451,
+      "before_error": 0.42322649642077315,
+      "after_error": 0.42322649642077315,
+      "improvement": 0.0,
+      "before_perimeter": 182,
+      "after_perimeter": 182
+    },
+    {
+      "component_id": "TZZ:50b84429088b02a6",
+      "country_id": "TZA",
+      "tiles": 10,
+      "before_error": 0.36644196822735475,
+      "after_error": 0.36644196822735475,
+      "improvement": 0.0,
+      "before_perimeter": 16,
+      "after_perimeter": 16
+    },
+    {
+      "component_id": "TZZ:9185ad05dcf3419a",
+      "country_id": "TZA",
+      "tiles": 3,
+      "before_error": 0.4040437495888405,
+      "after_error": 0.4040437495888405,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "UGA:c937c439d1615753",
+      "country_id": "UGA",
+      "tiles": 337,
+      "before_error": 0.5883041253995653,
+      "after_error": 0.5883041253995653,
+      "improvement": 0.0,
+      "before_perimeter": 122,
+      "after_perimeter": 122
+    },
+    {
+      "component_id": "UKR:52622876ebf1ecb8",
+      "country_id": "UKR",
+      "tiles": 246,
+      "before_error": 0.5656285102411569,
+      "after_error": 0.5136694975412668,
+      "improvement": 0.05195901269989012,
+      "before_perimeter": 102,
+      "after_perimeter": 98
+    },
+    {
+      "component_id": "URY:a93a37d95dfce9bb",
+      "country_id": "URY",
+      "tiles": 23,
+      "before_error": 0.5675569464456085,
+      "after_error": 0.42976233261734,
+      "improvement": 0.13779461382826852,
+      "before_perimeter": 34,
+      "after_perimeter": 28
+    },
+    {
+      "component_id": "USA:07ed9e11d3ffe922",
+      "country_id": "USA",
+      "tiles": 1,
+      "before_error": 0.3308372240012404,
+      "after_error": 0.3308372240012404,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "USA:13c14a072880aac5",
+      "country_id": "USA",
+      "tiles": 4,
+      "before_error": 0.5827033441249021,
+      "after_error": 0.5827033441249021,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "USA:53281e0ad0b87aeb",
+      "country_id": "USA",
+      "tiles": 3,
+      "before_error": 0.45956139399226714,
+      "after_error": 0.45956139399226714,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "USA:5e512db06aed1701",
+      "country_id": "USA",
+      "tiles": 1,
+      "before_error": 0.2915442526511469,
+      "after_error": 0.2915442526511469,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "USA:63257470544bea15",
+      "country_id": "USA",
+      "tiles": 7,
+      "before_error": 0.3074776664235259,
+      "after_error": 0.3074776664235259,
+      "improvement": 0.0,
+      "before_perimeter": 12,
+      "after_perimeter": 12
+    },
+    {
+      "component_id": "USA:63b54f0fb7efa7a0",
+      "country_id": "USA",
+      "tiles": 1,
+      "before_error": 0.8100268710639367,
+      "after_error": 0.8100268710639367,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "USA:8f1b933b729d8403",
+      "country_id": "USA",
+      "tiles": 1,
+      "before_error": 0.7945946311337978,
+      "after_error": 0.7945946311337978,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "USA:90107a05206832e4",
+      "country_id": "USA",
+      "tiles": 2230,
+      "before_error": 0.22953344102904993,
+      "after_error": 0.20801648550155327,
+      "improvement": 0.021516955527496662,
+      "before_perimeter": 336,
+      "after_perimeter": 308
+    },
+    {
+      "component_id": "USA:c78710e5bfb7f314",
+      "country_id": "USA",
+      "tiles": 52,
+      "before_error": 0.36162315875283435,
+      "after_error": 0.36162315875283435,
+      "improvement": 0.0,
+      "before_perimeter": 48,
+      "after_perimeter": 48
+    },
+    {
+      "component_id": "USA:cc58c4c14d03150e",
+      "country_id": "USA",
+      "tiles": 10,
+      "before_error": 0.45062323707756946,
+      "after_error": 0.45062323707756946,
+      "improvement": 0.0,
+      "before_perimeter": 22,
+      "after_perimeter": 22
+    },
+    {
+      "component_id": "USA:ed809571c4cb473f",
+      "country_id": "USA",
+      "tiles": 2,
+      "before_error": 0.40681832286099195,
+      "after_error": 0.40681832286099195,
+      "improvement": 0.0,
+      "before_perimeter": 6,
+      "after_perimeter": 6
+    },
+    {
+      "component_id": "USG:4318b9af790790b9",
+      "country_id": "USG",
+      "tiles": 1,
+      "before_error": 0.48673688694385486,
+      "after_error": 0.48673688694385486,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "UZB:448c5653f0be3548",
+      "country_id": "UZB",
+      "tiles": 247,
+      "before_error": 0.7598274313775554,
+      "after_error": 0.7598274313775554,
+      "improvement": 0.0,
+      "before_perimeter": 92,
+      "after_perimeter": 92
+    },
+    {
+      "component_id": "VCT:8a1bf16e1fe09fe4",
+      "country_id": "VCT",
+      "tiles": 1,
+      "before_error": 0.4494541605219782,
+      "after_error": 0.4494541605219782,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "VEN:301beeea27f4cccb",
+      "country_id": "VEN",
+      "tiles": 192,
+      "before_error": 0.4263835400491226,
+      "after_error": 0.3718756858949025,
+      "improvement": 0.0545078541542201,
+      "before_perimeter": 96,
+      "after_perimeter": 102
+    },
+    {
+      "component_id": "VEN:d01ddcc4bca41887",
+      "country_id": "VEN",
+      "tiles": 4,
+      "before_error": 0.513106314923713,
+      "after_error": 0.513106314923713,
+      "improvement": 0.0,
+      "before_perimeter": 10,
+      "after_perimeter": 10
+    },
+    {
+      "component_id": "VGB:fbe0a46652f34473",
+      "country_id": "VGB",
+      "tiles": 1,
+      "before_error": 0.5782306634806238,
+      "after_error": 0.5782306634806238,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "VIR:08404301006acbb1",
+      "country_id": "VIR",
+      "tiles": 1,
+      "before_error": 0.5231953271172345,
+      "after_error": 0.5231953271172345,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "VNM:749468814d903c2a",
+      "country_id": "VNM",
+      "tiles": 665,
+      "before_error": 0.8454678676785735,
+      "after_error": 0.8454678676785735,
+      "improvement": 0.0,
+      "before_perimeter": 230,
+      "after_perimeter": 230
+    },
+    {
+      "component_id": "VNM:9e943f334983e219",
+      "country_id": "VNM",
+      "tiles": 3,
+      "before_error": 0.5859063364103911,
+      "after_error": 0.5859063364103911,
+      "improvement": 0.0,
+      "before_perimeter": 8,
+      "after_perimeter": 8
+    },
+    {
+      "component_id": "VNM:b72d286f4ac3b4ba",
+      "country_id": "VNM",
+      "tiles": 1,
+      "before_error": 0.5379370061505934,
+      "after_error": 0.5379370061505934,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "VNM:d7575eb45eea9fbe",
+      "country_id": "VNM",
+      "tiles": 1,
+      "before_error": 0.6239703804008345,
+      "after_error": 0.6239703804008345,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "VUT:3e9e300e853e9a46",
+      "country_id": "VUT",
+      "tiles": 1,
+      "before_error": 0.49715171585110973,
+      "after_error": 0.49715171585110973,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "VUT:cd29270f54664d5f",
+      "country_id": "VUT",
+      "tiles": 1,
+      "before_error": 0.2728195027139402,
+      "after_error": 0.2728195027139402,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "WEB:8660f88c9871d216",
+      "country_id": "PSX",
+      "tiles": 23,
+      "before_error": 0.4386675095543381,
+      "after_error": 0.4386675095543381,
+      "improvement": 0.0,
+      "before_perimeter": 20,
+      "after_perimeter": 20
+    },
+    {
+      "component_id": "WLF:be1abc47bb646f80",
+      "country_id": "WLF",
+      "tiles": 1,
+      "before_error": 0.552792216482155,
+      "after_error": 0.552792216482155,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "WLS:71b2d76ca054b400",
+      "country_id": "GBR",
+      "tiles": 1,
+      "before_error": 0.2837917194982902,
+      "after_error": 0.2837917194982902,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "WSB:50ca0205ee67e049",
+      "country_id": "WSB",
+      "tiles": 1,
+      "before_error": 0.6871054833365471,
+      "after_error": 0.6871054833365471,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "WSM:13f12c032321342b",
+      "country_id": "WSM",
+      "tiles": 1,
+      "before_error": 0.48767280521202083,
+      "after_error": 0.48767280521202083,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "YEM:64d271dfdccb3847",
+      "country_id": "YEM",
+      "tiles": 235,
+      "before_error": 0.3357193837847635,
+      "after_error": 0.3357193837847635,
+      "improvement": 0.0,
+      "before_perimeter": 78,
+      "after_perimeter": 78
+    },
+    {
+      "component_id": "YEM:f78116744ba13f6a",
+      "country_id": "YEM",
+      "tiles": 1,
+      "before_error": 0.46448424032087754,
+      "after_error": 0.46448424032087754,
+      "improvement": 0.0,
+      "before_perimeter": 4,
+      "after_perimeter": 4
+    },
+    {
+      "component_id": "ZAF:eb3d29c8e7d957f4",
+      "country_id": "ZAF",
+      "tiles": 416,
+      "before_error": 0.5125805038081144,
+      "after_error": 0.44820060663802186,
+      "improvement": 0.06437989717009251,
+      "before_perimeter": 126,
+      "after_perimeter": 136
+    },
+    {
+      "component_id": "ZMB:583491139c8eb3b0",
+      "country_id": "ZMB",
+      "tiles": 141,
+      "before_error": 0.4316766993343145,
+      "after_error": 0.4023987627806812,
+      "improvement": 0.02927793655363331,
+      "before_perimeter": 66,
+      "after_perimeter": 66
+    },
+    {
+      "component_id": "ZWE:241a07c809723778",
+      "country_id": "ZWE",
+      "tiles": 115,
+      "before_error": 0.45219974890710457,
+      "after_error": 0.37187114209313155,
+      "improvement": 0.08032860681397302,
+      "before_perimeter": 58,
+      "after_perimeter": 56
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/regional-release-global-130/cells.csv": "f5ee1bb6de903b09050b1b0af51db7b76fee5058ab0d429227e0d91c518d7bad",
+    "output/auto-cartogram/regional-release-global-refined/cells.csv": "fdd1ba637a898972f3f31ae4e994eede469a31149b0952c16558582cae5379d9",
+    "output/auto-cartogram/regional-release-global-130/lake-cells.csv": "d18d5a38f50a669abf647a6d69c46d9898a104e517fc0094337c033e2fea67e3",
+    "output/auto-cartogram/regional-release-global-refined/lake-cells.csv": "d18d5a38f50a669abf647a6d69c46d9898a104e517fc0094337c033e2fea67e3",
+    "output/auto-cartogram/geography-lake-guides-final/geometry.geojson": "36fdfefb614d3b68295a48e6cb4793e8a3a620ac76879e80b291ffc55e57696b"
+  },
+  "script_sha256": "f398ffb013b7312f63f1e0d79120c3ace43183703a17b78e3fc5abb1d1f446bd",
+  "limits": [
+    "Shape error is one minus intersection-over-union with the native dry-land outline, scaled to equal area and aligned at the tile centroid.",
+    "No rotation is fitted. This measures outline similarity, not relative position or population mapping quality.",
+    "New enclosed blank space is not declared to be a real lake. It includes experimental separation gaps.",
+    "Tile weighting is an approximation to population weighting because component tile budgets are rounded."
+  ]
+}
