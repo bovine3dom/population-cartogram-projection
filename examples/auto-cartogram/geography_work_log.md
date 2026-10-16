@@ -522,3 +522,33 @@ All 182 tests pass. No trial replaces the current layout or population export.
 The next method needs source-segment population constraints, joint regional
 moves, and relative-position checks. Further local iterations alone are not
 a supported improvement. Review gallery: `results/geography/sparse-borders/`.
+
+## 2026-10-16: large regional moves
+
+Corrected the experiment after the user requested much larger gaps. Added
+`release_regions.py` and five tests. Regional groups use border-corridor
+population weights. Lake shores and nearby island chains move together.
+Each region can move far from its old centre. Exact packing preserves broad
+source-centre order. It does not add connecting paths.
+
+The first grouping split South America too much. A single global population
+weight scale reduced this problem. The final spacing tests use 65 groups.
+They lose 40 existing true contacts, including 20 that fail the earlier
+sparse-border test. This broader permission is explicit in the reports.
+Mainland Russia–China distance increases from one tile spacing to 41.62 at
+spacing 1.1 and 48.10 at spacing 1.3.
+
+Reviewed world images and Eurasia, Africa, and Indonesia details. Russia and
+China now occupy separate parts of the map. Japan stays together. African
+lakes remain empty. West Africa separates too far from the rest of Africa.
+The widest test adds too much ocean space. Coarse-group trials failed packing
+constraints; they are not valid layouts.
+
+After 150 shape-refinement rounds, outline error falls from 0.42690 to
+0.40372. All 55,000 tiles and 481 component budgets remain exact. All 45 lakes
+retain 220 empty cells. Six new enclosed empty cells remain a defect.
+All 187 tests pass. No production layout or H3-MON mapping changed.
+
+Method and commands: `regional_release.md`. Next: joint regional placement
+with explicit costs for lost populated borders and nearby coast errors.
+
