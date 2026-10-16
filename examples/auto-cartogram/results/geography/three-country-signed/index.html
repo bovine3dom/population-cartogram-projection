@@ -1,0 +1,36 @@
+<!doctype html><meta charset="utf-8"><title>Shared-boundary fit: border checks</title>
+<style>body{font:18px system-ui;max-width:1800px;margin:32px auto;padding:0 20px}img{width:100%}.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:16px}table{border-collapse:collapse}td,th{padding:9px;border:1px solid #aaa}</style>
+<h1>Retained borders now share complete edges</h1>
+<p><b>This replaces the rejected point-contact model, not the current-best map.</b>
+The previous assembly let countries touch at isolated points. That did not preserve their borders.
+Here, both countries use identical vertex variables along every retained border. Only selected cuts get separate copies.</p>
+<p><b>This is a border-preservation checkpoint, not a shape improvement.</b> The regional optimizer still makes too little progress.
+Do not mistake an intact starting layout for a successful new layout. The full-planet current best and H3-MON mapping are unchanged.</p>
+<p><a href="../planet-kontur-coarse90/index.html">Current best</a> · <a href="experiment.json">Settings and checks</a> · <a href="../independent-assembly/index.html">Rejected point-contact experiments</a> · <a href="../contour-refinement/index.html">Contour refinement test</a></p>
+<h2>Regional checks</h2><p>All retained borders have zero geometric gap and positive shared length.
+The mesh also checks that no source border segment was omitted during vertex matching.
+Overlap is in tile-area units. Country areas are approximate continuous areas; these are not tile layouts.</p>
+<table><tr><th>Case</th><th>Complete retained borders</th><th>Border gaps</th><th>Overlap</th><th>Maximum area error</th><th>Accepted steps / attempts</th><th>Last solver status</th></tr><tr><td>all-borders</td><td>3</td><td>0</td><td>0.00000000</td><td>0.020%</td><td>20/24</td><td>solved</td></tr><tr><td>sparse-cuts</td><td>1</td><td>0</td><td>0.00000100</td><td>0.054%</td><td>23/24</td><td>solved</td></tr></table>
+<p>This 3-country test releases CHN–RUS, MNG–RUS. Numerical contact clearance: 0.0 tile units. A nonzero clearance is an experimental numerical buffer at nearby non-welded edges, not a required visible gap. It never separates welded edges.</p>
+<p>There is no cut-specific attraction. General collision checks still apply.
+A cut allows separation; it does not require a visible gap.</p>
+<p>The test starts from the saved continuous guide to obtain valid border topology.
+Independent Kontur shapes supply the preferred outlines. The regional panels omit other countries, islands, and lakes.
+White areas must not be read as a new sea map.</p>
+<div class="pair"><section><h2>all-borders</h2><a href="all-borders/review.png"><img src="all-borders/review.png" alt="Shared-border regional fit: all-borders"></a><p><a href="all-borders/components.geojson.gz">Geometry</a></p></section><section><h2>sparse-cuts</h2><a href="sparse-cuts/review.png"><img src="sparse-cuts/review.png" alt="Shared-border regional fit: sparse-cuts"></a><p><a href="sparse-cuts/components.geojson.gz">Geometry</a></p></section></div>
+<h2>Small test: release one border without breaking the other</h2>
+<p>A and B start as squares. C starts as a long rectangle with the same area and prefers a square.
+In the cut case, C can reshape and separate while A-B remains a complete shared edge.
+This tests the mechanism; it does not prove that the Eurasian fit is solved.</p>
+<div class="pair"><section><h3>A-B and B-C retained</h3><img src="demo/retained.png" alt="Synthetic retained-border test"></section>
+<section><h3>A-B retained, B-C cut</h3><img src="demo/cut.png" alt="Synthetic cut-border test"></section></div>
+<p><a href="demo/checks.json">Synthetic checks</a> · <a href="checksums.json">Archive checksums</a></p>
+<h2>Contour correspondence</h2><p>This pair uses patch-labelled contour guides. Source vertices anchor the correspondence.
+Crossing target chords trigger shared-edge subdivision. New samples interpolate fixed target parameters;
+they are not projected again across nearby bays. The mapped rings pass their self-intersection checks.
+Single-label rings and ambiguous label cycles still use whole-outline matching. See the fallback records in the report.</p><p>Source simplification: 0.3 tile units. Maximum initial edge length: 6.0. Iteration limit: 24.</p>
+<h2>Remaining problem</h2><p>Large steps toward the independent outlines can make narrow coastlines cross themselves.
+Released borders can also overlap during a proposed step. The validity and overlap checks reject those steps.
+Solver convergence is a separate check: a saved final polygon can be the unchanged initial polygon after failed attempts.
+Small accepted steps preserve borders but do not yet fix the Kazakhstan pinch.
+Do not weaken the border or collision checks to make an image look better.</p>

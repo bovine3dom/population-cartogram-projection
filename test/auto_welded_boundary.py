@@ -138,6 +138,27 @@ class WeldedBoundaryTest(unittest.TestCase):
             flat,_ = fit(mesh,iterations=2)
         self.assertLess(mesh.checks(flat)['overlap'],before)
 
+    def test_numerical_clearance_never_separates_welded_edges(self):
+        mesh = WeldedMesh(self.source,self.preferred,self.budgets,set(),contact_clearance=.0001)
+        _,lower = mesh.inequalities(mesh.initial)
+        self.assertLessEqual(lower.max(),1e-8)
+        for _,entries,_ in mesh.shared:
+            (_,ai,aj),(_,bi,bj) = entries
+            self.assertEqual(set(mesh.node[[ai,aj]]),set(mesh.node[[bi,bj]]))
+        for invalid in [-1.,.01,float('nan')]:
+            with self.assertRaises(ValueError):
+                WeldedMesh(self.source,self.preferred,self.budgets,set(),contact_clearance=invalid)
+
+    @unittest.skipUnless(importlib.util.find_spec('osqp'),'Install mesh-requirements.txt for the QP test')
+    def test_optional_numerical_clearance_is_subtile(self):
+        mesh = WeldedMesh(self.source,self.preferred,self.budgets,{('a','b')},contact_clearance=.0001)
+        with contextlib.redirect_stdout(io.StringIO()):
+            flat,_ = fit(mesh,iterations=5)
+        g = mesh.polygons(flat)
+        self.assertGreater(g['a'].distance(g['b']),.00009)
+        self.assertLess(g['a'].distance(g['b']),.001)
+        self.assertLess(mesh.checks(flat)['maximum_area_error'],1e-6)
+
     def test_narrow_water_gap_gets_self_collision_constraints(self):
         g = Polygon([(0,0),(4,0),(4,4),(2.1,4),(2.1,1),(1.9,1),(1.9,4),(0,4)])
         mesh = WeldedMesh({'a':g},{'a':normalized(g,g.area)},{'a':g.area},set())

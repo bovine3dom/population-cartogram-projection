@@ -1199,3 +1199,38 @@ Its later proposed overlap drops to about 0.00172 tile-area units, but the
 accepted steps become small near the numerical overlap limit. A three-country
 Russia–Mongolia–China comparison is also running. The sign fix is necessary,
 but it is not yet a successful release of the pinch.
+
+### Small real-geometry tests after the collision fix
+
+Completed `welded-signed-recovery` for the 12-country cut case and
+`welded-three-country` for Russia, Mongolia, and China. The small cut case keeps
+the complete China–Mongolia edge and releases the two Russian borders. At 24
+iterations it accepts 23 steps, but overlap stays close to the 0.000001
+acceptance limit and shape movement remains small.
+
+Tested an optional 0.0001-tile numerical clearance at nearby non-welded edges.
+The default remains zero, and the option rejects values above 0.001 tile units.
+This is not a visible map-gap target. The first experiment applied the offset
+at coincident corners and produced contradictory constraints. Stopped that run
+(`welded-three-country-clearance`) and excluded those endpoint contacts from
+the offset. Tests check this small clearance and unchanged welded borders.
+
+The corrected run, `welded-three-country-clearance-corners`, has a 40-iteration
+limit. Its control accepts 34 steps. The cut case accepts ten steps in twelve
+attempts, then stops at the solver iteration limit. Cut overlap is about
+0.000000000011 tile-area units and maximum area error is 0.020%. The full
+China–Mongolia border remains shared. These are different iteration budgets
+from the signed-only test; do not claim a controlled speed improvement.
+
+Published both pairs at `results/geography/three-country-signed/index.html`
+and `results/geography/three-country-collision/index.html`. Visually checked
+the final buffered pair. The control changes more than the cut case. Russia
+still forms a thin strip. This does not meet the goal of a visible release of
+the pinch. The sign error is fixed, but the optimizer and its already-pinched
+starting geometry still need work. Do not enlarge gaps to conceal this failure.
+
+All 270 tests pass. Published checksums and links are checked. The production
+layout, current-best cells, and H3-MON exports are unchanged. All fit jobs have
+stopped. The next test should separate initialization problems from remaining
+solver constraints, using the small real-geometry case rather than another
+planet run.
