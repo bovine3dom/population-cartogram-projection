@@ -1,0 +1,96 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Where the Kazakhstan pinch starts</title>
+<style>body{font:18px/1.5 system-ui;max-width:1150px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%}table{border-collapse:collapse}td,th{padding:.4rem .7rem;border:1px solid #bbb}code{font-size:.9em}a{color:#245b92}</style>
+<h1>Where the Kazakhstan pinch starts</h1>
+<p><strong>The main distortion starts in the continuous population fit.
+Tile allocation and fragment repair then move Kazakhstan into the narrow tip.</strong>
+These are saved stages of the preferred Equal Earth pipeline, not new layouts.
+No production file changed.</p>
+<h2>1. Before tiles: the continuous fit compresses northern Eurasia</h2>
+<p>The source shapes are recognisable. Input preprocessing changes their outline
+scores by only 0.01–0.02. After the continuous fit, Russia is a narrow strip above
+China, and Kazakhstan is compressed near the western end. This happens before
+square tiles, border repair, island placement, or lake insertion.</p>
+<p>The target-area pressure is large. Relative to each country's share of the
+represented mainland source area, Russia receives 0.142 times that share,
+Kazakhstan 0.118, and Mongolia 0.037. China receives 2.458 times its share and
+India 7.438. These are normalised area-share ratios, not linear scale factors.
+The continuous fit must accommodate these changes within connected geography.
+This is consistent with the observed compression; it does not prove that this
+particular distortion is unavoidable.</p>
+<h3>Equal Earth source</h3><img src="01-source.png" alt="Recognisable Eurasian source outlines">
+<h3>Continuous population fit</h3><img src="02-continuous-flow.png" alt="Russia compressed into a narrow strip above China before tile allocation">
+<h2>2. Tile allocation combines two different sets of targets</h2>
+<p>The saved partition settings use the continuous outline as a footprint, with
+flow-guide weight 8. Tiles outside their country's flow raster incur a squared
+distance cost. Thus the large distorted shape remains influential.</p>
+<p>However, <code>sites_in_flow=false</code>. The partition code replaces the flow
+centres with original projected population centres after a global scale and
+translation. Russia's target site is 113 tiles from its flow centroid, mostly
+west. Kazakhstan's target is 29 tiles away, mostly east. China and India differ
+by about 12 and 8 tiles. These different targets can change relative positions.
+The saved stages show that they do; a matched test is still needed to isolate
+the effect of the centre rule from the footprint and guide costs.</p>
+<p>Kazakhstan's centroid moves from x=553.76 in the scaled flow to x=600.20 in the
+partition. Russia moves from x=653.28 to x=564.98. The continuous outlines and
+partition use the same coordinates at this point.</p>
+<h3>Stretched flow used by the tile fitter</h3><img src="03-stretched-flow.png" alt="Flow guide after the saved horizontal stretch">
+<h3>Initial tile allocation</h3><img src="04-partition.png" alt="Kazakhstan placed near the top between western Russia and China">
+<h2>3. Repair of Russia moves an already-connected Kazakhstan</h2>
+<p>Kazakhstan has one connected 134-tile piece at the partition stage. It does
+not need fragment repair. But the repair log records <strong>170 Russia–Kazakhstan
+swaps, all initiated to repair Russia</strong>. These preserve tile counts while
+moving Kazakhstan's centroid from (600.20, 467.80) to (613.53, 470.55): about
+13 tiles east. Its width-to-height ratio changes from 1.33 to 1.00.</p>
+<p>The repair objective reduces disconnected fragments. It does not guarantee
+country position or borders. The connected neighbour can move as its cells are
+exchanged for cells in the fragmented country. This is a specific mechanism
+that helps put Kazakhstan at the narrow tip above India.</p>
+<h3>After fragment repair</h3><img src="05-repaired.png" alt="Kazakhstan has moved east while Russia's fragments have been repaired">
+<h2>4. Later stages largely retain the result</h2>
+<p>The margin-one layout, mainland docking, and island-and-lake integration change
+these large outlines very little. Kazakhstan's centroid ends at (613.75, 470.48).
+The island and lake changes did not cause this pinch.</p>
+<table><tr><th>Stage</th><th>Russia error</th><th>China error</th><th>India error</th><th>Kazakhstan error</th></tr>
+<tr><td>Continuous fit</td><td>0.8967</td><td>0.5416</td><td>0.4005</td><td>0.6690</td></tr>
+<tr><td>Tile allocation</td><td>0.5615</td><td>0.4718</td><td>0.4467</td><td>0.4001</td></tr>
+<tr><td>Fragment repair</td><td>0.4639</td><td>0.4724</td><td>0.4471</td><td>0.5362</td></tr>
+<tr><td>Islands and lakes</td><td>0.4705</td><td>0.4714</td><td>0.4503</td><td>0.5040</td></tr></table>
+<p>Error is one minus outline intersection-over-union after area scaling and
+centroid alignment. Lower is better. It measures shape, not position. Here the
+reference is the original flow-input geometry, not the later dry-land lake guide;
+do not directly compare these values with the earlier sparse-border scores.</p>
+<p>Other stages: <a href="06-margin-one.png">margin one</a>,
+<a href="07-docked.png">mainland docking</a>,
+<a href="08-islands-lakes.png">integrated islands and lakes</a>.</p>
+<h2>Why the cuts did little</h2>
+<p>The cuts were applied after all these operations. They did not remove the
+inherited regional distortion. The local search kept shape-guide centres fixed;
+only four endpoint components could move, and India could not move at all.
+Opening a few contacts did not provide a coordinated alternative shape.</p>
+<p>The earlier contact-graph test asked whether Russia and China could become
+independent groups. That is not required to improve their shapes. A protected
+path through southern Asia does not explain away the pinch and is not a reason
+to cut dense borders.</p>
+<h2>Next controlled tests</h2>
+<ol><li>Keep the saved continuous guide and all settings. Compare the current
+population-centre rule with flow-coordinate centres. Measure relative positions,
+fragment counts, and shapes before repair. This isolates the mixed target rule.</li>
+<li>Keep the same initial partition. Limit displacement of connected neighbours
+during fragment repair. Do not let a small country move far solely to repair a
+large neighbour. Measure unrepaired fragments as well as geographic improvement.</li>
+<li>Then test sparse-border release in the continuous or regional shape fit,
+before tile allocation. Keep a shape objective and dense-border constraints.
+Compare with a no-cut run that has the same movable countries. Use OWID as a
+visual reference, not as a target gap width.</li></ol>
+<p>These tests are proposed, not completed. The approved development baseline
+remains <a href="../islands-lakes-integrated/index.html">islands plus empty lakes</a>.</p>
+<h2>Records and reproduction</h2>
+<p><a href="trace.json.gz">Measurements, repair evidence, and input hashes</a> ·
+<a href="checksums.json">Artifact checksums</a></p>
+<p>Run <code>trace_kazakhstan.py output/auto-cartogram NEW_OUTPUT</code> with the
+geometry Python environment. The script reads saved stages and does not run a
+new fit. Panels show selected mainland parts only, each scaled to fit. White
+space can contain omitted countries. The source, continuous fit, partition,
+and repaired panels were checked visually.</p>
