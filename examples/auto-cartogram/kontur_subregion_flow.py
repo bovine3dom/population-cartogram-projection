@@ -68,15 +68,19 @@ def merge_density(cells, mass, budget, strengths, minimum_target):
     return cells, np.asarray(mass)
 
 
-def run(root, output, cell_size=200., strengths=(0., .5, .9), grid=256, timeout=180):
+def run(root, output, cell_size=200., strengths=(0., .5, .9), grid=256, timeout=180, geometry=None):
     if (output.exists() or not np.isfinite(cell_size) or cell_size <= 0 or grid < 16 or timeout < 1
             or not strengths or len(set(strengths)) != len(strengths) or any(not 0 <= s < 1 for s in strengths)):
         raise ValueError('Use a new output and positive settings')
     inputs = root/'world-55000-dissolved-input'
-    geometry_path = root/'world-55000-mainland-flow/input/geometry.geojson'
+    reference_path = root/'world-55000-mainland-flow/input/geometry.geojson'
+    geometry_path = geometry or reference_path
     source_path = root/'world-55000-h3-5-density/sources.csv'
     binary = (root/'vendor/cartogram-cpp/build/Release/cartogram').resolve()
     native = read_shapes(geometry_path)
+    reference = read_shapes(reference_path)
+    if set(native) != set(reference):
+        raise ValueError('Source component IDs differ from the reference')
     groups = {r['component_id']: r for r in read_csv(inputs/'groups.csv') if int(r['tiles']) > 0}
     samples = defaultdict(list)
     with source_path.open() as stream:
@@ -117,7 +121,7 @@ def run(root, output, cell_size=200., strengths=(0., .5, .9), grid=256, timeout=
                   maximum_solver_grid=2048, minimum_patch_target=minimum_target,
                   small_target_rule='Merge patches until every tested blend exceeds the solver floor, unless only one patch remains.',
                   reassigned_outside_centres=reassigned, runs=[],
-                  inputs={str(p): digest(p) for p in [geometry_path, source_path, inputs/'groups.csv', binary, root/'vendor/cartogram-cpp/include/constants.hpp']},
+                  inputs={str(p): digest(p) for p in [geometry_path, reference_path, source_path, inputs/'groups.csv', binary, root/'vendor/cartogram-cpp/include/constants.hpp']},
                   script_sha256=digest(Path(__file__)),
                   limits=['Continuous mainland experiment only. No tiles, islands, lake insertion, or population exports are changed.',
                           'The control has the same artificial subdivision as density runs, but uniform density within each original component.',
@@ -167,7 +171,7 @@ def run(root, output, cell_size=200., strengths=(0., .5, .9), grid=256, timeout=
             merged = {c: union_all([by_id[data[i]['patch_id']] for i in ii]) for c, ii in indices.items()}
             total = sum(g.area for g in merged.values())
             budget = sum(int(groups[c]['tiles']) for c in native)
-            entry['records'] = [dict(component=c, country=groups[c]['country_id'], shape_error=outline_error(g, native[c]),
+            entry['records'] = [dict(component=c, country=groups[c]['country_id'], shape_error=outline_error(g, reference[c]),
                     parts=len(getattr(g, 'geoms', [g])), valid=bool(g.is_valid),
                     relative_area_error=g.area/total*budget/int(groups[c]['tiles'])-1) for c, g in sorted(merged.items())]
             patch_area = sum(g.area for g in by_id.values())
@@ -192,6 +196,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('root', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--geometry', type=Path, help='Source geometry before flow; scores use the unchanged geographic reference')
     parser.add_argument('--cell-size', type=float, default=200.)
     parser.add_argument('--strengths', type=float, nargs='+', default=[0., .5, .9])
     parser.add_argument('--grid', type=int, default=256)
