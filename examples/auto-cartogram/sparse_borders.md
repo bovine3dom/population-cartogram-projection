@@ -1,5 +1,9 @@
 # Selective border separation: experiment
 
+**Follow-up:** [Large regional moves](regional_release.md) test much larger
+separations. The negative results below apply to the earlier local tests.
+They do not establish that large regional moves cannot help.
+
 ## Aim
 
 Allow some low-population borders to separate if this reduces distortion.

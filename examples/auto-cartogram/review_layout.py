@@ -181,7 +181,8 @@ def draw(path, shapes, tiles, owners, metrics, title):
         boxes.append(box)
         parts.append(f'<text x="{fmt(px)}" y="{fmt(py)}" text-anchor="middle" font-size="12" '
                      f'paint-order="stroke" stroke="#faf9f6" stroke-width="2" stroke-linejoin="round">{html.escape(label)}</text>')
-    methods={"mode=sparse-border-relaxation":"Low-density border experiment; blank gaps need not be water",
+    methods={"mode=regional-release":"Whole regions translated; large blank separations are not seas",
+             "mode=sparse-border-relaxation":"Low-density border experiment; blank gaps need not be water",
              "mode=explicit-lake-vacancies":"Local lake insertion; lakes are empty space, like the sea",
              "mode=geographic-baseline":"Separate geographic baseline",
              "mode=geographic-reposition":"Geographic placement of existing island shapes",
