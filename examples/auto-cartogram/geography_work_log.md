@@ -700,3 +700,47 @@ No sparse-border cuts or production mapping changes are included.
 Next, measure the Kazakhstan constraint against OWID. Keep this combined
 baseline unchanged. A larger gap is not a success unless country shapes
 improve. Retain dense borders, island positions, and empty lakes.
+
+## Kazakhstan: matched local tests and OWID reference
+
+Added `scope_sparse_borders.py` to restrict the existing population audit without
+making a dense border eligible. Selected Kazakhstan's sparse contacts with
+China, Russia, and Turkmenistan. Excluded the one-tile Baikonur component.
+Turkmenistan's contact was already missing. Only four large components can move;
+India is fixed in this first diagnostic.
+
+Ran a 40-round control and an optional-border trial. They produced identical
+cells. Then ran an 80-round control and an 80-round trial with two initial border
+openings. The openings formed again during refinement. Both runs keep exact
+budgets, connected components, fixed islands, and identical empty lake cells.
+The seeded trial improves Kazakhstan's outline error from 0.50424 to 0.31057,
+against 0.40996 in the control. China changes very little. Russia is worse than
+the control, and India cannot change. The seeded trial creates 38 newly empty
+enclosed cells, against 19 in the control. Neither trial replaces the baseline.
+Both stopped at the round limit; do not claim convergence.
+
+Added `compare_owid_region.py`. It compares largest mainland parts, not distant
+islands. OWID has approximately 57 blank cells between Kazakhstan and China,
+and 27 between Kazakhstan and Russia. Its shape scores are better for China
+and Kazakhstan, but worse for Russia under the unrotated Equal Earth metric.
+Thus neither a gap distance nor this outline score alone is an acceptance rule.
+The 20-cell local trial allowance is smaller than OWID's separation.
+
+Added `audit_sparse_cut.py`. The full current graph has an above-threshold
+contact path from Russia through Azerbaijan, Iran, Afghanistan, Pakistan,
+India, Bangladesh, and Myanmar to China. Sparse cuts alone cannot separate
+Russia and China into independent connected groups. This does not prevent a
+local gap or shape improvement. It means that independent rigid block moves
+are the wrong next step under the dense-border constraint.
+
+Next test: coordinated deformation with bounded movement of shape-guide
+centroids and movable surrounding countries. Retain dense contacts. Compare
+with an equally movable no-cut control. Do not translate distorted rigid shapes
+apart, or accept gaps without visible shape gains. This next solver is not yet
+implemented.
+
+Visually checked the OWID comparison and both Eurasia trials. Published records
+and images at `results/geography/kazakhstan-scoped/index.html`. Raw runs are in
+`output/auto-cartogram/kazakhstan-scoped/`. All four runs have stopped. Added
+nine tests for scope selection, mainland selection, and graph cuts. All 215
+tests pass. No production layout or population mapping changed.

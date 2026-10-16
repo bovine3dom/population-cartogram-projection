@@ -1,0 +1,211 @@
+{
+  "records": [
+    {
+      "country": "CHN",
+      "component": "CHN:72cd37e37e634df7",
+      "current_tiles": 9632,
+      "owid_tiles": 9834,
+      "current_shape_error": 0.4708662721110597,
+      "owid_shape_error": 0.3928871653174515
+    },
+    {
+      "country": "IND",
+      "component": "IND:3f0bb94d859b2064",
+      "current_tiles": 9838,
+      "owid_tiles": 9661,
+      "current_shape_error": 0.4503183237809749,
+      "owid_shape_error": 0.42638184881044494
+    },
+    {
+      "country": "KAZ",
+      "component": "KAZ:5d6f63a9b9f3c9f9",
+      "current_tiles": 134,
+      "owid_tiles": 140,
+      "current_shape_error": 0.50423639272132,
+      "owid_shape_error": 0.32728480249638303
+    },
+    {
+      "country": "KGZ",
+      "component": "KGZ:401b8fcdc0eef69c",
+      "current_tiles": 45,
+      "owid_tiles": 44,
+      "current_shape_error": 0.465355705837041,
+      "owid_shape_error": 0.4568242866918486
+    },
+    {
+      "country": "RUS",
+      "component": "RUS:b85c5bca1852870f",
+      "current_tiles": 978,
+      "owid_tiles": 975,
+      "current_shape_error": 0.4691482771917005,
+      "owid_shape_error": 0.7814036177227967
+    },
+    {
+      "country": "TKM",
+      "component": "TKM:ef25c6485f2078c2",
+      "current_tiles": 46,
+      "owid_tiles": 44,
+      "current_shape_error": 0.5920288266668758,
+      "owid_shape_error": 0.5623449678170181
+    },
+    {
+      "country": "UZB",
+      "component": "UZB:448c5653f0be3548",
+      "current_tiles": 247,
+      "owid_tiles": 229,
+      "current_shape_error": 0.7598274313775554,
+      "owid_shape_error": 0.5876195534143318
+    }
+  ],
+  "pairs": [
+    {
+      "a": "CHN",
+      "b": "IND",
+      "current_nearest_centre": 1.0,
+      "owid_nearest_centre": 1.0
+    },
+    {
+      "a": "CHN",
+      "b": "KAZ",
+      "current_nearest_centre": 1.0,
+      "owid_nearest_centre": 58.0
+    },
+    {
+      "a": "CHN",
+      "b": "KGZ",
+      "current_nearest_centre": 16.0,
+      "owid_nearest_centre": 57.0
+    },
+    {
+      "a": "CHN",
+      "b": "RUS",
+      "current_nearest_centre": 1.0,
+      "owid_nearest_centre": 104.0
+    },
+    {
+      "a": "CHN",
+      "b": "TKM",
+      "current_nearest_centre": 51.0,
+      "owid_nearest_centre": 81.0
+    },
+    {
+      "a": "CHN",
+      "b": "UZB",
+      "current_nearest_centre": 31.0,
+      "owid_nearest_centre": 68.0
+    },
+    {
+      "a": "IND",
+      "b": "KAZ",
+      "current_nearest_centre": 2.0,
+      "owid_nearest_centre": 21.0
+    },
+    {
+      "a": "IND",
+      "b": "KGZ",
+      "current_nearest_centre": 9.0,
+      "owid_nearest_centre": 20.0
+    },
+    {
+      "a": "IND",
+      "b": "RUS",
+      "current_nearest_centre": 1.0,
+      "owid_nearest_centre": 54.0
+    },
+    {
+      "a": "IND",
+      "b": "TKM",
+      "current_nearest_centre": 26.0,
+      "owid_nearest_centre": 37.0
+    },
+    {
+      "a": "IND",
+      "b": "UZB",
+      "current_nearest_centre": 17.0,
+      "owid_nearest_centre": 31.0
+    },
+    {
+      "a": "KAZ",
+      "b": "KGZ",
+      "current_nearest_centre": 14.0,
+      "owid_nearest_centre": 1.0
+    },
+    {
+      "a": "KAZ",
+      "b": "RUS",
+      "current_nearest_centre": 1.0,
+      "owid_nearest_centre": 28.0
+    },
+    {
+      "a": "KAZ",
+      "b": "TKM",
+      "current_nearest_centre": 49.0,
+      "owid_nearest_centre": 12.0
+    },
+    {
+      "a": "KAZ",
+      "b": "UZB",
+      "current_nearest_centre": 29.0,
+      "owid_nearest_centre": 1.0
+    },
+    {
+      "a": "KGZ",
+      "b": "RUS",
+      "current_nearest_centre": 1.0,
+      "owid_nearest_centre": 37.0
+    },
+    {
+      "a": "KGZ",
+      "b": "TKM",
+      "current_nearest_centre": 28.0,
+      "owid_nearest_centre": 14.0
+    },
+    {
+      "a": "KGZ",
+      "b": "UZB",
+      "current_nearest_centre": 8.0,
+      "owid_nearest_centre": 1.0
+    },
+    {
+      "a": "RUS",
+      "b": "TKM",
+      "current_nearest_centre": 1.0,
+      "owid_nearest_centre": 17.0
+    },
+    {
+      "a": "RUS",
+      "b": "UZB",
+      "current_nearest_centre": 1.0,
+      "owid_nearest_centre": 14.0
+    },
+    {
+      "a": "TKM",
+      "b": "UZB",
+      "current_nearest_centre": 1.0,
+      "owid_nearest_centre": 1.0
+    }
+  ],
+  "owid_source": {
+    "input_grid_step": 2,
+    "input_rows": 54978,
+    "duplicate_coordinates": 11,
+    "conflicting_coordinates": 11
+  },
+  "current_world_tiles": 55000,
+  "owid_world_tiles": 54967,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/geography-islands-lakes-integrated/cells.csv": "b2588c701ba5c36c9e829b9e142448617f51cae75ce9522c91f244ba683190a4",
+    "output/auto-cartogram/geography-lake-guides-final/geometry.geojson": "36fdfefb614d3b68295a48e6cb4793e8a3a620ac76879e80b291ffc55e57696b",
+    "examples/auto-cartogram/results/compact-landmass/owid/cells.csv.gz": "c04b1bda06d3b5a810007ab20ec5a1fde6e144d39ac6054985952dd01b49a15e",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/compare_owid_region.py": "598b89361b17fe8fb80223afec12317536fc9fdd2d75aca27d7b1f6a6de332ba"
+  },
+  "limits": [
+    "Use the largest represented source component in the new map and the largest four-connected country part in OWID.",
+    "OWID country parts do not have the same source-component or population scope. Outline scores are approximate references.",
+    "Shape error is one minus outline intersection-over-union after equal-area scaling and centroid alignment. No rotation is fitted.",
+    "Separations use grid Chebyshev centre distances: 1 can mean edge or corner contact. Subtract 1 for an approximate blank-cell width.",
+    "Nearest separation does not measure the full gap. The world tile totals are similar, but country budgets differ.",
+    "This is a diagnostic, not a new layout or a gap target."
+  ]
+}

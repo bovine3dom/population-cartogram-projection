@@ -1,0 +1,69 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Kazakhstan: shape tests and OWID reference</title>
+<style>body{font:18px/1.5 system-ui;max-width:1150px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%}table{border-collapse:collapse}td,th{padding:.4rem .8rem;border:1px solid #bbb}pre{overflow:auto}a{color:#245b92}</style>
+<h1>Kazakhstan: shape tests and OWID reference</h1>
+<p><strong>Diagnostic results only. These trials do not replace the
+<a href="../islands-lakes-integrated/index.html">combined island-and-lake baseline</a>.</strong>
+No population mapping changed. All images were checked visually.</p>
+<h2>Result</h2>
+<p>Removing a border constraint is not sufficient. At 40 rounds, the normal search
+produced identical cells with and without the selected constraints. A second
+trial opened the China–Kazakhstan and Kazakhstan–Russia contacts before 80 rounds
+of refinement. Both contacts formed again. China still has almost the same outline.
+India was fixed in this narrow test, so its shape could not improve.</p>
+<p>The 80-round control and seeded trial each retain 55,000 land tiles, exact
+component budgets, connected components, and all 220 empty lake cells at their
+original coordinates. Only the four large endpoint components could move.
+The seeded result has 38 newly empty enclosed cells, against 19 in the control.
+Do not accept the small score change as a successful regional fit.</p>
+<table><tr><th>Outline error; lower is better</th><th>Baseline</th><th>Control, 80 rounds</th><th>Seeded, 80 rounds</th></tr>
+<tr><td>China mainland</td><td>0.47087</td><td>0.46466</td><td>0.46361</td></tr>
+<tr><td>Russia mainland</td><td>0.46915</td><td>0.40563</td><td>0.41242</td></tr>
+<tr><td>Kazakhstan</td><td>0.50424</td><td>0.40996</td><td>0.31057</td></tr>
+<tr><td>India mainland</td><td>0.45032</td><td>0.45032</td><td>0.45032</td></tr></table>
+<p>The score compares equal-area outlines after centroid alignment, without rotation.
+It does not measure relative position or all aspects of recognisability.</p>
+<h2>Control: keep existing true borders</h2><img src="control-80.png" alt="Eurasia in the border-preserving control">
+<h2>Open two sparse contacts, then refine</h2><img src="seeded.png" alt="Eurasia after opening and refining sparse contacts">
+<h2>What OWID permits</h2>
+<p>OWID leaves approximately 57 blank cells between the main parts of Kazakhstan
+and China, and 27 between Kazakhstan and Russia. The combined baseline has
+contact in both cases. These are nearest grid distances, not widths along the
+whole border. The world tile totals are similar, but country budgets differ.
+The trial's 20-cell allowance tests local movement; it is not an OWID-scale fit.</p>
+<p>The panels below show only selected mainland parts. Other countries are omitted,
+so white space is not necessarily sea. Each panel is scaled to fit its frame.
+OWID has better outline scores for China and Kazakhstan, but a worse unrotated
+Equal Earth score for Russia. Thus this score alone must not select a layout.</p>
+<h3>Combined baseline</h3><img src="current.png" alt="Selected current mainland parts">
+<h3>OWID reference</h3><img src="owid.png" alt="Selected OWID mainland parts">
+<p><a href="../../compact-landmass/owid/layout.png">Complete OWID map</a> ·
+<a href="owid-comparison.json">Outline and distance measurements</a></p>
+<h2>Remaining constraints and next test</h2>
+<p>The full contact graph has a protected path from Russia through Azerbaijan,
+Iran, Afghanistan, Pakistan, India, Bangladesh, and Myanmar to China. Therefore,
+no cut that removes only currently eligible sparse contacts can separate Russia
+and China into independent connected groups. This does <em>not</em> prevent a gap
+at Kazakhstan or local shape improvement. It rules out using two independent,
+rigid blocks while keeping every dense contact.</p>
+<p>Next, test coordinated deformation of the surrounding countries. Permit selected
+sparse contacts to open, but keep dense contacts. Let shape guides move within
+bounds instead of fixing every guide at its current centroid. Compare against a
+control with the same movable countries. Require visible improvement in Russia,
+China, and India, without new narrow connecting paths or large enclosed holes.
+Do not move the current distorted shapes apart as rigid blocks.</p>
+<h2>Settings and records</h2>
+<p>The population audit uses 25 km corridors, mean density at most 20 people/km²,
+and segment p90 density at most 50 people/km². Scope: eligible borders incident
+to Kazakhstan, with at least 16 tiles at each endpoint. This selects China,
+Russia, and Turkmenistan. The Turkmenistan contact is already missing.</p>
+<p>Both 80-round runs use eight choices, guide weight 16, gap cost 1, maximum gap 20,
+and interior gap budget 1,000. The seeded run allows two border openings with
+an energy increase limit of 2,000 each. These are diagnostic settings, not defaults.</p>
+<ul><li><a href="audit.json.gz">Scoped population audit</a></li>
+<li><a href="cut-russia-china.json">Full contact-graph cut diagnostic, including protected path</a></li>
+<li>Control: <a href="control-80-cells.csv.gz">tiles</a>, <a href="control-80-sparse-borders.json.gz">settings and history</a>, <a href="control-80-shapes.csv">shape scores</a>, <a href="control-80-summary.json">summary</a></li>
+<li>Seeded: <a href="seeded-cells.csv.gz">tiles</a>, <a href="seeded-sparse-borders.json.gz">settings and history</a>, <a href="seeded-shapes.csv">shape scores</a>, <a href="seeded-summary.json">summary</a></li>
+<li><a href="../islands-lakes-integrated/lake-cells.csv.gz">Unchanged empty lake cells</a></li>
+<li><a href="checksums.json">Artifact checksums</a></li></ul>
