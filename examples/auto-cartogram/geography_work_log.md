@@ -932,3 +932,23 @@ commands and limits. No downstream tile fit was justified or started. The next
 experiment must permit separate deformation across selected borders, rather
 than only insert empty strips into one continuous field. Current best and
 production exports remain unchanged. All 234 Python tests pass.
+
+### Independent mainland flow diagnostic
+
+Added `independent_kontur_flow.py`. Each solver call receives only one mainland
+component, with the exact saved coarse patch geometry and target strings.
+Population and target-area sums are checked. The shared-flow reference is the
+saved coarse 90% guide, not a new control. After solving, a uniform scale sets
+the component area to its tile budget. This is not a tile fit or world assembly.
+
+The 256-grid Russia, China, India, and Kazakhstan runs completed for uniform
+and 90% density. Visually checked all four comparison sheets. The independent
+90% shapes are much closer to the geographic outlines. The uniform controls
+closely reproduce the original outlines. Canada's extra 90% trial failed with
+a non-simple patch boundary; no result from that failed run is used.
+
+Started 512-grid Russia, China, and Canada trials to check resolution sensitivity
+and retry Canada. The solver domain changes when neighbours are removed, so
+this is not a test of one selected border alone. No assembly is attempted.
+Current best, tile budgets, island and lake placement, and production exports
+remain unchanged. Four new unit tests pass.
