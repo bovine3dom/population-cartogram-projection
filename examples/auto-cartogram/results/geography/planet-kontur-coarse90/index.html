@@ -1,0 +1,82 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Planet cartogram: coarse 90% Kontur</title>
+<style>body{font:18px/1.5 system-ui;max-width:1250px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%}td,th{padding:.4rem .8rem;border:1px solid #bbb}table{border-collapse:collapse}pre{overflow:auto}a{color:#245b92}</style>
+<h1>Planet cartogram: coarse 90% Kontur</h1>
+<p><strong>Full 55,000-tile candidate, with islands and empty lakes. Not a production replacement.</strong>
+This uses the selected <a href="../kontur-density-flow/200/blend-0.9/world.png">coarser 90% Kontur guide</a>.
+No strategic border cuts have been applied. Existing layout defects are listed below.</p>
+<p><a href="review.png">Open the full planet image</a> ·
+<a href="../islands-lakes-integrated/index.html">Previous preferred layout</a></p>
+<a href="review.png"><img src="review.png" alt="Full planet tile cartogram from the coarse 90 percent Kontur guide"></a>
+<h2>Checks</h2>
+<table><tr><th>Check</th><th>This candidate</th><th>Previous preferred layout</th></tr>
+<tr><td>Land tiles</td><td>55,000</td><td>55,000</td></tr>
+<tr><td>Represented components</td><td>481</td><td>481</td></tr>
+<tr><td>Component budget errors</td><td>0</td><td>0</td></tr>
+<tr><td>Disconnected individual components</td><td>0</td><td>0</td></tr>
+<tr><td>Named lakes / empty cells</td><td>45 / 220</td><td>45 / 220</td></tr>
+<tr><td>Missing / false administrative contacts</td><td>73 / 48</td><td>63 / 34</td></tr>
+<tr><td>Split source landmasses</td><td>1</td><td>0</td></tr></table>
+<p>The same named lakes and their water-cell budgets remain. Lake positions differ.
+All water cells are empty and do not consume country tiles. The full tile map
+includes isolated landmasses omitted from the continuous guide, including Japan
+and Australia. Island populations retain their existing component budgets.</p>
+<h2>Known regressions</h2>
+<ul><li>The 178-tile Malaysian peninsula component is detached from Thailand.
+This is not an intentional sparse-border cut.</li>
+<li>Lithuania has no exterior-water edge. Estonia and Latvia still have exterior
+water, but the Baltic arrangement needs work.</li>
+<li>Paraguay has 16 exterior-water edges: it has regained a false coast.</li>
+<li>There are ten more missing and fourteen more false administrative contacts
+than in the previous preferred layout.</li></ul>
+<p>These failures prevent promotion. Exact budgets and connected individual
+components do not imply correct geography. The previous preferred layout and
+H3-MON mapping remain unchanged.</p>
+<h2>Eurasia</h2>
+<a href="eurasia.png"><img src="eurasia.png" alt="Eurasia detail showing the current Kazakhstan constraint"></a>
+<p>The Kazakhstan constraint remains after tile fitting. This candidate is a
+recorded no-strategic-cut control, not evidence that the constraint is solved.</p>
+<h2>Regional review</h2>
+<p><a href="europe.png">Europe</a> · <a href="africa.png">Africa and lakes</a> ·
+<a href="japan-korea.png">Japan and Korea</a> · <a href="indonesia.png">Indonesia and Malaysia</a> ·
+<a href="north-america.png">North America</a> · <a href="south-america.png">South America</a> ·
+<a href="new-york.png">New York</a> · <a href="south-asia.png">South Asia</a> ·
+<a href="philippines.png">Philippines</a></p>
+<p>The world, Eurasia, Europe, Africa, Japan/Korea, Indonesia, New York, and South
+America images were checked visually. Japan is not bisected by South Korea.
+The island locations were fitted again; they are not copied from the previous map.</p>
+<h2>Fit settings</h2>
+<p>Used the saved coarse 90% guide, not a fresh flow run. Retained margin-one
+settings: stretch 1.2, flow-guide weight 8, smoothing sigma 4, water radius 8,
+water margin 1, and 16 fixed-border rounds. The exact original component tile
+budgets replace the continuous solver's approximate areas.</p>
+<p>One deliberate change: retain the new flow centres instead of replacing them
+with globally aligned unwarped population sites. Then run fragment repair,
+island placement, mainland docking, geometric coast-frame placement,
+archipelago placement, and empty lake insertion. The old population transport
+map is not reused on the new mainland. Tiny numerical guide overlaps are trimmed
+under strict area and connectivity limits before fitting.</p>
+<h2>Next: strategic cuts before fitting</h2>
+<ol><li>Select a small set of sparse source-border segments around the Kazakhstan
+constraint using the population audit. Do not add overseas-territory links.</li>
+<li>Release those contacts in the early geometry or deformation step, not by
+moving final tile shapes apart. A contact flag alone cannot separate a shared
+continuous boundary.</li>
+<li>Carry the selected-cut record through tile fitting and docking, so later
+repair does not reconstruct the deliberately released contacts.</li>
+<li>Compare against the same no-cut settings. Require shape improvement, not
+just a larger gap. Check the Baltic coast, Paraguay, Malaysia, island placement,
+and empty lakes. Do not count accidental border losses as successful cuts.</li></ol>
+<p>No early-cut run is included here. Use
+<a href="../../compact-landmass/owid/layout.png">OWID</a> as the visual gap reference,
+not as a required separation distance.</p>
+<h2>Data and reproduction</h2>
+<p><a href="cells.csv.gz">Tile layout</a> · <a href="lake-cells.csv.gz">Empty lake cells</a> ·
+<a href="lake-placement.json.gz">Lake placement record</a> · <a href="run.json">Settings and input hashes</a> ·
+<a href="metrics.json">Layout metrics</a> · <a href="checks.json">Independent budget and lake checks</a> ·
+<a href="geography.json">Geographic checks</a> · <a href="water-access.csv.gz">Water-access table</a> ·
+<a href="landmass-parts.json.gz">Source landmass check</a> · <a href="checksums.json">Artifact hashes</a></p>
+<pre>PYTHONDONTWRITEBYTECODE=1 output/auto-cartogram/geometry-env/bin/python \
+ examples/auto-cartogram/run_kontur_planet.py NEW_OUTPUT</pre>
+<p>No population-density export or new H3-MON link was generated.</p>

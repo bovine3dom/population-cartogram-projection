@@ -860,3 +860,26 @@ Started `output/auto-cartogram/planet-kontur-coarse90/`. Log:
 `/tmp/planet-kontur-coarse90.log`. No strategic cuts are included. First inspect
 this full-planet candidate, then use the same settings as the no-cut control
 for early-pipeline border-release experiments. No production map is replaced.
+
+The run completed. All 55,000 land tiles and 481 component budgets are exact;
+every individual component is connected. The same 45 named lakes retain 220
+empty cells and the same per-lake budgets. Independent checks confirm that no
+lake cell overlaps land.
+
+The candidate has 73 missing and 48 false administrative contacts, against
+63 and 34 in the preferred baseline. One source landmass is split: the 178-tile
+Malaysian peninsula is detached from Thailand. Lithuania has no exterior-water
+edge, and Paraguay has 16. These are regressions, not strategic cuts. Do not
+promote the candidate or replace the H3-MON export.
+
+Visually checked the full world, Eurasia, Europe, Africa, Japan/Korea, Indonesia,
+New York, and South America. Japan is not bisected by South Korea. The Kazakhstan
+constraint remains. Published the candidate, regional images, tile and lake
+archives, settings, and checks at
+`results/geography/planet-kontur-coarse90/index.html`.
+
+The next cut experiment must change the early source geometry or deformation
+constraints, then carry the optional-contact record through fitting and docking.
+A flag cannot separate a shared continuous boundary. Compare against this
+recorded no-cut run, and track the coast and mainland regressions separately.
+No early-cut run has started. The fit job has stopped. All 228 tests pass.
