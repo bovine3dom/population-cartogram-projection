@@ -65,10 +65,19 @@ def run(source, output):
             raise ValueError('Output geometry hash differs')
         (folder/'components.geojson.gz').write_bytes(gzip.compress(path.read_bytes(),mtime=0))
         shutil.copyfile(source/name/'review.png',folder/'review.png')
-        rows.append(f'<tr><td>{name}</td><td>{len(retained)}</td><td>0</td><td>{case["overlap"]:.8f}</td><td>{case["maximum_area_error"]:.3%}</td></tr>')
+        accepted = sum('alpha' in step for step in case['history'])
+        status = case['history'][-1]['status']
+        rows.append(f'<tr><td>{name}</td><td>{len(retained)}</td><td>0</td><td>{case["overlap"]:.8f}</td><td>{case["maximum_area_error"]:.3%}</td><td>{accepted}/{len(case["history"])}</td><td>{status}</td></tr>')
         panels.append(f'<section><h2>{name}</h2><a href="{name}/review.png"><img src="{name}/review.png" alt="Shared-border regional fit: {name}"></a><p><a href="{name}/components.geojson.gz">Geometry</a></p></section>')
     (output/'demo').mkdir(exist_ok=True)
     demo(output/'demo')
+    correspondence = ('''<p>This pair uses patch-labelled contour guides. Source vertices anchor the correspondence.
+Crossing target chords trigger shared-edge subdivision. New samples interpolate fixed target parameters;
+they are not projected again across nearby bays. The mapped rings pass their self-intersection checks.
+Single-label rings and ambiguous label cycles still use whole-outline matching. See the fallback records in the report.</p>'''
+                      if report.get('patch_guides') else '''<p>This pair uses whole-outline arclength matching.
+A later patch-guided experiment repairs crossing target chords with shared-edge subdivision.</p>''')
+    settings = f'<p>Source simplification: {report["source_simplify"]} tile units. Maximum initial edge length: {report["edge_length"]}. Iteration limit: {report.get("iterations","not recorded")}.</p>'
     (output/'index.html').write_text('''<!doctype html><meta charset="utf-8"><title>Shared-boundary fit: border checks</title>
 <style>body{font:18px system-ui;max-width:1800px;margin:32px auto;padding:0 20px}img{width:100%}.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:16px}table{border-collapse:collapse}td,th{padding:9px;border:1px solid #aaa}</style>
 <h1>Retained borders now share complete edges</h1>
@@ -77,11 +86,11 @@ The previous assembly let countries touch at isolated points. That did not prese
 Here, both countries use identical vertex variables along every retained border. Only selected cuts get separate copies.</p>
 <p><b>This is a border-preservation checkpoint, not a shape improvement.</b> The regional optimizer still makes too little progress.
 Do not mistake an intact starting layout for a successful new layout. The full-planet current best and H3-MON mapping are unchanged.</p>
-<p><a href="../planet-kontur-coarse90/index.html">Current best</a> · <a href="experiment.json">Settings and checks</a> · <a href="../independent-assembly/index.html">Rejected point-contact experiments</a></p>
+<p><a href="../planet-kontur-coarse90/index.html">Current best</a> · <a href="experiment.json">Settings and checks</a> · <a href="../independent-assembly/index.html">Rejected point-contact experiments</a> · <a href="../contour-refinement/index.html">Contour refinement test</a></p>
 <h2>Regional checks</h2><p>All retained borders have zero geometric gap and positive shared length.
 The mesh also checks that no source border segment was omitted during vertex matching.
 Overlap is in tile-area units. Country areas are approximate continuous areas; these are not tile layouts.</p>
-<table><tr><th>Case</th><th>Complete retained borders</th><th>Border gaps</th><th>Overlap</th><th>Maximum area error</th></tr>'''+''.join(rows)+'''</table>
+<table><tr><th>Case</th><th>Complete retained borders</th><th>Border gaps</th><th>Overlap</th><th>Maximum area error</th><th>Accepted steps / attempts</th><th>Last solver status</th></tr>'''+''.join(rows)+'''</table>
 <p>The same four audited borders are released: Russia–Kazakhstan, China–Kazakhstan, Russia–China, and Russia–Mongolia.
 There is no cut-specific attraction or gap target. General collision checks still apply.
 A cut allows separation; it does not require a visible gap.</p>
@@ -96,11 +105,11 @@ This tests the mechanism; it does not prove that the Eurasian fit is solved.</p>
 <div class="pair"><section><h3>A-B and B-C retained</h3><img src="demo/retained.png" alt="Synthetic retained-border test"></section>
 <section><h3>A-B retained, B-C cut</h3><img src="demo/cut.png" alt="Synthetic cut-border test"></section></div>
 <p><a href="demo/checks.json">Synthetic checks</a> · <a href="checksums.json">Archive checksums</a></p>
+<h2>Contour correspondence</h2>'''+correspondence+settings+'''
 <h2>Remaining problem</h2><p>Large steps toward the independent outlines can make narrow coastlines cross themselves.
-The validity checks reject these steps. Small steps preserve the borders but do not yet fix the Kazakhstan pinch.
-A boundary-label audit found matching ordered Kontur patch labels for Russia, China, India, and Kazakhstan.
-But the first label-based contour mapping failed the self-intersection check on China, even with finer sampling.
-That mapping is not used in these panels. The next step is to correct contour sampling and correspondence.
+Released borders can also overlap during a proposed step. The validity and overlap checks reject those steps.
+Solver convergence is a separate check: a saved final polygon can be the unchanged initial polygon after failed attempts.
+Small accepted steps preserve borders but do not yet fix the Kazakhstan pinch.
 Do not weaken the border or collision checks to make an image look better.</p>
 ''')
     (output/'checksums.json').write_text(json.dumps({str(p.relative_to(output)):digest(p) for p in sorted(output.rglob('*'))

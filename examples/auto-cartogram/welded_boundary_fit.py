@@ -360,6 +360,10 @@ def fit(mesh, iterations=60, trust=2.):
                      primal_residual=float(solution.info.prim_res),dual_residual=float(solution.info.dual_res))
         if solution.info.status_val not in (1,2):
             history.append(entry)
+            print(json.dumps(entry),flush=True)
+            if solution.info.status_val == 7 and trust > .02:
+                trust = max(.02,trust/2)
+                continue
             break
         step = solution.x[:mesh.size]
         before = mesh.energy(current)+1e5*np.sum((mesh.areas(current)/mesh.budgets-1)**2)

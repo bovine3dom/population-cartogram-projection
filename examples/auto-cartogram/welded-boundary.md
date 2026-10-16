@@ -52,13 +52,33 @@ checks reject those steps. Small steps preserve borders but make little progress
 
 The optional `--patch-guides` mode matches contour sections by common Kontur
 patch labels. The ordered label sequences agree for Russia, China, India, and
-Kazakhstan. However, the sampled target contour for China intersects itself,
-even with source simplification 0.05 and edge length one. The run stops before
-optimization. This mode is experimental and is not used in the published pair.
+Kazakhstan. Its first version rejected China's sampled target contour because
+straight chords crossed narrow bends. Projection of new source points could
+also jump across a bay.
 
-The next task is to improve contour correspondence and sampling without
-removing the validity checks. New sample points on a retained edge must be
-shared by both countries. More iterations alone are not a demonstrated fix.
+The revised mode projects original source vertices only. It interpolates fixed
+target parameters for new samples. Crossing target chords cause subdivision of
+the source edge on both sides. Each mapped target ring must pass its
+self-intersection check. Refinement stops with an error if it cannot do this.
+Single-label rings and ambiguous label cycles still use whole-outline matching.
+
+[Contour refinement results](results/geography/contour-refinement/index.html)
+show a new paired test with simplification 0.3, edge length six, and a limit of
+24 iterations. One round of eight edge splits repaired the mapped contours.
+All 23 control borders and all 19 retained cut-case borders remain intact.
+The control accepts 24 steps, with maximum area error 0.027%. The cut case
+accepts one very small step in eight attempts, with maximum area error 0.170%.
+It stops because solver convergence and overlap checks prevent further steps.
+This is not a successful cut layout.
+
+Visual checks show small changes in the control, but the Kazakhstan pinch and
+the narrow Russian strip remain. A second test with one-tile simplification
+also failed to produce a useful cut layout. Its cut-case area error was 4.62%.
+Do not use coarse simplification to hide these problems.
+
+The next task is the collision model at released borders and solver convergence.
+Valid target contours are necessary, but they do not ensure a valid deformation
+path. Keep the whole-border, polygon validity, and overlap checks active.
 
 ## Repeat the checks
 
@@ -78,6 +98,10 @@ $PY examples/auto-cartogram/publish_welded_boundary.py \
 $PY -m unittest discover -s test -p 'auto_*.py'
 ```
 
+To repeat the contour refinement test, use a new output directory and add
+`--patch-guides`. Set `--iterations 24 --source-simplify .3 --edge-length 6`.
+
 The publisher checks border counts, shared lengths, gaps, overlap, polygon
-validity, and geometry hashes. It includes the synthetic release test and an
+validity, and geometry hashes. Its table reports accepted steps and solver
+status separately from final geometry checks. It includes the synthetic release test and an
 archive checksum file. Inspect the images as well as the numeric checks.

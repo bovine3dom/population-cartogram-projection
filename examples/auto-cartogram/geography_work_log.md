@@ -1128,3 +1128,46 @@ cyclic interpolation, and invalid parameter winding. All 264 tests pass.
 The coarse patch-guided run now builds valid target contours after one round
 of eight edge splits. Paired regional shape tests are in progress. This is
 not yet evidence of a better layout. Current best is unchanged.
+
+### Paired results after the contour repair
+
+Completed the fine pilot, coarse paired test, one-tile simplification test, and
+coarse retry test. Output directories are `welded-boundary-refined-parameters`,
+`welded-boundary-anchor-coarse`, `welded-boundary-anchor-tile`, and
+`welded-boundary-anchor-retry`, under `output/auto-cartogram`.
+The early fine pilot used fixed parameters but not the later original-vertex
+anchors. Its result is diagnostic only.
+
+The first coarse control accepted 12 steps. The cut case hit the quadratic
+solver's iteration limit before movement. Added a bounded retry with a smaller
+trust region for this status. Failed solver outputs are never accepted.
+A regression test checks that retries leave the current geometry unchanged.
+
+The final coarse pair uses 24 iterations, source simplification 0.3, and maximum
+initial edge length six. Both cases need one round of eight edge splits for
+the patch-guided target contours. The control accepts 24 steps; maximum area
+error is 0.027%. Geographic outline errors change from approximately 0.728 to
+0.707 for Russia, 0.670 to 0.661 for China, 0.444 to 0.440 for India, and 0.787
+to 0.728 for Kazakhstan. The starting values come from the almost unchanged
+cut output, not from independent target shapes.
+
+The cut case accepts only one very small step in eight attempts. Final overlap
+is 0.000000501 tile-area units and maximum area error is 0.170%. Subsequent
+proposed steps have valid polygons but overlap between countries; they are
+rejected. Smaller trust regions alone did not solve this. All 23 control
+borders and all 19 retained cut-case borders remain complete shared edges.
+The one-tile simplification test also fails to give a useful cut layout, with
+cut-case area error 4.62%. It is not a candidate.
+
+Visually checked both coarse panels, both one-tile panels, and the final
+published pair. The control has small outline changes, but Russia remains a
+thin strip and the Kazakhstan pinch remains. The cut panel is almost unchanged.
+The next task is the collision model at released borders and solver convergence,
+not another claim that successful contour construction solves the layout.
+Single-label rings and ambiguous label cycles still use whole-outline matching.
+
+Published the final pair at `results/geography/contour-refinement/index.html`.
+The table now distinguishes accepted steps and solver status from valid final
+geometry. Updated `welded-boundary.md` and linked the previous checkpoint.
+All 265 tests pass. No fit jobs remain active. Current best and H3-MON exports
+are unchanged.

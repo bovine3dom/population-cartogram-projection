@@ -3,6 +3,7 @@ import contextlib
 import io
 from pathlib import Path
 import sys
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -115,6 +116,17 @@ class WeldedBoundaryTest(unittest.TestCase):
         self.assertLess(mesh.checks(flat)['maximum_area_error'],1e-4)
         self.assertLess(mesh.checks(flat)['overlap'],1e-8)
         self.assertLess((g['c'].bounds[2]-g['c'].bounds[0])/(g['c'].bounds[3]-g['c'].bounds[1]),1.5)
+
+    @unittest.skipUnless(importlib.util.find_spec('osqp'),'Install mesh-requirements.txt for the QP test')
+    def test_iteration_limit_retries_smaller_steps_without_accepting_solution(self):
+        mesh = WeldedMesh(self.source,self.preferred,self.budgets,set())
+        info = SimpleNamespace(status_val=7,status='maximum iterations reached',iter=30000,prim_res=.01,dual_res=.01)
+        with patch('osqp.OSQP') as solver, contextlib.redirect_stdout(io.StringIO()):
+            solver.return_value.solve.return_value = SimpleNamespace(info=info)
+            flat,history = fit(mesh,iterations=3)
+        np.testing.assert_array_equal(flat,mesh.initial)
+        self.assertEqual([step['trust'] for step in history],[2.,1.,.5])
+        self.assertFalse(any('alpha' in step for step in history))
 
     @unittest.skipUnless(importlib.util.find_spec('osqp'),'Install mesh-requirements.txt for the QP test')
     def test_rectangle_fit_preserves_full_contact(self):

@@ -1,0 +1,15 @@
+{
+  "all-borders/components.geojson.gz": "ab0254325aaf3fae0d52a3f1748c8cc717f43bf3445e70efd0634f9b3ed41481",
+  "all-borders/review.png": "15bbc9783669f4954bfd9cf3185404fc25a6c3ca86e9764be503276905a0f6aa",
+  "demo/checks.json": "187be2d2c95545c8256b921888f5d1ae76b96836d51713a1cf1830350d88b21a",
+  "demo/cut.geojson": "93db9ef1ef80b9b37568132f313e52985c00bd82d132819bd71cc23d404e210b",
+  "demo/cut.png": "66ad1491b4aef4620b44c02f3a41dde79974d0fef4951562105733e24710e0c1",
+  "demo/cut.svg": "d3f59d4f84dc3cb238bb9209ff5e442b9ad4ea3400c19a6c4a3152679b698fb0",
+  "demo/retained.geojson": "a7095c809d84f5789a27bb038e7480a514a254e14ef8ab3bbd11c16eaa18ee23",
+  "demo/retained.png": "566d66a700d2f5a990a5653b6d6f8d6ce159bc077ecf6014119289f7bf5dd616",
+  "demo/retained.svg": "188e3cf4514f51840e83e3d7bf518526d787b82211e6053ca88a26c92e503c4b",
+  "experiment.json": "4eab835d88a4b3483abfa09c7cc2cd8d2a4ad613ebcec69d6fd3ada1e77660b6",
+  "index.html": "132eece0fd6156d094c130d16730b2a4a85960488960975cdcbdfc740efff257",
+  "sparse-cuts/components.geojson.gz": "ca5b1813895d5bf2a1fd5d578abffe7c5ec34c3415bca7a09f227b17f48151d9",
+  "sparse-cuts/review.png": "8faf797fa82c6cae4397a03aebaf27ecfa8f4ef9b6c6ada459d897776ae5010a"
+}
