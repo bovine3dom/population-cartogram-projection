@@ -204,7 +204,8 @@ def run(root, output, iterations=250, shape_weight=.1, optimizer='L-BFGS-B'):
         geometry.write_text(json.dumps(dict(type='FeatureCollection', features=[dict(type='Feature', properties=dict(component_id=c), geometry=mapping(g)) for c,g in sorted(shapes.items())]), separators=(',', ':'))+'\n')
         case['geometry_sha256'] = digest(geometry)
         draw(folder/'review.svg', shapes, rows, f'Independent-shape assembly: {name}',
-             f'Regional contact-only prototype. Overlap {checks["total_overlap"]:.2f} tile areas; maximum required gap {checks["maximum_required_gap"]:.2f} tile widths.')
+             f'Regional contact-only prototype. Overlap {checks["total_overlap"]:.2f} tile areas; maximum required gap {checks["maximum_required_gap"]:.2f} tile widths.',
+             method='Independent Kontur guides; area-preserving affine assembly.')
         subprocess.run(['rsvg-convert', str(folder/'review.svg'), '-o', str(folder/'review.png')], check=True)
         save()
     return report
