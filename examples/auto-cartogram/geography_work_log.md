@@ -1536,3 +1536,21 @@ Added optional sea flow to the local model. Non-lake empty cells must connect
 to exterior water. A final flood fill also checks for newly enclosed water.
 This tests the unnamed holes found between Norway and Sweden and near Åland.
 All 325 tests pass. The sea-flow trial is in progress. No current-best change.
+
+Completed `coarse90-nordic-sea-v1`. The local solver reaches optimality. It removes
+three unnamed enclosed-water cells relative to the previous Nordic trial.
+Independent global checks find no new enclosed-water cells, extra inland coast,
+or lost coastal access. Only the three Nordic components and Saimaa change.
+All lake counts and shore checks pass. Borders remain at 68 missing and 34 false.
+Checked the final enlarged Nordic image and Europe. Finland's lake extension is
+removed. Norway's narrow section and the missing Russian borders remain.
+Published `results/geography/coarse90-repairs/nordic-lakes-v1/index.html` with
+before-and-after images, alternate lake placement, run records, and downloads.
+The lake move is a sensitivity test, not a source-verified geographic fit.
+Do not apply the unnamed-water rule globally without source-water checks.
+A further control keeps Saimaa fixed and adds sea connectivity directly to
+the previous Nordic fit. It removes the local unnamed holes but retains the
+lake extension and a long water channel beside Norway. Checked its enlarged
+image and added it to the comparison page. The control reaches local optimality.
+Also checked the review page in headless Chromium.
+No current-best or H3-MON change. All 325 tests pass. No trial jobs remain.

@@ -235,3 +235,55 @@ record the trial code. The review includes run records, land and lake downloads,
 and comparison checks. All 317 tests pass. The current best and H3-MON exports
 are unchanged. The next shape experiment should test the group placement and
 lake placement together. Paraguay still needs an earlier coastal-cover repair.
+
+## Interior lake exchange and sea connectivity
+
+Review: `results/geography/coarse90-repairs/nordic-lakes-v1/index.html`.
+The final trial is `coarse90-nordic-sea-v1`. It starts from the previous Nordic
+trial, not from the current best. It is not approved for production.
+
+`move_interior_lake.py` tests a rigid move inside a single shore component.
+It exchanges water and land. The old lake cells become land, and the same
+number of interior land cells become water. The lake shape, country tile
+budget, country borders, and other lake shores stay fixed. The tool rejects
+shared or exposed shores, overlaps, and disconnected countries. It does not
+estimate a new lake position from source geography.
+
+Four nonzero interior moves fit within five cells of Saimaa in the previous
+Nordic result. The shortest is three cells west and two north. It creates
+`coarse90-saimaa-seed-v1`. The next experiment moves three west and three north,
+creating `coarse90-saimaa-seed-v2`. Both are refitted with the same Nordic group,
+source templates, margin 12, expansion 1, reach 2, perimeter cost 0.4, and
+squared-distance cost 0.3. Both local fits reach optimality within 90 seconds.
+Both remove Finland's long lake extension. The shorter move is selected.
+
+A further fit starts from `coarse90-saimaa-fit-v1`. It uses the same shape
+settings, a 120-second limit, and `--sea-connected`. Continuous water flow
+requires non-lake empty cells in the window to reach the exterior sea. Recorded
+lake cells remain empty and are excluded from this flow. A final flood fill
+rejects newly enclosed water inside or outside the window. This trial reaches
+optimality within its local model.
+
+A control fit, `coarse90-nordic-sea-fixed-lake-v1`, starts directly from the
+previous Nordic result with the same sea-flow and shape settings. It leaves
+Saimaa fixed. It removes the local unnamed holes, but retains Finland's lake
+extension and a long water channel beside Norway. This control also reaches
+local optimality. Fewer enclosed holes alone do not prove better geography.
+
+Compared with `coarse90-nordic-expansion-v6`, only the three Nordic components
+and Saimaa change. The lake moves from (508, 474) to (505, 476). All 55,000 land
+tiles retain exact component counts. All 481 components remain connected.
+All 45 lakes retain their IDs and 220 empty cells. Shore checks pass. There are
+no lost true borders, new false borders, or coast-access regressions.
+
+Three unnamed enclosed-water cells disappear: (494, 476), (495, 476), and
+(497, 467). No new enclosed-water cells appear globally. Global unnamed water
+falls from 376 to 373 cells. These counts are not counts of defective lakes.
+Unnamed water can represent real features. Check source water before applying
+this rule outside a reviewed local area.
+
+Visually checked both lake trials, the final Nordic detail, and Europe.
+Finland's extension is removed. Norway's narrow northern section remains.
+The Nordic group still lacks its Russian borders. Paraguay is unchanged.
+Snapshots `coarse90-repair-code-22` and `coarse90-repair-code-23` retain the trial
+code. All 325 tests pass. The current best and H3-MON exports are unchanged.
