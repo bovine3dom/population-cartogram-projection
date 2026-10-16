@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fresh shapes: Equal Earth and Mercator</title>
+<style>body{font:17px/1.5 system-ui;max-width:1900px;margin:auto;padding:24px;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#165a9e}.warning{border-left:5px solid #a54;padding-left:16px}</style>
+<h1>Fresh shapes: Equal Earth and Mercator</h1>
+<p>Each row compares a source outline, fresh tiles, and the current lake layout.
+The five panels have the same area and display scale. Each country has its own display scale.
+North is up. All shapes are centred. There is no world placement in this test.</p>
+<p><strong>Population budgets are identical for both projections.</strong> Mercator changes the shape target,
+not the number of tiles. The calculation uses spherical Mercator without latitude clipping.
+It rejects the poles. See the <a href="https://proj.org/en/stable/operations/projections/merc.html#spherical-form">PROJ formula</a>.</p>
+<p class="warning">Diagnostic only. Each row shows the largest component, not all islands.
+Fresh tile growth does not preserve lake holes. The source polygons used here do not contain the separately
+inserted lake cells. Do not use these templates as a replacement map. The published H3-MON map is unchanged.</p>
+<p><a href="metrics.json">Measurements and input hashes</a> · <a href="templates.csv.gz">Fresh tile coordinates</a> ·
+<a href="../../../geography_work_log.md">Work log</a> · <a href="../regional-release/index.html">Previous regional-move test</a></p>
+<h2>Russia</h2>
+<p>Mercator gives a taller, less flattened starting outline. Both fresh tile shapes retain more of the
+source outline than the current layout. Other components, including those across the map seam, are not shown.</p>
+<a href="RUS.png"><img src="RUS.png" alt="Russia: Equal Earth outline and tiles, Mercator outline and tiles, current shape"></a>
+<h2>China</h2>
+<p>Both projections retain a recognizable source shape before placement. The current layout differs much
+more than the two starting outlines differ from each other.</p>
+<a href="CHN.png"><img src="CHN.png" alt="China: five-panel projection and shape comparison"></a>
+<h2>India</h2>
+<p>Equal Earth gives a taller outline. Mercator gives a wider outline. Both fresh tile shapes retain the
+peninsula and northeastern extension. The current shape has lost much of that outline.</p>
+<a href="IND.png"><img src="IND.png" alt="India: five-panel projection and shape comparison"></a>
+<h2>Canada</h2>
+<p>The largest component has 203 tiles; the country has 259 in total. This limits coast detail.
+Both fresh shapes retain Hudson Bay better than the current layout. The Arctic islands are not shown,
+so this is not a complete test of Canada's recognition.</p>
+<a href="CAN.png"><img src="CAN.png" alt="Canada mainland: five-panel projection and shape comparison"></a>
+<h2>Interpretation</h2>
+<p>This test shows that recognizable shapes are possible at these component budgets before placement.
+It does not identify which earlier pipeline stage caused each defect. It also does not show that these
+shapes will fit together without distortion. Overlap scores use a different target for each projection;
+do not use them to rank the projections against each other.</p>
+<p>The next test must start from fresh shapes, keep lakes empty, and fit neighbouring shapes together.
+It must permit selected border losses when they reduce shape distortion. Moving the old distorted
+shapes apart cannot achieve this.</p>
+<h2>Reproduce</h2>
+<pre>output/auto-cartogram/geometry-env/bin/python examples/auto-cartogram/review_projection_shapes.py \
+  output/auto-cartogram/world-55000-dissolved-input \
+  output/auto-cartogram/geography-margin1-lake-vacancies-final \
+  output/auto-cartogram/world-dissolved/polygons.geojson \
+  output/auto-cartogram/projection-shapes-new</pre>
+<p>The output directory must be new. Use <code>--countries</code> to select other country IDs.
+The selection controls the diagnostic, not a placement rule.</p>
+</html>

@@ -558,3 +558,31 @@ tile archives, reports, and checksums. Independent archive checks confirm all
 budgets and empty lake cells. The refined mainland Russia–China distance is
 56.92 tile spacings. The widest rigid trial reaches 158.90, but its excessive
 empty space makes it a poor candidate.
+
+## 2026-10-16: fresh shapes from Equal Earth and Mercator
+
+The user correctly noted that rigid regional moves retained the distorted
+shapes. Added `review_projection_shapes.py` to compare fresh shapes before
+placement. It uses the largest represented component of each selected
+country. The default selection is Russia, China, India, and Canada.
+
+Both projections use the same existing component population tile budgets.
+Each projected outline is scaled uniformly to that area. Spherical Mercator
+uses the formula in the PROJ documentation. It does not clip latitude; it
+rejects the poles. This is a diagnostic projection option, not a change to
+the production geometry preparation or population coordinates.
+
+Visually checked all four comparisons. Mercator gives Russia a less flattened
+outline. Both projections retain recognizable China and India shapes before
+placement. Canada has only 203 tiles in its largest component, but the fresh
+shapes still retain Hudson Bay better than the current layout. Arctic islands
+are not in this comparison. The result supports starting from fresh shapes;
+it does not establish that those shapes will fit together.
+
+The growth helper does not preserve lake holes. These diagnostic templates
+must not replace the lake-aware layout. The next placement test needs fresh
+shape targets and explicit empty-lake constraints. All 191 tests pass,
+including four projection tests. Production maps are unchanged.
+
+Gallery: `results/geography/projection-shapes/index.html`. It includes source
+outlines, fresh tiles, current shapes, exact tile archives, and input hashes.

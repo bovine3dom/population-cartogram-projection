@@ -1,0 +1,109 @@
+{
+  "records": [
+    {
+      "country": "RUS",
+      "component": "RUS:b85c5bca1852870f",
+      "tiles": 978,
+      "country_tiles": 1002,
+      "projections": {
+        "Equal Earth": {
+          "source_holes": 0,
+          "fresh_outline_iou": 0.9160238640118936,
+          "current_outline_iou": 0.5294824073380652,
+          "source_width": 82.99568864243392,
+          "source_height": 23.518262342312646
+        },
+        "Mercator": {
+          "source_holes": 0,
+          "fresh_outline_iou": 0.9099756396474937,
+          "current_outline_iou": 0.41677614059014545,
+          "source_width": 60.08792168951074,
+          "source_height": 32.48759505071411
+        }
+      }
+    },
+    {
+      "country": "CHN",
+      "component": "CHN:72cd37e37e634df7",
+      "tiles": 9632,
+      "country_tiles": 9738,
+      "projections": {
+        "Equal Earth": {
+          "source_holes": 0,
+          "fresh_outline_iou": 0.9791273162132988,
+          "current_outline_iou": 0.5285526322230581,
+          "source_width": 151.24079774163215,
+          "source_height": 120.96894694094428
+        },
+        "Mercator": {
+          "source_holes": 0,
+          "fresh_outline_iou": 0.9803938112308191,
+          "current_outline_iou": 0.398417388496091,
+          "source_width": 173.2603807072237,
+          "source_height": 121.82013985557624
+        }
+      }
+    },
+    {
+      "country": "IND",
+      "component": "IND:3f0bb94d859b2064",
+      "tiles": 9838,
+      "country_tiles": 9842,
+      "projections": {
+        "Equal Earth": {
+          "source_holes": 0,
+          "fresh_outline_iou": 0.9758419747237312,
+          "current_outline_iou": 0.5496816762190306,
+          "source_width": 142.4216869280462,
+          "source_height": 189.04358515916124
+        },
+        "Mercator": {
+          "source_holes": 0,
+          "fresh_outline_iou": 0.9761969290818158,
+          "current_outline_iou": 0.5974896946989117,
+          "source_width": 166.31544425336773,
+          "source_height": 170.2411662192887
+        }
+      }
+    },
+    {
+      "country": "CAN",
+      "component": "CAN:614ec007a6324298",
+      "tiles": 203,
+      "country_tiles": 259,
+      "projections": {
+        "Equal Earth": {
+          "source_holes": 0,
+          "fresh_outline_iou": 0.8882403543838091,
+          "current_outline_iou": 0.5059389830014949,
+          "source_width": 29.334896947361514,
+          "source_height": 13.50852064045836
+        },
+        "Mercator": {
+          "source_holes": 0,
+          "fresh_outline_iou": 0.8889571508813837,
+          "current_outline_iou": 0.4969422097353907,
+          "source_width": 24.647103719524306,
+          "source_height": 17.223395743037585
+        }
+      }
+    }
+  ],
+  "projection": "Spherical Mercator, radius 1000; no latitude clipping; poles rejected",
+  "limits": [
+    "Largest component only, not a world layout.",
+    "Exact existing component population budgets, not projected-area allocation.",
+    "Fresh growth keeps one connected shape but does not preserve lake holes. Do not use as a production template.",
+    "Centroid-aligned overlap is measured separately against each projection; scores across different targets are not a ranking of projections."
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/geography-margin1-lake-vacancies-final/cells.csv": "399530758e597a5262bd1d39af14783d40324d253423b9cc16f11054ba306a17",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "scripts": {
+    "review_projection_shapes.py": "bced5375a4b6113286b3250ea2a2abc0a8c5c50a66c50dfe86fc7443b336e973",
+    "prepare_flow.py": "b794cd56bfcce5910034d405d600deb257dd01829425a0301c79a0b432678fc2",
+    "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec"
+  }
+}
