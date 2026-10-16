@@ -679,3 +679,24 @@ Earth flow's repeatability difference remains unconfirmed.
 Published images, settings, tile archives, empty lake cells, audits, and
 checksums at `results/geography/margin-1-mercator/index.html`. No production
 mapping changed. Both jobs have stopped. All 201 tests pass.
+
+## Saved island positions with empty lakes
+
+Applied lake insertion to the saved island-position layout, not to the earlier
+mainland layout. The combined map has 55,000 land tiles. All 208 moved island
+components retain their exact saved positions. The same 45 lakes have 220
+empty cells. These cells do not consume country tiles. Lake positions can
+change during local insertion; no global mainland fit was run.
+
+The contact graph matches the saved island layout exactly. Every component
+keeps its tile count and remains connected. The source landmass check finds
+no split groups. Added an integration check and five regression tests. All
+206 tests pass. Visually checked Europe, Africa, New York, and Japan/Korea.
+
+Saved the separate combined baseline and its checks at
+`results/geography/islands-lakes-integrated/index.html` (HTTP 200).
+No sparse-border cuts or production mapping changes are included.
+
+Next, measure the Kazakhstan constraint against OWID. Keep this combined
+baseline unchanged. A larger gap is not a success unless country shapes
+improve. Retain dense borders, island positions, and empty lakes.
