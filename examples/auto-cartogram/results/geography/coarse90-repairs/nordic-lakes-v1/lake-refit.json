@@ -1,0 +1,53 @@
+{
+  "distance_weight": 0.3,
+  "perimeter_weight": 0.4,
+  "templates": "output/auto-cartogram/world-55000-shape-islands",
+  "movable": [
+    "FIN:9332a3268ae7c503",
+    "NOW:a387a8ce67e0d957",
+    "SWE:1320ee42b8e1186c"
+  ],
+  "expansion": 1,
+  "required_extra": [
+    [
+      "FIN:9332a3268ae7c503",
+      "NOW:a387a8ce67e0d957"
+    ]
+  ],
+  "maximum_reach": 2,
+  "connectivity": "rooted continuous flow with independent component checks",
+  "maximum_tiles": 200,
+  "margin": 12,
+  "seconds_per_target": 90.0,
+  "maximum_cuts": 100,
+  "targets": [
+    {
+      "component": "SWE:1320ee42b8e1186c",
+      "accepted": true,
+      "attempts": [
+        {
+          "status": 0,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+        }
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/coarse90-saimaa-seed-v1/cells.csv": "9b99aca6b1d9502c8d9622b1482c091fa9165ad20d7651059b1109d2da2a27e5",
+    "output/auto-cartogram/geography-source-coasts-55000/source-coasts.csv": "74b99a8e34ad48401ffacaa8729698370040acc1f95bf9ffee8667eaa4d14c97",
+    "output/auto-cartogram/coarse90-saimaa-seed-v1/lake-cells.csv": "b9fcc87b65209a0fdf5f01c20ebde714e879ab8e6c37dd507d0ff155cf240ea9",
+    "output/auto-cartogram/world-55000-shape-islands/cells.csv": "3005fca220af87ec54339c7a35660b8f77358fbbe17545f80ed3fc6d546afc85"
+  },
+  "script_sha256": "af34e2722e84f754b907567cfebb2a2eec7d34bcb1622f6d7d66c7a7451e76be",
+  "cells_sha256": "0933d63795ed7cab2f3a6ac172a0f4b01781a2771d5dc1eb26922f089dbd09af",
+  "limits": [
+    "Exact counts. Lakes and their shore cells stay fixed. Expansion is optional.",
+    "With expansion, coast checks can reject a feasible border fit. The solver does not search again.",
+    "Each component keeps one root cell. Search windows and time limits can hide valid repairs.",
+    "Source coast labels use finite samples. They are not a proof of ocean access.",
+    "Only connected integer solutions that retain true borders and add no false borders are accepted.",
+    "Accepted solutions can still have poor shapes. No production approval."
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "trials": {
+    "coarse90-nordic-expansion-v6": {
+      "cells_sha256": "bcd2e87e6f6ff950e8f865b6450e21db7d932dced6f9bea4fa50765aa7cadd74",
+      "unnamed_hole_cells": 376,
+      "nordic_unnamed_holes": [
+        [
+          494,
+          476
+        ],
+        [
+          495,
+          476
+        ],
+        [
+          497,
+          467
+        ]
+      ],
+      "perimeters": {
+        "FIN:9332a3268ae7c503": 52,
+        "SWE:1320ee42b8e1186c": 42,
+        "NOW:a387a8ce67e0d957": 36
+      }
+    },
+    "coarse90-saimaa-fit-v1": {
+      "cells_sha256": "0933d63795ed7cab2f3a6ac172a0f4b01781a2771d5dc1eb26922f089dbd09af",
+      "unnamed_hole_cells": 375,
+      "nordic_unnamed_holes": [
+        [
+          494,
+          476
+        ],
+        [
+          497,
+          467
+        ]
+      ],
+      "perimeters": {
+        "FIN:9332a3268ae7c503": 48,
+        "SWE:1320ee42b8e1186c": 44,
+        "NOW:a387a8ce67e0d957": 38
+      }
+    },
+    "coarse90-nordic-sea-v1": {
+      "cells_sha256": "6b12bb11c36f9ac6b1c0cc8bafc52eac589684e2c9d9de18d8d287d774f4c479",
+      "unnamed_hole_cells": 373,
+      "nordic_unnamed_holes": [],
+      "perimeters": {
+        "FIN:9332a3268ae7c503": 46,
+        "SWE:1320ee42b8e1186c": 42,
+        "NOW:a387a8ce67e0d957": 38
+      }
+    }
+  },
+  "changed_components": [
+    "FIN:9332a3268ae7c503",
+    "NOW:a387a8ce67e0d957",
+    "SWE:1320ee42b8e1186c"
+  ],
+  "changed_lakes": [
+    "water:1159113295"
+  ],
+  "removed_unnamed_holes": [
+    [
+      494,
+      476
+    ],
+    [
+      495,
+      476
+    ],
+    [
+      497,
+      467
+    ]
+  ],
+  "added_unnamed_holes": [],
+  "coast_access_regressions": false
+}

@@ -1,0 +1,19 @@
+{
+  "lake_id": "water:1159113295",
+  "dx": -3,
+  "dy": 2,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/coarse90-nordic-expansion-v6/cells.csv": "bcd2e87e6f6ff950e8f865b6450e21db7d932dced6f9bea4fa50765aa7cadd74",
+    "output/auto-cartogram/coarse90-nordic-expansion-v6/lake-cells.csv": "4bb9a311cad7ceebf26464abcc19ef8980bc8ca0dd87ae8335e02a01ad76139c",
+    "output/auto-cartogram/coarse90-nordic-expansion-v6/lake-placement.json": "044cd8853c37e2b575ad9b966da054f0936a651e02283e54d1a63720984a854d"
+  },
+  "script_sha256": "86bc2382fa50eb638d09bd7ada20a83894711e3aa597ca09115ca145034f43c7",
+  "cells_sha256": "9b99aca6b1d9502c8d9622b1482c091fa9165ad20d7651059b1109d2da2a27e5",
+  "lake_cells_sha256": "b9fcc87b65209a0fdf5f01c20ebde714e879ab8e6c37dd507d0ff155cf240ea9",
+  "limits": [
+    "Interior lake exchange only. Shared-shore lakes cannot move.",
+    "The lake shape, water count, land budget, borders, and other lake shores stay fixed.",
+    "The lake moves in tile coordinates, not from a new source-geography fit. No production approval."
+  ]
+}
