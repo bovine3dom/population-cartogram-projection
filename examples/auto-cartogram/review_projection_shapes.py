@@ -12,17 +12,9 @@ from shapely import affinity, transform, union_all
 from shapely.geometry import box, shape
 
 from geographic_baseline import grow
-from prepare_flow import equal_earth
+from prepare_flow import equal_earth, mercator
 from review_layout import connectivity, load
 from save_review import digest
-
-
-def mercator(points):
-    points = np.asarray(points, dtype=float)
-    if not np.isfinite(points).all() or np.any(np.abs(points[:, 1]) >= 90):
-        raise ValueError('Mercator requires finite coordinates and latitudes inside the poles')
-    lon, lat = np.deg2rad(points).T
-    return np.column_stack((lon, np.arcsinh(np.tan(lat))))*1000
 
 
 def normalize(geometry, area):
