@@ -1,0 +1,2196 @@
+{
+  "cuts": [
+    [
+      "CHN:72cd37e37e634df7",
+      "KAZ:5d6f63a9b9f3c9f9"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "MNG:7ecd8e5b0a42fa66",
+      "RUS:b85c5bca1852870f"
+    ]
+  ],
+  "retained_control_contacts": [
+    [
+      "AFG:cda2af5bb6ea22f0",
+      "CHN:72cd37e37e634df7"
+    ],
+    [
+      "AFG:cda2af5bb6ea22f0",
+      "IRN:3c2b5bd7d999fbee"
+    ],
+    [
+      "AFG:cda2af5bb6ea22f0",
+      "PAK:447ed1858f7b7a5d"
+    ],
+    [
+      "AFG:cda2af5bb6ea22f0",
+      "TJK:d6e62d7f585e085c"
+    ],
+    [
+      "AFG:cda2af5bb6ea22f0",
+      "UZB:448c5653f0be3548"
+    ],
+    [
+      "AZE:0510388634a9edd9",
+      "IRN:3c2b5bd7d999fbee"
+    ],
+    [
+      "AZE:0510388634a9edd9",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "IND:3f0bb94d859b2064"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "KAZ:5d6f63a9b9f3c9f9"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "KGZ:401b8fcdc0eef69c"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "MNG:7ecd8e5b0a42fa66"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "PAK:447ed1858f7b7a5d"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "TJK:d6e62d7f585e085c"
+    ],
+    [
+      "IND:3f0bb94d859b2064",
+      "PAK:447ed1858f7b7a5d"
+    ],
+    [
+      "IRN:3c2b5bd7d999fbee",
+      "PAK:447ed1858f7b7a5d"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "KGZ:401b8fcdc0eef69c"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "UZB:448c5653f0be3548"
+    ],
+    [
+      "KGZ:401b8fcdc0eef69c",
+      "TJK:d6e62d7f585e085c"
+    ],
+    [
+      "KGZ:401b8fcdc0eef69c",
+      "UZB:448c5653f0be3548"
+    ],
+    [
+      "MNG:7ecd8e5b0a42fa66",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "TJK:d6e62d7f585e085c",
+      "UZB:448c5653f0be3548"
+    ]
+  ],
+  "iterations": 160,
+  "shape_weight": 1.0,
+  "simplification": [
+    {
+      "component": "RUS:b85c5bca1852870f",
+      "error": 0.01882804921095671
+    },
+    {
+      "component": "CHN:72cd37e37e634df7",
+      "error": 0.004254842679834447
+    },
+    {
+      "component": "KAZ:5d6f63a9b9f3c9f9",
+      "error": 0.027529822461803022
+    },
+    {
+      "component": "MNG:7ecd8e5b0a42fa66",
+      "error": 0.03907881863307727
+    },
+    {
+      "component": "KGZ:401b8fcdc0eef69c",
+      "error": 0.04646818841640454
+    },
+    {
+      "component": "UZB:448c5653f0be3548",
+      "error": 0.026117977466091236
+    },
+    {
+      "component": "TJK:d6e62d7f585e085c",
+      "error": 0.03590000085616185
+    },
+    {
+      "component": "AFG:cda2af5bb6ea22f0",
+      "error": 0.010606181201999076
+    },
+    {
+      "component": "PAK:447ed1858f7b7a5d",
+      "error": 0.00723921832104768
+    },
+    {
+      "component": "IND:3f0bb94d859b2064",
+      "error": 0.004053594113956671
+    },
+    {
+      "component": "IRN:3c2b5bd7d999fbee",
+      "error": 0.008653121965156774
+    },
+    {
+      "component": "AZE:0510388634a9edd9",
+      "error": 0.03426746009604664
+    }
+  ],
+  "cases": [
+    {
+      "name": "all-borders",
+      "required": [
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "CHN:72cd37e37e634df7"
+        ],
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "IRN:3c2b5bd7d999fbee"
+        ],
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "TJK:d6e62d7f585e085c"
+        ],
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "UZB:448c5653f0be3548"
+        ],
+        [
+          "AZE:0510388634a9edd9",
+          "IRN:3c2b5bd7d999fbee"
+        ],
+        [
+          "AZE:0510388634a9edd9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "IND:3f0bb94d859b2064"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "KGZ:401b8fcdc0eef69c"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "MNG:7ecd8e5b0a42fa66"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "TJK:d6e62d7f585e085c"
+        ],
+        [
+          "IND:3f0bb94d859b2064",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "IRN:3c2b5bd7d999fbee",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "KGZ:401b8fcdc0eef69c"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "UZB:448c5653f0be3548"
+        ],
+        [
+          "KGZ:401b8fcdc0eef69c",
+          "TJK:d6e62d7f585e085c"
+        ],
+        [
+          "KGZ:401b8fcdc0eef69c",
+          "UZB:448c5653f0be3548"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "TJK:d6e62d7f585e085c",
+          "UZB:448c5653f0be3548"
+        ]
+      ],
+      "stages": [
+        {
+          "contact_weight": 1.0,
+          "collision_weight": 20.0,
+          "objective": 4661.753305838506,
+          "success": false,
+          "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+          "iterations": 160,
+          "seconds": 17.57772558974102
+        },
+        {
+          "contact_weight": 10.0,
+          "collision_weight": 200.0,
+          "objective": 20767.356404151637,
+          "success": false,
+          "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+          "iterations": 160,
+          "seconds": 19.550996523350477
+        },
+        {
+          "contact_weight": 100.0,
+          "collision_weight": 2000.0,
+          "objective": 170684.35744771705,
+          "success": false,
+          "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+          "iterations": 160,
+          "seconds": 19.254668991081417
+        }
+      ],
+      "initial_parameters": [
+        [
+          -12.40601741103265,
+          -14.722670450375475,
+          0.0,
+          0.0
+        ],
+        [
+          -56.78945930742867,
+          4.154228608869033,
+          0.0,
+          0.0
+        ],
+        [
+          67.29823885020633,
+          -8.827554830745854,
+          0.0,
+          0.0
+        ],
+        [
+          25.897226221943214,
+          -48.514620707604124,
+          0.0,
+          0.0
+        ],
+        [
+          -37.25254533372002,
+          -18.73855444342537,
+          0.0,
+          0.0
+        ],
+        [
+          -22.54414802600806,
+          24.66739284263842,
+          0.0,
+          0.0
+        ],
+        [
+          -0.6108646548347849,
+          7.244383807947983,
+          0.0,
+          0.0
+        ],
+        [
+          51.964846391563896,
+          21.489425005657395,
+          0.0,
+          0.0
+        ],
+        [
+          -2.2837888310022834,
+          -26.529392449693688,
+          0.0,
+          0.0
+        ],
+        [
+          16.695437201233005,
+          52.83436071206897,
+          0.0,
+          0.0
+        ],
+        [
+          -5.226390484835974,
+          -0.9863915073196665,
+          0.0,
+          0.0
+        ],
+        [
+          -24.742534616083674,
+          7.929393411982446,
+          0.0,
+          0.0
+        ]
+      ],
+      "countries": [
+        {
+          "component": "AFG:cda2af5bb6ea22f0",
+          "country": "AFG",
+          "area": 291.0,
+          "area_error": 2.220446049250313e-16,
+          "geographic_error": 0.44421668168662143,
+          "preferred_error": 0.4433047290811837,
+          "valid": true
+        },
+        {
+          "component": "AZE:0510388634a9edd9",
+          "country": "AZE",
+          "area": 69.00000000000003,
+          "area_error": 0.0,
+          "geographic_error": 0.6817267392204369,
+          "preferred_error": 0.6820513128790078,
+          "valid": true
+        },
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "country": "CHN",
+          "area": 9631.99999999999,
+          "area_error": -1.1102230246251565e-15,
+          "geographic_error": 0.42502987864572817,
+          "preferred_error": 0.4030462520719831,
+          "valid": true
+        },
+        {
+          "component": "IND:3f0bb94d859b2064",
+          "country": "IND",
+          "area": 9838.000000000025,
+          "area_error": 2.6645352591003757e-15,
+          "geographic_error": 0.5112206823670672,
+          "preferred_error": 0.5106363924765969,
+          "valid": true
+        },
+        {
+          "component": "IRN:3c2b5bd7d999fbee",
+          "country": "IRN",
+          "area": 611.0000000000002,
+          "area_error": -3.3306690738754696e-16,
+          "geographic_error": 0.40472512495733004,
+          "preferred_error": 0.42897174046312214,
+          "valid": true
+        },
+        {
+          "component": "KAZ:5d6f63a9b9f3c9f9",
+          "country": "KAZ",
+          "area": 133.99999999999991,
+          "area_error": -1.4432899320127035e-15,
+          "geographic_error": 0.31082226948229097,
+          "preferred_error": 0.3063363753190166,
+          "valid": true
+        },
+        {
+          "component": "KGZ:401b8fcdc0eef69c",
+          "country": "KGZ",
+          "area": 44.999999999999964,
+          "area_error": -6.661338147750939e-16,
+          "geographic_error": 0.5128966270981007,
+          "preferred_error": 0.5398953212347432,
+          "valid": true
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "country": "MNG",
+          "area": 24.000000000000007,
+          "area_error": 2.220446049250313e-16,
+          "geographic_error": 0.5987032267571514,
+          "preferred_error": 0.5990694968321455,
+          "valid": true
+        },
+        {
+          "component": "PAK:447ed1858f7b7a5d",
+          "country": "PAK",
+          "area": 1663.0000000000011,
+          "area_error": -1.1102230246251565e-16,
+          "geographic_error": 0.3993640747439582,
+          "preferred_error": 0.3680350668847522,
+          "valid": true
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "country": "RUS",
+          "area": 978.0000000000005,
+          "area_error": 2.220446049250313e-16,
+          "geographic_error": 0.5616080167700981,
+          "preferred_error": 0.35886545195382136,
+          "valid": true
+        },
+        {
+          "component": "TJK:d6e62d7f585e085c",
+          "country": "TJK",
+          "area": 70.99999999999999,
+          "area_error": 4.440892098500626e-16,
+          "geographic_error": 0.6946939187120078,
+          "preferred_error": 0.6972735430677938,
+          "valid": true
+        },
+        {
+          "component": "UZB:448c5653f0be3548",
+          "country": "UZB",
+          "area": 247.00000000000009,
+          "area_error": -2.220446049250313e-16,
+          "geographic_error": 0.6014537662959394,
+          "preferred_error": 0.3772052949448851,
+          "valid": true
+        }
+      ],
+      "pairs": [
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "AZE:0510388634a9edd9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 15.51744555346792,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "CHN:72cd37e37e634df7",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 5.3893843861553945,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "IND:3f0bb94d859b2064",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 6.586473314522326,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "IRN:3c2b5bd7d999fbee",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.6484543250021759,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 6.5457842684276075,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 1.3988192292021617,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 62.87198409017955,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.3043182550204239,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 21.787528874733134,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.01070623035204161
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "UZB:448c5653f0be3548",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.0023310964051184682
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "CHN:72cd37e37e634df7",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 8.915603765683537,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "IND:3f0bb94d859b2064",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 23.8381184899783,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "IRN:3c2b5bd7d999fbee",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 1.8680494092452031,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 1.9033817986309525,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 20.560102718277797,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 82.2949351456278,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 32.62441834533898,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "RUS:b85c5bca1852870f",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 26.144292604152685,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 22.480467291993957,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 0.0,
+          "overlap": 2.7020778088796527
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "IND:3f0bb94d859b2064",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 11.025261450542201,
+          "overlap": 0.0
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "IRN:3c2b5bd7d999fbee",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 17.342251855664884,
+          "overlap": 0.0
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": true,
+          "cut": true,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 1.190347211709073
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.11984235162578048
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 24.0
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.007155867321874519
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "RUS:b85c5bca1852870f",
+          "required": true,
+          "cut": true,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 1.6891154739982523
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.04260993425638612
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 2.4710229274410898,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "IRN:3c2b5bd7d999fbee",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 0.0,
+          "overlap": 0.030712168127557546
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 35.90049482749726,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 43.09235439060147,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 67.11890754544493,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.14826501960276528
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 60.65056358769006,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 32.678867128518036,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 26.13897307870148,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 12.207226518552465,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 24.39072941156499,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 88.17592184097761,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.04369351028505992
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 36.92548826048701,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 25.247836245942203,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 4.43710047666384,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 4.419956056788368,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 62.593893834334054,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 16.36757303645702,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "RUS:b85c5bca1852870f",
+          "required": true,
+          "cut": true,
+          "source_contact": true,
+          "gap": 10.44222725305619,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 3.9077442316516233,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "UZB:448c5653f0be3548",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 1.4531702552704227
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 45.93330933373219,
+          "overlap": 0.0
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 1.9763199123837003,
+          "overlap": 0.0
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 19.00126405824965,
+          "overlap": 0.0
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 1.8834714448166445
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "UZB:448c5653f0be3548",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.11138095670901789
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 32.69677992882599,
+          "overlap": 0.0
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "RUS:b85c5bca1852870f",
+          "required": true,
+          "cut": true,
+          "source_contact": true,
+          "gap": 7.207430850257912,
+          "overlap": 0.0
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 57.44110736456306,
+          "overlap": 0.0
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 62.77408985832488,
+          "overlap": 0.0
+        },
+        {
+          "a": "PAK:447ed1858f7b7a5d",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 24.30224630335003,
+          "overlap": 0.0
+        },
+        {
+          "a": "PAK:447ed1858f7b7a5d",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 0.0,
+          "overlap": 0.003831187530966812
+        },
+        {
+          "a": "PAK:447ed1858f7b7a5d",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 11.765093361286057,
+          "overlap": 0.0
+        },
+        {
+          "a": "RUS:b85c5bca1852870f",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 15.842012266381193,
+          "overlap": 0.0
+        },
+        {
+          "a": "RUS:b85c5bca1852870f",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 15.963247428917288,
+          "overlap": 0.0
+        },
+        {
+          "a": "TJK:d6e62d7f585e085c",
+          "b": "UZB:448c5653f0be3548",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 1.3174661213237113,
+          "overlap": 0.0
+        }
+      ],
+      "terms": {
+        "shape": 1762.799338367812,
+        "anchor": 2693.5835875579223,
+        "contact": 1020.3874990839291,
+        "overlap": 33.438710516890616,
+        "order": 0.0
+      },
+      "total_overlap": 33.438710516890616,
+      "maximum_required_gap": 26.144292604152685,
+      "required_gaps_over_point_one": 10,
+      "contact_proxy_pass": false,
+      "full_border_fit": false,
+      "parameters": [
+        [
+          -20.43748299474757,
+          -10.994739179160106,
+          -0.43788773802180875,
+          0.25352551085120667
+        ],
+        [
+          -46.70572537880734,
+          12.232211795530317,
+          0.7,
+          -0.4573564980087224
+        ],
+        [
+          87.21495320426963,
+          7.838903129947169,
+          0.27385376269057204,
+          -0.22629012545576696
+        ],
+        [
+          13.095388338704483,
+          -83.01566591864274,
+          0.16875772966459127,
+          -0.41564735954755155
+        ],
+        [
+          -41.45641564986378,
+          -12.087694900660509,
+          -0.31456822242583937,
+          -0.22754259723635265
+        ],
+        [
+          -25.84803960996298,
+          17.530257863608867,
+          0.126132754883834,
+          -0.5403501890348056
+        ],
+        [
+          -3.737052260079649,
+          7.765330125435736,
+          0.4671995898508523,
+          -0.5095224430263049
+        ],
+        [
+          50.92438249213613,
+          27.459473113808407,
+          -0.7,
+          -0.7
+        ],
+        [
+          10.261295903031442,
+          -22.845893451577616,
+          0.15367181751534323,
+          -0.2186245646844631
+        ],
+        [
+          10.366968807823286,
+          47.81730469012795,
+          -0.13293150596253586,
+          0.6584653475165769
+        ],
+        [
+          -5.60638159998083,
+          0.30191002293118296,
+          -0.6651248572213283,
+          -0.38232767584574295
+        ],
+        [
+          -28.071910380552033,
+          7.998714467958613,
+          -0.03686247445377089,
+          0.36046324648910943
+        ]
+      ],
+      "labels": [
+        "AFG:cda2af5bb6ea22f0",
+        "AZE:0510388634a9edd9",
+        "CHN:72cd37e37e634df7",
+        "IND:3f0bb94d859b2064",
+        "IRN:3c2b5bd7d999fbee",
+        "KAZ:5d6f63a9b9f3c9f9",
+        "KGZ:401b8fcdc0eef69c",
+        "MNG:7ecd8e5b0a42fa66",
+        "PAK:447ed1858f7b7a5d",
+        "RUS:b85c5bca1852870f",
+        "TJK:d6e62d7f585e085c",
+        "UZB:448c5653f0be3548"
+      ],
+      "geometry_sha256": "9951a33c6a6227d07e86b6ef23c1f4275f15125a9278930c8e6e6704639d8518"
+    },
+    {
+      "name": "sparse-cuts",
+      "required": [
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "CHN:72cd37e37e634df7"
+        ],
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "IRN:3c2b5bd7d999fbee"
+        ],
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "TJK:d6e62d7f585e085c"
+        ],
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "UZB:448c5653f0be3548"
+        ],
+        [
+          "AZE:0510388634a9edd9",
+          "IRN:3c2b5bd7d999fbee"
+        ],
+        [
+          "AZE:0510388634a9edd9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "IND:3f0bb94d859b2064"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "KGZ:401b8fcdc0eef69c"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "MNG:7ecd8e5b0a42fa66"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "TJK:d6e62d7f585e085c"
+        ],
+        [
+          "IND:3f0bb94d859b2064",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "IRN:3c2b5bd7d999fbee",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "KGZ:401b8fcdc0eef69c"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "UZB:448c5653f0be3548"
+        ],
+        [
+          "KGZ:401b8fcdc0eef69c",
+          "TJK:d6e62d7f585e085c"
+        ],
+        [
+          "KGZ:401b8fcdc0eef69c",
+          "UZB:448c5653f0be3548"
+        ],
+        [
+          "TJK:d6e62d7f585e085c",
+          "UZB:448c5653f0be3548"
+        ]
+      ],
+      "stages": [
+        {
+          "contact_weight": 1.0,
+          "collision_weight": 20.0,
+          "objective": 4411.116166327066,
+          "success": false,
+          "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+          "iterations": 160,
+          "seconds": 17.19738424383104
+        },
+        {
+          "contact_weight": 10.0,
+          "collision_weight": 200.0,
+          "objective": 17349.391580727475,
+          "success": false,
+          "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+          "iterations": 160,
+          "seconds": 17.73988987505436
+        },
+        {
+          "contact_weight": 100.0,
+          "collision_weight": 2000.0,
+          "objective": 145704.77857664193,
+          "success": false,
+          "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+          "iterations": 160,
+          "seconds": 18.262653668876737
+        }
+      ],
+      "initial_parameters": [
+        [
+          -12.40601741103265,
+          -14.722670450375475,
+          0.0,
+          0.0
+        ],
+        [
+          -56.78945930742867,
+          4.154228608869033,
+          0.0,
+          0.0
+        ],
+        [
+          67.29823885020633,
+          -8.827554830745854,
+          0.0,
+          0.0
+        ],
+        [
+          25.897226221943214,
+          -48.514620707604124,
+          0.0,
+          0.0
+        ],
+        [
+          -37.25254533372002,
+          -18.73855444342537,
+          0.0,
+          0.0
+        ],
+        [
+          -22.54414802600806,
+          24.66739284263842,
+          0.0,
+          0.0
+        ],
+        [
+          -0.6108646548347849,
+          7.244383807947983,
+          0.0,
+          0.0
+        ],
+        [
+          51.964846391563896,
+          21.489425005657395,
+          0.0,
+          0.0
+        ],
+        [
+          -2.2837888310022834,
+          -26.529392449693688,
+          0.0,
+          0.0
+        ],
+        [
+          16.695437201233005,
+          52.83436071206897,
+          0.0,
+          0.0
+        ],
+        [
+          -5.226390484835974,
+          -0.9863915073196665,
+          0.0,
+          0.0
+        ],
+        [
+          -24.742534616083674,
+          7.929393411982446,
+          0.0,
+          0.0
+        ]
+      ],
+      "countries": [
+        {
+          "component": "AFG:cda2af5bb6ea22f0",
+          "country": "AFG",
+          "area": 291.0,
+          "area_error": 2.220446049250313e-16,
+          "geographic_error": 0.466882552087608,
+          "preferred_error": 0.465622972121153,
+          "valid": true
+        },
+        {
+          "component": "AZE:0510388634a9edd9",
+          "country": "AZE",
+          "area": 69.00000000000004,
+          "area_error": 2.220446049250313e-16,
+          "geographic_error": 0.6801525590904581,
+          "preferred_error": 0.6804984072279106,
+          "valid": true
+        },
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "country": "CHN",
+          "area": 9631.999999999996,
+          "area_error": -5.551115123125783e-16,
+          "geographic_error": 0.41025253313126464,
+          "preferred_error": 0.37071635214033616,
+          "valid": true
+        },
+        {
+          "component": "IND:3f0bb94d859b2064",
+          "country": "IND",
+          "area": 9838.000000000007,
+          "area_error": 8.881784197001252e-16,
+          "geographic_error": 0.5376631784065248,
+          "preferred_error": 0.5442556605992305,
+          "valid": true
+        },
+        {
+          "component": "IRN:3c2b5bd7d999fbee",
+          "country": "IRN",
+          "area": 611.0000000000006,
+          "area_error": 2.220446049250313e-16,
+          "geographic_error": 0.4559940779801105,
+          "preferred_error": 0.47590160398596504,
+          "valid": true
+        },
+        {
+          "component": "KAZ:5d6f63a9b9f3c9f9",
+          "country": "KAZ",
+          "area": 134.00000000000003,
+          "area_error": -6.661338147750939e-16,
+          "geographic_error": 0.2893166773307959,
+          "preferred_error": 0.2967468504623688,
+          "valid": true
+        },
+        {
+          "component": "KGZ:401b8fcdc0eef69c",
+          "country": "KGZ",
+          "area": 44.99999999999998,
+          "area_error": -3.3306690738754696e-16,
+          "geographic_error": 0.5122318393583363,
+          "preferred_error": 0.5428919050687064,
+          "valid": true
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "country": "MNG",
+          "area": 24.000000000000007,
+          "area_error": 2.220446049250313e-16,
+          "geographic_error": 0.03907769305122866,
+          "preferred_error": 6.075042232489558e-06,
+          "valid": true
+        },
+        {
+          "component": "PAK:447ed1858f7b7a5d",
+          "country": "PAK",
+          "area": 1662.9999999999993,
+          "area_error": -1.2212453270876722e-15,
+          "geographic_error": 0.3899134692438797,
+          "preferred_error": 0.32408747786621195,
+          "valid": true
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "country": "RUS",
+          "area": 978.0000000000015,
+          "area_error": 1.1102230246251565e-15,
+          "geographic_error": 0.5904285994823455,
+          "preferred_error": 0.3995424429457506,
+          "valid": true
+        },
+        {
+          "component": "TJK:d6e62d7f585e085c",
+          "country": "TJK",
+          "area": 70.99999999999994,
+          "area_error": -2.220446049250313e-16,
+          "geographic_error": 0.7011175629293329,
+          "preferred_error": 0.7036450823640199,
+          "valid": true
+        },
+        {
+          "component": "UZB:448c5653f0be3548",
+          "country": "UZB",
+          "area": 247.00000000000006,
+          "area_error": -3.3306690738754696e-16,
+          "geographic_error": 0.6686231831397028,
+          "preferred_error": 0.496556762924409,
+          "valid": true
+        }
+      ],
+      "pairs": [
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "AZE:0510388634a9edd9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 15.151562691475446,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "CHN:72cd37e37e634df7",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 5.1517118659670444,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "IND:3f0bb94d859b2064",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 7.967526906137006,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "IRN:3c2b5bd7d999fbee",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.02565778468570528
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 6.486825831538501,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 0.38958440937289396,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 58.238074091250574,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 1.3396591898667656,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 22.103586507903294,
+          "overlap": 0.0
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.11098927887243587
+        },
+        {
+          "a": "AFG:cda2af5bb6ea22f0",
+          "b": "UZB:448c5653f0be3548",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.006968377168073266
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "CHN:72cd37e37e634df7",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 9.646669356573645,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "IND:3f0bb94d859b2064",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 33.85386701192159,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "IRN:3c2b5bd7d999fbee",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.04298683566855746
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 2.0657915279358687,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 18.769309670602482,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 78.46216554742662,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 32.25964327691641,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "RUS:b85c5bca1852870f",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 25.842970865044833,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 21.518582638075223,
+          "overlap": 0.0
+        },
+        {
+          "a": "AZE:0510388634a9edd9",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 0.0,
+          "overlap": 3.9446943330434143
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "IND:3f0bb94d859b2064",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 8.950390898423988,
+          "overlap": 0.0
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "IRN:3c2b5bd7d999fbee",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 16.30476527701868,
+          "overlap": 0.0
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": false,
+          "cut": true,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.4770735355952292
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.23814756974411874
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 24.000000000000004
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.024154886305154118
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": true,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.4193675038642032
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.006577790601739533
+        },
+        {
+          "a": "CHN:72cd37e37e634df7",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 1.6149372907729502,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "IRN:3c2b5bd7d999fbee",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 0.7859005704476544,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 42.14264541378771,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 45.5410539603666,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 72.91150189743995,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.007686716085513941
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 65.380537367668,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 36.92120042954666,
+          "overlap": 0.0
+        },
+        {
+          "a": "IND:3f0bb94d859b2064",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 27.296587065446396,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "KAZ:5d6f63a9b9f3c9f9",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 11.288394971488774,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 24.101368873336558,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 84.71380950590266,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.8534840926475527,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 36.30680620657427,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 25.675543066266656,
+          "overlap": 0.0
+        },
+        {
+          "a": "IRN:3c2b5bd7d999fbee",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 2.077979366571883,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "KGZ:401b8fcdc0eef69c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 4.473705751748276,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 61.279971953421786,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 18.092628382775747,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": true,
+          "source_contact": true,
+          "gap": 11.27546116955323,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 4.686061512537667,
+          "overlap": 0.0
+        },
+        {
+          "a": "KAZ:5d6f63a9b9f3c9f9",
+          "b": "UZB:448c5653f0be3548",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.4853851509468936
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "MNG:7ecd8e5b0a42fa66",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 42.09260851716657,
+          "overlap": 0.0
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 3.1753219169706837,
+          "overlap": 0.0
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 19.8250566900846,
+          "overlap": 0.0
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 1.86775805953874
+        },
+        {
+          "a": "KGZ:401b8fcdc0eef69c",
+          "b": "UZB:448c5653f0be3548",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 0.0,
+          "overlap": 0.0002855574700857808
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "PAK:447ed1858f7b7a5d",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 29.45809930409252,
+          "overlap": 0.0
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": true,
+          "source_contact": true,
+          "gap": 17.599883655107774,
+          "overlap": 0.0
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 52.7291744008135,
+          "overlap": 0.0
+        },
+        {
+          "a": "MNG:7ecd8e5b0a42fa66",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 59.9585724420494,
+          "overlap": 0.0
+        },
+        {
+          "a": "PAK:447ed1858f7b7a5d",
+          "b": "RUS:b85c5bca1852870f",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 26.582921648809116,
+          "overlap": 0.0
+        },
+        {
+          "a": "PAK:447ed1858f7b7a5d",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 0.0,
+          "overlap": 0.08084581245026926
+        },
+        {
+          "a": "PAK:447ed1858f7b7a5d",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 12.647188168613559,
+          "overlap": 0.0
+        },
+        {
+          "a": "RUS:b85c5bca1852870f",
+          "b": "TJK:d6e62d7f585e085c",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 16.368846156890044,
+          "overlap": 0.0
+        },
+        {
+          "a": "RUS:b85c5bca1852870f",
+          "b": "UZB:448c5653f0be3548",
+          "required": false,
+          "cut": false,
+          "source_contact": false,
+          "gap": 17.06302274751546,
+          "overlap": 0.0
+        },
+        {
+          "a": "TJK:d6e62d7f585e085c",
+          "b": "UZB:448c5653f0be3548",
+          "required": true,
+          "cut": false,
+          "source_contact": true,
+          "gap": 2.2481819005656796,
+          "overlap": 0.0
+        }
+      ],
+      "terms": {
+        "shape": 2012.7187960287586,
+        "anchor": 2437.579829126148,
+        "contact": 802.1002623687465,
+        "overlap": 31.738579192040138,
+        "order": 0.0
+      },
+      "total_overlap": 31.738579192040138,
+      "maximum_required_gap": 25.842970865044833,
+      "required_gaps_over_point_one": 7,
+      "contact_proxy_pass": false,
+      "full_border_fit": false,
+      "parameters": [
+        [
+          -19.744442156418447,
+          -11.083237285315164,
+          -0.4853481386519198,
+          0.34296402973434764
+        ],
+        [
+          -44.91765838641242,
+          12.365328105116943,
+          0.7,
+          -0.3195761604357043
+        ],
+        [
+          82.21164324481087,
+          8.535496392952687,
+          0.23580584354426284,
+          -0.20579565857565668
+        ],
+        [
+          12.918508848139927,
+          -81.5330431352606,
+          0.3769969332993233,
+          -0.18316484123735424
+        ],
+        [
+          -41.24670220270535,
+          -10.654423019422977,
+          -0.361043981871163,
+          -0.21866296081358974
+        ],
+        [
+          -26.08628198593242,
+          18.33349189734976,
+          0.042908410524043414,
+          -0.7
+        ],
+        [
+          -3.4663763888228245,
+          8.238164541673752,
+          0.47213760874483224,
+          -0.632135892080576
+        ],
+        [
+          51.96484626459677,
+          21.8163500932498,
+          3.125527460668358e-06,
+          -1.626867582394531e-07
+        ],
+        [
+          10.852694611248682,
+          -24.849556928793753,
+          0.10762740150370895,
+          -0.21456130898116804
+        ],
+        [
+          10.179386480922144,
+          50.349942036104785,
+          -0.19681140929080287,
+          0.7
+        ],
+        [
+          -5.052207872126794,
+          0.9819913245730048,
+          -0.6776177712160514,
+          -0.3471467514206178
+        ],
+        [
+          -27.613388632012978,
+          7.499649070739983,
+          -0.06544148005964007,
+          0.5868507866141893
+        ]
+      ],
+      "labels": [
+        "AFG:cda2af5bb6ea22f0",
+        "AZE:0510388634a9edd9",
+        "CHN:72cd37e37e634df7",
+        "IND:3f0bb94d859b2064",
+        "IRN:3c2b5bd7d999fbee",
+        "KAZ:5d6f63a9b9f3c9f9",
+        "KGZ:401b8fcdc0eef69c",
+        "MNG:7ecd8e5b0a42fa66",
+        "PAK:447ed1858f7b7a5d",
+        "RUS:b85c5bca1852870f",
+        "TJK:d6e62d7f585e085c",
+        "UZB:448c5653f0be3548"
+      ],
+      "geometry_sha256": "f76cd6a6b4f9e369c5de74c82daa6eeea915697612af2a625ccb53ca05c5c127"
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-mainland-flow/input/geometry.geojson": "4cc7e51c0d38456e6ed53fb0b8ee448c34b6d5244521ca0d5f673adc8aee4564",
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/independent-kontur-flow/RUS/blend-0.9/component.geojson": "cbbb6bfe5842ed8e2fc69e0d9c61675f186e18d57551c840aabfe797b89ff282",
+    "output/auto-cartogram/independent-kontur-flow/experiment.json": "c63d6e44428c0c4e08c3d9ff804ec5c62bc64ea3b1039fe4f4247c643173c329",
+    "output/auto-cartogram/independent-kontur-flow/CHN/blend-0.9/component.geojson": "806dd5b4fe00da5801c8cbb468e8ae49e84001a1337b5171fbb3cf7b60cc721f",
+    "output/auto-cartogram/independent-kontur-flow/KAZ/blend-0.9/component.geojson": "594604c82c082e5c844d2ba7664bd6c8e70790ba79a2f7b4b8db4031218019fb",
+    "output/auto-cartogram/independent-eurasia-neighbours/MNG/blend-0.9/component.geojson": "01e5f9402f6ee874b4132643abf6c3b54fe8f6576571f39641c6d779951900aa",
+    "output/auto-cartogram/independent-eurasia-neighbours/experiment.json": "f47d58c88ab68f18f709b9c57a7d59a4c5bcc261964d407dea242ad88850e913",
+    "output/auto-cartogram/independent-eurasia-neighbours/KGZ/blend-0.9/component.geojson": "ba398829b6df32bf332d957d8300c9a560c919d32bb50d14746e7d7bb38e6a64",
+    "output/auto-cartogram/independent-eurasia-neighbours/UZB/blend-0.9/component.geojson": "18695dd22716e451a98656a2b141e5263ee40a8c7f62279eac470a35fe4718a1",
+    "output/auto-cartogram/independent-eurasia-neighbours/TJK/blend-0.9/component.geojson": "cadf9ad666261a52f6c6c03e1279742fc107dd425b9bee33e8ff038e6d93b7c2",
+    "output/auto-cartogram/independent-eurasia-neighbours/AFG/blend-0.9/component.geojson": "8744c9e2dea5c740f22a858df44c420fe78bbfc0925ada5b61c0ea3ab3362514",
+    "output/auto-cartogram/independent-eurasia-neighbours/PAK/blend-0.9/component.geojson": "22020a319530fb556c50a13c0bc131b030e08f701560dfacb6aac208164b6707",
+    "output/auto-cartogram/independent-kontur-flow/IND/blend-0.9/component.geojson": "32a7ad4f9ff98e8b2bc3ace52667b05bc5d3a63ccaaec0c504e5d15737fd52fe",
+    "output/auto-cartogram/independent-eurasia-neighbours/IRN/blend-0.9/component.geojson": "2f78bc1e73b65c02bcca0befce8312d7296ced79a3b60cfab28506691bb42b77",
+    "output/auto-cartogram/independent-eurasia-neighbours/AZE/blend-0.9/component.geojson": "85ba0942ade8e27761384887ff60faf32cbad78a82d57bff5b6f21fe07801963",
+    "output/auto-cartogram/sparse-border-audit-25-wide/border-population.json": "550eb1329221c7401a2f4699f7785520eb7c05adaa3a749e870bce18acabac58"
+  },
+  "script_sha256": "0fe7e31f71680298439f24451f188483f6889810af35b3f4d2e9d94c14817edc",
+  "limits": [
+    "Regional diagnostic, not a world layout. External neighbours are omitted.",
+    "Per-country area-preserving affine stretch and shear, plus translation. No shared flow field.",
+    "Retained contacts use a soft nearest-boundary distance penalty, not matched full-border curves.",
+    "Cuts have no contact penalty, no target gap, and no boundary matching. General collision and ordering apply to all pairs.",
+    "Affine freedom is limited: log stretch and shear are each bounded to [-0.7, 0.7]. No independent rotation.",
+    "Exact polygon overlaps and residual gaps are reported. A small objective is not proof of feasibility.",
+    "Simplified shapes are uniformly rescaled to their original tile-area budgets. Population is not reassigned."
+  ]
+}

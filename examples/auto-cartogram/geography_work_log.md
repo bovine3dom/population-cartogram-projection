@@ -1012,3 +1012,31 @@ country size for better numerical conditioning. Also started an SLSQP comparison
 with the same corrected objective and initial states. No failed trial is promoted.
 These are solver and contact-model tests, not evidence that sparse cuts cannot
 work with a full boundary deformation model.
+
+Added an explicit-constraint polish test. Both cases start from the same saved
+all-borders pose. Requested limits are 0.05 tile widths per retained gap and
+0.001 tile areas of total overlap. An earlier polish launch was stopped before
+completion to replace different starting poses with this common start. Neither
+interrupted timing or polish launch is published as a completed pair.
+
+Six paired trials completed. None passes even the looser contact-only review
+limits (0.1 maximum gap, 0.01 total overlap). The final control has overlap
+0.1705 and maximum required gap 2.459. The final cut case has overlap 0.4850 and
+maximum required gap 0.580. Its two excessive retained gaps are Azerbaijan–Iran
+and Kazakhstan–Uzbekistan. Both final optimizations stopped without success.
+
+The cuts now open real space: Russia–Kazakhstan has a 7.685-tile gap,
+China–Kazakhstan 7.047, and Russia–Mongolia 0.687. Russia–China still touches or
+slightly overlaps. Removal of a relationship does not require a gap. The cut case
+improves Russia's geographic outline score slightly, but worsens China, India,
+and Kazakhstan. This is not a successful shape improvement or border fit.
+
+Visually checked the initial failures, corrected intermediate results, and both
+published final panels. India narrows and Central Asian shapes remain too thin.
+Published all six pairs with explicit failure labels, residuals, geometry, and
+input hashes at `results/geography/independent-assembly/index.html`.
+See `independent-assembly.md` for commands, limits, and the next model.
+
+The next step needs local boundary deformation and explicit matching along
+retained borders, rather than more whole-country affine stretch. Current best
+and production exports remain unchanged. All jobs have stopped.

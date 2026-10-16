@@ -3,10 +3,12 @@ from pathlib import Path
 import unittest
 
 import numpy as np
+from scipy.optimize import minimize
 from shapely import box
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from assemble_independent import Assembly, matrix
+from polish_independent_assembly import constraints
 
 
 class IndependentAssemblyTest(unittest.TestCase):
@@ -71,6 +73,37 @@ class IndependentAssemblyTest(unittest.TestCase):
         flat[1,0] = 4.
         self.assertAlmostEqual(state.terms(flat.ravel())['contact'], 4.)
         self.assertEqual(state.terms(state.start), expected)
+
+    def test_cut_removes_explicit_gap_constraint(self):
+        retained = Assembly(self.shapes, self.centres, {('a','b')})
+        released = Assembly(self.shapes, self.centres, set())
+        before = constraints(retained, retained.start, retained.required)
+        after = constraints(released, released.start, released.required)
+        self.assertEqual(len(before), 2)
+        self.assertEqual(len(after), 1)
+        self.assertAlmostEqual(before[0], .05-3)
+        self.assertAlmostEqual(before[-1], after[-1])
+        self.assertGreater(after[0], 0)
+
+    def test_explicit_overlap_constraint_remains_for_cut(self):
+        state = Assembly(self.shapes, self.centres, set())
+        flat = state.start.reshape(-1,4).copy()
+        flat[1,0] = 1.
+        self.assertLess(constraints(state, flat.ravel(), set())[0], 0)
+        with self.assertRaisesRegex(ValueError, 'policy'):
+            constraints(state, flat.ravel(), {('a','b')})
+
+    def test_two_country_constrained_fit_and_release(self):
+        for required in [{('a','b')}, set()]:
+            state = Assembly(self.shapes, self.centres, required)
+            result = minimize(lambda p: state.objective(p, 100, 2000, .1), state.start,
+                              method='SLSQP', bounds=[b for _ in self.shapes for b in [(None,None),(None,None),(0,0),(0,0)]],
+                              constraints=[dict(type='ineq', fun=lambda p: constraints(state,p,required))],
+                              options=dict(maxiter=100, ftol=1e-9))
+            self.assertTrue(result.success, result.message)
+            self.assertGreaterEqual(min(constraints(state,result.x,required)), -1e-6)
+            if not required:
+                np.testing.assert_allclose(result.x,state.start,atol=1e-6)
 
     def test_rejects_unknown_contact(self):
         with self.assertRaises(ValueError):
