@@ -12,7 +12,7 @@ from review_layout import load, read_csv
 from save_review import digest
 
 
-def separate(tiles, required, blocked=(), radius=4, maximum_tiles=550):
+def separate(tiles, required, blocked=(), radius=4, maximum_tiles=550, restore_contacts=False):
     result={c:set(p) for c,p in tiles.items()}
     owners={p:c for c,points in result.items() for p in points}
     blocked=set(blocked);moves=[]
@@ -22,40 +22,44 @@ def separate(tiles, required, blocked=(), radius=4, maximum_tiles=550):
         if len(result[c])>maximum_tiles:continue
         actual=contacts(owners)
         current={p for p in actual if c in p}
-        if not current-required:continue
+        missing={p for p in required-actual if c in p}
+        if not current-required and not (restore_contacts and missing):continue
         outside={p:d for p,d in owners.items() if d!=c}
+        occupied=outside.keys() | blocked
         candidates=[]
         for dx,dy in shifts:
             moved={(x+dx,y+dy) for x,y in result[c]}
-            if moved & (outside.keys() | blocked):continue
-            trial_owner=outside|{p:c for p in moved}
-            if any(owners.get(q)!=trial_owner.get(q) for p in blocked for q in adjacent(p)):continue
+            if moved & occupied:continue
+            if any(owners.get(q)!=outside.get(q,c if q in moved else None)
+                   for p in blocked for q in adjacent(p)):continue
             boundary={tuple(sorted((c,outside[q]))) for p in moved for q in adjacent(p) if q in outside}
             if (current & required)-boundary or boundary-required-current:continue
-            if len(boundary-required)>=len(current-required):continue
-            candidates.append(((len(boundary-required),dx*dx+dy*dy,dx,dy),moved,boundary))
+            gains=len((boundary & required)-current) if restore_contacts else 0
+            if len(boundary-required)>=len(current-required) and not gains:continue
+            candidates.append(((-gains,len(boundary-required),dx*dx+dy*dy,dx,dy),moved,boundary))
         if not candidates:continue
         score,moved,boundary=min(candidates,key=lambda x:x[0])
         result[c]=moved;owners=outside|{p:c for p in moved}
-        moves.append(dict(component=c,dx=score[2],dy=score[3],removed_false=sorted(current-required-boundary)))
+        moves.append(dict(component=c,dx=score[-2],dy=score[-1],removed_false=sorted(current-required-boundary),
+                          gained_true=sorted((boundary & required)-current)))
     return result,moves
 
 
-def run(inputs,layout,output,radius=4):
+def run(inputs,layout,output,radius=4,restore_contacts=False):
     if output.exists() or radius<1:raise ValueError('Use a new output and positive radius')
     rows,tiles,owners=load(inputs,layout)
     if any(len(tiles[c])!=int(rows[c]['tiles']) for c in tiles):raise ValueError('Exact counts required')
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
     lakes=layout/'lake-cells.csv'
     water={(int(r['x']),int(r['y'])) for r in read_csv(lakes)} if lakes.exists() else set()
-    result,moves=separate(tiles,required,water,radius)
+    result,moves=separate(tiles,required,water,radius,restore_contacts=restore_contacts)
     output.mkdir(parents=True)
     with (output/'cells.csv').open('w',newline='') as stream:
         writer=csv.writer(stream);writer.writerow(['component_id','x','y'])
         for c,points in sorted(result.items()):writer.writerows((c,x,y) for x,y in sorted(points))
     for name in ['lake-cells.csv','lake-placement.json']:
         if (layout/name).exists():shutil.copyfile(layout/name,output/name)
-    record=dict(radius=radius,moves=moves,
+    record=dict(radius=radius,restore_contacts=restore_contacts,moves=moves,
                 inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',layout/'cells.csv']+([lakes] if lakes.exists() else [])},
                 script_sha256=digest(Path(__file__)),cells_sha256=digest(output/'cells.csv'),
                 limits=['Short rigid translations only. All true contacts are retained. No new false contacts.',
@@ -70,4 +74,5 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ['inputs','layout','output']:parser.add_argument(name,type=Path)
     parser.add_argument('--radius',type=int,default=4)
+    parser.add_argument('--restore-contacts',action='store_true')
     run(**vars(parser.parse_args()))

@@ -36,6 +36,26 @@ class CoarseRepairTests(unittest.TestCase):
         self.assertFalse(moves)
         self.assertEqual(set().union(*result.values()), set().union(*tiles.values()))
 
+    def test_buffer_can_improve_without_an_immediate_coast_change(self):
+        inland = {(2, 2), (2, 3)}
+        tiles = {'a': inland, 'b': {(x, y) for x in range(7) for y in range(7)}-inland}
+        unchanged, moves = repair(tiles, {('a', 'b')}, {'a'})
+        self.assertFalse(moves)
+        self.assertEqual(unchanged, tiles)
+        result, moves = repair(tiles, {('a', 'b')}, {'a'}, buffer=3)
+        self.assertTrue(moves)
+        self.assertIn((3, 3), result['a'])
+        self.assertEqual({c: len(p) for c, p in result.items()}, {c: len(p) for c, p in tiles.items()})
+        self.assertEqual(set().union(*result.values()), set().union(*tiles.values()))
+        self.assertTrue(all(len(pieces(p)) == 1 for p in result.values()))
+        pinned, moves = repair(tiles, {('a', 'b')}, {'a'}, buffer=3, fixed_cells=inland)
+        self.assertFalse(moves)
+        self.assertEqual(pinned, tiles)
+
+    def test_negative_coast_buffer_is_rejected(self):
+        with self.assertRaises(ValueError):
+            repair({'a': {(0, 0)}}, set(), set(), buffer=-1)
+
     def test_short_separation_keeps_borders_and_lake_shores(self):
         tiles = {'a': {(0, 0)}, 'b': {(1, 0), (2, 0)}, 'wrong': {(0, 1)}}
         required = {('a', 'b')}
@@ -45,6 +65,16 @@ class CoarseRepairTests(unittest.TestCase):
         self.assertNotIn((1, -1), owner)
         self.assertTrue(required <= contacts(owner))
         self.assertEqual({c:len(p) for c,p in result.items()}, {c:len(p) for c,p in tiles.items()})
+
+    def test_translation_can_gain_a_border_without_losing_an_existing_one(self):
+        tiles = {'a': {(0, 0)}, 'b': {(1, 0), (2, 0)}, 'c': {(0, 2)}}
+        required = {('a', 'b'), ('a', 'c')}
+        result, moves = separate(tiles, required, radius=1, restore_contacts=True)
+        self.assertTrue(moves)
+        owner = {p: c for c, points in result.items() for p in points}
+        self.assertTrue(required <= contacts(owner))
+        self.assertFalse(contacts(owner)-required)
+        self.assertEqual({c: len(p) for c, p in result.items()}, {c: len(p) for c, p in tiles.items()})
 
     def test_separation_cannot_open_a_lake_to_the_sea(self):
         tiles = {'a': {(x,y) for x in range(3) for y in range(3)}-{(1,1)},

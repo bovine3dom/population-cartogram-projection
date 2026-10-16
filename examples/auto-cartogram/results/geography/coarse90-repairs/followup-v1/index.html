@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Coarse Kontur: repair limits</title>
+<style>body{font:18px system-ui;max-width:1200px;margin:2em auto;padding:0 1em}img{max-width:100%}td,th{padding:.5em;text-align:left}</style>
+<h1>Coarse Kontur: repair limits</h1>
+<p>These are research trials, not approved maps. The current best and H3-MON exports are unchanged. Both trials start from <a href="../mainland-v1/index.html">the mainland repair trial</a>, not from each other.</p>
+<table><tr><th>Trial</th><th>Missing borders</th><th>False borders</th></tr><tr><td>Mainland repair</td><td>69</td><td>34</td></tr><tr><td>Coastal buffer</td><td>67</td><td>34</td></tr><tr><td>Rigid translations</td><td>65</td><td>32</td></tr></table>
+<p>All trials retain 55,000 tiles and exact component budgets. All 481 components remain connected. All 45 lakes retain their 220 empty cells and valid shores. These checks do not prove correct geography.</p>
+<h2>Coastal buffer: Paraguay remains wrong</h2>
+<p>The three-cell buffer allows inland cells to move away from the coast before a sea edge can be removed. There were 158 swaps. No inland component gains sea edges. No coastal component loses all sea access. But Paraguay still has 16 sea edges. Its narrow shape is not repaired. Do not promote this result on border totals alone.</p>
+<p><a href="coast-repair.json.gz">Swap record and input hashes</a></p>
+<img src="buffer-south-america.png" alt="South America after the coastal-buffer trial">
+<h2>Rigid translations: rejected</h2>
+<p>Five components move by at most 12 cells. Four true borders are restored and two false borders are removed. But Ethiopia gains seven sea edges, from 41 to 48. The inland KAB component gains four sea edges, from zero. This is a regression despite the better border totals.</p>
+<p><a href="separation.json">Move record and input hashes</a></p>
+<img src="translation-africa.png" alt="Africa after the rigid-translation trial">
+<h2>Nordic fit</h2>
+<p>A larger local fit remains infeasible with a ten-cell margin and an eight-cell reach limit. This is not proof that all fits are infeasible. With the current shapes, a separate search finds that Norway must move at least 14 cells east and seven cells north to touch both Sweden and Finland. That is not a suitable repair of its geographic position.</p>
+<h2>Next experiment</h2>
+<p>Fit the Nordic group together. Allow its outside boundary to change. Retain exact tile counts, lake shores, and true borders. For Paraguay, preserve connected coastal cover during fragment repair. Do not wait until the final layout to enforce its inland position.</p>
+</html>
