@@ -780,3 +780,32 @@ Added three tests for the outline metric. The original flow-input outline is
 the reference here, not the later lake guide, so scores differ slightly from
 the sparse-border study. All 218 tests pass. The gallery returns HTTP 200.
 The baseline and production mapping remain unchanged.
+
+## Coarse Kontur density inside components
+
+Added `kontur_subregion_flow.py`. It clips each represented mainland component
+into coarse Equal Earth grid patches and assigns matched Kontur H3-5 centre
+population to them. Points outside an outline go to the nearest patch of the
+same component. No country-wide redistribution replaces component membership.
+Patch target areas sum to the existing component tile-area target.
+
+Compare three density blends on identical patch geometry: uniform component
+density, 50% Kontur share, and 90% Kontur share. The remaining area share keeps
+targets positive. This is coarse aggregation with a density floor, not Gaussian
+smoothing. Try 200-unit and 100-unit grids, nominally 1,274 km and 637 km.
+Equal Earth does not preserve distance, so these lengths are only approximate.
+The continuous solver starts at 256 cells on its longer axis and can refine.
+The density grid and solver grid are different settings.
+
+Initial trials exposed two technical limits. The solver CSV parser rejects
+scientific notation. Very small clipped patches also make area fitting unstable.
+Write fixed-point targets, do not subdivide components below 16 tiles, and merge
+patches smaller than one uniform-target tile into a same-component neighbour.
+The first 128-cell solver trials did not converge and are not accepted layouts.
+
+Started matched revised runs with 464 and 858 patches over 189 components.
+They cover 7,221,236,218 people in the existing mainland flow scope. Isolated
+islands are not part of this fit. No production geometry or mapping changes.
+Reference: the cartogram-cpp README and installed CLI help confirm that each
+GeoJSON region can have a separate CSV target area:
+https://github.com/mgastner/cartogram-cpp .
