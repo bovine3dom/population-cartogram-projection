@@ -1476,5 +1476,11 @@ edges in the partition and 16 after repair. These defects remain open.
 Published the candidate, comparisons, audit, records, and cell downloads at
 `results/geography/coarse90-repairs/index.html`. No strategic cuts or H3-MON
 changes. Continued mainland experiments are recorded in `coarse90-repairs.md`.
+Published `results/geography/coarse90-repairs/mainland-v1/index.html` after
+independent tile, contact, and lake-shore checks. This trial has 69 missing and
+34 false contacts. It fixes the Malaysia connection, Sweden's Germany contact,
+and Lithuania's lost coast. It retains the New York correction. Paraguay's
+false coast, the Finland–Norway regression, and other border defects remain.
+Do not promote this trial. All 308 tests pass. No experiment jobs remain active.
 The current-best cell SHA256 remains
 `3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e`.

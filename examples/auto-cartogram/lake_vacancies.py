@@ -58,26 +58,32 @@ class VacancyLayout:
     def ocean_edges(self, c):
         return sum(q in self.exterior for p in self.tiles[c] for q in adjacent(p))
 
-    def attempt(self, path):
+    def attempt(self, path, coastal=False):
         """Slide labels outward; leave only the first path cell empty."""
         if len(path) < 2 or len(set(path)) != len(path) or any(b not in adjacent(a) for a, b in zip(path, path[1:])):
             raise ValueError('Use a simple side-adjacent path')
         start, end = path[0], path[-1]
         if any(p not in self.owners for p in path[:-1]) or end not in self.exterior or end in self.protected_sea:
             return None
-        if any(q in self.exterior for q in adjacent(start)) or not simple_toggle(self.owners, end):
+        beside_sea=any(q in self.exterior for q in adjacent(start))
+        if beside_sea != coastal or not simple_toggle(self.owners, end):
             return None
         labels = [self.owners[p] for p in path[:-1]]
         changes = {p: c for p, c in zip(path[1:], labels) if self.owners.get(p) != c}
         changes[start] = None
         affected = set(labels)
+        if coastal:
+            affected.update(self.owners[q] for p in (start,end) for q in adjacent(p) if q in self.owners)
         if affected & self.fixed:
             return None
         counts = {c: len(self.tiles[c]) for c in affected}
         ocean = {c: self.ocean_edges(c) for c in affected & self.landlocked}
         false_before = self.false_contacts()
+        false_pairs={key for key,count in self.contacts.items() if count>0 and key not in self.required} if coastal else set()
+        coastal_access={c for c in affected-self.landlocked if self.ocean_edges(c)>0} if coastal else set()
         before = self.update(changes)
         self.exterior.remove(end)
+        if coastal:self.exterior.add(start)
         reason = None
         if any(len(self.tiles[c]) != counts[c] for c in affected):
             raise AssertionError('Unbalanced vacancy path')
@@ -85,20 +91,25 @@ class VacancyLayout:
             reason = 'component-split'
         elif any(self.contacts[key] <= 0 for key in self.protected_contacts):
             reason = 'lost-land-border'
-        elif self.false_contacts() > false_before:
+        elif self.false_contacts() > false_before or (coastal and any(count>0 and key not in self.required|false_pairs for key,count in self.contacts.items())):
             reason = 'new-false-border'
+        elif any(self.ocean_edges(c)==0 for c in coastal_access):
+            reason = 'lost-coastal-access'
         elif any(self.ocean_edges(c) > n for c, n in ocean.items()):
             reason = 'new-landlocked-ocean-edge'
         if reason:
             self.update(before)
             self.exterior.add(end)
+            if coastal:self.exterior.remove(start)
             self.rejections[reason] += 1
             return None
-        return dict(before=before, end=end, length=len(path)-1, changed_cells=len(changes))
+        return dict(before=before, end=end, coastal_start=start if coastal else None,
+                    length=len(path)-1, changed_cells=len(changes))
 
     def undo(self, action):
         self.update(action['before'])
         self.exterior.add(action['end'])
+        if action.get('coastal_start') is not None:self.exterior.remove(action['coastal_start'])
 
     def paths(self, target, maximum_cost=96, limit=64):
         """Offer short routes to exterior water, preferring fewer border shifts."""

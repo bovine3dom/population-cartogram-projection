@@ -10,6 +10,7 @@ import time
 import numpy as np
 from scipy.optimize import Bounds, LinearConstraint, milp
 from scipy.sparse import coo_matrix
+from scipy.spatial import cKDTree
 
 from compact_regions import adjacent
 from dock_true_borders import contacts
@@ -19,7 +20,7 @@ from review_layout import load, read_csv
 from save_review import digest
 
 
-def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20):
+def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, maximum_reach=None, fixed_cells=(), required_extra=()):
     owner = {p:c for c, points in tiles.items() for p in points}
     ocean = exterior_water(owner)
     xy = np.array(sorted(tiles[target]))
@@ -38,11 +39,15 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20):
         add({indices[p,c]:1 for c in labels},1,1)
     for c in labels:
         add({indices[p,c]:1 for p in points},len(tiles[c]&window),len(tiles[c]&window))
+    for p in window & set(fixed_cells):
+        add({indices[p,owner[p]]:1},1,1)
     # A fixed root permits valid connectivity cuts. Prefer an interior cell.
     roots = {}
     for c in labels:
         outside = tiles[c]-window
-        roots[c] = min(outside) if outside else max(sorted(tiles[c]),key=lambda p:sum(q in tiles[c] for q in adjacent(p)))
+        centre=np.mean(sorted(tiles[c]),axis=0)
+        roots[c] = min(outside) if outside else max(sorted(tiles[c]),key=lambda p:(
+            sum(q in tiles[c] for q in adjacent(p)), -sum((p[i]-centre[i])**2 for i in (0,1))))
         if roots[c] in window:
             add({indices[roots[c],c]:1},1,1)
     actual = contacts(owner)
@@ -56,8 +61,10 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20):
                 left,lc=term(p,a);right,rc=term(q,b)
                 add(left|right,hi=1-lc-rc)
     # Keep each true border that currently exists. Contacts outside the window are fixed.
-    for a,b in sorted(required & actual):
-        if a not in labels and b not in labels:
+    required_extra=set(required_extra)
+    if not required_extra<=required:raise ValueError('Extra contacts must be source borders')
+    for a,b in sorted((required & actual)|required_extra):
+        if a not in labels and b not in labels and (a,b) not in required_extra:
             continue
         if any(owner.get(q)==b and p not in window and q not in window for p in tiles[a] for q in adjacent(p)):
             continue
@@ -80,6 +87,36 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20):
             add({indices[p,c]:n for p,n in weights.items()},hi=bound)
         elif c not in inland and (c==target or original_coasts[c]) and not (tiles[c]&coast-window):
             add({indices[p,c]:1 for p in coast & window},lo=1)
+    # Continuous flow from a fixed root enforces connectivity in the first solve.
+    bounds_upper=[1.]*len(objective);integrality=[1]*len(objective)
+    if maximum_reach is not None:
+        for c in labels:
+            distances=cKDTree(sorted(tiles[c])).query(points,p=1)[0]
+            for p,d in zip(points,distances):
+                if d>maximum_reach:bounds_upper[indices[p,c]]=0.
+    for c in labels:
+        outside_parts=pieces(tiles[c]-window)
+        fixed_nodes={p:('outside',i) for i,part in enumerate(outside_parts) for p in part}
+        nodes=points+[('outside',i) for i in range(len(outside_parts))]
+        root=roots[c] if roots[c] in window else fixed_nodes[roots[c]]
+        demand=len(tiles[c]&window)+len(outside_parts)-1
+        if demand<=0:continue
+        edges=set()
+        for p in points:
+            for q in adjacent(p):
+                other=q if q in window else fixed_nodes.get(q)
+                if other is not None and bounds_upper[indices[p,c]] and (other not in window or bounds_upper[indices[other,c]]):
+                    edges.add((p,other));edges.add((other,p))
+        balances={p:{} for p in nodes}
+        for a,b in sorted(edges,key=repr):
+            f=len(objective);objective.append(0.);bounds_upper.append(float(demand));integrality.append(0)
+            balances[a][f]=-1;balances[b][f]=1
+            for p in (a,b):
+                if p in window:add({f:1,indices[p,c]:-demand},hi=0)
+        for p,values in balances.items():
+            if p==root:add(values,-demand,-demand)
+            elif p in window:add(values|{indices[p,c]:-1},0,0)
+            else:add(values,1,1)
     started=time.monotonic();records=[]
     for turn in range(maximum_cuts):
         remaining=seconds-(time.monotonic()-started)
@@ -88,11 +125,14 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20):
         for row,values in enumerate(constraints):
             for col,value in values.items():rr.append(row);cc.append(col);vv.append(value)
         matrix=coo_matrix((vv,(rr,cc)),shape=(len(constraints),len(objective))).tocsc()
-        solved=milp(np.array(objective),integrality=np.ones(len(objective)),bounds=Bounds(0,1),
+        solved=milp(np.array(objective),integrality=np.array(integrality),bounds=Bounds(0,bounds_upper),
                     constraints=LinearConstraint(matrix,lower,upper),options={'time_limit':remaining,'mip_rel_gap':0})
         records.append(dict(status=int(solved.status),message=solved.message))
-        if solved.x is None or np.max(np.abs(solved.x-np.rint(solved.x)))>1e-5:break
-        values=matrix@np.rint(solved.x)
+        if solved.x is None:break
+        integer=np.array(integrality,dtype=bool)
+        if np.max(np.abs(solved.x[integer]-np.rint(solved.x[integer])))>1e-5:break
+        candidate=solved.x.copy();candidate[integer]=np.rint(candidate[integer])
+        values=matrix@candidate
         if np.any(values<np.asarray(lower)-1e-5) or np.any(values>np.asarray(upper)+1e-5):break
         result={c:set(p) for c,p in tiles.items()}
         for p in points:
@@ -114,7 +154,7 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20):
         after={p:c for c,points in result.items() for p in points}
         if len(after)!=len(owner) or any(len(result[c])!=len(tiles[c]) for c in tiles):raise AssertionError('Counts differ')
         new=contacts(after)
-        if (required & actual)-new or new-required-actual:raise AssertionError('Border regression')
+        if ((required & actual)|required_extra)-new or new-required-actual:raise AssertionError('Border regression')
         edges=water_edges(result,after,ocean)
         if (target in inland and edges[target]['exterior_water_edges']) or (target not in inland and not edges[target]['exterior_water_edges']):
             raise AssertionError('Target coast constraint failed')
@@ -126,18 +166,24 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20):
     return None,records
 
 
-def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60,maximum_cuts=100,targets=None):
+def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60,maximum_cuts=100,targets=None,maximum_reach=None,require_contacts=()):
     if output.exists() or min(maximum_tiles,margin,seconds,maximum_cuts)<=0 or not np.isfinite(seconds):raise ValueError('Use a new output and positive limits')
+    if maximum_reach is not None and maximum_reach<1:raise ValueError('Use a positive reach')
     rows,tiles,owner=load(inputs,layout)
     if any(len(tiles[c])!=int(rows[c]['tiles']) or len(pieces(tiles[c]))!=1 for c in tiles):raise ValueError('Exact connected components required')
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
     inland={r['component_id'] for r in read_csv(source_coasts) if int(r['uncovered_samples'])==0}
+    lakes=layout/'lake-cells.csv'
+    lake_cells={(int(r['x']),int(r['y'])) for r in read_csv(lakes)} if lakes.exists() else set()
+    fixed_cells={q for p in lake_cells for q in adjacent(p) if q in owner}
     coast=water_edges(tiles,owner,exterior_water(owner));records=[]
+    extra={tuple(sorted(pair)) for pair in require_contacts}
+    if not extra<=required:raise ValueError('Extra contacts must be source borders')
     selected=set(targets) if targets else set(tiles)
     if not selected<=set(tiles):raise ValueError('Unknown target')
-    targets=[c for c in tiles if c in selected and len(tiles[c])<=maximum_tiles and ((c in inland)==bool(coast[c]['exterior_water_edges']))]
+    targets=[c for c in tiles if c in selected and len(tiles[c])<=maximum_tiles and (extra or (c in inland)==bool(coast[c]['exterior_water_edges']))]
     for c in sorted(targets,key=lambda c:(len(tiles[c]),c)):
-        result,attempts=fit(tiles,required,inland,c,margin,seconds,maximum_cuts)
+        result,attempts=fit(tiles,required,inland,c,margin,seconds,maximum_cuts,maximum_reach,fixed_cells,extra)
         records.append(dict(component=c,accepted=result is not None,attempts=attempts))
         print(json.dumps(records[-1]),flush=True)
         if result is not None:tiles=result
@@ -147,8 +193,8 @@ def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60
         for c,points in sorted(tiles.items()):writer.writerows((c,x,y) for x,y in sorted(points))
     for name in ['lake-cells.csv','lake-placement.json']:
         if (layout/name).exists():shutil.copyfile(layout/name,output/name)
-    record=dict(maximum_tiles=maximum_tiles,margin=margin,seconds_per_target=seconds,maximum_cuts=maximum_cuts,targets=records,
-                inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',layout/'cells.csv',source_coasts]},
+    record=dict(required_extra=sorted(extra),maximum_reach=maximum_reach,connectivity='rooted continuous flow with independent component checks',maximum_tiles=maximum_tiles,margin=margin,seconds_per_target=seconds,maximum_cuts=maximum_cuts,targets=records,
+                inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',layout/'cells.csv',source_coasts]+([lakes] if lakes.exists() else [])},
                 script_sha256=digest(Path(__file__)),cells_sha256=digest(output/'cells.csv'),
                 limits=['Fixed footprint and exact counts. Lakes stay empty.',
                         'Each component keeps one root cell. Search windows and time limits can hide valid repairs.',
@@ -167,4 +213,6 @@ if __name__=='__main__':
     parser.add_argument('--margin',type=int,default=3)
     parser.add_argument('--maximum-cuts',type=int,default=100)
     parser.add_argument('--targets',nargs='+')
+    parser.add_argument('--maximum-reach',type=int)
+    parser.add_argument('--require-contacts',nargs=2,action='append',default=[])
     run(**vars(parser.parse_args()))

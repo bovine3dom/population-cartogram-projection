@@ -29,7 +29,7 @@ def separate(tiles, required, blocked=(), radius=4, maximum_tiles=550):
             moved={(x+dx,y+dy) for x,y in result[c]}
             if moved & (outside.keys() | blocked):continue
             trial_owner=outside|{p:c for p in moved}
-            if any({owners[q] for q in adjacent(p) if q in owners}!={trial_owner[q] for q in adjacent(p) if q in trial_owner} for p in blocked):continue
+            if any(owners.get(q)!=trial_owner.get(q) for p in blocked for q in adjacent(p)):continue
             boundary={tuple(sorted((c,outside[q]))) for p in moved for q in adjacent(p) if q in outside}
             if (current & required)-boundary or boundary-required-current:continue
             if len(boundary-required)>=len(current-required):continue
