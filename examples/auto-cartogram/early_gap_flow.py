@@ -7,9 +7,8 @@ import math
 from pathlib import Path
 import subprocess
 
-import numpy as np
-from shapely import STRtree, affinity, coverage_simplify, make_valid, union_all
-from shapely.geometry import Polygon, mapping, shape
+from shapely import affinity, coverage_simplify, union_all
+from shapely.geometry import mapping, shape
 
 from assemble_independent import CUTS
 from independent_kontur_flow import normalized
@@ -18,14 +17,7 @@ from review_layout import read_csv
 from save_review import digest
 from trace_kazakhstan import outline_error
 from welded_boundary_fit import WeldedMesh, seed_cut_gap
-
-
-def polygonal(g):
-    if not g.area:
-        return Polygon()
-    if g.geom_type in ('Polygon','MultiPolygon'):
-        return g
-    return union_all([p for p in g.geoms if p.geom_type in ('Polygon','MultiPolygon')])
+from transport_patch_boundaries import advect_patches
 
 
 def simplify_patches(features, scale, tolerance):
@@ -38,75 +30,6 @@ def simplify_patches(features, scale, tolerance):
                for f,a,b in zip(features,originals,simplified)]
     result = [dict(type='Feature',properties=f['properties'],geometry=mapping(g)) for f,g in zip(features,simplified)]
     return result,changes
-
-
-def advect_patches(features, mesh, before, after, scale, audit=None):
-    """Clip patches to source triangles and apply the corresponding affine map."""
-    if audit is None:
-        audit = {}
-    audit.update(piece_repairs=0,maximum_piece_area_error=0.)
-    left,right = before.reshape(-1,2),after.reshape(-1,2)
-    triangles = [Polygon(left[t]) for t in mesh.triangles]
-    tree = STRtree(triangles)
-    countries = mesh.polygons(before)
-    labels = list(countries)
-    owners = STRtree(list(countries.values()))
-    triangle_owner = [labels[int(owners.query(t.representative_point(),predicate='within')[0])] for t in triangles]
-    mapped = {(c,tuple(np.round(left[i],8))):tuple(right[i]) for c,rings in mesh.rings.items() for ring in rings for i in ring}
-    transforms = []
-    for ids in mesh.triangles:
-        a,b = left[ids],right[ids]
-        transforms.append(np.column_stack((b[1]-b[0],b[2]-b[0]))@np.linalg.inv(np.column_stack((a[1]-a[0],a[2]-a[0]))))
-    def transport(piece, index, country):
-        ids = mesh.triangles[index]
-        def point(p):
-            key = country,tuple(np.round(p,8))
-            if key not in mapped:
-                p = np.asarray(p)
-                q = right[ids[0]]+transforms[index]@(p-left[ids[0]])
-                for u,v in zip(ids,np.roll(ids,-1)):
-                    u,v = sorted((u,v))
-                    direction = left[v]-left[u]
-                    t = np.clip(np.dot(p-left[u],direction)/np.dot(direction,direction),0.,1.)
-                    if np.linalg.norm(p-(left[u]+t*direction)) < 1e-8:
-                        q = right[u]+t*(right[v]-right[u])
-                        break
-                mapped[key] = tuple(q)
-            return mapped[key]
-        parts = list(piece.geoms) if piece.geom_type == 'MultiPolygon' else [piece]
-        result = []
-        for g in parts:
-            warped = Polygon([point(p) for p in g.exterior.coords],[[point(p) for p in ring.coords] for ring in g.interiors])
-            if not warped.is_valid:
-                warped = polygonal(make_valid(warped))
-                audit['piece_repairs'] += 1
-            expected_area = g.area*np.linalg.det(transforms[index])
-            error = abs(warped.area-expected_area)
-            audit['maximum_piece_area_error'] = max(audit['maximum_piece_area_error'],error)
-            tolerance = 2e-8*max(1.,g.length*np.linalg.norm(transforms[index],ord=2))
-            if error > min(1e-5,tolerance):
-                raise ValueError(f'Patch transport area error: {country}, triangle {index}, error {error}, expected {expected_area}, limit {min(1e-5,tolerance)}')
-            result.append(warped)
-        return union_all(result)
-    result = []
-    for f in features:
-        source = affinity.scale(shape(f['geometry']),scale,scale,origin=(0,0))
-        parts = []
-        covered = 0.
-        for i in tree.query(source,predicate='intersects'):
-            if triangle_owner[i] != f['properties']['component_id']:
-                continue
-            piece = polygonal(source.intersection(triangles[i]))
-            if piece.area:
-                covered += piece.area
-                parts.append(transport(piece,i,f['properties']['component_id']))
-        if abs(covered-source.area) > max(1e-6,source.area*1e-7):
-            raise ValueError('Patch not covered by source triangulation: '+f['properties']['patch_id'])
-        warped = polygonal(union_all(parts))
-        if warped.geom_type not in ('Polygon','MultiPolygon') or not warped.is_valid or warped.is_empty:
-            raise ValueError('Invalid or disconnected warped patch: '+f['properties']['patch_id'])
-        result.append(dict(type='Feature',properties=f['properties'],geometry=mapping(warped)))
-    return result
 
 
 def run(root, output, gap=8., grid=512, solve=True, source_simplify=.1, gap_steps=0):

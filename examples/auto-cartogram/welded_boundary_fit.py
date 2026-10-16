@@ -344,7 +344,7 @@ class WeldedMesh:
                     maximum_area_error=float(np.max(np.abs(self.areas(flat)/self.budgets-1))))
 
 
-def seed_cut_gap(mesh, gap, steps=0):
+def seed_cut_gap(mesh, gap, steps=0, local=False):
     """Open cuts before fitting, while retained borders keep shared variables."""
     from scipy.sparse.linalg import lsqr
     if not math.isfinite(gap) or gap < 0:
@@ -380,12 +380,20 @@ def seed_cut_gap(mesh, gap, steps=0):
                 if node not in common:
                     row([(2*node+axis,5*normal[axis]) for axis in range(2)],-2.5*gap)
     design = sparse.coo_matrix((vv,(rr,cc)),shape=(len(rhs),2*mesh.n)).tocsc()
-    column_scale = 1/np.sqrt(np.asarray(design.power(2).sum(axis=0)).ravel())
-    result = lsqr(design@sparse.diags(column_scale),np.asarray(rhs),atol=1e-9,btol=1e-9,iter_lim=30000)
+    active = np.arange(2*mesh.n)
+    if local:
+        if steps:
+            raise ValueError('Local opening does not support the QP fallback')
+        affected = {c for pair in mesh.cuts for c in pair}
+        fixed = {i for c,rings in mesh.rings.items() if c not in affected for ring in rings for i in ring}
+        active = np.array([i for i in active if i//2 not in fixed])
+    reduced = design[:,active]
+    column_scale = 1/np.sqrt(np.asarray(reduced.power(2).sum(axis=0)).ravel())
+    result = lsqr(reduced@sparse.diags(column_scale),np.asarray(rhs),atol=1e-9,btol=1e-9,iter_lim=30000)
     if result[1] not in (1,2):
         raise ValueError('Initial-gap displacement solve did not converge')
     displacement = np.zeros_like(xy)
-    displacement[:mesh.n] = (result[0]*column_scale).reshape(-1,2)
+    displacement.ravel()[active] = result[0]*column_scale
     attempts = []
     for fraction in [1.,.75,.5,.25,.1,.05,.01,.001,.0001]:
         candidate = (xy+fraction*displacement).ravel()
@@ -523,9 +531,35 @@ def fit(mesh, iterations=60, trust=2., trace_directory=None, remesh=True):
     return current,history
 
 
-def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False, trace_collisions=False, countries=COUNTRIES, contact_clearance=0., source_kind='shared', initial_gap=0.):
+def continuation_fit(mesh, stages, iterations):
+    """Change areas and preferred contours in small steps from the source."""
+    if stages < 1 or iterations < 1:
+        raise ValueError('Use positive continuation and iteration counts')
+    initial_rhs = mesh.design@mesh.initial
+    target_rhs, target_budgets = mesh.rhs.copy(),mesh.budgets.copy()
+    source_budgets = mesh.areas(mesh.initial)
+    history = []
+    current = mesh.initial.copy()
+    for stage in range(1,stages+1):
+        fraction = stage/stages
+        mesh.budgets = np.exp((1-fraction)*np.log(source_budgets)+fraction*np.log(target_budgets))
+        mesh.rhs = (1-fraction)*initial_rhs+fraction*target_rhs
+        mesh.linear = np.asarray(mesh.design.T@mesh.rhs).ravel()
+        mesh.initial = current
+        current,steps = fit(mesh,iterations)
+        checks = mesh.checks(current)
+        history.append(dict(stage=stage,fraction=fraction,steps=steps,**checks))
+        print('continuation',json.dumps({k:v for k,v in history[-1].items() if k != 'steps'}),flush=True)
+        if not checks['valid'] or checks['maximum_area_error'] > .1:
+            break
+    mesh.budgets,mesh.rhs = target_budgets,target_rhs
+    mesh.linear = np.asarray(mesh.design.T@mesh.rhs).ravel()
+    return current,history
+
+
+def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False, trace_collisions=False, countries=COUNTRIES, contact_clearance=0., source_kind='shared', initial_gap=0., continuation_stages=0):
     import osqp
-    if (output.exists() or iterations < 1 or not math.isfinite(source_simplify) or source_simplify < 0
+    if (output.exists() or iterations < 1 or continuation_stages < 0 or not math.isfinite(source_simplify) or source_simplify < 0
             or not math.isfinite(edge_length) or edge_length <= 0):
         raise ValueError('Use a new output directory and positive iteration limit')
     if len(countries) < 2 or len(set(countries)) != len(countries) or not set(countries) <= set(COUNTRIES):
@@ -586,7 +620,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         paths.extend(extra)
         paths.append(Path(__file__).with_name('kontur_boundary_map.py'))
     output.mkdir(parents=True)
-    report = dict(source_kind=source_kind,initial_gap=initial_gap,countries=list(countries),contact_clearance=contact_clearance,cuts=sorted(cuts),trace_collisions=trace_collisions,patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
+    report = dict(continuation_stages=continuation_stages,source_kind=source_kind,initial_gap=initial_gap,countries=list(countries),contact_clearance=contact_clearance,cuts=sorted(cuts),trace_collisions=trace_collisions,patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
                   script_sha256=digest(Path(__file__)),osqp_version=osqp.__version__,
                   limits=['Shared vertices preserve entire retained border polylines, not only point contacts.',
                           'Selected cuts duplicate boundary degrees of freedom. General geometric collision checks still apply.',
@@ -603,7 +637,8 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         print(name,'initial',json.dumps(initial_checks),flush=True)
         if not initial_checks['valid'] or initial_checks['overlap'] > 1e-6:
             raise ValueError('Invalid initial mesh')
-        flat,history = fit(mesh,iterations,trace_directory=output/name/'collision-trace' if trace_collisions else None)
+        flat,history = (continuation_fit(mesh,continuation_stages,iterations) if continuation_stages else
+                        fit(mesh,iterations,trace_directory=output/name/'collision-trace' if trace_collisions else None))
         geometries = mesh.polygons(flat)
         folder = output/name
         folder.mkdir(exist_ok=True)
@@ -643,4 +678,5 @@ if __name__ == '__main__':
     parser.add_argument('--contact-clearance',type=float,default=0.)
     parser.add_argument('--source-kind',choices=['shared','geographic'],default='shared')
     parser.add_argument('--initial-gap',type=float,default=0.)
+    parser.add_argument('--continuation-stages',type=int,default=0)
     run(**vars(parser.parse_args()))
