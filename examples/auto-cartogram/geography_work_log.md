@@ -1234,3 +1234,45 @@ layout, current-best cells, and H3-MON exports are unchanged. All fit jobs have
 stopped. The next test should separate initialization problems from remaining
 solver constraints, using the small real-geometry case rather than another
 planet run.
+
+### Two-hour early-cut investigation: started 2026-10-16 at 13:32 UTC
+
+The user requested continued work for at least two hours, with a useful release
+of the pinch as the goal. The minimum end time is 15:32 UTC. Current best remains
+unchanged. This entry records work in progress, not completion of that period.
+
+Added an original-geography start to the shared-border fitter. Patch-labelled
+correspondence now uses the original Kontur patch geometry for that start.
+Three native-start pilots completed. Native geometry can open an eight-tile
+nominal slit in the three-country test, but the quadratic fitter leaves country
+area errors of several hundred percent or more. These are not cartograms and
+must not be promoted. Large-gap attempts on the already-pinched shared guide
+failed the geometry checks; no opening was applied in those runs.
+
+Added an elastic source-opening initializer. It retains the same variables on
+all uncut borders and duplicates variables only on audited cuts. The recorded
+opening target is nominal, not a measured minimum gap. Full-world checks exposed
+a flaw in perimeter-only springs: holes stayed fixed while outer rings moved,
+and narrow coasts could fold. Interior triangle edges now move holes with their
+country and constrain narrow features. Failed seed attempts remain recorded.
+
+The second experiment opens the original world before population flow. It
+simplifies the complete 369-patch coverage, retains every patch label and target,
+and transports patches through the source mesh triangles. This tests a much
+wider source opening than the previous 1–50 km strips. All 189 source components
+are present, so external retained borders are not silently omitted.
+
+Preparation pilots exposed numeric seams between independently transformed
+triangle pieces. Added canonical shared-point mapping, local affine coordinates,
+and bounded area checks for numeric polygon repair. The full-component and
+retained-border checks remain active. Failed preparation outputs are not solver
+inputs or candidate maps. The first complete population-flow comparison is
+still pending at this checkpoint.
+
+Research: read sections 4.1–4.4 of “Topology-Preserving Line Densification for
+Creating Cartograms”, https://arxiv.org/html/2511.08121v1. Its method inserts
+vertices where boundaries cross triangulation edges and uses piecewise affine
+mapping. This supports transporting whole clipped patch pieces rather than only
+moving their original vertices. It does not establish that our cut layout will
+improve. Checked the geometry repair API at
+https://shapely.readthedocs.io/en/stable/reference/shapely.make_valid.html.

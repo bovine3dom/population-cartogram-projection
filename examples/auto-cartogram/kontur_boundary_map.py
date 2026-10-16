@@ -110,8 +110,9 @@ class BoundaryMap:
         return self.sample(self.locations(xy))
 
 
-def build(root, main, source_scale, source_origin, budgets):
-    path = root/'kontur-patch-flow-200-floor/blend-0.9/areas_cartogram.geojson'
+def build(root, main, source_scale, source_origin, budgets, source_kind='shared'):
+    path = root/('kontur-patch-flow-200-floor/patches.geojson' if source_kind == 'geographic' else
+                 'kontur-patch-flow-200-floor/blend-0.9/areas_cartogram.geojson')
     shared = json.loads(path.read_text())['features']
     result,paths,records = {},[path],[]
     for code,c in main.items():

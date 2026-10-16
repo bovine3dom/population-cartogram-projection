@@ -344,6 +344,84 @@ class WeldedMesh:
                     maximum_area_error=float(np.max(np.abs(self.areas(flat)/self.budgets-1))))
 
 
+def seed_cut_gap(mesh, gap, steps=0):
+    """Open cuts before fitting, while retained borders keep shared variables."""
+    from scipy.sparse.linalg import lsqr
+    if not math.isfinite(gap) or gap < 0:
+        raise ValueError('Use a finite nonnegative initial gap')
+    if not gap or not mesh.cuts:
+        return dict(requested=gap,applied_target=0.,reason='No gap or no cuts')
+    xy = mesh.initial.reshape(-1,2)
+    rr,cc,vv,rhs = [],[],[],[]
+    def row(entries, target):
+        r = len(rhs)
+        for index,value in entries:
+            rr.append(r);cc.append(index);vv.append(value)
+        rhs.append(target)
+    for i in range(2*mesh.n):
+        row([(i,.01)],0.)
+    # Interior edges move holes with their country and keep narrow necks
+    # together. Perimeter-only springs leave holes fixed and can fold coasts.
+    edges = {tuple(sorted((int(a),int(b)))) for triangle in mesh.triangles
+             for a,b in zip(triangle,np.roll(triangle,-1))}
+    for a,b in sorted(edges):
+        weight = 1/max(np.linalg.norm(xy[b]-xy[a]),1e-8)
+        for axis in range(2):
+            row([(2*a+axis,weight),(2*b+axis,-weight)],0.)
+    for _,entries,cut in mesh.shared:
+        if not cut:
+            continue
+        common = set(mesh.node[list(entries[0][1:])]) & set(mesh.node[list(entries[1][1:])])
+        for _,i,j in entries:
+            a,b = mesh.node[[i,j]]
+            delta = xy[b]-xy[a]
+            normal = np.array([delta[1],-delta[0]])/np.linalg.norm(delta)
+            for node in (a,b):
+                if node not in common:
+                    row([(2*node+axis,5*normal[axis]) for axis in range(2)],-2.5*gap)
+    design = sparse.coo_matrix((vv,(rr,cc)),shape=(len(rhs),2*mesh.n)).tocsc()
+    column_scale = 1/np.sqrt(np.asarray(design.power(2).sum(axis=0)).ravel())
+    result = lsqr(design@sparse.diags(column_scale),np.asarray(rhs),atol=1e-9,btol=1e-9,iter_lim=30000)
+    if result[1] not in (1,2):
+        raise ValueError('Initial-gap displacement solve did not converge')
+    displacement = np.zeros_like(xy)
+    displacement[:mesh.n] = (result[0]*column_scale).reshape(-1,2)
+    attempts = []
+    for fraction in [1.,.75,.5,.25,.1,.05,.01,.001,.0001]:
+        candidate = (xy+fraction*displacement).ravel()
+        checks = mesh.checks(candidate)
+        attempts.append(dict(fraction=fraction,**checks))
+        if checks['valid'] and checks['overlap'] < 1e-6 and (not steps or fraction >= .5):
+            polygons = mesh.polygons(candidate)
+            candidate.reshape(-1,2)[mesh.n:] = [[polygons[c].centroid.x,polygons[c].centroid.y] for c in mesh.labels]
+            mesh.initial = candidate
+            mesh.remesh(candidate)
+            return dict(requested=gap,applied_target=fraction*gap,fraction=fraction,lsqr_iterations=result[2],checks=checks,attempts=attempts)
+    if steps:
+        original = {name:getattr(mesh,name) for name in ['design','rhs','hessian','linear','budgets','contact_clearance']}
+        initial = mesh.initial.copy()
+        full = sparse.hstack([design,sparse.csc_matrix((design.shape[0],2*len(mesh.labels)))],format='csc')
+        mesh.design,mesh.rhs = full,full@initial+np.asarray(rhs)
+        mesh.hessian = (full.T@full).tocsc()
+        mesh.linear = np.asarray(full.T@mesh.rhs).ravel()
+        seed_areas = mesh.areas(initial)
+        mesh.budgets = seed_areas
+        mesh.contact_clearance = .0001
+        try:
+            fitted,history = fit(mesh,steps,remesh=False)
+        finally:
+            for name,value in original.items():
+                setattr(mesh,name,value)
+        checks = mesh.checks(fitted)
+        movement = float(np.max(np.abs(fitted-initial)))
+        if checks['valid'] and checks['overlap'] < 1e-6 and movement > 1e-6:
+            mesh.initial = fitted
+            mesh.remesh(fitted)
+            return dict(requested=gap,applied_target=gap,constrained=True,maximum_movement=movement,
+                        source_area_error=float(np.max(np.abs(mesh.areas(fitted)/seed_areas-1))),checks=checks,attempts=attempts,history=history)
+    return dict(requested=gap,applied_target=0.,reason='All initial-gap steps failed validity or overlap checks',attempts=attempts)
+
+
 def save_collision_trace(mesh, current, step, directory, entry, inequality, lower):
     """Save a rejected proposal, not a candidate layout."""
     directory.mkdir(parents=True)
@@ -371,7 +449,7 @@ def save_collision_trace(mesh, current, step, directory, entry, inequality, lowe
     (directory/'trace.json').write_text(json.dumps(report,indent=2)+'\n')
 
 
-def fit(mesh, iterations=60, trust=2., trace_directory=None):
+def fit(mesh, iterations=60, trust=2., trace_directory=None, remesh=True):
     import osqp
     current = mesh.initial.copy()
     history = []
@@ -424,7 +502,8 @@ def fit(mesh, iterations=60, trust=2., trace_directory=None):
                     save_collision_trace(mesh,current,step,trace_directory,entry,inequality,lower)
             if checks['valid'] and checks['overlap'] < 1e-6 and merit <= before+1e-8:
                 current = proposed
-                mesh.remesh(current)
+                if remesh:
+                    mesh.remesh(current)
                 entry.update(alpha=float(alpha),energy=mesh.energy(current),**checks)
                 accepted = True
                 break
@@ -444,7 +523,7 @@ def fit(mesh, iterations=60, trust=2., trace_directory=None):
     return current,history
 
 
-def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False, trace_collisions=False, countries=COUNTRIES, contact_clearance=0.):
+def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False, trace_collisions=False, countries=COUNTRIES, contact_clearance=0., source_kind='shared', initial_gap=0.):
     import osqp
     if (output.exists() or iterations < 1 or not math.isfinite(source_simplify) or source_simplify < 0
             or not math.isfinite(edge_length) or edge_length <= 0):
@@ -459,6 +538,11 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
     saved = next(r for r in json.loads(guide_report.read_text())['runs'] if r['strength'] == .9)
     if not saved['solver_success'] or saved['geometry_sha256'] != digest(guide_path):
         raise ValueError('Saved guide differs')
+    if source_kind not in ('shared','geographic'):
+        raise ValueError('Unknown source geometry')
+    if source_kind == 'geographic':
+        guide_path = root/'world-55000-mainland-flow/input/geometry.geojson'
+        guide = read_shapes(guide_path)
     scale = math.sqrt(sum(int(rows[c]['tiles']) for c in guide)/sum(g.area for g in guide.values()))
     main = {code:max((c for c in guide if c[:3]==code),key=lambda c:int(rows[c]['tiles'])) for code in countries}
     from shapely import affinity
@@ -498,11 +582,11 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
     mappers,matching = None,[]
     if patch_guides:
         from kontur_boundary_map import build
-        mappers,extra,matching = build(root,main,scale,(origin.x,origin.y),budgets)
+        mappers,extra,matching = build(root,main,scale,(origin.x,origin.y),budgets,source_kind)
         paths.extend(extra)
         paths.append(Path(__file__).with_name('kontur_boundary_map.py'))
     output.mkdir(parents=True)
-    report = dict(countries=list(countries),contact_clearance=contact_clearance,cuts=sorted(cuts),trace_collisions=trace_collisions,patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
+    report = dict(source_kind=source_kind,initial_gap=initial_gap,countries=list(countries),contact_clearance=contact_clearance,cuts=sorted(cuts),trace_collisions=trace_collisions,patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
                   script_sha256=digest(Path(__file__)),osqp_version=osqp.__version__,
                   limits=['Shared vertices preserve entire retained border polylines, not only point contacts.',
                           'Selected cuts duplicate boundary degrees of freedom. General geometric collision checks still apply.',
@@ -514,6 +598,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
             raise ValueError('Unknown case')
         policy = cuts if name == 'sparse-cuts' else set()
         mesh = WeldedMesh(source,preferred,budgets,policy,edge_length,mappers,contact_clearance)
+        seed = seed_cut_gap(mesh,initial_gap)
         initial_checks = mesh.checks(mesh.initial)
         print(name,'initial',json.dumps(initial_checks),flush=True)
         if not initial_checks['valid'] or initial_checks['overlap'] > 1e-6:
@@ -522,7 +607,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         geometries = mesh.polygons(flat)
         folder = output/name
         folder.mkdir(exist_ok=True)
-        case = dict(name=name,nodes=mesh.n,triangles=len(mesh.triangles),contour_refinement=mesh.refinement,
+        case = dict(name=name,seed=seed,nodes=mesh.n,triangles=len(mesh.triangles),contour_refinement=mesh.refinement,
                     initial_checks=initial_checks,history=history,**mesh.checks(flat))
         case['countries'] = [dict(component=c,country=c[:3],geographic_error=outline_error(geometries[c],native[c]),
                                   preferred_error=outline_error(geometries[c],preferred[c]),area_error=geometries[c].area/budgets[c]-1) for c in mesh.labels]
@@ -537,7 +622,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         case['geometry_sha256'] = digest(path)
         draw(folder/'review.svg',geometries,rows,'Shared-boundary fit: '+name,
              f'Whole retained borders welded. Overlap {case["overlap"]:.6f}; maximum area error {case["maximum_area_error"]:.2%}.',
-             method='Independent Kontur guides; shared-vertex boundary optimization.')
+             method=f'Independent Kontur guides; shared-vertex optimization from {source_kind} geometry.')
         subprocess.run(['rsvg-convert',str(folder/'review.svg'),'-o',str(folder/'review.png')],check=True)
         report['cases'].append(case)
         (output/'experiment.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -556,4 +641,6 @@ if __name__ == '__main__':
     parser.add_argument('--trace-collisions',action='store_true')
     parser.add_argument('--countries',nargs='+',choices=COUNTRIES,default=COUNTRIES)
     parser.add_argument('--contact-clearance',type=float,default=0.)
+    parser.add_argument('--source-kind',choices=['shared','geographic'],default='shared')
+    parser.add_argument('--initial-gap',type=float,default=0.)
     run(**vars(parser.parse_args()))
