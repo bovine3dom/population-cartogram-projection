@@ -883,3 +883,31 @@ constraints, then carry the optional-contact record through fitting and docking.
 A flag cannot separate a shared continuous boundary. Compare against this
 recorded no-cut run, and track the coast and mainland regressions separately.
 No early-cut run has started. The fit job has stopped. All 228 tests pass.
+
+### Early source cuts: selection and first tests
+
+The user selected the coarse 90% Kontur planet as the current best development
+layout. This decision replaces the recommendation above. See `current-best.md`.
+Keep the Malaysia, Lithuania, and Paraguay defects open. The tile contact graph
+also confirms a false Sweden–Germany contact. Norway does not touch Germany.
+Production H3-MON data is unchanged.
+
+Added `cut_flow_source.py`. It opens selected, population-audited source borders
+before patch construction and continuous flow. It rejects lost unselected
+contacts, invalid components, and area loss above 10%. Fragment removal is off
+by default; the wider trials permit at most 0.01% of a component's source area.
+Population samples stay in their original component, including samples in the
+removed strip. Tile budgets do not change.
+
+Started a fresh no-cut control and two-border and four-border trials. The two
+borders are Russia–Kazakhstan and China–Kazakhstan. The four-border trials also
+cut Russia–China and Russia–Mongolia. All pass the existing 25 km population
+corridor audit. Whole-border statistics do not prove that every segment is sparse.
+
+The four-border 25 km and 50 km preparations failed the unselected-contact guard:
+they also remove Russia–North Korea. They were not fitted. The two-border 25 km
+and 50 km preparations pass, as does the four-border 5 km preparation. Runs use
+all three existing density strengths and the 200-unit grid. Shape scores use
+the unchanged geographic outlines, not each trial's cut outlines. Each blend
+within a trial uses the same patches; cuts can change patches between trials.
+No downstream tile fit has started.

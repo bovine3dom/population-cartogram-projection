@@ -3,11 +3,12 @@
 <title>Planet cartogram: coarse 90% Kontur</title>
 <style>body{font:18px/1.5 system-ui;max-width:1250px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%}td,th{padding:.4rem .8rem;border:1px solid #bbb}table{border-collapse:collapse}pre{overflow:auto}a{color:#245b92}</style>
 <h1>Planet cartogram: coarse 90% Kontur</h1>
-<p><strong>Full 55,000-tile candidate, with islands and empty lakes. Not a production replacement.</strong>
+<p><strong>Current best development layout, selected by the user: 55,000 tiles, with islands and empty lakes.</strong>
+The deployed H3-MON mapping has not changed.
 This uses the selected <a href="../kontur-density-flow/200/blend-0.9/world.png">coarser 90% Kontur guide</a>.
 No strategic border cuts have been applied. Existing layout defects are listed below.</p>
 <p><a href="review.png">Open the full planet image</a> ·
-<a href="../islands-lakes-integrated/index.html">Previous preferred layout</a></p>
+<a href="../islands-lakes-integrated/index.html">Earlier margin-one layout</a></p>
 <a href="review.png"><img src="review.png" alt="Full planet tile cartogram from the coarse 90 percent Kontur guide"></a>
 <h2>Checks</h2>
 <table><tr><th>Check</th><th>This candidate</th><th>Previous preferred layout</th></tr>
@@ -28,11 +29,13 @@ This is not an intentional sparse-border cut.</li>
 <li>Lithuania has no exterior-water edge. Estonia and Latvia still have exterior
 water, but the Baltic arrangement needs work.</li>
 <li>Paraguay has 16 exterior-water edges: it has regained a false coast.</li>
+<li>Sweden has a false direct contact with Germany. Norway does not have that contact.</li>
 <li>There are ten more missing and fourteen more false administrative contacts
 than in the previous preferred layout.</li></ul>
-<p>These failures prevent promotion. Exact budgets and connected individual
-components do not imply correct geography. The previous preferred layout and
-H3-MON mapping remain unchanged.</p>
+<p>The user selected this layout as current best with these known defects.
+Exact budgets and connected individual components do not imply correct geography.
+Keep this saved baseline unchanged during cut experiments. The deployed H3-MON
+mapping remains unchanged.</p>
 <h2>Eurasia</h2>
 <a href="eurasia.png"><img src="eurasia.png" alt="Eurasia detail showing the current Kazakhstan constraint"></a>
 <p>The Kazakhstan constraint remains after tile fitting. This candidate is a
