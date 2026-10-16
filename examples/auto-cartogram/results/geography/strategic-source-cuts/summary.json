@@ -1,0 +1,182 @@
+[
+  {
+    "name": "control",
+    "population": 7221236218.0,
+    "patches": 369,
+    "scores": {
+      "RUS": 0.7319406085412468,
+      "CHN": 0.674722909455773,
+      "IND": 0.4478286926142141,
+      "KAZ": 0.8039146123585204
+    },
+    "valid_connected": true,
+    "maximum_main_relative_area_error": 0.0003284530663745233,
+    "maximum_patch_relative_area_error": 3.9880675156148975,
+    "minimum_cut_gaps_tiles": []
+  },
+  {
+    "name": "control-repeat",
+    "population": 7221236218.0,
+    "patches": 369,
+    "scores": {
+      "RUS": 0.7280583041025623,
+      "CHN": 0.6741911301536903,
+      "IND": 0.44356959849693567,
+      "KAZ": 0.7965335404881663
+    },
+    "valid_connected": true,
+    "maximum_main_relative_area_error": 0.00030322905615765006,
+    "maximum_patch_relative_area_error": 3.9880487861726266,
+    "minimum_cut_gaps_tiles": []
+  },
+  {
+    "name": "flow-1",
+    "population": 7221236218.0,
+    "patches": 369,
+    "scores": {
+      "RUS": 0.7307953381961714,
+      "CHN": 0.6747160163894071,
+      "IND": 0.44867876676816354,
+      "KAZ": 0.7816678079023268
+    },
+    "valid_connected": true,
+    "maximum_main_relative_area_error": 0.0002943949067663043,
+    "maximum_patch_relative_area_error": 3.9886387064064017,
+    "minimum_cut_gaps_tiles": [
+      {
+        "a": "CHN:72cd37e37e634df7",
+        "b": "KAZ:5d6f63a9b9f3c9f9",
+        "gap": 0.0008362061735179264
+      },
+      {
+        "a": "KAZ:5d6f63a9b9f3c9f9",
+        "b": "RUS:b85c5bca1852870f",
+        "gap": 0.0003618345540989319
+      }
+    ]
+  },
+  {
+    "name": "flow-25",
+    "population": 7221236218.0,
+    "patches": 369,
+    "scores": {
+      "RUS": 0.7291740602056396,
+      "CHN": 0.6695272857309196,
+      "IND": 0.4431127190533679,
+      "KAZ": 0.7614783696504572
+    },
+    "valid_connected": true,
+    "maximum_main_relative_area_error": 0.0003560209292390315,
+    "maximum_patch_relative_area_error": 3.98810558757188,
+    "minimum_cut_gaps_tiles": [
+      {
+        "a": "CHN:72cd37e37e634df7",
+        "b": "KAZ:5d6f63a9b9f3c9f9",
+        "gap": 0.012243714584673776
+      },
+      {
+        "a": "KAZ:5d6f63a9b9f3c9f9",
+        "b": "RUS:b85c5bca1852870f",
+        "gap": 0.0013785894070169797
+      }
+    ]
+  },
+  {
+    "name": "flow-50",
+    "population": 7221236218.0,
+    "patches": 369,
+    "scores": {
+      "RUS": 0.728674707068871,
+      "CHN": 0.6715893201033488,
+      "IND": 0.4409406004154576,
+      "KAZ": 0.7428579877253462
+    },
+    "valid_connected": true,
+    "maximum_main_relative_area_error": 0.0003173943964499548,
+    "maximum_patch_relative_area_error": 3.9878673723497773,
+    "minimum_cut_gaps_tiles": [
+      {
+        "a": "CHN:72cd37e37e634df7",
+        "b": "KAZ:5d6f63a9b9f3c9f9",
+        "gap": 0.3974786487351438
+      },
+      {
+        "a": "KAZ:5d6f63a9b9f3c9f9",
+        "b": "RUS:b85c5bca1852870f",
+        "gap": 4.584178868626367e-05
+      }
+    ]
+  },
+  {
+    "name": "flow-four-1",
+    "population": 7221236218.0,
+    "patches": 369,
+    "scores": {
+      "RUS": 0.7285047962674325,
+      "CHN": 0.6713864003581917,
+      "IND": 0.44244395076584575,
+      "KAZ": 0.7773827340969166
+    },
+    "valid_connected": true,
+    "maximum_main_relative_area_error": 0.00037843818287630615,
+    "maximum_patch_relative_area_error": 3.9880076253830508,
+    "minimum_cut_gaps_tiles": [
+      {
+        "a": "CHN:72cd37e37e634df7",
+        "b": "KAZ:5d6f63a9b9f3c9f9",
+        "gap": 0.000683903601089947
+      },
+      {
+        "a": "CHN:72cd37e37e634df7",
+        "b": "RUS:b85c5bca1852870f",
+        "gap": 6.0430912834828795e-06
+      },
+      {
+        "a": "KAZ:5d6f63a9b9f3c9f9",
+        "b": "RUS:b85c5bca1852870f",
+        "gap": 0.00017854687277825786
+      },
+      {
+        "a": "MNG:7ecd8e5b0a42fa66",
+        "b": "RUS:b85c5bca1852870f",
+        "gap": 2.534992567917744e-05
+      }
+    ]
+  },
+  {
+    "name": "flow-four-5",
+    "population": 7221236218.0,
+    "patches": 369,
+    "scores": {
+      "RUS": 0.7265582176027434,
+      "CHN": 0.6698504379457106,
+      "IND": 0.4443116819144787,
+      "KAZ": 0.7592082891486989
+    },
+    "valid_connected": true,
+    "maximum_main_relative_area_error": 0.00031132979480064105,
+    "maximum_patch_relative_area_error": 3.988514924189422,
+    "minimum_cut_gaps_tiles": [
+      {
+        "a": "CHN:72cd37e37e634df7",
+        "b": "KAZ:5d6f63a9b9f3c9f9",
+        "gap": 0.001330585294764184
+      },
+      {
+        "a": "CHN:72cd37e37e634df7",
+        "b": "RUS:b85c5bca1852870f",
+        "gap": 0.00021506083259513364
+      },
+      {
+        "a": "KAZ:5d6f63a9b9f3c9f9",
+        "b": "RUS:b85c5bca1852870f",
+        "gap": 0.00039457060021393493
+      },
+      {
+        "a": "MNG:7ecd8e5b0a42fa66",
+        "b": "RUS:b85c5bca1852870f",
+        "gap": 0.003810621947125131
+      }
+    ]
+  }
+]

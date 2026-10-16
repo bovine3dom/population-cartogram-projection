@@ -911,3 +911,24 @@ all three existing density strengths and the 200-unit grid. Shape scores use
 the unchanged geographic outlines, not each trial's cut outlines. Each blend
 within a trial uses the same patches; cuts can change patches between trials.
 No downstream tile fit has started.
+
+All seven trials completed: two fresh controls and five cut variants, each with
+three density blends. All 21 solver runs succeeded. Every trial has 189 mainland
+components, 369 patches, and 7,221,236,218 people. The 90% outputs have valid,
+connected components. Four-country area errors are below 0.04%; the known
+solver floor still inflates some tiny components.
+
+Visually checked the control and cut Eurasia panels, plus the control and 50 km
+world panels. Russia still forms a thin strip above China. The two 50 km cuts
+reduce Kazakhstan's outline error to 0.743, from 0.797–0.804 in the controls.
+Russia stays at 0.729, within the control range of 0.728–0.732. This is not a
+useful large-scale shape improvement. The narrowest Russia–Kazakhstan gap in
+the 50 km trial is less than 0.00005 target-tile widths. This is a minimum
+polygon distance, not an average width along the seam.
+
+Published the images, settings, hashes, geometry archives, and measurements at
+`results/geography/strategic-source-cuts/index.html`. See `source-cuts.md` for
+commands and limits. No downstream tile fit was justified or started. The next
+experiment must permit separate deformation across selected borders, rather
+than only insert empty strips into one continuous field. Current best and
+production exports remain unchanged. All 234 Python tests pass.
