@@ -1,0 +1,325 @@
+{
+  "coarse90-nordic-sea-v1": {
+    "cells_sha256": "6b12bb11c36f9ac6b1c0cc8bafc52eac589684e2c9d9de18d8d287d774f4c479",
+    "changed_components": [],
+    "countries": {
+      "PRY": {
+        "tiles": 48,
+        "sea_edges": 16,
+        "perimeter": 34,
+        "thin_cells": 1
+      },
+      "ARG": {
+        "tiles": 315,
+        "sea_edges": 41,
+        "perimeter": 158,
+        "thin_cells": 13
+      },
+      "BRA": {
+        "tiles": 1465,
+        "sea_edges": 186,
+        "perimeter": 296,
+        "thin_cells": 17
+      },
+      "BOL": {
+        "tiles": 85,
+        "sea_edges": 25,
+        "perimeter": 64,
+        "thin_cells": 2
+      }
+    },
+    "gained_true": [],
+    "lost_true": [],
+    "added_false": [],
+    "added_unnamed_holes": [],
+    "removed_unnamed_holes": [],
+    "new_axis_errors": {
+      "island": [],
+      "country": []
+    },
+    "lake_cells_identical": true,
+    "coast_access_regressions": false
+  },
+  "coarse90-paraguay-inset-v1": {
+    "cells_sha256": "e726d5b0efa37315f4b65131e33b021f32642b0aef20cc3e387efb7b1cf9f0cf",
+    "changed_components": [
+      "ARG:7462ff4f8b49993a",
+      "BRA:c9a395c2d321cd60",
+      "PRY:8be730e7955b0934"
+    ],
+    "countries": {
+      "PRY": {
+        "tiles": 48,
+        "sea_edges": 0,
+        "perimeter": 36,
+        "thin_cells": 2
+      },
+      "ARG": {
+        "tiles": 315,
+        "sea_edges": 57,
+        "perimeter": 200,
+        "thin_cells": 26
+      },
+      "BRA": {
+        "tiles": 1465,
+        "sea_edges": 186,
+        "perimeter": 310,
+        "thin_cells": 18
+      },
+      "BOL": {
+        "tiles": 85,
+        "sea_edges": 25,
+        "perimeter": 64,
+        "thin_cells": 2
+      }
+    },
+    "gained_true": [
+      [
+        "ARG:7462ff4f8b49993a",
+        "BOL:1a7254807c71e166"
+      ]
+    ],
+    "lost_true": [],
+    "added_false": [],
+    "added_unnamed_holes": [],
+    "removed_unnamed_holes": [],
+    "new_axis_errors": {
+      "island": [
+        [
+          "ARG",
+          "ARG:7462ff4f8b49993a",
+          "ARG:b42dd8a02e55c90b",
+          "east"
+        ]
+      ],
+      "country": []
+    },
+    "lake_cells_identical": true,
+    "coast_access_regressions": false
+  },
+  "coarse90-paraguay-refine-v3": {
+    "cells_sha256": "2a0c7c7b6e1ad694c7f87ce57c8b011cc7ceadf4475da9fb35bc628e47139a10",
+    "changed_components": [
+      "ARG:7462ff4f8b49993a",
+      "BRA:c9a395c2d321cd60",
+      "PRY:8be730e7955b0934"
+    ],
+    "countries": {
+      "PRY": {
+        "tiles": 48,
+        "sea_edges": 0,
+        "perimeter": 34,
+        "thin_cells": 0
+      },
+      "ARG": {
+        "tiles": 315,
+        "sea_edges": 55,
+        "perimeter": 196,
+        "thin_cells": 22
+      },
+      "BRA": {
+        "tiles": 1465,
+        "sea_edges": 186,
+        "perimeter": 310,
+        "thin_cells": 18
+      },
+      "BOL": {
+        "tiles": 85,
+        "sea_edges": 25,
+        "perimeter": 64,
+        "thin_cells": 2
+      }
+    },
+    "gained_true": [
+      [
+        "ARG:7462ff4f8b49993a",
+        "BOL:1a7254807c71e166"
+      ]
+    ],
+    "lost_true": [],
+    "added_false": [],
+    "added_unnamed_holes": [],
+    "removed_unnamed_holes": [],
+    "new_axis_errors": {
+      "island": [
+        [
+          "ARG",
+          "ARG:7462ff4f8b49993a",
+          "ARG:b42dd8a02e55c90b",
+          "east"
+        ]
+      ],
+      "country": []
+    },
+    "lake_cells_identical": true,
+    "coast_access_regressions": false
+  },
+  "coarse90-paraguay-refine-v5": {
+    "cells_sha256": "f571db66972804684d0ad1ea1235c48e89aa2b7941706b5356b5cc7a99658c8f",
+    "changed_components": [
+      "ARG:7462ff4f8b49993a",
+      "BRA:c9a395c2d321cd60",
+      "PRY:8be730e7955b0934"
+    ],
+    "countries": {
+      "PRY": {
+        "tiles": 48,
+        "sea_edges": 0,
+        "perimeter": 32,
+        "thin_cells": 0
+      },
+      "ARG": {
+        "tiles": 315,
+        "sea_edges": 55,
+        "perimeter": 190,
+        "thin_cells": 20
+      },
+      "BRA": {
+        "tiles": 1465,
+        "sea_edges": 186,
+        "perimeter": 302,
+        "thin_cells": 17
+      },
+      "BOL": {
+        "tiles": 85,
+        "sea_edges": 25,
+        "perimeter": 64,
+        "thin_cells": 2
+      }
+    },
+    "gained_true": [
+      [
+        "ARG:7462ff4f8b49993a",
+        "BOL:1a7254807c71e166"
+      ]
+    ],
+    "lost_true": [],
+    "added_false": [],
+    "added_unnamed_holes": [],
+    "removed_unnamed_holes": [
+      [
+        302,
+        265
+      ]
+    ],
+    "new_axis_errors": {
+      "island": [
+        [
+          "ARG",
+          "ARG:7462ff4f8b49993a",
+          "ARG:b42dd8a02e55c90b",
+          "east"
+        ]
+      ],
+      "country": []
+    },
+    "lake_cells_identical": true,
+    "coast_access_regressions": false
+  },
+  "coarse90-paraguay-refine-v6": {
+    "cells_sha256": "c081e2636dc0bda5f559557cfac64e33db077c02dd747ef8e66f4bd84eca5a5a",
+    "changed_components": [
+      "ARG:7462ff4f8b49993a",
+      "BRA:c9a395c2d321cd60",
+      "PRY:8be730e7955b0934"
+    ],
+    "countries": {
+      "PRY": {
+        "tiles": 48,
+        "sea_edges": 0,
+        "perimeter": 32,
+        "thin_cells": 0
+      },
+      "ARG": {
+        "tiles": 315,
+        "sea_edges": 55,
+        "perimeter": 190,
+        "thin_cells": 13
+      },
+      "BRA": {
+        "tiles": 1465,
+        "sea_edges": 186,
+        "perimeter": 302,
+        "thin_cells": 17
+      },
+      "BOL": {
+        "tiles": 85,
+        "sea_edges": 25,
+        "perimeter": 64,
+        "thin_cells": 2
+      }
+    },
+    "gained_true": [
+      [
+        "ARG:7462ff4f8b49993a",
+        "BOL:1a7254807c71e166"
+      ]
+    ],
+    "lost_true": [],
+    "added_false": [],
+    "added_unnamed_holes": [],
+    "removed_unnamed_holes": [
+      [
+        302,
+        265
+      ]
+    ],
+    "new_axis_errors": {
+      "island": [],
+      "country": []
+    },
+    "lake_cells_identical": true,
+    "coast_access_regressions": false
+  },
+  "coarse90-paraguay-water-v1": {
+    "cells_sha256": "0cf5af5148b74907c5d6318ceb4d7dc575548a6912586326b59fc4978b3dbb49",
+    "changed_components": [
+      "ARG:7462ff4f8b49993a",
+      "BRA:c9a395c2d321cd60",
+      "PRY:8be730e7955b0934"
+    ],
+    "countries": {
+      "PRY": {
+        "tiles": 48,
+        "sea_edges": 0,
+        "perimeter": 32,
+        "thin_cells": 0
+      },
+      "ARG": {
+        "tiles": 315,
+        "sea_edges": 55,
+        "perimeter": 192,
+        "thin_cells": 13
+      },
+      "BRA": {
+        "tiles": 1465,
+        "sea_edges": 186,
+        "perimeter": 302,
+        "thin_cells": 17
+      },
+      "BOL": {
+        "tiles": 85,
+        "sea_edges": 25,
+        "perimeter": 64,
+        "thin_cells": 2
+      }
+    },
+    "gained_true": [
+      [
+        "ARG:7462ff4f8b49993a",
+        "BOL:1a7254807c71e166"
+      ]
+    ],
+    "lost_true": [],
+    "added_false": [],
+    "added_unnamed_holes": [],
+    "removed_unnamed_holes": [],
+    "new_axis_errors": {
+      "island": [],
+      "country": []
+    },
+    "lake_cells_identical": true,
+    "coast_access_regressions": false,
+    "enclosed_water_cells_identical": true
+  }
+}

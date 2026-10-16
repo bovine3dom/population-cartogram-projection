@@ -1,0 +1,49 @@
+{
+  "refine": true,
+  "sea_connected": true,
+  "distance_weight": 0.1,
+  "perimeter_weight": 2.0,
+  "templates": null,
+  "movable": [
+    "ARG:7462ff4f8b49993a",
+    "BRA:c9a395c2d321cd60",
+    "PRY:8be730e7955b0934"
+  ],
+  "expansion": 1,
+  "required_extra": [],
+  "maximum_reach": 2,
+  "connectivity": "rooted continuous flow with independent component checks",
+  "maximum_tiles": 200,
+  "margin": 14,
+  "seconds_per_target": 180.0,
+  "maximum_cuts": 100,
+  "targets": [
+    {
+      "component": "PRY:8be730e7955b0934",
+      "accepted": true,
+      "attempts": [
+        {
+          "status": 1,
+          "message": "Time limit reached. (HiGHS Status 13: Time limit reached)"
+        }
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/coarse90-paraguay-refine-v3/cells.csv": "2a0c7c7b6e1ad694c7f87ce57c8b011cc7ceadf4475da9fb35bc628e47139a10",
+    "output/auto-cartogram/geography-source-coasts-55000/source-coasts.csv": "74b99a8e34ad48401ffacaa8729698370040acc1f95bf9ffee8667eaa4d14c97",
+    "output/auto-cartogram/coarse90-paraguay-refine-v3/lake-cells.csv": "b9fcc87b65209a0fdf5f01c20ebde714e879ab8e6c37dd507d0ff155cf240ea9"
+  },
+  "script_sha256": "c0c1f6821d6b2fab918ab1cb161dc18bcdeb0e93c5f141bdf78c006bc68f42e5",
+  "cells_sha256": "f571db66972804684d0ad1ea1235c48e89aa2b7941706b5356b5cc7a99658c8f",
+  "limits": [
+    "Exact counts. Lakes and their shore cells stay fixed. Expansion is optional.",
+    "With expansion, coast checks can reject a feasible border fit. The solver does not search again.",
+    "Each component keeps one root cell. Search windows and time limits can hide valid repairs.",
+    "Source coast labels use finite samples. They are not a proof of ocean access.",
+    "Only connected integer solutions that retain true borders and add no false borders are accepted.",
+    "Accepted solutions can still have poor shapes. No production approval."
+  ]
+}

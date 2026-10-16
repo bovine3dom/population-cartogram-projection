@@ -58,7 +58,7 @@ def publish(layout, output):
         shutil.copyfile(layout/'regions'/f'{name}.png',output/f'{name}.png')
     for name in ['cells.csv','lake-cells.csv','lake-placement.json']:
         with gzip.open(output/(name+'.gz'),'wb') as stream:stream.write((layout/name).read_bytes())
-    for name in ['local-coasts.json','separation.json','coastal-bays.json']:
+    for name in ['local-coasts.json','separation.json','coastal-bays.json','inset.json','water-restoration.json']:
         if (layout/name).exists():shutil.copyfile(layout/name,output/name)
     record['metrics']=metrics
     record['files']={str(p.relative_to(output)):digest(p) for p in output.rglob('*') if p.is_file()}
@@ -80,7 +80,7 @@ def publish(layout, output):
 <p>All 55,000 tiles retain exact component budgets. All 481 components are connected. The {len(water)} lakes use {sum(map(len,water.values()))} empty cells. Lake shore checks pass.</p>
 <table><tr><th>Check</th><th>Current best</th><th>Candidate</th></tr>{table}</table>
 <p>There are {metrics['missing_contacts']} missing and {metrics['false_contacts']} false contacts. The current best has 73 and 48. The candidate gains {len(record['gained_true'])} true contacts and loses {len(record['lost_true'])}. It removes {len(record['removed_false'])} false contacts and adds {len(record['added_false'])}. These totals do not prove correct geography.</p>
-<p>Open issues include Paraguay's false coast, the Nordic shapes, and missing mainland connections. A coast can be mathematically valid but visually poor. Do not use this as a production map.</p>
+<p>Open issues include country shapes, remaining coast defects, and missing mainland connections. A coast can be mathematically valid but visually poor. Do not use this as a production map.</p>
 <p><a href="checks.json">Checks and exact contact changes</a> · <a href="cells.csv.gz">Land tiles</a> · <a href="lake-cells.csv.gz">Empty lake cells</a> · <a href="geography/summary.json">Geographic audit</a></p>
 <h2>World</h2><img src="review.png" alt="World trial">{regions}</html>\n''')
     return record

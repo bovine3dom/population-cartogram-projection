@@ -1,0 +1,111 @@
+{
+  "moves": [
+    {
+      "component": "ARG:7462ff4f8b49993a",
+      "restored_water": [
+        302,
+        265
+      ],
+      "added_coast": [
+        309,
+        254
+      ],
+      "path": [
+        [
+          302,
+          265
+        ],
+        [
+          302,
+          264
+        ],
+        [
+          302,
+          263
+        ],
+        [
+          302,
+          262
+        ],
+        [
+          302,
+          261
+        ],
+        [
+          302,
+          260
+        ],
+        [
+          302,
+          259
+        ],
+        [
+          302,
+          258
+        ],
+        [
+          302,
+          257
+        ],
+        [
+          302,
+          256
+        ],
+        [
+          302,
+          255
+        ],
+        [
+          302,
+          254
+        ],
+        [
+          303,
+          254
+        ],
+        [
+          304,
+          254
+        ],
+        [
+          305,
+          254
+        ],
+        [
+          306,
+          254
+        ],
+        [
+          307,
+          254
+        ],
+        [
+          308,
+          254
+        ],
+        [
+          309,
+          254
+        ]
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/coarse90-paraguay-refine-v6/cells.csv": "c081e2636dc0bda5f559557cfac64e33db077c02dd747ef8e66f4bd84eca5a5a",
+    "output/auto-cartogram/coarse90-nordic-sea-v1/cells.csv": "6b12bb11c36f9ac6b1c0cc8bafc52eac589684e2c9d9de18d8d287d774f4c479",
+    "output/auto-cartogram/geography-source-coasts-55000/source-coasts.csv": "74b99a8e34ad48401ffacaa8729698370040acc1f95bf9ffee8667eaa4d14c97",
+    "output/auto-cartogram/coarse90-paraguay-refine-v6/lake-cells.csv": "b9fcc87b65209a0fdf5f01c20ebde714e879ab8e6c37dd507d0ff155cf240ea9",
+    "output/auto-cartogram/coarse90-paraguay-refine-v6/lake-placement.json": "47acc2aedafd1afd202dbbd9823fd1d36938d95b6831617181255a3bc390058b"
+  },
+  "script_sha256": "ac04ecbf2f3e6ed13f798792a244b65b7e21b8dc99c8cd2302ee8aa24a0b02e6",
+  "cells_sha256": "0cf5af5148b74907c5d6318ceb4d7dc575548a6912586326b59fc4978b3dbb49",
+  "limits": [
+    "Restore existing enclosed water only; this does not identify real lakes.",
+    "Paths stay within one component. Only the two endpoints change ownership.",
+    "Keep exact budgets, true borders, reference water shores, and sampled coast access. Add no false border pairs.",
+    "Do not add same-country source-axis errors relative to the reference. This heuristic is not a geographic proof.",
+    "Existing opened holes or changed shore labels can make restoration fail. No production approval."
+  ]
+}

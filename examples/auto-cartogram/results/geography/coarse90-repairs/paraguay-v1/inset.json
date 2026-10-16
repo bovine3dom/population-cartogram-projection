@@ -1,0 +1,376 @@
+{
+  "target": "PRY:8be730e7955b0934",
+  "radius": 4,
+  "reach": 16,
+  "selected": {
+    "target": "PRY:8be730e7955b0934",
+    "donor": "BRA:c9a395c2d321cd60",
+    "cover": "ARG:7462ff4f8b49993a",
+    "shift": [
+      3,
+      0
+    ],
+    "retained_border_cells": [
+      {
+        "kept": [
+          282,
+          286
+        ],
+        "returned": [
+          285,
+          286
+        ]
+      }
+    ],
+    "cover_to_donor": [
+      [
+        293,
+        274
+      ],
+      [
+        292,
+        274
+      ],
+      [
+        291,
+        274
+      ],
+      [
+        290,
+        274
+      ],
+      [
+        289,
+        274
+      ],
+      [
+        290,
+        273
+      ],
+      [
+        291,
+        273
+      ],
+      [
+        292,
+        273
+      ],
+      [
+        293,
+        273
+      ],
+      [
+        294,
+        273
+      ],
+      [
+        295,
+        273
+      ],
+      [
+        296,
+        273
+      ],
+      [
+        297,
+        273
+      ],
+      [
+        291,
+        272
+      ],
+      [
+        292,
+        272
+      ],
+      [
+        293,
+        272
+      ],
+      [
+        294,
+        272
+      ],
+      [
+        295,
+        272
+      ],
+      [
+        296,
+        272
+      ],
+      [
+        291,
+        271
+      ],
+      [
+        292,
+        271
+      ],
+      [
+        293,
+        271
+      ],
+      [
+        294,
+        271
+      ],
+      [
+        295,
+        271
+      ],
+      [
+        292,
+        270
+      ],
+      [
+        293,
+        270
+      ],
+      [
+        294,
+        270
+      ],
+      [
+        292,
+        269
+      ],
+      [
+        293,
+        269
+      ]
+    ],
+    "changed_cells": 87,
+    "perimeter": 546,
+    "perimeter_change": 58,
+    "gained_true": [
+      [
+        "ARG:7462ff4f8b49993a",
+        "BOL:1a7254807c71e166"
+      ]
+    ]
+  },
+  "attempts": [
+    {
+      "shift": [
+        1,
+        0
+      ],
+      "donor": "BRA:c9a395c2d321cd60",
+      "cover": "ARG:7462ff4f8b49993a",
+      "accepted": false,
+      "detail": "Coastal cover or donor is disconnected"
+    },
+    {
+      "shift": [
+        2,
+        0
+      ],
+      "donor": "BRA:c9a395c2d321cd60",
+      "cover": "ARG:7462ff4f8b49993a",
+      "accepted": false,
+      "detail": "Coastal cover or donor is disconnected"
+    },
+    {
+      "shift": [
+        3,
+        0
+      ],
+      "donor": "BRA:c9a395c2d321cd60",
+      "cover": "ARG:7462ff4f8b49993a",
+      "accepted": true,
+      "detail": {
+        "target": "PRY:8be730e7955b0934",
+        "donor": "BRA:c9a395c2d321cd60",
+        "cover": "ARG:7462ff4f8b49993a",
+        "shift": [
+          3,
+          0
+        ],
+        "retained_border_cells": [
+          {
+            "kept": [
+              282,
+              286
+            ],
+            "returned": [
+              285,
+              286
+            ]
+          }
+        ],
+        "cover_to_donor": [
+          [
+            293,
+            274
+          ],
+          [
+            292,
+            274
+          ],
+          [
+            291,
+            274
+          ],
+          [
+            290,
+            274
+          ],
+          [
+            289,
+            274
+          ],
+          [
+            290,
+            273
+          ],
+          [
+            291,
+            273
+          ],
+          [
+            292,
+            273
+          ],
+          [
+            293,
+            273
+          ],
+          [
+            294,
+            273
+          ],
+          [
+            295,
+            273
+          ],
+          [
+            296,
+            273
+          ],
+          [
+            297,
+            273
+          ],
+          [
+            291,
+            272
+          ],
+          [
+            292,
+            272
+          ],
+          [
+            293,
+            272
+          ],
+          [
+            294,
+            272
+          ],
+          [
+            295,
+            272
+          ],
+          [
+            296,
+            272
+          ],
+          [
+            291,
+            271
+          ],
+          [
+            292,
+            271
+          ],
+          [
+            293,
+            271
+          ],
+          [
+            294,
+            271
+          ],
+          [
+            295,
+            271
+          ],
+          [
+            292,
+            270
+          ],
+          [
+            293,
+            270
+          ],
+          [
+            294,
+            270
+          ],
+          [
+            292,
+            269
+          ],
+          [
+            293,
+            269
+          ]
+        ],
+        "changed_cells": 87,
+        "perimeter": 546,
+        "perimeter_change": 58,
+        "gained_true": [
+          [
+            "ARG:7462ff4f8b49993a",
+            "BOL:1a7254807c71e166"
+          ]
+        ]
+      }
+    },
+    {
+      "shift": [
+        3,
+        1
+      ],
+      "donor": "BRA:c9a395c2d321cd60",
+      "cover": "ARG:7462ff4f8b49993a",
+      "accepted": false,
+      "detail": "Cannot balance the coastal cover locally"
+    },
+    {
+      "shift": [
+        3,
+        2
+      ],
+      "donor": "BRA:c9a395c2d321cd60",
+      "cover": "ARG:7462ff4f8b49993a",
+      "accepted": false,
+      "detail": "Cannot retain a true target border locally"
+    },
+    {
+      "shift": [
+        4,
+        0
+      ],
+      "donor": "BRA:c9a395c2d321cd60",
+      "cover": "ARG:7462ff4f8b49993a",
+      "accepted": false,
+      "detail": "Cannot retain a true target border locally"
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/coarse90-nordic-sea-v1/cells.csv": "6b12bb11c36f9ac6b1c0cc8bafc52eac589684e2c9d9de18d8d287d774f4c479",
+    "output/auto-cartogram/geography-source-coasts-55000/source-coasts.csv": "74b99a8e34ad48401ffacaa8729698370040acc1f95bf9ffee8667eaa4d14c97",
+    "output/auto-cartogram/coarse90-nordic-sea-v1/lake-cells.csv": "b9fcc87b65209a0fdf5f01c20ebde714e879ab8e6c37dd507d0ff155cf240ea9"
+  },
+  "script_sha256": "9df533d50808d227886972fcea9d179008d1d67cae47f98ad6c484fc3df1439b",
+  "cells_sha256": "e726d5b0efa37315f4b65131e33b021f32642b0aef20cc3e387efb7b1cf9f0cf",
+  "limits": [
+    "A bounded three-component exchange, not a global fit. No connector tiles are added.",
+    "The land footprint, exact counts, lake shores, and all existing true borders stay fixed. No new false border pairs.",
+    "Coastal cover uses whole-component source coast labels, not coast orientation. Shapes need visual review. No production approval."
+  ]
+}
