@@ -809,3 +809,32 @@ islands are not part of this fit. No production geometry or mapping changes.
 Reference: the cartogram-cpp README and installed CLI help confirm that each
 GeoJSON region can have a separate CSV target area:
 https://github.com/mgastner/cartogram-cpp .
+
+The solver source confirms a target-area floor of 0.0001 of the total. Added a
+second merge rule: use one shared subdivision that clears this floor in every
+tested density blend, unless the entire component is smaller. Final grids have
+369 and 603 patches. All six final solver runs returned success, each in about
+10–16 seconds after preparation. Each retains 189 valid, connected components.
+The small numerical overlap share is below 0.0001%; contacts are not certified.
+
+Visually checked all six Eurasia results and the finer 90% global mainland view.
+The internal density signal works: western Russia gains area and its eastern
+strip becomes thinner. On the finer grid, Russia's outline error improves from
+0.896 to 0.612 at 90% Kontur. China worsens from 0.436 to 0.691, India from 0.382
+to 0.463, and Kazakhstan from 0.669 to 0.822. The compression is not fixed.
+These are outline scores, not population-fidelity scores.
+
+The four large components have area errors below 0.3%. Tiny unsplit components
+still receive the solver's minimum-area adjustment. The worst is the one-tile
+Western Sahara component, with about 400% relative area error. Therefore these
+are diagnostic continuous guides, not exact-budget layouts. No production map
+or H3 export changed. No tile repair, islands, or lake insertion was run.
+
+Published images, compressed geometries, requested and processed targets, logs,
+input hashes, and scores at `results/geography/kontur-density-flow/index.html`.
+Final raw runs: `output/auto-cartogram/kontur-patch-flow-{100,200}-floor/`.
+Earlier failed or area-biased trials remain separate. All jobs have stopped.
+Added seven tests for budget conservation, positive targets, clipping, and
+patch merging. All 225 tests pass; gallery links and artifact hashes pass, and
+the gallery returns HTTP 200. Next: combine the coarse density signal with shape constraints
+and optional sparse contacts upstream; do not promote the raw outlines.
