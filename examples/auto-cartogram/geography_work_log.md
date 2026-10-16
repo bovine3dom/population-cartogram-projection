@@ -1484,3 +1484,18 @@ false coast, the Finland–Norway regression, and other border defects remain.
 Do not promote this trial. All 308 tests pass. No experiment jobs remain active.
 The current-best cell SHA256 remains
 `3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e`.
+
+### Further repair trials
+
+Added an optional inland coastal buffer and fixed lake-shore cells to coast
+swaps. Added optional true-contact restoration to short rigid translations.
+Ran both from `coarse90-lithuania-lakes-v1` with frozen code snapshots.
+The buffer gives 67 missing and 34 false borders, but does not repair Paraguay.
+The translations give 65 missing and 32 false borders, but increase false coast
+access for Ethiopia and KAB. Rejected the translation trial. Neither trial is
+promoted. Checked the South America and Africa images, and the Nordic reference.
+The wider Nordic local fit is infeasible under its window and reach constraints.
+Recorded results and images in `coarse90-repairs/followup-v1/index.html` under
+`results/geography`. The next test must allow the Nordic outside boundary to
+change. Paraguay needs connected coastal cover during fragment repair.
+All 311 tests pass. The current-best hash is unchanged. No trial jobs remain.

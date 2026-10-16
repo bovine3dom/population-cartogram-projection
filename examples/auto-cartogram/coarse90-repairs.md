@@ -144,3 +144,40 @@ Use the geometry environment's Python executable. Each output must be new.
 
 The saved snapshots retain the exact code for these trials. Current defaults
 use stricter shore guards. They need not reproduce the earlier trial's moves.
+
+## Further local trials
+
+Review: `results/geography/coarse90-repairs/followup-v1/index.html`.
+Both trials start from `coarse90-lithuania-lakes-v1`. Neither replaces it.
+
+- `coarse90-coastal-buffer-v1`: run `repair_coast_access.py` with
+  `--buffer 3 --rounds 30`. The buffer adds a cost for inland cells near exterior
+  water. A sea-edge penalty exceeds all buffer costs for a component. Thus a
+  better buffer score cannot justify more sea edges. Freeze all lake-shore cells.
+  The 158 swaps give 67 missing and 34 false contacts. Paraguay still has 16
+  exterior-water edges. Visual review shows that its narrow shape remains.
+- `coarse90-contact-translations-v1`: run `separate_false_contacts.py` with
+  `--radius 12 --restore-contacts`. Five rigid moves give 65 missing and 32 false
+  contacts. Reject this trial: Ethiopia gains seven exterior-water edges and
+  the inland KAB component gains four. Border totals alone are not sufficient.
+  The optional translation mode remains an experiment, not a safe final repair.
+- `coarse90-nordic-contact-v2`: require Finland–Norway with Sweden as the local
+  target, margin 10, reach 8, and 90 seconds. The solver reports infeasibility.
+  This result applies only to that constrained window. A separate rigid search
+  within 32 cells on each axis needs a minimum Norway move of 14 cells east and
+  seven north to touch both Sweden and Finland. This moves Norway too far east.
+
+Both completed layouts pass independent count, connectivity, and lake-shore
+checks. The buffer trial causes no extra inland sea edges and no complete loss
+of coastal access. Visually checked South America, Africa, and the reference
+Nordic layout. The current best and H3-MON exports are unchanged.
+
+Snapshots `coarse90-repair-code-13` and `coarse90-repair-code-14` hold the trial
+code. A later translation optimization avoids repeated whole-world dictionary
+copies. The defaults still disable the new buffer and contact-restoration modes.
+All 311 tests pass.
+
+Next, allow the Nordic group's outside boundary to change in a joint fit.
+Retain its counts, true borders, and lake shores. For Paraguay, enforce connected
+coastal cover during fragment repair. Final fixed-footprint swaps have not
+repaired either main defect.

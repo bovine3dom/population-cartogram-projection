@@ -1,0 +1,83 @@
+{
+  "radius": 12,
+  "restore_contacts": true,
+  "moves": [
+    {
+      "component": "GIB:71de83b149a1d32c",
+      "dx": -5,
+      "dy": 10,
+      "removed_false": [],
+      "gained_true": [
+        [
+          "ESP:ff9451038f1a27e4",
+          "GIB:71de83b149a1d32c"
+        ]
+      ]
+    },
+    {
+      "component": "KAB:13532639e9546e01",
+      "dx": -2,
+      "dy": 11,
+      "removed_false": [
+        [
+          "KAB:13532639e9546e01",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAB:13532639e9546e01",
+          "UZB:448c5653f0be3548"
+        ]
+      ],
+      "gained_true": []
+    },
+    {
+      "component": "GUF:4acf8ebf720d2a5f",
+      "dx": 0,
+      "dy": -2,
+      "removed_false": [],
+      "gained_true": [
+        [
+          "BRA:c9a395c2d321cd60",
+          "GUF:4acf8ebf720d2a5f"
+        ]
+      ]
+    },
+    {
+      "component": "DJI:8814228594ff16f1",
+      "dx": 11,
+      "dy": 3,
+      "removed_false": [],
+      "gained_true": [
+        [
+          "DJI:8814228594ff16f1",
+          "SOL:e03433706d8873bb"
+        ]
+      ]
+    },
+    {
+      "component": "GAB:9b0fa4569aef69bd",
+      "dx": 1,
+      "dy": 6,
+      "removed_false": [],
+      "gained_true": [
+        [
+          "CMR:35df8c314c8ef083",
+          "GAB:9b0fa4569aef69bd"
+        ]
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/coarse90-lithuania-lakes-v1/cells.csv": "2d11638b7e04e4b2cb94de8e5bcf575a6ab99e9e197cb5817006803798abf7f4",
+    "output/auto-cartogram/coarse90-lithuania-lakes-v1/lake-cells.csv": "4bb9a311cad7ceebf26464abcc19ef8980bc8ca0dd87ae8335e02a01ad76139c"
+  },
+  "script_sha256": "d0977246862da1508daac8411e5da9d993edbba574a6fd5ea6d891b8ac9d5a8c",
+  "cells_sha256": "8df59f19d69814afc1faf9d452e2ebc9da9a51bc9f918eb6a3e4e7ad2849c430",
+  "limits": [
+    "Short rigid translations only. All true contacts are retained. No new false contacts.",
+    "Lake cells and their shore labels stay fixed. Coast access and source-axis order need separate review.",
+    "Small gaps can grow. No production approval."
+  ]
+}

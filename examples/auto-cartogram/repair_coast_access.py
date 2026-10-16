@@ -13,7 +13,11 @@ from review_layout import load, read_csv, connectivity
 from save_review import digest
 
 
-def repair(tiles, required, landlocked, fixed=(), rounds=200, radius=12):
+def repair(tiles, required, landlocked, fixed=(), rounds=200, radius=12,
+           buffer=0, fixed_cells=()):
+    if buffer < 0:
+        raise ValueError('Buffer must be non-negative')
+    fixed_cells = set(fixed_cells)
     state = VacancyLayout(tiles, required, landlocked, fixed=fixed)
     # The footprint never changes, so exterior water and distances stay fixed.
     distance = {p: 1 for p in state.owners if any(q in state.exterior for q in adjacent(p))}
@@ -24,9 +28,13 @@ def repair(tiles, required, landlocked, fixed=(), rounds=200, radius=12):
             if q in state.owners and q not in distance:
                 distance[q] = distance[p]+1
                 queue.append(q)
+    # One lost sea edge outweighs all buffer costs in a component.
+    weight = 1 + buffer * max(map(len, tiles.values()))
+    costs = {p: weight * sum(q in state.exterior for q in adjacent(p))
+             + max(0, buffer + 1 - distance.get(p, 10000)) for p in state.owners}
     def score(c):
         if c in landlocked:
-            return state.ocean_edges(c)
+            return sum(costs[p] for p in state.tiles[c])
         return max(0, min(distance.get(p, 10000) for p in state.tiles[c])-1)
     history = []
     for _ in range(rounds):
@@ -39,14 +47,14 @@ def repair(tiles, required, landlocked, fixed=(), rounds=200, radius=12):
             offers = []
             for q in sorted(frontier):
                 d = state.owners[q]
-                if d in state.fixed:
+                if d in state.fixed or q in fixed_cells:
                     continue
                 for p in sorted(points):
                     length = abs(p[0]-q[0])+abs(p[1]-q[1])
-                    if length > radius or not any(state.owners.get(r) == d for r in adjacent(p)):
+                    if p in fixed_cells or length > radius or not any(state.owners.get(r) == d for r in adjacent(p)):
                         continue
                     if c in landlocked:
-                        benefit = sum(r in state.exterior for r in adjacent(p))-sum(r in state.exterior for r in adjacent(q))
+                        benefit = costs[p]-costs[q]
                     else:
                         benefit = min(distance.get(r, 10000) for r in points)-distance.get(q, 10000)
                     if benefit > 0:
@@ -74,7 +82,7 @@ def repair(tiles, required, landlocked, fixed=(), rounds=200, radius=12):
     return state.tiles, history
 
 
-def run(inputs, layout, source_coasts, output, rounds=200, radius=12):
+def run(inputs, layout, source_coasts, output, rounds=200, radius=12, buffer=0):
     if output.exists() or min(rounds, radius) < 1:
         raise ValueError('Use a new output and positive limits')
     rows, tiles, _ = load(inputs, layout)
@@ -87,7 +95,10 @@ def run(inputs, layout, source_coasts, output, rounds=200, radius=12):
     if not set(tiles) <= {r['component_id'] for r in coasts}:
         raise ValueError('Missing source coast classifications')
     inland = {r['component_id'] for r in coasts if int(r['uncovered_samples']) == 0}
-    result, history = repair(tiles, required, inland, set(tiles)-land, rounds, radius)
+    lakes = read_csv(layout/'lake-cells.csv') if (layout/'lake-cells.csv').exists() else []
+    shores = {q for r in lakes for q in adjacent((int(r['x']), int(r['y'])))}
+    result, history = repair(tiles, required, inland, set(tiles)-land, rounds, radius,
+                             buffer=buffer, fixed_cells=shores)
     output.mkdir(parents=True)
     with (output/'cells.csv').open('w', newline='') as stream:
         writer = csv.writer(stream)
@@ -97,8 +108,9 @@ def run(inputs, layout, source_coasts, output, rounds=200, radius=12):
     for name in ['lake-cells.csv', 'lake-placement.json']:
         if (layout/name).exists():
             shutil.copyfile(layout/name, output/name)
-    record = dict(rounds=rounds, radius=radius, swaps=history,
-                  inputs={str(p): digest(p) for p in [inputs/'groups.csv', inputs/'geographic-contacts.csv', layout/'cells.csv', source_coasts]},
+    record = dict(rounds=rounds, radius=radius, buffer=buffer, swaps=history,
+                  inputs={str(p): digest(p) for p in [inputs/'groups.csv', inputs/'geographic-contacts.csv', layout/'cells.csv', source_coasts]
+                          + [layout/name for name in ('lake-cells.csv', 'lake-placement.json') if (layout/name).exists()]},
                   script_sha256=digest(Path(__file__)), cells_sha256=digest(output/'cells.csv'),
                   limits=['Source coast labels use finite samples, not a proof of ocean access.',
                           'The footprint, lakes, island cells, and all component budgets stay fixed.',
@@ -115,4 +127,5 @@ if __name__ == '__main__':
         parser.add_argument(name, type=Path)
     parser.add_argument('--rounds', type=int, default=200)
     parser.add_argument('--radius', type=int, default=12)
+    parser.add_argument('--buffer', type=int, default=0)
     run(**vars(parser.parse_args()))
