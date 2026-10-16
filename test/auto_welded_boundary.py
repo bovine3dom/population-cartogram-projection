@@ -4,12 +4,14 @@ import io
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 from shapely import box
-from shapely.geometry import Polygon
+from shapely.geometry import Point, Polygon
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
+from kontur_boundary_map import BoundaryMap, ContourSamplingError
 from independent_kontur_flow import normalized
 from welded_boundary_fit import WeldedMesh, area_gradient, signed_area, fit
 
@@ -49,6 +51,28 @@ class WeldedBoundaryTest(unittest.TestCase):
         self.source['a'] = Polygon([(0,0),(4,0),(4,1),(4,4),(0,4)])
         with self.assertRaisesRegex(ValueError,'misses part'):
             WeldedMesh(self.source,self.preferred,self.budgets,set())
+
+    def test_target_chord_refinement_is_shared_and_parameters_stay_fixed(self):
+        target = Polygon([(0,0),(-1,0),(-1,3),(2,3),(2,2),(0,2),(0,1),(2,0)])
+        self.assertTrue(target.is_valid)
+        ring = target.exterior
+        arc = dict(ring=ring,labels=['x','y'],starts=np.array([0.,.5]))
+        mapper = BoundaryMap(arc,arc)
+        parameters = np.array([ring.project(Point(p),normalized=True)
+                               for p in [(0,0),(2,2),(0,2),(0,1),(2,0)]])
+        with self.assertRaises(ContourSamplingError):
+            mapper.sample(parameters)
+        with patch.object(mapper,'locations_on_ring',return_value=parameters) as locate:
+            mesh = WeldedMesh(self.source,{'a':target,'b':self.preferred['b']},self.budgets,set(),
+                              edge_length=100,mappers={'a':[mapper],'b':[None]})
+        self.assertEqual(locate.call_count,1)
+        self.assertTrue(mesh.refinement)
+        self.assertGreater(len(mesh.shared),2)
+        for _,entries,_ in mesh.shared:
+            (_,ai,aj),(_,bi,bj) = entries
+            self.assertEqual(set(mesh.node[[ai,aj]]),set(mesh.node[[bi,bj]]))
+        self.assertTrue(mesh.checks(mesh.initial)['valid'])
+        self.assertAlmostEqual(mesh.polygons(mesh.initial)['a'].area,16)
 
     def test_area_derivative_matches_finite_difference(self):
         p = np.array([[0.,0.],[4.,.1],[3.,4.],[-1.,2.]])
