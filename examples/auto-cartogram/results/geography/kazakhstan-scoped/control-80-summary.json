@@ -1,0 +1,24 @@
+{
+  "tiles": 55000,
+  "components": 481,
+  "before_tile_weighted_shape_error": 0.4266114477337469,
+  "after_tile_weighted_shape_error": 0.42416523931032846,
+  "newly_empty_cells": 160,
+  "new_enclosed_empty_cells": 19,
+  "named_lake_cells": 220,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/geography-islands-lakes-integrated/cells.csv": "b2588c701ba5c36c9e829b9e142448617f51cae75ce9522c91f244ba683190a4",
+    "output/auto-cartogram/kazakhstan-scoped/control-80/cells.csv": "e3e6abcb7daf3d46626da7c17bcf859efd8b57eacc187c1b483367854d3544c4",
+    "output/auto-cartogram/geography-islands-lakes-integrated/lake-cells.csv": "8867655bc6aee365d4e2ffe0f963574b128dca47f12382beb85bc9ca66911ec5",
+    "output/auto-cartogram/kazakhstan-scoped/control-80/lake-cells.csv": "8867655bc6aee365d4e2ffe0f963574b128dca47f12382beb85bc9ca66911ec5",
+    "output/auto-cartogram/geography-lake-guides-final/geometry.geojson": "36fdfefb614d3b68295a48e6cb4793e8a3a620ac76879e80b291ffc55e57696b"
+  },
+  "script_sha256": "f398ffb013b7312f63f1e0d79120c3ace43183703a17b78e3fc5abb1d1f446bd",
+  "limits": [
+    "Shape error is one minus intersection-over-union with the native dry-land outline, scaled to equal area and aligned at the tile centroid.",
+    "No rotation is fitted. This measures outline similarity, not relative position or population mapping quality.",
+    "New enclosed blank space is not declared to be a real lake. It includes experimental separation gaps.",
+    "Tile weighting is an approximation to population weighting because component tile budgets are rounded."
+  ]
+}

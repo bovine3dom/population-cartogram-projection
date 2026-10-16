@@ -1,0 +1,67 @@
+{
+  "feasible": false,
+  "cost": 90.670143,
+  "protected_path": [
+    "RUS:b85c5bca1852870f",
+    "AZE:0510388634a9edd9",
+    "IRN:3c2b5bd7d999fbee",
+    "AFG:cda2af5bb6ea22f0",
+    "PAK:447ed1858f7b7a5d",
+    "IND:3f0bb94d859b2064",
+    "BGD:d6d0c7df0b40a187",
+    "MMR:e9f27e99686071f9",
+    "CHN:72cd37e37e634df7"
+  ],
+  "cut": [
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "KAZ:5d6f63a9b9f3c9f9",
+      "audited_sparse": true,
+      "false_contact": false,
+      "protected": false
+    },
+    {
+      "a": "CHN:72cd37e37e634df7",
+      "b": "RUS:b85c5bca1852870f",
+      "audited_sparse": true,
+      "false_contact": false,
+      "protected": false
+    },
+    {
+      "a": "IND:3f0bb94d859b2064",
+      "b": "KAS:b7c84d817c090062",
+      "audited_sparse": true,
+      "false_contact": false,
+      "protected": false
+    },
+    {
+      "a": "IND:3f0bb94d859b2064",
+      "b": "PAK:447ed1858f7b7a5d",
+      "audited_sparse": false,
+      "false_contact": false,
+      "protected": true
+    },
+    {
+      "a": "IND:3f0bb94d859b2064",
+      "b": "RUS:b85c5bca1852870f",
+      "audited_sparse": false,
+      "false_contact": true,
+      "protected": false
+    }
+  ],
+  "source": "RUS",
+  "target": "CHN",
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/geography-islands-lakes-integrated/cells.csv": "b2588c701ba5c36c9e829b9e142448617f51cae75ce9522c91f244ba683190a4",
+    "output/auto-cartogram/sparse-border-audit-25-wide/border-population.json": "550eb1329221c7401a2f4699f7785520eb7c05adaa3a749e870bce18acabac58",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/audit_sparse_cut.py": "dcc6e00125a075b688a14ac33e8640b31261251042c0d668583d36fc5d53b5a6"
+  },
+  "limits": [
+    "This is a contact-graph diagnostic, not a layout proposal or evidence of better shapes.",
+    "The cost is one per true cut plus corridor population in millions. False contacts have negligible cost and may be removed.",
+    "Every existing true contact above either density limit is protected. Already missing contacts are not added.",
+    "A feasible cut can still fail geometric, lake, island, or shape checks. No tiles are moved."
+  ]
+}

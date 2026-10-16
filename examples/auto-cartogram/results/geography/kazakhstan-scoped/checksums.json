@@ -1,0 +1,17 @@
+{
+  "audit.json.gz": "6932c7fd95451fdbf0f7d3dc45425f06b2f3194ea8da073c49287881adcff325",
+  "control-80-cells.csv.gz": "79efb783bfd23d7d8688c5e1263b1802eb04941e9c35359baf9c1d0499304cf6",
+  "control-80-shapes.csv": "e1d50259ba0938da408d95dbfc721daa781badf9cb805106789aada3a1b12c54",
+  "control-80-sparse-borders.json.gz": "b942f7fa3499db5f60fee42be9e4653facc49fdcd8b8cb0f8905619faaa692b8",
+  "control-80-summary.json": "08611de17bcc0030f54230d6e480b064d9d1f014338a90f54ce6f64e6e034550",
+  "control-80.png": "89d9c8fc44dec4e26a2c29b9632f7864406cf5a2f9321072a6b8e122ad467014",
+  "current.png": "3b2db21c7a79b7f3fac133a5fccdcd9a2b7d1969b5db3f56e539a2119f3511e7",
+  "cut-russia-china.json": "39d0fc816ebb703a4750bbbbb37114c8fc02bce1ef4479c12e7046ac8a0f2c21",
+  "owid-comparison.json": "6e9cdbc6ae7a2fa66c4ae5dfe039f5d8a50ea9222cc05954c1d433005b2b9b43",
+  "owid.png": "8a1c99aaddd80f662462353f002e2882a74ada2b4398453e4996c9aa430d29cd",
+  "seeded-cells.csv.gz": "6421a5a777a5a5eb729d3c5e4e9b736a20717aa9e3362ac6396b51125d95012a",
+  "seeded-shapes.csv": "3208b7ea544934b77d35a78e874887c53b7a71d6eebbdbfefefec54465e4da80",
+  "seeded-sparse-borders.json.gz": "5ed97ae30c1a810a7622b95c70534e01f940fa9654a0ab76e7272a9b13cadc65",
+  "seeded-summary.json": "11ffc260096d6b5f395467b7ed0ba3476f056b2776d12d11761a2eb5eaabde43",
+  "seeded.png": "4fb44054100d05c2887aa49937e9b9e04ed92571a17955abad1bf7bbf5534d38"
+}
