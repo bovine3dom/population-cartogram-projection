@@ -838,3 +838,25 @@ Added seven tests for budget conservation, positive targets, clipping, and
 patch merging. All 225 tests pass; gallery links and artifact hashes pass, and
 the gallery returns HTTP 200. Next: combine the coarse density signal with shape constraints
 and optional sparse contacts upstream; do not promote the raw outlines.
+
+## Planet tile fit from the coarse 90% Kontur guide
+
+The user selected the coarser 90% result. Added `run_kontur_planet.py` to fit that
+saved guide to the original 55,000-tile component budgets. Keep the margin-one
+settings, mainland docking, archipelago rules, and empty lake insertion. Use
+flow-coordinate centres so that the old unwarped population sites do not undo
+the selected guide. This centre rule is an explicit change from the older fit.
+
+Trim only tiny numerical overlaps before the strict flow-input check. Reject
+large overlaps or any cleanup that splits a component. Three new tests cover
+this guard. All 228 tests pass.
+
+Recompute island positions for the new mainland. Use geometric coast frames;
+the old layout's population transport map is not valid for the new mainland.
+Do not copy saved island coordinates onto a different world fit. The final lake
+count and source-landmass connectivity need fresh checks.
+
+Started `output/auto-cartogram/planet-kontur-coarse90/`. Log:
+`/tmp/planet-kontur-coarse90.log`. No strategic cuts are included. First inspect
+this full-planet candidate, then use the same settings as the no-cut control
+for early-pipeline border-release experiments. No production map is replaced.
