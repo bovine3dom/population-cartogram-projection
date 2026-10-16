@@ -952,3 +952,20 @@ and retry Canada. The solver domain changes when neighbours are removed, so
 this is not a test of one selected border alone. No assembly is attempted.
 Current best, tile budgets, island and lake placement, and production exports
 remain unchanged. Four new unit tests pass.
+
+The 512-grid runs completed, including Canada. Russia and China give similar
+outline scores at both resolutions. Shared to independent scores are Russia
+0.728 to 0.528–0.531, China 0.670 to 0.379–0.382, India 0.444 to 0.128,
+Kazakhstan 0.787 to 0.227, and Canada 0.769 to 0.202. All independent uniform
+controls have errors below 0.0006. All accepted shapes are valid and connected;
+maximum patch area errors are below 0.9%. Fifteen of sixteen solver calls
+succeeded. The failed Canada 256-grid call remains in the archive.
+
+Visually checked all four primary comparison sheets, Canada's successful retry,
+China's 512-grid comparison, and the enlarged independent Russia shape. Published
+`results/geography/independent-kontur-flow/index.html`, with source and output
+geometry, solver inputs, logs, hashes, and images. See `independent-flow.md`.
+
+These results justify a regional assembly experiment with independent reference
+shapes and selected border constraints. They do not justify replacing the world
+layout. All 238 tests pass. All jobs have stopped.
