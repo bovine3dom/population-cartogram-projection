@@ -1,0 +1,3 @@
+mode=regional-release
+counts=exact
+approval=none

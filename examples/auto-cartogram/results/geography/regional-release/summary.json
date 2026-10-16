@@ -1,0 +1,42 @@
+[
+  {
+    "variant": "spacing-110",
+    "mainland_russia_china_distance": 41.617304093369626,
+    "tiles": 55000,
+    "components": 481,
+    "empty_lake_cells": 220,
+    "named_lakes": 45,
+    "missing_contacts": 103,
+    "false_contacts": 13
+  },
+  {
+    "variant": "spacing-130",
+    "mainland_russia_china_distance": 48.104053883222775,
+    "tiles": 55000,
+    "components": 481,
+    "empty_lake_cells": 220,
+    "named_lakes": 45,
+    "missing_contacts": 103,
+    "false_contacts": 13
+  },
+  {
+    "variant": "spacing-180",
+    "mainland_russia_china_distance": 158.90248582070703,
+    "tiles": 55000,
+    "components": 481,
+    "empty_lake_cells": 220,
+    "named_lakes": 45,
+    "missing_contacts": 103,
+    "false_contacts": 13
+  },
+  {
+    "variant": "refined",
+    "mainland_russia_china_distance": 56.92099788303083,
+    "tiles": 55000,
+    "components": 481,
+    "empty_lake_cells": 220,
+    "named_lakes": 45,
+    "missing_contacts": 101,
+    "false_contacts": 8
+  }
+]

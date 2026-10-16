@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Large regional moves: review</title>
+<style>body{font:17px/1.5 system-ui;max-width:1500px;margin:auto;padding:24px;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#165a9e}table{border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #ccc}.warning{border-left:5px solid #a54;padding-left:16px}details{margin:24px 0}</style>
+<h1>Large regional moves</h1>
+<p class="warning"><strong>Experiment, not a replacement map.</strong> These tests allow large moves, not just narrow border gaps.
+The published H3-MON map is unchanged. Blank separations are <strong>not geographic seas</strong>.</p>
+<p><a href="../../../regional_release.md">Method and commands</a> ·
+<a href="../../../geography_work_log.md">Work log</a> ·
+<a href="summary.json">Measurements</a> ·
+<a href="../margin-1-followup/index.html#local-lakes">Input with empty lakes</a> ·
+<a href="../sparse-borders/index.html">Earlier small-gap tests</a></p>
+<h2>Start here: Eurasia after regional moves and shape refinement</h2>
+<p>Russia stays beside Europe. China moves far away. No connector paths were added.
+Japan stays together beside Korea. This gives the large-scale separation that the earlier tests did not.</p>
+<a href="refined/eurasia.png"><img src="refined/eurasia.png" alt="Eurasia with Russia near Europe and a large gap before China"></a>
+<p><a href="refined/review.png">Whole world</a> · <a href="refined/africa.png">Africa and lakes</a> ·
+<a href="refined/indonesia.png">Indonesia</a> · <a href="refined/cells.csv.gz">Tile coordinates</a> ·
+<a href="refined/sparse-borders.json">Refinement report</a> · <a href="refined/shape-comparison.json">Outline comparison</a></p>
+<h2>What stays exact?</h2>
+<p>All four layouts keep 55,000 land tiles, all 481 component budgets, and 220 empty cells in 45 named lakes.
+Each component stays connected. Lake cells do not consume country tiles. Lake shores and nearby island chains
+move together. Overseas islands do not follow country IDs.</p>
+<h2>What is the cost?</h2>
+<p>The regional grouping removes 40 existing true contacts. <strong>20 fail the earlier sparse-border test.</strong>
+Thus this is not yet a solution that removes only sparse borders. The method uses border-corridor population
+weights to form 65 groups. Hard protection of all other borders would still link Russia and China through
+chains of countries.</p>
+<p>West Africa separates too far from East and Southern Africa. The widest test adds too much ocean space.
+Some old island-position errors remain because island chains move intact. These are reasons not to replace
+the current map with this experiment.</p>
+<table><tr><th>Layout</th><th>Russia–China distance</th><th>Missing / false contacts</th><th>Outline error</th></tr>
+<tr><td>Input</td><td>1.00</td><td>63 / 34</td><td>0.42690</td></tr>
+<tr><td><a href="spacing-110/review.png">Spacing 1.1</a></td><td>41.62</td><td>103 / 13</td><td>0.42690</td></tr>
+<tr><td><a href="spacing-130/review.png">Spacing 1.3</a></td><td>48.10</td><td>103 / 13</td><td>0.42690</td></tr>
+<tr><td><a href="spacing-180/review.png">Spacing 1.8</a></td><td>158.90</td><td>103 / 13</td><td>0.42690</td></tr>
+<tr><td><a href="refined/review.png">Spacing 1.3 + refinement</a></td><td>56.92</td><td>101 / 8</td><td>0.40372</td></tr></table>
+<p>Distance is the nearest tile-centre distance between the largest mainland components, in tile spacings.
+Outline error compares aligned, equal-area shapes; lower is better. It does not measure relative position.
+Rigid moves do not improve that score. The 150 refinement rounds reduce it by about 5.4%, but create six new
+enclosed empty cells. They protect contacts that remain after translation, not those already removed.</p>
+<h2>Whole-world comparison</h2>
+<h3>Spacing 1.1</h3><a href="spacing-110/review.png"><img loading="lazy" src="spacing-110/review.png" alt="Whole world at spacing 1.1"></a>
+<p><a href="spacing-110/eurasia.png">Eurasia</a> · <a href="spacing-110/release.json">Moves and lost borders</a> · <a href="spacing-110/cells.csv.gz">Tiles</a></p>
+<h3>Spacing 1.3</h3><a href="spacing-130/review.png"><img loading="lazy" src="spacing-130/review.png" alt="Whole world at spacing 1.3"></a>
+<p><a href="spacing-130/eurasia.png">Eurasia</a> · <a href="spacing-130/release.json">Moves and lost borders</a> · <a href="spacing-130/cells.csv.gz">Tiles</a></p>
+<h3>Spacing 1.8: too much ocean space</h3><a href="spacing-180/review.png"><img loading="lazy" src="spacing-180/review.png" alt="Whole world with the widest spacing"></a>
+<p><a href="spacing-180/eurasia.png">Eurasia</a> · <a href="spacing-180/release.json">Moves and lost borders</a> · <a href="spacing-180/cells.csv.gz">Tiles</a></p>
+<h3>Spacing 1.3 after shape refinement</h3><a href="refined/review.png"><img loading="lazy" src="refined/review.png" alt="Whole world after shape refinement"></a>
+<h2>Known problem: Africa</h2>
+<img loading="lazy" src="refined/africa.png" alt="Africa with empty lakes but excessive separation between west and east">
+<p>The lakes remain empty. However, the regional split makes Africa less recognizable.</p>
+<h2>OWID reference</h2>
+<p>This archived reference uses different colours and component rules. Compare the regional arrangement,
+not the colour or absolute image scale.</p>
+<a href="../../compact-landmass/owid/layout.png"><img loading="lazy" src="../../compact-landmass/owid/layout.png" alt="Archived OWID layout for comparison"></a>
+<h2>Next step</h2>
+<p>Test joint regional placement with explicit costs for lost populated borders and nearby coast errors.
+Reward shape improvement, not separation alone. Retain the exact tile and empty-lake checks.
+All 187 automatic-cartogram tests pass. No new population mapping has been published.</p>
+</html>
