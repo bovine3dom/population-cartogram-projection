@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Margin-one with lakes: Mercator starting projection</title>
+<style>body{font:17px/1.5 system-ui;max-width:1600px;margin:auto;padding:24px;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#165a9e}table{border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #ccc}.warning{border-left:5px solid #a54;padding-left:16px}details{margin:24px 0}</style>
+<h1>Margin-one with lakes: Mercator starting projection</h1>
+<p><strong>The reference is the <a href="../margin-1-followup/local-lakes/review.png">preferred local-lakes layout</a>.</strong>
+This experiment repeats its flow, margin-one fit, mainland repair, and lake insertion.
+Only the starting mainland flow projection changes. It does not use the separate shape-first solver
+or add permission to break borders.</p>
+<p class="warning">Neither new run replaces the preferred reference. The Mercator run has two detached
+component groups. The fresh Equal Earth control also has a regression. Production layouts and H3-MON
+mapping are unchanged.</p>
+<p><a href="../../../margin1_projection.md">Method and commands</a> ·
+<a href="../../../geography_work_log.md">Work log</a> · <a href="summary.json">Checked comparison</a></p>
+<h2>Mercator starting flow, original fitting method</h2>
+<a href="mercator/review.png"><img src="mercator/review.png" alt="Mercator starting flow fitted with the existing margin-one and lake pipeline"></a>
+<p><a href="mercator/europe.png">Europe</a> · <a href="mercator/africa.png">Africa and lakes</a> ·
+<a href="mercator/north-america.png">North America</a> · <a href="mercator/south-america.png">South America</a> ·
+<a href="mercator/south-asia.png">South Asia</a> · <a href="mercator/japan-korea.png">Japan and Korea</a> ·
+<a href="mercator/indonesia.png">Indonesia</a></p>
+<h2>Preferred reference: unchanged</h2>
+<a href="../margin-1-followup/local-lakes/review.png"><img loading="lazy" src="../margin-1-followup/local-lakes/review.png" alt="The user's preferred margin-one layout with local lakes"></a>
+<h2>Checks</h2>
+<table><tr><th>Layout</th><th>Land tiles</th><th>Missing contacts</th><th>False contacts</th><th>Lakes / empty cells</th><th>Split source landmasses</th></tr>
+<tr><td>Preferred reference</td><td>55,000</td><td>63</td><td>34</td><td>45 / 220</td><td>0</td></tr>
+<tr><td>Fresh Equal Earth control</td><td>55,000</td><td>61</td><td>39</td><td>45 / 220</td><td>1</td></tr>
+<tr><td>Mercator starting flow</td><td>55,000</td><td>64</td><td>37</td><td>45 / 220</td><td>2</td></tr></table>
+<p>All 481 component budgets remain exact. Every individual component is connected. Every named lake cell
+is empty and does not consume a population tile. A connected component is not the same check as a joined
+source landmass: a whole component can still be detached from its neighbours.</p>
+<p>The Mercator run leaves a 178-tile Malaysian component and a 30-tile Canadian component detached from
+their source landmass groups. The Equal Earth control leaves Norway and Sweden detached together.
+The original repair rules were applied unchanged; these remaining defects are reported, not hidden by a new rule.</p>
+<p>The lake totals match, but the Mercator lake set differs: Syvash does not fit, while the South Aral Sea
+now fits. The Equal Earth control retains the reference's lake set. No partial failed lake placement is kept.</p>
+<p>In the Mercator run, Estonia, Latvia, and Lithuania retain edges beside exterior water. Paraguay has no
+exterior-water edge. These checks do not prove that all coast relationships are correct.</p>
+<h2>Visual review</h2>
+<p>Reviewed the world views, Europe, African lakes, North America, and Japan/Korea. The Mercator result
+retains the joined layout, unlike the separate-country experiments. Russia, China, and India still have
+substantial distortion. Changing the starting projection alone has not restored the fresh native outlines.
+The reference remains the current best fit.</p>
+<details><summary>Fresh Equal Earth control</summary>
+<a href="equal-earth/review.png"><img loading="lazy" src="equal-earth/review.png" alt="Fresh Equal Earth control using the same settings"></a>
+<p>The starting Equal Earth geometry matches the archived input byte for byte. The newly solved flow
+geometry differs from the old solved flow. The cause of this repeatability difference has not been established.
+Compare the Mercator candidate with both this control and the saved reference.</p></details>
+<h2>Saved files</h2>
+<ul>
+<li>Mercator: <a href="mercator/cells.csv.gz">tiles</a>, <a href="mercator/lake-cells.csv.gz">empty lake cells</a>,
+<a href="mercator/comparison.json">settings and comparison</a>, <a href="mercator/pipeline.json.gz">pipeline record</a>,
+<a href="mercator/lake-placement.json.gz">lake report</a>, <a href="mercator/geography.json">geography checks</a>,
+<a href="mercator/checksums.json">checksums</a>.</li>
+<li>Equal Earth control: <a href="equal-earth/cells.csv.gz">tiles</a>, <a href="equal-earth/comparison.json">settings and comparison</a>,
+<a href="equal-earth/pipeline.json.gz">pipeline record</a>, <a href="equal-earth/geography.json">geography checks</a>.</li>
+</ul>
+<p>Both runs completed. All 201 tests pass. No background fit remains active.</p>
+</html>

@@ -68,3 +68,33 @@ Equal Earth control. Do not attribute control-run changes to Mercator.
 All 201 tests pass. Three new tests check unchanged default projection,
 unchanged component budgets and holes, and unchanged mainland selection.
 The existing tests also check Mercator reference coordinates and polar limits.
+
+## Completed comparison
+
+[Open the checked images](results/geography/margin-1-mercator/index.html).
+Both runs completed. Neither replaces the preferred reference.
+
+| Layout | Missing contacts | False contacts | Split source landmasses |
+| --- | ---: | ---: | ---: |
+| Preferred reference | 63 | 34 | 0 |
+| Fresh Equal Earth control | 61 | 39 | 1 |
+| Mercator starting flow | 64 | 37 | 2 |
+
+All layouts have 55,000 tiles, exact budgets for 481 components, 45 named
+lakes, and 220 empty lake cells. Every individual component is connected.
+Mercator leaves a 178-tile Malaysian component and a 30-tile Canadian
+component detached from their source landmass groups. The control leaves
+Norway and Sweden detached together. These are regressions, not new permission
+to break borders.
+
+The Mercator run loses Syvash and gains the South Aral Sea in the accepted lake
+set. The Equal Earth control keeps the reference lake set. Estonia, Latvia,
+and Lithuania retain exterior-water edges in the Mercator run. Paraguay has
+none. The counts and lake cells were checked independently before publication.
+
+Visual review covered world views, Europe, African lakes, North America, and
+Japan/Korea. The joined layout remains intact at the broad regional scale,
+but Russia, China, and India still have substantial shape distortion. The
+projection change alone does not restore their native outlines. The original
+preferred layout remains the reference. The cause of the fresh Equal Earth
+flow's repeatability difference has not yet been established.
