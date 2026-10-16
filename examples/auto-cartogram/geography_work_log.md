@@ -1428,3 +1428,12 @@ Chromium and checked its HTTP response, local links, and all 59 file hashes.
 Nine source records and 25 unique input hashes pass their checks. All 286 tests
 pass. Current-best cells retain their original SHA256. All experiment jobs have
 stopped. H3-MON exports remain unchanged.
+
+### Final validation
+
+All 288 tests pass. A missing corridor measurement cannot authorize a short
+border cut. The planet runner now rejects a custom policy that still requires
+one of its recorded cuts, even when all file hashes match. Its run record also
+includes the copied component-budget file. Checked the review page at desktop
+and narrow widths in headless Chromium. All changes are committed; the two user
+PDF files remain untracked and unchanged.
