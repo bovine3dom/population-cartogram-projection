@@ -314,6 +314,10 @@ class WeldedMesh:
                         # Use the actual separating vector so every valid
                         # current configuration admits the zero displacement.
                         normal = separation/distance
+                        if d != c and polygons[c].contains(Point(point)):
+                            # A small accepted overlap is penetration, not a
+                            # positive clearance pointing into the neighbour.
+                            normal = -normal
                     gap = np.dot(separation,normal)
                     row([(u,(1-t)*normal),(v,t*normal),(a,-(1-fraction)*normal),(b,-fraction*normal)],-gap)
         jac = sparse.coo_matrix((vv,(rr,cc)),shape=(len(lower),self.size)).tocsc()
@@ -332,7 +336,34 @@ class WeldedMesh:
                     maximum_area_error=float(np.max(np.abs(self.areas(flat)/self.budgets-1))))
 
 
-def fit(mesh, iterations=60, trust=2.):
+def save_collision_trace(mesh, current, step, directory, entry, inequality, lower):
+    """Save a rejected proposal, not a candidate layout."""
+    directory.mkdir(parents=True)
+    before,after = mesh.polygons(current),mesh.polygons(current+step)
+    features,overlaps = [],[]
+    for stage,shapes in [('current',before),('proposed',after)]:
+        features.extend(dict(type='Feature',properties=dict(stage=stage,component_id=c),geometry=mapping(g))
+                        for c,g in shapes.items())
+    for i,a in enumerate(mesh.labels):
+        for b in mesh.labels[i+1:]:
+            intersection = after[a].intersection(after[b])
+            if intersection.area > 1e-8:
+                overlaps.append(dict(a=a,b=b,area=intersection.area,cut=tuple(sorted((a,b))) in mesh.cuts))
+                features.append(dict(type='Feature',properties=dict(stage='overlap',a=a,b=b),geometry=mapping(intersection)))
+    residual = inequality@step-lower
+    report = dict(step=entry,overlaps=sorted(overlaps,key=lambda p:-p['area']),
+                  maximum_linear_violation=max(0.,float(-residual.min())),
+                  current_checks=mesh.checks(current),proposed_checks=mesh.checks(current+step),
+                  rings={c:[r.tolist() for r in rings] for c,rings in mesh.rings.items()},
+                  cuts=sorted(mesh.cuts),budgets=dict(zip(mesh.labels,mesh.budgets.tolist())),
+                  limits=['Rejected solver proposal; not a layout.',
+                          'Constraint residuals are in the original row units, not all in distance units.'])
+    np.savez_compressed(directory/'step.npz',initial=mesh.initial,current=current,step=step)
+    (directory/'geometry.geojson').write_text(json.dumps(dict(type='FeatureCollection',features=features))+'\n')
+    (directory/'trace.json').write_text(json.dumps(report,indent=2)+'\n')
+
+
+def fit(mesh, iterations=60, trust=2., trace_directory=None):
     import osqp
     current = mesh.initial.copy()
     history = []
@@ -341,7 +372,11 @@ def fit(mesh, iterations=60, trust=2.):
         eq,rhs = mesh.equalities(current)
         inequality,lower = mesh.inequalities(current)
         if lower.max(initial=-np.inf) > 1e-7:
-            raise ValueError('Collision linearization excludes the valid current mesh')
+            checks = mesh.checks(current)
+            # An accepted tolerance-sized overlap needs a corrective step;
+            # zero displacement must not be required to remain feasible.
+            if not checks['valid'] or not 0 < checks['overlap'] < 1e-6:
+                raise ValueError('Collision linearization excludes the valid current mesh')
         # Penalized area slacks keep each subproblem feasible while the curved
         # area constraints are linearized. Report actual final area errors.
         count = len(rhs)
@@ -376,6 +411,9 @@ def fit(mesh, iterations=60, trust=2.):
                 entry['full_step_checks'] = checks
                 entry['full_step_merit'] = merit
                 entry['initial_merit'] = before
+                if (trace_directory is not None and not trace_directory.exists()
+                        and checks['polygon_valid'] and checks['overlap'] > 1e-6):
+                    save_collision_trace(mesh,current,step,trace_directory,entry,inequality,lower)
             if checks['valid'] and checks['overlap'] < 1e-6 and merit <= before+1e-8:
                 current = proposed
                 mesh.remesh(current)
@@ -398,11 +436,13 @@ def fit(mesh, iterations=60, trust=2.):
     return current,history
 
 
-def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False):
+def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False, trace_collisions=False, countries=COUNTRIES):
     import osqp
     if (output.exists() or iterations < 1 or not math.isfinite(source_simplify) or source_simplify < 0
             or not math.isfinite(edge_length) or edge_length <= 0):
         raise ValueError('Use a new output directory and positive iteration limit')
+    if len(countries) < 2 or len(set(countries)) != len(countries) or not set(countries) <= set(COUNTRIES):
+        raise ValueError('Select at least two distinct supported countries')
     groups_path = root/'world-55000-dissolved-input/groups.csv'
     rows = {r['component_id']:r for r in read_csv(groups_path)}
     guide_path = root/'kontur-patch-flow-200-floor/blend-0.9/components.geojson'
@@ -412,7 +452,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
     if not saved['solver_success'] or saved['geometry_sha256'] != digest(guide_path):
         raise ValueError('Saved guide differs')
     scale = math.sqrt(sum(int(rows[c]['tiles']) for c in guide)/sum(g.area for g in guide.values()))
-    main = {code:max((c for c in guide if c[:3]==code),key=lambda c:int(rows[c]['tiles'])) for code in COUNTRIES}
+    main = {code:max((c for c in guide if c[:3]==code),key=lambda c:int(rows[c]['tiles'])) for code in countries}
     from shapely import affinity
     source = {c:affinity.scale(guide[c],scale,scale,origin=(0,0)) for c in main.values()}
     origin = union_all(list(source.values())).centroid
@@ -431,7 +471,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
             raise ValueError('Independent guide differs')
         preferred[c] = normalized(read_shapes(path)[c],int(rows[c]['tiles']))
         paths.extend([path,details])
-    cuts = {tuple(sorted((main[a],main[b]))) for a,b in CUTS}
+    cuts = {tuple(sorted((main[a],main[b]))) for a,b in CUTS if a in main and b in main}
     audit_path = root/'sparse-border-audit-25-wide/border-population.json'
     audit = json.loads(audit_path.read_text())
     contacts_path = root/'world-55000-dissolved-input/geographic-contacts.csv'
@@ -454,7 +494,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         paths.extend(extra)
         paths.append(Path(__file__).with_name('kontur_boundary_map.py'))
     output.mkdir(parents=True)
-    report = dict(cuts=sorted(cuts),patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
+    report = dict(countries=list(countries),cuts=sorted(cuts),trace_collisions=trace_collisions,patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
                   script_sha256=digest(Path(__file__)),osqp_version=osqp.__version__,
                   limits=['Shared vertices preserve entire retained border polylines, not only point contacts.',
                           'Selected cuts duplicate boundary degrees of freedom. General geometric collision checks still apply.',
@@ -470,10 +510,10 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         print(name,'initial',json.dumps(initial_checks),flush=True)
         if not initial_checks['valid'] or initial_checks['overlap'] > 1e-6:
             raise ValueError('Invalid initial mesh')
-        flat,history = fit(mesh,iterations)
+        flat,history = fit(mesh,iterations,trace_directory=output/name/'collision-trace' if trace_collisions else None)
         geometries = mesh.polygons(flat)
         folder = output/name
-        folder.mkdir()
+        folder.mkdir(exist_ok=True)
         case = dict(name=name,nodes=mesh.n,triangles=len(mesh.triangles),contour_refinement=mesh.refinement,
                     initial_checks=initial_checks,history=history,**mesh.checks(flat))
         case['countries'] = [dict(component=c,country=c[:3],geographic_error=outline_error(geometries[c],native[c]),
@@ -505,4 +545,6 @@ if __name__ == '__main__':
     parser.add_argument('--edge-length',type=float,default=2.)
     parser.add_argument('--cases',nargs='+',choices=['all-borders','sparse-cuts'],default=['all-borders','sparse-cuts'])
     parser.add_argument('--patch-guides',action='store_true')
+    parser.add_argument('--trace-collisions',action='store_true')
+    parser.add_argument('--countries',nargs='+',choices=COUNTRIES,default=COUNTRIES)
     run(**vars(parser.parse_args()))

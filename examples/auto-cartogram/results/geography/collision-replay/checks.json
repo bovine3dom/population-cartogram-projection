@@ -1,0 +1,66 @@
+{
+  "pair": {
+    "a": "MNG:7ecd8e5b0a42fa66",
+    "b": "RUS:b85c5bca1852870f",
+    "area": 0.21036104357692448,
+    "cut": true
+  },
+  "inside_samples": [
+    {
+      "country": "MNG:7ecd8e5b0a42fa66",
+      "inside": "RUS:b85c5bca1852870f",
+      "samples": 9,
+      "wrong_sign_samples": 4,
+      "maximum_depth": 6.328942462860185e-08
+    },
+    {
+      "country": "RUS:b85c5bca1852870f",
+      "inside": "MNG:7ecd8e5b0a42fa66",
+      "samples": 6,
+      "wrong_sign_samples": 4,
+      "maximum_depth": 5.943356894872936e-08
+    }
+  ],
+  "original_full_mesh_violation": 1.0415112592786285e-06,
+  "corrected_pair_violation": 0.05602449142228295,
+  "source_current_checks": {
+    "valid": true,
+    "polygon_valid": true,
+    "triangles_valid": true,
+    "overlap": 5.005931598134339e-07,
+    "maximum_area_error": 0.0016949035559314929
+  },
+  "source_proposed_checks": {
+    "valid": true,
+    "polygon_valid": true,
+    "triangles_valid": true,
+    "overlap": 0.21117462384790997,
+    "maximum_area_error": 0.00025764421536167426
+  },
+  "overlap_by_step": [
+    {
+      "alpha": 0.0,
+      "area": 4.1182026379754504e-07
+    },
+    {
+      "alpha": 0.0001,
+      "area": 2.2711843044251565e-05
+    },
+    {
+      "alpha": 0.001,
+      "area": 0.00022339707579248835
+    },
+    {
+      "alpha": 0.01,
+      "area": 0.002228767133012499
+    },
+    {
+      "alpha": 0.1,
+      "area": 0.02236574240856236
+    },
+    {
+      "alpha": 1.0,
+      "area": 0.21036104357692448
+    }
+  ]
+}
