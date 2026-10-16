@@ -42,7 +42,8 @@ def clean_overlaps(shapes, maximum_share=1e-6):
     return result, records
 
 
-def run(output, legacy_centres=False, guide=None, guide_record=None, inputs=INPUTS):
+def run(output, legacy_centres=False, guide=None, guide_record=None, inputs=INPUTS,
+        landlocked_weight=0., coastal_groups=False):
     if output.exists():
         raise ValueError('Use a new output directory')
     cuts = []
@@ -70,11 +71,15 @@ def run(output, legacy_centres=False, guide=None, guide_record=None, inputs=INPU
         'float_islands', 'dock_landmasses', 'borrow_coast', 'mainland_only', 'sites_in_flow', 'fixed_border_rounds',
         'shared_islands', 'archipelagos', 'archipelago_gap_fraction', 'fixed_land_anchors', 'bridge_groups', 'water_radius', 'water_margin']}
     settings['flow_centres'] = not legacy_centres
+    if landlocked_weight:
+        settings.update(source_coasts=ROOT/'geography-source-coasts-55000/source-coasts.csv',
+                        landlocked_weight=landlocked_weight)
     cleaned, changes = clean_overlaps(read_shapes(guide))
     output.mkdir(parents=True)
     clean_path = output/'guide.geojson'
     clean_path.write_text(json.dumps(dict(type='FeatureCollection', features=[dict(type='Feature', properties=dict(component_id=c), geometry=mapping(g)) for c,g in sorted(cleaned.items())]), separators=(',', ':'))+'\n')
-    record = dict(complete=False, approved=False, cuts=cuts, settings=settings, overlap_cleanup=changes,
+    record = dict(complete=False, approved=False, cuts=cuts, coastal_groups=coastal_groups,
+        settings={k: str(v) if isinstance(v, Path) else v for k, v in settings.items()}, overlap_cleanup=changes,
         inputs={str(p): digest(p) for p in [BASE, DOCK, LAKES, guide, guide_record, clean_path, inputs/'geographic-contacts.csv', inputs/'groups.csv']},
         script_sha256=digest(Path(__file__)),
         limits=['Research candidate only. Cut pairs, if any, are explicit and use a separate contact policy.',
@@ -91,7 +96,7 @@ def run(output, legacy_centres=False, guide=None, guide_record=None, inputs=INPU
         dock_settings = {k: dock[k] for k in ['max_tiles', 'radius', 'rounds', 'detached_only', 'coastal_islands_km']}
         dock_true_borders.run(inputs, output/'fit/layout', output/'docked', polygons=POLYGONS, **dock_settings)
         place_coast_graph.run(inputs, output/'docked', POLYGONS, output/'coast-islands', preserve_order=True)
-        restore_archipelagos.run(inputs, output/'coast-islands', POLYGONS, output/'islands', bridge_groups=True)
+        restore_archipelagos.run(inputs, output/'coast-islands', POLYGONS, output/'islands', bridge_groups=True, coastal_groups=coastal_groups)
         lake_settings = {k: lakes[k] for k in ['maximum_lakes', 'search_radius', 'placement_attempts', 'maximum_path_cost', 'path_attempts', 'bay_radius']}
         place_lake_regions.run(inputs, output/'islands', POLYGONS, ROOT/'geography-lake-guides-final',
                               ROOT/'geography-source-coasts-55000/source-coasts.csv', output/'layout', **lake_settings)
@@ -112,6 +117,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path)
     parser.add_argument('--legacy-centres', action='store_true')
+    parser.add_argument('--landlocked-weight', type=float, default=0.)
+    parser.add_argument('--coastal-groups', action='store_true')
     parser.add_argument('--guide',type=Path)
     parser.add_argument('--guide-record',type=Path)
     parser.add_argument('--inputs',type=Path,default=INPUTS)
