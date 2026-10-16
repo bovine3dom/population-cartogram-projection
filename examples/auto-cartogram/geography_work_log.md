@@ -1040,3 +1040,35 @@ See `independent-assembly.md` for commands, limits, and the next model.
 The next step needs local boundary deformation and explicit matching along
 retained borders, rather than more whole-country affine stretch. Current best
 and production exports remain unchanged. All jobs have stopped.
+
+### Full retained borders after the user's rejection of point contacts
+
+The user rejected the contact-only assembly. That approximation left most of
+each border unconstrained. Replaced it with `welded_boundary_fit.py`: both
+countries now use identical vertex variables along each complete retained
+border. Selected cuts receive separate boundary variables. A source-length
+check rejects incomplete edge matching, rather than silently leaving a seam.
+
+The new model starts from the saved continuous guide to obtain valid shared
+boundary topology. Its preferred shapes are the independent Kontur fits.
+It uses local boundary displacement, not whole-country affine transforms.
+Contour correspondence uses ordered arclength matching; it is not a new
+population transport map. A small within-country elastic term smooths local
+movement. No elastic spring crosses a cut.
+
+Added a sparse quadratic-program solver in the experimental geometry environment.
+`mesh-requirements.txt` pins OSQP 1.0.5. The Python interface was checked against
+https://osqp.org/docs/interfaces/python.html. Areas use penalized slack variables
+with sequential linearization. Actual area errors, overlaps, and shared border
+lengths are measured. Step limits bound each triangle's deformation gradient.
+The mesh is triangulated again after accepted movement. Polygon validity and
+inter-country overlap are checked before each accepted step.
+
+Early runs preserved all 23 control borders and all 19 retained cut-case borders,
+but shape movement stalled at narrow coastlines. Added self-collision checks
+across narrow water gaps, not only collisions between countries. Corrected the
+near-edge separation planes so a valid current configuration remains feasible.
+Interrupted diagnostic runs are not candidates. Current best is unchanged.
+Eight new tests cover full-edge welding, cut independence, incomplete edge
+matching, area derivatives, collision feasibility, narrow water gaps, and a
+small quadratic-program fit.
