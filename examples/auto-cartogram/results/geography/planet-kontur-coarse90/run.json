@@ -1,0 +1,361 @@
+{
+  "complete": true,
+  "approved": false,
+  "cuts": [],
+  "settings": {
+    "stretch": 1.2,
+    "flow_guide_weight": 8.0,
+    "sigma": 4.0,
+    "iterations": 300,
+    "flow_grid": 256,
+    "flow_area_error": 0.01,
+    "float_islands": true,
+    "dock_landmasses": false,
+    "borrow_coast": true,
+    "mainland_only": true,
+    "sites_in_flow": false,
+    "fixed_border_rounds": 16,
+    "shared_islands": true,
+    "archipelagos": true,
+    "archipelago_gap_fraction": 0.2,
+    "fixed_land_anchors": true,
+    "bridge_groups": true,
+    "water_radius": 8,
+    "water_margin": 1,
+    "flow_centres": true
+  },
+  "overlap_cleanup": [
+    {
+      "component": "GUY:5aec9f8c07eb9159",
+      "removed_area": 1.7763568394002505e-14,
+      "component_share": 5.723063369472364e-16
+    },
+    {
+      "component": "IDN:41ba51e85ddbb728",
+      "removed_area": 1.4210854715202004e-14,
+      "component_share": 1.7617109023998792e-16
+    },
+    {
+      "component": "MKD:072da3322c97fa27",
+      "removed_area": 1.4210854715202004e-14,
+      "component_share": 1.6357526954456437e-16
+    },
+    {
+      "component": "LTU:4c2a60810b4196cd",
+      "removed_area": 1.4210854715202004e-14,
+      "component_share": 1.2053577862004597e-16
+    },
+    {
+      "component": "ARM:433ac98029e5a761",
+      "removed_area": 1.4210854715202004e-14,
+      "component_share": 1.205200555404466e-16
+    },
+    {
+      "component": "BIH:76753bb1c9d6c52b",
+      "removed_area": 2.842170943040401e-14,
+      "component_share": 1.9911792630448199e-16
+    },
+    {
+      "component": "HRV:23be6296644271a5",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 7.630153775285579e-16
+    },
+    {
+      "component": "ERI:b257cabcc1caab95",
+      "removed_area": 1.7053025658242404e-13,
+      "component_share": 1.0992907647107279e-15
+    },
+    {
+      "component": "SOL:e03433706d8873bb",
+      "removed_area": 2.842170943040401e-14,
+      "component_share": 1.5788051932198243e-16
+    },
+    {
+      "component": "MRT:93e93b11bab4502c",
+      "removed_area": 1.0505591177434326e-05,
+      "component_share": 5.13034942529806e-08
+    },
+    {
+      "component": "COG:c5650e58e144375b",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 4.2579320680708324e-16
+    },
+    {
+      "component": "NIC:99f10eccc73d03bc",
+      "removed_area": 5.684341886080802e-14,
+      "component_share": 1.908263843172076e-16
+    },
+    {
+      "component": "SRB:334f04d632601018",
+      "removed_area": 5.684341886080802e-14,
+      "component_share": 1.8315313987547183e-16
+    },
+    {
+      "component": "ARE:6af70f4330c4f4bf",
+      "removed_area": 7.389644451905042e-13,
+      "component_share": 1.9521192476297574e-15
+    },
+    {
+      "component": "AUT:709fdd785650b149",
+      "removed_area": 5.684341886080802e-14,
+      "component_share": 1.4746618894184454e-16
+    },
+    {
+      "component": "ISR:7ab28b88983e2128",
+      "removed_area": 2.2737367544323206e-13,
+      "component_share": 5.816706256650799e-16
+    },
+    {
+      "component": "BLR:216ea6b406f5bc6c",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 2.818409269555985e-16
+    },
+    {
+      "component": "HUN:9f803be1643ca956",
+      "removed_area": 5.684341886080802e-14,
+      "component_share": 1.3876588209217953e-16
+    },
+    {
+      "component": "SWE:1320ee42b8e1186c",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 2.654902923252206e-16
+    },
+    {
+      "component": "CUB:a203a2643a40db9f",
+      "removed_area": 0.0029905478008913633,
+      "component_share": 6.425167833812106e-06
+    },
+    {
+      "component": "SDS:9ecb0b566ac02a31",
+      "removed_area": 5.684341886080802e-14,
+      "component_share": 1.2054508536698214e-16
+    },
+    {
+      "component": "TUN:9e23ed3c89bdb2f6",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 2.2079590064123772e-16
+    },
+    {
+      "component": "BOL:1a7254807c71e166",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 2.1559982316710005e-16
+    },
+    {
+      "component": "RWA:11c3869510b66d95",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 1.8691181590811506e-16
+    },
+    {
+      "component": "IDN:51a10640dee7162b",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 1.6063366572121588e-16
+    },
+    {
+      "component": "KHM:299a58dab837de1b",
+      "removed_area": 3.410605131648481e-13,
+      "component_share": 4.697315362416903e-16
+    },
+    {
+      "component": "TCD:a34f6ca4b3bd052d",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 5.772206397040193e-16
+    },
+    {
+      "component": "KAZ:5d6f63a9b9f3c9f9",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 1.3671866867309336e-16
+    },
+    {
+      "component": "MWI:7555dabddb4364d9",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 1.263409858782184e-16
+    },
+    {
+      "component": "SYR:bb46c77ee43515e0",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 1.1523190016493778e-16
+    },
+    {
+      "component": "BFA:9c8f06c312ed722e",
+      "removed_area": 1.1368683772161603e-13,
+      "component_share": 1.1379156530161671e-16
+    },
+    {
+      "component": "NER:225f284b6e95d815",
+      "removed_area": 2.2737367544323206e-13,
+      "component_share": 1.94928266381456e-16
+    },
+    {
+      "component": "VEN:301beeea27f4cccb",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 3.816163135663141e-16
+    },
+    {
+      "component": "CMR:35df8c314c8ef083",
+      "removed_area": 2.2737367544323206e-13,
+      "component_share": 1.8600012750252689e-16
+    },
+    {
+      "component": "CAN:614ec007a6324298",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 3.6101800042741e-16
+    },
+    {
+      "component": "MOZ:0c9516b3b1958290",
+      "removed_area": 2.2737367544323206e-13,
+      "component_share": 1.579300732296744e-16
+    },
+    {
+      "component": "YEM:64d271dfdccb3847",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 3.1184553460051797e-16
+    },
+    {
+      "component": "AGO:704113b148b7974b",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 3.0278492423923606e-16
+    },
+    {
+      "component": "UKR:52622876ebf1ecb8",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 2.9785355632988676e-16
+    },
+    {
+      "component": "UZB:448c5653f0be3548",
+      "removed_area": 2.2737367544323206e-13,
+      "component_share": 1.4835564970169666e-16
+    },
+    {
+      "component": "POL:1980df7ed9d16d12",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 2.5802049106673495e-16
+    },
+    {
+      "component": "ESP:ff9451038f1a27e4",
+      "removed_area": 9.094947017729282e-13,
+      "component_share": 4.934638696191115e-16
+    },
+    {
+      "component": "DZA:704d2c59e6450910",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 2.341540203338658e-16
+    },
+    {
+      "component": "ARG:7462ff4f8b49993a",
+      "removed_area": 2.2737367544323206e-13,
+      "component_share": 1.1629834135155378e-16
+    },
+    {
+      "component": "UGA:c937c439d1615753",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 2.1746376238042954e-16
+    },
+    {
+      "component": "KEN:4b9b5a7ce90b0bb0",
+      "removed_area": 4.547473508864641e-13,
+      "component_share": 1.933421462557387e-16
+    },
+    {
+      "component": "FXX:f023db15990ca569",
+      "removed_area": 1.3642420526593924e-12,
+      "component_share": 4.996240977076778e-16
+    },
+    {
+      "component": "TUR:3b553df250ebf332",
+      "removed_area": 1.3642420526593924e-12,
+      "component_share": 4.459134621778073e-16
+    },
+    {
+      "component": "DEU:0b0480fae55fd996",
+      "removed_area": 2.7284841053187847e-12,
+      "component_share": 7.658748430925313e-16
+    },
+    {
+      "component": "ETH:38a05216b358b154",
+      "removed_area": 2.7284841053187847e-12,
+      "component_share": 5.030488919803562e-16
+    },
+    {
+      "component": "RUS:b85c5bca1852870f",
+      "removed_area": 9.094947017729282e-13,
+      "component_share": 1.4982820701041176e-16
+    },
+    {
+      "component": "BRA:c9a395c2d321cd60",
+      "removed_area": 9.094947017729282e-12,
+      "component_share": 1.0002657492599991e-15
+    },
+    {
+      "component": "NGA:edcdec1fdf6fb5c7",
+      "removed_area": 1.8189894035458565e-12,
+      "component_share": 1.9120121431088628e-16
+    },
+    {
+      "component": "USA:90107a05206832e4",
+      "removed_area": 1.8189894035458565e-12,
+      "component_share": 1.3143505498543745e-16
+    },
+    {
+      "component": "CHN:72cd37e37e634df7",
+      "removed_area": 3.637978807091713e-11,
+      "component_share": 6.08585815980777e-16
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/geography-water-trials/margin-1/pipeline.json": "498c9329133b1f523708ea0ff53129a8be3d26fdd726f9a62ec6eb80c6b2893a",
+    "output/auto-cartogram/geography-margin1-rejoined-final/docking.json": "2e5d3acf313fa18b09fe5b1f8d712e047bb19eb45b650e9d912a27c41a65ddeb",
+    "output/auto-cartogram/geography-margin1-lake-vacancies-final/lake-placement.json": "2f00f9725e85a279d1ac07b1ef85909613abd1152fdb9466bf7ec7cc9775d1e0",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/blend-0.9/components.geojson": "cc74d38c2365289dec534b518d23a4cb10552c86c318bfdc44166d1b5c11da21",
+    "output/auto-cartogram/kontur-patch-flow-200-floor/experiment.json": "b4571df8f639c2e7296e2d203cf950e8eec30c5ecadc6a51e8f7e56c2b4f4d80",
+    "output/auto-cartogram/planet-kontur-coarse90/guide.geojson": "fd06e7e357dd6e605c9fbe0e8621e0398c77b6b718246291e47f6f4fa7a583da"
+  },
+  "script_sha256": "42b99ab8bc34af5fa10fea08f9b31a6ee7abc86bf33bcbb2f064a9b08deb77e3",
+  "limits": [
+    "No strategic border cuts. This is the planet no-cut candidate.",
+    "Flow centres retain the selected guide. The legacy option uses unwarped population centres.",
+    "Island coast placement uses geometric frames, not the old layout population mapping.",
+    "Lakes are inserted as empty cells. The number placed can differ from the preferred baseline.",
+    "The continuous guide has approximate areas; the tile fit uses the original exact component budgets."
+  ],
+  "metrics": {
+    "tile_budget": 55000,
+    "population_total": 7954677990.0,
+    "represented_population": 7954677990.0,
+    "grouped_population": 10133200.0,
+    "omitted_population": 0.0,
+    "holes_not_encoded_in_wkt": 19,
+    "policy": "group",
+    "review_script_sha256": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+    "tiles": 55000,
+    "countries": 250,
+    "absolute_tile_error": 0,
+    "disconnected_regions": 0,
+    "regions_with_holes": 26,
+    "unmatched_source_population": 77246034.0,
+    "required_contacts": 348,
+    "missing_contacts": 73,
+    "false_contacts": 48,
+    "contacts_with_unrepresented_components": 31,
+    "actual_contacts": 323,
+    "generation": [
+      "mode=explicit-lake-vacancies",
+      "counts=exact",
+      "approval=none"
+    ],
+    "occupied_fraction": 0.22296453647699815,
+    "country_uniform_tile_cross_group_lower_bound": 5979286.023201256,
+    "country_absolute_area_error_tiles": 108.42557727971565,
+    "maximum_country_relative_area_error": 36156.62722727273,
+    "country_axis_comparisons": 7496,
+    "country_axis_order_errors": 220,
+    "country_axis_population_threshold": 10000000,
+    "country_axis_degree_threshold": 5,
+    "population_weighted_compactness": 0.2584963494532592,
+    "island_axis_comparisons": 3702,
+    "island_axis_order_errors": 400,
+    "passes_represented_constraints": false,
+    "named_lakes": 45,
+    "water_display_cells": 220
+  },
+  "cells_sha256": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e"
+}

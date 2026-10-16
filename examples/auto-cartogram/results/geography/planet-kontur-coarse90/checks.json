@@ -1,0 +1,17 @@
+{
+  "tiles": 55000,
+  "components": 481,
+  "exact_component_budgets": true,
+  "connected_components": true,
+  "empty_water_cells": 220,
+  "same_named_lakes_and_water_budgets": true,
+  "source_landmass_splits": 1,
+  "detached_component": "MYS:4035fe8bf71b03f5",
+  "detached_tiles": 178,
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/planet-kontur-coarse90/layout/cells.csv": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+    "output/auto-cartogram/planet-kontur-coarse90/layout/lake-cells.csv": "12c9209d792b80bbde7d8bdfab6465c671777125326372da532f50277bafafee",
+    "output/auto-cartogram/geography-islands-lakes-integrated/lake-cells.csv": "8867655bc6aee365d4e2ffe0f963574b128dca47f12382beb85bc9ca66911ec5"
+  }
+}
