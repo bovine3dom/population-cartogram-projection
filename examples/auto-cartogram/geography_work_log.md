@@ -1571,3 +1571,23 @@ Added explicit `--refine` mode so valid coast access does not skip shape fitting
 Two initial refinement commands did skip the fit; their empty target records
 are not results. The actual refinements use the new flag and frozen code.
 All 331 tests pass. The current best and H3-MON exports are unchanged.
+
+Completed the larger refinement and a thin-cell cost. The final candidate is
+`coarse90-paraguay-water-v1`. Paraguay has zero sea edges and all three true
+neighbours. Argentina–Bolivia is added. Only the three main South American
+components change. No true border is lost and no false pair is added.
+Argentina's thin-cell count falls from 26 in the seed to 13 after refinement,
+but its northern extension remains. Its perimeter is 192, versus 158 before
+this repair. The world has 67 missing and 34 false borders. Bolivia's existing
+25 sea edges do not increase.
+One larger fit filled an uncertain enclosed-water cell. A water-pinned fit
+then timed out without an incumbent. Added a single-country vacancy restoration
+that restores all enclosed reference water and shore labels without changing
+any budget. Only two endpoint cells change. The final candidate retains all
+named and unrecorded enclosed water. It has no new country or island axis-order
+errors. The intermediate Argentine axis-order error is absent in the final fit.
+Checked the world image, South America, and enlarged stage comparisons.
+Published `results/geography/coarse90-repairs/paraguay-v1/index.html` with data,
+checks, stage records, and rejected-trial records. No promotion: Argentina's
+shape and coast orientation still need review. All 337 tests pass. No trial
+jobs remain. The current best and H3-MON exports are unchanged.

@@ -1,0 +1,205 @@
+{
+  "approved": false,
+  "layout": "output/auto-cartogram/coarse90-paraguay-water-v1",
+  "known_defects": {
+    "cells_sha256": "0cf5af5148b74907c5d6318ceb4d7dc575548a6912586326b59fc4978b3dbb49",
+    "long_island_minus_manhattan": [
+      7.830769230769249,
+      -0.9461538461538908
+    ],
+    "sweden_germany_contact": false,
+    "malaysia_thailand_contact": true,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 2,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "baseline_defects": {
+    "cells_sha256": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+    "long_island_minus_manhattan": [
+      4.830769230769249,
+      6.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "gained_true": [
+    [
+      "ARG:7462ff4f8b49993a",
+      "BOL:1a7254807c71e166"
+    ],
+    [
+      "FIN:9332a3268ae7c503",
+      "SWE:1320ee42b8e1186c"
+    ],
+    [
+      "ISR:7ab28b88983e2128",
+      "WEB:8660f88c9871d216"
+    ],
+    [
+      "LTU:4c2a60810b4196cd",
+      "RUS:8afd88fb65e5e555"
+    ],
+    [
+      "MYS:4035fe8bf71b03f5",
+      "THA:2d2e3dd6e4f6c675"
+    ],
+    [
+      "NOW:a387a8ce67e0d957",
+      "SWE:1320ee42b8e1186c"
+    ]
+  ],
+  "lost_true": [],
+  "added_false": [],
+  "removed_false": [
+    [
+      "DEU:0b0480fae55fd996",
+      "SWE:1320ee42b8e1186c"
+    ],
+    [
+      "EST:50bd04ff06509a99",
+      "FIN:9332a3268ae7c503"
+    ],
+    [
+      "EST:50bd04ff06509a99",
+      "POL:1980df7ed9d16d12"
+    ],
+    [
+      "EST:50bd04ff06509a99",
+      "RUS:8afd88fb65e5e555"
+    ],
+    [
+      "FIN:9332a3268ae7c503",
+      "LVA:ff14565ea5d338a5"
+    ],
+    [
+      "GIB:71de83b149a1d32c",
+      "MAR:41e7d86fdd4b2365"
+    ],
+    [
+      "ITA:7d6868fd136c6c11",
+      "MCO:8f146e45080f16d1"
+    ],
+    [
+      "KAS:b7c84d817c090062",
+      "KAZ:5d6f63a9b9f3c9f9"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "NPL:c1885306c87c4123"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "PAK:447ed1858f7b7a5d"
+    ],
+    [
+      "LBN:8d427f2407db4cf0",
+      "WEB:8660f88c9871d216"
+    ],
+    [
+      "POL:1980df7ed9d16d12",
+      "SWE:1320ee42b8e1186c"
+    ],
+    [
+      "SYR:bb46c77ee43515e0",
+      "WEB:8660f88c9871d216"
+    ],
+    [
+      "USA:13c14a072880aac5",
+      "USA:90107a05206832e4"
+    ]
+  ],
+  "lake_count": 45,
+  "empty_lake_cells": 220,
+  "inputs": {
+    "output/auto-cartogram/planet-kontur-coarse90/layout/cells.csv": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+    "output/auto-cartogram/coarse90-paraguay-water-v1/cells.csv": "0cf5af5148b74907c5d6318ceb4d7dc575548a6912586326b59fc4978b3dbb49",
+    "output/auto-cartogram/coarse90-paraguay-water-v1/lake-cells.csv": "b9fcc87b65209a0fdf5f01c20ebde714e879ab8e6c37dd507d0ff155cf240ea9",
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2"
+  },
+  "metrics": {
+    "tile_budget": 55000,
+    "population_total": 7954677990.0,
+    "represented_population": 7954677990.0,
+    "grouped_population": 10133200.0,
+    "omitted_population": 0.0,
+    "holes_not_encoded_in_wkt": 19,
+    "policy": "group",
+    "review_script_sha256": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+    "tiles": 55000,
+    "countries": 250,
+    "absolute_tile_error": 0,
+    "disconnected_regions": 0,
+    "regions_with_holes": 26,
+    "unmatched_source_population": 77246034.0,
+    "required_contacts": 348,
+    "missing_contacts": 67,
+    "false_contacts": 34,
+    "contacts_with_unrepresented_components": 31,
+    "actual_contacts": 315,
+    "generation": [
+      "mode=reference-water-restoration",
+      "counts=exact",
+      "approval=none"
+    ],
+    "occupied_fraction": 0.22296453647699815,
+    "country_uniform_tile_cross_group_lower_bound": 5979286.023201256,
+    "country_absolute_area_error_tiles": 108.42557727971565,
+    "maximum_country_relative_area_error": 36156.62722727273,
+    "country_axis_comparisons": 7496,
+    "country_axis_order_errors": 218,
+    "country_axis_population_threshold": 10000000,
+    "country_axis_degree_threshold": 5,
+    "population_weighted_compactness": 0.25724874090752414,
+    "island_axis_comparisons": 3702,
+    "island_axis_order_errors": 392,
+    "passes_represented_constraints": false,
+    "named_lakes": 45,
+    "water_display_cells": 220
+  },
+  "files": {
+    "africa.png": "e1884233dc42cb8ce7043963c9c76da9198360376d47bea41f92b5d939f0d6b7",
+    "cells.csv.gz": "5ba64a48aebf070802dbb48631100a03f5cce8bc95e1be8a42eff22d8ce09932",
+    "comparison-checks.json": "1bda789c6482f1eec2e2c68ffc5d6d660718410c033c86b59541879bc4b7293e",
+    "europe.png": "d0ae3bb8ae1424d6a872157ac02216b1e37e937bd798e9fe5bd511bcebf2894a",
+    "geography/landmass-parts.json.gz": "a802508b60b77aec787a714f75adf0e31eb1f28f3d12f42bf35a3bc665a6d381",
+    "geography/nearby-relations.json.gz": "5005f1b9dc20104310ae2b8b694e7d9b5fb011223d3fef7bcfa2f637f305c929",
+    "geography/summary.json": "0e33d5146e52d0f738c27a082d8dc816f94d746ecf9e0acdd15057c04708c685",
+    "geography/water-access.csv.gz": "3ebb1b6d61df972d04ee0ca89b5abd6eb485660d917e28ca313ed33761d8aedb",
+    "indonesia.png": "10ff447c96c3ea7c29e34f7ff5ca65d2b42db6bca56e012a53c331edf47b86af",
+    "inset.json": "ce649e8a8d5c128a53ba85a55bce12c1de92ab7b0924ad5d262082cd9d279f9a",
+    "japan-korea.png": "614ad869232f558472bc7b786071de32c7c96db3ed19ecbfb179dad4e5afec48",
+    "lake-cells.csv.gz": "3d62f5a1420286b5cecf619f19cd7c12bc2300e53da9d5e6712de9cf4c421362",
+    "lake-placement.json.gz": "d05447d12173b826eea7b3dcbf612a48507a6806946b909696b02b645cc3a816",
+    "metrics.json": "2b899072548a61aa697ba7dbcf52872ea7917685e431d7bef0a2e197ebfae070",
+    "new-york.png": "f94ef52861f25e7965e47b40736f08c349ad16f90be28465f6e05651b4b574c4",
+    "paraguay-after.png": "86d89d8063c4327176adef8bc73856b8acc29fdf170edbc44bca99fdaba0a6cc",
+    "paraguay-before.png": "1a1395385927255a1489129091dd87e61a2c457cb63875a5cf2b4740a8ef420f",
+    "paraguay-seed.png": "3bcf1528e72295622ec563b56ced13272a256e155a187c0439eb91feedd3edfa",
+    "refinement-v3.json": "8f67cb0999d12e4460256406523fb3b31272302097cb89e0a3e4068cef7344b9",
+    "refinement-v4.json": "0dfe117fad64f95704cd9787663a37d02174dffecf393421cb952043fe9de48f",
+    "refinement-v5.json": "4572d6d3160dd024b07463fef8539528a53346083ce6501e1a202e95c3b0eb1c",
+    "refinement-v6.json": "6d90d91a4213a874ba2cdce51671ae4ad4ee27871650befab74ca4da5049c495",
+    "refinement-v7.json": "51c938b5adb019b9b0160412bb764a410664467b693629d209897ac5153ee3ac",
+    "review.png": "651e8075f44c9213afa76cbc2245ff18da789a54e9ef8786823975af0f34fe77",
+    "south-america.png": "b1167d204df48e128a95a6ffc5bd2e54d3f36bd355bcfa660fb305567e0697cd",
+    "water-restoration.json": "3d9a9bdfa3eab9ef242d2643abbac87a3b906e1055e1b300080f2664eac0d793"
+  }
+}

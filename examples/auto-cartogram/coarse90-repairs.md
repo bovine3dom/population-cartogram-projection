@@ -287,3 +287,74 @@ Finland's extension is removed. Norway's narrow northern section remains.
 The Nordic group still lacks its Russian borders. Paraguay is unchanged.
 Snapshots `coarse90-repair-code-22` and `coarse90-repair-code-23` retain the trial
 code. All 325 tests pass. The current best and H3-MON exports are unchanged.
+
+## Paraguay: a valid inland layout
+
+Review: `results/geography/coarse90-repairs/paraguay-v1/index.html`.
+Final layout: `coarse90-paraguay-water-v1`.
+Reference for this repair: `coarse90-nordic-sea-v1`.
+
+Paraguay's exterior-water edges fall from 16 to zero. Its three source borders
+remain. Argentina–Bolivia is restored. No true border is lost and no false pair
+is added. The world now has 67 missing and 34 false borders. The Nordic layout,
+island cells, and all other components are unchanged. Bolivia's existing false
+coast stays at 25 edges. The repair does not move the defect there.
+
+### Why the earlier exchanges stopped
+
+A short eastward Paraguay move enters Brazil. But giving the vacated western
+strip to Brazil creates disconnected coastal cover. Removing that fragment
+exposes Paraguay again. Pairwise swaps cannot make the required joint exchange.
+
+`inset_landlocked.py` tests short translations into one coastal donor. A second
+coastal source neighbour takes the vacated cells. It then gives an equal number
+of its original boundary cells to the donor. The trial must retain connectivity,
+exact budgets, lake shores, and all existing true borders. It adds no false
+border pairs. An old target boundary cell can be retained to preserve a true
+contact. No connector tiles are added. There is no country-specific branch.
+
+For Paraguay, the accepted seed moves three cells east. One retained cell keeps
+Bolivia. Argentina takes 29 vacated cells and gives 29 original boundary cells
+to Brazil. The exchange changes 87 labels without changing the land footprint.
+It also restores Argentina–Bolivia. The initial Argentine extension is too thin.
+
+### Shape refinement and water checks
+
+Use `--refine` to fit an explicit target whose coast access is already valid.
+Otherwise the coast-repair filter skips it. The recorded v1 and v2 refinement
+commands were skipped runs, not fit results.
+
+- `coarse90-paraguay-refine-v3`: margin 8, reach 2, expansion 1, perimeter weight
+  1, distance weight 0.1, sea connectivity, and 120 seconds. Accepted.
+- v4: perimeter weight 2. Rejected because another inland coast grew. The solver
+  now keeps occupied neighbours of fixed inland components occupied.
+- v5: start from v3; margin 14, perimeter weight 2, and 180 seconds. Accepted.
+- v6: start from v5; margin 10, perimeter weight 1, thin-cell weight 2, and
+  180 seconds. Accepted. A thin cell belongs to no full 2-by-2 block of its
+  component. This soft cost reduces Argentina's thin-cell count from 26 in the
+  seed to 13, equal to the reference count.
+- v7: start from v3 and pin all existing enclosed water and shores. No feasible
+  incumbent before the time limit. This does not prove infeasibility.
+
+The larger fits filled one unrecorded enclosed-water cell. Its source status
+was uncertain. `restore_reference_water.py` restores it through a single-country
+vacancy exchange. Only the endpoints change: (302, 265) becomes water again,
+and (309, 254) becomes Argentine land. The route does not create a connector.
+The tool retains budgets, true borders, water shores, and coastal access. It
+rejects new false pairs and new same-country axis-order errors. All reference
+enclosed water is now retained, not only the named lakes.
+
+The final candidate changes only Paraguay, Argentina, and Brazil. Paraguay has
+48 tiles, Argentina 315, and Brazil 1,465. All 55,000 tile budgets are exact and
+all 481 components are connected. The 45 lakes retain their 220 empty cells.
+No enclosed water is added or removed. There are no new country or island
+centre-order errors relative to the reference. An intermediate Argentine
+centre-order regression is absent in the final result.
+
+Visually checked the world, South America, and enlarged stage comparisons.
+Argentina's perimeter rises from 158 to 192 despite the lower thin-cell count.
+Its northern extension and the direction of coastal cover still need geographic
+review. The last smoothing fits return feasible solutions at their time limits;
+they do not prove optimality. Do not promote this result on border counts alone.
+Snapshots `coarse90-repair-code-24` through `coarse90-repair-code-29` retain the
+trial code. All 337 tests pass. The current best and H3-MON exports are unchanged.

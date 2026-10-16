@@ -1,9 +1,10 @@
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
-from fit_local_coasts import fit
+from fit_local_coasts import fit, run as run_fit
 from repair_partition import pieces
 from review_geography import exterior_water, water_edges
 
@@ -130,8 +131,40 @@ class LocalCoastTest(unittest.TestCase):
         owner = {p: c for c, points in result.items() for p in points}
         self.assertEqual(water_edges(result, owner, exterior_water(owner))['b']['exterior_water_edges'], 0)
 
+    def test_thin_cell_cost_can_make_a_two_cell_wide_body(self):
+        tiles = {'a': {(x, 0) for x in range(6)}}
+        result, attempts = fit(tiles, set(), set(), 'a', expansion=2, thin_weight=2., seconds=10)
+        self.assertIsNotNone(result, attempts)
+        self.assertEqual(len(result['a']), 6)
+        self.assertEqual(len(pieces(result['a'])), 1)
+        for x, y in result['a']:
+            self.assertTrue(any({(a, b), (a+1, b), (a, b+1), (a+1, b+1)} <= result['a']
+                                for a, b in ((x, y), (x-1, y), (x, y-1), (x-1, y-1))))
+
+    def test_explicit_refinement_can_preserve_unrecorded_water(self):
+        from review_layout import load
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            inputs, layout = root/'inputs', root/'layout'
+            inputs.mkdir(); layout.mkdir()
+            (inputs/'groups.csv').write_text('component_id,tiles\na,8\n')
+            (inputs/'geographic-contacts.csv').write_text('a,b,both_represented\n')
+            coasts = root/'coasts.csv'
+            coasts.write_text('component_id,uncovered_samples\na,1\n')
+            points = {(x, y) for x in range(3) for y in range(3)}-{(1, 1)}
+            (layout/'cells.csv').write_text('component_id,x,y\n'+''.join(f'a,{x},{y}\n' for x, y in sorted(points)))
+            (layout/'complete.txt').write_text('test\n')
+            skipped = run_fit(inputs, layout, coasts, root/'skipped', targets=['a'])
+            self.assertEqual(skipped['targets'], [])
+            record = run_fit(inputs, layout, coasts, root/'fitted', targets=['a'], refine=True,
+                             expansion=1, sea_connected=True, preserve_enclosed_water=True, seconds=10)
+            self.assertTrue(record['targets'][0]['accepted'])
+            self.assertEqual(record['protected_water_cells'], 1)
+            self.assertEqual(load(inputs, root/'fitted')[1]['a'], points)
+            self.assertFalse((root/'fitted/lake-cells.csv').exists())
+
     def test_invalid_shape_weights_are_rejected(self):
-        for name in ('distance_weight', 'perimeter_weight'):
+        for name in ('distance_weight', 'perimeter_weight', 'thin_weight'):
             for value in (-1, float('nan'), float('inf')):
                 with self.subTest(name=name, value=value), self.assertRaises(ValueError):
                     fit({'a': {(0, 0)}}, set(), set(), 'a', **{name: value})
