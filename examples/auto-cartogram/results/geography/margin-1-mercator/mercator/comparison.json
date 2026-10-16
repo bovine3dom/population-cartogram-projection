@@ -1,0 +1,98 @@
+{
+  "projection": "mercator",
+  "complete": true,
+  "approved_for_production": false,
+  "reference": "output/auto-cartogram/geography-margin1-lake-vacancies-final",
+  "reference_cells_sha256": "399530758e597a5262bd1d39af14783d40324d253423b9cc16f11054ba306a17",
+  "records": {
+    "output/auto-cartogram/geography-water-trials/margin-1/pipeline.json": "498c9329133b1f523708ea0ff53129a8be3d26fdd726f9a62ec6eb80c6b2893a",
+    "output/auto-cartogram/geography-margin1-rejoined-final/docking.json": "2e5d3acf313fa18b09fe5b1f8d712e047bb19eb45b650e9d912a27c41a65ddeb",
+    "output/auto-cartogram/geography-margin1-lake-vacancies-final/lake-placement.json": "2f00f9725e85a279d1ac07b1ef85909613abd1152fdb9466bf7ec7cc9775d1e0",
+    "output/auto-cartogram/world-55000-mainland-flow/run.json": "20e70937d7eecee6d02581f7b8d9bfb8f76f13ffc97d669590418c2b1bdf2701"
+  },
+  "script_sha256": "44c69c5c991d3f3631f2b3409faf0e3ef63df687836466e1e4b2a92701a1b4d7",
+  "flow_command": [
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/vendor/cartogram-cpp/build/Release/cartogram",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/margin1-mercator-start/flow-input/geometry.geojson",
+    "/home/olie/projects/worktrees/cartogram-auto/output/auto-cartogram/margin1-mercator-start/flow-input/areas.csv",
+    "--skip_projection",
+    "--id",
+    "component_id",
+    "--area",
+    "tiles",
+    "--n_grid_rows_or_cols",
+    "256",
+    "--timeout",
+    "600",
+    "--export_preprocessed",
+    "--export_time_report"
+  ],
+  "flow_binary_sha256": "a7ee976eaf8a8efb774e26a9764644672bcb550d7ec523027f57aef3af39ccca",
+  "fit_settings": {
+    "stretch": 1.2,
+    "flow_guide_weight": 8.0,
+    "sigma": 4.0,
+    "iterations": 300,
+    "flow_grid": 256,
+    "flow_area_error": 0.01,
+    "float_islands": true,
+    "dock_landmasses": false,
+    "borrow_coast": true,
+    "mainland_only": true,
+    "sites_in_flow": false,
+    "fixed_border_rounds": 16,
+    "shared_islands": true,
+    "archipelagos": true,
+    "archipelago_gap_fraction": 0.2,
+    "fixed_land_anchors": true,
+    "bridge_groups": true,
+    "water_radius": 8,
+    "water_margin": 1
+  },
+  "dock_settings": {
+    "max_tiles": 10000,
+    "radius": 64,
+    "rounds": 4,
+    "detached_only": true,
+    "coastal_islands_km": 500.0
+  },
+  "lake_settings": {
+    "maximum_lakes": 48,
+    "search_radius": 24,
+    "placement_attempts": 128,
+    "maximum_path_cost": 96,
+    "path_attempts": 256,
+    "bay_radius": 8
+  },
+  "comparison": {
+    "tiles": {
+      "reference": 55000,
+      "candidate": 55000
+    },
+    "absolute_tile_error": {
+      "reference": 0,
+      "candidate": 0
+    },
+    "disconnected_regions": {
+      "reference": 0,
+      "candidate": 0
+    },
+    "missing_contacts": {
+      "reference": 63,
+      "candidate": 64
+    },
+    "false_contacts": {
+      "reference": 34,
+      "candidate": 37
+    },
+    "named_lakes": {
+      "reference": 45,
+      "candidate": 45
+    },
+    "water_display_cells": {
+      "reference": 220,
+      "candidate": 220
+    }
+  },
+  "cells_sha256": "9929f79f7e94e9dbf0c171008b6210ed0257dea17a62bf8f41d974abede01400"
+}

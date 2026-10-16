@@ -655,3 +655,27 @@ attributing all changes to projection. All 201 tests pass.
 Method: `margin1_projection.md`. Jobs and logs:
 `output/auto-cartogram/margin1-projection-jobs/`. Outputs:
 `output/auto-cartogram/margin1-{equal-earth,mercator}-start/`.
+
+Both corrected runs completed with exit code zero. Mercator has 64 missing
+and 37 false administrative contacts; the fresh Equal Earth control has 61
+and 39. The preferred reference has 63 and 34. Both new runs retain exact
+55,000-tile budgets and 481 connected individual components. Both place 45
+lakes with 220 empty cells. Mercator loses Syvash and gains the South Aral Sea;
+the control keeps the reference lake set.
+
+Independent geography checks found two remaining split source landmasses in
+Mercator: a 178-tile Malaysian component and a 30-tile Canadian component are
+detached. The control has one split, with Norway and Sweden detached together.
+The preferred reference has none. Do not confuse individual component
+connectivity with this separate landmass check. Mercator retains exterior
+water beside the Baltic states and no exterior-water edge beside Paraguay.
+
+Visually checked both world maps and Mercator details for Europe, Africa,
+North America, and Japan/Korea. The layout is joined rather than split into
+separate country shapes. Russia, China, and India remain distorted. Neither
+new result replaces the preferred reference. The cause of the fresh Equal
+Earth flow's repeatability difference remains unconfirmed.
+
+Published images, settings, tile archives, empty lake cells, audits, and
+checksums at `results/geography/margin-1-mercator/index.html`. No production
+mapping changed. Both jobs have stopped. All 201 tests pass.

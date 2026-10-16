@@ -1,0 +1,82 @@
+[
+  {
+    "projection": "equal-earth",
+    "comparison": {
+      "tiles": {
+        "reference": 55000,
+        "candidate": 55000
+      },
+      "absolute_tile_error": {
+        "reference": 0,
+        "candidate": 0
+      },
+      "disconnected_regions": {
+        "reference": 0,
+        "candidate": 0
+      },
+      "missing_contacts": {
+        "reference": 63,
+        "candidate": 61
+      },
+      "false_contacts": {
+        "reference": 34,
+        "candidate": 39
+      },
+      "named_lakes": {
+        "reference": 45,
+        "candidate": 45
+      },
+      "water_display_cells": {
+        "reference": 220,
+        "candidate": 220
+      }
+    },
+    "exact_component_budgets": true,
+    "lake_cells_empty": true,
+    "source_landmasses_split": 1,
+    "lost_reference_lakes": [],
+    "added_lakes": []
+  },
+  {
+    "projection": "mercator",
+    "comparison": {
+      "tiles": {
+        "reference": 55000,
+        "candidate": 55000
+      },
+      "absolute_tile_error": {
+        "reference": 0,
+        "candidate": 0
+      },
+      "disconnected_regions": {
+        "reference": 0,
+        "candidate": 0
+      },
+      "missing_contacts": {
+        "reference": 63,
+        "candidate": 64
+      },
+      "false_contacts": {
+        "reference": 34,
+        "candidate": 37
+      },
+      "named_lakes": {
+        "reference": 45,
+        "candidate": 45
+      },
+      "water_display_cells": {
+        "reference": 220,
+        "candidate": 220
+      }
+    },
+    "exact_component_budgets": true,
+    "lake_cells_empty": true,
+    "source_landmasses_split": 2,
+    "lost_reference_lakes": [
+      "Syvash"
+    ],
+    "added_lakes": [
+      "South Aral Sea"
+    ]
+  }
+]
