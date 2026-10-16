@@ -16,12 +16,18 @@ from save_review import digest
 from shape_placement import place
 
 
-def clusters(tiles,rows,source,land,gap_fraction,bridge_groups=False):
+def clusters(tiles,rows,source,land,gap_fraction,bridge_groups=False,coastal_groups=False):
     population={c:float(rows[c]['group_population']) for c in tiles};parents={};edges=[];nearest={}
     for c in sorted(set(tiles)-land):
         larger=sorted(a for a in tiles if population[a]>population[c])
         if not larger:continue
         tree=STRtree([source[a] for a in larger]);anchor=min(larger[int(i)] for i in tree.query_nearest(source[c],all_matches=True))
+        if coastal_groups and anchor in land:
+            islands=[a for a in larger if a not in land]
+            if islands:
+                candidate=min(islands,key=lambda a:(source[c].distance(source[a]),a))
+                if source[c].distance(source[candidate])<=gap_fraction*np.sqrt(source[candidate].area):
+                    anchor=candidate
         nearest[c]=anchor;gap=source[c].distance(source[anchor])
         if anchor not in land and gap<=gap_fraction*np.sqrt(source[anchor].area):
             parents[c]=anchor;edges.append(dict(component=c,anchor=anchor,source_gap=gap))
@@ -77,7 +83,7 @@ def displacement_cost(shift,bounds,repair_separation=False):
     return float(np.linalg.norm(np.asarray(shift)-minimum))
 
 
-def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimum_tiles=16,maximum_shift_scale=2.,bridge_groups=False,repair_separation=False):
+def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimum_tiles=16,maximum_shift_scale=2.,bridge_groups=False,repair_separation=False,coastal_groups=False):
     if output.exists():raise ValueError('Output already exists')
     if not np.isfinite([gap_fraction,land_radius_km,maximum_shift_scale]).all() or min(gap_fraction,land_radius_km,maximum_shift_scale)<=0 or minimum_tiles<1:raise ValueError('Invalid archipelago settings')
     rows,tiles,owner=load(inputs,layout)
@@ -87,7 +93,7 @@ def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimu
     source={f['properties']['component_id']:shape(f['geometry']) for f in json.loads(polygons.read_text())['features'] if f['properties']['component_id'] in tiles}
     source={c:transform(Polygon(g.exterior),lambda points:equal_earth(points)/1000) for c,g in source.items()}
     if set(source)!=set(tiles):raise ValueError('Source labels differ')
-    groups,edges=clusters(tiles,rows,source,land,gap_fraction,bridge_groups)
+    groups,edges=clusters(tiles,rows,source,land,gap_fraction,bridge_groups,coastal_groups)
     groups={root:members for root,members in groups.items() if len(members)>1 and sum(len(tiles[c]) for c in members)>=minimum_tiles}
     lines=(inputs/'validated.wkt').read_text().splitlines()
     area=sum(Polygon([tuple(map(float,p.split())) for p in lines[i+1].split('\t')]).area for i in range(2,len(lines),3))
@@ -117,7 +123,7 @@ def run(inputs,layout,polygons,output,gap_fraction=.2,land_radius_km=500.,minimu
     if any(result[c]!=tiles[c] for c in land):raise AssertionError('Mainland moved')
     after_owner={p:c for c,points in result.items() for p in points};after=tile_contacts(after_owner)
     if len(after_owner)!=total or after-required-before or after&required!=before&required:raise AssertionError('Overlap or source contacts changed')
-    report=dict(repair_separation=repair_separation,method='Nearby island groups placed together with source-axis separation from nearby land; no country-identity links',gap_fraction=gap_fraction,land_radius_km=land_radius_km,minimum_tiles=minimum_tiles,maximum_shift_scale=maximum_shift_scale,bridge_groups=bridge_groups,cluster_edges=edges,groups=records,moved_components=sum(result[c]!=tiles[c] for c in tiles),failed_groups=sum('not_moved' in r for r in records),inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]},scripts={name:digest(Path(__file__).with_name(name)) for name in ['restore_archipelagos.py','place_islands.py','shape_placement.py','prepare_flow.py']},limit='Proximity groups can cross country IDs. No cells join separate islands. Nearby-land distances use Equal Earth planar distance times Earth radius, not geodesic distance. Inconsistent or blocked groups remain unchanged and are reported. Preserving axis separation does not prove good geographic placement. With repair_separation, the displacement limit applies beyond the minimum translation needed to satisfy source separation bounds.')
+    report=dict(coastal_groups=coastal_groups,repair_separation=repair_separation,method='Nearby island groups placed together with source-axis separation from nearby land; no country-identity links',gap_fraction=gap_fraction,land_radius_km=land_radius_km,minimum_tiles=minimum_tiles,maximum_shift_scale=maximum_shift_scale,bridge_groups=bridge_groups,cluster_edges=edges,groups=records,moved_components=sum(result[c]!=tiles[c] for c in tiles),failed_groups=sum('not_moved' in r for r in records),inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',inputs/'validated.wkt',layout/'cells.csv',polygons]},scripts={name:digest(Path(__file__).with_name(name)) for name in ['restore_archipelagos.py','place_islands.py','shape_placement.py','prepare_flow.py']},limit='Proximity groups can cross country IDs. No cells join separate islands. Nearby-land distances use Equal Earth planar distance times Earth radius, not geodesic distance. Inconsistent or blocked groups remain unchanged and are reported. Preserving axis separation does not prove good geographic placement. With repair_separation, the displacement limit applies beyond the minimum translation needed to satisfy source separation bounds.')
     output.mkdir(parents=True)
     with (output/'cells.csv').open('w',newline='') as stream:
         writer=csv.writer(stream);writer.writerow(['component_id','x','y'])
@@ -135,5 +141,6 @@ if __name__=='__main__':
     parser.add_argument('--minimum-tiles',type=int,default=16)
     parser.add_argument('--maximum-shift-scale',type=float,default=2.)
     parser.add_argument('--repair-separation',action='store_true')
+    parser.add_argument('--coastal-groups',action='store_true',help='Group nearby islands even when a mainland coast is nearer')
     parser.add_argument('--bridge-groups',action='store_true',help='Merge nearby groups along existing larger-island parent choices; retain roots attached to land')
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

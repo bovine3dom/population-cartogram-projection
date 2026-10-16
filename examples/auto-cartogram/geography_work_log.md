@@ -1437,3 +1437,43 @@ one of its recorded cuts, even when all file hashes match. Its run record also
 includes the copied component-budget file. Checked the review page at desktop
 and narrow widths in headless Chromium. All changes are committed; the two user
 PDF files remain untracked and unchanged.
+
+### Return to coarse 90% Kontur: coastal island groups
+
+Kept the current best unchanged. Added `audit_coarse90.py` to check the saved
+stages and make labelled New York images. Long Island starts southeast of
+Manhattan in the partition. It moves northeast during border fitting. The final
+archipelago pass does not group these islands: the nearer mainland coast stops
+that grouping. Source centroids alone are not a useful correction here. The
+geographic centre of Long Island is slightly north of Manhattan; the nearby
+western coast is the important relationship.
+
+Added optional `coastal_groups` to `restore_archipelagos.py`. When the nearest
+larger body is mainland, the rule also checks the nearest larger island. It uses
+the existing source-gap limit. Defaults do not change. Four tests cover the
+new group, the unchanged default, a distant island, and no eligible island.
+
+Ran `refine_coarse90.py` to make
+`output/auto-cartogram/coarse90-coastal-groups-lakes-v2/`. The first run completed
+the map but failed while drawing a review because Matplotlib was not installed.
+Changed the new review code to SVG with the existing renderer, then ran again
+in a new directory. The second run completed.
+
+Checked labelled New York images, Europe, Indonesia, and Japan/Korea visually.
+Manhattan is now beside the western end of Long Island. The relative centre
+vector changes from (4.83, 6.05) to (7.83, -0.95). The island stage keeps
+mainland cells fixed. The repeated lake stage changes boundary cells in five
+mainland components. All 55,000 tiles retain exact component budgets. All 481
+components remain connected. The 45 lakes use 220 empty cells; an independent
+check confirms that none overlaps land. Missing and false contacts remain 73
+and 48. All 292 tests pass.
+
+The stage audit locates the remaining defects. Malaysia loses its Thailand
+contact during tile repair. Lithuania has no exterior-water edge in the initial
+partition. Sweden already touches Germany there. Paraguay has 13 exterior-water
+edges in the partition and 16 after repair. These defects remain open.
+
+Published the candidate, comparisons, audit, records, and cell downloads at
+`results/geography/coarse90-repairs/index.html`. No strategic cuts or H3-MON
+changes. The current-best cell SHA256 remains
+`3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e`.

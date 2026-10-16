@@ -1,0 +1,40 @@
+{
+  "islands": {
+    "cells_sha256": "0592e0b7d657b5a9277b98700828eb303ff4dfb4de286ff7ed5b0e14dfc647d5",
+    "long_island_minus_manhattan": [
+      7.830769230769249,
+      -0.9461538461538908
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "layout": {
+    "cells_sha256": "66896bade99732725d320643ac3fb034c7731e4ed77c11cccc46a538118c7c79",
+    "long_island_minus_manhattan": [
+      7.830769230769249,
+      -0.9461538461538908
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  }
+}

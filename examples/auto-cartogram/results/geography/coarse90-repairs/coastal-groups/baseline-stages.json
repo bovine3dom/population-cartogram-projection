@@ -1,0 +1,211 @@
+{
+  "fit/partition": {
+    "cells_sha256": "56c5e12cd3884240752df5c29db67e42b0cc96da69b5760870c0e1df0abbfd9a",
+    "long_island_minus_manhattan": [
+      2.830769230769249,
+      -3.9461538461538908
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": true,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 13,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "fit/repaired": {
+    "cells_sha256": "14b3dd80c871f39d3f03452bdd2018bd12fba7e38dd20c33398efecbc4a157eb",
+    "long_island_minus_manhattan": [
+      2.830769230769249,
+      -3.9461538461538908
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "fit/border": {
+    "cells_sha256": "8884d1c9def3be9297b69544cade652b52640615a5ffb4d3038082ff7fb0102d",
+    "long_island_minus_manhattan": [
+      9.83076923076925,
+      7.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "fit/shared": {
+    "cells_sha256": "fbbc724db5ede847fc2751b38855e0c269dc98a9dbc39fc5757aa00cc92506b9",
+    "long_island_minus_manhattan": [
+      9.83076923076925,
+      7.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "fit/islands": {
+    "cells_sha256": "1f6273f10d74709a2cfa3a0c40ebdfa64d8e467b2026163cbd1658f9a66aac09",
+    "long_island_minus_manhattan": [
+      9.83076923076925,
+      7.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "fit/coast-islands": {
+    "cells_sha256": "4b5ebdfd0d06c3dd0b774639b2ffbf28dff29e3ceca1752077ccd7a9e71dba47",
+    "long_island_minus_manhattan": [
+      9.83076923076925,
+      7.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "fit/layout": {
+    "cells_sha256": "98874351b2418170f57eddc303376232dd8ae84a022106a6004e797bf5b54fe8",
+    "long_island_minus_manhattan": [
+      9.83076923076925,
+      7.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "docked": {
+    "cells_sha256": "754f96550e0bc3a881aedb0f11ea27ca3ee8e78090772bb33f6d8ce89a79e049",
+    "long_island_minus_manhattan": [
+      9.83076923076925,
+      7.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "coast-islands": {
+    "cells_sha256": "e00d3c0a28b21f2e55e6706e090425fa57f230260be118a9f472594eeee956a7",
+    "long_island_minus_manhattan": [
+      4.830769230769249,
+      6.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "islands": {
+    "cells_sha256": "2bf1b72490a9cee93b340339718194319c917d83e00337753b14d956da173a59",
+    "long_island_minus_manhattan": [
+      4.830769230769249,
+      6.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "layout": {
+    "cells_sha256": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+    "long_island_minus_manhattan": [
+      4.830769230769249,
+      6.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  }
+}
