@@ -1499,3 +1499,14 @@ Recorded results and images in `coarse90-repairs/followup-v1/index.html` under
 `results/geography`. The next test must allow the Nordic outside boundary to
 change. Paraguay needs connected coastal cover during fragment repair.
 All 311 tests pass. The current-best hash is unchanged. No trial jobs remain.
+
+### Joint fits with a movable coastline
+
+Added optional empty cells to the local fit. Tile counts remain exact. Explicit
+movable labels limit the fit to a group. Lake cells and all shore neighbours
+stay fixed. The final flood fill rejects extra inland coast or lost coastal
+access. Added source-template costs and an optional perimeter cost. Defaults
+keep the old footprint. All 316 tests pass.
+The first joint Nordic fits restore Finland–Norway, but visual review shows
+thin strips. Neither is approved. Further shape and Paraguay trials are in
+progress. The current best and production exports are unchanged.

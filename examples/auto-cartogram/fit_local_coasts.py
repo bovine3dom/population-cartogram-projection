@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test exact local coast constraints without changing the land footprint."""
+"""Fit local coasts and borders with exact counts and optional coast movement."""
 import argparse
 import csv
 import json
@@ -20,27 +20,40 @@ from review_layout import load, read_csv
 from save_review import digest
 
 
-def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, maximum_reach=None, fixed_cells=(), required_extra=()):
+def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, maximum_reach=None, fixed_cells=(), required_extra=(), expansion=0, movable=(), preferred=None, perimeter_weight=0.):
     owner = {p:c for c, points in tiles.items() for p in points}
     ocean = exterior_water(owner)
     xy = np.array(sorted(tiles[target]))
     low, high = xy.min(axis=0)-margin, xy.max(axis=0)+margin
     window = {p for p in owner if all(low[i] <= p[i] <= high[i] for i in (0,1))}
+    if movable:
+        if target not in movable or not set(movable)<=set(tiles):
+            raise ValueError('Movable labels must include the target and exist')
+        window = {p for p in window if owner[p] in movable}
     labels = sorted({owner[p] for p in window})
+    if expansion < 0 or perimeter_weight < 0 or not np.isfinite(perimeter_weight):
+        raise ValueError('Expansion and perimeter weight must be non-negative and finite')
+    for _ in range(expansion):
+        window |= {q for p in window for q in adjacent(p) if q not in owner
+                   and all(low[i] <= q[i] <= high[i] for i in (0,1))}
     points = sorted(window)
     indices = {(p,c):i for i,(p,c) in enumerate((p,c) for p in points for c in labels)}
-    objective = [0. if owner[p] == c else 1. for p,c in indices]
+    preferred = preferred or tiles
+    objective = [0. if p in preferred.get(c, tiles[c]) else 1. for p,c in indices]
     constraints, lower, upper = [], [], []
     def add(values, lo=-np.inf, hi=np.inf):
         constraints.append(values);lower.append(lo);upper.append(hi)
     def term(p,c):
         return ({indices[p,c]:1.},0.) if p in window else ({},float(owner.get(p)==c))
     for p in points:
-        add({indices[p,c]:1 for c in labels},1,1)
+        add({indices[p,c]:1 for c in labels},0 if expansion else 1,1)
     for c in labels:
         add({indices[p,c]:1 for p in points},len(tiles[c]&window),len(tiles[c]&window))
     for p in window & set(fixed_cells):
-        add({indices[p,owner[p]]:1},1,1)
+        if p in owner:
+            add({indices[p,owner[p]]:1},1,1)
+        else:
+            add({indices[p,c]:1 for c in labels},0,0)
     # A fixed root permits valid connectivity cuts. Prefer an interior cell.
     roots = {}
     for c in labels:
@@ -52,7 +65,7 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
             add({indices[roots[c],c]:1},1,1)
     actual = contacts(owner)
     allowed = required | actual
-    edge_set = {tuple(sorted((p,q))) for p in window for q in adjacent(p) if q in owner}
+    edge_set = {tuple(sorted((p,q))) for p in window for q in adjacent(p) if q in owner or q in window}
     for p,q in sorted(edge_set):
         for a in labels if p in window else [owner[p]]:
             for b in labels if q in window else [owner[q]]:
@@ -80,15 +93,39 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
         add({i:1 for i in witnesses},lo=1)
     coast = {p for p in owner if any(q in ocean for q in adjacent(p))}
     original_coasts = {c: bool(tiles[c]&coast) for c in labels}
-    for c in labels:
+    # With a changing footprint, use an independent flood fill after solving.
+    # Old sea cells can become land, so the fixed-coast inequalities do not apply.
+    for c in ([] if expansion else labels):
         if c in inland:
             weights={p:sum(q in ocean for q in adjacent(p)) for p in coast & window}
             bound=0 if c==target else sum(weights[p] for p in tiles[c]&window if p in weights)
             add({indices[p,c]:n for p,n in weights.items()},hi=bound)
         elif c not in inland and (c==target or original_coasts[c]) and not (tiles[c]&coast-window):
             add({indices[p,c]:1 for p in coast & window},lo=1)
+    if expansion and target in inland:
+        # Inland target cells need land on each side, except at existing lakes.
+        # This is conservative: a new enclosed bay also needs land cover here.
+        bounds=[(min(p[i] for p in owner),max(p[i] for p in owner)) for i in (0,1)]
+        for p in points:
+            for q in adjacent(p):
+                if q not in owner and q not in ocean and all(lo<=v<=hi for v,(lo,hi) in zip(q,bounds)):
+                    continue
+                if q in window:
+                    add({indices[p,target]:1, **{indices[q,c]:-1 for c in labels}},hi=0)
+                elif q not in owner:
+                    add({indices[p,target]:1},hi=0)
+    if perimeter_weight:
+        perimeter_edges={tuple(sorted((p,q))) for p in window for q in adjacent(p)}
+        for p,q in sorted(perimeter_edges):
+            for c in labels:
+                left,lc=term(p,c);right,rc=term(q,c)
+                y=len(objective);objective.append(perimeter_weight)
+                add({y:1,**{i:-n for i,n in left.items()},**right},lo=lc-rc)
+                add({y:1,**left,**{i:-n for i,n in right.items()}},lo=rc-lc)
     # Continuous flow from a fixed root enforces connectivity in the first solve.
-    bounds_upper=[1.]*len(objective);integrality=[1]*len(objective)
+    bounds_upper=[1.]*len(objective)
+    # Border witnesses need not be integer once the cell labels are integer.
+    integrality=[1]*len(indices)+[0]*(len(objective)-len(indices))
     if maximum_reach is not None:
         for c in labels:
             distances=cKDTree(sorted(tiles[c])).query(points,p=1)[0]
@@ -137,36 +174,42 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
         result={c:set(p) for c,p in tiles.items()}
         for p in points:
             chosen=[c for c in labels if solved.x[indices[p,c]]>.5]
-            if len(chosen)!=1:return None,records
-            result[owner[p]].remove(p);result[chosen[0]].add(p)
+            if len(chosen)>1 or (not expansion and not chosen):return None,records
+            if p in owner:result[owner[p]].remove(p)
+            if chosen:result[chosen[0]].add(p)
         split=False
         for c in labels:
             for part in pieces(result[c]):
                 if roots[c] in part:continue
                 split=True
-                boundary={q for p in part for q in adjacent(p) if q in owner and q not in part}
+                boundary={q for p in part for q in adjacent(p) if (q in owner or q in window) and q not in part}
                 values={indices[p,c]:-1/len(part) for p in part if p in window}
                 fixed_inside=len(part-window)/len(part)
-                fixed_boundary=sum(owner[p]==c for p in boundary-window)
+                fixed_boundary=sum(owner.get(p)==c for p in boundary-window)
                 for p in boundary & window:values[indices[p,c]]=1
                 add(values,lo=fixed_inside-fixed_boundary)
         if split:continue
         after={p:c for c,points in result.items() for p in points}
         if len(after)!=len(owner) or any(len(result[c])!=len(tiles[c]) for c in tiles):raise AssertionError('Counts differ')
+        if any(owner.get(p)!=after.get(p) for p in fixed_cells):raise AssertionError('Fixed cell changed')
         new=contacts(after)
         if ((required & actual)|required_extra)-new or new-required-actual:raise AssertionError('Border regression')
-        edges=water_edges(result,after,ocean)
+        edges=water_edges(result,after,exterior_water(after) if expansion else ocean)
         if (target in inland and edges[target]['exterior_water_edges']) or (target not in inland and not edges[target]['exterior_water_edges']):
+            if expansion:return None,records+[dict(rejected='Target coast constraint failed')]
             raise AssertionError('Target coast constraint failed')
         # Do not move an inland coast defect to a different component.
         old_edges=water_edges(tiles,owner,ocean)
-        if any(edges[c]['exterior_water_edges']>old_edges[c]['exterior_water_edges'] for c in inland & set(labels)):
+        if any(edges[c]['exterior_water_edges']>old_edges[c]['exterior_water_edges'] for c in inland & set(tiles)):
             return None,records+[dict(rejected='Another inland coast grew')]
+        if any(old_edges[c]['exterior_water_edges'] and not edges[c]['exterior_water_edges']
+               for c in set(tiles)-inland):
+            return None,records+[dict(rejected='A coastal component lost sea access')]
         return result,records
     return None,records
 
 
-def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60,maximum_cuts=100,targets=None,maximum_reach=None,require_contacts=()):
+def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60,maximum_cuts=100,targets=None,maximum_reach=None,require_contacts=(),expansion=0,movable=(),templates=None,perimeter_weight=0.):
     if output.exists() or min(maximum_tiles,margin,seconds,maximum_cuts)<=0 or not np.isfinite(seconds):raise ValueError('Use a new output and positive limits')
     if maximum_reach is not None and maximum_reach<1:raise ValueError('Use a positive reach')
     rows,tiles,owner=load(inputs,layout)
@@ -175,7 +218,14 @@ def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60
     inland={r['component_id'] for r in read_csv(source_coasts) if int(r['uncovered_samples'])==0}
     lakes=layout/'lake-cells.csv'
     lake_cells={(int(r['x']),int(r['y'])) for r in read_csv(lakes)} if lakes.exists() else set()
-    fixed_cells={q for p in lake_cells for q in adjacent(p) if q in owner}
+    fixed_cells=lake_cells | {q for p in lake_cells for q in adjacent(p)}
+    preferred=None
+    if templates:
+        if not movable:raise ValueError('Template fitting needs explicit movable labels')
+        native=load(inputs,templates)[1];preferred={}
+        for c in movable:
+            offset=np.rint(np.mean(sorted(tiles[c]),axis=0)-np.mean(sorted(native[c]),axis=0)).astype(int)
+            preferred[c]={(x+int(offset[0]),y+int(offset[1])) for x,y in native[c]}
     coast=water_edges(tiles,owner,exterior_water(owner));records=[]
     extra={tuple(sorted(pair)) for pair in require_contacts}
     if not extra<=required:raise ValueError('Extra contacts must be source borders')
@@ -183,7 +233,7 @@ def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60
     if not selected<=set(tiles):raise ValueError('Unknown target')
     targets=[c for c in tiles if c in selected and len(tiles[c])<=maximum_tiles and (extra or (c in inland)==bool(coast[c]['exterior_water_edges']))]
     for c in sorted(targets,key=lambda c:(len(tiles[c]),c)):
-        result,attempts=fit(tiles,required,inland,c,margin,seconds,maximum_cuts,maximum_reach,fixed_cells,extra)
+        result,attempts=fit(tiles,required,inland,c,margin,seconds,maximum_cuts,maximum_reach,fixed_cells,extra,expansion,movable,preferred,perimeter_weight)
         records.append(dict(component=c,accepted=result is not None,attempts=attempts))
         print(json.dumps(records[-1]),flush=True)
         if result is not None:tiles=result
@@ -193,10 +243,11 @@ def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60
         for c,points in sorted(tiles.items()):writer.writerows((c,x,y) for x,y in sorted(points))
     for name in ['lake-cells.csv','lake-placement.json']:
         if (layout/name).exists():shutil.copyfile(layout/name,output/name)
-    record=dict(required_extra=sorted(extra),maximum_reach=maximum_reach,connectivity='rooted continuous flow with independent component checks',maximum_tiles=maximum_tiles,margin=margin,seconds_per_target=seconds,maximum_cuts=maximum_cuts,targets=records,
-                inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',layout/'cells.csv',source_coasts]+([lakes] if lakes.exists() else [])},
+    record=dict(perimeter_weight=perimeter_weight,templates=str(templates) if templates else None,movable=sorted(movable),expansion=expansion,required_extra=sorted(extra),maximum_reach=maximum_reach,connectivity='rooted continuous flow with independent component checks',maximum_tiles=maximum_tiles,margin=margin,seconds_per_target=seconds,maximum_cuts=maximum_cuts,targets=records,
+                inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',layout/'cells.csv',source_coasts]+([lakes] if lakes.exists() else [])+([templates/'cells.csv'] if templates else [])},
                 script_sha256=digest(Path(__file__)),cells_sha256=digest(output/'cells.csv'),
-                limits=['Fixed footprint and exact counts. Lakes stay empty.',
+                limits=['Exact counts. Lakes and their shore cells stay fixed. Expansion is optional.',
+                        'With expansion, coast checks can reject a feasible border fit. The solver does not search again.',
                         'Each component keeps one root cell. Search windows and time limits can hide valid repairs.',
                         'Source coast labels use finite samples. They are not a proof of ocean access.',
                         'Only connected integer solutions that retain true borders and add no false borders are accepted.',
@@ -214,5 +265,9 @@ if __name__=='__main__':
     parser.add_argument('--maximum-cuts',type=int,default=100)
     parser.add_argument('--targets',nargs='+')
     parser.add_argument('--maximum-reach',type=int)
+    parser.add_argument('--expansion',type=int,default=0)
+    parser.add_argument('--movable',nargs='+',default=[])
+    parser.add_argument('--templates',type=Path)
+    parser.add_argument('--perimeter-weight',type=float,default=0.)
     parser.add_argument('--require-contacts',nargs=2,action='append',default=[])
     run(**vars(parser.parse_args()))
