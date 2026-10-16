@@ -1554,3 +1554,20 @@ lake extension and a long water channel beside Norway. Checked its enlarged
 image and added it to the comparison page. The control reaches local optimality.
 Also checked the review page in headless Chromium.
 No current-best or H3-MON change. All 325 tests pass. No trial jobs remain.
+
+### Paraguay: three-component exchange
+
+Found a valid inland seed without changing the land footprint. Paraguay moves
+three cells east into Brazil. One old boundary cell is retained to keep Bolivia.
+Argentina takes the vacated coastal strip. It then gives 29 original boundary
+cells to Brazil. All three budgets balance. This changes 87 labels, removes all
+16 Paraguay sea edges, and restores Argentina–Bolivia. No true border is lost
+and no false pair is added. The rule has no country-specific branch.
+The seed has a narrow Argentine extension. It is not a production shape.
+A first local refinement passes all coast checks. A stronger-cost trial is
+rejected because another inland coast grows. Added a conservative occupancy
+constraint beside fixed inland neighbours. A larger refinement is in progress.
+Added explicit `--refine` mode so valid coast access does not skip shape fitting.
+Two initial refinement commands did skip the fit; their empty target records
+are not results. The actual refinements use the new flag and frozen code.
+All 331 tests pass. The current best and H3-MON exports are unchanged.

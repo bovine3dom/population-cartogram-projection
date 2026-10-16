@@ -109,6 +109,12 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
             add({indices[p,c]:n for p,n in weights.items()},hi=bound)
         elif c not in inland and (c==target or original_coasts[c]) and not (tiles[c]&coast-window):
             add({indices[p,c]:1 for p in coast & window},lo=1)
+    if expansion:
+        # Do not expose fixed inland neighbours when the local coast moves.
+        fixed_inland=inland-set(labels)
+        for p in window & owner.keys():
+            if any(owner.get(q) in fixed_inland for q in adjacent(p)):
+                add({indices[p,c]:1 for c in labels},1,1)
     if expansion and target in inland:
         # Inland target cells need land on each side, except at existing lakes.
         # This is conservative: a new enclosed bay also needs land cover here.
@@ -241,9 +247,10 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
     return None,records
 
 
-def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60,maximum_cuts=100,targets=None,maximum_reach=None,require_contacts=(),expansion=0,movable=(),templates=None,perimeter_weight=0.,distance_weight=0.,sea_connected=False):
+def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60,maximum_cuts=100,targets=None,maximum_reach=None,require_contacts=(),expansion=0,movable=(),templates=None,perimeter_weight=0.,distance_weight=0.,sea_connected=False,refine=False):
     if output.exists() or min(maximum_tiles,margin,seconds,maximum_cuts)<=0 or not np.isfinite(seconds):raise ValueError('Use a new output and positive limits')
     if maximum_reach is not None and maximum_reach<1:raise ValueError('Use a positive reach')
+    if refine and not targets:raise ValueError('Refinement needs explicit targets')
     rows,tiles,owner=load(inputs,layout)
     if any(len(tiles[c])!=int(rows[c]['tiles']) or len(pieces(tiles[c]))!=1 for c in tiles):raise ValueError('Exact connected components required')
     required={tuple(sorted((r['a'],r['b']))) for r in read_csv(inputs/'geographic-contacts.csv') if r['both_represented']=='true'}
@@ -263,7 +270,7 @@ def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60
     if not extra<=required:raise ValueError('Extra contacts must be source borders')
     selected=set(targets) if targets else set(tiles)
     if not selected<=set(tiles):raise ValueError('Unknown target')
-    targets=[c for c in tiles if c in selected and len(tiles[c])<=maximum_tiles and (extra or (c in inland)==bool(coast[c]['exterior_water_edges']))]
+    targets=[c for c in tiles if c in selected and len(tiles[c])<=maximum_tiles and (refine or extra or (c in inland)==bool(coast[c]['exterior_water_edges']))]
     for c in sorted(targets,key=lambda c:(len(tiles[c]),c)):
         result,attempts=fit(tiles,required,inland,c,margin,seconds,maximum_cuts,maximum_reach,fixed_cells,extra,expansion,movable,preferred,perimeter_weight,distance_weight,sea_connected,lake_cells)
         records.append(dict(component=c,accepted=result is not None,attempts=attempts))
@@ -275,7 +282,7 @@ def run(inputs,layout,source_coasts,output,maximum_tiles=200,margin=3,seconds=60
         for c,points in sorted(tiles.items()):writer.writerows((c,x,y) for x,y in sorted(points))
     for name in ['lake-cells.csv','lake-placement.json']:
         if (layout/name).exists():shutil.copyfile(layout/name,output/name)
-    record=dict(sea_connected=sea_connected,distance_weight=distance_weight,perimeter_weight=perimeter_weight,templates=str(templates) if templates else None,movable=sorted(movable),expansion=expansion,required_extra=sorted(extra),maximum_reach=maximum_reach,connectivity='rooted continuous flow with independent component checks',maximum_tiles=maximum_tiles,margin=margin,seconds_per_target=seconds,maximum_cuts=maximum_cuts,targets=records,
+    record=dict(refine=refine,sea_connected=sea_connected,distance_weight=distance_weight,perimeter_weight=perimeter_weight,templates=str(templates) if templates else None,movable=sorted(movable),expansion=expansion,required_extra=sorted(extra),maximum_reach=maximum_reach,connectivity='rooted continuous flow with independent component checks',maximum_tiles=maximum_tiles,margin=margin,seconds_per_target=seconds,maximum_cuts=maximum_cuts,targets=records,
                 inputs={str(p):digest(p) for p in [inputs/'groups.csv',inputs/'geographic-contacts.csv',layout/'cells.csv',source_coasts]+([lakes] if lakes.exists() else [])+([templates/'cells.csv'] if templates else [])},
                 script_sha256=digest(Path(__file__)),cells_sha256=digest(output/'cells.csv'),
                 limits=['Exact counts. Lakes and their shore cells stay fixed. Expansion is optional.',
@@ -303,5 +310,6 @@ if __name__=='__main__':
     parser.add_argument('--perimeter-weight',type=float,default=0.)
     parser.add_argument('--distance-weight',type=float,default=0.)
     parser.add_argument('--sea-connected',action='store_true')
+    parser.add_argument('--refine',action='store_true',help='Refit explicit targets even when coast access is already valid')
     parser.add_argument('--require-contacts',nargs=2,action='append',default=[])
     run(**vars(parser.parse_args()))

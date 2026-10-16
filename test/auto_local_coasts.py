@@ -120,6 +120,16 @@ class LocalCoastTest(unittest.TestCase):
         self.assertIsNotNone(result, attempts)
         self.assertEqual(result, tiles)
 
+    def test_moving_coast_does_not_expose_a_fixed_inland_neighbour(self):
+        tiles = {'a': {(x, y) for x in range(5) for y in range(5)}-{(2, 2)}, 'b': {(2, 2)}}
+        preferred = {'a': {(x, y) for x in range(-2, 2) for y in range(6)}}
+        result, attempts = fit(tiles, {('a', 'b')}, {'b'}, 'a', expansion=2,
+                               movable={'a'}, preferred=preferred, seconds=10)
+        self.assertIsNotNone(result, attempts)
+        self.assertEqual(result['b'], tiles['b'])
+        owner = {p: c for c, points in result.items() for p in points}
+        self.assertEqual(water_edges(result, owner, exterior_water(owner))['b']['exterior_water_edges'], 0)
+
     def test_invalid_shape_weights_are_rejected(self):
         for name in ('distance_weight', 'perimeter_weight'):
             for value in (-1, float('nan'), float('inf')):
