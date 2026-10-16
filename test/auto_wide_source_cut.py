@@ -20,5 +20,10 @@ class ShortClosureTest(unittest.TestCase):
         self.assertEqual(short_closures({('A','B')},self.records(length=51.)),set())
         self.assertEqual(short_closures({('A','B')},self.records(population=500001.)),set())
 
+    def test_missing_audit_measurements_cannot_authorize_a_cut(self):
+        records = self.records()
+        del records[1]['length_km']
+        self.assertEqual(short_closures({('A','B')},records),set())
+
     def test_already_open_bypass_needs_no_extra_cut(self):
         self.assertEqual(short_closures({('A','B'),('B','C')},self.records()),set())

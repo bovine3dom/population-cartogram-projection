@@ -1,0 +1,1622 @@
+{
+  "flows": [
+    {
+      "name": "complete-separator-flow",
+      "grid": 512,
+      "cuts": [
+        {
+          "countries": "AZE\u2013RUS",
+          "original_policy": false,
+          "mean_density": 62.547026401101924,
+          "p90_density": 129.5688507323385,
+          "corridor_population": 848162.0
+        },
+        {
+          "countries": "CHN\u2013RUS",
+          "original_policy": true,
+          "mean_density": 17.004052678505584,
+          "p90_density": 34.43543112851983,
+          "corridor_population": 2899267.0
+        },
+        {
+          "countries": "GEO\u2013RUS",
+          "original_policy": true,
+          "mean_density": 12.188138538923004,
+          "p90_density": 24.106582435376502,
+          "corridor_population": 429689.0
+        },
+        {
+          "countries": "KAZ\u2013RUS",
+          "original_policy": true,
+          "mean_density": 7.12051135902746,
+          "p90_density": 14.78039790336099,
+          "corridor_population": 2082918.0
+        },
+        {
+          "countries": "MNG\u2013RUS",
+          "original_policy": true,
+          "mean_density": 1.2514170613139406,
+          "p90_density": 1.8803592364112425,
+          "corridor_population": 187501.0
+        },
+        {
+          "countries": "PRK\u2013RUS",
+          "original_policy": false,
+          "mean_density": 156.53995843400767,
+          "p90_density": 307.4995549331927,
+          "corridor_population": 314350.0
+        }
+      ],
+      "corridor_population_cost": 6761887.0,
+      "cases": [
+        {
+          "name": "control",
+          "scores": {
+            "RUS": 0.7131521887298651,
+            "CHN": 0.6053460025523014,
+            "IND": 0.4368264211119818,
+            "KAZ": 0.7241799265008957
+          },
+          "retained_contacts": 293,
+          "missing_contacts": [],
+          "overlap": 0.00013706374738831073
+        },
+        {
+          "name": "separator",
+          "scores": {
+            "RUS": 0.5838522901590971,
+            "CHN": 0.5248515949084926,
+            "IND": 0.40972435899010706,
+            "KAZ": 0.7706738117134835
+          },
+          "retained_contacts": 287,
+          "missing_contacts": [],
+          "overlap": 0.0013991676605655812
+        }
+      ]
+    },
+    {
+      "name": "complete-separator-flow-256",
+      "grid": 256,
+      "cuts": [
+        {
+          "countries": "AZE\u2013RUS",
+          "original_policy": false,
+          "mean_density": 62.547026401101924,
+          "p90_density": 129.5688507323385,
+          "corridor_population": 848162.0
+        },
+        {
+          "countries": "CHN\u2013RUS",
+          "original_policy": true,
+          "mean_density": 17.004052678505584,
+          "p90_density": 34.43543112851983,
+          "corridor_population": 2899267.0
+        },
+        {
+          "countries": "GEO\u2013RUS",
+          "original_policy": true,
+          "mean_density": 12.188138538923004,
+          "p90_density": 24.106582435376502,
+          "corridor_population": 429689.0
+        },
+        {
+          "countries": "KAZ\u2013RUS",
+          "original_policy": true,
+          "mean_density": 7.12051135902746,
+          "p90_density": 14.78039790336099,
+          "corridor_population": 2082918.0
+        },
+        {
+          "countries": "MNG\u2013RUS",
+          "original_policy": true,
+          "mean_density": 1.2514170613139406,
+          "p90_density": 1.8803592364112425,
+          "corridor_population": 187501.0
+        },
+        {
+          "countries": "PRK\u2013RUS",
+          "original_policy": false,
+          "mean_density": 156.53995843400767,
+          "p90_density": 307.4995549331927,
+          "corridor_population": 314350.0
+        }
+      ],
+      "corridor_population_cost": 6761887.0,
+      "cases": [
+        {
+          "name": "control",
+          "scores": {
+            "RUS": 0.7426323236918801,
+            "CHN": 0.6358409302962642,
+            "IND": 0.4588794106748496,
+            "KAZ": 0.6841091979649757
+          },
+          "retained_contacts": 293,
+          "missing_contacts": [],
+          "overlap": 0.00015324018750106916
+        },
+        {
+          "name": "separator",
+          "scores": {
+            "RUS": 0.5566232187663904,
+            "CHN": 0.5456747952444625,
+            "IND": 0.4123990378310418,
+            "KAZ": 0.7397503617173655
+          },
+          "retained_contacts": 287,
+          "missing_contacts": [],
+          "overlap": 0.0004304746544221416
+        }
+      ]
+    },
+    {
+      "name": "complete-separator-flow-1024",
+      "grid": 1024,
+      "cuts": [
+        {
+          "countries": "AZE\u2013RUS",
+          "original_policy": false,
+          "mean_density": 62.547026401101924,
+          "p90_density": 129.5688507323385,
+          "corridor_population": 848162.0
+        },
+        {
+          "countries": "CHN\u2013RUS",
+          "original_policy": true,
+          "mean_density": 17.004052678505584,
+          "p90_density": 34.43543112851983,
+          "corridor_population": 2899267.0
+        },
+        {
+          "countries": "GEO\u2013RUS",
+          "original_policy": true,
+          "mean_density": 12.188138538923004,
+          "p90_density": 24.106582435376502,
+          "corridor_population": 429689.0
+        },
+        {
+          "countries": "KAZ\u2013RUS",
+          "original_policy": true,
+          "mean_density": 7.12051135902746,
+          "p90_density": 14.78039790336099,
+          "corridor_population": 2082918.0
+        },
+        {
+          "countries": "MNG\u2013RUS",
+          "original_policy": true,
+          "mean_density": 1.2514170613139406,
+          "p90_density": 1.8803592364112425,
+          "corridor_population": 187501.0
+        },
+        {
+          "countries": "PRK\u2013RUS",
+          "original_policy": false,
+          "mean_density": 156.53995843400767,
+          "p90_density": 307.4995549331927,
+          "corridor_population": 314350.0
+        }
+      ],
+      "corridor_population_cost": 6761887.0,
+      "cases": [
+        {
+          "name": "control",
+          "scores": {
+            "RUS": 0.6969452628885335,
+            "CHN": 0.5904356127775229,
+            "IND": 0.4545659951533838,
+            "KAZ": 0.6896881286630978
+          },
+          "retained_contacts": 293,
+          "missing_contacts": [],
+          "overlap": 0.0011380564610590227
+        },
+        {
+          "name": "separator",
+          "scores": {
+            "RUS": 0.6010408695064904,
+            "CHN": 0.5169637396273328,
+            "IND": 0.41374538547299655,
+            "KAZ": 0.7828650868611019
+          },
+          "retained_contacts": 287,
+          "missing_contacts": [],
+          "overlap": 3.189736162312329e-06
+        }
+      ]
+    },
+    {
+      "name": "three-block-separator-flow-repeat",
+      "grid": 512,
+      "cuts": [
+        {
+          "countries": "AZE\u2013RUS",
+          "original_policy": false,
+          "mean_density": 62.547026401101924,
+          "p90_density": 129.5688507323385,
+          "corridor_population": 848162.0
+        },
+        {
+          "countries": "CHN\u2013RUS",
+          "original_policy": true,
+          "mean_density": 17.004052678505584,
+          "p90_density": 34.43543112851983,
+          "corridor_population": 2899267.0
+        },
+        {
+          "countries": "GEO\u2013RUS",
+          "original_policy": true,
+          "mean_density": 12.188138538923004,
+          "p90_density": 24.106582435376502,
+          "corridor_population": 429689.0
+        },
+        {
+          "countries": "KAZ\u2013RUS",
+          "original_policy": true,
+          "mean_density": 7.12051135902746,
+          "p90_density": 14.78039790336099,
+          "corridor_population": 2082918.0
+        },
+        {
+          "countries": "MNG\u2013RUS",
+          "original_policy": true,
+          "mean_density": 1.2514170613139406,
+          "p90_density": 1.8803592364112425,
+          "corridor_population": 187501.0
+        },
+        {
+          "countries": "PRK\u2013RUS",
+          "original_policy": false,
+          "mean_density": 156.53995843400767,
+          "p90_density": 307.4995549331927,
+          "corridor_population": 314350.0
+        },
+        {
+          "countries": "AFG\u2013CHN",
+          "original_policy": true,
+          "mean_density": 0.19057204922126467,
+          "p90_density": 0.37598575726060035,
+          "corridor_population": 665.0
+        },
+        {
+          "countries": "BTN\u2013CHN",
+          "original_policy": true,
+          "mean_density": 3.3905315661110986,
+          "p90_density": 9.124397657954603,
+          "corridor_population": 65457.0
+        },
+        {
+          "countries": "CHN\u2013IND",
+          "original_policy": true,
+          "mean_density": 6.081628984324004,
+          "p90_density": 5.4358645037731455,
+          "corridor_population": 639255.0
+        },
+        {
+          "countries": "CHN\u2013KAS",
+          "original_policy": true,
+          "mean_density": 0.42879530306967095,
+          "p90_density": 0.823263709421417,
+          "corridor_population": 2211.0
+        },
+        {
+          "countries": "CHN\u2013KAZ",
+          "original_policy": true,
+          "mean_density": 8.914309632512666,
+          "p90_density": 24.204794781420738,
+          "corridor_population": 621598.0
+        },
+        {
+          "countries": "CHN\u2013KGZ",
+          "original_policy": true,
+          "mean_density": 1.4579390422277292,
+          "p90_density": 3.750617986878514,
+          "corridor_population": 54881.0
+        },
+        {
+          "countries": "CHN\u2013LAO",
+          "original_policy": false,
+          "mean_density": 28.292850450620957,
+          "p90_density": 62.117835784826404,
+          "corridor_population": 475832.0
+        },
+        {
+          "countries": "CHN\u2013MMR",
+          "original_policy": false,
+          "mean_density": 45.147180400366814,
+          "p90_density": 102.67215383178592,
+          "corridor_population": 3464194.0
+        },
+        {
+          "countries": "CHN\u2013NPL",
+          "original_policy": true,
+          "mean_density": 7.228055062877552,
+          "p90_density": 20.070117243047022,
+          "corridor_population": 363143.0
+        },
+        {
+          "countries": "CHN\u2013PAK",
+          "original_policy": true,
+          "mean_density": 1.0205299508435994,
+          "p90_density": 2.684225879511595,
+          "corridor_population": 19082.0
+        },
+        {
+          "countries": "CHN\u2013TJK",
+          "original_policy": true,
+          "mean_density": 1.7353146026667128,
+          "p90_density": 8.666687094966601,
+          "corridor_population": 36160.0
+        },
+        {
+          "countries": "KHM\u2013LAO",
+          "original_policy": true,
+          "mean_density": 12.244778642676707,
+          "p90_density": 27.499079172473895,
+          "corridor_population": 216470.0
+        },
+        {
+          "countries": "LAO\u2013THA",
+          "original_policy": false,
+          "mean_density": 71.4789145060544,
+          "p90_density": 134.79253830294303,
+          "corridor_population": 5567856.0
+        },
+        {
+          "countries": "MMR\u2013THA",
+          "original_policy": false,
+          "mean_density": 28.368184290705564,
+          "p90_density": 83.19393379131544,
+          "corridor_population": 2469994.0
+        },
+        {
+          "countries": "LAO\u2013VNM",
+          "original_policy": false,
+          "mean_density": 31.058084702029088,
+          "p90_density": 76.37301314889524,
+          "corridor_population": 2525651.0
+        }
+      ],
+      "corridor_population_cost": 23284336.0,
+      "cases": [
+        {
+          "name": "control",
+          "scores": {
+            "RUS": 0.7134780783331441,
+            "CHN": 0.60526139350392,
+            "IND": 0.436871242654404,
+            "KAZ": 0.7251971731841964
+          },
+          "retained_contacts": 293,
+          "missing_contacts": [],
+          "overlap": 0.0003144557122141123
+        },
+        {
+          "name": "separator",
+          "scores": {
+            "RUS": 0.5841086937622433,
+            "CHN": 0.374232500945027,
+            "IND": 0.35590330950849447,
+            "KAZ": 0.789014177071552
+          },
+          "retained_contacts": 272,
+          "missing_contacts": [],
+          "overlap": 9.75348666543141e-06
+        }
+      ]
+    },
+    {
+      "name": "three-block-separator-flow-1024",
+      "grid": 1024,
+      "cuts": [
+        {
+          "countries": "AZE\u2013RUS",
+          "original_policy": false,
+          "mean_density": 62.547026401101924,
+          "p90_density": 129.5688507323385,
+          "corridor_population": 848162.0
+        },
+        {
+          "countries": "CHN\u2013RUS",
+          "original_policy": true,
+          "mean_density": 17.004052678505584,
+          "p90_density": 34.43543112851983,
+          "corridor_population": 2899267.0
+        },
+        {
+          "countries": "GEO\u2013RUS",
+          "original_policy": true,
+          "mean_density": 12.188138538923004,
+          "p90_density": 24.106582435376502,
+          "corridor_population": 429689.0
+        },
+        {
+          "countries": "KAZ\u2013RUS",
+          "original_policy": true,
+          "mean_density": 7.12051135902746,
+          "p90_density": 14.78039790336099,
+          "corridor_population": 2082918.0
+        },
+        {
+          "countries": "MNG\u2013RUS",
+          "original_policy": true,
+          "mean_density": 1.2514170613139406,
+          "p90_density": 1.8803592364112425,
+          "corridor_population": 187501.0
+        },
+        {
+          "countries": "PRK\u2013RUS",
+          "original_policy": false,
+          "mean_density": 156.53995843400767,
+          "p90_density": 307.4995549331927,
+          "corridor_population": 314350.0
+        },
+        {
+          "countries": "AFG\u2013CHN",
+          "original_policy": true,
+          "mean_density": 0.19057204922126467,
+          "p90_density": 0.37598575726060035,
+          "corridor_population": 665.0
+        },
+        {
+          "countries": "BTN\u2013CHN",
+          "original_policy": true,
+          "mean_density": 3.3905315661110986,
+          "p90_density": 9.124397657954603,
+          "corridor_population": 65457.0
+        },
+        {
+          "countries": "CHN\u2013IND",
+          "original_policy": true,
+          "mean_density": 6.081628984324004,
+          "p90_density": 5.4358645037731455,
+          "corridor_population": 639255.0
+        },
+        {
+          "countries": "CHN\u2013KAS",
+          "original_policy": true,
+          "mean_density": 0.42879530306967095,
+          "p90_density": 0.823263709421417,
+          "corridor_population": 2211.0
+        },
+        {
+          "countries": "CHN\u2013KAZ",
+          "original_policy": true,
+          "mean_density": 8.914309632512666,
+          "p90_density": 24.204794781420738,
+          "corridor_population": 621598.0
+        },
+        {
+          "countries": "CHN\u2013KGZ",
+          "original_policy": true,
+          "mean_density": 1.4579390422277292,
+          "p90_density": 3.750617986878514,
+          "corridor_population": 54881.0
+        },
+        {
+          "countries": "CHN\u2013LAO",
+          "original_policy": false,
+          "mean_density": 28.292850450620957,
+          "p90_density": 62.117835784826404,
+          "corridor_population": 475832.0
+        },
+        {
+          "countries": "CHN\u2013MMR",
+          "original_policy": false,
+          "mean_density": 45.147180400366814,
+          "p90_density": 102.67215383178592,
+          "corridor_population": 3464194.0
+        },
+        {
+          "countries": "CHN\u2013NPL",
+          "original_policy": true,
+          "mean_density": 7.228055062877552,
+          "p90_density": 20.070117243047022,
+          "corridor_population": 363143.0
+        },
+        {
+          "countries": "CHN\u2013PAK",
+          "original_policy": true,
+          "mean_density": 1.0205299508435994,
+          "p90_density": 2.684225879511595,
+          "corridor_population": 19082.0
+        },
+        {
+          "countries": "CHN\u2013TJK",
+          "original_policy": true,
+          "mean_density": 1.7353146026667128,
+          "p90_density": 8.666687094966601,
+          "corridor_population": 36160.0
+        },
+        {
+          "countries": "KHM\u2013LAO",
+          "original_policy": true,
+          "mean_density": 12.244778642676707,
+          "p90_density": 27.499079172473895,
+          "corridor_population": 216470.0
+        },
+        {
+          "countries": "LAO\u2013THA",
+          "original_policy": false,
+          "mean_density": 71.4789145060544,
+          "p90_density": 134.79253830294303,
+          "corridor_population": 5567856.0
+        },
+        {
+          "countries": "MMR\u2013THA",
+          "original_policy": false,
+          "mean_density": 28.368184290705564,
+          "p90_density": 83.19393379131544,
+          "corridor_population": 2469994.0
+        },
+        {
+          "countries": "LAO\u2013VNM",
+          "original_policy": false,
+          "mean_density": 31.058084702029088,
+          "p90_density": 76.37301314889524,
+          "corridor_population": 2525651.0
+        }
+      ],
+      "corridor_population_cost": 23284336.0,
+      "cases": [
+        {
+          "name": "control",
+          "scores": {
+            "RUS": 0.6969868116772755,
+            "CHN": 0.5904905690805617,
+            "IND": 0.45460175366198374,
+            "KAZ": 0.6898641164141912
+          },
+          "retained_contacts": 293,
+          "missing_contacts": [],
+          "overlap": 0.001125802838942036
+        },
+        {
+          "name": "separator",
+          "scores": {
+            "RUS": 0.601045630450991,
+            "CHN": 0.3723796053064654,
+            "IND": 0.35887190123894697,
+            "KAZ": 0.7873638456811484
+          },
+          "retained_contacts": 272,
+          "missing_contacts": [],
+          "overlap": 3.862565790768713e-06
+        }
+      ]
+    },
+    {
+      "name": "three-block-p90-200",
+      "grid": 512,
+      "cuts": [
+        {
+          "countries": "AZE\u2013RUS",
+          "original_policy": false,
+          "mean_density": 62.547026401101924,
+          "p90_density": 129.5688507323385,
+          "corridor_population": 848162.0
+        },
+        {
+          "countries": "CHN\u2013RUS",
+          "original_policy": true,
+          "mean_density": 17.004052678505584,
+          "p90_density": 34.43543112851983,
+          "corridor_population": 2899267.0
+        },
+        {
+          "countries": "GEO\u2013RUS",
+          "original_policy": true,
+          "mean_density": 12.188138538923004,
+          "p90_density": 24.106582435376502,
+          "corridor_population": 429689.0
+        },
+        {
+          "countries": "KAZ\u2013RUS",
+          "original_policy": true,
+          "mean_density": 7.12051135902746,
+          "p90_density": 14.78039790336099,
+          "corridor_population": 2082918.0
+        },
+        {
+          "countries": "MNG\u2013RUS",
+          "original_policy": true,
+          "mean_density": 1.2514170613139406,
+          "p90_density": 1.8803592364112425,
+          "corridor_population": 187501.0
+        },
+        {
+          "countries": "PRK\u2013RUS",
+          "original_policy": false,
+          "mean_density": 156.53995843400767,
+          "p90_density": 307.4995549331927,
+          "corridor_population": 314350.0
+        },
+        {
+          "countries": "AFG\u2013CHN",
+          "original_policy": true,
+          "mean_density": 0.19057204922126467,
+          "p90_density": 0.37598575726060035,
+          "corridor_population": 665.0
+        },
+        {
+          "countries": "BTN\u2013CHN",
+          "original_policy": true,
+          "mean_density": 3.3905315661110986,
+          "p90_density": 9.124397657954603,
+          "corridor_population": 65457.0
+        },
+        {
+          "countries": "CHN\u2013IND",
+          "original_policy": true,
+          "mean_density": 6.081628984324004,
+          "p90_density": 5.4358645037731455,
+          "corridor_population": 639255.0
+        },
+        {
+          "countries": "CHN\u2013KAS",
+          "original_policy": true,
+          "mean_density": 0.42879530306967095,
+          "p90_density": 0.823263709421417,
+          "corridor_population": 2211.0
+        },
+        {
+          "countries": "CHN\u2013KAZ",
+          "original_policy": true,
+          "mean_density": 8.914309632512666,
+          "p90_density": 24.204794781420738,
+          "corridor_population": 621598.0
+        },
+        {
+          "countries": "CHN\u2013KGZ",
+          "original_policy": true,
+          "mean_density": 1.4579390422277292,
+          "p90_density": 3.750617986878514,
+          "corridor_population": 54881.0
+        },
+        {
+          "countries": "CHN\u2013MMR",
+          "original_policy": false,
+          "mean_density": 45.147180400366814,
+          "p90_density": 102.67215383178592,
+          "corridor_population": 3464194.0
+        },
+        {
+          "countries": "CHN\u2013NPL",
+          "original_policy": true,
+          "mean_density": 7.228055062877552,
+          "p90_density": 20.070117243047022,
+          "corridor_population": 363143.0
+        },
+        {
+          "countries": "CHN\u2013PAK",
+          "original_policy": true,
+          "mean_density": 1.0205299508435994,
+          "p90_density": 2.684225879511595,
+          "corridor_population": 19082.0
+        },
+        {
+          "countries": "CHN\u2013TJK",
+          "original_policy": true,
+          "mean_density": 1.7353146026667128,
+          "p90_density": 8.666687094966601,
+          "corridor_population": 36160.0
+        },
+        {
+          "countries": "LAO\u2013MMR",
+          "original_policy": false,
+          "mean_density": 36.77208085582279,
+          "p90_density": 178.28362879961998,
+          "corridor_population": 348640.0
+        },
+        {
+          "countries": "MMR\u2013THA",
+          "original_policy": false,
+          "mean_density": 28.368184290705564,
+          "p90_density": 83.19393379131544,
+          "corridor_population": 2469994.0
+        }
+      ],
+      "corridor_population_cost": 14847167.0,
+      "cases": [
+        {
+          "name": "control",
+          "scores": {
+            "RUS": 0.7117431854462111,
+            "CHN": 0.6083381045860246,
+            "IND": 0.4385865329216928,
+            "KAZ": 0.7222393808940091
+          },
+          "retained_contacts": 293,
+          "missing_contacts": [],
+          "overlap": 2.6389723643660545e-05
+        },
+        {
+          "name": "separator",
+          "scores": {
+            "RUS": 0.5838522901591019,
+            "CHN": 0.38149296294101254,
+            "IND": 0.35951605619499716,
+            "KAZ": 0.7366413765924158
+          },
+          "retained_contacts": 275,
+          "missing_contacts": [],
+          "overlap": 5.0622562412172556e-05
+        }
+      ]
+    }
+  ],
+  "planets": [
+    {
+      "largest_enclosed_regions": [
+        {
+          "cells": 192,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "EGY",
+            "ERI",
+            "SAU",
+            "SDN",
+            "YEM"
+          ]
+        },
+        {
+          "cells": 133,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "ALD",
+            "BLR",
+            "DNK",
+            "EST",
+            "FIN",
+            "LTU",
+            "LVA",
+            "POL",
+            "RUS",
+            "SWE"
+          ]
+        },
+        {
+          "cells": 59,
+          "lake_cells": 59,
+          "adjacent_countries": [
+            "KEN",
+            "TZA",
+            "UGA"
+          ]
+        },
+        {
+          "cells": 45,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "CHN",
+            "HKG",
+            "MAC"
+          ]
+        },
+        {
+          "cells": 38,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "CHN"
+          ]
+        },
+        {
+          "cells": 28,
+          "lake_cells": 28,
+          "adjacent_countries": [
+            "MOZ",
+            "MWI",
+            "TZA"
+          ]
+        }
+      ],
+      "tiles": 55000,
+      "scores": {
+        "RUS": 0.5154181690706712,
+        "CHN": 0.35702310099382617,
+        "IND": 0.392229877513638,
+        "KAZ": 0.3669231032811032
+      },
+      "retained_missing": 50,
+      "false_contacts": 27,
+      "cut_contacts": [],
+      "enclosed_empty_cells": 807,
+      "enclosed_lake_cells": 220,
+      "enclosed_non_lake_cells": 587,
+      "lake_cells": 220,
+      "cells_sha256": "4dc1c317bf1c8a03ad2ddf6beff25491674e4d55925371418512e81b50563388",
+      "limits": [
+        "Non-lake enclosed water is not a count of phantom holes. It can include real seas or other intended water.",
+        "Cut contacts are reported separately from false geographic contacts. The baseline is checked against the same retained-contact policy."
+      ],
+      "name": "planet-three-block-p90-200-islands",
+      "cuts": [
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "CHN:72cd37e37e634df7"
+        ],
+        [
+          "AZE:0510388634a9edd9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "BTN:fe4a4d07e153ef17",
+          "CHN:72cd37e37e634df7"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "IND:3f0bb94d859b2064"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "KAS:b7c84d817c090062"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "KGZ:401b8fcdc0eef69c"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "MMR:e9f27e99686071f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "NPL:c1885306c87c4123"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "TJK:d6e62d7f585e085c"
+        ],
+        [
+          "GEO:d709e483cc2819fe",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "LAO:b4c511d27634a146",
+          "MMR:e9f27e99686071f9"
+        ],
+        [
+          "MMR:e9f27e99686071f9",
+          "THA:2d2e3dd6e4f6c675"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "PRK:443ac4e48c09b5a9",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "same_policy_baseline": {
+        "largest_enclosed_regions": [
+          {
+            "cells": 192,
+            "lake_cells": 0,
+            "adjacent_countries": [
+              "AFG",
+              "AZE",
+              "IRN",
+              "RUS",
+              "TKM"
+            ]
+          },
+          {
+            "cells": 59,
+            "lake_cells": 59,
+            "adjacent_countries": [
+              "KEN",
+              "TZA",
+              "UGA"
+            ]
+          },
+          {
+            "cells": 28,
+            "lake_cells": 28,
+            "adjacent_countries": [
+              "MOZ",
+              "MWI",
+              "TZA"
+            ]
+          },
+          {
+            "cells": 17,
+            "lake_cells": 0,
+            "adjacent_countries": [
+              "ARG"
+            ]
+          },
+          {
+            "cells": 16,
+            "lake_cells": 16,
+            "adjacent_countries": [
+              "CAN",
+              "USA"
+            ]
+          },
+          {
+            "cells": 16,
+            "lake_cells": 16,
+            "adjacent_countries": [
+              "USA"
+            ]
+          }
+        ],
+        "tiles": 55000,
+        "scores": {
+          "RUS": 0.585641192470396,
+          "CHN": 0.5167748797577687,
+          "IND": 0.4277552889301133,
+          "KAZ": 0.3438036200674409
+        },
+        "retained_missing": 65,
+        "false_contacts": 48,
+        "cut_contacts": [
+          [
+            "AZE:0510388634a9edd9",
+            "RUS:b85c5bca1852870f"
+          ],
+          [
+            "BTN:fe4a4d07e153ef17",
+            "CHN:72cd37e37e634df7"
+          ],
+          [
+            "CHN:72cd37e37e634df7",
+            "IND:3f0bb94d859b2064"
+          ],
+          [
+            "CHN:72cd37e37e634df7",
+            "KAZ:5d6f63a9b9f3c9f9"
+          ],
+          [
+            "CHN:72cd37e37e634df7",
+            "MMR:e9f27e99686071f9"
+          ],
+          [
+            "CHN:72cd37e37e634df7",
+            "NPL:c1885306c87c4123"
+          ],
+          [
+            "GEO:d709e483cc2819fe",
+            "RUS:b85c5bca1852870f"
+          ],
+          [
+            "KAZ:5d6f63a9b9f3c9f9",
+            "RUS:b85c5bca1852870f"
+          ],
+          [
+            "LAO:b4c511d27634a146",
+            "MMR:e9f27e99686071f9"
+          ],
+          [
+            "MMR:e9f27e99686071f9",
+            "THA:2d2e3dd6e4f6c675"
+          ]
+        ],
+        "enclosed_empty_cells": 558,
+        "enclosed_lake_cells": 220,
+        "enclosed_non_lake_cells": 338,
+        "lake_cells": 220,
+        "cells_sha256": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+        "limits": [
+          "Non-lake enclosed water is not a count of phantom holes. It can include real seas or other intended water.",
+          "Cut contacts are reported separately from false geographic contacts. The baseline is checked against the same retained-contact policy."
+        ]
+      },
+      "metrics": {
+        "tile_budget": 55000,
+        "population_total": 7954677990.0,
+        "represented_population": 7954677990.0,
+        "grouped_population": 10133200.0,
+        "omitted_population": 0.0,
+        "holes_not_encoded_in_wkt": 19,
+        "policy": "group",
+        "review_script_sha256": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+        "tiles": 55000,
+        "countries": 250,
+        "absolute_tile_error": 0,
+        "disconnected_regions": 0,
+        "regions_with_holes": 27,
+        "unmatched_source_population": 77246034.0,
+        "required_contacts": 330,
+        "missing_contacts": 50,
+        "false_contacts": 27,
+        "contacts_with_unrepresented_components": 31,
+        "actual_contacts": 307,
+        "generation": [
+          "mode=explicit-lake-vacancies",
+          "counts=exact",
+          "approval=none"
+        ],
+        "occupied_fraction": 0.20731247644176404,
+        "country_uniform_tile_cross_group_lower_bound": 5979286.023201256,
+        "country_absolute_area_error_tiles": 108.42557727971565,
+        "maximum_country_relative_area_error": 36156.62722727273,
+        "country_axis_comparisons": 7496,
+        "country_axis_order_errors": 108,
+        "country_axis_population_threshold": 10000000,
+        "country_axis_degree_threshold": 5,
+        "population_weighted_compactness": 0.2533588218560772,
+        "island_axis_comparisons": 3702,
+        "island_axis_order_errors": 369,
+        "passes_represented_constraints": false,
+        "named_lakes": 45,
+        "water_display_cells": 220
+      }
+    },
+    {
+      "largest_enclosed_regions": [
+        {
+          "cells": 176,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "EGY",
+            "SAU",
+            "YEM"
+          ]
+        },
+        {
+          "cells": 59,
+          "lake_cells": 59,
+          "adjacent_countries": [
+            "KEN",
+            "TZA",
+            "UGA"
+          ]
+        },
+        {
+          "cells": 28,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "RUS",
+            "UKR"
+          ]
+        },
+        {
+          "cells": 28,
+          "lake_cells": 28,
+          "adjacent_countries": [
+            "MOZ",
+            "MWI",
+            "TZA"
+          ]
+        },
+        {
+          "cells": 20,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "BGD"
+          ]
+        },
+        {
+          "cells": 17,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "ARG",
+            "URY"
+          ]
+        }
+      ],
+      "tiles": 55000,
+      "scores": {
+        "RUS": 0.6051177940661445,
+        "CHN": 0.401111817800642,
+        "IND": 0.421171459572936,
+        "KAZ": 0.6287373566821253
+      },
+      "retained_missing": 66,
+      "false_contacts": 25,
+      "cut_contacts": [],
+      "enclosed_empty_cells": 611,
+      "enclosed_lake_cells": 219,
+      "enclosed_non_lake_cells": 392,
+      "lake_cells": 219,
+      "cells_sha256": "81969bc6fc2411b6e7a0747d563bd7e48f1f1cd47c42d1c0192681e6e4e9e5ce",
+      "limits": [
+        "Non-lake enclosed water is not a count of phantom holes. It can include real seas or other intended water.",
+        "Cut contacts are reported separately from false geographic contacts. The baseline is checked against the same retained-contact policy."
+      ],
+      "name": "planet-complete-separator",
+      "cuts": [
+        [
+          "AZE:0510388634a9edd9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "GEO:d709e483cc2819fe",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "PRK:443ac4e48c09b5a9",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "same_policy_baseline": {
+        "largest_enclosed_regions": [
+          {
+            "cells": 192,
+            "lake_cells": 0,
+            "adjacent_countries": [
+              "AFG",
+              "AZE",
+              "IRN",
+              "RUS",
+              "TKM"
+            ]
+          },
+          {
+            "cells": 59,
+            "lake_cells": 59,
+            "adjacent_countries": [
+              "KEN",
+              "TZA",
+              "UGA"
+            ]
+          },
+          {
+            "cells": 28,
+            "lake_cells": 28,
+            "adjacent_countries": [
+              "MOZ",
+              "MWI",
+              "TZA"
+            ]
+          },
+          {
+            "cells": 17,
+            "lake_cells": 0,
+            "adjacent_countries": [
+              "ARG"
+            ]
+          },
+          {
+            "cells": 16,
+            "lake_cells": 16,
+            "adjacent_countries": [
+              "CAN",
+              "USA"
+            ]
+          },
+          {
+            "cells": 16,
+            "lake_cells": 16,
+            "adjacent_countries": [
+              "USA"
+            ]
+          }
+        ],
+        "tiles": 55000,
+        "scores": {
+          "RUS": 0.585641192470396,
+          "CHN": 0.5167748797577687,
+          "IND": 0.4277552889301133,
+          "KAZ": 0.3438036200674409
+        },
+        "retained_missing": 70,
+        "false_contacts": 48,
+        "cut_contacts": [
+          [
+            "AZE:0510388634a9edd9",
+            "RUS:b85c5bca1852870f"
+          ],
+          [
+            "GEO:d709e483cc2819fe",
+            "RUS:b85c5bca1852870f"
+          ],
+          [
+            "KAZ:5d6f63a9b9f3c9f9",
+            "RUS:b85c5bca1852870f"
+          ]
+        ],
+        "enclosed_empty_cells": 558,
+        "enclosed_lake_cells": 220,
+        "enclosed_non_lake_cells": 338,
+        "lake_cells": 220,
+        "cells_sha256": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+        "limits": [
+          "Non-lake enclosed water is not a count of phantom holes. It can include real seas or other intended water.",
+          "Cut contacts are reported separately from false geographic contacts. The baseline is checked against the same retained-contact policy."
+        ]
+      },
+      "metrics": {
+        "tile_budget": 55000,
+        "population_total": 7954677990.0,
+        "represented_population": 7954677990.0,
+        "grouped_population": 10133200.0,
+        "omitted_population": 0.0,
+        "holes_not_encoded_in_wkt": 19,
+        "policy": "group",
+        "review_script_sha256": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+        "tiles": 55000,
+        "countries": 250,
+        "absolute_tile_error": 0,
+        "disconnected_regions": 0,
+        "regions_with_holes": 25,
+        "unmatched_source_population": 77246034.0,
+        "required_contacts": 342,
+        "missing_contacts": 66,
+        "false_contacts": 25,
+        "contacts_with_unrepresented_components": 31,
+        "actual_contacts": 301,
+        "generation": [
+          "mode=explicit-lake-vacancies",
+          "counts=exact",
+          "approval=none"
+        ],
+        "occupied_fraction": 0.2178338600952132,
+        "country_uniform_tile_cross_group_lower_bound": 5979286.023201256,
+        "country_absolute_area_error_tiles": 108.42557727971565,
+        "maximum_country_relative_area_error": 36156.62722727273,
+        "country_axis_comparisons": 7496,
+        "country_axis_order_errors": 109,
+        "country_axis_population_threshold": 10000000,
+        "country_axis_degree_threshold": 5,
+        "population_weighted_compactness": 0.26841805570608596,
+        "island_axis_comparisons": 3702,
+        "island_axis_order_errors": 337,
+        "passes_represented_constraints": false,
+        "named_lakes": 44,
+        "water_display_cells": 219
+      }
+    },
+    {
+      "largest_enclosed_regions": [
+        {
+          "cells": 181,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "EGY",
+            "ERI",
+            "SAU",
+            "SDN",
+            "YEM"
+          ]
+        },
+        {
+          "cells": 131,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "ALD",
+            "BLR",
+            "DNK",
+            "EST",
+            "FIN",
+            "LTU",
+            "LVA",
+            "POL",
+            "RUS",
+            "SWE"
+          ]
+        },
+        {
+          "cells": 59,
+          "lake_cells": 59,
+          "adjacent_countries": [
+            "KEN",
+            "TZA",
+            "UGA"
+          ]
+        },
+        {
+          "cells": 29,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "RUS",
+            "UKR"
+          ]
+        },
+        {
+          "cells": 28,
+          "lake_cells": 28,
+          "adjacent_countries": [
+            "MOZ",
+            "MWI",
+            "TZA"
+          ]
+        },
+        {
+          "cells": 17,
+          "lake_cells": 0,
+          "adjacent_countries": [
+            "ARG",
+            "URY"
+          ]
+        }
+      ],
+      "tiles": 55000,
+      "scores": {
+        "RUS": 0.5932711287140966,
+        "CHN": 0.3563477058716359,
+        "IND": 0.39021512892912624,
+        "KAZ": 0.4296376264350864
+      },
+      "retained_missing": 53,
+      "false_contacts": 22,
+      "cut_contacts": [],
+      "enclosed_empty_cells": 773,
+      "enclosed_lake_cells": 220,
+      "enclosed_non_lake_cells": 553,
+      "lake_cells": 220,
+      "cells_sha256": "89ff5f14f35e8ebc8cd0b97a92de178892f2f83a659b3f3da3c38e1362a5dbc4",
+      "limits": [
+        "Non-lake enclosed water is not a count of phantom holes. It can include real seas or other intended water.",
+        "Cut contacts are reported separately from false geographic contacts. The baseline is checked against the same retained-contact policy."
+      ],
+      "name": "planet-three-block-islands",
+      "cuts": [
+        [
+          "AFG:cda2af5bb6ea22f0",
+          "CHN:72cd37e37e634df7"
+        ],
+        [
+          "AZE:0510388634a9edd9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "BTN:fe4a4d07e153ef17",
+          "CHN:72cd37e37e634df7"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "IND:3f0bb94d859b2064"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "KAS:b7c84d817c090062"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "KGZ:401b8fcdc0eef69c"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "LAO:b4c511d27634a146"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "MMR:e9f27e99686071f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "NPL:c1885306c87c4123"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "PAK:447ed1858f7b7a5d"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "TJK:d6e62d7f585e085c"
+        ],
+        [
+          "GEO:d709e483cc2819fe",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KHM:299a58dab837de1b",
+          "LAO:b4c511d27634a146"
+        ],
+        [
+          "LAO:b4c511d27634a146",
+          "THA:2d2e3dd6e4f6c675"
+        ],
+        [
+          "LAO:b4c511d27634a146",
+          "VNM:749468814d903c2a"
+        ],
+        [
+          "MMR:e9f27e99686071f9",
+          "THA:2d2e3dd6e4f6c675"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "PRK:443ac4e48c09b5a9",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "same_policy_baseline": {
+        "largest_enclosed_regions": [
+          {
+            "cells": 192,
+            "lake_cells": 0,
+            "adjacent_countries": [
+              "AFG",
+              "AZE",
+              "IRN",
+              "RUS",
+              "TKM"
+            ]
+          },
+          {
+            "cells": 59,
+            "lake_cells": 59,
+            "adjacent_countries": [
+              "KEN",
+              "TZA",
+              "UGA"
+            ]
+          },
+          {
+            "cells": 28,
+            "lake_cells": 28,
+            "adjacent_countries": [
+              "MOZ",
+              "MWI",
+              "TZA"
+            ]
+          },
+          {
+            "cells": 17,
+            "lake_cells": 0,
+            "adjacent_countries": [
+              "ARG"
+            ]
+          },
+          {
+            "cells": 16,
+            "lake_cells": 16,
+            "adjacent_countries": [
+              "CAN",
+              "USA"
+            ]
+          },
+          {
+            "cells": 16,
+            "lake_cells": 16,
+            "adjacent_countries": [
+              "USA"
+            ]
+          }
+        ],
+        "tiles": 55000,
+        "scores": {
+          "RUS": 0.585641192470396,
+          "CHN": 0.5167748797577687,
+          "IND": 0.4277552889301133,
+          "KAZ": 0.3438036200674409
+        },
+        "retained_missing": 63,
+        "false_contacts": 48,
+        "cut_contacts": [
+          [
+            "AZE:0510388634a9edd9",
+            "RUS:b85c5bca1852870f"
+          ],
+          [
+            "BTN:fe4a4d07e153ef17",
+            "CHN:72cd37e37e634df7"
+          ],
+          [
+            "CHN:72cd37e37e634df7",
+            "IND:3f0bb94d859b2064"
+          ],
+          [
+            "CHN:72cd37e37e634df7",
+            "KAZ:5d6f63a9b9f3c9f9"
+          ],
+          [
+            "CHN:72cd37e37e634df7",
+            "MMR:e9f27e99686071f9"
+          ],
+          [
+            "CHN:72cd37e37e634df7",
+            "NPL:c1885306c87c4123"
+          ],
+          [
+            "GEO:d709e483cc2819fe",
+            "RUS:b85c5bca1852870f"
+          ],
+          [
+            "KAZ:5d6f63a9b9f3c9f9",
+            "RUS:b85c5bca1852870f"
+          ],
+          [
+            "LAO:b4c511d27634a146",
+            "THA:2d2e3dd6e4f6c675"
+          ],
+          [
+            "LAO:b4c511d27634a146",
+            "VNM:749468814d903c2a"
+          ],
+          [
+            "MMR:e9f27e99686071f9",
+            "THA:2d2e3dd6e4f6c675"
+          ]
+        ],
+        "enclosed_empty_cells": 558,
+        "enclosed_lake_cells": 220,
+        "enclosed_non_lake_cells": 338,
+        "lake_cells": 220,
+        "cells_sha256": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+        "limits": [
+          "Non-lake enclosed water is not a count of phantom holes. It can include real seas or other intended water.",
+          "Cut contacts are reported separately from false geographic contacts. The baseline is checked against the same retained-contact policy."
+        ]
+      },
+      "metrics": {
+        "tile_budget": 55000,
+        "population_total": 7954677990.0,
+        "represented_population": 7954677990.0,
+        "grouped_population": 10133200.0,
+        "omitted_population": 0.0,
+        "holes_not_encoded_in_wkt": 19,
+        "policy": "group",
+        "review_script_sha256": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+        "tiles": 55000,
+        "countries": 250,
+        "absolute_tile_error": 0,
+        "disconnected_regions": 0,
+        "regions_with_holes": 28,
+        "unmatched_source_population": 77246034.0,
+        "required_contacts": 327,
+        "missing_contacts": 53,
+        "false_contacts": 22,
+        "contacts_with_unrepresented_components": 31,
+        "actual_contacts": 296,
+        "generation": [
+          "mode=explicit-lake-vacancies",
+          "counts=exact",
+          "approval=none"
+        ],
+        "occupied_fraction": 0.205279796362442,
+        "country_uniform_tile_cross_group_lower_bound": 5979286.023201256,
+        "country_absolute_area_error_tiles": 108.42557727971565,
+        "maximum_country_relative_area_error": 36156.62722727273,
+        "country_axis_comparisons": 7496,
+        "country_axis_order_errors": 116,
+        "country_axis_population_threshold": 10000000,
+        "country_axis_degree_threshold": 5,
+        "population_weighted_compactness": 0.2631677809183253,
+        "island_axis_comparisons": 3702,
+        "island_axis_order_errors": 376,
+        "passes_represented_constraints": false,
+        "named_lakes": 45,
+        "water_display_cells": 220
+      }
+    }
+  ],
+  "script_sha256": "4e20f8ebf33dfc7196d91b40d005224f9310859a17c9e17d1f8e521c990feda7"
+}

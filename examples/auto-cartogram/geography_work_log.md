@@ -1364,3 +1364,67 @@ Published the failed wide-strip comparison at
 `results/geography/wide-early-cuts/index.html`. It includes the four completed
 flow cases, the rejected cuts, population totals, and area-error warnings.
 All 283 tests pass after adding graph-policy and optional self-contact tests.
+
+### 15:27 UTC: three-domain tile results and visual checks
+
+Completed three-domain fits and full 55,000-tile previews. The p90-150 rule
+selects 21 cuts. Allowing p90 200 selects 18 cuts with a lower corridor-population
+cost: 14,847,167 instead of 23,284,336. The mean-density limit stays 75.
+A pilot with mean limit 125 selected the same 18-cut graph; the final run uses
+75. Five of the 18 selected borders fail the original mean-20/p90-50 rule.
+They are Russia–Azerbaijan, Russia–North Korea, China–Myanmar, Laos–Myanmar,
+and Myanmar–Thailand. This policy change remains explicit and unapproved.
+
+The 18-cut tile preview gives the first useful release in this investigation.
+Compared with current best, its tile outline errors change as follows:
+
+| Country | Current best | 18 cuts |
+| --- | ---: | ---: |
+| Russia | 0.5856 | 0.5154 |
+| China | 0.5168 | 0.3570 |
+| India | 0.4278 | 0.3922 |
+| Kazakhstan | 0.3438 | 0.3669 |
+
+All 55,000 tiles and 481 connected components remain. The 45 named lakes occupy
+220 empty cells, with no lake cell assigned to a country. All 18 selected cuts
+remain open. Against the same retained-contact policy, missing borders decrease
+from 65 to 50. False geographic contacts decrease from 48 to 27. The continuous
+three-domain guide retains all 275 uncut regional contacts before raster fitting.
+This does not make the final tile map topologically exact.
+
+The six-cut preview is less successful than its continuous guide suggests.
+Its tile outline scores improve for China but worsen for Russia and Kazakhstan.
+This is why both continuous and tile scores are now published. The three-domain
+21-cut result also improves China and India but leaves Russia's tile score close
+to current best. Solver repeats can vary. One three-domain attempt failed on an
+invalid Norway patch; its output was rejected and the full run was repeated.
+
+Visually checked the world previews, Europe, Africa, Japan and Korea, all three
+six-cut flow resolutions, the three-domain guides, and the OWID excerpt. OWID
+permits a large Russia–China separation but keeps China and India in contact.
+Our three-domain method needs more cuts. Britain is too far south, Nordic shapes
+remain weak, and Kazakhstan still needs work. Current best is not replaced.
+
+The 21-cut preview exposed an island regression: Japan stayed north-west of its
+proper position. The archipelago stage found a source-consistent eastward move
+but rejected it because its norm exceeded the old displacement limit. Added an
+optional general rule: allow the minimum shift required by source separation,
+then limit extra movement. It moved the Japanese group by (159, -40) tiles without
+changing island shapes, mainland cells in that stage, tile counts, or retained
+contacts. Japan is now east of Korea. There is no country-specific exception.
+The 18-cut preview already placed Japan on the correct side of Korea.
+
+Enclosed non-lake water increases from 338 to 587 cells in the 18-cut map.
+This is not a phantom-hole count. The two largest regions are beside the Red Sea
+countries (192 cells) and the Baltic countries (133 cells). The published audit
+lists neighbouring countries for the largest empty regions. Smaller gaps still
+need source-water checks.
+
+Published `results/geography/complete-separator/index.html` with the 18-cut map
+first, two alternative tile previews, regional images, six flow comparisons,
+explicit cut lists, and checked cell downloads. Added `complete-separator.md`
+with the main result and reproduction commands. Checked the page in headless
+Chromium and checked its HTTP response, local links, and all 59 file hashes.
+Nine source records and 25 unique input hashes pass their checks. All 286 tests
+pass. Current-best cells retain their original SHA256. All experiment jobs have
+stopped. H3-MON exports remain unchanged.

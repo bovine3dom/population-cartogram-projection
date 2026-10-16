@@ -22,6 +22,14 @@ class BlockCutTest(unittest.TestCase):
         self.assertEqual(parts,[{'A'},{'B','C'}])
         self.assertTrue(graph.has_edge('B','C'))
 
+    def test_p90_limit_is_an_explicit_policy_change(self):
+        records = self.records()
+        records[1]['p90_segment_density'] = 178.
+        self.assertGreaterEqual(separator(records,'A','B','relaxed')[1],1e15)
+        self.assertEqual(separator(records,'A','B','relaxed',p90_limit=200.)[1],150.)
+        with self.assertRaises(ValueError):
+            separator(records,'A','B','relaxed',mean_limit=float('nan'))
+
     def test_unknown_policy_fails(self):
         with self.assertRaises(ValueError):
             separator(self.records(),'A','B','anything')

@@ -18,14 +18,14 @@ from save_review import digest
 from trace_kazakhstan import outline_error
 
 
-def separator(borders, start, end, policy):
-    if policy not in ('strict','relaxed'):
-        raise ValueError('Unknown separator policy')
+def separator(borders, start, end, policy, mean_limit=75., p90_limit=150.):
+    if policy not in ('strict','relaxed') or not all(math.isfinite(v) and v>0 for v in [mean_limit,p90_limit]):
+        raise ValueError('Use a known separator policy and positive finite density limits')
     graph = nx.Graph()
     for record in borders:
         eligible = record['eligible']
         if policy == 'relaxed':
-            eligible |= (record.get('mean_density',math.inf)<=75 and record.get('p90_segment_density',math.inf)<=150)
+            eligible |= (record.get('mean_density',math.inf)<=mean_limit and record.get('p90_segment_density',math.inf)<=p90_limit)
             eligible |= (record.get('length_km',math.inf)<=50 and record.get('corridor_population',math.inf)<=500000)
         graph.add_edge(record['a'],record['b'],capacity=max(1.,record.get('corridor_population',1e15)) if eligible else 1e15,record=record)
     graph = graph.subgraph(nx.node_connected_component(graph,start)).copy()
@@ -34,7 +34,7 @@ def separator(borders, start, end, policy):
     return graph,cost,cut,[left,right]
 
 
-def run(root,output,grid=512,split_india=False):
+def run(root,output,grid=512,split_india=False,mean_limit=75.,p90_limit=150.):
     if output.exists() or grid < 16:
         raise ValueError('Use a new output directory and a grid of at least 16')
     baseline = root/'kontur-patch-flow-200-floor'
@@ -50,14 +50,14 @@ def run(root,output,grid=512,split_india=False):
     if any(audit['inputs'].get(str(p)) != digest(p) for p in [groups_path,contacts_path]):
         raise ValueError('Audit inputs differ')
     main = {code:max((c for c in native if c[:3]==code),key=lambda c:int(groups[c]['tiles'])) for code in ['RUS','CHN','IND']}
-    graph,cost,cut,blocks = separator(audit['borders'],main['RUS'],main['CHN'],'relaxed')
+    graph,cost,cut,blocks = separator(audit['borders'],main['RUS'],main['CHN'],'relaxed',mean_limit,p90_limit)
     strict_cost = separator(audit['borders'],main['RUS'],main['CHN'],'strict')[1]
     if cost >= 1e15 or any(not b for b in blocks):
         raise ValueError('No permitted complete separator')
     if split_india:
         removed = {tuple(sorted((r['a'],r['b']))) for r in cut}
         remaining = [r for r in audit['borders'] if tuple(sorted((r['a'],r['b']))) not in removed]
-        _,extra_cost,extra_cut,children = separator(remaining,main['CHN'],main['IND'],'relaxed')
+        _,extra_cost,extra_cut,children = separator(remaining,main['CHN'],main['IND'],'relaxed',mean_limit,p90_limit)
         if extra_cost >= 1e15:
             raise ValueError('No permitted China-India separator')
         blocks = [b for b in blocks if main['CHN'] not in b]+children
@@ -71,10 +71,10 @@ def run(root,output,grid=512,split_india=False):
         select_patches(features,data,targets,c,int(groups[c]['tiles']),float(groups[c]['group_population']))
     output.mkdir(parents=True)
     paths = [source_path,groups_path,audit_path,contacts_path,binary,target_path,baseline/'patches.geojson',baseline/'patch-data.json',baseline/'blend-0.9/components.geojson']
-    report = dict(grid=grid,split_india=split_india,strict_separator_possible=strict_cost<1e15,corridor_population_cost=cost,cuts=cut,cases=[],
+    report = dict(grid=grid,split_india=split_india,mean_limit=mean_limit,p90_limit=p90_limit,strict_separator_possible=strict_cost<1e15,corridor_population_cost=cost,cuts=cut,cases=[],
                   inputs={str(p):digest(p) for p in paths},script_sha256=digest(Path(__file__)),
                   limits=['Research only. No tile fit or production export.',
-                          'The relaxed policy permits mean density at most 75 and segment p90 at most 150 people per square kilometre, or a border at most 50 km long with corridor population at most 500000.',
+                          f'The relaxed policy permits mean density at most {mean_limit:g} and segment p90 at most {p90_limit:g} people per square kilometre, or a border at most 50 km long with corridor population at most 500000.',
                           'This differs from the original density policy. No rejected edge is silently approved.',
                           'Fit connected land groups, not separate countries. All within-group borders remain in the common population flow.',
                           'Reuse exact saved Kontur patches and target rows. Normalize each block to its total tile-area budget.',
@@ -168,4 +168,6 @@ if __name__ == '__main__':
     parser.add_argument('output',type=Path)
     parser.add_argument('--grid',type=int,default=512)
     parser.add_argument('--split-india',action='store_true')
+    parser.add_argument('--mean-limit',type=float,default=75.)
+    parser.add_argument('--p90-limit',type=float,default=150.)
     run(**vars(parser.parse_args()))

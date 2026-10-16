@@ -1,0 +1,135 @@
+{
+  "complete": true,
+  "approved": false,
+  "cuts": [
+    [
+      "AFG:cda2af5bb6ea22f0",
+      "CHN:72cd37e37e634df7"
+    ],
+    [
+      "AZE:0510388634a9edd9",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "BTN:fe4a4d07e153ef17",
+      "CHN:72cd37e37e634df7"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "IND:3f0bb94d859b2064"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "KAS:b7c84d817c090062"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "KAZ:5d6f63a9b9f3c9f9"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "KGZ:401b8fcdc0eef69c"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "MMR:e9f27e99686071f9"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "NPL:c1885306c87c4123"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "PAK:447ed1858f7b7a5d"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "TJK:d6e62d7f585e085c"
+    ],
+    [
+      "GEO:d709e483cc2819fe",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "LAO:b4c511d27634a146",
+      "MMR:e9f27e99686071f9"
+    ],
+    [
+      "MMR:e9f27e99686071f9",
+      "THA:2d2e3dd6e4f6c675"
+    ],
+    [
+      "MNG:7ecd8e5b0a42fa66",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "PRK:443ac4e48c09b5a9",
+      "RUS:b85c5bca1852870f"
+    ]
+  ],
+  "parent": "output/auto-cartogram/planet-three-block-p90-200",
+  "inputs": {
+    "output/auto-cartogram/planet-three-block-p90-200/run.json": "aae58db775ecee88a1768975c56156551d48a75be99ad696544c6f9d009f45e2",
+    "output/auto-cartogram/planet-three-block-p90-200/layout/cells.csv": "4dc1c317bf1c8a03ad2ddf6beff25491674e4d55925371418512e81b50563388",
+    "output/auto-cartogram/planet-three-block-p90-200/coast-islands/cells.csv": "fe1ef76dde89d69a34845dd3bfeabdc61366ef2af7357a9952a9bd68fcc57fd5",
+    "output/auto-cartogram/three-block-p90-200-world/inputs/geographic-contacts.csv": "cb6e90451662d470b46b120db99764856978555af41ca726df03d8d973fd8de1",
+    "output/auto-cartogram/geography-margin1-lake-vacancies-final/lake-placement.json": "2f00f9725e85a279d1ac07b1ef85909613abd1152fdb9466bf7ec7cc9775d1e0",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003"
+  },
+  "script_sha256": "f4c3684d87c20b999ac947878553189fc48dc8ff575803048aca0e2c0b67ef37",
+  "limits": [
+    "Reuse the parent tile fit. The island stage leaves mainland cells unchanged; the lake stage can move boundary cells.",
+    "The island movement limit applies beyond the minimum correction needed to satisfy source-axis separation.",
+    "No country-specific placement rule. All tile counts and retained contacts remain checked.",
+    "Lakes remain empty cells. No production export."
+  ],
+  "metrics": {
+    "tile_budget": 55000,
+    "population_total": 7954677990.0,
+    "represented_population": 7954677990.0,
+    "grouped_population": 10133200.0,
+    "omitted_population": 0.0,
+    "holes_not_encoded_in_wkt": 19,
+    "policy": "group",
+    "review_script_sha256": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+    "tiles": 55000,
+    "countries": 250,
+    "absolute_tile_error": 0,
+    "disconnected_regions": 0,
+    "regions_with_holes": 27,
+    "unmatched_source_population": 77246034.0,
+    "required_contacts": 330,
+    "missing_contacts": 50,
+    "false_contacts": 27,
+    "contacts_with_unrepresented_components": 31,
+    "actual_contacts": 307,
+    "generation": [
+      "mode=explicit-lake-vacancies",
+      "counts=exact",
+      "approval=none"
+    ],
+    "occupied_fraction": 0.20731247644176404,
+    "country_uniform_tile_cross_group_lower_bound": 5979286.023201256,
+    "country_absolute_area_error_tiles": 108.42557727971565,
+    "maximum_country_relative_area_error": 36156.62722727273,
+    "country_axis_comparisons": 7496,
+    "country_axis_order_errors": 108,
+    "country_axis_population_threshold": 10000000,
+    "country_axis_degree_threshold": 5,
+    "population_weighted_compactness": 0.2533588218560772,
+    "island_axis_comparisons": 3702,
+    "island_axis_order_errors": 369,
+    "passes_represented_constraints": false,
+    "named_lakes": 45,
+    "water_display_cells": 220
+  },
+  "cells_sha256": "4dc1c317bf1c8a03ad2ddf6beff25491674e4d55925371418512e81b50563388"
+}
