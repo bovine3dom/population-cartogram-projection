@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Compare retained and released contacts in an area-preserving affine assembly."""
 import argparse
+from functools import lru_cache
 import itertools
 import json
 import math
@@ -39,17 +40,30 @@ class Assembly:
         self.pairs = list(itertools.combinations(range(len(self.labels)), 2))
         self.radii = np.array([g.area/math.pi for g in self.shapes])
         self.start = np.column_stack((self.centres, np.zeros((len(self.labels), 2)))).ravel()
+        # Finite differences change one country at a time. Reuse unaffected pairs.
+        self.geometry = lru_cache(maxsize=2048)(self.transform)
+        self.pair = lru_cache(maxsize=16384)(self.pair_terms)
+
+    def transform(self, i, values):
+        x, y, a, shear = values
+        m = matrix(a, shear)
+        return affinity.affine_transform(self.shapes[i], [*m[0], *m[1], x, y])
 
     def geometries(self, flat):
-        result = []
-        for g, (x, y, a, shear) in zip(self.shapes, flat.reshape(-1, 4)):
-            m = matrix(a, shear)
-            result.append(affinity.affine_transform(g, [*m[0], *m[1], x, y]))
-        return result
+        return [self.geometry(i, tuple(p)) for i,p in enumerate(flat.reshape(-1,4))]
+
+    def pair_terms(self, i, j, left, right):
+        ga, gb = self.geometry(i, left), self.geometry(j, right)
+        gap = ga.distance(gb) if (self.labels[i], self.labels[j]) in self.required else 0.
+        overlap = ga.intersection(gb).area if ga.intersects(gb) else 0.
+        direction = self.centres[j]-self.centres[i]
+        axis = int(np.argmax(np.abs(direction)))
+        signed = np.sign(direction[axis])*(right[axis]-left[axis])
+        return gap**2, overlap, max(0., -signed)**2
 
     def terms(self, flat):
         state = flat.reshape(-1, 4)
-        shapes = self.geometries(flat)
+        positions = [tuple(p) for p in state]
         # Shape cost is mean-square displacement under the affine transform,
         # approximated with an isotropic second moment. Translation is free here.
         shape_cost = sum(r*np.sum((matrix(a,s)-np.eye(2))**2)
@@ -57,17 +71,10 @@ class Assembly:
         anchor = float(np.sum((state[:, :2]-self.centres)**2))
         contact, overlap, order = 0., 0., 0.
         for i,j in self.pairs:
-            a,b = self.labels[i], self.labels[j]
-            ga,gb = shapes[i],shapes[j]
-            if (a,b) in self.required:
-                contact += ga.distance(gb)**2
-            if ga.intersects(gb):
-                overlap += ga.intersection(gb).area
-            direction = self.centres[j]-self.centres[i]
-            axis = int(np.argmax(np.abs(direction)))
-            # The same geographic ordering applies to every pair, cut or not.
-            signed = np.sign(direction[axis])*(state[j,axis]-state[i,axis])
-            order += max(0., -signed)**2
+            gap, area, inversion = self.pair(i, j, positions[i], positions[j])
+            contact += gap
+            overlap += area
+            order += inversion
         return dict(shape=float(shape_cost), anchor=anchor, contact=float(contact),
                     overlap=float(overlap), order=float(order))
 
@@ -157,7 +164,7 @@ def run(root, output, iterations=250, shape_weight=.1):
     for name, required in [('all-borders', all_contacts), ('sparse-cuts', all_contacts-cuts)]:
         state = Assembly(preferred, centres, required)
         flat = state.start.copy()
-        case = dict(name=name, required=sorted(required), stages=[], initial_sha256=None)
+        case = dict(name=name, required=sorted(required), stages=[], initial_parameters=state.start.reshape(-1,4).tolist())
         report['cases'].append(case)
         # Identical initial positions, shape weights, and penalty schedule in both cases.
         for contact, collision in [(1.,20.), (10.,200.), (100.,2000.)]:

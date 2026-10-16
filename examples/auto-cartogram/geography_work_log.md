@@ -992,3 +992,10 @@ gaps and overlaps must be reported, not hidden by a successful optimizer return.
 Six new unit tests check area preservation, removal of the direct contact term,
 no cut-specific gap target, unchanged collision handling, and retained contacts.
 Current best and production mappings remain unchanged.
+
+Stopped the first uncached timing run after its first completed stage. Added
+bounded caches for unchanged country shapes and pair evaluations. The restarted
+first stage has exactly the same objective (2683.466266071664) and iteration
+count, but takes 19 seconds instead of 97 seconds. A seventh unit test checks
+cache reuse and changing coordinates. Started paired runs with shape weights
+0.1 and 1. Each pair has identical settings except for the four removed contacts.
