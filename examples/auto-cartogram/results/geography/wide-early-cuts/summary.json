@@ -1,0 +1,136 @@
+[
+  {
+    "name": "control",
+    "scores": {
+      "RUS": 0.7145168830546568,
+      "CHN": 0.6352681751901892,
+      "IND": 0.4446409896163499,
+      "KAZ": 0.7265716414945086
+    },
+    "valid_connected": true,
+    "maximum_patch_relative_area_error": 3.987370644486714,
+    "removed": [],
+    "population": 7221236218.0,
+    "patches": 369
+  },
+  {
+    "name": "short-100",
+    "scores": {
+      "RUS": 0.7054410924724723,
+      "CHN": 0.6317621944090985,
+      "IND": 0.4410367248600203,
+      "KAZ": 0.7044537926485699
+    },
+    "valid_connected": true,
+    "maximum_patch_relative_area_error": 3.98743526846319,
+    "removed": [
+      {
+        "component": "CHN:72cd37e37e634df7",
+        "source_area_fraction": 0.024505414246082435,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "KAZ:5d6f63a9b9f3c9f9",
+        "source_area_fraction": 0.12042154254490367,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "MNG:7ecd8e5b0a42fa66",
+        "source_area_fraction": 0.09242799593916584,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "PRK:443ac4e48c09b5a9",
+        "source_area_fraction": 0.02595220916418428,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "RUS:b85c5bca1852870f",
+        "source_area_fraction": 0.035667952981794815,
+        "fragment_area_fraction": 0.0
+      }
+    ],
+    "population": 7221236218.0,
+    "patches": 369
+  },
+  {
+    "name": "short-250",
+    "scores": {
+      "RUS": 0.7122894170550362,
+      "CHN": 0.6314550265641189,
+      "IND": 0.44038520797848246,
+      "KAZ": 0.7269684290474162
+    },
+    "valid_connected": true,
+    "maximum_patch_relative_area_error": 3.9862381674684846,
+    "removed": [
+      {
+        "component": "CHN:72cd37e37e634df7",
+        "source_area_fraction": 0.05621165912240844,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "KAZ:5d6f63a9b9f3c9f9",
+        "source_area_fraction": 0.261290838755598,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "MNG:7ecd8e5b0a42fa66",
+        "source_area_fraction": 0.2161314286663718,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "PRK:443ac4e48c09b5a9",
+        "source_area_fraction": 0.11611019118226362,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "RUS:b85c5bca1852870f",
+        "source_area_fraction": 0.08297162824008308,
+        "fragment_area_fraction": 0.0
+      }
+    ],
+    "population": 7221236218.0,
+    "patches": 369
+  },
+  {
+    "name": "short-500",
+    "scores": {
+      "RUS": 0.6932554721558752,
+      "CHN": 0.6271357034917164,
+      "IND": 0.43904954109462013,
+      "KAZ": 0.6491611601689042
+    },
+    "valid_connected": true,
+    "maximum_patch_relative_area_error": 3.9877889024997932,
+    "removed": [
+      {
+        "component": "CHN:72cd37e37e634df7",
+        "source_area_fraction": 0.10142256479863354,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "KAZ:5d6f63a9b9f3c9f9",
+        "source_area_fraction": 0.4531246215121426,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "MNG:7ecd8e5b0a42fa66",
+        "source_area_fraction": 0.4001276347453909,
+        "fragment_area_fraction": 0.0
+      },
+      {
+        "component": "PRK:443ac4e48c09b5a9",
+        "source_area_fraction": 0.34771449921280584,
+        "fragment_area_fraction": 0.00012173109515836494
+      },
+      {
+        "component": "RUS:b85c5bca1852870f",
+        "source_area_fraction": 0.1603336245824044,
+        "fragment_area_fraction": 0.0
+      }
+    ],
+    "population": 7221236218.0,
+    "patches": 365
+  }
+]

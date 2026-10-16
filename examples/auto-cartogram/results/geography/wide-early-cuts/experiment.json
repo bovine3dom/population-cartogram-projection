@@ -1,0 +1,375 @@
+{
+  "started_utc": "2026-10-16T14:30:59Z",
+  "grid": 512,
+  "primary": [
+    [
+      "CHN:72cd37e37e634df7",
+      "KAZ:5d6f63a9b9f3c9f9"
+    ],
+    [
+      "CHN:72cd37e37e634df7",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "RUS:b85c5bca1852870f"
+    ],
+    [
+      "MNG:7ecd8e5b0a42fa66",
+      "RUS:b85c5bca1852870f"
+    ]
+  ],
+  "short_closures": [
+    {
+      "a": "PRK:443ac4e48c09b5a9",
+      "b": "RUS:b85c5bca1852870f",
+      "countries": "PRK\u2013RUS",
+      "eligible": false,
+      "length_km": 41.27908170939865,
+      "corridor_area_km2": 2008.113475592368,
+      "corridor_population": 314350.0,
+      "mean_density": 156.53995843400767,
+      "p90_segment_density": 307.4995549331927,
+      "maximum_segment_density": 307.4995549331927,
+      "source_centres": 21,
+      "segments": 2,
+      "reason": "Above a density limit"
+    }
+  ],
+  "maximum_source_area_loss": 0.8,
+  "maximum_fragment_loss": 0.05,
+  "cases": [
+    {
+      "name": "control",
+      "width_km": 0.0,
+      "cuts": [],
+      "complete": true,
+      "removed": [],
+      "source_sha256": "82b76b5603958c72c68f6ad4d74f7872b7ecb96cf6569131c5759ed8c24b6ec5",
+      "population": 7221236218.0,
+      "patches": 369,
+      "flow_report_sha256": "d17e8e6572c86a47cc98e72dfc88ab2a38532296a3efb12c1e2439d64c8ff3a9",
+      "finished_utc": "2026-10-16T14:31:43Z"
+    },
+    {
+      "name": "strict-100",
+      "width_km": 100.0,
+      "cuts": [
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "complete": false,
+      "error": "Seam also removes an unselected contact: [('PRK:443ac4e48c09b5a9', 'RUS:b85c5bca1852870f')]",
+      "finished_utc": "2026-10-16T14:31:47Z"
+    },
+    {
+      "name": "short-100",
+      "width_km": 100.0,
+      "cuts": [
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "PRK:443ac4e48c09b5a9",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "complete": true,
+      "removed": [
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "source_area_fraction": 0.024505414246082435,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "KAZ:5d6f63a9b9f3c9f9",
+          "source_area_fraction": 0.12042154254490367,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "source_area_fraction": 0.09242799593916584,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "PRK:443ac4e48c09b5a9",
+          "source_area_fraction": 0.02595220916418428,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "source_area_fraction": 0.035667952981794815,
+          "fragment_area_fraction": 0.0
+        }
+      ],
+      "source_sha256": "ebd45c495a1ca211dc16c63de12e910badd595e7abd18a616e7b7463b37185a0",
+      "population": 7221236218.0,
+      "patches": 369,
+      "flow_report_sha256": "bf20f32963c1f2a4133c7ac74bd350510036d24be471f4f9344e0a9ba5ea8194",
+      "finished_utc": "2026-10-16T14:32:39Z"
+    },
+    {
+      "name": "strict-250",
+      "width_km": 250.0,
+      "cuts": [
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "complete": false,
+      "error": "Seam also removes an unselected contact: [('PRK:443ac4e48c09b5a9', 'RUS:b85c5bca1852870f')]",
+      "finished_utc": "2026-10-16T14:32:50Z"
+    },
+    {
+      "name": "short-250",
+      "width_km": 250.0,
+      "cuts": [
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "PRK:443ac4e48c09b5a9",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "complete": true,
+      "removed": [
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "source_area_fraction": 0.05621165912240844,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "KAZ:5d6f63a9b9f3c9f9",
+          "source_area_fraction": 0.261290838755598,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "source_area_fraction": 0.2161314286663718,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "PRK:443ac4e48c09b5a9",
+          "source_area_fraction": 0.11611019118226362,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "source_area_fraction": 0.08297162824008308,
+          "fragment_area_fraction": 0.0
+        }
+      ],
+      "source_sha256": "028bc3a4db0f2df7cbe4e10dea0a70497b7ded98d64e8265c489b44ca5ab872a",
+      "population": 7221236218.0,
+      "patches": 369,
+      "flow_report_sha256": "dabdfe2b75b327c8d0c4620a1474d8abd1b4d2d4d5d214a78a03b3cf0ffd9bbb",
+      "finished_utc": "2026-10-16T14:33:45Z"
+    },
+    {
+      "name": "strict-500",
+      "width_km": 500.0,
+      "cuts": [
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "complete": false,
+      "error": "Seam also removes an unselected contact: [('PRK:443ac4e48c09b5a9', 'RUS:b85c5bca1852870f')]",
+      "finished_utc": "2026-10-16T14:34:09Z"
+    },
+    {
+      "name": "short-500",
+      "width_km": 500.0,
+      "cuts": [
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "PRK:443ac4e48c09b5a9",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "complete": true,
+      "removed": [
+        {
+          "component": "CHN:72cd37e37e634df7",
+          "source_area_fraction": 0.10142256479863354,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "KAZ:5d6f63a9b9f3c9f9",
+          "source_area_fraction": 0.4531246215121426,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "MNG:7ecd8e5b0a42fa66",
+          "source_area_fraction": 0.4001276347453909,
+          "fragment_area_fraction": 0.0
+        },
+        {
+          "component": "PRK:443ac4e48c09b5a9",
+          "source_area_fraction": 0.34771449921280584,
+          "fragment_area_fraction": 0.00012173109515836494
+        },
+        {
+          "component": "RUS:b85c5bca1852870f",
+          "source_area_fraction": 0.1603336245824044,
+          "fragment_area_fraction": 0.0
+        }
+      ],
+      "source_sha256": "b2ae4b12c369f2af88423ba4d011f59e8e91527d9768f0e596e507737efc585b",
+      "population": 7221236218.0,
+      "patches": 365,
+      "flow_report_sha256": "8d94500d3d86f5a137bc1f0c74b7948eb3b8bb20d55f4180a0ea03ae8a08ddfd",
+      "finished_utc": "2026-10-16T14:35:20Z"
+    },
+    {
+      "name": "strict-1000",
+      "width_km": 1000.0,
+      "cuts": [
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "complete": false,
+      "error": "Seam also removes an unselected contact: [('AZE:0510388634a9edd9', 'RUS:b85c5bca1852870f'), ('CHN:72cd37e37e634df7', 'PRK:443ac4e48c09b5a9'), ('PRK:443ac4e48c09b5a9', 'RUS:b85c5bca1852870f')]",
+      "finished_utc": "2026-10-16T14:36:15Z"
+    },
+    {
+      "name": "short-1000",
+      "width_km": 1000.0,
+      "cuts": [
+        [
+          "CHN:72cd37e37e634df7",
+          "KAZ:5d6f63a9b9f3c9f9"
+        ],
+        [
+          "CHN:72cd37e37e634df7",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "KAZ:5d6f63a9b9f3c9f9",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "MNG:7ecd8e5b0a42fa66",
+          "RUS:b85c5bca1852870f"
+        ],
+        [
+          "PRK:443ac4e48c09b5a9",
+          "RUS:b85c5bca1852870f"
+        ]
+      ],
+      "complete": false,
+      "error": "Seam removes too much source area from PRK:443ac4e48c09b5a9",
+      "finished_utc": "2026-10-16T14:37:09Z"
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-mainland-flow/input/geometry.geojson": "4cc7e51c0d38456e6ed53fb0b8ee448c34b6d5244521ca0d5f673adc8aee4564",
+    "output/auto-cartogram/sparse-border-audit-25-wide/border-population.json": "550eb1329221c7401a2f4699f7785520eb7c05adaa3a749e870bce18acabac58",
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2"
+  },
+  "script_sha256": "24a9570556ea5e2b5d6a9770b2693a8be4b4627b53764045ed22586b70327c4a",
+  "limits": [
+    "Research only. The short-border policy is different from the original density-only rule.",
+    "The alternative permits a retained bypass edge only if it is at most 50 km long and its audited corridor has at most 500000 people.",
+    "Source land can be removed, but no component population or tile budget is removed. Outside population centres are reassigned to the nearest patch of the same component.",
+    "The geographic reference remains unchanged. Exact patch partitions can change after cutting.",
+    "Every unselected source contact must remain. No tile fit or production export is changed."
+  ]
+}

@@ -112,10 +112,11 @@ def area_gradient(p):
 
 
 class WeldedMesh:
-    def __init__(self, source, preferred, budgets, cuts, edge_length=2., mappers=None, contact_clearance=0.):
+    def __init__(self, source, preferred, budgets, cuts, edge_length=2., mappers=None, contact_clearance=0., self_contact=False):
         if not math.isfinite(contact_clearance) or not 0 <= contact_clearance <= .001:
             raise ValueError('Numerical contact clearance must be between zero and 0.001 tile units')
         self.contact_clearance = contact_clearance
+        self.self_contact = self_contact
         self.labels = sorted(source)
         self.budgets = np.array([budgets[c] for c in self.labels])
         edge_counts = {}
@@ -306,9 +307,7 @@ class WeldedMesh:
                     point = locations[oi]
                     fraction = np.clip(np.dot(point-xy[a],direction)/length**2,0,1)
                     nearest = xy[a]+fraction*direction
-                    if d == c and polygons[c].contains(Point((point+nearest)/2)):
-                        # Inside-country separation is handled by the triangle
-                        # constraints; only repel across exterior water here.
+                    if d == c and not self.self_contact and polygons[c].contains(Point((point+nearest)/2)):
                         continue
                     separation = point-nearest
                     distance = np.linalg.norm(separation)
@@ -322,7 +321,11 @@ class WeldedMesh:
                             # positive clearance pointing into the neighbour.
                             normal = -normal
                     gap = np.dot(separation,normal)
-                    clearance = self.contact_clearance if d != c and not {a,b}&{u,v} else 0.
+                    # Positive triangles do not prevent distant parts of a
+                    # coastline from crossing. Keep a small feasible clearance
+                    # on both sides of a near self-contact, including interiors.
+                    clearance = (min(.001,distance*.1) if d == c and self.self_contact else
+                                 self.contact_clearance if d != c and not {a,b}&{u,v} else 0.)
                     if distance <= 1e-8 and not 1e-6 < fraction < 1-1e-6:
                         # Coincident corners have no unique separating side.
                         # Opposing positive offsets there can be infeasible.
@@ -557,7 +560,7 @@ def continuation_fit(mesh, stages, iterations):
     return current,history
 
 
-def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False, trace_collisions=False, countries=COUNTRIES, contact_clearance=0., source_kind='shared', initial_gap=0., continuation_stages=0):
+def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=('all-borders','sparse-cuts'), patch_guides=False, trace_collisions=False, countries=COUNTRIES, contact_clearance=0., source_kind='shared', initial_gap=0., continuation_stages=0, self_contact=False):
     import osqp
     if (output.exists() or iterations < 1 or continuation_stages < 0 or not math.isfinite(source_simplify) or source_simplify < 0
             or not math.isfinite(edge_length) or edge_length <= 0):
@@ -620,7 +623,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         paths.extend(extra)
         paths.append(Path(__file__).with_name('kontur_boundary_map.py'))
     output.mkdir(parents=True)
-    report = dict(continuation_stages=continuation_stages,source_kind=source_kind,initial_gap=initial_gap,countries=list(countries),contact_clearance=contact_clearance,cuts=sorted(cuts),trace_collisions=trace_collisions,patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
+    report = dict(self_contact=self_contact,continuation_stages=continuation_stages,source_kind=source_kind,initial_gap=initial_gap,countries=list(countries),contact_clearance=contact_clearance,cuts=sorted(cuts),trace_collisions=trace_collisions,patch_guides=patch_guides,boundary_matching=matching,iterations=iterations,source_simplify=source_simplify,edge_length=edge_length,simplification=simplification,cases=[],inputs={str(p):digest(p) for p in paths},
                   script_sha256=digest(Path(__file__)),osqp_version=osqp.__version__,
                   limits=['Shared vertices preserve entire retained border polylines, not only point contacts.',
                           'Selected cuts duplicate boundary degrees of freedom. General geometric collision checks still apply.',
@@ -631,7 +634,7 @@ def run(root, output, iterations=60, source_simplify=.05, edge_length=2., cases=
         if name not in ('all-borders','sparse-cuts'):
             raise ValueError('Unknown case')
         policy = cuts if name == 'sparse-cuts' else set()
-        mesh = WeldedMesh(source,preferred,budgets,policy,edge_length,mappers,contact_clearance)
+        mesh = WeldedMesh(source,preferred,budgets,policy,edge_length,mappers,contact_clearance,self_contact)
         seed = seed_cut_gap(mesh,initial_gap)
         initial_checks = mesh.checks(mesh.initial)
         print(name,'initial',json.dumps(initial_checks),flush=True)
@@ -679,4 +682,5 @@ if __name__ == '__main__':
     parser.add_argument('--source-kind',choices=['shared','geographic'],default='shared')
     parser.add_argument('--initial-gap',type=float,default=0.)
     parser.add_argument('--continuation-stages',type=int,default=0)
+    parser.add_argument('--self-contact',action='store_true')
     run(**vars(parser.parse_args()))

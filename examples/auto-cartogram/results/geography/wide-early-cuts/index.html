@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8">
+<title>Wide cuts before population flow</title>
+<style>body{font:17px system-ui;max-width:1600px;margin:32px auto;padding:0 20px}img{width:100%}table{border-collapse:collapse}td,th{padding:8px;border:1px solid #aaa}.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr))}</style>
+<h1>Wide cuts before population flow</h1>
+<p><a href="../planet-kontur-coarse90/index.html">Current best: unchanged</a></p>
+<p><b>Diagnostic only. The wider gaps do not give useful shape recovery.</b>
+Russia remains a long strip above China. Kazakhstan becomes thinner. No tile fit or H3-MON export uses these maps.</p>
+<p>These cuts occur in the original Equal Earth geometry, before population patches and flow.
+The four selected borders are Russia–Kazakhstan, China–Kazakhstan, Russia–China, and Russia–Mongolia.
+Each strict trial fails because a wider cut also removes an unselected contact.</p>
+<p>The separate short-border policy permits one extra cut: Russia–North Korea.
+It selects a border that closes a two-edge route around a primary cut, is at most 50 km long,
+and has at most 500,000 people in its audited corridor. This border fails the original mean-density rule.
+This alternative policy is not approved. The audit uses a 25 km corridor, not the full removed strip.</p>
+<p>The width is the nominal source gap in kilometres, not the final gap width.
+The 500 km trial removes 45% of Kazakhstan's source area and 16% of Russia's.
+No population is removed. All 7,221,236,218 people stay in their original components.
+Centres outside the changed outline use the nearest remaining patch in the same component.
+All unselected source contacts must remain. This check permits shorter borders; it does not preserve their full length.</p>
+<p>Each completed case runs 0% and 90% population blends. The panels show 90%.
+The patch grid uses 200 source units, approximately 1,274 km, not 200 km.
+The solver grid is 512. Islands, lake insertion, and tiles are absent at this stage.
+Tiny components remain subject to the solver area floor. A successful process exit does not give exact population areas.</p>
+<h2>Outline error against unchanged geography</h2>
+<p>Lower is better. The score aligns area and centre, without rotation.
+Small score changes do not establish visual improvement. The table uses the largest mainland component for each named country.</p>
+<table><tr><th>Trial</th><th>Russia</th><th>China</th><th>India</th><th>Kazakhstan</th></tr><tr><td>control</td><td>0.7145</td><td>0.6353</td><td>0.4446</td><td>0.7266</td></tr><tr><td>short-100</td><td>0.7054</td><td>0.6318</td><td>0.4410</td><td>0.7045</td></tr><tr><td>short-250</td><td>0.7123</td><td>0.6315</td><td>0.4404</td><td>0.7270</td></tr><tr><td>short-500</td><td>0.6933</td><td>0.6271</td><td>0.4390</td><td>0.6492</td></tr></table>
+<p><a href="summary.json">Measured results</a> · <a href="experiment.json">Cut settings and failures</a></p>
+<h2>Rejected source cuts</h2><ul><li>strict-100: Seam also removes an unselected contact: [(&#x27;PRK:443ac4e48c09b5a9&#x27;, &#x27;RUS:b85c5bca1852870f&#x27;)]</li><li>strict-250: Seam also removes an unselected contact: [(&#x27;PRK:443ac4e48c09b5a9&#x27;, &#x27;RUS:b85c5bca1852870f&#x27;)]</li><li>strict-500: Seam also removes an unselected contact: [(&#x27;PRK:443ac4e48c09b5a9&#x27;, &#x27;RUS:b85c5bca1852870f&#x27;)]</li><li>strict-1000: Seam also removes an unselected contact: [(&#x27;AZE:0510388634a9edd9&#x27;, &#x27;RUS:b85c5bca1852870f&#x27;), (&#x27;CHN:72cd37e37e634df7&#x27;, &#x27;PRK:443ac4e48c09b5a9&#x27;), (&#x27;PRK:443ac4e48c09b5a9&#x27;, &#x27;RUS:b85c5bca1852870f&#x27;)]</li><li>short-1000: Seam removes too much source area from PRK:443ac4e48c09b5a9</li></ul><div class="panels"><section><h2>control</h2><p><a href="control/world.png">World</a> · <a href="control/experiment.json">Checks</a></p><a href="control/eurasia.png"><img src="control/eurasia.png" alt="Eurasia: control"></a></section><section><h2>short-100</h2><p><a href="short-100/world.png">World</a> · <a href="short-100/experiment.json">Checks</a></p><a href="short-100/eurasia.png"><img src="short-100/eurasia.png" alt="Eurasia: short-100"></a></section><section><h2>short-250</h2><p><a href="short-250/world.png">World</a> · <a href="short-250/experiment.json">Checks</a></p><a href="short-250/eurasia.png"><img src="short-250/eurasia.png" alt="Eurasia: short-250"></a></section><section><h2>short-500</h2><p><a href="short-500/world.png">World</a> · <a href="short-500/experiment.json">Checks</a></p><a href="short-500/eurasia.png"><img src="short-500/eurasia.png" alt="Eurasia: short-500"></a></section></div>
