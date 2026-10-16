@@ -1,0 +1,51 @@
+{
+  "reference_sha256": "2d11638b7e04e4b2cb94de8e5bcf575a6ab99e9e197cb5817006803798abf7f4",
+  "trials": {
+    "2": {
+      "cells_sha256": "3ba65565dd0b59c99bc5a4a4679cffdcee009d547c44afb36a3725a8afd8ef7a",
+      "changed_components": [
+        "FIN:9332a3268ae7c503",
+        "NOW:a387a8ce67e0d957"
+      ],
+      "new_inland_coast": [],
+      "lost_coastal_access": [],
+      "lake_cells_identical": true,
+      "country_perimeters": {
+        "FIN:9332a3268ae7c503": 58,
+        "NOW:a387a8ce67e0d957": 44
+      }
+    },
+    "3": {
+      "cells_sha256": "6d29485a27cd253c7e0142ecd425bfeca6348bacc8188ebf06fc62801a3710c8",
+      "changed_components": [
+        "FIN:9332a3268ae7c503",
+        "NOW:a387a8ce67e0d957",
+        "SWE:1320ee42b8e1186c"
+      ],
+      "new_inland_coast": [],
+      "lost_coastal_access": [],
+      "lake_cells_identical": true,
+      "country_perimeters": {
+        "FIN:9332a3268ae7c503": 70,
+        "NOW:a387a8ce67e0d957": 34,
+        "SWE:1320ee42b8e1186c": 60
+      }
+    },
+    "6": {
+      "cells_sha256": "bcd2e87e6f6ff950e8f865b6450e21db7d932dced6f9bea4fa50765aa7cadd74",
+      "changed_components": [
+        "FIN:9332a3268ae7c503",
+        "NOW:a387a8ce67e0d957",
+        "SWE:1320ee42b8e1186c"
+      ],
+      "new_inland_coast": [],
+      "lost_coastal_access": [],
+      "lake_cells_identical": true,
+      "country_perimeters": {
+        "FIN:9332a3268ae7c503": 52,
+        "NOW:a387a8ce67e0d957": 36,
+        "SWE:1320ee42b8e1186c": 42
+      }
+    }
+  }
+}
