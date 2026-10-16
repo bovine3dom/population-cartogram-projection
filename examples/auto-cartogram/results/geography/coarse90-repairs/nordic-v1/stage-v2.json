@@ -1,0 +1,49 @@
+{
+  "movable": [
+    "FIN:9332a3268ae7c503",
+    "NOW:a387a8ce67e0d957",
+    "SWE:1320ee42b8e1186c"
+  ],
+  "expansion": 2,
+  "required_extra": [
+    [
+      "FIN:9332a3268ae7c503",
+      "NOW:a387a8ce67e0d957"
+    ]
+  ],
+  "maximum_reach": 10,
+  "connectivity": "rooted continuous flow with independent component checks",
+  "maximum_tiles": 200,
+  "margin": 12,
+  "seconds_per_target": 120.0,
+  "maximum_cuts": 100,
+  "targets": [
+    {
+      "component": "SWE:1320ee42b8e1186c",
+      "accepted": true,
+      "attempts": [
+        {
+          "status": 1,
+          "message": "Time limit reached. (HiGHS Status 13: Time limit reached)"
+        }
+      ]
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+    "output/auto-cartogram/coarse90-lithuania-lakes-v1/cells.csv": "2d11638b7e04e4b2cb94de8e5bcf575a6ab99e9e197cb5817006803798abf7f4",
+    "output/auto-cartogram/geography-source-coasts-55000/source-coasts.csv": "74b99a8e34ad48401ffacaa8729698370040acc1f95bf9ffee8667eaa4d14c97",
+    "output/auto-cartogram/coarse90-lithuania-lakes-v1/lake-cells.csv": "4bb9a311cad7ceebf26464abcc19ef8980bc8ca0dd87ae8335e02a01ad76139c"
+  },
+  "script_sha256": "09d1fc10f0c6886e7486604b0cef2531e0322bd2770bf1e64cc98349ed808ccb",
+  "cells_sha256": "3ba65565dd0b59c99bc5a4a4679cffdcee009d547c44afb36a3725a8afd8ef7a",
+  "limits": [
+    "Exact counts. Lakes and their shore cells stay fixed. Expansion is optional.",
+    "With expansion, coast checks can reject a feasible border fit. The solver does not search again.",
+    "Each component keeps one root cell. Search windows and time limits can hide valid repairs.",
+    "Source coast labels use finite samples. They are not a proof of ocean access.",
+    "Only connected integer solutions that retain true borders and add no false borders are accepted.",
+    "Accepted solutions can still have poor shapes. No production approval."
+  ]
+}

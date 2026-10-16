@@ -1510,3 +1510,16 @@ keep the old footprint. All 316 tests pass.
 The first joint Nordic fits restore Finland–Norway, but visual review shows
 thin strips. Neither is approved. Further shape and Paraguay trials are in
 progress. The current best and production exports are unchanged.
+
+Completed the joint-fit trials. Source-template fitting first restores the
+Nordic border. A second local fit uses squared template distance and perimeter
+costs. This gives `coarse90-nordic-expansion-v6`: 68 missing and 34 false borders.
+Only the three Nordic components change relative to the mainland repair trial.
+All exact counts, component connections, and lake shores pass independent checks.
+All lake cells are unchanged. No extra inland coast or lost coastal access occurs.
+Checked the world image, Europe, and enlarged Nordic views. Sweden is no longer
+rectangular, but Norway has a narrow section and Finland has an awkward lake
+extension. Published comparisons at
+`results/geography/coarse90-repairs/nordic-v1/index.html`. No promotion.
+The two expanded Paraguay trials time out without a feasible incumbent. Its
+false coast remains. All 317 tests pass. No trial jobs remain active.

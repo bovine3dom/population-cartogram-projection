@@ -1,0 +1,200 @@
+{
+  "approved": false,
+  "layout": "output/auto-cartogram/coarse90-nordic-expansion-v6",
+  "known_defects": {
+    "cells_sha256": "bcd2e87e6f6ff950e8f865b6450e21db7d932dced6f9bea4fa50765aa7cadd74",
+    "long_island_minus_manhattan": [
+      7.830769230769249,
+      -0.9461538461538908
+    ],
+    "sweden_germany_contact": false,
+    "malaysia_thailand_contact": true,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 2,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "baseline_defects": {
+    "cells_sha256": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+    "long_island_minus_manhattan": [
+      4.830769230769249,
+      6.053846153846109
+    ],
+    "sweden_germany_contact": true,
+    "malaysia_thailand_contact": false,
+    "coasts": {
+      "LTU:4c2a60810b4196cd": {
+        "exterior_water_edges": 0,
+        "enclosed_water_edges": 0
+      },
+      "PRY:8be730e7955b0934": {
+        "exterior_water_edges": 16,
+        "enclosed_water_edges": 0
+      }
+    }
+  },
+  "gained_true": [
+    [
+      "FIN:9332a3268ae7c503",
+      "SWE:1320ee42b8e1186c"
+    ],
+    [
+      "ISR:7ab28b88983e2128",
+      "WEB:8660f88c9871d216"
+    ],
+    [
+      "LTU:4c2a60810b4196cd",
+      "RUS:8afd88fb65e5e555"
+    ],
+    [
+      "MYS:4035fe8bf71b03f5",
+      "THA:2d2e3dd6e4f6c675"
+    ],
+    [
+      "NOW:a387a8ce67e0d957",
+      "SWE:1320ee42b8e1186c"
+    ]
+  ],
+  "lost_true": [],
+  "added_false": [],
+  "removed_false": [
+    [
+      "DEU:0b0480fae55fd996",
+      "SWE:1320ee42b8e1186c"
+    ],
+    [
+      "EST:50bd04ff06509a99",
+      "FIN:9332a3268ae7c503"
+    ],
+    [
+      "EST:50bd04ff06509a99",
+      "POL:1980df7ed9d16d12"
+    ],
+    [
+      "EST:50bd04ff06509a99",
+      "RUS:8afd88fb65e5e555"
+    ],
+    [
+      "FIN:9332a3268ae7c503",
+      "LVA:ff14565ea5d338a5"
+    ],
+    [
+      "GIB:71de83b149a1d32c",
+      "MAR:41e7d86fdd4b2365"
+    ],
+    [
+      "ITA:7d6868fd136c6c11",
+      "MCO:8f146e45080f16d1"
+    ],
+    [
+      "KAS:b7c84d817c090062",
+      "KAZ:5d6f63a9b9f3c9f9"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "NPL:c1885306c87c4123"
+    ],
+    [
+      "KAZ:5d6f63a9b9f3c9f9",
+      "PAK:447ed1858f7b7a5d"
+    ],
+    [
+      "LBN:8d427f2407db4cf0",
+      "WEB:8660f88c9871d216"
+    ],
+    [
+      "POL:1980df7ed9d16d12",
+      "SWE:1320ee42b8e1186c"
+    ],
+    [
+      "SYR:bb46c77ee43515e0",
+      "WEB:8660f88c9871d216"
+    ],
+    [
+      "USA:13c14a072880aac5",
+      "USA:90107a05206832e4"
+    ]
+  ],
+  "lake_count": 45,
+  "empty_lake_cells": 220,
+  "inputs": {
+    "output/auto-cartogram/planet-kontur-coarse90/layout/cells.csv": "3f6e042629c1c77ffa251a1f36e7cb40f494c21ca35d9ee84b0ca1e02667cb1e",
+    "output/auto-cartogram/coarse90-nordic-expansion-v6/cells.csv": "bcd2e87e6f6ff950e8f865b6450e21db7d932dced6f9bea4fa50765aa7cadd74",
+    "output/auto-cartogram/coarse90-nordic-expansion-v6/lake-cells.csv": "4bb9a311cad7ceebf26464abcc19ef8980bc8ca0dd87ae8335e02a01ad76139c",
+    "output/auto-cartogram/world-55000-dissolved-input/groups.csv": "7481e73bfaa4a10f4d7c42d6053eb9c057ed683f581ccacbe73ae4b15149c1ca",
+    "output/auto-cartogram/world-55000-dissolved-input/geographic-contacts.csv": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2"
+  },
+  "metrics": {
+    "tile_budget": 55000,
+    "population_total": 7954677990.0,
+    "represented_population": 7954677990.0,
+    "grouped_population": 10133200.0,
+    "omitted_population": 0.0,
+    "holes_not_encoded_in_wkt": 19,
+    "policy": "group",
+    "review_script_sha256": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+    "tiles": 55000,
+    "countries": 250,
+    "absolute_tile_error": 0,
+    "disconnected_regions": 0,
+    "regions_with_holes": 26,
+    "unmatched_source_population": 77246034.0,
+    "required_contacts": 348,
+    "missing_contacts": 68,
+    "false_contacts": 34,
+    "contacts_with_unrepresented_components": 31,
+    "actual_contacts": 314,
+    "generation": [
+      "mode=local-coast-milp",
+      "counts=exact",
+      "approval=none"
+    ],
+    "occupied_fraction": 0.22296453647699815,
+    "country_uniform_tile_cross_group_lower_bound": 5979286.023201256,
+    "country_absolute_area_error_tiles": 108.42557727971565,
+    "maximum_country_relative_area_error": 36156.62722727273,
+    "country_axis_comparisons": 7496,
+    "country_axis_order_errors": 218,
+    "country_axis_population_threshold": 10000000,
+    "country_axis_degree_threshold": 5,
+    "population_weighted_compactness": 0.2576881075161202,
+    "island_axis_comparisons": 3702,
+    "island_axis_order_errors": 392,
+    "passes_represented_constraints": false,
+    "named_lakes": 45,
+    "water_display_cells": 220
+  },
+  "files": {
+    "africa.png": "40a77c8d6da5e61d0f2d2aae87b7b6fa2dde4fd54c6ddb4d0f6d696f0d836058",
+    "cells.csv.gz": "200d51947e03e7f6b1becc7f2290727d170f89472264b43c97b50c1cc8bda2a9",
+    "comparison-checks.json": "46cfbc47ff455de7f5a3ff12072843741f9c985a51fbfe16fe2a40e6965272dd",
+    "europe.png": "3a74b8d35bf8da91a5155dd7d48fcf4a0e4d8160a0b39f070353f1d49c03cc33",
+    "geography/landmass-parts.json.gz": "fe0c8331504cfe598a5a750560e06a963307b86448bd8a7e707e6a38677d0294",
+    "geography/nearby-relations.json.gz": "593c4705958194ba32d914294399320d3ad92a66e954b48526f614a7f9409718",
+    "geography/summary.json": "55f4cba6aaeaaac2c35a8bf39653b723fa058dc5851b308798b7eec55a3e1d2d",
+    "geography/water-access.csv.gz": "736612098548975358c93ab14c7159b638002621656b8b0b037cb20b93f2d1dd",
+    "indonesia.png": "bee9034137c48bdf64a212d48cf8cb8d19a848d8ab4233b02bf57480fc59cce9",
+    "japan-korea.png": "b8f355010543d6169b5b52dc4b7bdb306ba05123362e2fec11b616b91417b45b",
+    "lake-cells.csv.gz": "cdfd59a0102b71a4d7d39c73d6eb6db13207891340a85f19eebb907058938d5a",
+    "lake-placement.json.gz": "d1723527f7a9679e9dd294ca3a748c1e85451008e5fb6b144cd6e363372bf893",
+    "local-coasts.json": "74f67c14a9eb497e998e09b0de247f5cdc51f47aec65c0a7623090159870bdd0",
+    "metrics.json": "c8dfe57e269195b8d14a7a52cf00a298f6c26dc5ac3bc3161242e27212fc5115",
+    "new-york.png": "f94ef52861f25e7965e47b40736f08c349ad16f90be28465f6e05651b4b574c4",
+    "nordic-before.png": "d723f233d387af22f63895414dbe7f8c884e973213b0307fa9af3299eab4e46c",
+    "nordic-v2.png": "77afb5ef910f15b5bdf938683f70ef528a842c4280a5a639294d8aa27bdc6632",
+    "nordic-v3.png": "b4139da9b93ee078917bc79d61a76e114f1f4b1b05f01f721aa3b40f7178b855",
+    "nordic-v6.png": "64d888aed586e0a45b8a1732f3de440620c3893010d0426fafcaf456dda12bf1",
+    "other-trials.json.gz": "ba38623993d4dfbcfc3209770fb9d181cc8c078748f59d5cc5af036cb5968d49",
+    "review.png": "07f9c27a3e4f4881cc9a0705a96ecc5b57c24422ccaaff722ab07984cb811600",
+    "south-america.png": "2a470e1256706ac648aa3b1fe2f23d4f472ad8b15a2909184d56ee779eebbc64",
+    "stage-v2.json": "3a0c627000340e67e809d9efc912a3e9f8deb497ed365eae093ccb63c94d3387",
+    "stage-v3.json": "0b4448dace314b870d4adf5391378e4412346bd0d678704eb8515f6dc186f415",
+    "stage-v6.json": "74f67c14a9eb497e998e09b0de247f5cdc51f47aec65c0a7623090159870bdd0"
+  }
+}

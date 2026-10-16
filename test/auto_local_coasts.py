@@ -76,7 +76,7 @@ class LocalCoastTest(unittest.TestCase):
         tiles = {'a': {(x, 0) for x in range(3)}, 'b': {(4, 0)}}
         preferred = {'a': {(1, y) for y in range(-1, 2)}}
         result, attempts = fit(tiles, set(), set(), 'a', expansion=1, seconds=10,
-                               movable={'a'}, preferred=preferred)
+                               movable={'a'}, preferred=preferred, distance_weight=.3)
         self.assertIsNotNone(result, attempts)
         self.assertEqual(result['a'], preferred['a'])
         self.assertEqual(result['b'], tiles['b'])
@@ -96,6 +96,12 @@ class LocalCoastTest(unittest.TestCase):
     def test_negative_expansion_is_rejected(self):
         with self.assertRaises(ValueError):
             fit({'a': {(0, 0)}}, set(), set(), 'a', expansion=-1)
+
+    def test_invalid_shape_weights_are_rejected(self):
+        for name in ('distance_weight', 'perimeter_weight'):
+            for value in (-1, float('nan'), float('inf')):
+                with self.subTest(name=name, value=value), self.assertRaises(ValueError):
+                    fit({'a': {(0, 0)}}, set(), set(), 'a', **{name: value})
 
     def test_fixed_root_can_make_local_problem_infeasible(self):
         tiles = {'a': {(1,1)}, 'b': {(x,y) for x in range(3) for y in range(3)}-{(1,1)}}

@@ -181,3 +181,57 @@ Next, allow the Nordic group's outside boundary to change in a joint fit.
 Retain its counts, true borders, and lake shores. For Paraguay, enforce connected
 coastal cover during fragment repair. Final fixed-footprint swaps have not
 repaired either main defect.
+
+## Joint Nordic fit with a movable coastline
+
+Review: `results/geography/coarse90-repairs/nordic-v1/index.html`.
+The final trial is `coarse90-nordic-expansion-v6`. It is not a new current best.
+
+The local solver can now assign empty cells near the current land. It keeps
+exact component counts, connected components, existing true borders, and lake
+shores. It adds no false border pairs. A new exterior-water flood fill checks
+all components, not only those inside the fit window. The fit rejects extra
+inland coast or loss of coastal access. These checks use sampled source coast
+labels. They are not a proof of correct geography.
+
+The experiments use the main Sweden, Norway, and Finland components as explicit
+movable labels. Other components stay fixed. They require Finland–Norway.
+
+| Run | Settings | Result |
+| --- | --- | --- |
+| Nordic v1 | Margin 4, expansion 3, reach 8; all local labels; 90 seconds | No feasible incumbent before the time limit |
+| Nordic v2 | Margin 12, expansion 2, reach 10; Nordic group; 120 seconds | Valid border, but a thin northern strip |
+| Nordic v3 | Source templates; expansion 4; otherwise v2 settings | Valid border and changed shapes, but long extensions |
+| Nordic v4 | Source templates; expansion 3; perimeter cost 0.4; 180 seconds | No feasible incumbent before the time limit |
+| Nordic v5 | As v4, plus squared-distance cost 0.3 | No feasible incumbent before the time limit |
+| Nordic v6 | Start from v3; expansion 1, reach 2; both shape costs; 120 seconds | Optimal within this local model; useful shape refinement |
+
+All runs except v6 start from `coarse90-lithuania-lakes-v1`. Templates come from
+`world-55000-shape-islands`. Each template is translated to its component's
+current centroid. The fit does not rotate it. The squared-distance term uses
+Manhattan distance to the nearest template cell. The perimeter term counts
+exposed tile sides for each component. Shared borders count for both components.
+
+The final trial restores Finland–Norway. It has 68 missing and 34 false borders.
+It loses no true border relative to the original current best. Only the three
+Nordic components change relative to the mainland repair trial. All 55,000
+counts remain exact. All 481 components remain connected. The 45 lakes retain
+all 220 empty cells and pass shore checks. No coastal-access regression occurs.
+
+Visual checks include the world, Europe, and enlarged Nordic comparisons.
+Sweden is no longer rectangular. Compared with v3, Finland's perimeter falls
+from 70 to 52 tile edges. Sweden's falls from 60 to 42. Norway's rises from 34
+to 36. Norway still has a narrow section. Finland still has an awkward extension
+around Lake Saimaa. Do not promote this result on border counts alone.
+
+Two Paraguay fits also permit coastline changes. Neither finds a feasible
+incumbent in its time limit. The first uses margin 4, expansion 2, reach 5, and
+120 seconds. The second limits movement to Paraguay, Brazil, and Argentina. It
+uses margin 6, expansion 1, reach 6, and 180 seconds. This does not prove that
+Paraguay cannot be repaired. Its false coast remains at 16 edges.
+
+Frozen snapshots `coarse90-repair-code-15` through `coarse90-repair-code-21`
+record the trial code. The review includes run records, land and lake downloads,
+and comparison checks. All 317 tests pass. The current best and H3-MON exports
+are unchanged. The next shape experiment should test the group placement and
+lake placement together. Paraguay still needs an earlier coastal-cover repair.
