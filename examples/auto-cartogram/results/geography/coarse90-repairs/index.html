@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coarse Kontur: defect repairs</title>
+<style>body{font:18px system-ui;max-width:1200px;margin:2em auto;padding:0 1em}img{max-width:100%}.pair{display:flex;flex-wrap:wrap}.pair figure{flex:1;min-width:260px;margin:12px}a{color:#075da6}</style>
+<h1>Coarse 90% Kontur: defect repairs</h1>
+<p>Experimental candidate. The current best and production mapping are unchanged. No strategic cuts.</p>
+<h2>Nearby coastal islands</h2>
+<p>The old grouping rule stopped at the nearest mainland coast. Thus, Manhattan did not join the nearby Long Island group. The optional new rule checks for a nearby larger island even when the mainland is nearer. It uses the existing distance limit. It has no country-specific rules.</p>
+<div class="pair"><figure><figcaption>Current best</figcaption><img src="coastal-groups/new-york-before.png" alt="Manhattan below Long Island"></figure><figure><figcaption>Candidate</figcaption><img src="coastal-groups/new-york.png" alt="Manhattan beside the western end of Long Island"></figure></div>
+<p>All 55,000 tiles retain their component budgets. All 481 components are connected. The 45 lakes use 220 empty cells. The island stage does not move mainland cells. The repeated lake stage changes boundary cells in five mainland components. The totals remain 73 missing contacts and 48 false contacts. These are existing defects, not acceptable production results.</p>
+<h2>Open mainland defects</h2>
+<ul><li>Malaysia loses its Thailand contact during tile repair.</li><li>Lithuania has no exterior-water edge in the initial partition.</li><li>Paraguay has 13 exterior-water edges in the initial partition and 16 after repair.</li><li>Sweden touches Germany in the initial partition.</li></ul>
+<p><a href="coastal-groups/baseline-stages.json">Baseline stage audit</a> · <a href="coastal-groups/stages.json">Candidate audit</a> · <a href="coastal-groups/metrics.json">Metrics</a> · <a href="coastal-groups/run.json">Run record</a> · <a href="coastal-groups/cells.csv.gz">Land tiles</a> · <a href="coastal-groups/lake-cells.csv.gz">Empty lake cells</a></p>
+<h2>World candidate</h2><img src="coastal-groups/review.png" alt="World candidate">
+<h2>Regional checks</h2><p>New York, Europe, Indonesia, and Japan/Korea were checked visually. The four mainland defects remain open.</p>
+<img src="coastal-groups/europe.png" alt="Europe"><img src="coastal-groups/indonesia.png" alt="Indonesia"><img src="coastal-groups/japan-korea.png" alt="Japan and Korea">
+</html>
