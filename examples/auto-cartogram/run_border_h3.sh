@@ -15,7 +15,11 @@ export OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=1
 export CONTINUITY_OUTER_STEPS=1 CONTINUITY_PROXIMAL=.01 CONTINUITY_RETRY_FACTOR=256
 julia=(julia --threads=2 --project="$project")
 fit=${BORDER_FIT_ROOT:-"$out/border-fit"}
-destination="$h3mon/www/data/planet-auto-55000-h3-5-islands-border"
+dataset=${BORDER_DATASET:-planet-auto-55000-h3-5-islands-border}
+[[ "$dataset" =~ ^[a-zA-Z0-9_-]+$ ]] || { echo 'Invalid dataset name' >&2; exit 2; }
+destination="$h3mon/www/data/$dataset"
+[ ! -e "$destination" ] || { echo "Export already exists: $destination" >&2; exit 2; }
+trap 'status=$?; printf "%s exit=%s\n" "$(date -u +%FT%TZ)" "$status" > "$out/pipeline-exit.txt"' EXIT
 # Check the preparation inputs before any expensive work or publication.
 "$python" - "$out" <<'PY'
 import hashlib,json,sys
@@ -51,6 +55,6 @@ cp "$out/border-audit.json" "$out/contacts.csv" "$out/group-codes.csv" "$out/pro
 cp "$fit/fit/metrics.csv" "$fit/fit/settings.csv" "$fit/fit/country-etas.csv" "$destination/"
 if [ -f "$fit/recovery.json" ]; then cp "$fit/recovery.json" "$destination/"; fi
 node examples/auto-cartogram/review_h3_mon.mjs "$h3mon" "$out/review" \
-  http://127.0.0.1:1983 planet-auto-55000-h3-5-islands-border
+  http://127.0.0.1:1983 "$dataset"
 date -u > "$out/numerical-export-complete.txt"
 echo 'Export and browser capture complete. Human visual review is still required.'
