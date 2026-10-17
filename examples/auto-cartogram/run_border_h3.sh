@@ -35,8 +35,18 @@ fi
 if [ ! -d "$out/fit" ]; then
   timeout -k 30s 1h "${julia[@]}" examples/auto-cartogram/border_h3_groups.jl seed "$out" "$out/tuned"
 fi
+if [ ! -e "$fit" ]; then
+  if ! timeout -k 30s 12h "${julia[@]}" examples/continuity/refit_tuned.jl "$out" "$out/tuned" "$fit"; then
+    echo 'Border sweep stopped. Check and recover its saved prefix.' >&2
+  fi
+fi
 if [ ! -f "$fit/research-fit-complete.txt" ]; then
-  timeout -k 30s 12h "${julia[@]}" examples/continuity/refit_tuned.jl "$out" "$out/tuned" "$fit"
+  recovery=${BORDER_RECOVERY_ROOT:-"$out/automatic-recovery"}
+  if [ ! -f "$recovery/complete-fit.txt" ]; then
+    "$python" examples/auto-cartogram/resume_h3_borders.py "$fit" "$recovery" "$project"
+  fi
+  fit=$(< "$recovery/complete-fit.txt")
+  [ -f "$fit/research-fit-complete.txt" ] || { echo 'Recovery is incomplete' >&2; exit 1; }
 fi
 timeout -k 30s 2h "${julia[@]}" examples/auto-cartogram/border_h3_groups.jl extract "$original" "$out" "$fit"
 timeout -k 30s 2h "$python" examples/auto-cartogram/balance_h3_groups.py "$out"

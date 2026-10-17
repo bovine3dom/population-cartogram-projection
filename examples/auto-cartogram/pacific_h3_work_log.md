@@ -67,3 +67,36 @@ Shell syntax checks and all 17 component-border tests pass.
 Started at 07:42 UTC. Runner PID: 2856035. Log:
 `output/auto-cartogram/pacific-h3-logs/border-run-v1.log`.
 The separate border-aware Arrow export is not ready yet.
+
+## 2026-10-17: automatic recovery
+
+The first sweep stopped at 17:25 UTC. China did not converge after 184 of
+186 group updates. No border-aware export was published. Reusing the earlier
+failed settings without automatic recovery was an error in the run setup.
+
+Added `resume_h3_borders.py` to the runner. It uses the existing checked
+recovery and promotion tools, with proximal weight 1000 and a 2 GiB cost
+cache. Each solver attempt has a 20-minute limit. It can resume from the
+lowest saved temperature factor. The Julia tool checks input hashes, prior
+plans, source geometry, forces, temperature, and mass before reuse.
+
+The runner permits at most four attempts per group and four recovered updates.
+It stops if no checked temperature progress occurs. It never promotes a hot
+stage. Promotion independently checks the original objective and distortion
+limits and verifies that every other group's plan is unchanged. A partial
+promotion does not mark the sweep complete. The failed checkpoint is retained.
+Only a complete checked sweep proceeds to extraction, balancing, export audit,
+and H3-MON capture. An interrupted recovery can be inspected and restarted in
+a new directory with `BORDER_RECOVERY_ROOT`; existing trial files are not replaced.
+
+Recovery is running under PID 2988496. Logs:
+- `output/auto-cartogram/pacific-h3-logs/border-recovery-v1.log`
+- `output/auto-cartogram/pacific-55000-h3-5-v1/border/automatic-recovery/`
+
+China's checkpoint matches all saved metrics. Its 30,995 source fragments and
+9,632 target tiles require 1,194,175,360 bytes for the dense Float32 cost cache.
+The remaining groups have not yet completed. No new H3-MON result is claimed.
+The 16 Julia recovery checks and all 352 Python tests pass. Eight new runner
+tests cover bounded retries, failed promotion, missing progress, and completion
+guards. China has saved a checked factor-256 continuation stage. This is a
+warm start, not an accepted final-temperature update.
