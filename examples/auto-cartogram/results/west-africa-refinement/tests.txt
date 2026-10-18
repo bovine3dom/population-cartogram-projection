@@ -1,0 +1,38 @@
+Test Summary:            | Pass  Total  Time
+Identity review graphics |   13     13  3.7s
+Test Summary:              | Pass  Total  Time
+Same-country corner groups |   24     24  8.1s
+Test Summary:                   | Pass  Total   Time
+Grouped population and resizing |   55     55  12.3s
+Test Summary:          | Pass  Total   Time
+Raw source preparation |   18     18  19.4s
+Land block AAA:G1: scaled single-group outline true
+Land block AAA:G2: scaled single-group outline true
+Land block AAA:G1: scaled single-group outline true
+Land block AAA:G2: scaled single-group outline true
+Land block AAA:G1: scaled single-group outline true
+Land block BBB:G1: scaled single-group outline true
+Test Summary:           | Pass  Total  Time
+Clean layout invariants |    5      5  3.6s
+Exchange sweep 1: 1 swaps, objective reduction=20.0
+Exchange sweep 2: 0 swaps, objective reduction=0.0
+Exchange sweep 1: 1 swaps, objective reduction=20.0
+Exchange sweep 2: 0 swaps, objective reduction=0.0
+Regional seed 1: OPTIMAL feasible=true
+Regional seed 1: OPTIMAL feasible=true
+Regional seed 2: OPTIMAL feasible=true
+Regional seed 1: OPTIMAL feasible=true
+Added monotone connection constraints for a at (0, 0)
+Regional seed 2: OPTIMAL feasible=true
+Test Summary:      | Pass  Total  Time
+Regional exchanges |   11     11  5.4s
+Test Summary:            | Pass  Total  Time
+Shared outline partition |   14     14  7.1s
+Test Summary: | Pass  Total  Time
+Assignment    |   25     25  0.3s
+Test Summary:       | Pass  Total  Time
+Identity invariants |   13     13  0.9s
+Test Summary:  | Pass  Total  Time
+Input geometry |    8      8  0.3s
+Test Summary:                         | Pass  Total  Time
+Reviewed identities without overrides |   35     35  1.2s

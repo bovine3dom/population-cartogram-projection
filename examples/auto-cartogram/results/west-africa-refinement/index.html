@@ -1,0 +1,66 @@
+<!doctype html><html lang='en'><meta charset='utf-8'><meta name='viewport' content='width=device-width'>
+<title>West Africa border trial</title><style>body{font:17px system-ui;max-width:1800px;margin:2rem auto;padding:1rem;background:#faf9f6}img{width:100%}table{border-collapse:collapse}td,th{padding:.5rem;border-bottom:1px solid #ccc;text-align:left}p{max-width:100ch}.note{background:#fff0d5;padding:1rem}</style>
+<h1>West Africa: geographic border trial</h1>
+<p>This is a separate experiment. The approved clean layout and H3-MON exports have not changed.
+Country tile counts and the regional outline are fixed. Colours identify countries; grey countries are outside the trial.
+Red lines mark shared tile edges between countries that do not share a border in Natural Earth.
+Missing neighbours appear in the tables, not as red lines. BFA is Burkina Faso; BEN is Benin;
+TGO is Togo; NER is Niger; NGA is Nigeria.</p>
+<p class='note'>The African mainland currently has no enclosed empty cells: this trial does not add lakes.
+Exact trials require all Natural Earth neighbour pairs inside the region, with no extra pairs.
+Local exchanges and penalized fits can retain wrong contacts. Geographic seeds do not enforce neighbours.
+The table reports all remaining errors; none of these trials is an approved map.
+Outside countries stay fixed. Their border errors are shown, not accepted as correct geography.
+Same-country corner contact counts as connected; country borders require shared edges.</p>
+<p><a href='geography.svg'>Natural Earth reference</a> · <a href='../owid-clean-build/world.svg'>Current world map</a></p>
+
+<p><a href='before.svg'>Current regional map with border errors</a></p>
+<h2>geographic-local</h2><p><a href='geographic-local-report.json'>Checks, input hashes, and solver report</a></p>
+<a href='geographic-local.svg'><img src='geographic-local.svg' alt='Current and refined West Africa'></a>
+<table><tr><th>Check</th><th>Before</th><th>After</th></tr>
+<tr><td>Extra internal neighbours</td><td>10</td><td>4</td></tr>
+<tr><td>Missing internal neighbours</td><td>12</td><td>7</td></tr>
+<tr><td>Extra neighbours, including outside</td><td>18</td><td>10</td></tr>
+<tr><td>Missing neighbours, including outside</td><td>14</td><td>9</td></tr>
+<tr><td>Total country perimeter</td><td>996</td><td>1188</td></tr>
+<tr><td>Burkina Faso perimeter</td><td>74</td><td>72</td></tr>
+</table><p>368 of 3052 regional cells change country. Country budgets remain exact. All countries remain connected under the corner-contact rule.</p>
+<p><strong>Remaining false_contacts:</strong> BFA–NGA, EGY–NER, EGY–NGA, GHA–NGA, GHA–SEN, MAR–MLI, MAR–MRT, NER–TUN, NGA–SDN, NGA–SEN</p>
+<p><strong>Remaining missing_contacts:</strong> BEN–BFA, BEN–NER, BFA–CIV, BFA–GHA, BFA–TGO, CIV–MLI, DZA–MRT, GIN–MLI, NER–TCD</p>
+<h2>geographic-centres</h2><p><a href='geographic-centres-report.json'>Checks, input hashes, and solver report</a></p>
+<a href='geographic-centres.svg'><img src='geographic-centres.svg' alt='Current and refined West Africa'></a>
+<table><tr><th>Check</th><th>Before</th><th>After</th></tr>
+<tr><td>Extra internal neighbours</td><td>10</td><td>10</td></tr>
+<tr><td>Missing internal neighbours</td><td>12</td><td>9</td></tr>
+<tr><td>Extra neighbours, including outside</td><td>18</td><td>16</td></tr>
+<tr><td>Missing neighbours, including outside</td><td>14</td><td>11</td></tr>
+<tr><td>Total country perimeter</td><td>996</td><td>1078</td></tr>
+<tr><td>Burkina Faso perimeter</td><td>74</td><td>68</td></tr>
+</table><p>834 of 3052 regional cells change country. Country budgets remain exact. All countries remain connected under the corner-contact rule.</p>
+<p><strong>Remaining false_contacts:</strong> BEN–GHA, BFA–GIN, BFA–NGA, BFA–SEN, CIV–SLE, EGY–NER, GHA–GIN, GIN–GMB, GMB–GNB, MAR–MLI, MAR–MRT, MLI–NGA, NER–SDN, NER–TUN, NGA–SDN, NGA–TGO</p>
+<p><strong>Remaining missing_contacts:</strong> BEN–NER, BFA–CIV, BFA–NER, BFA–TGO, CIV–MLI, DZA–MRT, GIN–LBR, GIN–MLI, GNB–SEN, MLI–SEN, NER–TCD</p>
+<h2>geographic-centres-refined</h2><p><a href='geographic-centres-refined-report.json'>Checks, input hashes, and solver report</a></p>
+<a href='geographic-centres-refined.svg'><img src='geographic-centres-refined.svg' alt='Current and refined West Africa'></a>
+<table><tr><th>Check</th><th>Before</th><th>After</th></tr>
+<tr><td>Extra internal neighbours</td><td>10</td><td>3</td></tr>
+<tr><td>Missing internal neighbours</td><td>12</td><td>2</td></tr>
+<tr><td>Extra neighbours, including outside</td><td>18</td><td>9</td></tr>
+<tr><td>Missing neighbours, including outside</td><td>14</td><td>4</td></tr>
+<tr><td>Total country perimeter</td><td>996</td><td>1226</td></tr>
+<tr><td>Burkina Faso perimeter</td><td>74</td><td>78</td></tr>
+</table><p>844 of 3052 regional cells change country. Country budgets remain exact. All countries remain connected under the corner-contact rule.</p>
+<p><strong>Remaining false_contacts:</strong> BFA–GIN, BFA–SEN, EGY–NER, GMB–GNB, MAR–MLI, MAR–MRT, NER–SDN, NER–TUN, NGA–SDN</p>
+<p><strong>Remaining missing_contacts:</strong> CIV–MLI, DZA–MRT, GIN–MLI, NER–TCD</p>
+<h2>geographic-centres-balanced</h2><p><a href='geographic-centres-balanced-report.json'>Checks, input hashes, and solver report</a></p>
+<a href='geographic-centres-balanced.svg'><img src='geographic-centres-balanced.svg' alt='Current and refined West Africa'></a>
+<table><tr><th>Check</th><th>Before</th><th>After</th></tr>
+<tr><td>Extra internal neighbours</td><td>10</td><td>10</td></tr>
+<tr><td>Missing internal neighbours</td><td>12</td><td>7</td></tr>
+<tr><td>Extra neighbours, including outside</td><td>18</td><td>16</td></tr>
+<tr><td>Missing neighbours, including outside</td><td>14</td><td>9</td></tr>
+<tr><td>Total country perimeter</td><td>996</td><td>1082</td></tr>
+<tr><td>Burkina Faso perimeter</td><td>74</td><td>64</td></tr>
+</table><p>834 of 3052 regional cells change country. Country budgets remain exact. All countries remain connected under the corner-contact rule.</p>
+<p><strong>Remaining false_contacts:</strong> BEN–GHA, BFA–GIN, BFA–NGA, BFA–SEN, CIV–SLE, EGY–NER, GHA–GIN, GIN–GMB, GMB–GNB, MAR–MLI, MAR–MRT, MLI–NGA, NER–SDN, NER–TUN, NGA–SDN, NGA–TGO</p>
+<p><strong>Remaining missing_contacts:</strong> BEN–NER, BFA–CIV, BFA–NER, CIV–MLI, DZA–MRT, GIN–LBR, GIN–MLI, GNB–SEN, NER–TCD</p>
+<h2>Geographic reference</h2><a href='geography.svg'><img src='geography.svg' alt='Natural Earth West Africa'></a></html>
