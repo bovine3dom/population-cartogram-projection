@@ -1,0 +1,448 @@
+{
+  "complete": true,
+  "approved": false,
+  "parent": "output/auto-cartogram/owid-landmass-world-v16",
+  "splits": [
+    {
+      "pool": "SRB",
+      "targets": [
+        "SRB",
+        "KOS"
+      ],
+      "populations": {
+        "SRB": 7220316.0,
+        "KOS": 1659899.0
+      },
+      "budgets": {
+        "SRB": 45,
+        "KOS": 10
+      },
+      "quotas": {
+        "SRB": 44.71934294383638,
+        "KOS": 10.280657056163617
+      },
+      "movable": [
+        "ALB:T1",
+        "BGR:T1",
+        "BIH:T1",
+        "HRV:T1",
+        "HUN:T1",
+        "KOS:T1",
+        "MKD:T1",
+        "MNE:T1",
+        "ROU:T1",
+        "SRB:T1"
+      ],
+      "accepted": true,
+      "attempts": {
+        "attempts": [
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ],
+        "variables": 540,
+        "radii": {
+          "ALB:T1": 2.0,
+          "BGR:T1": 2.0,
+          "BIH:T1": 2.0,
+          "HRV:T1": 2.0,
+          "HUN:T1": 2.0,
+          "KOS:T1": 2.0,
+          "MKD:T1": 2.0,
+          "MNE:T1": 2.0,
+          "ROU:T1": 2.0,
+          "SRB:T1": 2.0
+        },
+        "complete": true
+      },
+      "added_contacts": [
+        [
+          "ALB:T1",
+          "KOS:T1"
+        ],
+        [
+          "HRV:T1",
+          "MNE:T1"
+        ],
+        [
+          "KOS:T1",
+          "MKD:T1"
+        ],
+        [
+          "KOS:T1",
+          "MNE:T1"
+        ],
+        [
+          "KOS:T1",
+          "SRB:T1"
+        ],
+        [
+          "MKD:T1",
+          "SRB:T1"
+        ],
+        [
+          "MNE:T1",
+          "SRB:T1"
+        ]
+      ],
+      "removed_contacts": [
+        [
+          "ALB:T1",
+          "BIH:T1"
+        ],
+        [
+          "ALB:T1",
+          "SRB:T1"
+        ]
+      ],
+      "new_scope_has_coast": false
+    },
+    {
+      "pool": "SOM",
+      "targets": [
+        "SOM",
+        "SOL"
+      ],
+      "populations": {
+        "SOM": 13625253.0,
+        "SOL": 4250437.0
+      },
+      "budgets": {
+        "SOM": 89,
+        "SOL": 28
+      },
+      "quotas": {
+        "SOM": 89.18003170786695,
+        "SOL": 27.81996829213306
+      },
+      "movable": [
+        "DJI:T1",
+        "ETH:T1",
+        "KEN:T1",
+        "SOL:T1",
+        "SOM:T1"
+      ],
+      "accepted": true,
+      "attempts": {
+        "attempts": [
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          },
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ],
+        "variables": 492,
+        "radii": {
+          "DJI:T1": 2.0,
+          "ETH:T1": 2.0,
+          "KEN:T1": 2.0,
+          "SOL:T1": 2.0,
+          "SOM:T1": 2.0
+        },
+        "complete": true
+      },
+      "added_contacts": [
+        [
+          "DJI:T1",
+          "SOL:T1"
+        ],
+        [
+          "ETH:T1",
+          "SOL:T1"
+        ],
+        [
+          "SOL:T1",
+          "SOM:T1"
+        ]
+      ],
+      "removed_contacts": [
+        [
+          "DJI:T1",
+          "SOM:T1"
+        ]
+      ],
+      "new_scope_has_coast": true
+    },
+    {
+      "pool": "CYP",
+      "targets": [
+        "CYP",
+        "CYN"
+      ],
+      "populations": {
+        "CYP": 926869.0,
+        "CYN": 334359.0
+      },
+      "budgets": {
+        "CYP": 6,
+        "CYN": 2
+      },
+      "quotas": {
+        "CYP": 5.879152698798314,
+        "CYN": 2.120847301201686
+      },
+      "movable": [
+        "CYN:T1",
+        "CYP:T1"
+      ],
+      "accepted": true,
+      "attempts": {
+        "attempts": [
+          {
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ],
+        "variables": 16,
+        "radii": {
+          "CYN:T1": 2.0,
+          "CYP:T1": 2.0
+        },
+        "complete": true
+      },
+      "added_contacts": [
+        [
+          "CYN:T1",
+          "CYP:T1"
+        ]
+      ],
+      "removed_contacts": [],
+      "new_scope_has_coast": true
+    }
+  ],
+  "inputs": {
+    "output/auto-cartogram/owid-landmass-world-v16/cells.csv": "750831d1efe3b9f6ff46c86a8e4e259bc473b674445097388d2e9d2836b14fd5",
+    "output/auto-cartogram/owid-landmass-world-v16/matches.csv": "facdf5eddd1f1dbd090c9fe7838900284386382589f606567958a16f15b2503e",
+    "output/auto-cartogram/owid-landmass-world-v16/source-assignments.csv": "658705f6432bb2bfe156ad60d5555c67e6162013d06eb848a5a0d7618817549a",
+    "output/auto-cartogram/world-dissolved/components.csv": "b98e9c3fd09804fbf78a1686e682005c598a869f77c6127e6d3301aa0913cb05",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "examples/auto-cartogram/owid-scope-crosswalk.csv": "512040bb010169c274a1af6d3c0a7cbb49920cc56c1e82fe02a907908527419c",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/split_owid_scopes.py": "0e68ab9ba86acfb58d422fd64d06051d8e10ee979ffcded816ff35d2bb7fba51",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/partition_landmass.py": "ddda5dd81cfffc400700e8b22362aaa51e602e823bae4f46e44251c35fbbc174"
+  },
+  "total_tiles": 54967,
+  "parts": 289,
+  "recovered_population": 6373293.0,
+  "unchanged_land_mask": true,
+  "added_contacts": [
+    [
+      "ALB:T1",
+      "KOS:T1"
+    ],
+    [
+      "CYN:T1",
+      "CYP:T1"
+    ],
+    [
+      "DJI:T1",
+      "SOL:T1"
+    ],
+    [
+      "ETH:T1",
+      "SOL:T1"
+    ],
+    [
+      "HRV:T1",
+      "MNE:T1"
+    ],
+    [
+      "KOS:T1",
+      "MKD:T1"
+    ],
+    [
+      "KOS:T1",
+      "MNE:T1"
+    ],
+    [
+      "KOS:T1",
+      "SRB:T1"
+    ],
+    [
+      "MKD:T1",
+      "SRB:T1"
+    ],
+    [
+      "MNE:T1",
+      "SRB:T1"
+    ],
+    [
+      "SOL:T1",
+      "SOM:T1"
+    ]
+  ],
+  "removed_contacts": [
+    [
+      "ALB:T1",
+      "BIH:T1"
+    ],
+    [
+      "ALB:T1",
+      "SRB:T1"
+    ],
+    [
+      "DJI:T1",
+      "SOM:T1"
+    ]
+  ],
+  "remaining_unrepresented_population": 929748.0,
+  "enclosed_water_cells": 64,
+  "changed_parts": [
+    "ALB:T1",
+    "BGR:T1",
+    "BIH:T1",
+    "CYP:T1",
+    "ETH:T1",
+    "HRV:T1",
+    "MKD:T1",
+    "MNE:T1",
+    "SOM:T1",
+    "SRB:T1",
+    "KOS:T1",
+    "SOL:T1",
+    "CYN:T1"
+  ],
+  "source_assignment_count": 2492,
+  "source_scope_policy": "examples/auto-cartogram/owid-scope-crosswalk.csv",
+  "numeric_export": false,
+  "numeric_export_reason": "KOS, SOL, and CYN are source-scope IDs, not ISO numeric country codes"
+}

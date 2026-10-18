@@ -1,0 +1,10 @@
+pool,source_scope,target_scope,display_name,policy
+SRB,SRB,SRB,Serbia,Divide the existing combined budget
+SRB,KOS,KOS,Kosovo,Divide the existing combined budget
+SOM,SOM,SOM,Somalia,Divide the existing combined budget
+SOM,SOL,SOL,Somaliland,Divide the existing combined budget
+CYP,CYP,CYP,Cyprus residual group,Statistical bucket; not a sovereignty assignment
+CYP,CNM,CYP,Cyprus residual group,Buffer-zone source population joins the residual group
+CYP,ESB,CYP,Cyprus residual group,Eastern base-area source population joins the residual group
+CYP,WSB,CYP,Cyprus residual group,Western base-area source population joins the residual group
+CYP,CYN,CYN,Northern Cyprus,Divide the existing whole-island budget
