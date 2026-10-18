@@ -10,8 +10,10 @@ It is a separate review candidate, not a default replacement.
 The earlier [corner-group trial](group-resize.md) remains available. That trial
 uses saved source files and assignments. The clean build does not.
 
-The [West Africa experiment](west-africa.md) tests mainland border changes against
-Natural Earth. It is separate from the clean build and is not a replacement map.
+The [shape-preserving block-slide trial](block-slide.md) moves Burkina Faso and
+part of Nigeria without redrawing the region. It is separate from the clean
+build. The earlier [border-refit experiment](west-africa.md) remains available
+for comparison, but it did not match the requested movement approach.
 
 The matcher recovers all 24 checked island identities without overrides.
 These checks include Alaska, Oahu, the Big Island, and the main Japanese islands.

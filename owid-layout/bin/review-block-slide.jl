@@ -13,11 +13,12 @@ context=padded_bounds([p for (p,g) in old if g in region];padding=.06)
 palette=Dict("BFA"=>"#eca34d","NGA"=>"#a7c887","GHA"=>"#87b8cf","CIV"=>"#c5b3d1",
              "TGO"=>"#dcb5c6","BEN"=>"#d7988e","MLI"=>"#9caecf","SEN"=>"#cbbd8c","MRT"=>"#c9afb2","NER"=>"#a6c4bd")
 mkpath(output)
+counts=report["variants"]["south-slide"]
 page=["""<!doctype html><html lang='en'><meta charset='utf-8'><meta name='viewport' content='width=device-width'>
 <title>West Africa: move the pieces</title><style>body{font:17px system-ui;max-width:1800px;margin:2rem auto;padding:1rem;background:#faf9f6}img{width:100%}p{max-width:100ch}table{border-collapse:collapse}td,th{padding:.5rem;border-bottom:1px solid #ccc;text-align:left}.note{padding:1rem;background:#fff0d5}</style>
 <h1>Move Burkina Faso south; lift a Nigerian block north</h1>
-<p>This trial moves existing pieces. It does not repartition West Africa. Burkina Faso keeps its exact outline, orientation, and 159 tiles.
-Nigeria keeps 1,562 tiles. Every other country stays in exactly the same place. The combined land mask stays unchanged:
+<p>This trial moves existing pieces. It does not repartition West Africa. Burkina Faso keeps its exact outline, orientation, and $(counts["moving_tiles"]) tiles.
+Nigeria keeps $(counts["receiver_tiles"]) tiles. Every other country stays in exactly the same place. The combined land mask stays unchanged:
 there are no new gaps, holes, or water tiles.</p>
 <p class='note'>The current map and H3-MON exports have not changed. These are two-country movement trials, not complete geographic fixes.
 The selected Nigerian block comes from the western arm; the rest of Nigeria stays fixed. This does not move the entire arm as a predefined piece.
