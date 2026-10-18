@@ -1,0 +1,25 @@
+<!doctype html><html lang='en'><meta charset='utf-8'><meta name='viewport' content='width=device-width'>
+<title>West Africa: move the pieces</title><style>body{font:17px system-ui;max-width:1800px;margin:2rem auto;padding:1rem;background:#faf9f6}img{width:100%}p{max-width:100ch}table{border-collapse:collapse}td,th{padding:.5rem;border-bottom:1px solid #ccc;text-align:left}.note{padding:1rem;background:#fff0d5}</style>
+<h1>Move Burkina Faso south; lift a Nigerian block north</h1>
+<p>This trial moves existing pieces. It does not repartition West Africa. Burkina Faso keeps its exact outline, orientation, and 159 tiles.
+Nigeria keeps 1562 tiles. Every other country stays in exactly the same place. The combined land mask stays unchanged:
+there are no new gaps, holes, or water tiles.</p>
+<p class='note'>The current map and H3-MON exports have not changed. These are two-country movement trials, not complete geographic fixes.
+The selected Nigerian block comes from the western arm; the rest of Nigeria stays fixed. This does not move the entire arm as a predefined piece.
+A purely southward move is blocked with all other countries fixed, so both candidates also move Burkina Faso a short distance east.</p>
+<p><a href='#south-slide'>Small join adjustment</a> · <a href='#rigid-swap'>Two rigid pieces</a> · <a href='world.svg'>Trial world map</a> ·
+<a href='report.json'>Checks and input hashes</a> · <a href='candidates.csv'>Searched placements</a></p>
+
+<h2 id='south-slide'>South slide — small join adjustment</h2><p>Burkina Faso moves 4 tiles east and 9 tiles south.
+151 of 155 Nigerian block tiles move together 4 tiles west and 9 tiles north.
+4 Nigerian tiles need a join adjustment. The other 1407 Nigerian tiles do not move.</p>
+<a href='south-slide.svg'><img src='south-slide.svg' alt='South slide — small join adjustment: before and after'></a><details open><summary>Which pieces moved?</summary><a href='south-slide-movement.svg'><img src='south-slide-movement.svg' alt='Rigid movement and join adjustments'></a></details>
+<p>Burkina Faso's neighbours after this move: GHA, NGA, TGO. No neighbour graph was enforced.</p>
+<p><a href='south-slide-cells.csv'>World cells</a> · <a href='south-slide-motions.csv'>Tile movements</a></p>
+<h2 id='rigid-swap'>Exact rigid-piece swap</h2><p>Burkina Faso moves 7 tiles east and 10 tiles south.
+159 of 159 Nigerian block tiles move together 7 tiles west and 10 tiles north.
+0 Nigerian tiles need a join adjustment. The other 1403 Nigerian tiles do not move.</p>
+<a href='rigid-swap.svg'><img src='rigid-swap.svg' alt='Exact rigid-piece swap: before and after'></a><details open><summary>Which pieces moved?</summary><a href='rigid-swap-movement.svg'><img src='rigid-swap-movement.svg' alt='Rigid movement and join adjustments'></a></details>
+<p>Burkina Faso's neighbours after this move: NGA, TGO. No neighbour graph was enforced.</p>
+<p><a href='rigid-swap-cells.csv'>World cells</a> · <a href='rigid-swap-motions.csv'>Tile movements</a></p>
+<h2>World context</h2><a href='world.svg'><img src='world.svg' alt='World with the two-piece movement trial'></a></html>
