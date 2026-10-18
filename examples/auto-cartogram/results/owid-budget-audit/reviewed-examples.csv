@@ -1,0 +1,14 @@
+country,name,target_part,component_id,owid_tiles,proportional_tiles,rounded_component_tiles,delta,status
+FRA,Corsica,T2,FXX:b04574696bff21bc,4,2.178191360382696,2,-2,visual_identity_review_only; nearby small components not yet assigned
+GBR,Isle of Wight,T3,ENG:bf2fff53240de3db,4,0.9479404920271598,1,-3,visual_identity_review_only; nearby small components not yet assigned
+GBR,Northern Ireland,T2,NIR:69fa50e543fa7c66,16,13.4048860434963,14,-2,visual_identity_review_only; nearby small components not yet assigned
+ITA,Sicily,T2,ITA:e7ab63898f24eb00,26,33.92676522079932,34,8,visual_identity_review_only; nearby small components not yet assigned
+ITA,Sardinia,T3,ITA:ebecacbac755556c,11,11.02506591632313,11,0,visual_identity_review_only; nearby small components not yet assigned
+JPN,Honshu,T1,JPN:f07fed45233efce3,509,703.6423669258542,704,195,visual_identity_review_only; nearby small components not yet assigned
+JPN,Hokkaido,T2,JPN:c1b6e25b62179c19,193,34.565125539685255,35,-158,visual_identity_review_only; nearby small components not yet assigned
+JPN,Kyushu,T3,JPN:3876400cea5031e2,102,82.12534883184784,82,-20,visual_identity_review_only; nearby small components not yet assigned
+JPN,Shikoku,T4,JPN:ec0a7dcff3300192,35,23.797505163484345,24,-11,visual_identity_review_only; nearby small components not yet assigned
+IDN,Java,T1,IDN:fecb2bac3d81ef76,1050,1041.8789536960935,1042,-8,visual_identity_review_only; nearby small components not yet assigned
+IDN,Sumatra,T2,IDN:829c07ff03d97c10,271,374.0451384693623,374,103,visual_identity_review_only; nearby small components not yet assigned
+IDN,Indonesian Borneo,T3,IDN:51a10640dee7162b,248,115.65536054229338,116,-132,visual_identity_review_only; nearby small components not yet assigned
+IDN,Sulawesi,T4,IDN:7c3797a36dd1a69b,138,130.24394056521606,130,-8,visual_identity_review_only; nearby small components not yet assigned

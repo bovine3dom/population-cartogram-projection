@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OWID island tile budgets</title>
+<style>body{font:18px system-ui;max-width:1200px;margin:2em auto;padding:0 1em}img{max-width:100%}td,th{padding:.5em;text-align:left}table{border-collapse:collapse}tr{border-bottom:1px solid #ccc}</style>
+<h1>OWID island tile budgets</h1>
+<p>Audit only. No layout, population mapping, or H3-MON export has changed.</p>
+<p>Keep each OWID country's total tile count. Multiply that total by each source component's share of the matched Kontur population. This gives a fractional tile quota. The full CSV also gives integer budgets from the largest-remainder rule. There is no minimum island tile in this calculation.</p>
+<h2>Examples checked visually</h2>
+<table><tr><th>Component</th><th>OWID tiles</th><th>Kontur quota</th><th>Assessment</th></tr>
+<tr><td>Corsica</td><td>4</td><td>2.2</td><td>Small correction candidate</td></tr>
+<tr><td>Isle of Wight</td><td>4</td><td>0.9</td><td>Small correction candidate</td></tr>
+<tr><td>Northern Ireland</td><td>16</td><td>13.4</td><td>Small correction; check nearby island grouping</td></tr>
+<tr><td>Sicily</td><td>26</td><td>33.9</td><td>Needs more tiles, not fewer</td></tr>
+<tr><td>Sardinia</td><td>11</td><td>11.0</td><td>Little change needed</td></tr>
+<tr><td>Honshu</td><td>509</td><td>703.6</td><td>Large correction</td></tr>
+<tr><td>Hokkaido</td><td>193</td><td>34.6</td><td>Large correction</td></tr>
+<tr><td>Kyushu</td><td>102</td><td>82.1</td><td>Not a small boundary edit</td></tr>
+<tr><td>Shikoku</td><td>35</td><td>23.8</td><td>Substantial relative change</td></tr>
+<tr><td>Java</td><td>1050</td><td>1041.9</td><td>Close to its quota</td></tr>
+<tr><td>Sumatra</td><td>271</td><td>374.0</td><td>Large correction</td></tr>
+<tr><td>Indonesian Borneo</td><td>248</td><td>115.7</td><td>Large correction</td></tr>
+<tr><td>Sulawesi</td><td>138</td><td>130.2</td><td>Smaller correction</td></tr></table>
+<p>These identities were checked against the side-by-side shapes and positions. They are not a complete approved crosswalk. Quotas refer to individual source components. Nearby small islands have not yet been assigned to represented groups. Those assignments can change the final budgets.</p>
+<h2>What this means</h2><p>A small local correction is useful for some countries, but it cannot make the whole OWID map population-exact by island. Start with Corsica: test moving two tiles to mainland France after assigning the remaining small components. Keep the shapes fixed elsewhere. Do not reshape Japan or Indonesia as part of this small trial.</p>
+<h2>Input checks</h2><ul>
+<li>The file has 54,978 rows and 54,967 unique coordinates. Eleven coordinates have both South Africa and Lesotho labels. This inventory uses the last row, Lesotho, as the existing review loader does. The input file is unchanged. Resolve ownership before fitting.</li>
+<li>Use an ISO map-unit code before a sovereign-country code. For example, Reunion is separate from metropolitan France. Otherwise its population would distort the France comparison.</li>
+<li>The inventory has 205 scopes with both tiles and source population. There are 51 source scopes without tiles and three tile scopes without a direct source-code match. Some are code differences, not omitted populations: SDS/SSD, PSX/PSE, and SAH/ESH still need reviewed aliases.</li>
+<li>Some source islands have no separate OWID piece. Russia and Canada each have one four-connected tile group. Connectivity alone cannot identify all source islands or exclaves.</li>
+<li>Population uses native H3 centres within the source polygons. Unmatched and boundary points are excluded. The population year is not verified. OWID and Kontur scopes can differ.</li>
+<li>Source and target ranks are independent. Equal colours and ranks in the panels do not establish a match. Geographic panels use longitude and latitude; they are for component identification, not area comparison. Dateline components can compress the view.</li>
+</ul>
+<p><a href="countries.csv">Country inventory</a> · <a href="owid-parts.csv">OWID detached pieces</a> · <a href="source-budgets.csv">All source quotas and integer budgets</a> · <a href="reviewed-examples.csv">Reviewed example identities</a> · <a href="audit.json">Input hashes and limits</a></p>
+<h2>France</h2><img src="FRA.png" alt="France tile parts and source components">
+<h2>United Kingdom</h2><img src="GBR.png" alt="United Kingdom tile parts and source components">
+<h2>Italy</h2><img src="ITA.png" alt="Italy tile parts and source components">
+<h2>Japan</h2><img src="JPN.png" alt="Japan tile parts and source components">
+<h2>Indonesia</h2><img src="IDN.png" alt="Indonesia tile parts and source components">
+<h2>Other panels: identities still need review</h2>
+<p><a href="USA.png">United States</a> · <a href="CAN.png">Canada</a> · <a href="RUS.png">Russia</a> · <a href="MYS.png">Malaysia</a> · <a href="PHL.png">Philippines</a> · <a href="GRC.png">Greece</a></p>
+</html>

@@ -1,0 +1,127 @@
+{
+  "grid": {
+    "input_grid_step": 2,
+    "input_rows": 54978,
+    "duplicate_coordinates": 11,
+    "conflicting_coordinates": 11
+  },
+  "unique_tiles": 54967,
+  "conflicts": [
+    {
+      "x": 498,
+      "y": 600,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 500,
+      "y": 600,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 502,
+      "y": 600,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 498,
+      "y": 602,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 500,
+      "y": 602,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 502,
+      "y": 602,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 494,
+      "y": 604,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 496,
+      "y": 604,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 498,
+      "y": 604,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 500,
+      "y": 604,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    },
+    {
+      "x": 502,
+      "y": 604,
+      "codes": [
+        710,
+        426
+      ],
+      "inventory_owner": 426
+    }
+  ],
+  "overlap_policy": "Inventory uses the last row at each coordinate, as in review_gaps.py. Raw input is unchanged. Resolve conflicting ownership before fitting.",
+  "inputs": {
+    "data/cartogram.csv": "a08f41f7b3f8912e3956c8882a255a0e6ea60b5a720216a0746416ba5d62c257",
+    "output/auto-cartogram/world-dissolved/components.csv": "b98e9c3fd09804fbf78a1686e682005c598a869f77c6127e6d3301aa0913cb05",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "/usr/share/iso-codes/json/iso_3166-1.json": "f01b812b57fba9f31ff621bf33e7c7570a01964dbeb5be2167e94decf538c89f",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/audit_owid_budgets.py": "33423be1c87e68579c9d50f21d155289942014c8c0e9bd8e9d23788795dfe47f"
+  },
+  "policy": "Fixed OWID country totals. Largest-remainder component budgets. No minimum island tile. No tile edits or automatic component matching.",
+  "limits": [
+    "Native H3 centres assign population to source polygons; boundary and unmatched points are excluded.",
+    "Source map-unit ISO codes take priority over sovereign country codes. Unmapped scopes remain explicit.",
+    "Four-connected OWID parts need not correspond one-to-one to source islands or exclaves.",
+    "Source ranks and target ranks are separate. Equal ranks do not establish identity.",
+    "Zero-budget source components need an explicit grouping or visibility policy before fitting.",
+    "OWID and Kontur population dates and administrative scopes can differ."
+  ]
+}
