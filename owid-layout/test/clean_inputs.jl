@@ -72,6 +72,10 @@ end
     @test OWIDLayout.edge_contacts(OWIDLayout.group_owners(fitted))==Set([("a","b")])
     @test_throws ErrorException OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>3);cell_costs=zeros(3,2))
     @test_throws ErrorException OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>3);perimeter_weight=-1.)
+    _,soft=OWIDLayout.partition_groups(reference,footprint,Dict("a"=>2,"b"=>2);
+        required=Set{Tuple{String,String}}(),contact_penalty=100.,start_reference=true)
+    @test soft.complete && !soft.topology_exact # A fixed connected mask cannot remove this contact.
+    @test_throws ErrorException OWIDLayout.partition_groups(reference,footprint,Dict("a"=>2,"b"=>2);contact_penalty=-1.)
     remaining,seed=OWIDLayout.seed_scope(Set((x,y) for x in 1:4 for y in 1:4),5,(1.,1.))
     @test length(seed)==5 && length(remaining)==11
     @test length(OWIDLayout.connected_parts(seed;diagonals=true))==1

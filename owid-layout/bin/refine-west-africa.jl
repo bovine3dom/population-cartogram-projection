@@ -2,9 +2,11 @@ using OWIDLayout, CSV, JSON
 const O=OWIDLayout
 length(ARGS)==3 || error("Usage: refine-west-africa.jl CLEAN_BUILD OUTPUT_DIR MODE")
 root,output,mode=ARGS
-mode in ("conservative","geographic") || error("Unknown mode")
+mode in ("conservative","geographic","conservative-soft","geographic-soft") || error("Unknown mode")
+soft=endswith(mode,"-soft")
 ispath(output) && error("Use a new output directory")
 mkpath(output)
+cp(@__FILE__,joinpath(output,"driver.jl"))
 region=sort!(String.(split("MRT MLI NER NGA SEN GMB GNB GIN SLE LBR CIV BFA GHA TGO BEN")))
 paths=[joinpath(root,"layout/cells.csv"),joinpath(root,"layout/components.csv"),joinpath(root,"sources/polygons.geojson")]
 original=Dict((r.x,r.y)=>String(r.component_id) for r in CSV.File(paths[1]))
@@ -70,15 +72,27 @@ end
 points=sort!(collect(footprint))
 distances(guides)=[minimum(sum((p[k]-q[k])^2 for k in 1:2) for q in guides[s]) for p in points,s in region]
 oldcost=distances(reference);geocost=distances(geo_guides)
-blend=mode=="conservative" ? .25 : .85
+blend=startswith(mode,"conservative") ? .25 : .85
 costs=(1-blend).*oldcost.+blend.*geocost
 costs.-=minimum(costs;dims=2)
-# These three scopes have no coast in Natural Earth. The other pilot scopes do.
-inland=Set(["BFA","MLI","NER"])
+# A mainland outer edge not shared with another source scope is coastline.
+# Interior rings are not coastline: this must not turn lakes into sea access.
+segment(a,b)=minmax(Tuple(round.(Float64.(a);digits=7)),Tuple(round.(Float64.(b);digits=7)))
+edge_scopes=Dict{Tuple{NTuple{2,Float64},NTuple{2,Float64}},Set{String}}()
+for f in features
+    id=String(f["properties"]["component_id"]);haskey(scopes,id) || continue
+    for ring in f["geometry"]["coordinates"],i in 1:length(ring)-1
+        ring[i]==ring[i+1] && continue
+        push!(get!(edge_scopes,segment(ring[i],ring[i+1]),Set{String}()),scopes[id])
+    end
+end
+inland=Set(s for s in region if all(any(t!=s for t in edge_scopes[segment(r[i],r[i+1])])
+    for r in [first(main[s]["coordinates"])] for i in 1:length(r)-1 if r[i]!=r[i+1]))
 report=Dict{String,Any}("complete"=>false,"approved"=>false,"mode"=>mode,"region"=>region,"tiles"=>length(footprint),
-    "before"=>audit(owner),"geographic_weight"=>blend,"guide_axes"=>axes,
+    "before"=>audit(owner),"geographic_weight"=>blend,"guide_axes"=>axes,"inland"=>sort!(collect(inland)),
+    "topology_mode"=>soft ? "penalty; errors are not approved" : "exact internal graph",
     "inputs"=>Dict(p=>O.file_digest(p) for p in [paths;@__FILE__;joinpath(@__DIR__,"../src/partition.jl")]),
-    "limits"=>["The regional footprint and all outside countries stay fixed.","Internal contacts must match Natural Earth; outside contacts are audited only.","This experiment does not add missing lakes."])
+    "limits"=>["The regional footprint and all outside countries stay fixed.","Natural Earth defines desired contacts. Penalized trials can retain errors; outside contacts are audited only.","This experiment does not add missing lakes."])
 save()=open(io->JSON.print(io,report),joinpath(output,"report.json"),"w")
 save()
 CSV.write(joinpath(output,"before.csv"),[(component_id=g,x=p[1],y=p[2]) for (p,g) in sort!(collect(original);by=first)])
@@ -86,7 +100,8 @@ attempts=Any[]
 for radius in (8.,16.)
     println("Starting $mode: $(length(points)) tiles, radius=$radius");flush(stdout)
     result,check=O.partition_groups(reference,footprint,budgets;required,outside,inland,cell_costs=costs,
-        perimeter_weight=2.,free_outside_contacts=true,radius,node_limit=250,rounds=20)
+        perimeter_weight=2.,free_outside_contacts=true,radius,node_limit=soft ? 30 : 250,rounds=20,
+        contact_penalty=soft ? 200. : nothing,start_reference=soft)
     push!(attempts,check);report["attempts"]=attempts;save()
     isnothing(result) && continue
     fitted=merge(copy(outside),O.group_owners(result))
