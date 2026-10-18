@@ -2,7 +2,7 @@ using OWIDLayout, CSV, JSON
 const O=OWIDLayout
 length(ARGS)==3 || error("Usage: refine-west-africa.jl CLEAN_BUILD OUTPUT_DIR MODE")
 root,output,mode=ARGS
-mode in ("conservative","geographic","conservative-soft","geographic-soft","conservative-local","geographic-local","geographic-seed","geographic-reseed","geographic-centres","geographic-centres-refined") || error("Unknown mode")
+mode in ("conservative","geographic","conservative-soft","geographic-soft","conservative-local","geographic-local","geographic-seed","geographic-reseed","geographic-centres","geographic-centres-refined","geographic-centres-diagnostic") || error("Unknown mode")
 local_search=endswith(mode,"-local")
 centre_cost=startswith(mode,"geographic-centres")
 reseed=endswith(mode,"-seed") || endswith(mode,"-reseed") || centre_cost
@@ -107,7 +107,15 @@ attempts=Any[]
 for radius in (reseed || local_search ? (8.,) : (8.,16.))
     println("Starting $mode: $(length(points)) tiles, radius=$radius");flush(stdout)
     if reseed
-        result,check=O.seed_region(reference,outside,costs;inland,rounds=100)
+        function checkpoint(candidate,iteration)
+            candidate_owner=merge(copy(outside),O.group_owners(candidate))
+            progress=Dict("complete"=>false,"iteration"=>iteration,"audit"=>audit(candidate_owner),
+                "disconnected"=>Dict(g=>length.(O.connected_parts(ps;diagonals=true)) for (g,ps) in candidate if length(O.connected_parts(ps;diagonals=true))>1))
+            CSV.write(joinpath(output,"candidate.csv"),[(component_id=g,x=p[1],y=p[2]) for (p,g) in sort!(collect(candidate_owner);by=first)])
+            open(io->JSON.print(io,progress),joinpath(output,"candidate-report.json"),"w")
+            println("Disconnected countries: ",JSON.json(progress["disconnected"]));flush(stdout)
+        end
+        result,check=O.seed_region(reference,outside,costs;inland,rounds=endswith(mode,"-diagnostic") ? 1 : 100,checkpoint)
         if result!==nothing && (endswith(mode,"-reseed") || endswith(mode,"-refined"))
             report["seed_audit"]=audit(merge(copy(outside),O.group_owners(result)))
             result,check=O.exchange_region(result,outside,required,costs;inland)

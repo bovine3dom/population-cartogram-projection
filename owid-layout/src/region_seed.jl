@@ -3,7 +3,7 @@
 Exact counts, coast status, and connectivity are hard constraints. Neighbour
 relationships are deliberately left for the geographic audit and later edits.
 """
-function seed_region(reference,outside,costs;inland=Set{String}(),node_limit=100,rounds=20)
+function seed_region(reference,outside,costs;inland=Set{String}(),node_limit=100,rounds=20,checkpoint=(result,iteration)->nothing)
     labels=sort!(collect(keys(reference)));points=sort!([p for ps in values(reference) for p in ps])
     lookup=Dict(p=>i for (i,p) in enumerate(points));occupied=union(Set(points),Set(keys(outside)))
     water=enclosed_cells(occupied)
@@ -45,6 +45,7 @@ function seed_region(reference,outside,costs;inland=Set{String}(),node_limit=100
                 JuMP.@constraint(model,sum(x[lookup[p],j] for p in component)<=length(component)*sum(x[lookup[q],j] for q in boundary))
             end
         end
+        checkpoint(result,iteration)
         broken && continue
         all(length(result[g])==length(reference[g]) for g in labels) || error("Seed budget mismatch")
         return result,(complete=true,method="geographic region seed",attempts=attempts)
