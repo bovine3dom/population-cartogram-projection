@@ -1,0 +1,5104 @@
+{
+  "countries": [
+    {
+      "country": "ABW",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AFG",
+      "status": "landmass-first trial",
+      "tiles": 287,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AGO",
+      "status": "landmass-first trial",
+      "tiles": 255,
+      "parts": 1,
+      "edits": {
+        "AGO:T1": {
+          "before": 255,
+          "after": 255,
+          "removed": 21,
+          "added": 21
+        }
+      }
+    },
+    {
+      "country": "ALB",
+      "status": "landmass-first trial",
+      "tiles": 20,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AND",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ARE",
+      "status": "landmass-first trial",
+      "tiles": 68,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ARG",
+      "status": "landmass-first trial",
+      "tiles": 327,
+      "parts": 1,
+      "edits": {
+        "ARG:T1": {
+          "before": 327,
+          "after": 327,
+          "removed": 17,
+          "added": 17
+        }
+      }
+    },
+    {
+      "country": "ARM",
+      "status": "landmass-first trial",
+      "tiles": 24,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ATG",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AUS",
+      "status": "landmass-first trial",
+      "tiles": 177,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AUT",
+      "status": "landmass-first trial",
+      "tiles": 59,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AZE",
+      "status": "landmass-first trial",
+      "tiles": 68,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BDI",
+      "status": "landmass-first trial",
+      "tiles": 84,
+      "parts": 1,
+      "edits": {
+        "BDI:T1": {
+          "before": 84,
+          "after": 84,
+          "removed": 10,
+          "added": 10
+        }
+      }
+    },
+    {
+      "country": "BEL",
+      "status": "landmass-first trial",
+      "tiles": 72,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BEN",
+      "status": "landmass-first trial",
+      "tiles": 82,
+      "parts": 1,
+      "edits": {
+        "BEN:T1": {
+          "before": 82,
+          "after": 82,
+          "removed": 25,
+          "added": 25
+        }
+      }
+    },
+    {
+      "country": "BFA",
+      "status": "landmass-first trial",
+      "tiles": 159,
+      "parts": 1,
+      "edits": {
+        "BFA:T1": {
+          "before": 159,
+          "after": 159,
+          "removed": 14,
+          "added": 14
+        }
+      }
+    },
+    {
+      "country": "BGD",
+      "status": "landmass-first trial",
+      "tiles": 1188,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BGR",
+      "status": "landmass-first trial",
+      "tiles": 40,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BHR",
+      "status": "landmass-first trial",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BHS",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BIH",
+      "status": "landmass-first trial",
+      "tiles": 19,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BLR",
+      "status": "landmass-first trial",
+      "tiles": 56,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BLZ",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BOL",
+      "status": "landmass-first trial",
+      "tiles": 82,
+      "parts": 1,
+      "edits": {
+        "BOL:T1": {
+          "before": 82,
+          "after": 82,
+          "removed": 11,
+          "added": 11
+        }
+      }
+    },
+    {
+      "country": "BRA",
+      "status": "landmass-first trial",
+      "tiles": 1469,
+      "parts": 2,
+      "edits": {
+        "BRA:T1": {
+          "before": 1466,
+          "after": 1466,
+          "removed": 49,
+          "added": 49
+        },
+        "BRA:T2": {
+          "before": 3,
+          "after": 3,
+          "removed": 1,
+          "added": 1
+        }
+      }
+    },
+    {
+      "country": "BRB",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BRN",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {
+        "BRN:T1": {
+          "before": 4,
+          "after": 4,
+          "removed": 4,
+          "added": 4
+        }
+      }
+    },
+    {
+      "country": "BTN",
+      "status": "landmass-first trial",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BWA",
+      "status": "landmass-first trial",
+      "tiles": 14,
+      "parts": 1,
+      "edits": {
+        "BWA:T1": {
+          "before": 14,
+          "after": 14,
+          "removed": 3,
+          "added": 3
+        }
+      }
+    },
+    {
+      "country": "CAF",
+      "status": "landmass-first trial",
+      "tiles": 41,
+      "parts": 1,
+      "edits": {
+        "CAF:T1": {
+          "before": 41,
+          "after": 41,
+          "removed": 5,
+          "added": 5
+        }
+      }
+    },
+    {
+      "country": "CAN",
+      "status": "landmass-first trial",
+      "tiles": 262,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CHE",
+      "status": "landmass-first trial",
+      "tiles": 62,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CHL",
+      "status": "landmass-first trial",
+      "tiles": 121,
+      "parts": 1,
+      "edits": {
+        "CHL:T1": {
+          "before": 121,
+          "after": 121,
+          "removed": 10,
+          "added": 10
+        }
+      }
+    },
+    {
+      "country": "CHN",
+      "status": "landmass-first trial",
+      "tiles": 9834,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CIV",
+      "status": "landmass-first trial",
+      "tiles": 190,
+      "parts": 1,
+      "edits": {
+        "CIV:T1": {
+          "before": 190,
+          "after": 190,
+          "removed": 30,
+          "added": 30
+        }
+      }
+    },
+    {
+      "country": "CMR",
+      "status": "landmass-first trial",
+      "tiles": 201,
+      "parts": 1,
+      "edits": {
+        "CMR:T1": {
+          "before": 201,
+          "after": 201,
+          "removed": 24,
+          "added": 24
+        }
+      }
+    },
+    {
+      "country": "COD",
+      "status": "landmass-first trial",
+      "tiles": 676,
+      "parts": 1,
+      "edits": {
+        "COD:T1": {
+          "before": 676,
+          "after": 676,
+          "removed": 46,
+          "added": 46
+        }
+      }
+    },
+    {
+      "country": "COG",
+      "status": "landmass-first trial",
+      "tiles": 48,
+      "parts": 1,
+      "edits": {
+        "COG:T1": {
+          "before": 48,
+          "after": 48,
+          "removed": 13,
+          "added": 13
+        }
+      }
+    },
+    {
+      "country": "COK",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "COL",
+      "status": "landmass-first trial",
+      "tiles": 341,
+      "parts": 1,
+      "edits": {
+        "COL:T1": {
+          "before": 341,
+          "after": 341,
+          "removed": 24,
+          "added": 24
+        }
+      }
+    },
+    {
+      "country": "COM",
+      "status": "landmass-first trial",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CPV",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CRI",
+      "status": "landmass-first trial",
+      "tiles": 36,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CUB",
+      "status": "landmass-first trial",
+      "tiles": 73,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CUW",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CYP",
+      "status": "landmass-first trial",
+      "tiles": 8,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CZE",
+      "status": "landmass-first trial",
+      "tiles": 74,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DEU",
+      "status": "landmass-first trial",
+      "tiles": 571,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DJI",
+      "status": "landmass-first trial",
+      "tiles": 9,
+      "parts": 1,
+      "edits": {
+        "DJI:T1": {
+          "before": 9,
+          "after": 9,
+          "removed": 5,
+          "added": 5
+        }
+      }
+    },
+    {
+      "country": "DMA",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DNK",
+      "status": "landmass-first trial",
+      "tiles": 44,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DOM",
+      "status": "landmass-first trial",
+      "tiles": 69,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DZA",
+      "status": "landmass-first trial",
+      "tiles": 316,
+      "parts": 1,
+      "edits": {
+        "DZA:T1": {
+          "before": 316,
+          "after": 316,
+          "removed": 24,
+          "added": 24
+        }
+      }
+    },
+    {
+      "country": "ECU",
+      "status": "landmass-first trial",
+      "tiles": 133,
+      "parts": 1,
+      "edits": {
+        "ECU:T1": {
+          "before": 133,
+          "after": 133,
+          "removed": 14,
+          "added": 14
+        }
+      }
+    },
+    {
+      "country": "EGY",
+      "status": "landmass-first trial",
+      "tiles": 764,
+      "parts": 1,
+      "edits": {
+        "EGY:T1": {
+          "before": 764,
+          "after": 764,
+          "removed": 38,
+          "added": 38
+        }
+      }
+    },
+    {
+      "country": "ERI",
+      "status": "landmass-first trial",
+      "tiles": 35,
+      "parts": 1,
+      "edits": {
+        "ERI:T1": {
+          "before": 35,
+          "after": 35,
+          "removed": 10,
+          "added": 10
+        }
+      }
+    },
+    {
+      "country": "ESH",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {
+        "ESH:T1": {
+          "before": 4,
+          "after": 4,
+          "removed": 2,
+          "added": 2
+        }
+      }
+    },
+    {
+      "country": "ESP",
+      "status": "landmass-first trial",
+      "tiles": 319,
+      "parts": 5,
+      "edits": {
+        "ESP:T4": {
+          "before": 4,
+          "after": 7,
+          "removed": 0,
+          "added": 3
+        },
+        "ESP:T2": {
+          "before": 9,
+          "after": 6,
+          "removed": 3,
+          "added": 0
+        }
+      }
+    },
+    {
+      "country": "EST",
+      "status": "landmass-first trial",
+      "tiles": 8,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ETH",
+      "status": "landmass-first trial",
+      "tiles": 850,
+      "parts": 1,
+      "edits": {
+        "ETH:T1": {
+          "before": 850,
+          "after": 850,
+          "removed": 32,
+          "added": 32
+        }
+      }
+    },
+    {
+      "country": "FIN",
+      "status": "landmass-first trial",
+      "tiles": 44,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "FJI",
+      "status": "landmass-first trial",
+      "tiles": 8,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "FRA",
+      "status": "landmass-first trial",
+      "tiles": 438,
+      "parts": 2,
+      "edits": {
+        "FRA:T1": {
+          "before": 434,
+          "after": 436,
+          "removed": 0,
+          "added": 2
+        },
+        "FRA:T2": {
+          "before": 4,
+          "after": 2,
+          "removed": 2,
+          "added": 0
+        }
+      }
+    },
+    {
+      "country": "FRO",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "FSM",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GAB",
+      "status": "landmass-first trial",
+      "tiles": 19,
+      "parts": 1,
+      "edits": {
+        "GAB:T1": {
+          "before": 19,
+          "after": 19,
+          "removed": 5,
+          "added": 5
+        }
+      }
+    },
+    {
+      "country": "GBR",
+      "status": "landmass-first trial",
+      "tiles": 459,
+      "parts": 3,
+      "edits": {
+        "GBR:T1": {
+          "before": 439,
+          "after": 445,
+          "removed": 0,
+          "added": 6
+        },
+        "GBR:T2": {
+          "before": 16,
+          "after": 13,
+          "removed": 3,
+          "added": 0
+        },
+        "GBR:T3": {
+          "before": 4,
+          "after": 1,
+          "removed": 3,
+          "added": 0
+        }
+      }
+    },
+    {
+      "country": "GEO",
+      "status": "landmass-first trial",
+      "tiles": 26,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GHA",
+      "status": "landmass-first trial",
+      "tiles": 226,
+      "parts": 1,
+      "edits": {
+        "GHA:T1": {
+          "before": 226,
+          "after": 226,
+          "removed": 28,
+          "added": 28
+        }
+      }
+    },
+    {
+      "country": "GIN",
+      "status": "landmass-first trial",
+      "tiles": 111,
+      "parts": 1,
+      "edits": {
+        "GIN:T1": {
+          "before": 111,
+          "after": 111,
+          "removed": 18,
+          "added": 18
+        }
+      }
+    },
+    {
+      "country": "GLP",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GMB",
+      "status": "landmass-first trial",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {
+        "GMB:T1": {
+          "before": 16,
+          "after": 16,
+          "removed": 2,
+          "added": 2
+        }
+      }
+    },
+    {
+      "country": "GNB",
+      "status": "landmass-first trial",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {
+        "GNB:T1": {
+          "before": 16,
+          "after": 16,
+          "removed": 4,
+          "added": 4
+        }
+      }
+    },
+    {
+      "country": "GNQ",
+      "status": "landmass-first trial",
+      "tiles": 11,
+      "parts": 1,
+      "edits": {
+        "GNQ:T1": {
+          "before": 11,
+          "after": 11,
+          "removed": 3,
+          "added": 3
+        }
+      }
+    },
+    {
+      "country": "GRC",
+      "status": "landmass-first trial",
+      "tiles": 68,
+      "parts": 3,
+      "edits": {
+        "GRC:T2": {
+          "before": 4,
+          "after": 4,
+          "removed": 2,
+          "added": 2
+        }
+      }
+    },
+    {
+      "country": "GRD",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GRL",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GTM",
+      "status": "landmass-first trial",
+      "tiles": 129,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GUF",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {
+        "GUF:T1": {
+          "before": 4,
+          "after": 4,
+          "removed": 2,
+          "added": 2
+        }
+      }
+    },
+    {
+      "country": "GUM",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GUY",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {
+        "GUY:T1": {
+          "before": 4,
+          "after": 4,
+          "removed": 1,
+          "added": 1
+        }
+      }
+    },
+    {
+      "country": "HKG",
+      "status": "landmass-first trial",
+      "tiles": 56,
+      "parts": 2,
+      "edits": {
+        "HKG:T1": {
+          "before": 40,
+          "after": 48,
+          "removed": 0,
+          "added": 8
+        },
+        "HKG:T2": {
+          "before": 16,
+          "after": 8,
+          "removed": 8,
+          "added": 0
+        }
+      }
+    },
+    {
+      "country": "HND",
+      "status": "landmass-first trial",
+      "tiles": 64,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "HRV",
+      "status": "landmass-first trial",
+      "tiles": 27,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "HTI",
+      "status": "landmass-first trial",
+      "tiles": 89,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "HUN",
+      "status": "landmass-first trial",
+      "tiles": 66,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "IDN",
+      "status": "landmass-first trial",
+      "tiles": 1894,
+      "parts": 25,
+      "edits": {
+        "IDN:T1": {
+          "before": 1050,
+          "after": 1068,
+          "removed": 0,
+          "added": 18
+        },
+        "IDN:T2": {
+          "before": 271,
+          "after": 377,
+          "removed": 18,
+          "added": 124
+        },
+        "IDN:T3": {
+          "before": 248,
+          "after": 118,
+          "removed": 176,
+          "added": 46
+        },
+        "IDN:T4": {
+          "before": 138,
+          "after": 134,
+          "removed": 21,
+          "added": 17
+        },
+        "IDN:T5": {
+          "before": 43,
+          "after": 52,
+          "removed": 2,
+          "added": 11
+        },
+        "IDN:T6": {
+          "before": 24,
+          "after": 51,
+          "removed": 17,
+          "added": 44
+        },
+        "IDN:T7": {
+          "before": 20,
+          "after": 37,
+          "removed": 9,
+          "added": 26
+        },
+        "IDN:T16": {
+          "before": 4,
+          "after": 11,
+          "removed": 1,
+          "added": 8
+        },
+        "IDN:T9": {
+          "before": 8,
+          "after": 9,
+          "removed": 2,
+          "added": 3
+        },
+        "IDN:T15": {
+          "before": 4,
+          "after": 5,
+          "removed": 1,
+          "added": 2
+        },
+        "IDN:T14": {
+          "before": 6,
+          "after": 4,
+          "removed": 2,
+          "added": 0
+        },
+        "IDN:T10": {
+          "before": 8,
+          "after": 3,
+          "removed": 5,
+          "added": 0
+        },
+        "IDN:T11": {
+          "before": 8,
+          "after": 3,
+          "removed": 5,
+          "added": 0
+        },
+        "IDN:T12": {
+          "before": 8,
+          "after": 3,
+          "removed": 5,
+          "added": 0
+        },
+        "IDN:T17": {
+          "before": 4,
+          "after": 2,
+          "removed": 2,
+          "added": 0
+        },
+        "IDN:T18": {
+          "before": 4,
+          "after": 2,
+          "removed": 2,
+          "added": 0
+        },
+        "IDN:T19": {
+          "before": 4,
+          "after": 2,
+          "removed": 2,
+          "added": 0
+        },
+        "IDN:T20": {
+          "before": 4,
+          "after": 2,
+          "removed": 2,
+          "added": 0
+        },
+        "IDN:T22": {
+          "before": 4,
+          "after": 2,
+          "removed": 2,
+          "added": 0
+        },
+        "IDN:T23": {
+          "before": 3,
+          "after": 2,
+          "removed": 1,
+          "added": 0
+        },
+        "IDN:T8": {
+          "before": 17,
+          "after": 2,
+          "removed": 15,
+          "added": 0
+        },
+        "IDN:T13": {
+          "before": 6,
+          "after": 1,
+          "removed": 5,
+          "added": 0
+        },
+        "IDN:T21": {
+          "before": 4,
+          "after": 1,
+          "removed": 3,
+          "added": 0
+        },
+        "IDN:T24": {
+          "before": 2,
+          "after": 1,
+          "removed": 2,
+          "added": 1
+        }
+      }
+    },
+    {
+      "country": "IND",
+      "status": "landmass-first trial",
+      "tiles": 9661,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "IRL",
+      "status": "landmass-first trial",
+      "tiles": 40,
+      "parts": 1,
+      "edits": {
+        "IRL:T1": {
+          "before": 40,
+          "after": 40,
+          "removed": 1,
+          "added": 1
+        }
+      }
+    },
+    {
+      "country": "IRN",
+      "status": "landmass-first trial",
+      "tiles": 610,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "IRQ",
+      "status": "landmass-first trial",
+      "tiles": 303,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ISL",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ISR",
+      "status": "landmass-first trial",
+      "tiles": 57,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ITA",
+      "status": "landmass-first trial",
+      "tiles": 411,
+      "parts": 3,
+      "edits": {
+        "ITA:T1": {
+          "before": 374,
+          "after": 366,
+          "removed": 8,
+          "added": 0
+        },
+        "ITA:T2": {
+          "before": 26,
+          "after": 34,
+          "removed": 1,
+          "added": 9
+        }
+      }
+    },
+    {
+      "country": "JAM",
+      "status": "landmass-first trial",
+      "tiles": 21,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "JOR",
+      "status": "landmass-first trial",
+      "tiles": 66,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "JPN",
+      "status": "landmass-first trial",
+      "tiles": 858,
+      "parts": 9,
+      "edits": {
+        "JPN:T1": {
+          "before": 509,
+          "after": 697,
+          "removed": 63,
+          "added": 251
+        },
+        "JPN:T3": {
+          "before": 102,
+          "after": 81,
+          "removed": 24,
+          "added": 3
+        },
+        "JPN:T2": {
+          "before": 193,
+          "after": 34,
+          "removed": 160,
+          "added": 1
+        },
+        "JPN:T4": {
+          "before": 35,
+          "after": 24,
+          "removed": 12,
+          "added": 1
+        },
+        "JPN:T5": {
+          "before": 8,
+          "after": 10,
+          "removed": 1,
+          "added": 3
+        },
+        "JPN:T6": {
+          "before": 4,
+          "after": 3,
+          "removed": 2,
+          "added": 1
+        },
+        "JPN:T7": {
+          "before": 3,
+          "after": 3,
+          "removed": 3,
+          "added": 3
+        },
+        "JPN:T8": {
+          "before": 2,
+          "after": 3,
+          "removed": 2,
+          "added": 3
+        },
+        "JPN:T9": {
+          "before": 2,
+          "after": 3,
+          "removed": 2,
+          "added": 3
+        }
+      }
+    },
+    {
+      "country": "KAZ",
+      "status": "landmass-first trial",
+      "tiles": 140,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KEN",
+      "status": "landmass-first trial",
+      "tiles": 407,
+      "parts": 1,
+      "edits": {
+        "KEN:T1": {
+          "before": 407,
+          "after": 407,
+          "removed": 26,
+          "added": 26
+        }
+      }
+    },
+    {
+      "country": "KGZ",
+      "status": "landmass-first trial",
+      "tiles": 44,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KHM",
+      "status": "landmass-first trial",
+      "tiles": 116,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KIR",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KNA",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KOR",
+      "status": "landmass-first trial",
+      "tiles": 362,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KWT",
+      "status": "landmass-first trial",
+      "tiles": 34,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LAO",
+      "status": "landmass-first trial",
+      "tiles": 53,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LBN",
+      "status": "landmass-first trial",
+      "tiles": 42,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LBR",
+      "status": "landmass-first trial",
+      "tiles": 34,
+      "parts": 1,
+      "edits": {
+        "LBR:T1": {
+          "before": 34,
+          "after": 34,
+          "removed": 6,
+          "added": 6
+        }
+      }
+    },
+    {
+      "country": "LBY",
+      "status": "landmass-first trial",
+      "tiles": 45,
+      "parts": 1,
+      "edits": {
+        "LBY:T1": {
+          "before": 45,
+          "after": 45,
+          "removed": 9,
+          "added": 9
+        }
+      }
+    },
+    {
+      "country": "LCA",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LKA",
+      "status": "landmass-first trial",
+      "tiles": 144,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LSO",
+      "status": "landmass-first trial",
+      "tiles": 11,
+      "parts": 1,
+      "edits": {
+        "LSO:T1": {
+          "before": 11,
+          "after": 11,
+          "removed": 3,
+          "added": 3
+        }
+      }
+    },
+    {
+      "country": "LTU",
+      "status": "landmass-first trial",
+      "tiles": 20,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LUX",
+      "status": "landmass-first trial",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LVA",
+      "status": "landmass-first trial",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MAC",
+      "status": "landmass-first trial",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MAR",
+      "status": "landmass-first trial",
+      "tiles": 257,
+      "parts": 1,
+      "edits": {
+        "MAR:T1": {
+          "before": 257,
+          "after": 257,
+          "removed": 25,
+          "added": 25
+        }
+      }
+    },
+    {
+      "country": "MCO",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MDA",
+      "status": "landmass-first trial",
+      "tiles": 28,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MDG",
+      "status": "landmass-first trial",
+      "tiles": 200,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MDV",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MEX",
+      "status": "landmass-first trial",
+      "tiles": 944,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MHL",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MKD",
+      "status": "landmass-first trial",
+      "tiles": 12,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MLI",
+      "status": "landmass-first trial",
+      "tiles": 160,
+      "parts": 1,
+      "edits": {
+        "MLI:T1": {
+          "before": 160,
+          "after": 160,
+          "removed": 15,
+          "added": 15
+        }
+      }
+    },
+    {
+      "country": "MLT",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MMR",
+      "status": "landmass-first trial",
+      "tiles": 381,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MNE",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MNG",
+      "status": "landmass-first trial",
+      "tiles": 24,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MOZ",
+      "status": "landmass-first trial",
+      "tiles": 241,
+      "parts": 1,
+      "edits": {
+        "MOZ:T1": {
+          "before": 241,
+          "after": 241,
+          "removed": 41,
+          "added": 41
+        }
+      }
+    },
+    {
+      "country": "MRT",
+      "status": "landmass-first trial",
+      "tiles": 36,
+      "parts": 1,
+      "edits": {
+        "MRT:T1": {
+          "before": 36,
+          "after": 36,
+          "removed": 6,
+          "added": 6
+        }
+      }
+    },
+    {
+      "country": "MTQ",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MUS",
+      "status": "landmass-first trial",
+      "tiles": 8,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MWI",
+      "status": "landmass-first trial",
+      "tiles": 152,
+      "parts": 1,
+      "edits": {
+        "MWI:T1": {
+          "before": 152,
+          "after": 152,
+          "removed": 30,
+          "added": 30
+        }
+      }
+    },
+    {
+      "country": "MYS",
+      "status": "landmass-first trial",
+      "tiles": 224,
+      "parts": 2,
+      "edits": {
+        "MYS:T2": {
+          "before": 60,
+          "after": 180,
+          "removed": 0,
+          "added": 120
+        },
+        "MYS:T1": {
+          "before": 164,
+          "after": 44,
+          "removed": 120,
+          "added": 0
+        }
+      }
+    },
+    {
+      "country": "MYT",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NAM",
+      "status": "landmass-first trial",
+      "tiles": 17,
+      "parts": 1,
+      "edits": {
+        "NAM:T1": {
+          "before": 17,
+          "after": 17,
+          "removed": 8,
+          "added": 8
+        }
+      }
+    },
+    {
+      "country": "NCL",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {
+        "NCL:T1": {
+          "before": 2,
+          "after": 2,
+          "removed": 1,
+          "added": 1
+        }
+      }
+    },
+    {
+      "country": "NER",
+      "status": "landmass-first trial",
+      "tiles": 199,
+      "parts": 1,
+      "edits": {
+        "NER:T1": {
+          "before": 199,
+          "after": 199,
+          "removed": 19,
+          "added": 19
+        }
+      }
+    },
+    {
+      "country": "NGA",
+      "status": "landmass-first trial",
+      "tiles": 1562,
+      "parts": 1,
+      "edits": {
+        "NGA:T1": {
+          "before": 1562,
+          "after": 1562,
+          "removed": 69,
+          "added": 69
+        }
+      }
+    },
+    {
+      "country": "NIC",
+      "status": "landmass-first trial",
+      "tiles": 46,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NLD",
+      "status": "landmass-first trial",
+      "tiles": 115,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NOR",
+      "status": "landmass-first trial",
+      "tiles": 36,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NPL",
+      "status": "landmass-first trial",
+      "tiles": 204,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NZL",
+      "status": "landmass-first trial",
+      "tiles": 32,
+      "parts": 2,
+      "edits": {
+        "NZL:T2": {
+          "before": 16,
+          "after": 24,
+          "removed": 0,
+          "added": 8
+        },
+        "NZL:T1": {
+          "before": 16,
+          "after": 8,
+          "removed": 9,
+          "added": 1
+        }
+      }
+    },
+    {
+      "country": "OMN",
+      "status": "landmass-first trial",
+      "tiles": 46,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PAK",
+      "status": "landmass-first trial",
+      "tiles": 1589,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PAN",
+      "status": "landmass-first trial",
+      "tiles": 28,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PER",
+      "status": "landmass-first trial",
+      "tiles": 225,
+      "parts": 1,
+      "edits": {
+        "PER:T1": {
+          "before": 225,
+          "after": 225,
+          "removed": 23,
+          "added": 23
+        }
+      }
+    },
+    {
+      "country": "PHL",
+      "status": "landmass-first trial",
+      "tiles": 808,
+      "parts": 25,
+      "edits": {
+        "PHL:T1": {
+          "before": 394,
+          "after": 432,
+          "removed": 183,
+          "added": 221
+        },
+        "PHL:T2": {
+          "before": 220,
+          "after": 178,
+          "removed": 162,
+          "added": 120
+        },
+        "PHL:T25": {
+          "before": 2,
+          "after": 36,
+          "removed": 0,
+          "added": 34
+        },
+        "PHL:T4": {
+          "before": 21,
+          "after": 32,
+          "removed": 5,
+          "added": 16
+        },
+        "PHL:T5": {
+          "before": 20,
+          "after": 30,
+          "removed": 16,
+          "added": 26
+        },
+        "PHL:T3": {
+          "before": 46,
+          "after": 29,
+          "removed": 46,
+          "added": 29
+        },
+        "PHL:T8": {
+          "before": 11,
+          "after": 9,
+          "removed": 11,
+          "added": 9
+        },
+        "PHL:T20": {
+          "before": 4,
+          "after": 8,
+          "removed": 4,
+          "added": 8
+        },
+        "PHL:T6": {
+          "before": 18,
+          "after": 8,
+          "removed": 13,
+          "added": 3
+        },
+        "PHL:T7": {
+          "before": 12,
+          "after": 7,
+          "removed": 12,
+          "added": 7
+        },
+        "PHL:T12": {
+          "before": 5,
+          "after": 6,
+          "removed": 5,
+          "added": 6
+        },
+        "PHL:T16": {
+          "before": 4,
+          "after": 5,
+          "removed": 4,
+          "added": 5
+        },
+        "PHL:T15": {
+          "before": 4,
+          "after": 4,
+          "removed": 4,
+          "added": 4
+        },
+        "PHL:T18": {
+          "before": 4,
+          "after": 4,
+          "removed": 4,
+          "added": 4
+        },
+        "PHL:T19": {
+          "before": 4,
+          "after": 4,
+          "removed": 4,
+          "added": 4
+        },
+        "PHL:T9": {
+          "before": 8,
+          "after": 3,
+          "removed": 6,
+          "added": 1
+        },
+        "PHL:T10": {
+          "before": 6,
+          "after": 2,
+          "removed": 6,
+          "added": 2
+        },
+        "PHL:T11": {
+          "before": 5,
+          "after": 2,
+          "removed": 5,
+          "added": 2
+        },
+        "PHL:T22": {
+          "before": 2,
+          "after": 2,
+          "removed": 2,
+          "added": 2
+        },
+        "PHL:T23": {
+          "before": 2,
+          "after": 2,
+          "removed": 2,
+          "added": 2
+        },
+        "PHL:T13": {
+          "before": 4,
+          "after": 1,
+          "removed": 4,
+          "added": 1
+        },
+        "PHL:T14": {
+          "before": 4,
+          "after": 1,
+          "removed": 4,
+          "added": 1
+        },
+        "PHL:T17": {
+          "before": 4,
+          "after": 1,
+          "removed": 4,
+          "added": 1
+        },
+        "PHL:T21": {
+          "before": 2,
+          "after": 1,
+          "removed": 2,
+          "added": 1
+        },
+        "PHL:T24": {
+          "before": 2,
+          "after": 1,
+          "removed": 2,
+          "added": 1
+        }
+      }
+    },
+    {
+      "country": "PNG",
+      "status": "landmass-first trial",
+      "tiles": 67,
+      "parts": 1,
+      "edits": {
+        "PNG:T1": {
+          "before": 67,
+          "after": 67,
+          "removed": 2,
+          "added": 2
+        }
+      }
+    },
+    {
+      "country": "POL",
+      "status": "landmass-first trial",
+      "tiles": 251,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PRI",
+      "status": "landmass-first trial",
+      "tiles": 19,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PRK",
+      "status": "landmass-first trial",
+      "tiles": 176,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PRT",
+      "status": "landmass-first trial",
+      "tiles": 65,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PRY",
+      "status": "landmass-first trial",
+      "tiles": 46,
+      "parts": 1,
+      "edits": {
+        "PRY:T1": {
+          "before": 46,
+          "after": 46,
+          "removed": 8,
+          "added": 8
+        }
+      }
+    },
+    {
+      "country": "PSE",
+      "status": "landmass-first trial",
+      "tiles": 41,
+      "parts": 3,
+      "edits": {}
+    },
+    {
+      "country": "PYF",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "QAT",
+      "status": "landmass-first trial",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "REU",
+      "status": "landmass-first trial",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ROU",
+      "status": "landmass-first trial",
+      "tiles": 127,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "RUS",
+      "status": "landmass-first trial",
+      "tiles": 975,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "RWA",
+      "status": "landmass-first trial",
+      "tiles": 98,
+      "parts": 1,
+      "edits": {
+        "RWA:T1": {
+          "before": 98,
+          "after": 98,
+          "removed": 9,
+          "added": 9
+        }
+      }
+    },
+    {
+      "country": "SAU",
+      "status": "landmass-first trial",
+      "tiles": 240,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SDN",
+      "status": "landmass-first trial",
+      "tiles": 332,
+      "parts": 1,
+      "edits": {
+        "SDN:T1": {
+          "before": 332,
+          "after": 332,
+          "removed": 22,
+          "added": 22
+        }
+      }
+    },
+    {
+      "country": "SEN",
+      "status": "landmass-first trial",
+      "tiles": 133,
+      "parts": 1,
+      "edits": {
+        "SEN:T1": {
+          "before": 133,
+          "after": 133,
+          "removed": 11,
+          "added": 11
+        }
+      }
+    },
+    {
+      "country": "SGP",
+      "status": "landmass-first trial",
+      "tiles": 40,
+      "parts": 1,
+      "edits": {
+        "SGP:T1": {
+          "before": 40,
+          "after": 40,
+          "removed": 10,
+          "added": 10
+        }
+      }
+    },
+    {
+      "country": "SLB",
+      "status": "landmass-first trial",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SLE",
+      "status": "landmass-first trial",
+      "tiles": 59,
+      "parts": 1,
+      "edits": {
+        "SLE:T1": {
+          "before": 59,
+          "after": 59,
+          "removed": 9,
+          "added": 9
+        }
+      }
+    },
+    {
+      "country": "SLV",
+      "status": "landmass-first trial",
+      "tiles": 46,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SOM",
+      "status": "landmass-first trial",
+      "tiles": 117,
+      "parts": 1,
+      "edits": {
+        "SOM:T1": {
+          "before": 117,
+          "after": 117,
+          "removed": 19,
+          "added": 19
+        }
+      }
+    },
+    {
+      "country": "SRB",
+      "status": "landmass-first trial",
+      "tiles": 55,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SSD",
+      "status": "landmass-first trial",
+      "tiles": 90,
+      "parts": 1,
+      "edits": {
+        "SSD:T1": {
+          "before": 90,
+          "after": 90,
+          "removed": 10,
+          "added": 10
+        }
+      }
+    },
+    {
+      "country": "STP",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SUR",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {
+        "SUR:T1": {
+          "before": 4,
+          "after": 4,
+          "removed": 2,
+          "added": 2
+        }
+      }
+    },
+    {
+      "country": "SVK",
+      "status": "landmass-first trial",
+      "tiles": 40,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SVN",
+      "status": "landmass-first trial",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SWE",
+      "status": "landmass-first trial",
+      "tiles": 76,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SWZ",
+      "status": "landmass-first trial",
+      "tiles": 9,
+      "parts": 1,
+      "edits": {
+        "SWZ:T1": {
+          "before": 9,
+          "after": 9,
+          "removed": 4,
+          "added": 4
+        }
+      }
+    },
+    {
+      "country": "SYC",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SYR",
+      "status": "landmass-first trial",
+      "tiles": 150,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TCD",
+      "status": "landmass-first trial",
+      "tiles": 130,
+      "parts": 1,
+      "edits": {
+        "TCD:T1": {
+          "before": 130,
+          "after": 130,
+          "removed": 25,
+          "added": 25
+        }
+      }
+    },
+    {
+      "country": "TGO",
+      "status": "landmass-first trial",
+      "tiles": 69,
+      "parts": 1,
+      "edits": {
+        "TGO:T1": {
+          "before": 69,
+          "after": 69,
+          "removed": 27,
+          "added": 27
+        }
+      }
+    },
+    {
+      "country": "THA",
+      "status": "landmass-first trial",
+      "tiles": 488,
+      "parts": 1,
+      "edits": {
+        "THA:T1": {
+          "before": 488,
+          "after": 488,
+          "removed": 12,
+          "added": 12
+        }
+      }
+    },
+    {
+      "country": "TJK",
+      "status": "landmass-first trial",
+      "tiles": 71,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TKM",
+      "status": "landmass-first trial",
+      "tiles": 44,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TLS",
+      "status": "landmass-first trial",
+      "tiles": 10,
+      "parts": 1,
+      "edits": {
+        "TLS:T1": {
+          "before": 10,
+          "after": 10,
+          "removed": 6,
+          "added": 6
+        }
+      }
+    },
+    {
+      "country": "TON",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TTO",
+      "status": "landmass-first trial",
+      "tiles": 8,
+      "parts": 2,
+      "edits": {
+        "TTO:T1": {
+          "before": 4,
+          "after": 7,
+          "removed": 0,
+          "added": 3
+        },
+        "TTO:T2": {
+          "before": 4,
+          "after": 1,
+          "removed": 3,
+          "added": 0
+        }
+      }
+    },
+    {
+      "country": "TUN",
+      "status": "landmass-first trial",
+      "tiles": 85,
+      "parts": 1,
+      "edits": {
+        "TUN:T1": {
+          "before": 85,
+          "after": 85,
+          "removed": 16,
+          "added": 16
+        }
+      }
+    },
+    {
+      "country": "TUR",
+      "status": "landmass-first trial",
+      "tiles": 581,
+      "parts": 2,
+      "edits": {
+        "TUR:T1": {
+          "before": 504,
+          "after": 492,
+          "removed": 12,
+          "added": 0
+        },
+        "TUR:T2": {
+          "before": 77,
+          "after": 89,
+          "removed": 0,
+          "added": 12
+        }
+      }
+    },
+    {
+      "country": "TUV",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TWN",
+      "status": "landmass-first trial",
+      "tiles": 157,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TZA",
+      "status": "landmass-first trial",
+      "tiles": 477,
+      "parts": 1,
+      "edits": {
+        "TZA:T1": {
+          "before": 477,
+          "after": 477,
+          "removed": 32,
+          "added": 32
+        }
+      }
+    },
+    {
+      "country": "UGA",
+      "status": "landmass-first trial",
+      "tiles": 345,
+      "parts": 1,
+      "edits": {
+        "UGA:T1": {
+          "before": 345,
+          "after": 345,
+          "removed": 29,
+          "added": 29
+        }
+      }
+    },
+    {
+      "country": "UKR",
+      "status": "landmass-first trial",
+      "tiles": 283,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "URY",
+      "status": "landmass-first trial",
+      "tiles": 26,
+      "parts": 1,
+      "edits": {
+        "URY:T1": {
+          "before": 26,
+          "after": 26,
+          "removed": 5,
+          "added": 5
+        }
+      }
+    },
+    {
+      "country": "USA",
+      "status": "landmass-first trial",
+      "tiles": 2268,
+      "parts": 4,
+      "edits": {
+        "USA:T1": {
+          "before": 2255,
+          "after": 2254,
+          "removed": 1,
+          "added": 0
+        },
+        "USA:T3": {
+          "before": 4,
+          "after": 7,
+          "removed": 1,
+          "added": 4
+        },
+        "USA:T4": {
+          "before": 2,
+          "after": 4,
+          "removed": 2,
+          "added": 4
+        },
+        "USA:T2": {
+          "before": 7,
+          "after": 3,
+          "removed": 4,
+          "added": 0
+        }
+      }
+    },
+    {
+      "country": "UZB",
+      "status": "landmass-first trial",
+      "tiles": 229,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "VCT",
+      "status": "landmass-first trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "VEN",
+      "status": "landmass-first trial",
+      "tiles": 219,
+      "parts": 1,
+      "edits": {
+        "VEN:T1": {
+          "before": 219,
+          "after": 219,
+          "removed": 17,
+          "added": 17
+        }
+      }
+    },
+    {
+      "country": "VNM",
+      "status": "landmass-first trial",
+      "tiles": 672,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "VUT",
+      "status": "landmass-first trial",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "WSM",
+      "status": "landmass-first trial",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "YEM",
+      "status": "landmass-first trial",
+      "tiles": 220,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ZAF",
+      "status": "landmass-first trial",
+      "tiles": 430,
+      "parts": 1,
+      "edits": {
+        "ZAF:T1": {
+          "before": 430,
+          "after": 430,
+          "removed": 30,
+          "added": 30
+        }
+      }
+    },
+    {
+      "country": "ZMB",
+      "status": "landmass-first trial",
+      "tiles": 145,
+      "parts": 1,
+      "edits": {
+        "ZMB:T1": {
+          "before": 145,
+          "after": 145,
+          "removed": 17,
+          "added": 17
+        }
+      }
+    },
+    {
+      "country": "ZWE",
+      "status": "landmass-first trial",
+      "tiles": 111,
+      "parts": 1,
+      "edits": {
+        "ZWE:T1": {
+          "before": 111,
+          "after": 111,
+          "removed": 11,
+          "added": 11
+        }
+      }
+    }
+  ],
+  "unresolved": [],
+  "grid": {
+    "input_grid_step": 2,
+    "input_rows": 54978,
+    "duplicate_coordinates": 11,
+    "conflicting_coordinates": 11
+  },
+  "tiles": 54967,
+  "enclosed_water_cells": 64,
+  "country_counts_exact": true,
+  "part_contacts_unchanged": true,
+  "assigned_population": 7947374949.0,
+  "grouped_population": 90277129.0,
+  "inputs": {
+    "data/cartogram.csv": "a08f41f7b3f8912e3956c8882a255a0e6ea60b5a720216a0746416ba5d62c257",
+    "output/auto-cartogram/world-dissolved/components.csv": "b98e9c3fd09804fbf78a1686e682005c598a869f77c6127e6d3301aa0913cb05",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "/usr/share/iso-codes/json/iso_3166-1.json": "f01b812b57fba9f31ff621bf33e7c7570a01964dbeb5be2167e94decf538c89f",
+    "examples/auto-cartogram/owid-reviewed-identities.csv": "3d41b230220f714de4bc21d02db62556a334253aa2a6dc499879ef76ba3585d0",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/resize_owid_islands.py": "0f3b6c19a1e07b1bf320e0c0ceba308b44b0427c2e070d340ce05fefc82af6bc"
+  },
+  "dependencies": {
+    "audit_owid_budgets.py": "33423be1c87e68579c9d50f21d155289942014c8c0e9bd8e9d23788795dfe47f",
+    "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+    "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3",
+    "restore_reference_water.py": "ac04ecbf2f3e6ed13f798792a244b65b7e21b8dc99c8cd2302ee8aa24a0b02e6",
+    "review_geography.py": "9737581a1635145e18212da3b6a9fc09eeb3140b6b7db1056fa24738320827c4",
+    "review_gaps.py": "e58b31a287d8ee41e76967b1d9a1bd91862d25871c75c42cbc6686be9e73ebe1",
+    "review_layout.py": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+    "compact_regions.py": "5ae618071bbbfde5f29656d41d574e1da1389850d83fd9d348cb50e50b1cc338"
+  },
+  "code_aliases": {
+    "SDS": "SSD",
+    "PSX": "PSE",
+    "SAH": "ESH"
+  },
+  "contacts_sha256": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+  "limits": [
+    "Experimental matching. Automatic identities need review before population fitting.",
+    "Unreviewed matches above cost 0.12 fall back to the nearest group unless source border context uniquely identifies the component. The threshold is a trial heuristic.",
+    "Nearest fallback stays within source country scope. Source scopes without OWID tiles remain unrepresented.",
+    "Every target piece retains at least one tile and its pinned border/water cells. These floors can prevent exact population proportions.",
+    "No new parts are created for islands joined to the mainland in OWID.",
+    "Conflicting OWID labels use the existing last-row inventory convention, including Lesotho.",
+    "No mapping Arrow file or production layout is replaced.",
+    "Shared border positions may change. Selected archipelago gaps may open to the sea. Population identities are inherited, not newly approved.",
+    "The selected shared island has a fixed scaled outline. Internal borders can move. Source identities are unchanged.",
+    "All shape guides come from original OWID artwork. Internal landmass water is retained. Inter-landmass gaps can open to the sea. Source identities are inherited, not approved."
+  ],
+  "relaxed_layout": false,
+  "landmass_world": {
+    "complete": true,
+    "approved": false,
+    "reference": "data/cartogram.csv",
+    "budget_parent": "output/auto-cartogram/owid-borneo-outline-v1",
+    "landmasses": [
+      {
+        "parts": [
+          "AFG:T1",
+          "ALB:T1",
+          "AND:T1",
+          "ARE:T1",
+          "ARM:T1",
+          "AUT:T1",
+          "AZE:T1",
+          "BEL:T1",
+          "BGD:T1",
+          "BGR:T1",
+          "BIH:T1",
+          "BLR:T1",
+          "BTN:T1",
+          "CHE:T1",
+          "CHN:T1",
+          "CZE:T1",
+          "DEU:T1",
+          "DNK:T1",
+          "ESP:T1",
+          "EST:T1",
+          "FIN:T1",
+          "FRA:T1",
+          "GEO:T1",
+          "GRC:T1",
+          "HKG:T1",
+          "HRV:T1",
+          "HUN:T1",
+          "IND:T1",
+          "IRN:T1",
+          "IRQ:T1",
+          "ISR:T1",
+          "ITA:T1",
+          "JOR:T1",
+          "KAZ:T1",
+          "KGZ:T1",
+          "KHM:T1",
+          "KOR:T1",
+          "KWT:T1",
+          "LAO:T1",
+          "LBN:T1",
+          "LTU:T1",
+          "LUX:T1",
+          "LVA:T1",
+          "MAC:T1",
+          "MCO:T1",
+          "MDA:T1",
+          "MKD:T1",
+          "MMR:T1",
+          "MNE:T1",
+          "MNG:T1",
+          "MYS:T2",
+          "NLD:T1",
+          "NOR:T1",
+          "NPL:T1",
+          "OMN:T1",
+          "PAK:T1",
+          "POL:T1",
+          "PRK:T1",
+          "PRT:T1",
+          "PSE:T1",
+          "PSE:T2",
+          "PSE:T3",
+          "QAT:T1",
+          "ROU:T1",
+          "RUS:T1",
+          "SAU:T1",
+          "SGP:T1",
+          "SRB:T1",
+          "SVK:T1",
+          "SVN:T1",
+          "SWE:T1",
+          "SYR:T1",
+          "THA:T1",
+          "TJK:T1",
+          "TKM:T1",
+          "TUR:T1",
+          "TUR:T2",
+          "UKR:T1",
+          "UZB:T1",
+          "VNM:T1",
+          "YEM:T1"
+        ],
+        "before": 32762,
+        "after": 32884,
+        "scale": 1.00186018305162,
+        "internal_water": 4,
+        "status": "bounded outline reuse",
+        "relaxed_solver": {
+          "method": "validated parent seed",
+          "complete": true,
+          "outline_difference": 284,
+          "outline_difference_fraction": 0.008636418927137818,
+          "outline_difference_limit": 328
+        },
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "AGO:T1",
+          "BDI:T1",
+          "BEN:T1",
+          "BFA:T1",
+          "BWA:T1",
+          "CAF:T1",
+          "CIV:T1",
+          "CMR:T1",
+          "COD:T1",
+          "COG:T1",
+          "DJI:T1",
+          "DZA:T1",
+          "EGY:T1",
+          "ERI:T1",
+          "ESH:T1",
+          "ETH:T1",
+          "GAB:T1",
+          "GHA:T1",
+          "GIN:T1",
+          "GMB:T1",
+          "GNB:T1",
+          "GNQ:T1",
+          "KEN:T1",
+          "LBR:T1",
+          "LBY:T1",
+          "LSO:T1",
+          "MAR:T1",
+          "MLI:T1",
+          "MOZ:T1",
+          "MRT:T1",
+          "MWI:T1",
+          "NAM:T1",
+          "NER:T1",
+          "NGA:T1",
+          "RWA:T1",
+          "SDN:T1",
+          "SEN:T1",
+          "SLE:T1",
+          "SOM:T1",
+          "SSD:T1",
+          "SWZ:T1",
+          "TCD:T1",
+          "TGO:T1",
+          "TUN:T1",
+          "TZA:T1",
+          "UGA:T1",
+          "ZAF:T1",
+          "ZMB:T1",
+          "ZWE:T1"
+        ],
+        "before": 9878,
+        "after": 9878,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          -1.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "BLZ:T1",
+          "CAN:T1",
+          "CRI:T1",
+          "GTM:T1",
+          "HND:T1",
+          "MEX:T1",
+          "NIC:T1",
+          "PAN:T1",
+          "SLV:T1",
+          "USA:T1"
+        ],
+        "before": 3811,
+        "after": 3810,
+        "scale": 0.9998687922319354,
+        "internal_water": 60,
+        "status": "bounded outline reuse",
+        "relaxed_solver": {
+          "method": "validated parent seed",
+          "complete": true,
+          "outline_difference": 2,
+          "outline_difference_fraction": 0.0005249343832020997,
+          "outline_difference_limit": 38
+        },
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "ARG:T1",
+          "BOL:T1",
+          "BRA:T1",
+          "BRA:T2",
+          "CHL:T1",
+          "COL:T1",
+          "ECU:T1",
+          "GUF:T1",
+          "GUY:T1",
+          "PER:T1",
+          "PRY:T1",
+          "SUR:T1",
+          "URY:T1",
+          "VEN:T1"
+        ],
+        "before": 3001,
+        "after": 3001,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          -1
+        ],
+        "centre_displacement": [
+          0.0,
+          -1.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T1"
+        ],
+        "before": 1050,
+        "after": 1068,
+        "scale": 1.008535005412731,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "JPN:T1"
+        ],
+        "before": 509,
+        "after": 697,
+        "scale": 1.170193005423063,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          1,
+          2
+        ],
+        "centre_displacement": [
+          -0.3156384505020924,
+          -0.08177905308464517
+        ]
+      },
+      {
+        "parts": [
+          "GBR:T1"
+        ],
+        "before": 439,
+        "after": 445,
+        "scale": 1.0068105213832985,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "BRN:T1",
+          "IDN:T3",
+          "MYS:T1"
+        ],
+        "before": 416,
+        "after": 166,
+        "scale": 0.6316949117560324,
+        "internal_water": 0,
+        "solver": {
+          "attempts": [
+            {
+              "status": 0,
+              "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+            },
+            {
+              "status": 0,
+              "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+            }
+          ],
+          "variables": 319,
+          "radii": {
+            "BRN:T1": 4.0,
+            "IDN:T3": 4.0,
+            "MYS:T1": 4.0
+          },
+          "complete": true
+        },
+        "status": "partitioned",
+        "translation": [
+          0,
+          2
+        ],
+        "centre_displacement": [
+          -0.30120481927701803,
+          0.13253012048193114
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T1"
+        ],
+        "before": 394,
+        "after": 432,
+        "scale": 1.04711350889367,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          2,
+          4
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T2"
+        ],
+        "before": 271,
+        "after": 377,
+        "scale": 1.1794676389961338,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -3,
+          3
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T2"
+        ],
+        "before": 220,
+        "after": 178,
+        "scale": 0.8994948077064754,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          6,
+          -5
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "MDG:T1"
+        ],
+        "before": 200,
+        "after": 200,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "JPN:T2"
+        ],
+        "before": 193,
+        "after": 34,
+        "scale": 0.4197211015767593,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "AUS:T1"
+        ],
+        "before": 177,
+        "after": 177,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "DOM:T1",
+          "HTI:T1"
+        ],
+        "before": 158,
+        "after": 158,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "TWN:T1"
+        ],
+        "before": 157,
+        "after": 157,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "LKA:T1"
+        ],
+        "before": 144,
+        "after": 144,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T4"
+        ],
+        "before": 138,
+        "after": 134,
+        "scale": 0.9854006762498304,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T5",
+          "PNG:T1"
+        ],
+        "before": 110,
+        "after": 119,
+        "scale": 1.040104889815533,
+        "internal_water": 0,
+        "solver": {
+          "attempts": [
+            {
+              "status": 0,
+              "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+            }
+          ],
+          "variables": 174,
+          "radii": {
+            "IDN:T5": 4.0,
+            "PNG:T1": 4.0
+          },
+          "complete": true
+        },
+        "status": "partitioned",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          -0.14285714285722406,
+          -0.10084033613443921
+        ]
+      },
+      {
+        "parts": [
+          "JPN:T3"
+        ],
+        "before": 102,
+        "after": 81,
+        "scale": 0.8911327886790068,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          -0.9135802469136252,
+          -0.14814814814815236
+        ]
+      },
+      {
+        "parts": [
+          "CUB:T1"
+        ],
+        "before": 73,
+        "after": 73,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "GBR:T2",
+          "IRL:T1"
+        ],
+        "before": 56,
+        "after": 53,
+        "scale": 0.9728456051340169,
+        "internal_water": 0,
+        "solver": {
+          "attempts": [
+            {
+              "status": 0,
+              "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+            }
+          ],
+          "variables": 76,
+          "radii": {
+            "GBR:T2": 4.0,
+            "IRL:T1": 4.0
+          },
+          "complete": true
+        },
+        "status": "partitioned",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.1698113207547145
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T3"
+        ],
+        "before": 46,
+        "after": 29,
+        "scale": 0.7939992333804207,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          4,
+          -6
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "JPN:T4"
+        ],
+        "before": 35,
+        "after": 24,
+        "scale": 0.828078671210825,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.33333333333325754,
+          -0.1666666666666714
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T7",
+          "TLS:T1"
+        ],
+        "before": 30,
+        "after": 47,
+        "scale": 1.2516655570345725,
+        "internal_water": 0,
+        "solver": {
+          "attempts": [
+            {
+              "status": 0,
+              "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+            }
+          ],
+          "variables": 62,
+          "radii": {
+            "IDN:T7": 4.0,
+            "TLS:T1": 4.0
+          },
+          "complete": true
+        },
+        "status": "partitioned",
+        "translation": [
+          -1,
+          1
+        ],
+        "centre_displacement": [
+          -0.06382978723399901,
+          1.680851063829806
+        ]
+      },
+      {
+        "parts": [
+          "ITA:T2"
+        ],
+        "before": 26,
+        "after": 34,
+        "scale": 1.1435437497937313,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T6"
+        ],
+        "before": 24,
+        "after": 51,
+        "scale": 1.4577379737113252,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          3,
+          -3
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "JAM:T1"
+        ],
+        "before": 21,
+        "after": 21,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T4"
+        ],
+        "before": 21,
+        "after": 32,
+        "scale": 1.2344267996967353,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          1,
+          -1
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T5"
+        ],
+        "before": 20,
+        "after": 30,
+        "scale": 1.224744871391589,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          4,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PRI:T1"
+        ],
+        "before": 19,
+        "after": 19,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T6"
+        ],
+        "before": 18,
+        "after": 8,
+        "scale": 0.6666666666666666,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          -1
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T8"
+        ],
+        "before": 17,
+        "after": 2,
+        "scale": 0.3429971702850177,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "BHR:T1"
+        ],
+        "before": 16,
+        "after": 16,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "HKG:T2"
+        ],
+        "before": 16,
+        "after": 8,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "NZL:T1"
+        ],
+        "before": 16,
+        "after": 8,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "NZL:T2"
+        ],
+        "before": 16,
+        "after": 24,
+        "scale": 1.224744871391589,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T7"
+        ],
+        "before": 12,
+        "after": 7,
+        "scale": 0.7637626158259734,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          2,
+          4
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "ITA:T3"
+        ],
+        "before": 11,
+        "after": 11,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T8"
+        ],
+        "before": 11,
+        "after": 9,
+        "scale": 0.9045340337332909,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          -6
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "ESP:T2"
+        ],
+        "before": 9,
+        "after": 6,
+        "scale": 0.816496580927726,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "ESP:T3"
+        ],
+        "before": 8,
+        "after": 8,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "CYP:T1"
+        ],
+        "before": 8,
+        "after": 8,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "MUS:T1"
+        ],
+        "before": 8,
+        "after": 8,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T9"
+        ],
+        "before": 8,
+        "after": 9,
+        "scale": 1.0606601717798212,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          1,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T9"
+        ],
+        "before": 8,
+        "after": 3,
+        "scale": 0.6123724356957945,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          2
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T10"
+        ],
+        "before": 8,
+        "after": 3,
+        "scale": 0.6123724356957945,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "JPN:T5"
+        ],
+        "before": 8,
+        "after": 10,
+        "scale": 1.118033988749895,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T11"
+        ],
+        "before": 8,
+        "after": 3,
+        "scale": 0.6123724356957945,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T12"
+        ],
+        "before": 8,
+        "after": 3,
+        "scale": 0.6123724356957945,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "FJI:T1"
+        ],
+        "before": 8,
+        "after": 8,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "USA:T2"
+        ],
+        "before": 7,
+        "after": 3,
+        "scale": 0.6546536707079771,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "COM:T1"
+        ],
+        "before": 6,
+        "after": 6,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "REU:T1"
+        ],
+        "before": 6,
+        "after": 6,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T10"
+        ],
+        "before": 6,
+        "after": 2,
+        "scale": 0.5773502691896257,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -4,
+          -4
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T13"
+        ],
+        "before": 6,
+        "after": 1,
+        "scale": 0.408248290463863,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T14"
+        ],
+        "before": 6,
+        "after": 4,
+        "scale": 0.816496580927726,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "SLB:T1"
+        ],
+        "before": 6,
+        "after": 6,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T11"
+        ],
+        "before": 5,
+        "after": 2,
+        "scale": 0.6324555320336759,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -4,
+          -4
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T12"
+        ],
+        "before": 5,
+        "after": 6,
+        "scale": 1.0954451150103321,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          4
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "USA:T3"
+        ],
+        "before": 4,
+        "after": 7,
+        "scale": 1.3228756555322954,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "TTO:T1"
+        ],
+        "before": 4,
+        "after": 7,
+        "scale": 1.3228756555322954,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "TTO:T2"
+        ],
+        "before": 4,
+        "after": 1,
+        "scale": 0.5,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "VCT:T1"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "BRB:T1"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "CPV:T1"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "ESP:T4"
+        ],
+        "before": 4,
+        "after": 7,
+        "scale": 1.3228756555322954,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "GBR:T3"
+        ],
+        "before": 4,
+        "after": 1,
+        "scale": 0.5,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "STP:T1"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "FRA:T2"
+        ],
+        "before": 4,
+        "after": 2,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "GRC:T2"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          -1.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "MYT:T1"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "MDV:T1"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T15"
+        ],
+        "before": 4,
+        "after": 5,
+        "scale": 1.118033988749895,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T16"
+        ],
+        "before": 4,
+        "after": 11,
+        "scale": 1.6583123951777,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          1
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T17"
+        ],
+        "before": 4,
+        "after": 2,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T18"
+        ],
+        "before": 4,
+        "after": 2,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T13"
+        ],
+        "before": 4,
+        "after": 1,
+        "scale": 0.5,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -4,
+          -5
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T14"
+        ],
+        "before": 4,
+        "after": 1,
+        "scale": 0.5,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -3,
+          -2
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T15"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          -1,
+          5
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T16"
+        ],
+        "before": 4,
+        "after": 5,
+        "scale": 1.118033988749895,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          1,
+          -8
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T17"
+        ],
+        "before": 4,
+        "after": 1,
+        "scale": 0.5,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          -2
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T18"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          -2
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T19"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          2,
+          12
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "JPN:T6"
+        ],
+        "before": 4,
+        "after": 3,
+        "scale": 0.8660254037844386,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          -1.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T19"
+        ],
+        "before": 4,
+        "after": 2,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T20"
+        ],
+        "before": 4,
+        "after": 8,
+        "scale": 1.4142135623730951,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          4,
+          -4
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T20"
+        ],
+        "before": 4,
+        "after": 2,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T21"
+        ],
+        "before": 4,
+        "after": 1,
+        "scale": 0.5,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T22"
+        ],
+        "before": 4,
+        "after": 2,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "GUM:T1"
+        ],
+        "before": 4,
+        "after": 4,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T23"
+        ],
+        "before": 3,
+        "after": 2,
+        "scale": 0.816496580927726,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "JPN:T7"
+        ],
+        "before": 3,
+        "after": 3,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          1,
+          0
+        ],
+        "centre_displacement": [
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "USA:T4"
+        ],
+        "before": 2,
+        "after": 4,
+        "scale": 1.4142135623730951,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "ABW:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "CUW:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "LCA:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "MTQ:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "GLP:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "ISL:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "ESP:T5"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "MLT:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "GRC:T3"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "SYC:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T24"
+        ],
+        "before": 2,
+        "after": 1,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "IDN:T25"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T21"
+        ],
+        "before": 2,
+        "after": 1,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -4,
+          -4
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T22"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          -2,
+          6
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T23"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          -2,
+          9
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T24"
+        ],
+        "before": 2,
+        "after": 1,
+        "scale": 0.7071067811865476,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          1,
+          -3
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PHL:T25"
+        ],
+        "before": 2,
+        "after": 36,
+        "scale": 4.242640687119285,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          1,
+          1
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "FSM:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "JPN:T8"
+        ],
+        "before": 2,
+        "after": 3,
+        "scale": 1.224744871391589,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          -1,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "JPN:T9"
+        ],
+        "before": 2,
+        "after": 3,
+        "scale": 1.224744871391589,
+        "internal_water": 0,
+        "status": "single-part outline",
+        "translation": [
+          0,
+          1
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "NCL:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          1
+        ],
+        "centre_displacement": [
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "parts": [
+          "VUT:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "PYF:T1"
+        ],
+        "before": 2,
+        "after": 2,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "BHS:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "KNA:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "ATG:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "GRD:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "DMA:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "GRL:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "FRO:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "MHL:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "TUV:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "WSM:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "TON:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "KIR:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "parts": [
+          "COK:T1"
+        ],
+        "before": 1,
+        "after": 1,
+        "scale": 1.0,
+        "internal_water": 0,
+        "status": "unchanged budgets",
+        "translation": [
+          0,
+          0
+        ],
+        "centre_displacement": [
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "inputs": {
+      "data/cartogram.csv": "a08f41f7b3f8912e3956c8882a255a0e6ea60b5a720216a0746416ba5d62c257",
+      "output/auto-cartogram/owid-borneo-outline-v1/cells.csv": "56c77c05d56358b77036ab6833d04a92f83d72047d2c4b787e8afe24a764890e",
+      "output/auto-cartogram/owid-borneo-outline-v1/matches.csv": "facdf5eddd1f1dbd090c9fe7838900284386382589f606567958a16f15b2503e",
+      "output/auto-cartogram/owid-borneo-outline-v1/report.json": "9b2ad57bf1579631f0a5ed8ce397a0842a77eb20a48856c7c1fece3b0b211619",
+      "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/owid_landmass_world.py": "be8d0d5e77612e3b59395206b4221f4030c44bcfd56ad8c7097718df34256f09",
+      "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/partition_landmass.py": "40ba0b8b9a742c51b2e0069112a99c118f645da743c32e85548a8a491536366a",
+      "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/fit_local_coasts.py": "9d42bca12deb9b031b366c5413091e8da3454ce2294e2b0596d079a7bf0c3105",
+      "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+      "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/relax_owid_islands.py": "d503892f5497e356573dea770c0d043dde3bb677cee5eda6044775c8712b19aa",
+      "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3"
+    },
+    "max_axis_shift": 24,
+    "seconds_per_partition": 90.0,
+    "candidate_radius": 4,
+    "outline_tolerance": 0.01,
+    "parts": 286,
+    "total_tiles": 54967,
+    "enclosed_water_cells": 64,
+    "released_inter_landmass_gap_cells": 108
+  }
+}
