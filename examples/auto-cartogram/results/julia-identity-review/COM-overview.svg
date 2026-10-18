@@ -1,0 +1,45 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1400 540' width='1400' height='540'><rect width='100%' height='100%' fill='#faf9f6'/><g font-family='sans-serif' fill='#222'>
+<text x='20' y='28' font-size='21'>COM: original OWID</text><text x='720' y='28' font-size='21'>Saved layout (unchanged)</text>
+<defs><clipPath id='original'><rect x='20' y='55' width='660' height='460'/></clipPath></defs><g clip-path='url(#original)'>
+<rect x='261.5384615384613' y='373.4615384615386' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M261.5384615384613,461.9230769230773 L350.0,461.9230769230773' stroke='#555' stroke-width='0.7'/>
+<path d='M261.5384615384613,373.4615384615386 L261.5384615384613,461.9230769230773' stroke='#555' stroke-width='0.7'/>
+<rect x='261.5384615384613' y='285.0' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M350.0,285.0 L261.5384615384613,285.0' stroke='#555' stroke-width='0.7'/>
+<path d='M261.5384615384613,285.0 L261.5384615384613,373.4615384615386' stroke='#555' stroke-width='0.7'/>
+<rect x='350.0' y='373.4615384615386' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M350.0,461.9230769230773 L438.4615384615387,461.9230769230773' stroke='#555' stroke-width='0.7'/>
+<path d='M438.4615384615387,461.9230769230773 L438.4615384615387,373.4615384615386' stroke='#555' stroke-width='0.7'/>
+<rect x='350.0' y='285.0' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M438.4615384615387,373.4615384615386 L438.4615384615387,285.0' stroke='#555' stroke-width='0.7'/>
+<rect x='350.0' y='196.53846153846135' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M438.4615384615387,285.0 L438.4615384615387,196.53846153846135' stroke='#555' stroke-width='0.7'/>
+<path d='M350.0,196.53846153846135 L350.0,285.0' stroke='#555' stroke-width='0.7'/>
+<rect x='350.0' y='108.0769230769227' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M438.4615384615387,196.53846153846135 L438.4615384615387,108.0769230769227' stroke='#555' stroke-width='0.7'/>
+<path d='M438.4615384615387,108.0769230769227 L350.0,108.0769230769227' stroke='#555' stroke-width='0.7'/>
+<path d='M350.0,108.0769230769227 L350.0,196.53846153846135' stroke='#555' stroke-width='0.7'/>
+<text x='364.74358974359143' y='314.48717948718036' text-anchor='middle' font-size='12' paint-order='stroke' stroke='white' stroke-width='3' fill='#111'>T1</text>
+</g>
+<defs><clipPath id='saved'><rect x='720' y='55' width='660' height='460'/></clipPath></defs><g clip-path='url(#saved)'>
+<rect x='961.5384615384613' y='373.4615384615386' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M961.5384615384613,461.9230769230773 L1050.0,461.9230769230773' stroke='#555' stroke-width='0.7'/>
+<path d='M961.5384615384613,373.4615384615386 L961.5384615384613,461.9230769230773' stroke='#555' stroke-width='0.7'/>
+<rect x='961.5384615384613' y='285.0' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M1050.0,285.0 L961.5384615384613,285.0' stroke='#555' stroke-width='0.7'/>
+<path d='M961.5384615384613,285.0 L961.5384615384613,373.4615384615386' stroke='#555' stroke-width='0.7'/>
+<rect x='1050.0' y='373.4615384615386' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M1050.0,461.9230769230773 L1138.4615384615386,461.9230769230773' stroke='#555' stroke-width='0.7'/>
+<path d='M1138.4615384615386,461.9230769230773 L1138.4615384615386,373.4615384615386' stroke='#555' stroke-width='0.7'/>
+<rect x='1050.0' y='285.0' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M1138.4615384615386,373.4615384615386 L1138.4615384615386,285.0' stroke='#555' stroke-width='0.7'/>
+<rect x='1050.0' y='196.53846153846135' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M1138.4615384615386,285.0 L1138.4615384615386,196.53846153846135' stroke='#555' stroke-width='0.7'/>
+<path d='M1050.0,196.53846153846135 L1050.0,285.0' stroke='#555' stroke-width='0.7'/>
+<rect x='1050.0' y='108.0769230769227' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>COM:T1</title></rect>
+<path d='M1138.4615384615386,196.53846153846135 L1138.4615384615386,108.0769230769227' stroke='#555' stroke-width='0.7'/>
+<path d='M1138.4615384615386,108.0769230769227 L1050.0,108.0769230769227' stroke='#555' stroke-width='0.7'/>
+<path d='M1050.0,108.0769230769227 L1050.0,196.53846153846135' stroke='#555' stroke-width='0.7'/>
+<text x='1064.7435897435914' y='314.48717948718036' text-anchor='middle' font-size='12' paint-order='stroke' stroke='white' stroke-width='3' fill='#111'>T1</text>
+</g>
+</g></svg>

@@ -98,6 +98,51 @@ uses this saved table, not `/usr/share/iso-codes`.
 - Ran the world audit twice. Candidate CSV files were identical.
 - Saved the audit under `research/identity-audit/`.
 
+## Visual review of changed identities
+
+[Open the review page](../examples/auto-cartogram/results/julia-identity-review/index.html).
+It has 44 comparisons across nine country scopes. Each card shows:
+
+1. The original OWID piece.
+2. The saved, resized piece. This layout has not changed.
+3. The saved source component, or the anchor of an old fallback group.
+4. The new automatic source candidate.
+
+The two tile panels share a scale. The two main geography panels share another
+scale. Detail insets use their own scales. Other countries are omitted from
+the context. Click an image to open the SVG. Coordinate links open a geographic
+map. The population figures are component populations, not fallback-group totals.
+
+Review physical identities first, not the proposed tile counts. Use a piece ID
+such as `IDN:T6` and report “saved”, “candidate”, or “neither”. These observations
+should become regression tests for general rules, not runtime overrides.
+
+Generate the review with Julia:
+
+```sh
+julia --project=owid-layout owid-layout/bin/review-identities.jl \
+  data/cartogram.csv \
+  output/auto-cartogram/owid-scope-split-v3/cells.csv \
+  examples/auto-cartogram/results/owid-scope-splits/matches.csv \
+  owid-layout/research/identity-audit/candidates.csv \
+  output/auto-cartogram/world-dissolved/components.csv \
+  output/auto-cartogram/world-dissolved/polygons.geojson \
+  output/auto-cartogram/julia-identity-review-new
+```
+
+The renderer writes SVG and HTML directly. No Python or image converter is
+required. It records input hashes and refuses an existing output directory.
+
+Review work log:
+
+- Added country overviews and a comparison for every changed candidate.
+- Checked rendered images for Spain, Indonesia, the Philippines, Brazil, and
+  Palestine, including a fallback group and a missing candidate.
+- Moved detail insets below the maps so they cannot hide geographic context.
+- Added label spacing and location markers for very small components.
+- Added 13 graphics tests. The full Julia suite now passes 94 tests.
+- No new identity is approved by these rendering checks.
+
 ## Remaining work
 
 The cost weights were developed with these checks. Passing them is not an

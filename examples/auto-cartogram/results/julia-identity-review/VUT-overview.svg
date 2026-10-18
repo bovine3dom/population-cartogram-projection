@@ -1,0 +1,25 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1400 540' width='1400' height='540'><rect width='100%' height='100%' fill='#faf9f6'/><g font-family='sans-serif' fill='#222'>
+<text x='20' y='28' font-size='21'>VUT: original OWID</text><text x='720' y='28' font-size='21'>Saved layout (unchanged)</text>
+<defs><clipPath id='original'><rect x='20' y='55' width='660' height='460'/></clipPath></defs><g clip-path='url(#original)'>
+<rect x='305.7692307692307' y='285.0' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>VUT:T1</title></rect>
+<path d='M305.7692307692307,373.4615384615386 L394.23076923076934,373.4615384615386' stroke='#555' stroke-width='0.7'/>
+<path d='M394.23076923076934,373.4615384615386 L394.23076923076934,285.0' stroke='#555' stroke-width='0.7'/>
+<path d='M305.7692307692307,285.0 L305.7692307692307,373.4615384615386' stroke='#555' stroke-width='0.7'/>
+<rect x='305.7692307692307' y='196.53846153846135' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>VUT:T1</title></rect>
+<path d='M394.23076923076934,285.0 L394.23076923076934,196.53846153846135' stroke='#555' stroke-width='0.7'/>
+<path d='M394.23076923076934,196.53846153846135 L305.7692307692307,196.53846153846135' stroke='#555' stroke-width='0.7'/>
+<path d='M305.7692307692307,196.53846153846135 L305.7692307692307,285.0' stroke='#555' stroke-width='0.7'/>
+<text x='350.0' y='285.0' text-anchor='middle' font-size='12' paint-order='stroke' stroke='white' stroke-width='3' fill='#111'>T1</text>
+</g>
+<defs><clipPath id='saved'><rect x='720' y='55' width='660' height='460'/></clipPath></defs><g clip-path='url(#saved)'>
+<rect x='1005.7692307692307' y='285.0' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>VUT:T1</title></rect>
+<path d='M1005.7692307692307,373.4615384615386 L1094.2307692307693,373.4615384615386' stroke='#555' stroke-width='0.7'/>
+<path d='M1094.2307692307693,373.4615384615386 L1094.2307692307693,285.0' stroke='#555' stroke-width='0.7'/>
+<path d='M1005.7692307692307,285.0 L1005.7692307692307,373.4615384615386' stroke='#555' stroke-width='0.7'/>
+<rect x='1005.7692307692307' y='196.53846153846135' width='88.46153846153865' height='88.46153846153865' fill='#eaa35e'><title>VUT:T1</title></rect>
+<path d='M1094.2307692307693,285.0 L1094.2307692307693,196.53846153846135' stroke='#555' stroke-width='0.7'/>
+<path d='M1094.2307692307693,196.53846153846135 L1005.7692307692307,196.53846153846135' stroke='#555' stroke-width='0.7'/>
+<path d='M1005.7692307692307,196.53846153846135 L1005.7692307692307,285.0' stroke='#555' stroke-width='0.7'/>
+<text x='1050.0' y='285.0' text-anchor='middle' font-size='12' paint-order='stroke' stroke='white' stroke-width='3' fill='#111'>T1</text>
+</g>
+</g></svg>
