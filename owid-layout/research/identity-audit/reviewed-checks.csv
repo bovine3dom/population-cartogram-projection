@@ -1,0 +1,25 @@
+target_id,name,expected,actual,passed
+FRA:T2,Corsica,FXX:b04574696bff21bc,FXX:b04574696bff21bc,true
+GBR:T3,Isle of Wight,ENG:bf2fff53240de3db,ENG:bf2fff53240de3db,true
+GBR:T2,Northern Ireland,NIR:69fa50e543fa7c66,NIR:69fa50e543fa7c66,true
+ITA:T2,Sicily,ITA:e7ab63898f24eb00,ITA:e7ab63898f24eb00,true
+ITA:T3,Sardinia,ITA:ebecacbac755556c,ITA:ebecacbac755556c,true
+JPN:T1,Honshu,JPN:f07fed45233efce3,JPN:f07fed45233efce3,true
+JPN:T2,Hokkaido,JPN:c1b6e25b62179c19,JPN:c1b6e25b62179c19,true
+JPN:T3,Kyushu,JPN:3876400cea5031e2,JPN:3876400cea5031e2,true
+JPN:T4,Shikoku,JPN:ec0a7dcff3300192,JPN:ec0a7dcff3300192,true
+IDN:T1,Java,IDN:fecb2bac3d81ef76,IDN:fecb2bac3d81ef76,true
+IDN:T2,Sumatra,IDN:829c07ff03d97c10,IDN:829c07ff03d97c10,true
+IDN:T3,Indonesian Borneo,IDN:51a10640dee7162b,IDN:51a10640dee7162b,true
+IDN:T4,Sulawesi,IDN:7c3797a36dd1a69b,IDN:7c3797a36dd1a69b,true
+JPN:T5,Okinawa,JPN:dd1f679d5c572195,JPN:dd1f679d5c572195,true
+USA:T1,Contiguous US,USA:90107a05206832e4,USA:90107a05206832e4,true
+USA:T2,Hawaii (Big Island),USA:ed809571c4cb473f,USA:ed809571c4cb473f,true
+USA:T3,Oahu,USA:63257470544bea15,USA:63257470544bea15,true
+USA:T4,Alaska,USA:13c14a072880aac5,USA:13c14a072880aac5,true
+MYS:T1,Malaysian Borneo,MYS:0abe504273f2e4bd,MYS:0abe504273f2e4bd,true
+MYS:T2,Peninsular Malaysia,MYS:4035fe8bf71b03f5,MYS:4035fe8bf71b03f5,true
+NZL:T1,South Island,NZL:979ee6939c934325,NZL:979ee6939c934325,true
+NZL:T2,North Island,NZL:8f99f1c50259113a,NZL:8f99f1c50259113a,true
+TTO:T1,Trinidad,TTO:c755d5dbf151e3d4,TTO:c755d5dbf151e3d4,true
+TTO:T2,Tobago,TTO:bff519111239a900,TTO:bff519111239a900,true

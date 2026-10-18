@@ -1,0 +1,25 @@
+country,target_part,component_id,name
+FRA,T2,FXX:b04574696bff21bc,Corsica
+GBR,T3,ENG:bf2fff53240de3db,Isle of Wight
+GBR,T2,NIR:69fa50e543fa7c66,Northern Ireland
+ITA,T2,ITA:e7ab63898f24eb00,Sicily
+ITA,T3,ITA:ebecacbac755556c,Sardinia
+JPN,T1,JPN:f07fed45233efce3,Honshu
+JPN,T2,JPN:c1b6e25b62179c19,Hokkaido
+JPN,T3,JPN:3876400cea5031e2,Kyushu
+JPN,T4,JPN:ec0a7dcff3300192,Shikoku
+IDN,T1,IDN:fecb2bac3d81ef76,Java
+IDN,T2,IDN:829c07ff03d97c10,Sumatra
+IDN,T3,IDN:51a10640dee7162b,Indonesian Borneo
+IDN,T4,IDN:7c3797a36dd1a69b,Sulawesi
+JPN,T5,JPN:dd1f679d5c572195,Okinawa
+USA,T1,USA:90107a05206832e4,Contiguous US
+USA,T2,USA:ed809571c4cb473f,Hawaii (Big Island)
+USA,T3,USA:63257470544bea15,Oahu
+USA,T4,USA:13c14a072880aac5,Alaska
+MYS,T1,MYS:0abe504273f2e4bd,Malaysian Borneo
+MYS,T2,MYS:4035fe8bf71b03f5,Peninsular Malaysia
+NZL,T1,NZL:979ee6939c934325,South Island
+NZL,T2,NZL:8f99f1c50259113a,North Island
+TTO,T1,TTO:c755d5dbf151e3d4,Trinidad
+TTO,T2,TTO:bff519111239a900,Tobago
