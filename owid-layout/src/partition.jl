@@ -6,7 +6,8 @@ Variable order, solver threads, seed, node budget, and cut rounds are fixed.
 No wall-clock cutoff is used. A feasible incumbent must pass the same checks.
 """
 function partition_groups(reference,footprint,budgets; required=nothing,outside=Dict(),
-                          preferred=reference,inland=nothing,radius=3.,node_limit=100_000,rounds=80)
+                          preferred=reference,inland=nothing,radius=3.,node_limit=100_000,rounds=80,
+                          perimeter_weight=.25,cell_costs=nothing,free_outside_contacts=false)
     labels=sort!(collect(keys(reference)));points=sort!(collect(footprint))
     Set(labels)==Set(keys(budgets)) || error("Partition budget labels differ")
     sum(values(budgets))==length(points) || error("Partition count differs from footprint")
@@ -17,7 +18,10 @@ function partition_groups(reference,footprint,budgets; required=nothing,outside=
     n=length(points);k=length(labels);lookup=Dict(p=>i for (i,p) in enumerate(points))
     centroid=cell_centre(Set(p for ps in values(reference) for p in ps));scale=sqrt(n/sum(length,values(reference)))
     guide=Dict(g=>[ntuple(a->centroid[a]+scale*(p[a]-centroid[a]),2) for p in preferred[g]] for g in labels)
-    distances=[minimum(sum((p[a]-q[a])^2 for a in 1:2) for q in guide[g]) for p in points,g in labels]
+    distances=isnothing(cell_costs) ? [minimum(sum((p[a]-q[a])^2 for a in 1:2) for q in guide[g]) for p in points,g in labels] : cell_costs
+    size(distances)==(n,k) && all(isfinite,distances) || error("Invalid cell costs")
+    isfinite(perimeter_weight) && perimeter_weight>=0 || error("Invalid perimeter weight")
+    free_outside_contacts && any(!all(g in labels for g in pair) for pair in required) && error("Free outside contacts require an internal-only graph")
     allowed=distances .<= minimum(distances;dims=2) .+ radius^2
     # Increase candidates deterministically if a label has too little capacity.
     for j in 1:k
@@ -63,9 +67,9 @@ function partition_groups(reference,footprint,budgets; required=nothing,outside=
                 allowed[i,j] || allowed[h,j] || continue
                 edge=JuMP.@variable(model,lower_bound=0)
                 JuMP.@constraint(model,edge>=x[i,j]-x[h,j]);JuMP.@constraint(model,edge>=x[h,j]-x[i,j])
-                JuMP.add_to_expression!(objective,.25,edge)
+                JuMP.add_to_expression!(objective,perimeter_weight,edge)
             end
-        elseif haskey(outside,q)
+        elseif haskey(outside,q) && !free_outside_contacts
             for j in 1:k
                 allowed[i,j] || continue
                 labels[j]==outside[q] && continue
@@ -113,8 +117,11 @@ function partition_groups(reference,footprint,budgets; required=nothing,outside=
         end
         broken && continue
         all(length(result[g])==budgets[g] for g in labels) || error("Partition count check failed")
-        edge_contacts(merge(copy(outside),group_owners(result)))==required || error("Partition contact check failed")
-        return result,(complete=true,attempts=attempts,variables=JuMP.num_variables(model),node_limit=node_limit,radius=radius)
+        actual=edge_contacts(merge(copy(outside),group_owners(result)))
+        free_outside_contacts && filter!(pair->all(g in labels for g in pair),actual)
+        actual==required || error("Partition contact check failed")
+        return result,(complete=true,attempts=attempts,variables=JuMP.num_variables(model),node_limit=node_limit,radius=radius,
+                       perimeter_weight=perimeter_weight,free_outside_contacts=free_outside_contacts)
     end
     nothing,(complete=false,attempts=attempts,reason="Connectivity cut limit")
 end

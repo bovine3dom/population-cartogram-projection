@@ -65,6 +65,13 @@ end
     again,_=OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>3))
     @test again==result
     @test_throws ErrorException OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>4))
+    outside=Dict((2,0)=>"c",(2,1)=>"c")
+    fitted,check=OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>3);
+        outside,required=Set([("a","b")]),free_outside_contacts=true,perimeter_weight=2.,cell_costs=zeros(4,2))
+    @test check.complete && check.free_outside_contacts
+    @test OWIDLayout.edge_contacts(OWIDLayout.group_owners(fitted))==Set([("a","b")])
+    @test_throws ErrorException OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>3);cell_costs=zeros(3,2))
+    @test_throws ErrorException OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>3);perimeter_weight=-1.)
     remaining,seed=OWIDLayout.seed_scope(Set((x,y) for x in 1:4 for y in 1:4),5,(1.,1.))
     @test length(seed)==5 && length(remaining)==11
     @test length(OWIDLayout.connected_parts(seed;diagonals=true))==1
