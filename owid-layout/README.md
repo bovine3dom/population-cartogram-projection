@@ -2,10 +2,11 @@
 
 ## Status
 
-This project contains an automatic identity baseline and an artwork-group
-audit. It does not yet build or replace a layout. It has no Python runtime calls.
-The baseline matches edge-connected pieces. The new groups also include corner
-contact within each country. Group-level source matching is not yet implemented.
+This project contains an automatic identity baseline, a corner-group audit,
+and a Julia population-resize trial. It has no Python runtime calls.
+The [latest trial](group-resize.md) rematches the ten corner-affected scopes and
+resizes their groups. It produces a separate layout, not a default replacement.
+It still uses existing source intermediates and retains other scopes' assignments.
 
 The matcher recovers all 24 checked island identities without overrides.
 These checks include Alaska, Oahu, the Big Island, and the main Japanese islands.
@@ -32,7 +33,7 @@ dc833896648ddf701c655e418fab724daeb866b3eb164983d7d5bb7d225e611c
 
 No existing layout, Python program, or H3-MON export has changed.
 
-## Method
+## Original identity baseline
 
 1. Read OWID cells. Use the last row at duplicate coordinates, as in the saved
    layout. Find connected pieces and give them stable IDs.
@@ -130,7 +131,9 @@ A connected artwork group is not necessarily one real island. For example,
 corner chains join all Japanese pieces and both Hawaiian pieces. Matching must
 therefore allow several geographic source components per artwork group. Do not
 pass the new groups to the old one-to-one matcher and call each group an island.
-The edge-connected children remain available for later internal allocation.
+The edge-connected children remain available as identity evidence.
+The [population-resize trial](group-resize.md) now uses several source anchors
+per group without giving each child a separate tile budget.
 
 The diagrams mark original corner joins in red. The saved layout is shown only
 for comparison and is unchanged. Its later resizing can separate child pieces;
@@ -207,14 +210,13 @@ scores are not confidence probabilities. Across the 286 original OWID pieces,
 fallback groups, not island identities. These differences need review, especially
 in Indonesia and the Philippines; they are not 44 proven corrections.
 
-This version does not yet use source-border evidence or reject weak identities.
+The original identity baseline does not use source-border evidence or reject weak identities.
 Surplus target pieces receive empty candidate IDs. Unmatched source population
 is not yet allocated. Pair exchanges cannot introduce an unused source after
 linear assignment. These are limits to address before using the candidates
 for tile budgets.
 
-Next, match multiple source components to the corner-connected artwork groups.
-Then test the other world identities and unmatched-component rules. Port population allocation, shared-landmass resizing, placement, and
-validation. Finally, replace the existing component preparation with Julia
-input processing from Natural Earth and Kontur. Until then, the audit uses
-existing component intermediates; it is not a raw-input production pipeline.
+Next, review the new population-resize images and test the other world identities.
+Extend the Julia run to all scopes, port the shared-landmass border solver,
+and replace component preparation with Julia processing from Natural Earth and
+Kontur. The current trial is not yet a raw-input production pipeline.

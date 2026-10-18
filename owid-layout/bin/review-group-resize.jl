@@ -19,10 +19,10 @@ page=["""<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewpo
 <title>Corner groups: population resize</title><style>body{font:17px system-ui;max-width:1550px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#08659d}nav a{display:inline-block;margin:.5rem}table{border-collapse:collapse}td,th{padding:.35rem .7rem;text-align:left;border-bottom:1px solid #ddd}p{max-width:90ch}.note{padding:1rem;background:#fff0d5}</style>
 <h1>Corner groups: population resize</h1>
 <p>This is a separate Julia trial. The saved layout and H3-MON exports have not changed.
-Population matching was rerun for the ten scopes affected by corner grouping. All other assignments remain from the saved layout.</p>
-<p><strong>Checks:</strong> 54,967 land tiles; exact country totals; 18 groups change tile count;
-all shared group borders retained; all 64 enclosed water cells retained at their original positions.
-The layout has 244 groups, including the three added population scopes.</p>
+Population matching was rerun for $(length(scopes)) scopes affected by corner grouping. All other assignments remain from the saved layout.</p>
+<p><strong>Checks:</strong> $(report["land_tiles"]) land tiles; exact country totals; $(length(report["fit"]["changed_groups"])) groups change tile count;
+all shared group borders retained; all $(report["fit"]["water_after"]) enclosed water cells retained at their original positions.
+The layout has $(report["groups"]) groups, including the added population scopes.</p>
 <p>Each artwork group can receive several source components. Strong child matches add source anchors but do not receive separate tile budgets.
 Unmatched source components join the nearest source anchor. Weak target groups share a nearby population pool.
 The minimum is one tile per existing G group, not one tile per old T fragment.</p>
@@ -30,7 +30,7 @@ The minimum is one tile per existing G group, not one tile per old T fragment.</
 Source-distance fallback is approximate. Source preparation and unchanged scopes still use the earlier pipeline.
 Shared borders are held in place during local coast edits; this is not a new shared-island border fit.</div>
 <p><strong>Read the images:</strong> The two tile panels share a scale. The geographic panel uses a separate scale.
-Colours identify population pools in all three panels. Labels identify G groups. Fallback target groups can share a colour.
+Colours identify the new population pools in all three panels. Labels identify G groups. Fallback target groups can share a colour.
 Only the selected country is shown. Empty space stays empty; no water tiles are assigned to countries.</p>
 <p><a href='../owid-scope-splits/index.html'>Saved layout</a> · <a href='../julia-corner-groups/index.html'>Corner-group definitions</a> ·
 <a href='budgets.csv'>Budgets</a> · <a href='source-assignments.csv'>Source assignments</a> · <a href='membership.csv'>Old T-to-G IDs</a> ·
