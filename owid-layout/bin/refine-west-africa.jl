@@ -115,7 +115,7 @@ for radius in (reseed || local_search ? (8.,) : (8.,16.))
             open(io->JSON.print(io,progress),joinpath(output,"candidate-report.json"),"w")
             println("Disconnected countries: ",JSON.json(progress["disconnected"]));flush(stdout)
         end
-        result,check=O.seed_region(reference,outside,costs;inland,rounds=endswith(mode,"-diagnostic") ? 1 : 100,checkpoint)
+        result,check=O.seed_region(reference,outside,costs;inland,rounds=endswith(mode,"-diagnostic") ? 1 : 100,checkpoint,monotone=centre_cost)
         if result!==nothing && (endswith(mode,"-reseed") || endswith(mode,"-refined"))
             report["seed_audit"]=audit(merge(copy(outside),O.group_owners(result)))
             result,check=O.exchange_region(result,outside,required,costs;inland)

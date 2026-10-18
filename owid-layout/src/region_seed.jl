@@ -3,7 +3,7 @@
 Exact counts, coast status, and connectivity are hard constraints. Neighbour
 relationships are deliberately left for the geographic audit and later edits.
 """
-function seed_region(reference,outside,costs;inland=Set{String}(),node_limit=100,rounds=20,checkpoint=(result,iteration)->nothing)
+function seed_region(reference,outside,costs;inland=Set{String}(),node_limit=100,rounds=20,checkpoint=(result,iteration)->nothing,monotone=false)
     labels=sort!(collect(keys(reference)));points=sort!([p for ps in values(reference) for p in ps])
     lookup=Dict(p=>i for (i,p) in enumerate(points));occupied=union(Set(points),Set(keys(outside)))
     water=enclosed_cells(occupied)
@@ -25,7 +25,7 @@ function seed_region(reference,outside,costs;inland=Set{String}(),node_limit=100
         end
     end
     JuMP.@objective(model,Min,sum(costs[i,j]*x[i,j] for i in 1:n,j in 1:k))
-    attempts=NamedTuple[]
+    attempts=NamedTuple[];roots=Dict{String,Tuple{Int,Int}}()
     for iteration in 1:rounds
         JuMP.optimize!(model)
         feasible=JuMP.has_values(model)
@@ -38,6 +38,32 @@ function seed_region(reference,outside,costs;inland=Set{String}(),node_limit=100
             components=connected_parts(result[g];diagonals=true)
             length(components)<=1 && continue
             broken=true
+            if monotone
+                # Pin a cell in the largest candidate component, not in OWID.
+                # A descending graph-distance path gives a stronger shape prior
+                # than connectivity alone. It cannot make a disconnected island.
+                main=first(sort(components;by=ps->(-length(ps),minimum(ps))))
+                centre=cell_centre(main)
+                root=first(sort!(collect(main);by=p->(sum((p[k]-centre[k])^2 for k in 1:2),p)))
+                roots[g]=root;JuMP.fix(x[lookup[root],j],1;force=true)
+                distance=Dict(root=>0);queue=[root]
+                for p in queue,(dx,dy) in CORNER_OFFSETS
+                    q=(p[1]+dx,p[2]+dy)
+                    if haskey(lookup,q) && !haskey(distance,q)
+                        distance[q]=distance[p]+1;push!(queue,q)
+                    end
+                end
+                for (i,p) in enumerate(points)
+                    p==root && continue
+                    if !haskey(distance,p)
+                        JuMP.fix(x[i,j],0;force=true);continue
+                    end
+                    nearer=[lookup[q] for (dx,dy) in CORNER_OFFSETS for q in [(p[1]+dx,p[2]+dy)] if get(distance,q,typemax(Int))<distance[p]]
+                    JuMP.@constraint(model,x[i,j]<=sum(x[h,j] for h in nearer))
+                end
+                println("Added monotone connection constraints for $g at $root");flush(stdout)
+                continue
+            end
             for component in components
                 boundary=Set((p[1]+dx,p[2]+dy) for p in component for (dx,dy) in CORNER_OFFSETS if (p[1]+dx,p[2]+dy) ∉ component && haskey(lookup,(p[1]+dx,p[2]+dy)))
                 # This component is smaller than the country's fixed budget.
@@ -48,7 +74,7 @@ function seed_region(reference,outside,costs;inland=Set{String}(),node_limit=100
         checkpoint(result,iteration)
         broken && continue
         all(length(result[g])==length(reference[g]) for g in labels) || error("Seed budget mismatch")
-        return result,(complete=true,method="geographic region seed",attempts=attempts)
+        return result,(complete=true,method="geographic region seed",attempts=attempts,monotone_roots=roots)
     end
     nothing,(complete=false,attempts=attempts)
 end

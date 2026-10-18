@@ -76,6 +76,9 @@ end
     connected,check=OWIDLayout.seed_region(split,Dict(),fragmented;rounds=2)
     @test check.complete
     @test length(OWIDLayout.connected_parts(connected["a"];diagonals=true))==1
+    rooted,check=OWIDLayout.seed_region(split,Dict(),fragmented;rounds=2,monotone=true)
+    @test check.complete && haskey(check.monotone_roots,"a")
+    @test length(OWIDLayout.connected_parts(rooted["a"];diagonals=true))==1
 end
 
 @testset "Shared outline partition" begin
