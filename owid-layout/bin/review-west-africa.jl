@@ -31,7 +31,9 @@ page=["""<!doctype html><html lang='en'><meta charset='utf-8'><meta name='viewpo
 <h1>West Africa: geographic border trial</h1>
 <p>This is a separate experiment. The approved clean layout and H3-MON exports have not changed.
 Country tile counts and the regional outline are fixed. Colours identify countries; grey countries are outside the trial.
-Red lines mark shared tile edges between countries that do not share a border in Natural Earth.</p>
+Red lines mark shared tile edges between countries that do not share a border in Natural Earth.
+Missing neighbours appear in the tables, not as red lines. BFA is Burkina Faso; BEN is Benin;
+TGO is Togo; NER is Niger; NGA is Nigeria.</p>
 <p class='note'>The African mainland currently has no enclosed empty cells: this trial does not add lakes.
 Exact trials require all Natural Earth neighbour pairs inside the region, with no extra pairs.
 Local exchanges and penalized fits can retain wrong contacts. Geographic seeds do not enforce neighbours.

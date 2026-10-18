@@ -10,6 +10,9 @@ It is a separate review candidate, not a default replacement.
 The earlier [corner-group trial](group-resize.md) remains available. That trial
 uses saved source files and assignments. The clean build does not.
 
+The [West Africa experiment](west-africa.md) tests mainland border changes against
+Natural Earth. It is separate from the clean build and is not a replacement map.
+
 The matcher recovers all 24 checked island identities without overrides.
 These checks include Alaska, Oahu, the Big Island, and the main Japanese islands.
 The checked identities are test expectations, not matcher inputs.
