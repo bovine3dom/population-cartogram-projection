@@ -1,0 +1,669 @@
+{
+  "approved": false,
+  "parent": "output/auto-cartogram/owid-island-resize-v9",
+  "archipelagos": {
+    "PHL": {
+      "accepted": true,
+      "parts": {
+        "PHL:T1": {
+          "before": 394,
+          "after": 432,
+          "translation": [
+            2.3243560819702225,
+            4.497649934198137
+          ],
+          "removed": 183,
+          "added": 221
+        },
+        "PHL:T2": {
+          "before": 220,
+          "after": 178,
+          "translation": [
+            5.812870275791624,
+            -5.117977528089881
+          ],
+          "removed": 162,
+          "added": 120
+        },
+        "PHL:T25": {
+          "before": 2,
+          "after": 36,
+          "translation": [
+            1.0,
+            1.3888888888888857
+          ],
+          "removed": 0,
+          "added": 34
+        },
+        "PHL:T4": {
+          "before": 21,
+          "after": 32,
+          "translation": [
+            1.0,
+            -0.9285714285714164
+          ],
+          "removed": 5,
+          "added": 16
+        },
+        "PHL:T5": {
+          "before": 20,
+          "after": 30,
+          "translation": [
+            4.2666666666666515,
+            0.4000000000000057
+          ],
+          "removed": 16,
+          "added": 26
+        },
+        "PHL:T3": {
+          "before": 46,
+          "after": 29,
+          "translation": [
+            3.7106446776610937,
+            -5.739880059970034
+          ],
+          "removed": 46,
+          "added": 29
+        },
+        "PHL:T8": {
+          "before": 11,
+          "after": 9,
+          "translation": [
+            -0.8383838383838338,
+            -6.111111111111114
+          ],
+          "removed": 11,
+          "added": 9
+        },
+        "PHL:T20": {
+          "before": 4,
+          "after": 8,
+          "translation": [
+            4.375,
+            -3.625
+          ],
+          "removed": 4,
+          "added": 8
+        },
+        "PHL:T6": {
+          "before": 18,
+          "after": 8,
+          "translation": [
+            -1.0833333333333712,
+            -0.5138888888888857
+          ],
+          "removed": 13,
+          "added": 3
+        },
+        "PHL:T7": {
+          "before": 12,
+          "after": 7,
+          "translation": [
+            1.5476190476190368,
+            4.166666666666657
+          ],
+          "removed": 12,
+          "added": 7
+        },
+        "PHL:T12": {
+          "before": 5,
+          "after": 6,
+          "translation": [
+            -0.2333333333333485,
+            3.9666666666666686
+          ],
+          "removed": 5,
+          "added": 6
+        },
+        "PHL:T16": {
+          "before": 4,
+          "after": 5,
+          "translation": [
+            0.5,
+            -8.5
+          ],
+          "removed": 4,
+          "added": 5
+        },
+        "PHL:T15": {
+          "before": 4,
+          "after": 4,
+          "translation": [
+            -1.0,
+            5.0
+          ],
+          "removed": 4,
+          "added": 4
+        },
+        "PHL:T18": {
+          "before": 4,
+          "after": 4,
+          "translation": [
+            0.0,
+            -2.0
+          ],
+          "removed": 4,
+          "added": 4
+        },
+        "PHL:T19": {
+          "before": 4,
+          "after": 4,
+          "translation": [
+            2.0,
+            12.0
+          ],
+          "removed": 4,
+          "added": 4
+        },
+        "PHL:T9": {
+          "before": 8,
+          "after": 3,
+          "translation": [
+            -0.5,
+            1.5
+          ],
+          "removed": 6,
+          "added": 1
+        },
+        "PHL:T10": {
+          "before": 6,
+          "after": 2,
+          "translation": [
+            -4.5,
+            -3.5
+          ],
+          "removed": 6,
+          "added": 2
+        },
+        "PHL:T11": {
+          "before": 5,
+          "after": 2,
+          "translation": [
+            -4.399999999999977,
+            -4.300000000000011
+          ],
+          "removed": 5,
+          "added": 2
+        },
+        "PHL:T22": {
+          "before": 2,
+          "after": 2,
+          "translation": [
+            -2.0,
+            6.0
+          ],
+          "removed": 2,
+          "added": 2
+        },
+        "PHL:T23": {
+          "before": 2,
+          "after": 2,
+          "translation": [
+            -2.0,
+            9.0
+          ],
+          "removed": 2,
+          "added": 2
+        },
+        "PHL:T13": {
+          "before": 4,
+          "after": 1,
+          "translation": [
+            -3.5,
+            -4.5
+          ],
+          "removed": 4,
+          "added": 1
+        },
+        "PHL:T14": {
+          "before": 4,
+          "after": 1,
+          "translation": [
+            -2.5,
+            -1.5
+          ],
+          "removed": 4,
+          "added": 1
+        },
+        "PHL:T17": {
+          "before": 4,
+          "after": 1,
+          "translation": [
+            -0.5,
+            -1.5
+          ],
+          "removed": 4,
+          "added": 1
+        },
+        "PHL:T21": {
+          "before": 2,
+          "after": 1,
+          "translation": [
+            -4.0,
+            -3.5
+          ],
+          "removed": 2,
+          "added": 1
+        },
+        "PHL:T24": {
+          "before": 2,
+          "after": 1,
+          "translation": [
+            1.0,
+            -3.5
+          ],
+          "removed": 2,
+          "added": 1
+        }
+      },
+      "released_sea": [
+        {
+          "cells": [
+            [
+              545,
+              -183
+            ],
+            [
+              545,
+              -182
+            ],
+            [
+              545,
+              -181
+            ],
+            [
+              545,
+              -180
+            ],
+            [
+              546,
+              -183
+            ],
+            [
+              546,
+              -182
+            ],
+            [
+              546,
+              -181
+            ],
+            [
+              546,
+              -180
+            ],
+            [
+              547,
+              -186
+            ],
+            [
+              547,
+              -185
+            ],
+            [
+              547,
+              -184
+            ],
+            [
+              547,
+              -183
+            ],
+            [
+              547,
+              -182
+            ],
+            [
+              548,
+              -186
+            ],
+            [
+              548,
+              -185
+            ],
+            [
+              548,
+              -184
+            ],
+            [
+              548,
+              -183
+            ],
+            [
+              548,
+              -182
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T3",
+            "PHL:T4",
+            "PHL:T5"
+          ]
+        },
+        {
+          "cells": [
+            [
+              554,
+              -183
+            ],
+            [
+              554,
+              -182
+            ],
+            [
+              555,
+              -183
+            ],
+            [
+              555,
+              -182
+            ],
+            [
+              556,
+              -183
+            ],
+            [
+              556,
+              -182
+            ],
+            [
+              556,
+              -181
+            ],
+            [
+              556,
+              -180
+            ],
+            [
+              557,
+              -183
+            ],
+            [
+              557,
+              -182
+            ],
+            [
+              557,
+              -181
+            ],
+            [
+              557,
+              -180
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T1",
+            "PHL:T3"
+          ]
+        },
+        {
+          "cells": [
+            [
+              538,
+              -164
+            ],
+            [
+              538,
+              -163
+            ],
+            [
+              539,
+              -164
+            ],
+            [
+              539,
+              -163
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T1",
+            "PHL:T12",
+            "PHL:T15"
+          ]
+        },
+        {
+          "cells": [
+            [
+              540,
+              -166
+            ],
+            [
+              540,
+              -165
+            ],
+            [
+              541,
+              -166
+            ],
+            [
+              541,
+              -165
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T1",
+            "PHL:T12"
+          ]
+        },
+        {
+          "cells": [
+            [
+              545,
+              -188
+            ],
+            [
+              545,
+              -187
+            ],
+            [
+              546,
+              -188
+            ],
+            [
+              546,
+              -187
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T3",
+            "PHL:T4"
+          ]
+        },
+        {
+          "cells": [
+            [
+              545,
+              -177
+            ],
+            [
+              545,
+              -176
+            ],
+            [
+              546,
+              -177
+            ],
+            [
+              546,
+              -176
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T25",
+            "PHL:T5",
+            "PHL:T7"
+          ]
+        },
+        {
+          "cells": [
+            [
+              545,
+              -144
+            ],
+            [
+              545,
+              -143
+            ],
+            [
+              546,
+              -144
+            ],
+            [
+              546,
+              -143
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T1",
+            "PHL:T19"
+          ]
+        },
+        {
+          "cells": [
+            [
+              549,
+              -181
+            ],
+            [
+              549,
+              -180
+            ],
+            [
+              550,
+              -181
+            ],
+            [
+              550,
+              -180
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T3",
+            "PHL:T5"
+          ]
+        },
+        {
+          "cells": [
+            [
+              554,
+              -194
+            ],
+            [
+              554,
+              -193
+            ],
+            [
+              555,
+              -194
+            ],
+            [
+              555,
+              -193
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T2",
+            "PHL:T20"
+          ]
+        },
+        {
+          "cells": [
+            [
+              553,
+              -186
+            ],
+            [
+              553,
+              -185
+            ],
+            [
+              553,
+              -184
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T1",
+            "PHL:T3"
+          ]
+        },
+        {
+          "cells": [
+            [
+              544,
+              -179
+            ],
+            [
+              544,
+              -178
+            ]
+          ],
+          "shore_parts": [
+            "PHL:T18",
+            "PHL:T25",
+            "PHL:T4",
+            "PHL:T5"
+          ]
+        }
+      ],
+      "released_cells": 63,
+      "max_axis_shift": 24,
+      "spacing": 1.3,
+      "centre_order_threshold": 2,
+      "gap": "one-cell eight-neighbour halo"
+    }
+  },
+  "border_fits": {
+    "MYS": {
+      "accepted": true,
+      "attempts": [
+        {
+          "target": "MYS:T1",
+          "requested": 44,
+          "movable": [
+            "BRN:T1",
+            "IDN:T3",
+            "MYS:T1"
+          ],
+          "accepted": true,
+          "solver": [
+            {
+              "status": 1,
+              "message": "Time limit reached. (HiGHS Status 13: Time limit reached)"
+            }
+          ]
+        },
+        {
+          "target": "MYS:T2",
+          "requested": 180,
+          "movable": [
+            "MYS:T2",
+            "SGP:T1",
+            "THA:T1"
+          ],
+          "accepted": true,
+          "solver": [
+            {
+              "status": 0,
+              "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "seconds_per_fit": 90.0,
+  "margin": 8,
+  "expansion": 8,
+  "inputs": {
+    "output/auto-cartogram/owid-island-resize-v9/cells.csv": "33ff225c49480acb457bf600c03a8e2374378a4ce6275b4224a867a2832b9aae",
+    "output/auto-cartogram/owid-island-resize-v9/matches.csv": "76f49c744c1ab4faf25066ec698ff8a24ed6946c3083f233a9f488664d07123d",
+    "output/auto-cartogram/owid-island-resize-v9/report.json": "b3416b74dab4aacab7a723bf41f2ca193467f8a91de62625173de6bfa05bf0b0",
+    "data/cartogram.csv": "a08f41f7b3f8912e3956c8882a255a0e6ea60b5a720216a0746416ba5d62c257",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/relax_owid_islands.py": "d503892f5497e356573dea770c0d043dde3bb677cee5eda6044775c8712b19aa"
+  },
+  "dependencies": {
+    "fit_local_coasts.py": "9165f0c21aba7e5dfcde86d9d23f08134c7d954490934f839242e1bd2603b64c",
+    "resize_owid_islands.py": "0f3b6c19a1e07b1bf320e0c0ceba308b44b0427c2e070d340ce05fefc82af6bc",
+    "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+    "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3"
+  },
+  "complete": true
+}
