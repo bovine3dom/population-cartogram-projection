@@ -5,7 +5,8 @@
 The [clean Julia build](clean-build.md) starts from Kontur, Natural Earth, and
 original OWID. It prepares source polygons, matches all scopes, and resizes the
 artwork groups. It reads no saved layouts or assignments and calls no Python.
-It is a separate review candidate, not a default replacement.
+This is the current reviewed layout baseline. See [the supported workflow](workflow.md).
+The mainland trials are not part of this build.
 
 The earlier [corner-group trial](group-resize.md) remains available. That trial
 uses saved source files and assignments. The clean build does not.
@@ -19,7 +20,7 @@ The matcher recovers all 24 checked island identities without overrides.
 These checks include Alaska, Oahu, the Big Island, and the main Japanese islands.
 The checked identities are test expectations, not matcher inputs.
 
-The reviewed layout remains at:
+The previous layout remains at:
 
 - Git tag: `owid-reviewed-scope-splits-2026-10-18`
 - Commit: `31682a7`
@@ -223,7 +224,7 @@ is not yet allocated. Pair exchanges cannot introduce an unused source after
 linear assignment. These are limits to address before using the candidates
 for tile budgets.
 
-The [clean build](clean-build.md) now includes source preparation, all-scope
-matching, and a shared-outline solver. Next, review its differences from the
-saved map, especially internal proportions within corner-connected groups.
-The automatic identities still require wider validation before production use.
+The [clean build](clean-build.md) is the current layout baseline. It includes
+source preparation, all-scope matching, and a shared-outline solver. The earlier
+identity-only limits above do not describe the complete clean build.
+See [the supported workflow](workflow.md) for fitting and export status.

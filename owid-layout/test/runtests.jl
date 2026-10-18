@@ -3,7 +3,6 @@ include("review.jl")
 include("groups.jl")
 include("group_population_resize.jl")
 include("clean_inputs.jl")
-include("block_slide.jl")
 
 piece(id, mass, x, y) = Piece(id,mass,(x,y),(x-0.5,y-0.5,x+0.5,y+0.5))
 

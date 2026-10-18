@@ -1,4 +1,5 @@
 using OWIDLayout, CSV, JSON
+include("../research/mainland/load.jl")
 const O=OWIDLayout
 length(ARGS)==3 || error("Usage: refine-west-africa.jl CLEAN_BUILD OUTPUT_DIR MODE")
 root,output,mode=ARGS
@@ -100,7 +101,7 @@ report=Dict{String,Any}("complete"=>false,"approved"=>false,"mode"=>mode,"region
     "cell_cost"=>centre_cost ? "squared distance to geographic guide centres" : "blended distance to original and geographic shape guides",
     "exchange_perimeter_weight"=>endswith(mode,"-balanced") ? 12. : 2.,
     "exchange_contact_penalty"=>endswith(mode,"-balanced") ? 40. : 200.,
-    "inputs"=>Dict(p=>O.file_digest(p) for p in [paths;@__FILE__;joinpath(@__DIR__,"../src/partition.jl");joinpath(@__DIR__,"../src/region_exchange.jl");joinpath(@__DIR__,"../src/region_seed.jl")]),
+    "inputs"=>Dict(p=>O.file_digest(p) for p in [paths;@__FILE__;joinpath(@__DIR__,"../src/partition.jl");joinpath(@__DIR__,"../research/mainland/region_exchange.jl");joinpath(@__DIR__,"../research/mainland/region_seed.jl")]),
     "limits"=>["The regional footprint and all outside countries stay fixed.","Natural Earth defines desired contacts. Penalized trials can retain errors; outside contacts are audited only.","This experiment does not add missing lakes."])
 save()=open(io->JSON.print(io,report),joinpath(output,"report.json"),"w")
 save()

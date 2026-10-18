@@ -6,7 +6,8 @@ The Julia command below starts from Kontur, Natural Earth, and original OWID.
 It does not read saved layouts, saved assignments, or Python output files.
 The saved layout and H3-MON exports have not changed.
 
-This is a reproducible build candidate, not an approved replacement map.
+This is the current reviewed layout baseline. The H3-MON exports are separate.
+The tag `owid-clean-layout-baseline-v1` preserves this state.
 [Open the review](../examples/auto-cartogram/results/owid-clean-build/index.html).
 [Compare with the saved map](../examples/auto-cartogram/results/owid-clean-build/comparison/index.html).
 
@@ -106,8 +107,8 @@ It does not add every absent scope that might qualify for one tile.
 An artwork group is not always a physical island. Corner chains join all of
 Japan and both main New Zealand islands. These groups receive one budget each.
 The clean build therefore keeps their original internal proportions. It does
-not recover the earlier child-piece edits from a saved map. Review these
-changes before replacing the saved layout.
+not recover the earlier child-piece edits from a saved map. These differences
+are part of the current reviewed baseline.
 
 Internal water inside edge-connected landmasses stays empty and enclosed.
 There are 64 such cells in this input. Some of the original 172 enclosed empty
@@ -141,5 +142,5 @@ This build does not produce an H3-to-tile mapping or change H3-MON.
 - Checked the rendered world, Indonesia, Borneo, the Philippines, and Japan.
   Borneo retains a common outline with internal country borders. The Philippines
   has three population groups. Hokkaido is larger than in the saved map; this
-  is a known difference, not an approved change. The Malaysian peninsula and
-  Singapore also have different coast outlines. The saved map remains current.
+  is a known difference. The Malaysian peninsula and Singapore also have
+  different coast outlines. This clean layout is now the reviewed baseline.

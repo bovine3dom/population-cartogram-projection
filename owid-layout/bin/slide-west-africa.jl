@@ -1,4 +1,5 @@
 using OWIDLayout, CSV, JSON
+include("../research/mainland/load.jl")
 const O=OWIDLayout
 length(ARGS)==2 || error("Usage: slide-west-africa.jl CLEAN_BUILD OUTPUT_DIR")
 root,output=ARGS
@@ -47,7 +48,7 @@ isempty(near) && error("No small-seam move reaches Ghana")
 mkpath(output)
 CSV.write(joinpath(output,"candidates.csv"),candidates)
 cp(input,joinpath(output,"before.csv"))
-paths=[input,@__FILE__,joinpath(@__DIR__,"../src/block_slide.jl")]
+paths=[input,@__FILE__,joinpath(@__DIR__,"../research/mainland/block_slide.jl")]
 report=Dict("complete"=>true,"approved"=>false,"method"=>"rigid translation with a counter-moving block",
     "inputs"=>Dict(p=>O.file_digest(p) for p in paths),"minimum_counterblock_tiles"=>minimum_block,
     "search"=>Dict("dx"=>[-width,width],"dy"=>[-2height,-1],"valid_large_block_candidates"=>length(candidates)),
