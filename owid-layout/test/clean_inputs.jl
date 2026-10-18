@@ -66,6 +66,9 @@ end
     @test sum(r.objective_reduction for r in report.sweeps)==20
     again,_=OWIDLayout.exchange_region(reference,Dict(),required,costs;perimeter_weight=0.)
     @test again==result
+    seeded,check=OWIDLayout.seed_region(reference,Dict(),costs)
+    @test check.complete && seeded==result
+    @test_throws ErrorException OWIDLayout.seed_region(reference,Dict(),zeros(3,2))
 end
 
 @testset "Shared outline partition" begin

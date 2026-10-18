@@ -10,6 +10,7 @@ include("group_resize.jl")
 include("prepare_sources.jl")
 include("partition.jl")
 include("region_exchange.jl")
+include("region_seed.jl")
 include("scope_splits.jl")
 include("clean_layout.jl")
 
