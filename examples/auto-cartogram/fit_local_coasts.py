@@ -20,7 +20,7 @@ from review_layout import load, read_csv
 from save_review import digest
 
 
-def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, maximum_reach=None, fixed_cells=(), required_extra=(), expansion=0, movable=(), preferred=None, perimeter_weight=0., distance_weight=0., sea_connected=False, protected_water=(), thin_weight=0., budgets=None, footprint=None):
+def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, maximum_reach=None, fixed_cells=(), required_extra=(), expansion=0, movable=(), preferred=None, perimeter_weight=0., distance_weight=0., sea_connected=False, protected_water=(), thin_weight=0., budgets=None, footprint=None, outline_guide=None, outline_weight=0.):
     budgets = budgets or {}
     if not set(budgets)<=set(tiles) or any(n<1 or int(n)!=n for n in budgets.values()):
         raise ValueError('Use positive integer budgets for existing components')
@@ -55,7 +55,9 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
     points = sorted(window)
     indices = {(p,c):i for i,(p,c) in enumerate((p,c) for p in points for c in labels)}
     preferred = preferred or tiles
-    objective = [0. if p in preferred.get(c, tiles[c]) else 1. for p,c in indices]
+    if outline_weight<0 or not np.isfinite(outline_weight):raise ValueError('Use a non-negative outline weight')
+    objective = [(0. if p in preferred.get(c, tiles[c]) else 1.) +
+                 (outline_weight if outline_guide is not None and p not in outline_guide else 0.) for p,c in indices]
     if distance_weight:
         for c in labels:
             distances=cKDTree(sorted(preferred.get(c,tiles[c]))).query(points,p=1)[0]
