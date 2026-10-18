@@ -2,11 +2,13 @@
 
 ## Status
 
-This project contains an automatic identity baseline, a corner-group audit,
-and a Julia population-resize trial. It has no Python runtime calls.
-The [latest trial](group-resize.md) rematches the ten corner-affected scopes and
-resizes their groups. It produces a separate layout, not a default replacement.
-It still uses existing source intermediates and retains other scopes' assignments.
+The [clean Julia build](clean-build.md) starts from Kontur, Natural Earth, and
+original OWID. It prepares source polygons, matches all scopes, and resizes the
+artwork groups. It reads no saved layouts or assignments and calls no Python.
+It is a separate review candidate, not a default replacement.
+
+The earlier [corner-group trial](group-resize.md) remains available. That trial
+uses saved source files and assignments. The clean build does not.
 
 The matcher recovers all 24 checked island identities without overrides.
 These checks include Alaska, Oahu, the Big Island, and the main Japanese islands.
@@ -216,7 +218,7 @@ is not yet allocated. Pair exchanges cannot introduce an unused source after
 linear assignment. These are limits to address before using the candidates
 for tile budgets.
 
-Next, review the new population-resize images and test the other world identities.
-Extend the Julia run to all scopes, port the shared-landmass border solver,
-and replace component preparation with Julia processing from Natural Earth and
-Kontur. The current trial is not yet a raw-input production pipeline.
+The [clean build](clean-build.md) now includes source preparation, all-scope
+matching, and a shared-outline solver. Next, review its differences from the
+saved map, especially internal proportions within corner-connected groups.
+The automatic identities still require wider validation before production use.

@@ -11,24 +11,30 @@ budgets=collect(CSV.File(joinpath(trial,"budgets.csv")))
 assignments=Dict(String(r.component_id)=>String(r.group_id) for r in CSV.File(joinpath(trial,"source-assignments.csv")))
 source=Dict(String(r.component_id)=>r for r in CSV.File(components;types=String))
 geometry=Dict(String(f["properties"]["component_id"])=>f["geometry"] for f in JSON.parsefile(polygons)["features"])
-scopes=String.(report["changed_scopes"])
+clean=get(report,"mode","")=="clean"
+scopes=String.(get(report,"review_scopes",report["changed_scopes"]))
+clean && append!(scopes,[s for s in ("JPN","NZL") if s ∉ scopes])
+before_label=clean ? "Original OWID after scope splits" : "Saved layout"
+intro=clean ? "This Julia build starts from Kontur, Natural Earth, and original OWID. All scopes are matched again. No saved layouts or assignments are read." : "Population matching was rerun for $(length(scopes)) scopes affected by corner grouping. All other assignments remain from the saved layout."
+water_note=clean ? "$(report["fit"]["protected_water_cells"]) internal water cells remain empty and enclosed. Gaps between separate land pieces can open to the sea." : "All $(report["fit"]["water_after"]) enclosed water cells remain at their original positions."
+limits=clean ? "This build needs visual approval. Corner-connected groups receive one budget each. Earlier edits within those groups are not inputs; Japan and New Zealand retain their original internal proportions. The saved layout and H3-MON exports have not changed." : "Source preparation and unchanged scopes still use the earlier pipeline. Shared borders stay fixed during local coast edits."
 colours=("#e8a45c","#73afd0","#85be79","#b99acc","#d88191","#c5be63","#72beb0","#bba18d","#a3b5db","#c7a1aa",
          "#73a7a0","#b8c687","#d2b287","#a7a2c2","#e1b6b1","#8eaea5","#bbaa72","#7fa0bd","#c297b5","#c4bcaa")
 mkdir(output)
+title=clean ? "OWID: clean Julia build" : "Corner groups: population resize"
 page=["""<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
-<title>Corner groups: population resize</title><style>body{font:17px system-ui;max-width:1550px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#08659d}nav a{display:inline-block;margin:.5rem}table{border-collapse:collapse}td,th{padding:.35rem .7rem;text-align:left;border-bottom:1px solid #ddd}p{max-width:90ch}.note{padding:1rem;background:#fff0d5}</style>
-<h1>Corner groups: population resize</h1>
+<title>$title</title><style>body{font:17px system-ui;max-width:1550px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#08659d}nav a{display:inline-block;margin:.5rem}table{border-collapse:collapse}td,th{padding:.35rem .7rem;text-align:left;border-bottom:1px solid #ddd}p{max-width:90ch}.note{padding:1rem;background:#fff0d5}</style>
+<h1>$title</h1>
 <p>This is a separate Julia trial. The saved layout and H3-MON exports have not changed.
-Population matching was rerun for $(length(scopes)) scopes affected by corner grouping. All other assignments remain from the saved layout.</p>
+$intro</p>
 <p><strong>Checks:</strong> $(report["land_tiles"]) land tiles; exact country totals; $(length(report["fit"]["changed_groups"])) groups change tile count;
-all shared group borders retained; all $(report["fit"]["water_after"]) enclosed water cells retained at their original positions.
+all shared group borders retained. $water_note
 The layout has $(report["groups"]) groups, including the added population scopes.</p>
 <p>Each artwork group can receive several source components. Strong child matches add source anchors but do not receive separate tile budgets.
 Unmatched source components join the nearest source anchor. Weak target groups share a nearby population pool.
 The minimum is one tile per existing G group, not one tile per old T fragment.</p>
 <div class="note">This remains an experimental match. There are no hand-written identity overrides in the rerun scopes.
-Source-distance fallback is approximate. Source preparation and unchanged scopes still use the earlier pipeline.
-Shared borders are held in place during local coast edits; this is not a new shared-island border fit.</div>
+Source-distance fallback is approximate. $limits</div>
 <p><strong>Read the images:</strong> The two tile panels share a scale. The geographic panel uses a separate scale.
 Colours identify the new population pools in all three panels. Labels identify G groups. Fallback target groups can share a colour.
 Only the selected country is shown. Empty space stays empty; no water tiles are assigned to countries.</p>
@@ -37,6 +43,11 @@ Only the selected country is shown. Empty space stays empty; no water tiles are 
 <a href='cells.csv'>New cells</a> · <a href='report.json'>Checks and hashes</a></p><nav>
 """]
 append!(page,["<a href='#$s'>$s</a>" for s in scopes]);push!(page,"</nav>")
+if clean && isfile(joinpath(dirname(trial),"build.json"))
+    cp(joinpath(dirname(trial),"build.json"),joinpath(output,"build.json"))
+    cp(joinpath(trial,"source-scopes-without-tiles.csv"),joinpath(output,"source-scopes-without-tiles.csv"))
+    push!(page,"<p><a href='build.json'>Raw-input build audit</a> · <a href='source-scopes-without-tiles.csv'>Source scopes without tiles</a></p>")
+end
 for scope in scopes
     rows=sort([r for r in budgets if r.country==scope];by=r->parse(Int,last(split(r.group_id,':'))[2:end]))
     ids=String.(getproperty.(rows,:group_id))
@@ -57,7 +68,7 @@ for scope in scopes
     filename="$scope.svg"
     open(joinpath(output,filename),"w") do io
         svg_start(io,1800,690)
-        println(io,"<text x='20' y='28' font-size='21'>$scope — saved layout</text><text x='620' y='28' font-size='21'>New group resize</text><text x='1220' y='28' font-size='21'>Source population pools</text>")
+        println(io,"<text x='20' y='28' font-size='21'>$scope — $before_label</text><text x='620' y='28' font-size='21'>New group resize</text><text x='1220' y='28' font-size='21'>Source population pools</text>")
         draw_tiles(io,old,"",bounds,20,60,560,600,"before";labels=true,colours=fills)
         draw_tiles(io,new,"",bounds,620,60,560,600,"after";labels=true,colours=fills)
         draw_geography(io,shapes,"",gb,1220,60,560,600,"","source";colours=source_colours)
@@ -75,7 +86,7 @@ for scope in scopes
     end
     changed=count(r->r.before!=r.tiles,rows)
     push!(page,"<h2 id='$scope'>$scope — $changed groups change size</h2><a href='$filename'><img src='$filename' loading='lazy' alt='$scope saved and resized groups with source population assignments'></a>")
-    push!(page,"<table><tr><th>Group</th><th>Saved tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>")
+    push!(page,"<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>")
     for r in rows
         push!(page,"<tr><td>$(r.group_id)</td><td>$(r.before)</td><td>$(r.tiles)</td><td>$(r.population_group)</td><td>$(round(Int,r.pool_population))</td><td>$(r.identity)</td></tr>")
     end
@@ -88,7 +99,7 @@ world_fills=Dict(g=>world_palette[OWIDLayout.group_scope(g)] for g in values(aft
 world_bounds=padded_bounds(collect(keys(after));padding=.03)
 open(joinpath(output,"world.svg"),"w") do io
     svg_start(io,1800,1150)
-    println(io,"<text x='20' y='30' font-size='24'>World — corner-group population resize trial</text>")
+    println(io,"<text x='20' y='30' font-size='24'>World — $title</text>")
     draw_tiles(io,after,"",world_bounds,20,60,1760,1060,"world";colours=world_fills)
     transform,_=panel_transform(world_bounds,20,60,1760,1060)
     parts=Dict{String,Vector{Tuple{Int,Int}}}()
