@@ -1,0 +1,29 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 690' width='1800' height='690'><rect width='100%' height='100%' fill='#faf9f6'/><g font-family='sans-serif' fill='#222'>
+<text x='20' y='28' font-size='21'>ABW — Original OWID after scope splits</text><text x='620' y='28' font-size='21'>New group resize</text><text x='1220' y='28' font-size='21'>Source population pools</text>
+<defs><clipPath id='before'><rect x='20' y='60' width='560' height='600'/></clipPath></defs><g clip-path='url(#before)'>
+<rect x='262.36559139784947' y='360.0' width='75.2688172043011' height='75.2688172043011' fill='#e8a45c'><title>ABW:G1</title></rect>
+<path d='M262.36559139784947,435.2688172043011 L337.6344086021506,435.2688172043011' stroke='#555' stroke-width='0.7'/>
+<path d='M337.6344086021506,435.2688172043011 L337.6344086021506,360.0' stroke='#555' stroke-width='0.7'/>
+<path d='M262.36559139784947,360.0 L262.36559139784947,435.2688172043011' stroke='#555' stroke-width='0.7'/>
+<rect x='262.36559139784947' y='284.73118279569894' width='75.2688172043011' height='75.2688172043011' fill='#e8a45c'><title>ABW:G1</title></rect>
+<path d='M337.6344086021506,360.0 L337.6344086021506,284.73118279569894' stroke='#555' stroke-width='0.7'/>
+<path d='M337.6344086021506,284.73118279569894 L262.36559139784947,284.73118279569894' stroke='#555' stroke-width='0.7'/>
+<path d='M262.36559139784947,284.73118279569894 L262.36559139784947,360.0' stroke='#555' stroke-width='0.7'/>
+<text x='300.0' y='360.0' text-anchor='middle' font-size='12' paint-order='stroke' stroke='white' stroke-width='3' fill='#111'>G1</text>
+</g>
+<defs><clipPath id='after'><rect x='620' y='60' width='560' height='600'/></clipPath></defs><g clip-path='url(#after)'>
+<rect x='862.3655913978495' y='360.0' width='75.2688172043011' height='75.2688172043011' fill='#e8a45c'><title>ABW:G1</title></rect>
+<path d='M862.3655913978495,435.2688172043011 L937.6344086021506,435.2688172043011' stroke='#555' stroke-width='0.7'/>
+<path d='M937.6344086021506,435.2688172043011 L937.6344086021506,360.0' stroke='#555' stroke-width='0.7'/>
+<path d='M862.3655913978495,360.0 L862.3655913978495,435.2688172043011' stroke='#555' stroke-width='0.7'/>
+<rect x='862.3655913978495' y='284.73118279569894' width='75.2688172043011' height='75.2688172043011' fill='#e8a45c'><title>ABW:G1</title></rect>
+<path d='M937.6344086021506,360.0 L937.6344086021506,284.73118279569894' stroke='#555' stroke-width='0.7'/>
+<path d='M937.6344086021506,284.73118279569894 L862.3655913978495,284.73118279569894' stroke='#555' stroke-width='0.7'/>
+<path d='M862.3655913978495,284.73118279569894 L862.3655913978495,360.0' stroke='#555' stroke-width='0.7'/>
+<text x='900.0' y='360.0' text-anchor='middle' font-size='12' paint-order='stroke' stroke='white' stroke-width='3' fill='#111'>G1</text>
+</g>
+<defs><clipPath id='source'><rect x='1220' y='60' width='560' height='600'/></clipPath></defs><g clip-path='url(#source)'>
+<path d='M1437.82,237.21 L1575.61,344.11 L1602.28,373.23 L1622.56,425.03 L1703.49,526.33 L1711.18,587.33 L1685.53,610.0 L1638.39,609.72 L1588.94,590.65 L1555.7,557.07 L1602.28,557.07 L1602.28,541.13 L1525.14,503.85 L1367.9,364.6 L1321.42,345.44 L1298.64,331.4 L1288.82,308.92 L1293.45,285.3 L1314.57,245.46 L1319.94,222.88 L1311.05,184.94 L1295.12,151.74 L1291.79,125.75 L1319.94,110.0 L1414.58,218.71 L1437.82,237.21 Z' fill='#e8a45c' fill-rule='evenodd' stroke='#aaa79e' stroke-width='0.7'><title>ABW:0d999085fdb95914</title></path>
+</g>
+<text x='1489.562135872863' y='378.5881688613367' font-size='13' text-anchor='middle' paint-order='stroke' stroke='white' stroke-width='3'>G1</text>
+</g></svg>

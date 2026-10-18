@@ -1,0 +1,23 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 690' width='1800' height='690'><rect width='100%' height='100%' fill='#faf9f6'/><g font-family='sans-serif' fill='#222'>
+<text x='20' y='28' font-size='21'>AND — Original OWID after scope splits</text><text x='620' y='28' font-size='21'>New group resize</text><text x='1220' y='28' font-size='21'>Source population pools</text>
+<defs><clipPath id='before'><rect x='20' y='60' width='560' height='600'/></clipPath></defs><g clip-path='url(#before)'>
+<rect x='262.36559139784947' y='322.36559139784947' width='75.2688172043011' height='75.2688172043011' fill='#e8a45c'><title>AND:G1</title></rect>
+<path d='M262.36559139784947,397.6344086021506 L337.6344086021506,397.6344086021506' stroke='#555' stroke-width='0.7'/>
+<path d='M337.6344086021506,397.6344086021506 L337.6344086021506,322.36559139784947' stroke='#555' stroke-width='0.7'/>
+<path d='M337.6344086021506,322.36559139784947 L262.36559139784947,322.36559139784947' stroke='#555' stroke-width='0.7'/>
+<path d='M262.36559139784947,322.36559139784947 L262.36559139784947,397.6344086021506' stroke='#555' stroke-width='0.7'/>
+<text x='300.0' y='360.0' text-anchor='middle' font-size='12' paint-order='stroke' stroke='white' stroke-width='3' fill='#111'>G1</text>
+</g>
+<defs><clipPath id='after'><rect x='620' y='60' width='560' height='600'/></clipPath></defs><g clip-path='url(#after)'>
+<rect x='862.3655913978495' y='322.36559139784947' width='75.2688172043011' height='75.2688172043011' fill='#e8a45c'><title>AND:G1</title></rect>
+<path d='M862.3655913978495,397.6344086021506 L937.6344086021506,397.6344086021506' stroke='#555' stroke-width='0.7'/>
+<path d='M937.6344086021506,397.6344086021506 L937.6344086021506,322.36559139784947' stroke='#555' stroke-width='0.7'/>
+<path d='M937.6344086021506,322.36559139784947 L862.3655913978495,322.36559139784947' stroke='#555' stroke-width='0.7'/>
+<path d='M862.3655913978495,322.36559139784947 L862.3655913978495,397.6344086021506' stroke='#555' stroke-width='0.7'/>
+<text x='900.0' y='360.0' text-anchor='middle' font-size='12' paint-order='stroke' stroke='white' stroke-width='3' fill='#111'>G1</text>
+</g>
+<defs><clipPath id='source'><rect x='1220' y='60' width='560' height='600'/></clipPath></defs><g clip-path='url(#source)'>
+<path d='M1657.75,424.0 L1645.38,438.69 L1630.85,445.49 L1615.12,445.67 L1599.65,440.01 L1596.29,434.54 L1592.66,433.08 L1588.76,435.04 L1584.05,440.56 L1569.93,488.2 L1528.24,505.86 L1446.21,516.58 L1438.94,524.89 L1433.29,535.02 L1425.09,545.06 L1410.03,553.41 L1399.4,554.87 L1320.6,544.33 L1305.67,533.19 L1305.67,511.06 L1268.15,452.29 L1290.2,442.2 L1297.6,440.29 L1323.29,421.72 L1318.85,393.79 L1295.98,373.35 L1266.67,377.27 L1270.97,357.19 L1292.49,319.78 L1292.62,312.98 L1281.73,305.59 L1283.34,288.93 L1290.61,271.09 L1296.39,260.46 L1325.17,248.68 L1345.21,179.1 L1386.36,181.24 L1424.55,166.59 L1444.46,165.13 L1515.06,213.59 L1529.32,220.3 L1677.25,234.9 L1665.96,270.77 L1686.94,284.09 L1717.2,293.49 L1728.15,309.44 L1733.33,316.99 L1700.65,320.05 L1676.85,343.23 L1662.46,379.92 L1657.75,424.0 Z' fill='#e8a45c' fill-rule='evenodd' stroke='#aaa79e' stroke-width='0.7'><title>AND:0923843c3687a75e</title></path>
+</g>
+<text x='1467.446660820824' y='355.9258796264141' font-size='13' text-anchor='middle' paint-order='stroke' stroke='white' stroke-width='3'>G1</text>
+</g></svg>

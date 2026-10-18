@@ -134,6 +134,10 @@ This build does not produce an H3-to-tile mapping or change H3-MON.
   All 204 tests pass.
 - Preserved the earlier reviewed maps. Added separate review images so that
   changes from original OWID are not confused with changes from the saved map.
+- Ran the final raw-input command twice in separate processes. All 17 output
+  files are byte-identical, including the source-membership Arrow, assignments,
+  budgets, final cells, and build manifest. The published `repeatability.json`
+  contains their hashes.
 - Checked the rendered world, Indonesia, Borneo, the Philippines, and Japan.
   Borneo retains a common outline with internal country borders. The Philippines
   has three population groups. Hokkaido is larger than in the saved map; this

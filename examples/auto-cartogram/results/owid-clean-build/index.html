@@ -1,0 +1,146 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>OWID: clean Julia build</title><style>body{font:17px system-ui;max-width:1550px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#08659d}nav a{display:inline-block;margin:.5rem}table{border-collapse:collapse}td,th{padding:.35rem .7rem;text-align:left;border-bottom:1px solid #ddd}p{max-width:90ch}.note{padding:1rem;background:#fff0d5}</style>
+<h1>OWID: clean Julia build</h1>
+<p>This is a separate Julia trial. The saved layout and H3-MON exports have not changed.
+This Julia build starts from Kontur, Natural Earth, and original OWID. All scopes are matched again. No saved layouts or assignments are read.</p>
+<p><strong>Checks:</strong> 54967 land tiles; exact country totals; 40 groups change tile count;
+all shared group borders retained. 64 internal water cells remain empty and enclosed. Gaps between separate land pieces can open to the sea.
+The layout has 244 groups, including the added population scopes.</p>
+<p>Each artwork group can receive several source components. Strong child matches add source anchors but do not receive separate tile budgets.
+Unmatched source components join the nearest source anchor. Weak target groups share a nearby population pool.
+The minimum is one tile per existing G group, not one tile per old T fragment.</p>
+<div class="note">This remains an experimental match. There are no hand-written identity overrides in the rerun scopes.
+Source-distance fallback is approximate. This build needs visual approval. Corner-connected groups receive one budget each. Earlier edits within those groups are not inputs; Japan and New Zealand retain their original internal proportions. The saved layout and H3-MON exports have not changed.</div>
+<p><strong>Read the images:</strong> The two tile panels share a scale. The geographic panel uses a separate scale.
+Colours identify the new population pools in all three panels. Labels identify G groups. Fallback target groups can share a colour.
+Only the selected country is shown. Empty space stays empty; no water tiles are assigned to countries.</p>
+<p><a href='../owid-scope-splits/index.html'>Saved layout</a> · <a href='../julia-corner-groups/index.html'>Corner-group definitions</a> ·
+<a href='budgets.csv'>Budgets</a> · <a href='source-assignments.csv'>Source assignments</a> · <a href='membership.csv'>Old T-to-G IDs</a> ·
+<a href='cells.csv'>New cells</a> · <a href='report.json'>Checks and hashes</a></p><nav>
+
+<a href='#IDN'>IDN</a>
+<a href='#MYS'>MYS</a>
+<a href='#PHL'>PHL</a>
+<a href='#TUR'>TUR</a>
+<a href='#ITA'>ITA</a>
+<a href='#ESP'>ESP</a>
+<a href='#GBR'>GBR</a>
+<a href='#FRA'>FRA</a>
+<a href='#PSE'>PSE</a>
+<a href='#USA'>USA</a>
+<a href='#GRC'>GRC</a>
+<a href='#ABW'>ABW</a>
+<a href='#AFG'>AFG</a>
+<a href='#AGO'>AGO</a>
+<a href='#ALB'>ALB</a>
+<a href='#AND'>AND</a>
+<a href='#JPN'>JPN</a>
+<a href='#NZL'>NZL</a>
+</nav>
+<p><a href='build.json'>Raw-input build audit</a> · <a href='source-scopes-without-tiles.csv'>Source scopes without tiles</a></p>
+<h2 id='IDN'>IDN — 16 groups change size</h2><a href='IDN.svg'><img src='IDN.svg' loading='lazy' alt='IDN saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>IDN:G1</td><td>1050</td><td>1093</td><td>IDN:G1</td><td>155911984</td><td>automatic_group</td></tr>
+<tr><td>IDN:G2</td><td>279</td><td>380</td><td>IDN:G2</td><td>54253880</td><td>automatic_group</td></tr>
+<tr><td>IDN:G3</td><td>248</td><td>118</td><td>IDN:G3</td><td>16781841</td><td>automatic_group</td></tr>
+<tr><td>IDN:G4</td><td>138</td><td>132</td><td>IDN:G4</td><td>18830559</td><td>automatic_group</td></tr>
+<tr><td>IDN:G5</td><td>44</td><td>64</td><td>IDN:G5</td><td>9088756</td><td>automatic_group</td></tr>
+<tr><td>IDN:G6</td><td>43</td><td>52</td><td>IDN:G6</td><td>7400520</td><td>automatic_group</td></tr>
+<tr><td>IDN:G7</td><td>17</td><td>2</td><td>IDN:G7</td><td>300659</td><td>automatic_group</td></tr>
+<tr><td>IDN:G8</td><td>16</td><td>3</td><td>IDN:G8</td><td>395835</td><td>automatic_group</td></tr>
+<tr><td>IDN:G9</td><td>16</td><td>1</td><td>IDN:G9</td><td>158546</td><td>automatic_group</td></tr>
+<tr><td>IDN:G10</td><td>8</td><td>8</td><td>IDN:G10</td><td>1080668</td><td>automatic_group</td></tr>
+<tr><td>IDN:G11</td><td>8</td><td>4</td><td>IDN:G11</td><td>613130</td><td>automatic_group</td></tr>
+<tr><td>IDN:G12</td><td>6</td><td>5</td><td>IDN:G12</td><td>737122</td><td>automatic_group</td></tr>
+<tr><td>IDN:G13</td><td>6</td><td>13</td><td>IDN:G13</td><td>1777921</td><td>automatic_group</td></tr>
+<tr><td>IDN:G14</td><td>4</td><td>9</td><td>IDN:G14</td><td>1258300</td><td>automatic_group</td></tr>
+<tr><td>IDN:G15</td><td>4</td><td>2</td><td>IDN:G15</td><td>289304</td><td>automatic_group</td></tr>
+<tr><td>IDN:G16</td><td>4</td><td>3</td><td>IDN:G16</td><td>465013</td><td>automatic_group</td></tr>
+<tr><td>IDN:G17</td><td>3</td><td>5</td><td>IDN:G17</td><td>776907</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='MYS'>MYS — 2 groups change size</h2><a href='MYS.svg'><img src='MYS.svg' loading='lazy' alt='MYS saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>MYS:G1</td><td>164</td><td>44</td><td>MYS:G1</td><td>6565903</td><td>automatic_group</td></tr>
+<tr><td>MYS:G2</td><td>60</td><td>180</td><td>MYS:G2</td><td>26798844</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='PHL'>PHL — 3 groups change size</h2><a href='PHL.svg'><img src='PHL.svg' loading='lazy' alt='PHL saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>PHL:G1</td><td>522</td><td>593</td><td>PHL:G1</td><td>79572486</td><td>automatic_group</td></tr>
+<tr><td>PHL:G2</td><td>239</td><td>197</td><td>PHL:G2</td><td>26457949</td><td>automatic_group</td></tr>
+<tr><td>PHL:G3</td><td>47</td><td>18</td><td>PHL:G3</td><td>2328015</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='TUR'>TUR — 2 groups change size</h2><a href='TUR.svg'><img src='TUR.svg' loading='lazy' alt='TUR saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>TUR:G1</td><td>504</td><td>492</td><td>TUR:G1</td><td>71389267</td><td>automatic_group</td></tr>
+<tr><td>TUR:G2</td><td>77</td><td>89</td><td>TUR:G2</td><td>12971040</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='ITA'>ITA — 2 groups change size</h2><a href='ITA.svg'><img src='ITA.svg' loading='lazy' alt='ITA saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>ITA:G1</td><td>374</td><td>366</td><td>ITA:G1</td><td>51603343</td><td>automatic_group</td></tr>
+<tr><td>ITA:G2</td><td>26</td><td>34</td><td>ITA:G2</td><td>4818232</td><td>automatic_group</td></tr>
+<tr><td>ITA:G3</td><td>11</td><td>11</td><td>ITA:G3</td><td>1584922</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='ESP'>ESP — 3 groups change size</h2><a href='ESP.svg'><img src='ESP.svg' loading='lazy' alt='ESP saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>ESP:G1</td><td>296</td><td>296</td><td>ESP:G1</td><td>43309807</td><td>automatic_group</td></tr>
+<tr><td>ESP:G2</td><td>9</td><td>2</td><td>ESP:G2</td><td>241891</td><td>automatic_group</td></tr>
+<tr><td>ESP:G3</td><td>8</td><td>8</td><td>ESP:G3</td><td>1166748</td><td>automatic_group</td></tr>
+<tr><td>ESP:G4</td><td>4</td><td>7</td><td>ESP:G4</td><td>998346</td><td>automatic_group</td></tr>
+<tr><td>ESP:G5</td><td>2</td><td>6</td><td>ESP:G5</td><td>878155</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='GBR'>GBR — 3 groups change size</h2><a href='GBR.svg'><img src='GBR.svg' loading='lazy' alt='GBR saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>GBR:G1</td><td>439</td><td>445</td><td>GBR:G1</td><td>64868449</td><td>automatic_group</td></tr>
+<tr><td>GBR:G2</td><td>16</td><td>13</td><td>GBR:G2</td><td>1955781</td><td>automatic_group</td></tr>
+<tr><td>GBR:G3</td><td>4</td><td>1</td><td>GBR:G3</td><td>138293</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='FRA'>FRA — 2 groups change size</h2><a href='FRA.svg'><img src='FRA.svg' loading='lazy' alt='FRA saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>FRA:G1</td><td>434</td><td>436</td><td>FRA:G1</td><td>63645728</td><td>automatic_group</td></tr>
+<tr><td>FRA:G2</td><td>4</td><td>2</td><td>FRA:G2</td><td>318170</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='PSE'>PSE — 2 groups change size</h2><a href='PSE.svg'><img src='PSE.svg' loading='lazy' alt='PSE saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>PSE:G1</td><td>28</td><td>26</td><td>PSE:G1</td><td>3377254</td><td>automatic_group</td></tr>
+<tr><td>PSE:G2</td><td>13</td><td>15</td><td>PSE:G2</td><td>2041145</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='USA'>USA — 3 groups change size</h2><a href='USA.svg'><img src='USA.svg' loading='lazy' alt='USA saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>USA:G1</td><td>2255</td><td>2254</td><td>USA:G1</td><td>332349999</td><td>automatic_group</td></tr>
+<tr><td>USA:G2</td><td>11</td><td>10</td><td>USA:G2</td><td>1461365</td><td>automatic_group</td></tr>
+<tr><td>USA:G3</td><td>2</td><td>4</td><td>USA:G3</td><td>573153</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='GRC'>GRC — 2 groups change size</h2><a href='GRC.svg'><img src='GRC.svg' loading='lazy' alt='GRC saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>GRC:G1</td><td>66</td><td>67</td><td>GRC:G1</td><td>9590123</td><td>automatic_group</td></tr>
+<tr><td>GRC:G2</td><td>2</td><td>1</td><td>GRC:G2</td><td>205166</td><td>automatic_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='ABW'>ABW — 0 groups change size</h2><a href='ABW.svg'><img src='ABW.svg' loading='lazy' alt='ABW saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>ABW:G1</td><td>2</td><td>2</td><td>ABW:G1</td><td>87775</td><td>whole_scope_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='AFG'>AFG — 0 groups change size</h2><a href='AFG.svg'><img src='AFG.svg' loading='lazy' alt='AFG saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>AFG:G1</td><td>287</td><td>287</td><td>AFG:G1</td><td>42084589</td><td>whole_scope_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='AGO'>AGO — 0 groups change size</h2><a href='AGO.svg'><img src='AGO.svg' loading='lazy' alt='AGO saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>AGO:G1</td><td>255</td><td>255</td><td>AGO:G1</td><td>36407494</td><td>whole_scope_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='ALB'>ALB — 0 groups change size</h2><a href='ALB.svg'><img src='ALB.svg' loading='lazy' alt='ALB saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>ALB:G1</td><td>20</td><td>20</td><td>ALB:G1</td><td>2809577</td><td>whole_scope_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='AND'>AND — 0 groups change size</h2><a href='AND.svg'><img src='AND.svg' loading='lazy' alt='AND saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>AND:G1</td><td>1</td><td>1</td><td>AND:G1</td><td>78907</td><td>whole_scope_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='JPN'>JPN — 0 groups change size</h2><a href='JPN.svg'><img src='JPN.svg' loading='lazy' alt='JPN saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>JPN:G1</td><td>858</td><td>858</td><td>JPN:G1</td><td>121669295</td><td>whole_scope_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2 id='NZL'>NZL — 0 groups change size</h2><a href='NZL.svg'><img src='NZL.svg' loading='lazy' alt='NZL saved and resized groups with source population assignments'></a>
+<table><tr><th>Group</th><th>Before tiles</th><th>New tiles</th><th>Population pool</th><th>Pool population</th><th>Match</th></tr>
+<tr><td>NZL:G1</td><td>32</td><td>32</td><td>NZL:G1</td><td>4660576</td><td>whole_scope_group</td></tr>
+</table><p>Pool population is repeated for fallback groups. Do not add repeated pool values.</p>
+<h2>World</h2><a href='world.svg'><img src='world.svg' loading='lazy' alt='Whole-world trial layout'></a></html>
