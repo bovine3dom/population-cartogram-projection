@@ -34,7 +34,8 @@ Country tile counts and the regional outline are fixed. Colours identify countri
 Red lines mark shared tile edges between countries that do not share a border in Natural Earth.</p>
 <p class='note'>The African mainland currently has no enclosed empty cells: this trial does not add lakes.
 Exact trials require all Natural Earth neighbour pairs inside the region, with no extra pairs.
-Trials marked “soft” penalize wrong contacts but can retain them; the table reports these errors.
+Local exchanges and penalized fits can retain wrong contacts. Geographic seeds do not enforce neighbours.
+The table reports all remaining errors; none of these trials is an approved map.
 Outside countries stay fixed. Their border errors are shown, not accepted as correct geography.
 Same-country corner contact counts as connected; country borders require shared edges.</p>
 <p><a href='geography.svg'>Natural Earth reference</a> · <a href='../owid-clean-build/world.svg'>Current world map</a></p>
@@ -50,7 +51,7 @@ for (trial,report) in zip(trials,reports)
     mode=String(report["mode"]);cp(joinpath(trial,"report.json"),joinpath(output,"$mode-report.json"))
     push!(page,"<h2>$mode</h2><p><a href='$mode-report.json'>Checks, input hashes, and solver report</a></p>")
     if !report["complete"]
-        push!(page,"<p>No validated fit was found within the search budget. This is not proof that no fit exists.</p>")
+        push!(page,"<p>No validated fit was produced. See the solver report for the stopping reason. This is not proof that no fit exists.</p>")
         continue
     end
     after=load_cells(joinpath(trial,"cells.csv"));filename="$mode.svg"

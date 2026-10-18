@@ -2,9 +2,10 @@ using OWIDLayout, CSV, JSON
 const O=OWIDLayout
 length(ARGS)==3 || error("Usage: refine-west-africa.jl CLEAN_BUILD OUTPUT_DIR MODE")
 root,output,mode=ARGS
-mode in ("conservative","geographic","conservative-soft","geographic-soft","conservative-local","geographic-local","geographic-seed","geographic-reseed") || error("Unknown mode")
+mode in ("conservative","geographic","conservative-soft","geographic-soft","conservative-local","geographic-local","geographic-seed","geographic-reseed","geographic-centres","geographic-centres-refined") || error("Unknown mode")
 local_search=endswith(mode,"-local")
-reseed=endswith(mode,"-seed") || endswith(mode,"-reseed")
+centre_cost=startswith(mode,"geographic-centres")
+reseed=endswith(mode,"-seed") || endswith(mode,"-reseed") || centre_cost
 soft=endswith(mode,"-soft") || local_search || reseed
 ispath(output) && error("Use a new output directory")
 mkpath(output)
@@ -76,6 +77,9 @@ distances(guides)=[minimum(sum((p[k]-q[k])^2 for k in 1:2) for q in guides[s]) f
 oldcost=distances(reference);geocost=distances(geo_guides)
 blend=startswith(mode,"conservative") ? .25 : .85
 costs=(1-blend).*oldcost.+blend.*geocost
+if centre_cost
+    costs=[sum((p[k]-(axes[k][1]+axes[k][2]*centres[s][k]))^2 for k in 1:2) for p in points,s in region]
+end
 costs.-=minimum(costs;dims=2)
 # A mainland outer edge not shared with another source scope is coastline.
 # Interior rings are not coastline: this must not turn lakes into sea access.
@@ -92,18 +96,19 @@ inland=Set(s for s in region if all(any(t!=s for t in edge_scopes[segment(r[i],r
     for r in [first(main[s]["coordinates"])] for i in 1:length(r)-1 if r[i]!=r[i+1]))
 report=Dict{String,Any}("complete"=>false,"approved"=>false,"mode"=>mode,"region"=>region,"tiles"=>length(footprint),
     "before"=>audit(owner),"geographic_weight"=>blend,"guide_axes"=>axes,"inland"=>sort!(collect(inland)),
-    "topology_mode"=>soft ? "penalty; errors are not approved" : "exact internal graph",
+    "topology_mode"=>soft ? "audit or penalty; errors are not approved" : "exact internal graph",
+    "cell_cost"=>centre_cost ? "squared distance to geographic guide centres" : "blended distance to original and geographic shape guides",
     "inputs"=>Dict(p=>O.file_digest(p) for p in [paths;@__FILE__;joinpath(@__DIR__,"../src/partition.jl");joinpath(@__DIR__,"../src/region_exchange.jl");joinpath(@__DIR__,"../src/region_seed.jl")]),
     "limits"=>["The regional footprint and all outside countries stay fixed.","Natural Earth defines desired contacts. Penalized trials can retain errors; outside contacts are audited only.","This experiment does not add missing lakes."])
 save()=open(io->JSON.print(io,report),joinpath(output,"report.json"),"w")
 save()
 CSV.write(joinpath(output,"before.csv"),[(component_id=g,x=p[1],y=p[2]) for (p,g) in sort!(collect(original);by=first)])
 attempts=Any[]
-for radius in (8.,16.)
+for radius in (reseed || local_search ? (8.,) : (8.,16.))
     println("Starting $mode: $(length(points)) tiles, radius=$radius");flush(stdout)
     if reseed
-        result,check=O.seed_region(reference,outside,costs;inland)
-        if result!==nothing && endswith(mode,"-reseed")
+        result,check=O.seed_region(reference,outside,costs;inland,rounds=100)
+        if result!==nothing && (endswith(mode,"-reseed") || endswith(mode,"-refined"))
             report["seed_audit"]=audit(merge(copy(outside),O.group_owners(result)))
             result,check=O.exchange_region(result,outside,required,costs;inland)
         end
