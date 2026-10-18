@@ -86,6 +86,20 @@ def run(owid, layout, polygons, output):
         (output/f'{c}.svg').write_text(''.join(svg))
         subprocess.run(['rsvg-convert',str(output/f'{c}.svg'),'-o',str(output/f'{c}.png')],check=True)
         pages.append(f'<h2>{c}</h2><p>{html.escape(entry["status"])}</p><a href="{c}.png"><img src="{c}.png" alt="{c}: original, trial, and shared source group labels"></a>')
+    if report.get('relaxed_layout'):
+        shutil.copyfile(layout/'relaxation.json',output/'relaxation.json')
+        for country in report['relaxation']['border_fits']:
+            for label in sorted(k for k in new if k.startswith(country+':')):
+                points=before[label]|new[label]
+                west=min(x for x,y in points)-8;east=max(x for x,y in points)+8
+                south=min(y for x,y in points)-8;north=max(y for x,y in points)+8
+                for name,cells in [('before',before),('after',new)]:
+                    stem=label.replace(':','-')+'-'+name
+                    owner={p:k.split(':')[0] for k,ps in cells.items() for p in ps
+                           if west<=p[0]<=east and south<=p[1]<=north}
+                    draw_layout(output/f'{stem}.svg',owner,f'{label} and neighbours: {name}',{}, {},borders=True)
+                    subprocess.run(['rsvg-convert',str(output/f'{stem}.svg'),'-o',str(output/f'{stem}.png')],check=True)
+                    pages.insert(0,f'<h2>{label} and neighbours: {name}</h2><img src="{stem}.png" alt="Shared border context">')
     for name in ('report.json','matches.csv','source-assignments.csv','source-scopes-without-tiles.csv'):shutil.copyfile(layout/name,output/name)
     import gzip
     (output/'cells.csv.gz').write_bytes(gzip.compress((layout/'cells.csv').read_bytes(),mtime=0))
@@ -93,7 +107,7 @@ def run(owid, layout, polygons, output):
     for name,cells in [('before',before),('after',new)]:
         draw_layout(output/f'world-{name}.svg',{p:k.split(':')[0] for k,points in cells.items() for p in points},f'OWID island resize: {name}',{}, {})
         subprocess.run(['rsvg-convert',str(output/f'world-{name}.svg'),'-o',str(output/f'world-{name}.png')],check=True)
-    (output/'index.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OWID island resize trial</title><style>body{font:18px system-ui;max-width:1500px;margin:2em auto;padding:0 1em}img{max-width:100%}</style><h1>OWID island resize trial</h1><p>Research only. No default layout or mapping export changed. Automatic island identities still need review. Malaysia and the Philippines remain unchanged because their requested budgets fail the current border and water constraints. Shared G labels now refer to the same assigned groups, not independent size ranks.</p><p>Country totals, existing piece contacts, connectivity, and enclosed water stay fixed. Small source components join the nearest matched component within the same country. A visibility and protected-border floor can prevent exact population proportions. No new islands are created. Source scopes without target tiles remain unrepresented.</p><p><a href="report.json">Checks and blocked countries</a> · <a href="matches.csv">Identities and requested budgets</a> · <a href="source-assignments.csv">Every source assignment</a> · <a href="source-scopes-without-tiles.csv">Unrepresented scopes</a> · <a href="cells.csv.gz">Trial land tiles</a> · <a href="owid-cartogram.csv.gz">Trial in OWID coordinate format</a></p><p>For a blocked country, the displayed layout is unchanged; requested budgets in matches.csv were not applied. Conflicting South Africa/Lesotho coordinates use the audit last-row convention.</p><h2>World before</h2><img src="world-before.png" alt="OWID before"><h2>World after</h2><img src="world-after.png" alt="OWID trial after">'+''.join(pages)+'</html>')
+    (output/'index.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OWID island resize trial</title><style>body{font:18px system-ui;max-width:1500px;margin:2em auto;padding:0 1em}img{max-width:100%}</style><h1>OWID island resize trial</h1><p>Research only. No default layout or mapping export changed. Automatic island identities still need review. See each country status below; blocked trials remain unchanged. Shared G labels now refer to the same assigned groups, not independent size ranks.</p><p>Country totals, existing piece contacts, and connectivity stay fixed. The report lists any released inter-island sea gaps. Small source components join the nearest matched component within the same country. A visibility and protected-border floor can prevent exact population proportions. No new islands are created. Source scopes without target tiles remain unrepresented.</p><p><a href="report.json">Checks and blocked countries</a> · <a href="matches.csv">Identities and requested budgets</a> · <a href="source-assignments.csv">Every source assignment</a> · <a href="source-scopes-without-tiles.csv">Unrepresented scopes</a> · <a href="cells.csv.gz">Trial land tiles</a> · <a href="owid-cartogram.csv.gz">Trial in OWID coordinate format</a></p><p>For a blocked country, the displayed layout is unchanged; requested budgets in matches.csv were not applied. Conflicting South Africa/Lesotho coordinates use the audit last-row convention.</p><h2>World before</h2><img src="world-before.png" alt="OWID before"><h2>World after</h2><img src="world-after.png" alt="OWID trial after">'+''.join(pages)+'</html>')
 
 
 if __name__=='__main__':

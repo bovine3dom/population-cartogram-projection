@@ -75,7 +75,7 @@ def draw(path,land,enclosed,masks,title,legend='Grey: land. Red: enclosed empty 
     path.write_text('\n'.join(parts)+'</svg>\n')
 
 
-def draw_layout(path,owners,title,names,country_ids):
+def draw_layout(path,owners,title,names,country_ids,borders=False):
     width,height=1800,1120
     xmin=min(x for x,y in owners)-1;xmax=max(x for x,y in owners)+1
     ymin=min(y for x,y in owners)-1;ymax=max(y for x,y in owners)+1
@@ -91,6 +91,16 @@ def draw_layout(path,owners,title,names,country_ids):
         commands=[f'M{tx(x-.5):.3f},{ty(y+.5):.3f}h{scale:.3f}v{scale:.3f}h-{scale:.3f}z' for x,y in sorted(points)]
         for start in range(0,len(commands),10000):
             parts.append(f'<path fill="{country_color(c)}" shape-rendering="crispEdges" d="{" ".join(commands[start:start+10000])}"/>')
+    if borders:
+        edges=[]
+        for (x,y),c in sorted(owners.items()):
+            for dx,dy in ((1,0),(0,1)):
+                other=owners.get((x+dx,y+dy))
+                if other is None or other==c:continue
+                a=(x+.5,y-.5) if dx else (x-.5,y+.5)
+                b=(x+.5,y+.5)
+                edges.append(f'M{tx(a[0]):.3f},{ty(a[1]):.3f}L{tx(b[0]):.3f},{ty(b[1]):.3f}')
+        parts.append(f'<path fill="none" stroke="#555" stroke-width="1" d="{" ".join(edges)}"/>')
     boxes=[]
     for c,points in sorted(countries.items(),key=lambda item:(-len(item[1]),item[0])):
         if len(points)*scale*scale<1200:continue

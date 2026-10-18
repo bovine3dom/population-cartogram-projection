@@ -20,7 +20,11 @@ from review_layout import load, read_csv
 from save_review import digest
 
 
-def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, maximum_reach=None, fixed_cells=(), required_extra=(), expansion=0, movable=(), preferred=None, perimeter_weight=0., distance_weight=0., sea_connected=False, protected_water=(), thin_weight=0.):
+def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, maximum_reach=None, fixed_cells=(), required_extra=(), expansion=0, movable=(), preferred=None, perimeter_weight=0., distance_weight=0., sea_connected=False, protected_water=(), thin_weight=0., budgets=None):
+    budgets = budgets or {}
+    if not set(budgets)<=set(tiles) or any(n<1 or int(n)!=n for n in budgets.values()):
+        raise ValueError('Use positive integer budgets for existing components')
+    counts = {c:budgets.get(c,len(points)) for c,points in tiles.items()}
     owner = {p:c for c, points in tiles.items() for p in points}
     protected_water = set(protected_water)
     if protected_water & owner.keys():raise ValueError('Protected water overlaps land')
@@ -34,6 +38,11 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
             raise ValueError('Movable labels must include the target and exist')
         window = {p for p in window if owner[p] in movable}
     labels = sorted({owner[p] for p in window})
+    if any(counts[c]!=len(tiles[c]) for c in set(tiles)-set(labels)):
+        raise ValueError('Changed budgets must be inside the fit window')
+    window_counts = {c:counts[c]-len(tiles[c]-window) for c in labels}
+    if any(n<1 for n in window_counts.values()):
+        raise ValueError('Fit window is too small for the requested budgets')
     if expansion < 0 or min(perimeter_weight,distance_weight,thin_weight) < 0 or not np.isfinite([perimeter_weight,distance_weight,thin_weight]).all():
         raise ValueError('Expansion and shape weights must be non-negative and finite')
     for _ in range(expansion):
@@ -55,7 +64,7 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
     for p in points:
         add({indices[p,c]:1 for c in labels},0 if expansion else 1,1)
     for c in labels:
-        add({indices[p,c]:1 for p in points},len(tiles[c]&window),len(tiles[c]&window))
+        add({indices[p,c]:1 for p in points},window_counts[c],window_counts[c])
     for p in window & set(fixed_cells):
         if p in owner:
             add({indices[p,owner[p]]:1},1,1)
@@ -164,7 +173,7 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
         fixed_nodes={p:('outside',i) for i,part in enumerate(outside_parts) for p in part}
         nodes=points+[('outside',i) for i in range(len(outside_parts))]
         root=roots[c] if roots[c] in window else fixed_nodes[roots[c]]
-        demand=len(tiles[c]&window)+len(outside_parts)-1
+        demand=window_counts[c]+len(outside_parts)-1
         if demand<=0:continue
         edges=set()
         for p in points:
@@ -185,7 +194,7 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
     if sea_connected:
         if not expansion:raise ValueError('Sea connectivity needs a movable coastline')
         water_nodes=window-protected_water
-        demand=len(water_nodes)-sum(len(tiles[c]&window) for c in labels)
+        demand=len(water_nodes)-sum(window_counts.values())
         balances={p:{} for p in water_nodes};balances['sea']={}
         bounds=[(min(p[i] for p in owner),max(p[i] for p in owner)) for i in (0,1)]
         edges=set()
@@ -238,7 +247,7 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
                 add(values,lo=fixed_inside-fixed_boundary)
         if split:continue
         after={p:c for c,points in result.items() for p in points}
-        if len(after)!=len(owner) or any(len(result[c])!=len(tiles[c]) for c in tiles):raise AssertionError('Counts differ')
+        if len(after)!=sum(counts.values()) or any(len(result[c])!=counts[c] for c in tiles):raise AssertionError('Counts differ')
         if any(owner.get(p)!=after.get(p) for p in fixed_cells):raise AssertionError('Fixed cell changed')
         new=contacts(after)
         if ((required & actual)|required_extra)-new or new-required-actual:raise AssertionError('Border regression')
