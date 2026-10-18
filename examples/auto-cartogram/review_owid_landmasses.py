@@ -19,7 +19,7 @@ from review_layout import country_color
 
 
 def comparison(path,labels,layouts,title):
-    cells=[{p:c for c in labels for p in layout[c]} for layout in layouts]
+    cells=[{p:c for c in labels for p in layout.get(c,())} for layout in layouts]
     points=set().union(*(set(c) for c in cells));west=min(x for x,y in points);east=max(x for x,y in points)
     south=min(y for x,y in points);north=max(y for x,y in points)
     scale=min(640/(east-west+2),620/(north-south+2))
@@ -30,7 +30,7 @@ def comparison(path,labels,layouts,title):
         ty=lambda y:130+(north-y+.5)*scale
         svg.append(f'<text x="{30+700*side}" y="80" font-family="sans-serif" font-size="18">{["Original OWID","Previous trial","Landmass-first trial"][side]}: {len(owner)} tiles</text>')
         for c in labels:
-            commands=[f'M{tx(x-.5):.2f},{ty(y+.5):.2f}h{scale:.2f}v{scale:.2f}h-{scale:.2f}z' for x,y in sorted(layouts[side][c])]
+            commands=[f'M{tx(x-.5):.2f},{ty(y+.5):.2f}h{scale:.2f}v{scale:.2f}h-{scale:.2f}z' for x,y in sorted(layouts[side].get(c,()))]
             svg.append(f'<path fill="{country_color(c.split(":")[0])}" d="{" ".join(commands)}"/>')
         edges=[]
         for (x,y),c in sorted(owner.items()):
@@ -41,7 +41,9 @@ def comparison(path,labels,layouts,title):
                 edges.append(f'M{tx(a[0]):.2f},{ty(a[1]):.2f}L{tx(x+.5):.2f},{ty(y+.5):.2f}')
         svg.append(f'<path fill="none" stroke="#555" stroke-width="1" d="{" ".join(edges)}"/>')
         for c in labels:
-            ps=layouts[side][c];centre=np.mean(sorted(ps),axis=0)
+            ps=layouts[side].get(c,set())
+            if not ps:continue
+            centre=np.mean(sorted(ps),axis=0)
             x,y=min(ps,key=lambda p:sum((np.array(p)-centre)**2))
             svg.append(f'<text x="{tx(x):.2f}" y="{ty(y):.2f}" font-family="sans-serif" font-size="12" paint-order="stroke" stroke="white" stroke-width="2">{html.escape(c)}</text>')
     path.write_text(''.join(svg)+'</svg>\n')

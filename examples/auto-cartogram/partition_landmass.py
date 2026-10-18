@@ -13,16 +13,19 @@ from dock_true_borders import contacts
 from review_geography import exterior_water
 
 
-def partition(reference, footprint, budgets, radius=4, seconds=120):
-    labels=sorted(reference);points=sorted(footprint)
+def partition(reference, footprint, budgets, radius=4, seconds=120, exact_contacts=None, outside=None, inland=None, preferred=None, perimeter_weight=0.):
+    labels=sorted(reference);points=sorted(footprint);outside=outside or {}
+    if set(outside)&footprint or set(outside.values())&set(labels):raise ValueError('Outside cells must belong to other labels')
+    if perimeter_weight<0 or not np.isfinite(perimeter_weight):raise ValueError('Use a non-negative perimeter weight')
     if set(labels)!=set(budgets) or any(n<1 or int(n)!=n for n in budgets.values()):
         raise ValueError('Use a positive integer budget for every part')
     if sum(budgets.values())!=len(points):raise ValueError('Outline area differs from budgets')
     if len(parts(footprint))!=1:raise ValueError('Use one connected outline')
-    if len(labels)==1:return {labels[0]:set(footprint)},dict(complete=True,variables=0,attempts=[])
+    if len(labels)==1 and exact_contacts is None and not outside:return {labels[0]:set(footprint)},dict(complete=True,variables=0,attempts=[])
     source=set().union(*reference.values())
     centre=np.mean(sorted(source),axis=0);scale=(len(points)/len(source))**.5
-    distances=np.column_stack([cKDTree(centre+scale*(np.array(sorted(reference[c]))-centre)).query(points)[0] for c in labels])
+    preferred=preferred or reference
+    distances=np.column_stack([cKDTree(centre+scale*(np.array(sorted(preferred[c]))-centre)).query(points)[0] for c in labels])
     nearest=distances.min(axis=1)
     radii=np.full(len(labels),float(radius))
     if radius<=0 or not np.isfinite(radius):raise ValueError('Use a positive candidate radius')
@@ -45,6 +48,7 @@ def partition(reference, footprint, budgets, radius=4, seconds=120):
     choices={p:[labels[j] for j in range(len(labels)) if distances[i,j]<=nearest[i]+radii[j]]
              for i,p in enumerate(points)}
     fixed={p:cs[0] for p,cs in choices.items() if len(cs)==1}
+    fixed.update(outside)
     indices={(p,c):i for i,(p,c) in enumerate((p,c) for p in points if p not in fixed for c in choices[p])}
     lookup={p:i for i,p in enumerate(points)};label_index={c:i for i,c in enumerate(labels)}
     costs=[float(distances[lookup[p],label_index[c]]**2) for p,c in indices]
@@ -59,15 +63,19 @@ def partition(reference, footprint, budgets, radius=4, seconds=120):
     for p in points:
         if p not in fixed:add([(term(p,c),1) for c in choices[p]],1,1)
     for c in labels:add([(term(p,c),1) for p in points if c in choices[p]],budgets[c],budgets[c])
-    old_sea=exterior_water({p:1 for p in source});new_sea=exterior_water({p:1 for p in footprint})
+    old_sea=exterior_water({p:1 for p in source|set(outside)});new_sea=exterior_water({p:1 for p in footprint|set(outside)})
     source_coast={p for p in source if any(q in old_sea for q in adjacent(p))}
     coast={p for p in footprint if any(q in new_sea for q in adjacent(p))}
-    owner={p:c for c,ps in reference.items() for p in ps};required=contacts(owner)
-    edges=[(p,q) for p in points for q in adjacent(p) if q in footprint and p<q]
+    owner={**outside,**{p:c for c,ps in reference.items() for p in ps}}
+    expected=contacts(owner) if exact_contacts is None else set(exact_contacts)
+    if any(a>=b or a not in set(owner.values()) or b not in set(owner.values()) for a,b in expected):
+        raise ValueError('Use sorted contact pairs for existing labels')
+    required={pair for pair in expected if set(pair)&set(labels)}
+    edges=[(p,q) for p in points for q in adjacent(p) if (q in footprint and p<q) or q in outside]
     witnesses={pair:[] for pair in required};fixed_contacts=set()
     for p,q in edges:
         for a in choices[p]:
-            for b in choices[q]:
+            for b in (choices[q] if q in choices else [outside[q]]):
                 if a==b:continue
                 pair=tuple(sorted((a,b)));left=term(p,a);right=term(q,b)
                 if pair not in required:add([(left,1),(right,1)],hi=1)
@@ -77,10 +85,16 @@ def partition(reference, footprint, budgets, radius=4, seconds=120):
                     add([((i,0.),1),(left,-1)],hi=0)
                     add([((i,0.),1),(right,-1)],hi=0)
     for pair in required-fixed_contacts:add([(w,1) for w in witnesses[pair]],lo=1)
+    if perimeter_weight:
+        for p,q in edges:
+            for c in set(choices[p])|set(choices.get(q,[])):
+                i=len(costs);costs.append(perimeter_weight)
+                add([((i,0.),1),(term(p,c),-1),(term(q,c),1)],lo=0)
+                add([((i,0.),1),(term(p,c),1),(term(q,c),-1)],lo=0)
     # Preserve coast access, including the lack of access for inland parts.
     for c in labels:
         terms=[(term(p,c),1) for p in coast if c in choices[p]]
-        if reference[c]&source_coast:add(terms,lo=1)
+        if (c not in inland if inland is not None else bool(reference[c]&source_coast)):add(terms,lo=1)
         else:add(terms,0,0)
     deadline=time.monotonic()+seconds;attempts=[]
     for iteration in range(40):
@@ -110,6 +124,6 @@ def partition(reference, footprint, budgets, radius=4, seconds=120):
         if fragments:continue
         after={p:c for c,ps in result.items() for p in ps}
         assert set(after)==footprint and sum(map(len,result.values()))==len(footprint)
-        assert all(len(result[c])==budgets[c] for c in labels) and contacts(after)==required
+        assert all(len(result[c])==budgets[c] for c in labels) and contacts({**outside,**after})==expected
         return result,dict(attempts=attempts,variables=integer_count,radii=dict(zip(labels,radii.tolist())),complete=True)
     return None,dict(attempts=attempts,variables=integer_count,radii=dict(zip(labels,radii.tolist())),complete=False)
