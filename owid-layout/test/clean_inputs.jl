@@ -42,6 +42,19 @@ import Arrow, H3, JSON
     end
 end
 
+@testset "Clean layout invariants" begin
+    reference=Dict("AAA:G1"=>Set([(0,0),(0,1)]),"AAA:G2"=>Set([(8,0),(8,1)]))
+    result,checks=OWIDLayout.fit_clean_layout(reference,Dict("AAA:G1"=>1,"AAA:G2"=>3))
+    @test checks["complete"]
+    @test checks["groups_connected"] && checks["scope_totals_exact"] && checks["coastal_groups_unchanged"]
+    @test sum(length,values(result))==4
+    again,_=OWIDLayout.fit_clean_layout(reference,Dict("AAA:G1"=>1,"AAA:G2"=>3))
+    @test again==result
+    invalid=Dict("AAA:G1"=>reference["AAA:G1"],"BBB:G1"=>reference["AAA:G2"])
+    result,checks=OWIDLayout.fit_clean_layout(invalid,Dict("AAA:G1"=>1,"BBB:G1"=>3))
+    @test result===nothing && !checks["scope_totals_exact"]
+end
+
 @testset "Shared outline partition" begin
     reference=Dict("a"=>Set([(0,0),(0,1)]),"b"=>Set([(1,0),(1,1)]))
     footprint=union(values(reference)...)

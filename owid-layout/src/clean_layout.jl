@@ -84,13 +84,21 @@ function fit_clean_layout(reference,budgets;node_limit=100_000,max_shift=32)
         push!(placements,(groups=template.labels,shift=shift))
     end
     holes=enclosed_cells(keys(owner))
+    function coastal_groups(cells,water)
+        Set(g for (p,g) in cells for (dx,dy) in EDGE_OFFSETS
+            if !haskey(cells,(p[1]+dx,p[2]+dy)) && (p[1]+dx,p[2]+dy) ∉ water)
+    end
+    scopes=unique(group_scope.(collect(keys(reference))))
     checks=Dict("complete"=>true,"blocks"=>records,"placements"=>placements,
         "budgets_exact"=>all(length(result[g])==n for (g,n) in budgets),
+        "groups_connected"=>all(length(connected_parts(ps;diagonals=true))==1 for ps in values(result)),
+        "scope_totals_exact"=>all(sum(length(ps) for (g,ps) in reference if group_scope(g)==s)==sum(length(ps) for (g,ps) in result if group_scope(g)==s) for s in scopes),
+        "coastal_groups_unchanged"=>coastal_groups(original,enclosed_cells(keys(original)))==coastal_groups(owner,holes),
         "contacts_unchanged"=>edge_contacts(owner)==contacts,"protected_water_retained"=>issubset(protected,holes),
         "protected_water_cells"=>length(protected),"water_before"=>length(enclosed_cells(keys(original))),"water_after"=>length(holes),
         "water_unchanged"=>enclosed_cells(keys(original))==holes,"total_tiles"=>length(owner),
         "changed_groups"=>sort!([g for g in keys(reference) if length(reference[g])!=budgets[g]]))
-    checks["complete"]=checks["budgets_exact"]&&checks["contacts_unchanged"]&&checks["protected_water_retained"]&&length(owner)==length(original)
+    checks["complete"]=all(checks[k] for k in ("budgets_exact","groups_connected","scope_totals_exact","coastal_groups_unchanged","contacts_unchanged","protected_water_retained"))&&length(owner)==length(original)
     checks["complete"] ? (result,checks) : (nothing,checks)
 end
 
