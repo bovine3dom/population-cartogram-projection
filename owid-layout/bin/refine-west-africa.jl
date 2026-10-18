@@ -2,8 +2,9 @@ using OWIDLayout, CSV, JSON
 const O=OWIDLayout
 length(ARGS)==3 || error("Usage: refine-west-africa.jl CLEAN_BUILD OUTPUT_DIR MODE")
 root,output,mode=ARGS
-mode in ("conservative","geographic","conservative-soft","geographic-soft") || error("Unknown mode")
-soft=endswith(mode,"-soft")
+mode in ("conservative","geographic","conservative-soft","geographic-soft","conservative-local","geographic-local") || error("Unknown mode")
+local_search=endswith(mode,"-local")
+soft=endswith(mode,"-soft") || local_search
 ispath(output) && error("Use a new output directory")
 mkpath(output)
 cp(@__FILE__,joinpath(output,"driver.jl"))
@@ -91,7 +92,7 @@ inland=Set(s for s in region if all(any(t!=s for t in edge_scopes[segment(r[i],r
 report=Dict{String,Any}("complete"=>false,"approved"=>false,"mode"=>mode,"region"=>region,"tiles"=>length(footprint),
     "before"=>audit(owner),"geographic_weight"=>blend,"guide_axes"=>axes,"inland"=>sort!(collect(inland)),
     "topology_mode"=>soft ? "penalty; errors are not approved" : "exact internal graph",
-    "inputs"=>Dict(p=>O.file_digest(p) for p in [paths;@__FILE__;joinpath(@__DIR__,"../src/partition.jl")]),
+    "inputs"=>Dict(p=>O.file_digest(p) for p in [paths;@__FILE__;joinpath(@__DIR__,"../src/partition.jl");joinpath(@__DIR__,"../src/region_exchange.jl")]),
     "limits"=>["The regional footprint and all outside countries stay fixed.","Natural Earth defines desired contacts. Penalized trials can retain errors; outside contacts are audited only.","This experiment does not add missing lakes."])
 save()=open(io->JSON.print(io,report),joinpath(output,"report.json"),"w")
 save()
@@ -99,9 +100,13 @@ CSV.write(joinpath(output,"before.csv"),[(component_id=g,x=p[1],y=p[2]) for (p,g
 attempts=Any[]
 for radius in (8.,16.)
     println("Starting $mode: $(length(points)) tiles, radius=$radius");flush(stdout)
-    result,check=O.partition_groups(reference,footprint,budgets;required,outside,inland,cell_costs=costs,
-        perimeter_weight=2.,free_outside_contacts=true,radius,node_limit=soft ? 30 : 250,rounds=20,
-        contact_penalty=soft ? 200. : nothing,start_reference=soft)
+    if local_search
+        result,check=O.exchange_region(reference,outside,required,costs;inland)
+    else
+        result,check=O.partition_groups(reference,footprint,budgets;required,outside,inland,cell_costs=costs,
+            perimeter_weight=2.,free_outside_contacts=true,radius,node_limit=soft ? 30 : 250,rounds=20,
+            contact_penalty=soft ? 200. : nothing,start_reference=soft)
+    end
     push!(attempts,check);report["attempts"]=attempts;save()
     isnothing(result) && continue
     fitted=merge(copy(outside),O.group_owners(result))

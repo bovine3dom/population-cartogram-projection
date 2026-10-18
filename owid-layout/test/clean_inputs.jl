@@ -55,6 +55,19 @@ end
     @test result===nothing && !checks["scope_totals_exact"]
 end
 
+@testset "Regional exchanges" begin
+    reference=Dict("a"=>Set([(0,0),(1,0)]),"b"=>Set([(0,1),(1,1)]))
+    costs=[0. 10.;0. 10.;10. 0.;10. 0.]
+    required=Set([("a","b")])
+    result,report=OWIDLayout.exchange_region(reference,Dict(),required,costs;perimeter_weight=0.)
+    @test result["a"]==Set([(0,0),(0,1)])
+    @test result["b"]==Set([(1,0),(1,1)])
+    @test report.topology_exact
+    @test sum(r.objective_reduction for r in report.sweeps)==20
+    again,_=OWIDLayout.exchange_region(reference,Dict(),required,costs;perimeter_weight=0.)
+    @test again==result
+end
+
 @testset "Shared outline partition" begin
     reference=Dict("a"=>Set([(0,0),(0,1)]),"b"=>Set([(1,0),(1,1)]))
     footprint=union(values(reference)...)
