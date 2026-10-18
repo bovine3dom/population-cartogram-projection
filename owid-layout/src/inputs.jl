@@ -4,13 +4,16 @@ function code_table(path)
     Dict(String(r.alpha3) => parse(Int, r.numeric) for r in CSV.File(path; types=String))
 end
 
-function connected_parts(points)
+function connected_parts(points; diagonals=false)
+    offsets = diagonals ? ((-1,0),(1,0),(0,-1),(0,1),(-1,-1),(-1,1),(1,-1),(1,1)) :
+                          ((-1,0),(1,0),(0,-1),(0,1))
     remaining = Set(points); result = Set{Tuple{Int,Int}}[]
     while !isempty(remaining)
         seed = minimum(remaining); delete!(remaining, seed)
         part = Set([seed]); queue = [seed]
         for (x,y) in queue
-            for q in ((x-1,y), (x+1,y), (x,y-1), (x,y+1))
+            for (dx,dy) in offsets
+                q = (x+dx,y+dy)
                 if q in remaining
                     delete!(remaining, q); push!(part, q); push!(queue, q)
                 end
@@ -22,14 +25,18 @@ function connected_parts(points)
 end
 
 """Read the original OWID lattice. Duplicate coordinates use the last row."""
-function read_targets(path, codes)
+function read_owid_cells(path)
     rows = collect(CSV.File(path; header=[:x,:y,:code], types=Int))
     isempty(rows) && throw(ArgumentError("Empty OWID input"))
     xs = sort!(unique(r.x for r in rows)); ys = sort!(unique(r.y for r in rows))
     step = foldl(gcd, vcat(diff(xs), diff(ys)); init=0)
     step = max(step, 1)
+    Dict(((r.x-first(xs))÷step, -(r.y-first(ys))÷step) => r.code for r in rows)
+end
+
+function read_targets(path, codes)
+    owner = read_owid_cells(path)
     reverse = Dict(v => k for (k,v) in codes)
-    owner = Dict(((r.x-first(xs))÷step, -(r.y-first(ys))÷step) => r.code for r in rows)
     grouped = Dict{String,Vector{Piece}}()
     for code in sort!(unique(collect(values(owner))))
         scope = get(reverse, code, "OWID_$code")

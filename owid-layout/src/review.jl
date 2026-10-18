@@ -55,13 +55,13 @@ function draw_geography(io, shapes, selected, bounds, x, y, width, height, colou
     println(io,"</g>")
 end
 
-function draw_tiles(io, owners, selected, bounds, x, y, width, height, clip; labels=false, highlights=Set([selected]))
+function draw_tiles(io, owners, selected, bounds, x, y, width, height, clip; labels=false, highlights=Set([selected]), colours=Dict())
     transform,scale = panel_transform(bounds,x,y,width,height)
     println(io,"<defs><clipPath id='$clip'><rect x='$x' y='$y' width='$width' height='$height'/></clipPath></defs><g clip-path='url(#$clip)'>")
     for (p,id) in sort!(collect(owners);by=first)
         (bounds[1]-1<=p[1]<=bounds[3]+1 && bounds[2]-1<=p[2]<=bounds[4]+1) || continue
         px,py = transform((p[1]-0.5,p[2]+0.5))
-        fill = id in highlights ? "#eaa35e" : "#d6d6d6"
+        fill = get(colours,id,id in highlights ? "#eaa35e" : "#d6d6d6")
         println(io,"<rect x='$px' y='$py' width='$scale' height='$scale' fill='$fill'><title>$(escape_markup(id))</title></rect>")
         for (a,b,q) in (((-.5,-.5),(.5,-.5),(p[1],p[2]-1)),((.5,-.5),(.5,.5),(p[1]+1,p[2])),
                         ((.5,.5),(-.5,.5),(p[1],p[2]+1)),((-.5,.5),(-.5,-.5),(p[1]-1,p[2])))

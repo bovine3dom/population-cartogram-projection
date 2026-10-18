@@ -1,5 +1,6 @@
 using Test, OWIDLayout, CSV
 include("review.jl")
+include("groups.jl")
 
 piece(id, mass, x, y) = Piece(id,mass,(x,y),(x-0.5,y-0.5,x+0.5,y+0.5))
 
