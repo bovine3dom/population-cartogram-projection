@@ -1,0 +1,26 @@
+{
+  "reference": "output/auto-cartogram/owid-island-resize-v9",
+  "parent": "output/auto-cartogram/owid-island-motion-v2",
+  "parts": [
+    "MYS:T1",
+    "IDN:T3",
+    "BRN:T1"
+  ],
+  "old_area": 286,
+  "new_area": 166,
+  "scale": 0.7618527288259722,
+  "attempts": [
+    {
+      "status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+    }
+  ],
+  "complete": true,
+  "approved": false,
+  "inputs": {
+    "output/auto-cartogram/owid-island-resize-v9/cells.csv": "33ff225c49480acb457bf600c03a8e2374378a4ce6275b4224a867a2832b9aae",
+    "output/auto-cartogram/owid-island-motion-v2/cells.csv": "55c3174b3c2b7fee1677b426d6f6d582402df7a076083a4b39848d76158a49c8",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/fit_owid_landmass.py": "b97f0d4965323e53ba12935a21426d1fa16db8897d579cbb17619904c7c13ecc",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/fit_local_coasts.py": "1dbfaa939aee4d38f3e5a288bb6a10428f5b1f595ddd54b2d62813e6bbbb6893"
+  }
+}

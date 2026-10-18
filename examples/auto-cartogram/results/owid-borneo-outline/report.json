@@ -1,0 +1,2652 @@
+{
+  "countries": [
+    {
+      "country": "ABW",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AFG",
+      "status": "unchanged",
+      "tiles": 287,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AGO",
+      "status": "unchanged",
+      "tiles": 255,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ALB",
+      "status": "unchanged",
+      "tiles": 20,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AND",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ARE",
+      "status": "unchanged",
+      "tiles": 68,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ARG",
+      "status": "unchanged",
+      "tiles": 327,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ARM",
+      "status": "unchanged",
+      "tiles": 24,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ATG",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AUS",
+      "status": "unchanged",
+      "tiles": 177,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AUT",
+      "status": "unchanged",
+      "tiles": 59,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "AZE",
+      "status": "unchanged",
+      "tiles": 68,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BDI",
+      "status": "unchanged",
+      "tiles": 84,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BEL",
+      "status": "unchanged",
+      "tiles": 72,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BEN",
+      "status": "unchanged",
+      "tiles": 82,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BFA",
+      "status": "unchanged",
+      "tiles": 159,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BGD",
+      "status": "unchanged",
+      "tiles": 1188,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BGR",
+      "status": "unchanged",
+      "tiles": 40,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BHR",
+      "status": "unchanged",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BHS",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BIH",
+      "status": "unchanged",
+      "tiles": 19,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BLR",
+      "status": "unchanged",
+      "tiles": 56,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BLZ",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BOL",
+      "status": "unchanged",
+      "tiles": 82,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BRA",
+      "status": "unchanged",
+      "tiles": 1469,
+      "parts": 2,
+      "edits": {}
+    },
+    {
+      "country": "BRB",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BRN",
+      "status": "shared island outline trial",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {
+        "BRN:T1": {
+          "before": 4,
+          "after": 4,
+          "removed": 4,
+          "added": 4
+        }
+      }
+    },
+    {
+      "country": "BTN",
+      "status": "unchanged",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "BWA",
+      "status": "unchanged",
+      "tiles": 14,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CAF",
+      "status": "unchanged",
+      "tiles": 41,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CAN",
+      "status": "unchanged",
+      "tiles": 262,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CHE",
+      "status": "unchanged",
+      "tiles": 62,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CHL",
+      "status": "unchanged",
+      "tiles": 121,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CHN",
+      "status": "unchanged",
+      "tiles": 9834,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CIV",
+      "status": "unchanged",
+      "tiles": 190,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CMR",
+      "status": "unchanged",
+      "tiles": 201,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "COD",
+      "status": "unchanged",
+      "tiles": 676,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "COG",
+      "status": "unchanged",
+      "tiles": 48,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "COK",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "COL",
+      "status": "unchanged",
+      "tiles": 341,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "COM",
+      "status": "unchanged",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CPV",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CRI",
+      "status": "unchanged",
+      "tiles": 36,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CUB",
+      "status": "unchanged",
+      "tiles": 73,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CUW",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CYP",
+      "status": "unchanged",
+      "tiles": 8,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "CZE",
+      "status": "unchanged",
+      "tiles": 74,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DEU",
+      "status": "unchanged",
+      "tiles": 571,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DJI",
+      "status": "unchanged",
+      "tiles": 9,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DMA",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DNK",
+      "status": "unchanged",
+      "tiles": 44,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DOM",
+      "status": "unchanged",
+      "tiles": 69,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "DZA",
+      "status": "unchanged",
+      "tiles": 316,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ECU",
+      "status": "unchanged",
+      "tiles": 133,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "EGY",
+      "status": "unchanged",
+      "tiles": 764,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ERI",
+      "status": "unchanged",
+      "tiles": 35,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ESH",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ESP",
+      "status": "resized",
+      "tiles": 319,
+      "parts": 5,
+      "edits": {
+        "ESP:T2": {
+          "shape_iou": 0.6992536930092575,
+          "moved_tiles": 3,
+          "added_tiles": 0,
+          "pinned_tiles": 0,
+          "translation": [
+            -0.11111111111111427,
+            0.27777777777777146
+          ]
+        },
+        "ESP:T4": {
+          "shape_iou": 0.7133061210802122,
+          "moved_tiles": 0,
+          "added_tiles": 3,
+          "pinned_tiles": 0,
+          "translation": [
+            0.2142857142857224,
+            0.5
+          ]
+        }
+      }
+    },
+    {
+      "country": "EST",
+      "status": "unchanged",
+      "tiles": 8,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ETH",
+      "status": "unchanged",
+      "tiles": 850,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "FIN",
+      "status": "unchanged",
+      "tiles": 44,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "FJI",
+      "status": "unchanged",
+      "tiles": 8,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "FRA",
+      "status": "resized",
+      "tiles": 438,
+      "parts": 2,
+      "edits": {
+        "FRA:T2": {
+          "shape_iou": 0.5469181606780188,
+          "moved_tiles": 2,
+          "added_tiles": 0,
+          "pinned_tiles": 0,
+          "translation": [
+            0.0,
+            -0.5
+          ]
+        },
+        "FRA:T1": {
+          "shape_iou": 0.9905219167763527,
+          "moved_tiles": 0,
+          "added_tiles": 2,
+          "pinned_tiles": 45
+        }
+      }
+    },
+    {
+      "country": "FRO",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "FSM",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GAB",
+      "status": "unchanged",
+      "tiles": 19,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GBR",
+      "status": "resized",
+      "tiles": 459,
+      "parts": 3,
+      "edits": {
+        "GBR:T2": {
+          "shape_iou": 0.7049180327868848,
+          "moved_tiles": 3,
+          "added_tiles": 0,
+          "pinned_tiles": 5
+        },
+        "GBR:T3": {
+          "shape_iou": 1.0,
+          "moved_tiles": 3,
+          "added_tiles": 0,
+          "pinned_tiles": 0,
+          "translation": [
+            0.5,
+            0.5
+          ]
+        },
+        "GBR:T1": {
+          "shape_iou": 0.9341439107670202,
+          "moved_tiles": 0,
+          "added_tiles": 6,
+          "pinned_tiles": 0,
+          "translation": [
+            -0.12278160272325067,
+            -0.18051751938778082
+          ]
+        }
+      }
+    },
+    {
+      "country": "GEO",
+      "status": "unchanged",
+      "tiles": 26,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GHA",
+      "status": "unchanged",
+      "tiles": 226,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GIN",
+      "status": "unchanged",
+      "tiles": 111,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GLP",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GMB",
+      "status": "unchanged",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GNB",
+      "status": "unchanged",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GNQ",
+      "status": "unchanged",
+      "tiles": 11,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GRC",
+      "status": "unchanged",
+      "tiles": 68,
+      "parts": 3,
+      "edits": {}
+    },
+    {
+      "country": "GRD",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GRL",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GTM",
+      "status": "unchanged",
+      "tiles": 129,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GUF",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GUM",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "GUY",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "HKG",
+      "status": "resized",
+      "tiles": 56,
+      "parts": 2,
+      "edits": {
+        "HKG:T2": {
+          "shape_iou": 0.809310900375188,
+          "moved_tiles": 8,
+          "added_tiles": 0,
+          "pinned_tiles": 0,
+          "translation": [
+            0.375,
+            0.375
+          ]
+        },
+        "HKG:T1": {
+          "shape_iou": 0.7991157754193754,
+          "moved_tiles": 0,
+          "added_tiles": 8,
+          "pinned_tiles": 8
+        }
+      }
+    },
+    {
+      "country": "HND",
+      "status": "unchanged",
+      "tiles": 64,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "HRV",
+      "status": "unchanged",
+      "tiles": 27,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "HTI",
+      "status": "unchanged",
+      "tiles": 89,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "HUN",
+      "status": "unchanged",
+      "tiles": 66,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "IDN",
+      "status": "shared island outline trial",
+      "tiles": 1894,
+      "parts": 25,
+      "edits": {
+        "IDN:T3": {
+          "before": 118,
+          "after": 118,
+          "removed": 52,
+          "added": 52
+        }
+      }
+    },
+    {
+      "country": "IND",
+      "status": "unchanged",
+      "tiles": 9661,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "IRL",
+      "status": "unchanged",
+      "tiles": 40,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "IRN",
+      "status": "unchanged",
+      "tiles": 610,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "IRQ",
+      "status": "unchanged",
+      "tiles": 303,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ISL",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ISR",
+      "status": "unchanged",
+      "tiles": 57,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ITA",
+      "status": "resized",
+      "tiles": 411,
+      "parts": 3,
+      "edits": {
+        "ITA:T1": {
+          "shape_iou": 0.9469858813111126,
+          "moved_tiles": 8,
+          "added_tiles": 0,
+          "pinned_tiles": 38
+        },
+        "ITA:T2": {
+          "shape_iou": 0.7680009423551977,
+          "moved_tiles": 1,
+          "added_tiles": 9,
+          "pinned_tiles": 0,
+          "translation": [
+            -0.3461538461538396,
+            0.4276018099547514
+          ]
+        }
+      }
+    },
+    {
+      "country": "JAM",
+      "status": "unchanged",
+      "tiles": 21,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "JOR",
+      "status": "unchanged",
+      "tiles": 66,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "JPN",
+      "status": "resized",
+      "tiles": 858,
+      "parts": 9,
+      "edits": {
+        "JPN:T2": {
+          "shape_iou": 0.6979247327845057,
+          "moved_tiles": 160,
+          "added_tiles": 1,
+          "pinned_tiles": 0,
+          "translation": [
+            -0.027125876257287018,
+            -0.12404754647972993
+          ]
+        },
+        "JPN:T3": {
+          "shape_iou": 0.8170792404911361,
+          "moved_tiles": 21,
+          "added_tiles": 0,
+          "pinned_tiles": 8
+        },
+        "JPN:T4": {
+          "shape_iou": 0.6455783244563813,
+          "moved_tiles": 11,
+          "added_tiles": 0,
+          "pinned_tiles": 9
+        },
+        "JPN:T6": {
+          "shape_iou": 0.6660731161953168,
+          "moved_tiles": 1,
+          "added_tiles": 0,
+          "pinned_tiles": 0,
+          "translation": [
+            0.16666666666662877,
+            0.1666666666666714
+          ]
+        },
+        "JPN:T1": {
+          "shape_iou": 0.8120817009723704,
+          "moved_tiles": 0,
+          "added_tiles": 188,
+          "pinned_tiles": 15
+        },
+        "JPN:T5": {
+          "shape_iou": 0.6186824324974659,
+          "moved_tiles": 1,
+          "added_tiles": 3,
+          "pinned_tiles": 0,
+          "translation": [
+            0.5,
+            0.29999999999999716
+          ]
+        },
+        "JPN:T8": {
+          "shape_iou": 0.6898979485566152,
+          "moved_tiles": 2,
+          "added_tiles": 3,
+          "pinned_tiles": 0,
+          "translation": [
+            -1.0,
+            -0.5
+          ]
+        },
+        "JPN:T9": {
+          "shape_iou": 0.6898979485566356,
+          "moved_tiles": 2,
+          "added_tiles": 3,
+          "pinned_tiles": 0,
+          "translation": [
+            -0.5,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "country": "KAZ",
+      "status": "unchanged",
+      "tiles": 140,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KEN",
+      "status": "unchanged",
+      "tiles": 407,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KGZ",
+      "status": "unchanged",
+      "tiles": 44,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KHM",
+      "status": "unchanged",
+      "tiles": 116,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KIR",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KNA",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KOR",
+      "status": "unchanged",
+      "tiles": 362,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "KWT",
+      "status": "unchanged",
+      "tiles": 34,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LAO",
+      "status": "unchanged",
+      "tiles": 53,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LBN",
+      "status": "unchanged",
+      "tiles": 42,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LBR",
+      "status": "unchanged",
+      "tiles": 34,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LBY",
+      "status": "unchanged",
+      "tiles": 45,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LCA",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LKA",
+      "status": "unchanged",
+      "tiles": 144,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LSO",
+      "status": "unchanged",
+      "tiles": 11,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LTU",
+      "status": "unchanged",
+      "tiles": 20,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LUX",
+      "status": "unchanged",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "LVA",
+      "status": "unchanged",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MAC",
+      "status": "unchanged",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MAR",
+      "status": "unchanged",
+      "tiles": 257,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MCO",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MDA",
+      "status": "unchanged",
+      "tiles": 28,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MDG",
+      "status": "unchanged",
+      "tiles": 200,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MDV",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MEX",
+      "status": "unchanged",
+      "tiles": 944,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MHL",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MKD",
+      "status": "unchanged",
+      "tiles": 12,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MLI",
+      "status": "unchanged",
+      "tiles": 160,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MLT",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MMR",
+      "status": "unchanged",
+      "tiles": 381,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MNE",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MNG",
+      "status": "unchanged",
+      "tiles": 24,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MOZ",
+      "status": "unchanged",
+      "tiles": 241,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MRT",
+      "status": "unchanged",
+      "tiles": 36,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MTQ",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MUS",
+      "status": "unchanged",
+      "tiles": 8,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MWI",
+      "status": "unchanged",
+      "tiles": 152,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "MYS",
+      "status": "shared island outline trial",
+      "tiles": 224,
+      "parts": 2,
+      "edits": {
+        "MYS:T1": {
+          "before": 44,
+          "after": 44,
+          "removed": 17,
+          "added": 17
+        }
+      }
+    },
+    {
+      "country": "MYT",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NAM",
+      "status": "unchanged",
+      "tiles": 17,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NCL",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NER",
+      "status": "unchanged",
+      "tiles": 199,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NGA",
+      "status": "unchanged",
+      "tiles": 1562,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NIC",
+      "status": "unchanged",
+      "tiles": 46,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NLD",
+      "status": "unchanged",
+      "tiles": 115,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NOR",
+      "status": "unchanged",
+      "tiles": 36,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NPL",
+      "status": "unchanged",
+      "tiles": 204,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "NZL",
+      "status": "resized",
+      "tiles": 32,
+      "parts": 2,
+      "edits": {
+        "NZL:T1": {
+          "shape_iou": 0.7125678800904283,
+          "moved_tiles": 9,
+          "added_tiles": 1,
+          "pinned_tiles": 0,
+          "translation": [
+            -0.375,
+            0.375
+          ]
+        },
+        "NZL:T2": {
+          "shape_iou": 0.7908401964624469,
+          "moved_tiles": 0,
+          "added_tiles": 8,
+          "pinned_tiles": 0,
+          "translation": [
+            0.375,
+            0.5
+          ]
+        }
+      }
+    },
+    {
+      "country": "OMN",
+      "status": "unchanged",
+      "tiles": 46,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PAK",
+      "status": "unchanged",
+      "tiles": 1589,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PAN",
+      "status": "unchanged",
+      "tiles": 28,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PER",
+      "status": "unchanged",
+      "tiles": 225,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PHL",
+      "status": "joint border / island-motion trial",
+      "tiles": 808,
+      "parts": 25,
+      "edits": {
+        "PHL:T1": {
+          "before": 394,
+          "after": 432,
+          "removed": 183,
+          "added": 221
+        },
+        "PHL:T2": {
+          "before": 220,
+          "after": 178,
+          "removed": 162,
+          "added": 120
+        },
+        "PHL:T25": {
+          "before": 2,
+          "after": 36,
+          "removed": 0,
+          "added": 34
+        },
+        "PHL:T4": {
+          "before": 21,
+          "after": 32,
+          "removed": 5,
+          "added": 16
+        },
+        "PHL:T5": {
+          "before": 20,
+          "after": 30,
+          "removed": 16,
+          "added": 26
+        },
+        "PHL:T3": {
+          "before": 46,
+          "after": 29,
+          "removed": 46,
+          "added": 29
+        },
+        "PHL:T8": {
+          "before": 11,
+          "after": 9,
+          "removed": 11,
+          "added": 9
+        },
+        "PHL:T20": {
+          "before": 4,
+          "after": 8,
+          "removed": 4,
+          "added": 8
+        },
+        "PHL:T6": {
+          "before": 18,
+          "after": 8,
+          "removed": 13,
+          "added": 3
+        },
+        "PHL:T7": {
+          "before": 12,
+          "after": 7,
+          "removed": 12,
+          "added": 7
+        },
+        "PHL:T12": {
+          "before": 5,
+          "after": 6,
+          "removed": 5,
+          "added": 6
+        },
+        "PHL:T16": {
+          "before": 4,
+          "after": 5,
+          "removed": 4,
+          "added": 5
+        },
+        "PHL:T15": {
+          "before": 4,
+          "after": 4,
+          "removed": 4,
+          "added": 4
+        },
+        "PHL:T18": {
+          "before": 4,
+          "after": 4,
+          "removed": 4,
+          "added": 4
+        },
+        "PHL:T19": {
+          "before": 4,
+          "after": 4,
+          "removed": 4,
+          "added": 4
+        },
+        "PHL:T9": {
+          "before": 8,
+          "after": 3,
+          "removed": 6,
+          "added": 1
+        },
+        "PHL:T10": {
+          "before": 6,
+          "after": 2,
+          "removed": 6,
+          "added": 2
+        },
+        "PHL:T11": {
+          "before": 5,
+          "after": 2,
+          "removed": 5,
+          "added": 2
+        },
+        "PHL:T22": {
+          "before": 2,
+          "after": 2,
+          "removed": 2,
+          "added": 2
+        },
+        "PHL:T23": {
+          "before": 2,
+          "after": 2,
+          "removed": 2,
+          "added": 2
+        },
+        "PHL:T13": {
+          "before": 4,
+          "after": 1,
+          "removed": 4,
+          "added": 1
+        },
+        "PHL:T14": {
+          "before": 4,
+          "after": 1,
+          "removed": 4,
+          "added": 1
+        },
+        "PHL:T17": {
+          "before": 4,
+          "after": 1,
+          "removed": 4,
+          "added": 1
+        },
+        "PHL:T21": {
+          "before": 2,
+          "after": 1,
+          "removed": 2,
+          "added": 1
+        },
+        "PHL:T24": {
+          "before": 2,
+          "after": 1,
+          "removed": 2,
+          "added": 1
+        }
+      }
+    },
+    {
+      "country": "PNG",
+      "status": "unchanged",
+      "tiles": 67,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "POL",
+      "status": "unchanged",
+      "tiles": 251,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PRI",
+      "status": "unchanged",
+      "tiles": 19,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PRK",
+      "status": "unchanged",
+      "tiles": 176,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PRT",
+      "status": "unchanged",
+      "tiles": 65,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PRY",
+      "status": "unchanged",
+      "tiles": 46,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "PSE",
+      "status": "unchanged",
+      "tiles": 41,
+      "parts": 3,
+      "edits": {}
+    },
+    {
+      "country": "PYF",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "QAT",
+      "status": "unchanged",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "REU",
+      "status": "unchanged",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ROU",
+      "status": "unchanged",
+      "tiles": 127,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "RUS",
+      "status": "unchanged",
+      "tiles": 975,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "RWA",
+      "status": "unchanged",
+      "tiles": 98,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SAU",
+      "status": "unchanged",
+      "tiles": 240,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SDN",
+      "status": "unchanged",
+      "tiles": 332,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SEN",
+      "status": "unchanged",
+      "tiles": 133,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SGP",
+      "status": "joint border / island-motion trial",
+      "tiles": 40,
+      "parts": 1,
+      "edits": {
+        "SGP:T1": {
+          "before": 40,
+          "after": 40,
+          "removed": 10,
+          "added": 10
+        }
+      }
+    },
+    {
+      "country": "SLB",
+      "status": "unchanged",
+      "tiles": 6,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SLE",
+      "status": "unchanged",
+      "tiles": 59,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SLV",
+      "status": "unchanged",
+      "tiles": 46,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SOM",
+      "status": "unchanged",
+      "tiles": 117,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SRB",
+      "status": "unchanged",
+      "tiles": 55,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SSD",
+      "status": "unchanged",
+      "tiles": 90,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "STP",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SUR",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SVK",
+      "status": "unchanged",
+      "tiles": 40,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SVN",
+      "status": "unchanged",
+      "tiles": 16,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SWE",
+      "status": "unchanged",
+      "tiles": 76,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SWZ",
+      "status": "unchanged",
+      "tiles": 9,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SYC",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "SYR",
+      "status": "unchanged",
+      "tiles": 150,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TCD",
+      "status": "unchanged",
+      "tiles": 130,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TGO",
+      "status": "unchanged",
+      "tiles": 69,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "THA",
+      "status": "joint border / island-motion trial",
+      "tiles": 488,
+      "parts": 1,
+      "edits": {
+        "THA:T1": {
+          "before": 488,
+          "after": 488,
+          "removed": 12,
+          "added": 12
+        }
+      }
+    },
+    {
+      "country": "TJK",
+      "status": "unchanged",
+      "tiles": 71,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TKM",
+      "status": "unchanged",
+      "tiles": 44,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TLS",
+      "status": "unchanged",
+      "tiles": 10,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TON",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TTO",
+      "status": "resized",
+      "tiles": 8,
+      "parts": 2,
+      "edits": {
+        "TTO:T2": {
+          "shape_iou": 1.0,
+          "moved_tiles": 3,
+          "added_tiles": 0,
+          "pinned_tiles": 0,
+          "translation": [
+            -0.5,
+            0.5
+          ]
+        },
+        "TTO:T1": {
+          "shape_iou": 0.613437752442258,
+          "moved_tiles": 0,
+          "added_tiles": 3,
+          "pinned_tiles": 0,
+          "translation": [
+            0.0,
+            -0.5
+          ]
+        }
+      }
+    },
+    {
+      "country": "TUN",
+      "status": "unchanged",
+      "tiles": 85,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TUR",
+      "status": "resized",
+      "tiles": 581,
+      "parts": 2,
+      "edits": {
+        "TUR:T1": {
+          "shape_iou": 0.9572887274110512,
+          "moved_tiles": 12,
+          "added_tiles": 0,
+          "pinned_tiles": 48
+        },
+        "TUR:T2": {
+          "shape_iou": 0.840944731487535,
+          "moved_tiles": 0,
+          "added_tiles": 12,
+          "pinned_tiles": 12
+        }
+      }
+    },
+    {
+      "country": "TUV",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TWN",
+      "status": "unchanged",
+      "tiles": 157,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "TZA",
+      "status": "unchanged",
+      "tiles": 477,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "UGA",
+      "status": "unchanged",
+      "tiles": 345,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "UKR",
+      "status": "unchanged",
+      "tiles": 283,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "URY",
+      "status": "unchanged",
+      "tiles": 26,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "USA",
+      "status": "resized",
+      "tiles": 2268,
+      "parts": 4,
+      "edits": {
+        "USA:T1": {
+          "shape_iou": 0.9989560835464636,
+          "moved_tiles": 1,
+          "added_tiles": 0,
+          "pinned_tiles": 138
+        },
+        "USA:T2": {
+          "shape_iou": 0.6312770589953102,
+          "moved_tiles": 4,
+          "added_tiles": 0,
+          "pinned_tiles": 0,
+          "translation": [
+            0.4285714285714286,
+            -0.2857142857142918
+          ]
+        },
+        "USA:T3": {
+          "shape_iou": 0.7133061210802055,
+          "moved_tiles": 1,
+          "added_tiles": 4,
+          "pinned_tiles": 0,
+          "translation": [
+            -0.7857142857142857,
+            -0.5
+          ]
+        },
+        "USA:T4": {
+          "shape_iou": 0.6543327756893014,
+          "moved_tiles": 2,
+          "added_tiles": 4,
+          "pinned_tiles": 0,
+          "translation": [
+            -1.25,
+            -0.5
+          ]
+        }
+      }
+    },
+    {
+      "country": "UZB",
+      "status": "unchanged",
+      "tiles": 229,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "VCT",
+      "status": "unchanged",
+      "tiles": 4,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "VEN",
+      "status": "unchanged",
+      "tiles": 219,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "VNM",
+      "status": "unchanged",
+      "tiles": 672,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "VUT",
+      "status": "unchanged",
+      "tiles": 2,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "WSM",
+      "status": "unchanged",
+      "tiles": 1,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "YEM",
+      "status": "unchanged",
+      "tiles": 220,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ZAF",
+      "status": "unchanged",
+      "tiles": 430,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ZMB",
+      "status": "unchanged",
+      "tiles": 145,
+      "parts": 1,
+      "edits": {}
+    },
+    {
+      "country": "ZWE",
+      "status": "unchanged",
+      "tiles": 111,
+      "parts": 1,
+      "edits": {}
+    }
+  ],
+  "unresolved": [],
+  "grid": {
+    "input_grid_step": 2,
+    "input_rows": 54978,
+    "duplicate_coordinates": 11,
+    "conflicting_coordinates": 11
+  },
+  "tiles": 54967,
+  "enclosed_water_cells": 109,
+  "country_counts_exact": true,
+  "part_contacts_unchanged": true,
+  "assigned_population": 7947374949.0,
+  "grouped_population": 90277129.0,
+  "inputs": {
+    "data/cartogram.csv": "a08f41f7b3f8912e3956c8882a255a0e6ea60b5a720216a0746416ba5d62c257",
+    "output/auto-cartogram/world-dissolved/components.csv": "b98e9c3fd09804fbf78a1686e682005c598a869f77c6127e6d3301aa0913cb05",
+    "output/auto-cartogram/world-dissolved/polygons.geojson": "9e06180c60daf1063debdd307d4cb86d7f3757fe5e37b5fe6f32daaa3e00f003",
+    "/usr/share/iso-codes/json/iso_3166-1.json": "f01b812b57fba9f31ff621bf33e7c7570a01964dbeb5be2167e94decf538c89f",
+    "examples/auto-cartogram/owid-reviewed-identities.csv": "3d41b230220f714de4bc21d02db62556a334253aa2a6dc499879ef76ba3585d0",
+    "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/resize_owid_islands.py": "0f3b6c19a1e07b1bf320e0c0ceba308b44b0427c2e070d340ce05fefc82af6bc"
+  },
+  "dependencies": {
+    "audit_owid_budgets.py": "33423be1c87e68579c9d50f21d155289942014c8c0e9bd8e9d23788795dfe47f",
+    "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+    "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3",
+    "restore_reference_water.py": "ac04ecbf2f3e6ed13f798792a244b65b7e21b8dc99c8cd2302ee8aa24a0b02e6",
+    "review_geography.py": "9737581a1635145e18212da3b6a9fc09eeb3140b6b7db1056fa24738320827c4",
+    "review_gaps.py": "e58b31a287d8ee41e76967b1d9a1bd91862d25871c75c42cbc6686be9e73ebe1",
+    "review_layout.py": "338e1e027a865fd5df79ba7eedaa6bc32beb0f7282d14114f6d4c57e6c3374ea",
+    "compact_regions.py": "5ae618071bbbfde5f29656d41d574e1da1389850d83fd9d348cb50e50b1cc338"
+  },
+  "code_aliases": {
+    "SDS": "SSD",
+    "PSX": "PSE",
+    "SAH": "ESH"
+  },
+  "contacts_sha256": "a266138be0d82c4c49b081fea4a4b322d02b0e230158c9fb8e85d2aff7bea7b2",
+  "limits": [
+    "Experimental matching. Automatic identities need review before population fitting.",
+    "Unreviewed matches above cost 0.12 fall back to the nearest group unless source border context uniquely identifies the component. The threshold is a trial heuristic.",
+    "Nearest fallback stays within source country scope. Source scopes without OWID tiles remain unrepresented.",
+    "Every target piece retains at least one tile and its pinned border/water cells. These floors can prevent exact population proportions.",
+    "No new parts are created for islands joined to the mainland in OWID.",
+    "Conflicting OWID labels use the existing last-row inventory convention, including Lesotho.",
+    "No mapping Arrow file or production layout is replaced.",
+    "Shared border positions may change. Selected archipelago gaps may open to the sea. Population identities are inherited, not newly approved.",
+    "The selected shared island has a fixed scaled outline. Internal borders can move. Source identities are unchanged."
+  ],
+  "relaxed_layout": true,
+  "released_inter_piece_sea_cells": 63,
+  "parent_layout_sha256": "33ff225c49480acb457bf600c03a8e2374378a4ce6275b4224a867a2832b9aae",
+  "relaxation": {
+    "approved": false,
+    "parent": "output/auto-cartogram/owid-island-resize-v9",
+    "archipelagos": {
+      "PHL": {
+        "accepted": true,
+        "parts": {
+          "PHL:T1": {
+            "before": 394,
+            "after": 432,
+            "translation": [
+              2.3243560819702225,
+              4.497649934198137
+            ],
+            "removed": 183,
+            "added": 221
+          },
+          "PHL:T2": {
+            "before": 220,
+            "after": 178,
+            "translation": [
+              5.812870275791624,
+              -5.117977528089881
+            ],
+            "removed": 162,
+            "added": 120
+          },
+          "PHL:T25": {
+            "before": 2,
+            "after": 36,
+            "translation": [
+              1.0,
+              1.3888888888888857
+            ],
+            "removed": 0,
+            "added": 34
+          },
+          "PHL:T4": {
+            "before": 21,
+            "after": 32,
+            "translation": [
+              1.0,
+              -0.9285714285714164
+            ],
+            "removed": 5,
+            "added": 16
+          },
+          "PHL:T5": {
+            "before": 20,
+            "after": 30,
+            "translation": [
+              4.2666666666666515,
+              0.4000000000000057
+            ],
+            "removed": 16,
+            "added": 26
+          },
+          "PHL:T3": {
+            "before": 46,
+            "after": 29,
+            "translation": [
+              3.7106446776610937,
+              -5.739880059970034
+            ],
+            "removed": 46,
+            "added": 29
+          },
+          "PHL:T8": {
+            "before": 11,
+            "after": 9,
+            "translation": [
+              -0.8383838383838338,
+              -6.111111111111114
+            ],
+            "removed": 11,
+            "added": 9
+          },
+          "PHL:T20": {
+            "before": 4,
+            "after": 8,
+            "translation": [
+              4.375,
+              -3.625
+            ],
+            "removed": 4,
+            "added": 8
+          },
+          "PHL:T6": {
+            "before": 18,
+            "after": 8,
+            "translation": [
+              -1.0833333333333712,
+              -0.5138888888888857
+            ],
+            "removed": 13,
+            "added": 3
+          },
+          "PHL:T7": {
+            "before": 12,
+            "after": 7,
+            "translation": [
+              1.5476190476190368,
+              4.166666666666657
+            ],
+            "removed": 12,
+            "added": 7
+          },
+          "PHL:T12": {
+            "before": 5,
+            "after": 6,
+            "translation": [
+              -0.2333333333333485,
+              3.9666666666666686
+            ],
+            "removed": 5,
+            "added": 6
+          },
+          "PHL:T16": {
+            "before": 4,
+            "after": 5,
+            "translation": [
+              0.5,
+              -8.5
+            ],
+            "removed": 4,
+            "added": 5
+          },
+          "PHL:T15": {
+            "before": 4,
+            "after": 4,
+            "translation": [
+              -1.0,
+              5.0
+            ],
+            "removed": 4,
+            "added": 4
+          },
+          "PHL:T18": {
+            "before": 4,
+            "after": 4,
+            "translation": [
+              0.0,
+              -2.0
+            ],
+            "removed": 4,
+            "added": 4
+          },
+          "PHL:T19": {
+            "before": 4,
+            "after": 4,
+            "translation": [
+              2.0,
+              12.0
+            ],
+            "removed": 4,
+            "added": 4
+          },
+          "PHL:T9": {
+            "before": 8,
+            "after": 3,
+            "translation": [
+              -0.5,
+              1.5
+            ],
+            "removed": 6,
+            "added": 1
+          },
+          "PHL:T10": {
+            "before": 6,
+            "after": 2,
+            "translation": [
+              -4.5,
+              -3.5
+            ],
+            "removed": 6,
+            "added": 2
+          },
+          "PHL:T11": {
+            "before": 5,
+            "after": 2,
+            "translation": [
+              -4.399999999999977,
+              -4.300000000000011
+            ],
+            "removed": 5,
+            "added": 2
+          },
+          "PHL:T22": {
+            "before": 2,
+            "after": 2,
+            "translation": [
+              -2.0,
+              6.0
+            ],
+            "removed": 2,
+            "added": 2
+          },
+          "PHL:T23": {
+            "before": 2,
+            "after": 2,
+            "translation": [
+              -2.0,
+              9.0
+            ],
+            "removed": 2,
+            "added": 2
+          },
+          "PHL:T13": {
+            "before": 4,
+            "after": 1,
+            "translation": [
+              -3.5,
+              -4.5
+            ],
+            "removed": 4,
+            "added": 1
+          },
+          "PHL:T14": {
+            "before": 4,
+            "after": 1,
+            "translation": [
+              -2.5,
+              -1.5
+            ],
+            "removed": 4,
+            "added": 1
+          },
+          "PHL:T17": {
+            "before": 4,
+            "after": 1,
+            "translation": [
+              -0.5,
+              -1.5
+            ],
+            "removed": 4,
+            "added": 1
+          },
+          "PHL:T21": {
+            "before": 2,
+            "after": 1,
+            "translation": [
+              -4.0,
+              -3.5
+            ],
+            "removed": 2,
+            "added": 1
+          },
+          "PHL:T24": {
+            "before": 2,
+            "after": 1,
+            "translation": [
+              1.0,
+              -3.5
+            ],
+            "removed": 2,
+            "added": 1
+          }
+        },
+        "released_sea": [
+          {
+            "cells": [
+              [
+                545,
+                -183
+              ],
+              [
+                545,
+                -182
+              ],
+              [
+                545,
+                -181
+              ],
+              [
+                545,
+                -180
+              ],
+              [
+                546,
+                -183
+              ],
+              [
+                546,
+                -182
+              ],
+              [
+                546,
+                -181
+              ],
+              [
+                546,
+                -180
+              ],
+              [
+                547,
+                -186
+              ],
+              [
+                547,
+                -185
+              ],
+              [
+                547,
+                -184
+              ],
+              [
+                547,
+                -183
+              ],
+              [
+                547,
+                -182
+              ],
+              [
+                548,
+                -186
+              ],
+              [
+                548,
+                -185
+              ],
+              [
+                548,
+                -184
+              ],
+              [
+                548,
+                -183
+              ],
+              [
+                548,
+                -182
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T3",
+              "PHL:T4",
+              "PHL:T5"
+            ]
+          },
+          {
+            "cells": [
+              [
+                554,
+                -183
+              ],
+              [
+                554,
+                -182
+              ],
+              [
+                555,
+                -183
+              ],
+              [
+                555,
+                -182
+              ],
+              [
+                556,
+                -183
+              ],
+              [
+                556,
+                -182
+              ],
+              [
+                556,
+                -181
+              ],
+              [
+                556,
+                -180
+              ],
+              [
+                557,
+                -183
+              ],
+              [
+                557,
+                -182
+              ],
+              [
+                557,
+                -181
+              ],
+              [
+                557,
+                -180
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T1",
+              "PHL:T3"
+            ]
+          },
+          {
+            "cells": [
+              [
+                538,
+                -164
+              ],
+              [
+                538,
+                -163
+              ],
+              [
+                539,
+                -164
+              ],
+              [
+                539,
+                -163
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T1",
+              "PHL:T12",
+              "PHL:T15"
+            ]
+          },
+          {
+            "cells": [
+              [
+                540,
+                -166
+              ],
+              [
+                540,
+                -165
+              ],
+              [
+                541,
+                -166
+              ],
+              [
+                541,
+                -165
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T1",
+              "PHL:T12"
+            ]
+          },
+          {
+            "cells": [
+              [
+                545,
+                -188
+              ],
+              [
+                545,
+                -187
+              ],
+              [
+                546,
+                -188
+              ],
+              [
+                546,
+                -187
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T3",
+              "PHL:T4"
+            ]
+          },
+          {
+            "cells": [
+              [
+                545,
+                -177
+              ],
+              [
+                545,
+                -176
+              ],
+              [
+                546,
+                -177
+              ],
+              [
+                546,
+                -176
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T25",
+              "PHL:T5",
+              "PHL:T7"
+            ]
+          },
+          {
+            "cells": [
+              [
+                545,
+                -144
+              ],
+              [
+                545,
+                -143
+              ],
+              [
+                546,
+                -144
+              ],
+              [
+                546,
+                -143
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T1",
+              "PHL:T19"
+            ]
+          },
+          {
+            "cells": [
+              [
+                549,
+                -181
+              ],
+              [
+                549,
+                -180
+              ],
+              [
+                550,
+                -181
+              ],
+              [
+                550,
+                -180
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T3",
+              "PHL:T5"
+            ]
+          },
+          {
+            "cells": [
+              [
+                554,
+                -194
+              ],
+              [
+                554,
+                -193
+              ],
+              [
+                555,
+                -194
+              ],
+              [
+                555,
+                -193
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T2",
+              "PHL:T20"
+            ]
+          },
+          {
+            "cells": [
+              [
+                553,
+                -186
+              ],
+              [
+                553,
+                -185
+              ],
+              [
+                553,
+                -184
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T1",
+              "PHL:T3"
+            ]
+          },
+          {
+            "cells": [
+              [
+                544,
+                -179
+              ],
+              [
+                544,
+                -178
+              ]
+            ],
+            "shore_parts": [
+              "PHL:T18",
+              "PHL:T25",
+              "PHL:T4",
+              "PHL:T5"
+            ]
+          }
+        ],
+        "released_cells": 63,
+        "max_axis_shift": 24,
+        "spacing": 1.3,
+        "centre_order_threshold": 2,
+        "gap": "one-cell eight-neighbour halo"
+      }
+    },
+    "border_fits": {
+      "MYS": {
+        "accepted": true,
+        "attempts": [
+          {
+            "target": "MYS:T1",
+            "requested": 44,
+            "movable": [
+              "BRN:T1",
+              "IDN:T3",
+              "MYS:T1"
+            ],
+            "accepted": true,
+            "solver": [
+              {
+                "status": 1,
+                "message": "Time limit reached. (HiGHS Status 13: Time limit reached)"
+              }
+            ]
+          },
+          {
+            "target": "MYS:T2",
+            "requested": 180,
+            "movable": [
+              "MYS:T2",
+              "SGP:T1",
+              "THA:T1"
+            ],
+            "accepted": true,
+            "solver": [
+              {
+                "status": 0,
+                "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "seconds_per_fit": 90.0,
+    "margin": 8,
+    "expansion": 8,
+    "inputs": {
+      "output/auto-cartogram/owid-island-resize-v9/cells.csv": "33ff225c49480acb457bf600c03a8e2374378a4ce6275b4224a867a2832b9aae",
+      "output/auto-cartogram/owid-island-resize-v9/matches.csv": "76f49c744c1ab4faf25066ec698ff8a24ed6946c3083f233a9f488664d07123d",
+      "output/auto-cartogram/owid-island-resize-v9/report.json": "b3416b74dab4aacab7a723bf41f2ca193467f8a91de62625173de6bfa05bf0b0",
+      "data/cartogram.csv": "a08f41f7b3f8912e3956c8882a255a0e6ea60b5a720216a0746416ba5d62c257",
+      "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/relax_owid_islands.py": "d503892f5497e356573dea770c0d043dde3bb677cee5eda6044775c8712b19aa"
+    },
+    "dependencies": {
+      "fit_local_coasts.py": "9165f0c21aba7e5dfcde86d9d23f08134c7d954490934f839242e1bd2603b64c",
+      "resize_owid_islands.py": "0f3b6c19a1e07b1bf320e0c0ceba308b44b0427c2e070d340ce05fefc82af6bc",
+      "geographic_baseline.py": "7c7a6dd0d6856300b3ee6382974d5fb69082cf056765be7ed54014d2c7b12cec",
+      "shape_placement.py": "5dd7e100bc4aa0bcc3e160e37f27944d70d635d71fdc8d1d18ef431f4065aad3"
+    },
+    "complete": true
+  },
+  "landmass_fit": {
+    "reference": "output/auto-cartogram/owid-island-resize-v9",
+    "parent": "output/auto-cartogram/owid-island-motion-v2",
+    "parts": [
+      "MYS:T1",
+      "IDN:T3",
+      "BRN:T1"
+    ],
+    "old_area": 286,
+    "new_area": 166,
+    "scale": 0.7618527288259722,
+    "attempts": [
+      {
+        "status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      }
+    ],
+    "complete": true,
+    "approved": false,
+    "inputs": {
+      "output/auto-cartogram/owid-island-resize-v9/cells.csv": "33ff225c49480acb457bf600c03a8e2374378a4ce6275b4224a867a2832b9aae",
+      "output/auto-cartogram/owid-island-motion-v2/cells.csv": "55c3174b3c2b7fee1677b426d6f6d582402df7a076083a4b39848d76158a49c8",
+      "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/fit_owid_landmass.py": "b97f0d4965323e53ba12935a21426d1fa16db8897d579cbb17619904c7c13ecc",
+      "/home/olie/projects/worktrees/cartogram-auto/examples/auto-cartogram/fit_local_coasts.py": "1dbfaa939aee4d38f3e5a288bb6a10428f5b1f595ddd54b2d62813e6bbbb6893"
+    }
+  }
+}

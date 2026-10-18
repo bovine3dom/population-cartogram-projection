@@ -20,7 +20,7 @@ from review_layout import load, read_csv
 from save_review import digest
 
 
-def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, maximum_reach=None, fixed_cells=(), required_extra=(), expansion=0, movable=(), preferred=None, perimeter_weight=0., distance_weight=0., sea_connected=False, protected_water=(), thin_weight=0., budgets=None):
+def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, maximum_reach=None, fixed_cells=(), required_extra=(), expansion=0, movable=(), preferred=None, perimeter_weight=0., distance_weight=0., sea_connected=False, protected_water=(), thin_weight=0., budgets=None, footprint=None):
     budgets = budgets or {}
     if not set(budgets)<=set(tiles) or any(n<1 or int(n)!=n for n in budgets.values()):
         raise ValueError('Use positive integer budgets for existing components')
@@ -48,6 +48,10 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
     for _ in range(expansion):
         window |= {q for p in window for q in adjacent(p) if q not in owner
                    and all(low[i] <= q[i] <= high[i] for i in (0,1))}
+    if footprint is not None:
+        footprint=set(footprint)
+        if not footprint<=window or sum(window_counts.values())!=len(footprint):
+            raise ValueError('Footprint must fit the window and match its land budget')
     points = sorted(window)
     indices = {(p,c):i for i,(p,c) in enumerate((p,c) for p in points for c in labels)}
     preferred = preferred or tiles
@@ -62,7 +66,8 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
     def term(p,c):
         return ({indices[p,c]:1.},0.) if p in window else ({},float(owner.get(p)==c))
     for p in points:
-        add({indices[p,c]:1 for c in labels},0 if expansion else 1,1)
+        lo,hi=(int(p in footprint),)*2 if footprint is not None else (0 if expansion else 1,1)
+        add({indices[p,c]:1 for c in labels},lo,hi)
     for c in labels:
         add({indices[p,c]:1 for p in points},window_counts[c],window_counts[c])
     for p in window & set(fixed_cells):
@@ -75,7 +80,9 @@ def fit(tiles, required, inland, target, margin=3, seconds=60, maximum_cuts=20, 
     for c in labels:
         outside = tiles[c]-window
         centre=np.mean(sorted(tiles[c]),axis=0)
-        roots[c] = min(outside) if outside else max(sorted(tiles[c]),key=lambda p:(
+        candidates=tiles[c] if footprint is None else preferred.get(c,tiles[c]) & footprint
+        if not candidates:raise ValueError('Each part needs a root inside the footprint')
+        roots[c] = min(outside) if outside else max(sorted(candidates),key=lambda p:(
             sum(q in tiles[c] for q in adjacent(p)), -sum((p[i]-centre[i])**2 for i in (0,1))))
         if roots[c] in window:
             add({indices[roots[c],c]:1},1,1)

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Borneo: scale the whole island first</title>
+<style>body{font:18px system-ui;max-width:1500px;margin:2em auto;padding:0 1em}img{max-width:100%}.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1em}</style>
+<h1>Borneo: scale the whole island first</h1>
+<p>Research trial. No default map or H3-MON export changed.</p>
+<p>Combine the original OWID parts of Borneo, then scale the whole outline from 286 to 166 tiles. Keep that outline fixed while fitting the internal borders. Malaysia has 44 tiles, Indonesia 118, and Brunei 4. These counts match the previous trial.</p>
+<p>Brunei can move with the scaled island. It no longer forms a projection beyond the outline. Each country part remains connected. All existing land contacts and protected water remain unchanged. The peninsula and the Philippine island movements are unchanged from the previous trial.</p>
+<div class="panels">
+<section><h2>Original OWID</h2><a href="MYS-T1-before.png"><img src="MYS-T1-before.png" alt="Original OWID Borneo and neighbours"></a></section>
+<section><h2>Previous trial</h2><a href="previous.png"><img src="previous.png" alt="Separate country resizing with a Brunei projection"></a></section>
+<section><h2>Whole-island trial</h2><a href="MYS-T1-after.png"><img src="MYS-T1-after.png" alt="Scaled Borneo outline with fitted internal borders"></a></section>
+</div>
+<p>The outline follows the OWID artwork, not a new geographic coastline. Grid rounding changes small details. The Malaysian strip is narrow because its tile count is much smaller. Automatic population identities still need review.</p>
+<p><a href="landmass-fit.json">Fit record</a> · <a href="report.json">Full report</a> · <a href="matches.csv">Population groups</a> · <a href="cells.csv.gz">Land tiles</a> · <a href="owid-cartogram.csv.gz">OWID-format layout</a> · <a href="../owid-island-motion/index.html">Previous trial and source assignments</a></p>
+<h2>World after</h2><a href="world-after.png"><img src="world-after.png" alt="World with the new Borneo outline"></a>
+</html>

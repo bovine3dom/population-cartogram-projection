@@ -50,6 +50,20 @@ class RelaxOwidTest(unittest.TestCase):
         self.assertIsNotNone(result, attempts)
         self.assertEqual(len(result['a']), 6)
 
+    def test_shared_footprint_moves_roots_and_keeps_exact_outline(self):
+        tiles = {'a':{(0,0),(1,0)}, 'b':{(2,0),(3,0)}}
+        footprint = {(x,2) for x in range(4)}
+        preferred = {'a':{(0,2),(1,2)}, 'b':{(2,2),(3,2)}}
+        result, attempts = fit(tiles, {('a','b')}, set(), 'a', margin=5,
+            expansion=3, preferred=preferred, footprint=footprint, seconds=10)
+        self.assertIsNotNone(result, attempts)
+        self.assertEqual(set().union(*result.values()), footprint)
+        self.assertEqual({c:len(p) for c,p in result.items()}, {'a':2,'b':2})
+
+    def test_footprint_budget_mismatch_rejected(self):
+        with self.assertRaises(ValueError):
+            fit({'a':{(0,0)}}, set(), set(), 'a', footprint={(0,0),(1,0)}, expansion=2)
+
     def test_invalid_budget_rejected(self):
         with self.assertRaises(ValueError):
             fit({'a':{(0,0)}}, set(), set(), 'a', budgets={'a':0})
