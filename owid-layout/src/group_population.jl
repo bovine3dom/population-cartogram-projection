@@ -97,6 +97,14 @@ function match_group_population(sources, targets, geometry, source_rows, total;
                                 target_neighbours=Dict(), source_neighbours=Dict(), floors=Dict(),
                                 children=Piece[], membership=Dict(), target_cells=Dict())
     s=sort(collect(sources);by=p->p.id); t=sort(collect(targets);by=p->p.id)
+    if length(t)==1
+        g=only(t).id;mass=sum(p.mass for p in s)
+        n=only(allocate_tiles([mass],total;floors=[get(floors,g,1)]))
+        assignments=[(component_id=p.id,group_id=g,population=p.mass,assignment="whole_scope_group",source_distance=NaN) for p in s]
+        groups=[(group_id=g,population_group=g,anchor_components="",pool_population=mass,tiles=n,
+                 pool_proportional_tiles=Float64(total),pool_source_components=length(s),identity="whole_scope_group")]
+        return (;budgets=Dict(g=>n),assignments,groups)
+    end
     anchor=first(sort(s;by=p->(-p.mass,p.id))); r=source_rows[anchor.id]
     lon=(parse(Float64,r.west)+parse(Float64,r.east))/2
     lat=(parse(Float64,r.south)+parse(Float64,r.north))/2

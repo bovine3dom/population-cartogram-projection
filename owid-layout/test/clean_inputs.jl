@@ -1,0 +1,59 @@
+import Arrow, H3, JSON
+
+@testset "Raw source preparation" begin
+    function feature(id,country,rings)
+        Dict("type"=>"Feature","properties"=>Dict("GU_A3"=>id,"ADM0_A3"=>country,"NAME"=>id,"ISO_N3_EH"=>"001"),
+             "geometry"=>Dict("type"=>"Polygon","coordinates"=>rings))
+    end
+    square(x,y)=[[[x,y],[x+1,y],[x+1,y+1],[x,y+1],[x,y]]]
+    boundary=Dict("features"=>[feature("a","X",square(0.,0.)),feature("b","X",square(1.,0.)),feature("c","X",square(2.,1.))])
+    parts=OWIDLayout.natural_earth_parts(boundary);index=OWIDLayout.source_index(parts)
+    @test OWIDLayout.source_owner(index,parts,.5,.5)==1
+    @test OWIDLayout.source_owner(index,parts,1.,.5)==0 # Strict boundary exclusion.
+    @test OWIDLayout.source_owner(index,parts,4.,4.)==0
+    dissolved=OWIDLayout.dissolved_parts(parts,[10.,20.,30.],[1,1,1],index)
+    @test length(dissolved.rows)==2 # Shared edge merges; corner contact does not.
+    @test sum(r.population for r in dissolved.rows)==60
+    @test sum(r.source_cells for r in dissolved.rows)==3
+    @test length(dissolved.crosswalk)==3
+    overlap=OWIDLayout.natural_earth_parts(Dict("features"=>[feature("a","X",square(0.,0.)),feature("d","Y",square(.25,.25))]))
+    @test OWIDLayout.source_owner(OWIDLayout.source_index(overlap),overlap,.5,.5)==-1
+    hole=[[.25,.25],[.75,.25],[.75,.75],[.25,.75],[.25,.25]]
+    holed=OWIDLayout.natural_earth_parts(Dict("features"=>[feature("a","X",[first(square(0.,0.)),hole])]))
+    @test OWIDLayout.source_owner(OWIDLayout.source_index(holed),holed,.5,.5)==0
+    mktempdir() do root
+        arrow=joinpath(root,"kontur.arrow");geo=joinpath(root,"natural-earth.geojson")
+        ids=[H3.API.latLngToCell(H3.Lib.LatLng(deg2rad(y),deg2rad(x)),8) for (x,y) in ((.5,.5),(1.5,.5),(4.,4.))]
+        Arrow.write(arrow,(h3=UInt64.(ids),population=[10.,20.,7.]))
+        open(io->JSON.print(io,boundary),geo,"w")
+        out=joinpath(root,"prepared")
+        report=OWIDLayout.prepare_sources(arrow,geo,out)
+        @test report.population==30
+        @test report.unmatched_population==7
+        @test report.ambiguous_population==0
+        @test report.input_cells==3
+        @test isfile(joinpath(out,"complete.txt"))
+        @test length(collect(CSV.File(joinpath(out,"components.csv"))))==2
+        @test_throws ErrorException OWIDLayout.prepare_sources(arrow,geo,out)
+        duplicate=joinpath(root,"duplicate.arrow")
+        Arrow.write(duplicate,(h3=UInt64[ids[1],ids[1]],population=[1.,2.]))
+        @test_throws ErrorException OWIDLayout.prepare_sources(duplicate,geo,joinpath(root,"bad"))
+        @test !ispath(joinpath(root,"bad"))
+    end
+end
+
+@testset "Shared outline partition" begin
+    reference=Dict("a"=>Set([(0,0),(0,1)]),"b"=>Set([(1,0),(1,1)]))
+    footprint=union(values(reference)...)
+    result,report=OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>3))
+    @test report.complete
+    @test length(result["a"])==1 && length(result["b"])==3
+    @test OWIDLayout.edge_contacts(OWIDLayout.group_owners(result))==Set([("a","b")])
+    again,_=OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>3))
+    @test again==result
+    @test_throws ErrorException OWIDLayout.partition_groups(reference,footprint,Dict("a"=>1,"b"=>4))
+    remaining,seed=OWIDLayout.seed_scope(Set((x,y) for x in 1:4 for y in 1:4),5,(1.,1.))
+    @test length(seed)==5 && length(remaining)==11
+    @test length(OWIDLayout.connected_parts(seed;diagonals=true))==1
+    @test length(OWIDLayout.connected_parts(remaining;diagonals=true))==1
+end
