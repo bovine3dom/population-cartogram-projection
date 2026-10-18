@@ -1,7 +1,8 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 <title>OWID: clean Julia build</title><style>body{font:17px system-ui;max-width:1550px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%;height:auto}a{color:#08659d}nav a{display:inline-block;margin:.5rem}table{border-collapse:collapse}td,th{padding:.35rem .7rem;text-align:left;border-bottom:1px solid #ddd}p{max-width:90ch}.note{padding:1rem;background:#fff0d5}</style>
 <h1>OWID: clean Julia build</h1>
-<p>This is a separate Julia trial. The saved layout and H3-MON exports have not changed.
+<p>This is the current reviewed island-layout baseline. Git tag: <code>owid-clean-layout-baseline-v1</code>.
+<a href="world.svg">Open the world map</a>. The H3-MON exports have not changed.
 This Julia build starts from Kontur, Natural Earth, and original OWID. All scopes are matched again. No saved layouts or assignments are read.</p>
 <p><strong>Checks:</strong> 54967 land tiles; exact country totals; 40 groups change tile count;
 all shared group borders retained. 64 internal water cells remain empty and enclosed. Gaps between separate land pieces can open to the sea.
@@ -9,8 +10,11 @@ The layout has 244 groups, including the added population scopes.</p>
 <p>Each artwork group can receive several source components. Strong child matches add source anchors but do not receive separate tile budgets.
 Unmatched source components join the nearest source anchor. Weak target groups share a nearby population pool.
 The minimum is one tile per existing G group, not one tile per old T fragment.</p>
-<div class="note">This remains an experimental match. There are no hand-written identity overrides in the rerun scopes.
-Source-distance fallback is approximate. This build needs visual approval. Corner-connected groups receive one budget each. Earlier edits within those groups are not inputs; Japan and New Zealand retain their original internal proportions. The saved layout and H3-MON exports have not changed.</div>
+<div class="note">There are no hand-written identity overrides. Source-distance fallback is approximate.
+Corner-connected groups receive one budget each. Earlier edits within those groups are not inputs;
+Japan and New Zealand retain their original internal proportions. This reviewed baseline includes those differences.
+The original build audits below are unchanged. Their review flags describe the state when the files were generated.
+<a href="../owid-supported-workflow/index.html">Open the fitting and export checks</a>.</div>
 <p><strong>Read the images:</strong> The two tile panels share a scale. The geographic panel uses a separate scale.
 Colours identify the new population pools in all three panels. Labels identify G groups. Fallback target groups can share a colour.
 Only the selected country is shown. Empty space stays empty; no water tiles are assigned to countries.</p>

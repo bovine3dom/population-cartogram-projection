@@ -119,7 +119,8 @@ protected cells. Water never receives country tiles.
 The automatic identity costs and nearest-source fallback still need review.
 Determinism does not prove that every match is geographically correct. The
 shared-outline solver has a bounded search and can reject an infeasible fit.
-This build does not produce an H3-to-tile mapping or change H3-MON.
+The layout-only command does not produce an H3-to-tile mapping or change H3-MON.
+Use the [pipeline command](workflow.md) to add fitting and Arrow export.
 
 ## Work log
 

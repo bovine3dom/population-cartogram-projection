@@ -1,0 +1,12 @@
+{
+  "url": "http://127.0.0.1:1983/?data=h3-mon/population_density_hilo.arrow&cartogram=h3-mon/cartogram_weights_hilo.arrow#x=110&y=5&z=3",
+  "errors": [],
+  "failedRequests": [],
+  "served": [
+    "population_density_hilo.json",
+    "population_density_hilo.arrow",
+    "cartogram_weights_hilo.arrow"
+  ],
+  "bodyClass": "pane-open cartogram-ready load-complete pane-full",
+  "basemap": "Local neutral style; actual H3-MON renderer and local Julia Arrow files"
+}

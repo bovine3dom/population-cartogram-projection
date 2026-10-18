@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>Julia layout and mapping workflow: checks</title>
+<style>body{font:17px system-ui;max-width:1100px;margin:2rem auto;padding:0 1rem;background:#faf9f6;color:#222}img{width:100%}a{color:#08659d}li{margin:.5rem 0}code{background:#eee;padding:.1rem .3rem}</style>
+<h1>Julia layout and mapping workflow</h1>
+<p>The current island layout is unchanged. <a href="../owid-clean-build/world.svg">Open the world map</a>.
+The tag <code>owid-clean-layout-baseline-v1</code> preserves that baseline.</p>
+<p>The supported workflow now runs from a cartogram CSV, Kontur, and Natural Earth to a resized layout,
+an H3 mapping, and population-density Arrow files. It uses Julia. Tile count and country set are inputs,
+not fixed constants. See <code>owid-layout/workflow.md</code> in the repository for commands and input formats.</p>
+<h2>Checks</h2>
+<ul>
+<li>254 supported Julia tests pass. These include a custom five-tile regional cartogram and a custom country code.</li>
+<li>The full-world layout was regenerated. Its cell file is byte-identical to the baseline.</li>
+<li>The H3-5 adapter checked all 32,957,699 native cells. It produced 400,161 component/H3 fragments,
+244 population pools, and 54,967 target tiles. <a href="population-audit.json">Population accounting</a>.</li>
+<li>Real fits for Malaysia, Brunei, and Fiji cover 236 tiles and four separate population pools.
+Source weight sums differ from one by less than 1e-9. Relative target error is below 1e-6.
+No transport crosses a population-pool boundary. <a href="regional-review.json">Regional fit checks</a>.</li>
+<li>The exported Arrow files loaded in headless H3-MON without page errors or failed requests.
+<a href="browser-checks.json">Browser checks</a>. The image below was inspected.</li>
+</ul>
+<p>This is a regional export test, not a new full-world deployment. The browser used local file interception;
+no H3-MON defaults were changed. City labels and border-aware fitting are not part of this workflow.</p>
+<h2>Regional density render</h2>
+<p>Malaysia and Brunei are near the centre. Fiji is at the lower right. Other countries are omitted from this test.
+Colours show population density. The grey area is empty space, not country tiles.</p>
+<a href="h3-mon.png"><img src="h3-mon.png" alt="H3-MON rendering of Julia population-density files for Malaysia, Brunei, and Fiji"></a>
+</html>
