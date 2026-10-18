@@ -7,7 +7,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'examples/auto-cartogram'))
 from dock_true_borders import contacts
-from owid_landmass_world import footprint, landmasses, relax_outline, run
+from fit_local_coasts import fit
+from owid_landmass_world import check_outline, footprint, landmasses, relax_outline, run
 from partition_landmass import partition
 from relax_owid_islands import owners
 from restore_reference_water import enclosed
@@ -15,6 +16,15 @@ from review_layout import connectivity
 
 
 class LandmassWorldTest(unittest.TestCase):
+    def test_soft_outline_guide_affects_coast_fit(self):
+        source={'a':{(0,0),(1,0)}};guide={(0,0),(0,1)}
+        result,report=fit(source,set(),set(),'a',expansion=2,outline_guide=guide,outline_weight=2,seconds=10)
+        self.assertIsNotNone(result,report)
+        self.assertEqual(result['a'],guide)
+
+    def test_negative_outline_weight_rejected(self):
+        with self.assertRaises(ValueError):fit({'a':{(0,0)}},set(),set(),'a',outline_weight=-1)
+
     def test_groups_ignore_country_boundaries(self):
         source={'a':{(0,0)},'b':{(1,0)},'c':{(3,0)},'d':{(2,1)}}
         self.assertEqual(landmasses(source), [['a','b'],['d'],['c']])
@@ -26,6 +36,18 @@ class LandmassWorldTest(unittest.TestCase):
         self.assertIsNone(result)
         self.assertFalse(report['complete'])
         self.assertGreater(report['outline_difference'],report['outline_difference_limit'])
+
+    def test_parent_seed_must_keep_inland_status(self):
+        reference={'a':{(2,2)},'b':{(x,y) for x in range(5) for y in range(5)}-{(2,2)}}
+        seed={'a':{(0,0)},'b':set(owners(reference))-{(0,0)}}
+        report=check_outline(reference,set(owners(reference)),{'a':1,'b':24},seed,.01)
+        self.assertFalse(report['complete'])
+
+    def test_valid_parent_seed_passes_bound(self):
+        reference={'a':{(0,0),(1,0)}}
+        report=check_outline(reference,reference['a'],{'a':2},reference,.01)
+        self.assertTrue(report['complete'])
+        self.assertEqual(report['outline_difference'],0)
 
     def test_unchanged_footprint_is_exact(self):
         source={(0,0),(0,1),(1,0)}
@@ -81,8 +103,20 @@ class LandmassWorldTest(unittest.TestCase):
             self.assertTrue((root/'result'/'owid-cartogram.csv').exists())
             self.assertEqual(owid.read_text().count('\n'),6)
 
+    def test_single_part_partition_and_invalid_outline(self):
+        result,_=partition({'a':{(0,0)}},{(0,0),(1,0)},{'a':2})
+        self.assertEqual(result,{'a':{(0,0),(1,0)}})
+        with self.assertRaises(ValueError):partition({'a':{(0,0)}},{(0,0),(2,0)},{'a':2})
+
     def test_incompatible_budget_rejected(self):
         with self.assertRaises(ValueError):partition({'a':{(0,0)}},{(0,0)},{'a':2})
+
+    def test_lake_shore_does_not_allow_a_new_sea_coast(self):
+        inner={(x,y) for x in range(1,4) for y in range(1,4)}-{(2,2)}
+        shape={(x,y) for x in range(5) for y in range(5)}-{(2,2)}
+        result,report=partition({'a':inner,'b':shape-inner},shape,{'a':9,'b':15},seconds=10)
+        self.assertIsNone(result,report)
+        self.assertFalse(report['complete'])
 
     def test_inland_part_stays_inland(self):
         source={'a':{(2,2)},'b':{(x,y) for x in range(5) for y in range(5)}-{(2,2)}}

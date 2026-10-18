@@ -10,6 +10,7 @@ from scipy.spatial import cKDTree
 from audit_owid_budgets import parts
 from compact_regions import adjacent
 from dock_true_borders import contacts
+from review_geography import exterior_water
 
 
 def partition(reference, footprint, budgets, radius=4, seconds=120):
@@ -17,6 +18,8 @@ def partition(reference, footprint, budgets, radius=4, seconds=120):
     if set(labels)!=set(budgets) or any(n<1 or int(n)!=n for n in budgets.values()):
         raise ValueError('Use a positive integer budget for every part')
     if sum(budgets.values())!=len(points):raise ValueError('Outline area differs from budgets')
+    if len(parts(footprint))!=1:raise ValueError('Use one connected outline')
+    if len(labels)==1:return {labels[0]:set(footprint)},dict(complete=True,variables=0,attempts=[])
     source=set().union(*reference.values())
     centre=np.mean(sorted(source),axis=0);scale=(len(points)/len(source))**.5
     distances=np.column_stack([cKDTree(centre+scale*(np.array(sorted(reference[c]))-centre)).query(points)[0] for c in labels])
@@ -56,8 +59,9 @@ def partition(reference, footprint, budgets, radius=4, seconds=120):
     for p in points:
         if p not in fixed:add([(term(p,c),1) for c in choices[p]],1,1)
     for c in labels:add([(term(p,c),1) for p in points if c in choices[p]],budgets[c],budgets[c])
-    source_coast={p for p in source if any(q not in source for q in adjacent(p))}
-    coast={p for p in footprint if any(q not in footprint for q in adjacent(p))}
+    old_sea=exterior_water({p:1 for p in source});new_sea=exterior_water({p:1 for p in footprint})
+    source_coast={p for p in source if any(q in old_sea for q in adjacent(p))}
+    coast={p for p in footprint if any(q in new_sea for q in adjacent(p))}
     owner={p:c for c,ps in reference.items() for p in ps};required=contacts(owner)
     edges=[(p,q) for p in points for q in adjacent(p) if q in footprint and p<q]
     witnesses={pair:[] for pair in required};fixed_contacts=set()

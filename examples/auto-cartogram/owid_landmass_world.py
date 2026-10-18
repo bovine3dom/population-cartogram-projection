@@ -81,10 +81,24 @@ def footprint(source,count,coast_gaps=()):
     return result
 
 
+def inland_parts(tiles):
+    ocean=exterior_water(owners(tiles))
+    return {c for c,ps in tiles.items() if not any(q in ocean for p in ps for q in adjacent(p))}
+
+
+def check_outline(reference,shape,budgets,candidate,tolerance):
+    owner=owners(candidate);before=owners(reference);difference=len(set(owner)^shape)
+    limit=max(2,int(tolerance*len(shape)))
+    valid=(set(candidate)==set(budgets) and len(owner)==sum(budgets.values()) and difference<=limit
+           and contacts(owner)==contacts(before) and enclosed(owner)==enclosed(before)
+           and inland_parts(candidate)==inland_parts(reference)
+           and all(len(candidate[c])==budgets[c] and connectivity(ps)==1 for c,ps in candidate.items()))
+    return dict(complete=valid,outline_difference=difference,outline_difference_fraction=difference/len(shape),outline_difference_limit=limit)
+
+
 def relax_outline(reference,shape,budgets,seconds,tolerance):
     source=set(owners(reference));water=enclosed(owners(reference));required=contacts(owners(reference))
-    ocean=exterior_water(owners(reference))
-    inland={c for c,ps in reference.items() if not any(q in ocean for p in ps for q in adjacent(p))}
+    inland=inland_parts(reference)
     centre=np.mean(sorted(source),axis=0);scale=(len(shape)/len(source))**.5
     preferred={c:{tuple(np.rint(centre+scale*(np.array(p)-centre)).astype(int)) for p in ps}
                for c,ps in reference.items()}
@@ -99,20 +113,19 @@ def relax_outline(reference,shape,budgets,seconds,tolerance):
         attempts.append(dict(part=target,solver=solver,accepted=working is not None))
         print(json.dumps(attempts[-1]),flush=True)
         if working is None:return None,dict(attempts=attempts,complete=False)
-    actual=set(owners(working));difference=len(actual^shape);limit=max(2,int(tolerance*len(shape)))
-    valid=(difference<=limit and contacts(owners(working))==required and enclosed(owners(working))==water
-           and all(len(working[c])==budgets[c] and connectivity(ps)==1 for c,ps in working.items()))
-    return working if valid else None,dict(attempts=attempts,complete=valid,outline_difference=difference,
-        outline_difference_fraction=difference/len(shape),outline_difference_limit=limit)
+    checked=check_outline(reference,shape,budgets,working,tolerance)
+    return working if checked['complete'] else None,dict(method='local guide fit',attempts=attempts,**checked)
 
 
 def run(owid,parent,output,seconds=120,radius=4,max_shift=24,outline_tolerance=.01):
     if output.exists():raise ValueError('Use a new output directory')
+    if not np.isfinite([seconds,radius,max_shift,outline_tolerance]).all() or min(seconds,radius)<=0 or max_shift<0 or not 0<=outline_tolerance<=1:
+        raise ValueError('Use positive solver limits, a non-negative shift, and an outline tolerance from zero to one')
     output.mkdir(parents=True)
     current=load(parent);reference,grid,codes=reference_parts(owid,current)
     groups=landmasses(reference);budgets={c:len(ps) for c,ps in current.items()}
     record=dict(complete=False,approved=False,reference=str(owid),budget_parent=str(parent),landmasses=[],
-        inputs={str(p):digest(p) for p in (owid,parent/'cells.csv',parent/'matches.csv',Path(__file__),Path(__file__).with_name('partition_landmass.py'))},
+        inputs={str(p):digest(p) for p in (owid,parent/'cells.csv',parent/'matches.csv',parent/'report.json',Path(__file__),*(Path(__file__).with_name(n) for n in ('partition_landmass.py','fit_local_coasts.py','geographic_baseline.py','relax_owid_islands.py','shape_placement.py')))},
         max_axis_shift=max_shift,seconds_per_partition=seconds,candidate_radius=radius,outline_tolerance=outline_tolerance)
     def save(): (output/'landmass-world.json').write_text(json.dumps(record,indent=2)+'\n')
     templates=[]
@@ -129,19 +142,24 @@ def run(owid,parent,output,seconds=120,radius=4,max_shift=24,outline_tolerance=.
         elif len(labels)==1:
             fitted={labels[0]:shape};entry['status']='single-part outline'
         else:
-            fitted,entry['solver']=partition({c:reference[c] for c in labels},shape,{c:budgets[c] for c in labels},radius,seconds)
-            entry['status']='partitioned' if fitted is not None else 'blocked'
-            if fitted is None and outline_tolerance>0:
-                fitted,entry['relaxed_solver']=relax_outline({c:reference[c] for c in labels},shape,
-                    {c:budgets[c] for c in labels},seconds,outline_tolerance)
-                if fitted is not None:entry['status']='bounded outline relaxation'
+            local={c:reference[c] for c in labels};counts={c:budgets[c] for c in labels};seed={c:current[c] for c in labels}
+            checked=check_outline(local,shape,counts,seed,outline_tolerance)
+            if outline_tolerance>0 and checked['complete']:
+                fitted=seed;entry['status']='bounded outline reuse'
+                entry['relaxed_solver']=dict(method='validated parent seed',**checked)
+            else:
+                fitted,entry['solver']=partition(local,shape,counts,radius,seconds)
+                entry['status']='partitioned' if fitted is not None else 'blocked'
+                if fitted is None and outline_tolerance>0:
+                    fitted,entry['relaxed_solver']=relax_outline(local,shape,counts,seconds,outline_tolerance)
+                    if fitted is not None:entry['status']='bounded outline relaxation'
         record['landmasses'].append(entry);save()
         print(json.dumps(entry),flush=True)
         if fitted is None:continue
         templates.append((labels,fitted,entry))
     if any(r['status']=='blocked' for r in record['landmasses']):return record
     # Place each completed landmass as a rigid object. Keep the reviewed parent
-    # centres as position guides, but never use its outlines as shape input.
+    # centres as position guides. Reused outlines must pass the reference bound.
     occupied=set();placed=[];result={};protected_water=set()
     for labels,fitted,entry in sorted(templates,key=lambda r:(-sum(budgets[c] for c in r[0]),r[0])):
         shape=set().union(*fitted.values());old=set().union(*(current[c] for c in labels))
@@ -174,15 +192,15 @@ def run(owid,parent,output,seconds=120,radius=4,max_shift=24,outline_tolerance=.
     write_csv(output/'cells.csv',[dict(component_id=c,x=x,y=y) for c,ps in sorted(result.items()) for x,y in sorted(ps)])
     with owid.open() as stream:raw=[tuple(map(int,r)) for r in csv.reader(stream)]
     x0=min(r[0] for r in raw);y0=min(r[1] for r in raw)
-    step=json.loads((parent/'report.json').read_text())['grid']['input_grid_step']
+    step=grid['input_grid_step']
     with (output/'owid-cartogram.csv').open('w',newline='') as stream:
         writer=csv.writer(stream,lineterminator='\n')
         writer.writerows((x0+step*x,y0-step*y,codes[c.split(':')[0]]) for c,ps in sorted(result.items()) for x,y in sorted(ps))
     for name in ('matches.csv','source-assignments.csv','source-scopes-without-tiles.csv'):shutil.copyfile(parent/name,output/name)
     report=json.loads((parent/'report.json').read_text())
     # Preserve old reports only as provenance, not as checks on this new layout.
-    for key in ('relaxation','landmass_fit','parent_layout_sha256'):report.pop(key,None)
-    report.update(relaxed_layout=False,landmass_world=record,enclosed_water_cells=len(water))
+    for key in ('relaxation','landmass_fit','parent_layout_sha256','released_inter_piece_sea_cells'):report.pop(key,None)
+    report.update(relaxed_layout=False,landmass_world=record,enclosed_water_cells=len(water),grid=grid)
     for entry in report['countries']:
         entry['status']='landmass-first trial'
         entry['edits']={c:dict(before=len(reference[c]),after=len(result[c]),removed=len(reference[c]-result[c]),added=len(result[c]-reference[c]))
