@@ -27,7 +27,7 @@ function geo_rings(geometry, longitude, latitude)
       for ring in polygon] for polygon in polygons]
 end
 
-function draw_geography(io, shapes, selected, bounds, x, y, width, height, colour, clip)
+function draw_geography(io, shapes, selected, bounds, x, y, width, height, colour, clip; colours=Dict())
     transform,scale = panel_transform(bounds,x,y,width,height)
     println(io,"<defs><clipPath id='$clip'><rect x='$x' y='$y' width='$width' height='$height'/></clipPath></defs><g clip-path='url(#$clip)'>")
     # Draw the selected component last so its coast remains visible.
@@ -39,7 +39,7 @@ function draw_geography(io, shapes, selected, bounds, x, y, width, height, colou
             maximum(first,outer)<bounds[1] && continue
             minimum(last,outer)>bounds[4] && continue
             maximum(last,outer)<bounds[2] && continue
-            fill = id == selected ? colour : "#dedbd3"
+            fill = get(colours,id,id == selected ? colour : "#dedbd3")
             stroke = id == selected ? "#222" : "#aaa79e"
             println(io,"<path d='$(svg_path(rings,transform))' fill='$fill' fill-rule='evenodd' stroke='$stroke' stroke-width='0.7'><title>$(escape_markup(id))</title></path>")
         end

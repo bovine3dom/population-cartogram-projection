@@ -65,7 +65,8 @@ end
 Returns candidate identities, not approved population assignments. Dummy columns
 leave surplus target pieces unmatched. Scores are costs, not probabilities.
 """
-function match_identities(sources, targets; population_weight=0.035, relationship_weight=0.05)
+function match_identities(sources, targets; population_weight=0.035, relationship_weight=0.05,
+                          allowed=(target,source)->true, allow_unmatched=false, mapped_centres=Dict())
     all(w -> isfinite(w) && w >= 0, (population_weight, relationship_weight)) || throw(ArgumentError("Invalid weight"))
     s = sort(collect(sources); by=p -> p.id); t = sort(collect(targets); by=p -> p.id)
     length(unique(p.id for p in s)) == length(s) || throw(ArgumentError("Duplicate source IDs"))
@@ -80,14 +81,18 @@ function match_identities(sources, targets; population_weight=0.035, relationshi
     sb = extent(s[significant]); tb = extent(t)
     scale = ntuple(a -> max(tb[a+2]-tb[a], 1) / max(sb[a+2]-sb[a], 1e-6), 2)
     span = ntuple(a -> max(tb[a+2]-tb[a], 4), 2)
-    mapped = [ntuple(a -> tb[a] + (p.centre[a]-sb[a])*scale[a], 2) for p in s]
+    mapped = [get(mapped_centres,p.id,ntuple(a -> tb[a] + (p.centre[a]-sb[a])*scale[a], 2)) for p in s]
     position = [sum(((p.centre[a]-q[a])/span[a])^2 for a in 1:2) for p in t, q in mapped]
     sizecost = [abs(log(p.mass / max(q, 0.25))) for p in t, q in quota]
     cost = position + population_weight * sizecost
-    # Dummies are only needed when there are more targets than sources. The
-    # constant penalty makes the solver use all real sources before a dummy.
-    dummy = fill(maximum(cost) + 1, length(t), max(0, length(t)-length(s)))
+    permitted = [allowed(a,b) for a in t,b in s]
+    unmatched_cost = (maximum(cost)+1)*(length(t)+1)
+    cost[.!permitted] .= unmatched_cost*(length(t)+1)
+    # Dummy columns cover surplus targets or an explicitly permitted unmatched
+    # target. Their penalty favours feasible real matches before a dummy.
+    dummy = fill(unmatched_cost, length(t), allow_unmatched ? length(t) : max(0, length(t)-length(s)))
     chosen = assignment(hcat(cost, dummy))
+    all(i -> chosen[i]>length(s) || permitted[i,chosen[i]],eachindex(t)) || throw(ArgumentError("Infeasible source-border constraints"))
     # Refine joint assignments with relative direction. A country-wide position
     # scale otherwise loses the order of two nearby islands in a remote group.
     # This is deterministic pair-swap descent, not a global quadratic optimum.
@@ -104,6 +109,7 @@ function match_identities(sources, targets; population_weight=0.035, relationshi
         best = -1e-12; swap = nothing
         for i in 1:length(t), j in i+1:length(t)
             a,b = chosen[i],chosen[j]
+            (b<=length(s) && !permitted[i,b] || a<=length(s) && !permitted[j,a]) && continue
             delta = fullcost[i,b]+fullcost[j,a]-fullcost[i,a]-fullcost[j,b]
             delta += relation(i,j,b,a)-relation(i,j,a,b)
             for k in eachindex(t)
