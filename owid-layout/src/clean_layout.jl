@@ -102,11 +102,13 @@ function fit_clean_layout(reference,budgets;node_limit=100_000,max_shift=32)
     checks["complete"] ? (result,checks) : (nothing,checks)
 end
 
-function clean_layout(source_dir,owid,output;node_limit=100_000)
+function clean_layout(source_dir,owid,output;node_limit=100_000,
+                      country_codes=joinpath(@__DIR__,"../config/country-codes.csv"),
+                      scope_crosswalk=joinpath(@__DIR__,"../config/scope-crosswalk.csv"))
     ispath(output) && error("Use a new layout directory")
     mkdir(output)
-    codes=code_table(joinpath(@__DIR__,"..","config","country-codes.csv"))
-    crosswalk=collect(CSV.File(joinpath(@__DIR__,"..","config","scope-crosswalk.csv");types=String))
+    codes=code_table(country_codes)
+    crosswalk=isnothing(scope_crosswalk) ? NamedTuple[] : collect(CSV.File(scope_crosswalk;types=String))
     mapping=Dict(String(r.source_scope)=>String(r.target_scope) for r in crosswalk)
     rawrows=collect(CSV.File(joinpath(source_dir,"components.csv");types=String))
     canonical=[begin

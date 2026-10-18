@@ -1,7 +1,9 @@
 const ALIASES = Dict("SDS" => "SSD", "PSX" => "PSE", "SAH" => "ESH")
 
 function code_table(path)
-    Dict(String(r.alpha3) => parse(Int, r.numeric) for r in CSV.File(path; types=String))
+    rows=collect(CSV.File(path;types=String))
+    allunique(r.alpha3 for r in rows) && allunique(parse(Int,r.numeric) for r in rows) || error("Duplicate country codes")
+    Dict(String(r.alpha3)=>parse(Int,r.numeric) for r in rows)
 end
 
 function connected_parts(points; diagonals=false)

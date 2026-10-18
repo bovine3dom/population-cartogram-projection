@@ -5,22 +5,30 @@ version = "0.1.0"
 [deps]
 Arrow = "69666777-d1a9-59fb-9406-91d4454c9d45"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 GeoInterface = "cf35fbd7-0cd7-5166-be24-54bfbe79505f"
 H3 = "f62fece2-b996-571a-b4c9-e662aba1c617"
 HiGHS = "87dc4568-4c63-4d18-b0c0-bb2238e4078b"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+KernelAbstractions = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
 LibGEOS = "a90b1aa1-3769-5649-ba7e-abc5a9d163eb"
+PopulationCartogramProjection = "c8499a48-226f-4b8e-883b-6bf873220240"
 SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+
+[sources]
+PopulationCartogramProjection = {path = ".."}
 
 [compat]
 Arrow = "2.8.1"
 CSV = "0.10"
+DataFrames = "1.8.2"
 GeoInterface = "1.6.2"
 H3 = "0.3.4"
 HiGHS = "1.26.0"
 JSON = "1"
 JuMP = "1.32.1"
+KernelAbstractions = "0.9.45"
 LibGEOS = "0.9.7"
 julia = "1.12"
 

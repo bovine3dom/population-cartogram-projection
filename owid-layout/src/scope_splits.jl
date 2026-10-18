@@ -36,6 +36,7 @@ function split_population_scopes(owners,sources,features,source_scopes,crosswalk
     end
     geography=Dict(scope=>LibGEOS.unaryUnion(LibGEOS.GeometryCollection(ps,ctx)) for (scope,ps) in shapes)
     for pool in sort!(unique(String(r.pool) for r in crosswalk))
+        pool in values(result) || continue # A regional cartogram can omit this pool.
         targets=sort!(unique(String(r.target_scope) for r in crosswalk if r.pool==pool))
         missing=[s for s in targets if s ∉ values(result)]
         isempty(missing) && continue
