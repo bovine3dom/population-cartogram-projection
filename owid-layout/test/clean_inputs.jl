@@ -69,6 +69,13 @@ end
     seeded,check=OWIDLayout.seed_region(reference,Dict(),costs)
     @test check.complete && seeded==result
     @test_throws ErrorException OWIDLayout.seed_region(reference,Dict(),zeros(3,2))
+    mask=Set((x,y) for x in 0:3 for y in 0:1)
+    split=Dict("a"=>Set([(0,0),(0,1)]),"b"=>setdiff(mask,Set([(0,0),(0,1)])))
+    fragmented=hcat(fill(10.,8),zeros(8)) # Prefer two distant corners for a.
+    fragmented[[1,8],1].=0.;fragmented[[1,8],2].=5.
+    connected,check=OWIDLayout.seed_region(split,Dict(),fragmented;rounds=2)
+    @test check.complete
+    @test length(OWIDLayout.connected_parts(connected["a"];diagonals=true))==1
 end
 
 @testset "Shared outline partition" begin

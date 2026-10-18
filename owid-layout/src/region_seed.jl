@@ -40,7 +40,9 @@ function seed_region(reference,outside,costs;inland=Set{String}(),node_limit=100
             broken=true
             for component in components
                 boundary=Set((p[1]+dx,p[2]+dy) for p in component for (dx,dy) in CORNER_OFFSETS if (p[1]+dx,p[2]+dy) ∉ component && haskey(lookup,(p[1]+dx,p[2]+dy)))
-                JuMP.@constraint(model,sum(x[lookup[p],j] for p in component)-sum(x[lookup[q],j] for q in boundary)<=length(component)-1)
+                # This component is smaller than the country's fixed budget.
+                # If any of it remains, a connected country must cross its boundary.
+                JuMP.@constraint(model,sum(x[lookup[p],j] for p in component)<=length(component)*sum(x[lookup[q],j] for q in boundary))
             end
         end
         broken && continue
