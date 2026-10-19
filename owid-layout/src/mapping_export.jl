@@ -56,6 +56,10 @@ end
 function mapping_signature(build,resolution,backend)
     root=normpath(joinpath(@__DIR__,".."))
     files=[joinpath(build,"build.json")]
+    active=Base.active_project()
+    if !isnothing(active)
+        append!(files,filter(isfile,[active,joinpath(dirname(active),"Manifest.toml")]))
+    end
     options=get(JSON.parsefile(first(files)),"options",Dict())
     for key in ("country_codes","scope_crosswalk")
         path=get(options,key,nothing)
@@ -66,6 +70,7 @@ function mapping_signature(build,resolution,backend)
     end
     append!(files,[joinpath(root,"Project.toml"),joinpath(root,"Manifest.toml"),joinpath(root,"config/country-codes.csv")])
     Dict("resolution"=>resolution,"backend"=>string(typeof(backend)),"julia"=>string(VERSION),
+        "level_zero_driver"=>get(ENV,"ZE_ENABLE_ALT_DRIVERS",""),
         "files"=>Dict(abspath(p)=>file_digest(p) for p in files))
 end
 
