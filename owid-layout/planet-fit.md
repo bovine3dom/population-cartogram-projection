@@ -37,9 +37,34 @@ not need it. The program does not fall back to CPU. Add `--resume` after `5` to
 resume the same inputs. Resume checks the active GPU project and manifest as
 well as the layout, source data, core code, and driver setting.
 
+## Publication
+
+The separate destination is `planet-owid-islands-h3-5-v1` in the H3-MON data
+directory. It is not available until the fit and browser checks finish.
+The finalizer runs this sequence without requiring another manual export step:
+
+```sh
+bash owid-layout/bin/finish-fit.sh 3052741 \
+  output/auto-cartogram/owid-planet-islands-h3-5 \
+  /home/olie/projects/H3-MON planet-owid-islands-h3-5-v1
+```
+
+Progress is recorded in the mapping directory as `finalize-status.txt`.
+The finalizer log is `finalize.log`. On success, `h3-mon-url.txt` contains the
+local test URL. `browser-published/` contains a screenshot and browser checks
+from the actual served files, not local file interception. Manual visual review
+is still required. A failed fit or browser check must not be described as ready.
+
 ## Work log
 
 - Confirmed the frozen layout and no other active fitting jobs.
 - Created an isolated, pinned GPU environment. The device is functional.
 - Passed a small GPU fit with zero transport between population pools.
-- Prepared the full-world run. Export and browser review are still pending.
+- Started the full-world GPU run on 19 October 2026 at about 07:24 UTC.
+  PID: `3052741`. Log: `output/auto-cartogram/planet-fit-logs/fit.log`.
+- Re-ran all 44 mapping tests after the GPU signature change. All passed.
+- Added a checked publisher. Its eight tests passed. It rejects incomplete jobs,
+  changed export files, and existing destination directories.
+- Added a finalizer that waits for this fit, checks the export in headless
+  H3-MON, publishes a separate dataset, and checks the actual HTTP files.
+  It does not change the existing default dataset.
