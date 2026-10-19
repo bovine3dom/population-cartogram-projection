@@ -1,5 +1,6 @@
 using DataFrames
 import Arrow, H3, JSON
+include("../bin/recover-balanced.jl")
 
 @testset "Grouped transport and Arrow export" begin
     h=UInt64(H3.API.latLngToCell(H3.Lib.LatLng(0.,0.),5))
@@ -9,7 +10,10 @@ import Arrow, H3, JSON
     t=DataFrame(x=[0,1,8,9,10],y=[0,0,0,0,0],group_id=["island","island","main","main","main"],
         country=fill("CUSTOM",5))
     a,check=OWIDLayout.fit_pool(s[1:2,:],t[1:2,:])
-    @test check["maximum_relative_target_error"]<=1e-6
+    @test check["maximum_relative_target_error"]<=OWIDLayout.BALANCE_TOLERANCE
+    strict,strictcheck=OWIDLayout.fit_pool(s[1:2,:],t[1:2,:];tolerance=1e-6)
+    @test strictcheck["maximum_relative_target_error"]<=1e-6
+    @test strictcheck["target_tolerance"]==1e-6
     b,_=OWIDLayout.fit_pool(s[3:3,:],t[3:5,:])
     m=vcat(a,b)
     @test OWIDLayout.check_mapping(m,s,t)["population"]≈100.
@@ -92,11 +96,41 @@ end
         @test_throws ErrorException OWIDLayout.mapping_inputs(build;resolution=9)
         output=joinpath(root,"mapping")
         job=OWIDLayout.fit_export(build,output;resolution=8)
-        @test job["complete"]
+        @test job["complete"] && job["phase"]=="complete"
+        @test length(job["raw_shards"])==2
+        @test all(isfile(joinpath(output,"raw-shards","$i.arrow")) for i in 1:2)
         @test job["export"]["population"]≈40
         @test Set(Arrow.Table(joinpath(output,"h3-mon/cartogram_weights_hilo.arrow")).code)==Set([901])
         @test_throws ErrorException OWIDLayout.fit_export(build,output;resolution=8)
         @test_throws ErrorException OWIDLayout.fit_export(build,output;resolution=8,resume=true)
+        # Simulate interruption after raw fitting. Resume must reuse the raw
+        # files and must reject a damaged raw checkpoint before balancing.
+        rawchecks=deepcopy(job["raw_shards"])
+        job["complete"]=false;empty!(job["shards"])
+        OWIDLayout.write_json_atomic(joinpath(output,"mapping-job.json"),job)
+        rm(joinpath(output,"h3-mon");recursive=true)
+        rawpath=joinpath(output,"raw-shards/1.arrow");rawbytes=read(rawpath)
+        open(io->write(io,"changed"),rawpath,"a")
+        @test_throws ErrorException OWIDLayout.fit_export(build,output;resolution=8,resume=true)
+        @test !ispath(joinpath(output,"h3-mon"))
+        write(rawpath,rawbytes)
+        job=OWIDLayout.fit_export(build,output;resolution=8,resume=true)
+        @test job["complete"] && job["raw_shards"]==rawchecks
+        @test read(rawpath)==rawbytes
+        # Recovery is explicit and limited to the reviewed code changes.
+        previous=joinpath(root,"previous");cp(output,previous)
+        legacy=deepcopy(job)
+        legacy["signature"]["files"][abspath(joinpath(@__DIR__,"../src/mapping_fit.jl"))]="prior-code-test-fixture"
+        OWIDLayout.write_json_atomic(joinpath(previous,"mapping-job.json"),legacy)
+        recovered=joinpath(root,"recovered")
+        migrated=recover_balanced(build,previous,recovered)
+        @test length(migrated["shards"])==2 && !migrated["complete"]
+        @test read(joinpath(output,"shards/1.arrow"))==read(joinpath(recovered,"shards/1.arrow"))
+        @test OWIDLayout.fit_export(build,recovered;resolution=8,resume=true)["complete"]
+        legacy["signature"]["files"][joinpath(build,"build.json")]="changed-input"
+        OWIDLayout.write_json_atomic(joinpath(previous,"mapping-job.json"),legacy)
+        @test_throws ErrorException recover_balanced(build,previous,joinpath(root,"invalid-recovery"))
+        @test !ispath(joinpath(root,"invalid-recovery"))
         # Simulate interruption after the final export. Verify all checkpoints.
         job["complete"]=false
         OWIDLayout.write_json_atomic(joinpath(output,"mapping-job.json"),job)

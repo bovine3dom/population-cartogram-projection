@@ -3,6 +3,7 @@ include("review.jl")
 include("groups.jl")
 include("group_population_resize.jl")
 include("clean_inputs.jl")
+include("balance_kernel.jl")
 include("mapping.jl")
 include("publish.jl")
 

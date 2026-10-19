@@ -132,7 +132,8 @@ The output directory contains:
 - `build.json`: layout completion and input, code, and policy hashes.
 - `mapping/sources.csv` and `mapping/targets.csv`: fitting inputs.
 - `mapping/population-audit.json`: represented and excluded populations.
-- `mapping/shards/`: checked per-pool mappings.
+- `mapping/raw-shards/`: raw fits, saved before CPU balancing.
+- `mapping/shards/`: checked, balanced per-pool mappings.
 - `mapping/mapping-job.json`: completion, hashes, and fitting checks.
 - `mapping/h3-mon/cartogram_weights_hilo.arrow`: H3-to-tile mapping.
 - `mapping/h3-mon/population_density_hilo.arrow`: density values.
@@ -140,13 +141,20 @@ The output directory contains:
 - `mapping/h3-mon/checks.json`: export checks and file hashes.
 
 The fit must retain every represented source population within `1e-9` relative
-weight error. Target population error must be at most `1e-6`. Both sets of export
+weight error. Target population error must be at most `1e-4` (0.01%), as in the
+earlier planet pipeline. Both sets of export
 weights must sum to one within `1e-9`. Any transport between different pools is
 an error. Export occurs only after these checks pass.
 
 Sparse balance can add support at up to four adjacent-tile steps inside a pool.
-It cannot cross a pool boundary. It has a fixed iteration limit and fails if it
-cannot meet the tolerance. It does not claim a new minimum-cost solution.
+It cannot cross a pool boundary. Each support attempt has a limit of 50,000
+iterations. It fails if it cannot meet the tolerance. It does not claim a new
+minimum-cost solution. The numerical loop uses typed arrays. It does not access
+DataFrame columns inside the iteration loop.
+
+All raw fits are saved before the balance stage starts. Thus CPU balancing does
+not delay the next GPU fit. A failed balance can resume from the raw checkpoints.
+The job records its current phase and the time for each fit and balance.
 
 The exported H3 parent can have fragments in several pools. Those fragments are
 combined only after fitting and checking. `weight` is a fraction of represented
@@ -184,7 +192,7 @@ metadata JSON. Keep old exports until the new map has passed visual review.
 
 ## Validation
 
-The supported Julia suite passes 254 tests. The separate mainland research suite
+The initial supported Julia suite passed 254 tests. The separate mainland research suite
 passes 36 tests. Regenerating the full-world layout with the consolidated code
 produced the same `cells.csv` hash as the baseline above.
 
@@ -221,3 +229,6 @@ stage. The data workflow remains Julia-only.
   population conservation, invalid weights, and interrupted jobs.
 - Regenerated the world layout and confirmed that its cells are unchanged.
 - Checked real regional Arrow files in headless H3-MON and inspected the image.
+- Fixed excessive allocations in CPU balancing. Restored the earlier planet
+  tolerance of `1e-4` and the 50,000-iteration limit per support attempt.
+- Separated raw fitting from balancing. Added raw checkpoint and recovery tests.

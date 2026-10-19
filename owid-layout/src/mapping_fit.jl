@@ -1,14 +1,46 @@
+const BALANCE_TOLERANCE = 1e-4
+const BALANCE_ITERATIONS = 50_000
+
+# Keep DataFrame column access outside this typed numerical kernel. Otherwise
+# the loop can box each arithmetic operation and allocate gigabytes per pass.
+function balance_kernel!(mass::Vector{Float64}, rows::Vector{Int}, columns::Vector{Int},
+                         supply::Vector{Float64}, targets::Int;
+                         iterations::Int, tolerance::Float64)
+    demand=sum(supply)/targets
+    st=zeros(length(supply));tt=zeros(targets);error_value=Inf
+    for turn in 1:iterations
+        fill!(tt,0.)
+        for k in eachindex(mass);tt[columns[k]]+=mass[k];end
+        all(>(0),tt) || break
+        fill!(st,0.)
+        for k in eachindex(mass)
+            mass[k]*=demand/tt[columns[k]];st[rows[k]]+=mass[k]
+        end
+        all(>(0),st) || break
+        fill!(tt,0.)
+        for k in eachindex(mass)
+            mass[k]*=supply[rows[k]]/st[rows[k]];tt[columns[k]]+=mass[k]
+        end
+        all(isfinite,mass) || error("Non-finite balanced mass")
+        error_value=maximum(i->abs(tt[i]/demand-1),eachindex(tt))
+        if error_value<=tolerance
+            return (;converged=true,iterations=turn,error=error_value,target_mass=tt)
+        end
+    end
+    (;converged=false,iterations,error=error_value,target_mass=tt)
+end
+
 """Balance sparse transport inside one declared population pool.
 
 The source margin is exact to floating-point precision. The target margin must
 pass the tolerance. Failure is an error, not a usable mapping.
 """
-function balance_mapping(raw, sources, targets; tolerance=1e-6, iterations=20_000, expansion_steps=4)
+function balance_mapping(raw, sources, targets; tolerance=BALANCE_TOLERANCE, iterations=BALANCE_ITERATIONS, expansion_steps=4)
     isfinite(tolerance) && 0<tolerance<=1e-4 || error("Invalid balance tolerance")
     iterations>0 && expansion_steps>=0 || error("Invalid balance limits")
     si=Dict(id=>i for (i,id) in enumerate(sources.id))
     ti=Dict((r.x,r.y)=>i for (i,r) in enumerate(eachrow(targets)))
-    supply=Float64.(sources.value);demand=sum(supply)/nrow(targets)
+    supply=Vector{Float64}(sources.value)
     edges=Dict{Tuple{Int,Int},Float64}()
     for r in eachrow(raw)
         isfinite(r.weight) && r.weight>=0 || error("Invalid transport weight")
@@ -22,28 +54,14 @@ function balance_mapping(raw, sources, targets; tolerance=1e-6, iterations=20_00
     for step in 0:expansion_steps
         order=sort!(collect(keys(edges)));rows=first.(order);columns=last.(order)
         mass=[edges[k] for k in order]
-        st=zeros(length(supply));tt=zeros(nrow(targets))
-        for turn in 1:iterations
-            fill!(tt,0.)
-            for k in eachindex(mass);tt[columns[k]]+=mass[k];end
-            all(>(0),tt) || break
-            fill!(st,0.)
-            for k in eachindex(mass)
-                mass[k]*=demand/tt[columns[k]];st[rows[k]]+=mass[k]
-            end
-            all(>(0),st) || break
-            fill!(tt,0.)
-            for k in eachindex(mass)
-                mass[k]*=supply[rows[k]]/st[rows[k]];tt[columns[k]]+=mass[k]
-            end
-            all(isfinite,mass) || error("Non-finite balanced mass")
-            error_value=maximum(abs.(tt./demand.-1))
-            if error_value<=tolerance
-                mapping=DataFrame([(id=sources.id[i],x=targets.x[j],y=targets.y[j],
-                    weight=mass[k]/supply[i],weight_mean=mass[k]/tt[j]) for (k,(i,j)) in enumerate(order)])
-                return mapping,Dict("maximum_relative_target_error"=>error_value,"balance_iterations"=>turn,
-                    "expansion_steps"=>step,"added_pairs"=>length(edges)-initial_edges)
-            end
+        result=balance_kernel!(mass,rows,columns,supply,nrow(targets);iterations=Int(iterations),tolerance=Float64(tolerance))
+        error_value=result.error
+        println("Balance support +",step,": ",result.iterations," iterations, target error=",error_value);flush(stdout)
+        if result.converged
+            mapping=DataFrame([(id=sources.id[i],x=targets.x[j],y=targets.y[j],
+                weight=mass[k]/supply[i],weight_mean=mass[k]/result.target_mass[j]) for (k,(i,j)) in enumerate(order)])
+            return mapping,Dict("maximum_relative_target_error"=>error_value,"balance_iterations"=>result.iterations,
+                "target_tolerance"=>tolerance,"expansion_steps"=>step,"added_pairs"=>length(edges)-initial_edges)
         end
         step==expansion_steps && break
         # Add support, not population. Expansion never leaves this pool.
@@ -58,7 +76,7 @@ function balance_mapping(raw, sources, targets; tolerance=1e-6, iterations=20_00
     error("Sparse balance failed; target error=$error_value. No mapping was accepted.")
 end
 
-function check_mapping(mapping,sources,targets; tolerance=1e-6)
+function check_mapping(mapping,sources,targets; tolerance=BALANCE_TOLERANCE)
     PopulationCartogramProjection._validate_inputs(targets,sources)
     source=Dict(r.id=>r for r in eachrow(sources))
     target=Dict((r.x,r.y)=>r for r in eachrow(targets))
@@ -81,22 +99,26 @@ function check_mapping(mapping,sources,targets; tolerance=1e-6)
     target_error=maximum(abs(mass[p]/(poolmass[t.group_id]/pooltiles[t.group_id])-1) for (p,t) in target)
     target_error<=tolerance || error("Target population is not balanced")
     Dict{String,Any}("cross_pool_population"=>0.,"population"=>sum(values(mass)),"tiles"=>length(target),
-        "maximum_relative_target_error"=>target_error,"minimum_source_retained_share"=>minimum(values(retained)),
+        "maximum_relative_target_error"=>target_error,"target_tolerance"=>tolerance,"minimum_source_retained_share"=>minimum(values(retained)),
         "maximum_source_retained_share"=>maximum(values(retained)))
 end
 
-function fit_pool(sources,targets;backend=KA.CPU(),kwargs...)
+function raw_pool(sources,targets;backend=KA.CPU())
     PopulationCartogramProjection._validate_inputs(targets,sources)
     length(unique(sources.group_id))==1 && Set(sources.group_id)==Set(targets.group_id) || error("Expected one population pool")
     if nrow(sources)==1 || nrow(targets)==1
-        mapping=DataFrame([(id=s.id,x=t.x,y=t.y,weight=1/nrow(targets),weight_mean=s.value/sum(sources.value))
+        return DataFrame([(id=s.id,x=t.x,y=t.y,weight=1/nrow(targets),weight_mean=s.value/sum(sources.value))
             for s in eachrow(sources) for t in eachrow(targets)])
-        balance=Dict("expansion_steps"=>0,"added_pairs"=>0,"balance_iterations"=>0)
     else
         screen=select(targets,:x,:y);screen.y .*= -1
         raw=PopulationCartogramProjection.distribute(screen,select(sources,:x,:y,:value,:id);backend)
         raw.y .*= -1
-        mapping,balance=balance_mapping(raw,sources,targets;kwargs...)
+        return raw
     end
-    mapping,merge(balance,check_mapping(mapping,sources,targets))
+end
+
+function fit_pool(sources,targets;backend=KA.CPU(),tolerance=BALANCE_TOLERANCE,kwargs...)
+    raw=raw_pool(sources,targets;backend)
+    mapping,balance=balance_mapping(raw,sources,targets;tolerance,kwargs...)
+    mapping,merge(balance,check_mapping(mapping,sources,targets;tolerance))
 end

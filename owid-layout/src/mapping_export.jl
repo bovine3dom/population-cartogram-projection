@@ -91,22 +91,50 @@ function fit_export(build,output;resolution=5,backend=KA.CPU(),resume=false)
     inputs=mapping_inputs(build;resolution);sources,targets=inputs.sources,inputs.targets
     CSV.write(joinpath(output,"sources.csv"),sources);CSV.write(joinpath(output,"targets.csv"),targets)
     write_json_atomic(joinpath(output,"population-audit.json"),inputs.audit)
-    mkpath(joinpath(output,"shards"));mappings=DataFrame[]
-    for (i,group) in enumerate(sort!(unique(sources.group_id)))
+    mkpath(joinpath(output,"shards"));mkpath(joinpath(output,"raw-shards"))
+    groups=sort!(unique(sources.group_id))
+    raw_shards=get!(job,"raw_shards",Dict{String,Any}())
+    job["phase"]="fit";write_json_atomic(jobpath,job)
+    # Finish and checkpoint all raw fits before CPU balancing. A balance failure
+    # must not discard the expensive fit or block the next pool's GPU work.
+    for (i,group) in enumerate(groups)
+        haskey(job["shards"],group) && continue
+        file=joinpath(output,"raw-shards","$i.arrow")
+        if haskey(raw_shards,group)
+            raw_shards[group]["sha256"]==file_digest(file) || error("Changed raw mapping shard")
+            continue
+        end
+        s=sources[sources.group_id.==group,:];t=targets[targets.group_id.==group,:]
+        println("Fit ",group,": ",nrow(s)," source fragments, ",nrow(t)," tiles");flush(stdout)
+        started=time()
+        raw=raw_pool(s,t;backend)
+        Arrow.write(file*".tmp",raw;file=true);mv(file*".tmp",file;force=true)
+        raw_shards[group]=Dict("sha256"=>file_digest(file),"fit_seconds"=>time()-started)
+        write_json_atomic(jobpath,job)
+        println("Saved raw fit ",group," in ",raw_shards[group]["fit_seconds"]," s");flush(stdout)
+    end
+    job["phase"]="balance";write_json_atomic(jobpath,job)
+    mappings=DataFrame[]
+    for (i,group) in enumerate(groups)
         s=sources[sources.group_id.==group,:];t=targets[targets.group_id.==group,:]
         file=joinpath(output,"shards","$i.arrow")
         if haskey(job["shards"],group)
             job["shards"][group]["sha256"]==file_digest(file) || error("Changed mapping shard")
             mapping=DataFrame(Arrow.Table(file));check_mapping(mapping,s,t)
         else
-            println("Fit ",group,": ",nrow(s)," source fragments, ",nrow(t)," tiles");flush(stdout)
-            mapping,checks=fit_pool(s,t;backend)
+            println("Balance ",group);flush(stdout)
+            rawfile=joinpath(output,"raw-shards","$i.arrow")
+            raw_shards[group]["sha256"]==file_digest(rawfile) || error("Changed raw mapping shard")
+            started=time()
+            mapping,balance=balance_mapping(DataFrame(Arrow.Table(rawfile)),s,t)
+            checks=merge(balance,check_mapping(mapping,s,t),Dict("balance_seconds"=>time()-started))
             Arrow.write(file*".tmp",mapping;file=true);mv(file*".tmp",file;force=true)
             job["shards"][group]=Dict("sha256"=>file_digest(file),"checks"=>checks)
             write_json_atomic(jobpath,job)
         end
         push!(mappings,mapping)
     end
+    job["phase"]="export";write_json_atomic(jobpath,job)
     # If a process stopped after export, verify its files before completing.
     exported=joinpath(output,"h3-mon")
     if ispath(exported)
@@ -117,7 +145,7 @@ function fit_export(build,output;resolution=5,backend=KA.CPU(),resume=false)
         codepath=get(get(record,"options",Dict()),"country_codes",joinpath(@__DIR__,"../config/country-codes.csv"))
         checks=export_mapping(vcat(mappings...),sources,targets,exported;codes=code_table(codepath))
     end
-    job["export"]=checks;job["complete"]=true
+    job["export"]=checks;job["complete"]=true;job["phase"]="complete"
     write_json_atomic(jobpath,job)
     job
 end
