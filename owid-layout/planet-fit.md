@@ -109,3 +109,5 @@ tracks this process, not the stopped job. The destination dataset name is unchan
 - Fixed CPU balance type instability and added an allocation regression test.
 - Added raw checkpoint, damaged-checkpoint, and checked recovery tests.
 - Rechecked and preserved 33 completed pools. Restarted the remaining fits.
+- The complete supported Julia suite passes 282 tests, including the new
+  allocation, raw checkpoint, and recovery checks.
